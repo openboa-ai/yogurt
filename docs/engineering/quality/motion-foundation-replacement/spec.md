@@ -25,3 +25,5 @@ Use dedicated controls where the action has its own lifecycle: copying reports t
 The default switch uses a 52 × 32 px track with a 26 px thumb and a 3 px inset. Preserve controlled and uncontrolled use, keyboard activation and immediate state callbacks. The native template retains its existing native switch until its rendering is separately qualified.
 
 Text fields, search fields and single-choice select controls use the same compact, regular, comfortable, spacious and touch height roles as actions. Their labels, validation, input attributes, controlled values and accessible descriptions remain attached to the actual input. The regular size remains the default. Select preserves the native `size` and `multiple` attributes separately from the visual `controlSize` choice. Each size is demonstrated and tested at narrow and wide widths.
+
+Cards use a shared 24 px corner and 18 px regular inset. Compact and spacious density choices use 12 px and 24 px insets without changing the caller's content or action. The ordinary card and the existing metric and profile cards consume these same roles. Cards remain fluid in their container and do not gain a perimeter outline.

@@ -11,7 +11,7 @@ import {
 import {
   Composer,
   VoiceControl
-} from "./shared/chunk-6KMTQNS5.js";
+} from "./shared/chunk-ZUZ5LBUB.js";
 import {
   SidebarContent,
   SidebarFooter,
@@ -65,7 +65,7 @@ import {
   TableRow,
   ToastStack,
   Trace
-} from "./shared/chunk-XP2XCIQ3.js";
+} from "./shared/chunk-CFIUPFQ7.js";
 import {
   ConfirmDialog,
   Receipt

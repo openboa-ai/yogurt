@@ -433,6 +433,10 @@
   --yg-segment-option-height: var(--boa-control-row);
   --yg-segment-track-radius: var(--boa-space-16);
   --yg-segment-option-radius: var(--boa-radius-panel);
+  --yg-card-corner: var(--boa-radius-sheet);
+  --yg-card-inset-compact: var(--boa-space-12);
+  --yg-card-inset-regular: var(--boa-space-18);
+  --yg-card-inset-spacious: var(--boa-space-24);
   --yg-button-radius: var(--boa-radius-control);
   --yg-button-pill-radius: var(--boa-radius-round);
   --yg-button-compact-radius: var(--boa-radius-small);
@@ -632,11 +636,15 @@
 }
 .yg-card {
   display: grid;
-  border-radius: var(--yg-radius-card);
+  box-sizing: border-box;
+  padding: var(--yg-card-inset-regular);
+  border-radius: var(--yg-card-corner);
   gap: var(--yg-gap-stack);
   align-content: start;
   background: var(--yg-raised-surface);
 }
+.yg-card[data-density="compact"] { padding: var(--yg-card-inset-compact); }
+.yg-card[data-density="spacious"] { padding: var(--yg-card-inset-spacious); }
 .yg-card p,
 .yg-section-line p,
 .yg-stepper p,
@@ -4450,7 +4458,7 @@ summary.yg-task-line:focus-visible {
   opacity: clamp(0, var(--yg-card-content, 1), 1);
   translate: 0 calc((1 - var(--yg-card-content, 1)) * 10px);
 }
-.yg-stat-card { box-sizing: border-box; width: min(340px, 100%); min-block-size: 0; padding: 18px; border-radius: 24px; }
+.yg-stat-card { box-sizing: border-box; width: min(340px, 100%); min-block-size: 0; padding: var(--yg-card-inset-regular); border-radius: var(--yg-card-corner); }
 .yg-stat-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .yg-stat-heading > div { min-inline-size: 0; }
 .yg-stat-label { display: block; font: var(--yg-font-help); }
@@ -4459,7 +4467,7 @@ summary.yg-task-line:focus-visible {
 .yg-stat-series { display: block; inline-size: 100%; block-size: auto; overflow: visible; color: var(--yg-action); fill: currentColor; }
 .yg-stat-area { fill: color-mix(in srgb, currentColor 12%, transparent); }
 .yg-stat-line { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
-.yg-profile-card { box-sizing: border-box; width: min(320px, 100%); padding: 18px; border-radius: 24px; }
+.yg-profile-card { box-sizing: border-box; width: min(320px, 100%); padding: var(--yg-card-inset-regular); border-radius: var(--yg-card-corner); }
 .yg-profile-header { gap: 12px; }.yg-profile-avatar { width: 52px; height: 52px; }
 .yg-profile-card details { margin-top: 14px; }
 .yg-fan-cards-list:not([data-many]) { position: relative; display: block; height: 230px; overflow: visible; padding: 0; }
@@ -6432,6 +6440,9 @@ body {
 .variant-body {
   margin: var(--boa-space-12) 0;
   min-block-size: 0;
+}
+.specimen:is([data-component="card"], [data-variant-component="card"]) {
+  background: var(--yg-canvas);
 }
 .surface-comparison {
   display: grid;

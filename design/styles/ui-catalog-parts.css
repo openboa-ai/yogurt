@@ -29,11 +29,15 @@
 }
 .yg-card {
   display: grid;
-  border-radius: var(--yg-radius-card);
+  box-sizing: border-box;
+  padding: var(--yg-card-inset-regular);
+  border-radius: var(--yg-card-corner);
   gap: var(--yg-gap-stack);
   align-content: start;
   background: var(--yg-raised-surface);
 }
+.yg-card[data-density="compact"] { padding: var(--yg-card-inset-compact); }
+.yg-card[data-density="spacious"] { padding: var(--yg-card-inset-spacious); }
 .yg-card p,
 .yg-section-line p,
 .yg-stepper p,

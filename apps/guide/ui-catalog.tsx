@@ -86,6 +86,7 @@ const variants = new Set([
   "gradient",
   "elevation",
   "button",
+  "card",
   "bottom-action",
   "icon-button",
   "stack",
@@ -375,6 +376,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                     appearance={appearance}
                     material={material}
                     className="specimen variant-body"
+                    data-variant-component={id}
                     data-layout={previewLayout(entry)}
                     key={id}
                   >

@@ -58,6 +58,18 @@ export function ExtendedExample({
         </Y.Stack>
       );
     case "card":
+      if (variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "spacious"] as const).map((density) => (
+              <Y.Card key={density} density={density}
+                title={density[0].toUpperCase() + density.slice(1)} description="Weekly review">
+                Release notes and decisions from the week.
+              </Y.Card>
+            ))}
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Card
           title="Weekly review"

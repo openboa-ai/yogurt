@@ -43,9 +43,9 @@ export function Direction({
     </ReadingDirection.Provider>
   );
 }
-export function Card({ title, description, children, action }: NamedSection) {
+export function Card({ title, description, children, action, density = "regular" }: NamedSection & { density?: "compact" | "regular" | "spacious" }) {
   return (
-    <section className="yg-card">
+    <section className="yg-card" data-density={density}>
       <Heading level={3}>{title}</Heading>
       {description && <p className="yg-help">{description}</p>}
       <div>{children}</div>

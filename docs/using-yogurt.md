@@ -40,6 +40,8 @@ Web `Button`, `TextField` and `SearchField` accept the same size names: `compact
 
 Copy, quantity adjustment, hold confirmation, slide confirmation and loading results have dedicated web controls exported from the package root. They keep their own state and event contracts. Their individual registry entries and corresponding native implementations are not yet available. Generated Zig dimensions do not establish native visual or behavioral parity.
 
+Web cards accept `density="compact"`, `"regular"` or `"spacious"`. The insets are 12, 18 and 24 px, with a shared 24 px corner. Choose the inset for the content and surrounding space; a density does not change the card's purpose or action.
+
 An `AgentAvatar` uses the host’s `ready`, `thinking`, `working`, `waiting`, `blocked` or `done` state. Pass the state to roster and conversation components through `AgentSummary`. Keep a readable status label next to active work, and use `animated={false}` for archived portraits outside the Message component. Message keeps its portraits still by default. AgentAvatar follows the system motion preference and uses a still version of the current expression when motion is reduced. [Motion and component behavior](motion.md)
 
 ## Zig and Vercel Native SDK

@@ -86,6 +86,10 @@
   --yg-segment-option-height: var(--boa-control-row);
   --yg-segment-track-radius: var(--boa-space-16);
   --yg-segment-option-radius: var(--boa-radius-panel);
+  --yg-card-corner: var(--boa-radius-sheet);
+  --yg-card-inset-compact: var(--boa-space-12);
+  --yg-card-inset-regular: var(--boa-space-18);
+  --yg-card-inset-spacious: var(--boa-space-24);
   --yg-button-radius: var(--boa-radius-control);
   --yg-button-pill-radius: var(--boa-radius-round);
   --yg-button-compact-radius: var(--boa-radius-small);

@@ -15,7 +15,9 @@ export declare function AspectRatio({ ratio, children, }: Content & {
 export declare function Direction({ dir, children, }: Content & {
     dir?: "ltr" | "rtl";
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Card({ title, description, children, action }: NamedSection): import("react/jsx-runtime").JSX.Element;
+export declare function Card({ title, description, children, action, density }: NamedSection & {
+    density?: "compact" | "regular" | "spacious";
+}): import("react/jsx-runtime").JSX.Element;
 export declare function Asset({ children, size, framed, }: Content & {
     size?: number;
     framed?: boolean;

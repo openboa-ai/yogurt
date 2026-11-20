@@ -1,7 +1,7 @@
 "use client";
 import {
   AmountTop
-} from "../shared/chunk-XP2XCIQ3.js";
+} from "../shared/chunk-CFIUPFQ7.js";
 import "../shared/chunk-42GF67JU.js";
 import "../shared/chunk-5SWGMKHQ.js";
 import "../shared/chunk-XHKWNKXE.js";

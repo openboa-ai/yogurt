@@ -42,8 +42,8 @@ function Direction({
 }) {
   return /* @__PURE__ */ jsx(dist_exports.Provider, { dir, children: /* @__PURE__ */ jsx("div", { dir, children }) });
 }
-function Card({ title, description, children, action }) {
-  return /* @__PURE__ */ jsxs("section", { className: "yg-card", children: [
+function Card({ title, description, children, action, density = "regular" }) {
+  return /* @__PURE__ */ jsxs("section", { className: "yg-card", "data-density": density, children: [
     /* @__PURE__ */ jsx(Heading, { level: 3, children: title }),
     description && /* @__PURE__ */ jsx("p", { className: "yg-help", children: description }),
     /* @__PURE__ */ jsx("div", { children }),

@@ -208,6 +208,9 @@ body {
   margin: var(--boa-space-12) 0;
   min-block-size: 0;
 }
+.specimen:is([data-component="card"], [data-variant-component="card"]) {
+  background: var(--yg-canvas);
+}
 .surface-comparison {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
