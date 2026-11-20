@@ -1,5 +1,6 @@
 import { type ComponentProps, type ReactNode } from "react";
 import { type Choices } from "./forms.js";
+import { type IconName } from "../foundation/foundation.js";
 export declare function Link(props: ComponentProps<"a"> & {
     href: string;
 }): import("react/jsx-runtime").JSX.Element;
@@ -24,6 +25,7 @@ export declare function Tabs({ label, items, value, onValueChange, }: {
         id: string;
         label: string;
         panel: ReactNode;
+        icon?: IconName;
         disabled?: boolean;
     }[];
     value: string;

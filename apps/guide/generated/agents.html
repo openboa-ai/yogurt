@@ -383,6 +383,7 @@
 .yg-root {
   --yg-surface-edge: color-mix(in srgb, var(--yg-text) 11%, transparent);
   --yg-active-edge: color-mix(in srgb, var(--yg-action) 17%, transparent);
+  --yg-focus-surface: var(--yg-action-soft);
   --yg-raised-surface: light-dark(var(--yg-canvas), var(--yg-surface));
   color-scheme: light dark;
   color: var(--yg-text);
@@ -634,28 +635,28 @@
   width: 100%;
   min-width: 0;
   min-height: var(--yg-size-regular);
-  background: var(--yg-surface);
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
+  background: var(--yg-field);
   border: 0;
   border-radius: var(--yg-radius-control);
   padding: 0 var(--yg-inset-regular);
-  transition: box-shadow var(--yg-layer) var(--yg-settle);
+  transition: background-color var(--yg-layer) var(--yg-settle);
 }
-.yg-input:has(input:focus-visible, textarea:focus-visible),
-.yg-select:has(select:focus-visible) {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
-  outline-offset: -1px;
+:is(.yg-input, .yg-select):focus-within,
+.yg-standalone:focus-visible {
+  background: var(--yg-focus-surface);
+  outline: none;
 }
 .yg-input:has([aria-invalid="true"]),
 .yg-select:has([aria-invalid="true"]),
 .yg-standalone[aria-invalid="true"] {
-  box-shadow: inset 0 0 0 1px var(--yg-danger);
+  background: var(--yg-danger-soft);
 }
 .yg-input input,
 .yg-input textarea,
 .yg-select select {
   font: var(--yg-font-body);
   color: var(--yg-text);
+  caret-color: var(--yg-action);
   flex: 1;
   min-width: 0;
   width: 100%;
@@ -732,7 +733,7 @@
     border-radius: var(--yg-radius-popover);
     background: var(--yg-raised-surface);
     color: var(--yg-text);
-    box-shadow: inset 0 0 0 1px var(--yg-surface-edge), var(--yg-float-shadow);
+    box-shadow: var(--yg-float-shadow);
     font: inherit;
   }
   .yg-select[data-dropdown] select:open::picker(select) {
@@ -825,7 +826,8 @@
 .yg-switch [role="switch"] > span {
   display: block;
   position: absolute;
-  inset: var(--yg-track-inset) auto auto var(--yg-track-inset);
+  inset-block-start: var(--yg-track-inset);
+  inset-inline-start: var(--yg-track-inset);
   width: var(--yg-thumb-size);
   height: var(--yg-thumb-size);
   background: var(--yg-thumb);
@@ -836,8 +838,12 @@
   background: var(--yg-action);
 }
 .yg-switch [role="switch"][data-state="checked"] > span {
-  transform: translateX(var(--yg-thumb-size));
+  --yg-thumb-travel: calc(var(--yg-switch-width) - var(--yg-thumb-size) - 2 * var(--yg-track-inset));
+  transform: translateX(var(--yg-thumb-travel));
   background: var(--yg-on-action);
+}
+.yg-switch [role="switch"][data-state="checked"]:dir(rtl) > span {
+  transform: translateX(calc(-1 * var(--yg-thumb-travel)));
 }
 .yg-checkbox [role="checkbox"],
 .yg-radio [role="radio"] {
@@ -1071,7 +1077,7 @@
   background: var(--yg-raised-surface);
   border: 0;
   border-radius: var(--yg-radius-sheet);
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge), var(--yg-panel-shadow);
+  box-shadow: var(--yg-panel-shadow);
 }
 .yg-dialog[open] {
   display: grid;
@@ -1458,6 +1464,11 @@
   }
 }
 @media (forced-colors: active) {
+  :is(.yg-input, .yg-select):focus-within,
+  .yg-standalone:focus-visible {
+    outline: var(--boa-stroke-focus) solid Highlight;
+    outline-offset: 2px;
+  }
   .yg-button,
   .yg-input,
   .yg-standalone,

@@ -1,7 +1,7 @@
 .yg-morph-tooltip { position: relative; display: inline-flex; }
 .yg-morph-tooltip-trigger {
   display: inline-flex; align-items: center; gap: var(--yg-gap-inline);
-  min-block-size: var(--yg-size-regular); padding: var(--yg-inset-layer) var(--yg-inset-regular); border: var(--boa-stroke-rule) solid var(--yg-surface-edge);
+  min-block-size: var(--yg-size-regular); padding: var(--yg-inset-layer) var(--yg-inset-regular); border: 0;
   border-radius: var(--yg-radius-control); background: var(--yg-field); color: var(--yg-text);
   font: var(--yg-font-action); cursor: pointer;
   transition: background-color var(--yg-travel) var(--yg-settle), transform var(--yg-travel) var(--yg-settle);
@@ -12,36 +12,39 @@
 .yg-morph-tooltip-trigger span { display: inline-grid; place-items: center; inline-size: 16px; block-size: 16px; color: var(--yg-muted); border: 1px solid currentColor; border-radius: 50%; font-size: 11px; font-weight: 700; line-height: 1; box-sizing: border-box; transition: transform var(--yg-travel) var(--yg-settle); }
 .yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span { color: var(--yg-action); }
 .yg-morph-tooltip-card {
-  position: absolute; z-index: 10; inset-block-end: calc(100% + var(--yg-gap-inline)); inset-inline-start: 0;
-  display: grid; gap: var(--yg-gap-inline); width: max-content; max-width: min(240px, 80vw);
-  padding: var(--yg-inset-regular); border: var(--boa-stroke-rule) solid var(--yg-surface-edge); border-radius: var(--yg-radius-popover);
-  background: var(--yg-surface); color: var(--yg-text); box-shadow: var(--yg-float-shadow);
-  line-height: 1.45; overflow-wrap: anywhere;
-  transform-origin: left bottom;
-  animation: yg-morph-arrive var(--yg-expand) var(--yg-selection) both;
+  position: absolute; z-index: 10; inset-block-end: calc(100% + 12px); inset-inline-start: 50%;
+  box-sizing: border-box; width: max-content; max-width: min(240px, 80vw); padding: 8px 12px;
+  border: 0; border-radius: 11px; background: var(--yg-action); color: var(--yg-on-action);
+  font: var(--yg-font-label); line-height: 18px; overflow-wrap: anywhere; pointer-events: none;
+  opacity: 0; visibility: hidden; transform: translate(-50%, 5px) scale(.92);
+  transform-origin: 50% 140%; transition: opacity var(--yg-travel) var(--yg-settle), transform var(--yg-expand) var(--yg-selection), visibility 0s linear var(--yg-expand);
 }
-.yg-morph-tooltip-card[hidden] { display: none; }
-@keyframes yg-morph-arrive {
-  from { opacity: 0; transform: translateY(6px) scale(.97); }
-  70% { opacity: 1; transform: translateY(-1px) scale(1); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+.yg-morph-tooltip-card::after {
+  content: ""; position: absolute; left: calc(50% - 5px); bottom: -4px; width: 10px; height: 10px;
+  border-radius: 2px; background: inherit; transform: rotate(45deg);
 }
+.yg-morph-tooltip-card[data-open="true"] { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); transition-delay: 0s; }
 .yg-spring-dropdown { display: grid; gap: var(--yg-gap-control); inline-size: min(100%, 232px); min-inline-size: 0; }
 .yg-spring-label { color: var(--yg-muted); font: var(--yg-font-label); }
 .yg-spring-trigger {
   box-sizing: border-box; display: flex; align-items: center; gap: var(--yg-gap-row); inline-size: 100%; block-size: var(--yg-size-featured);
-  padding: 0 var(--yg-inset-row) 0 var(--yg-inset-panel); border: var(--boa-stroke-rule) solid var(--yg-surface-edge); border-radius: 16px;
+  padding: 0 var(--yg-inset-row) 0 var(--yg-inset-panel); border: 0; border-radius: 16px;
   background: var(--yg-field); color: var(--yg-text); font: inherit; text-align: start; cursor: pointer;
   transition: border-color var(--yg-change) var(--yg-settle), background-color var(--yg-change) var(--yg-settle);
 }
-.yg-spring-trigger:hover, .yg-spring-trigger[data-state="open"] { background: var(--yg-hover); border-color: var(--yg-active-edge); }
+.yg-spring-trigger:hover { background: var(--yg-hover); }
+.yg-spring-trigger[data-state="open"] { background: var(--yg-focus-surface); }
 .yg-spring-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
 .yg-spring-symbol, .yg-spring-option-symbol { display: block; flex: none; inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--yg-action); }
 .yg-spring-value { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
 .yg-spring-value-roll { display: block; animation: yg-spring-roll var(--yg-expand) var(--yg-selection) both; }
 .yg-spring-chevron { display: grid; place-items: center; flex: none; inline-size: 20px; block-size: 20px; color: var(--yg-muted); font-size: 20px; line-height: 1; transition: transform var(--yg-change) var(--yg-selection); }
 .yg-spring-trigger[data-state="open"] .yg-spring-chevron { transform: rotate(180deg); }
-.yg-spring-menu { z-index: 100; box-sizing: border-box; inline-size: var(--radix-select-trigger-width); max-block-size: var(--radix-select-content-available-height); overflow: hidden; border: var(--boa-stroke-rule) solid var(--yg-surface-edge); border-radius: var(--yg-radius-popover); background: var(--yg-surface); color: var(--yg-text); box-shadow: var(--yg-float-shadow); transform-origin: var(--radix-select-content-transform-origin); }
+.yg-spring-menu { z-index: 100; box-sizing: border-box; inline-size: var(--radix-select-trigger-width); max-block-size: var(--radix-select-content-available-height); overflow: hidden; border: 0; border-radius: var(--yg-radius-popover); background: var(--yg-surface); color: var(--yg-text); box-shadow: var(--yg-float-shadow); transform-origin: var(--radix-select-content-transform-origin); }
+.yg-spring-menu[data-state="open"] .yg-spring-option { animation: yg-spring-row var(--yg-expand) var(--yg-selection) both; }
+.yg-spring-menu[data-state="open"] .yg-spring-option:nth-child(2) { animation-delay: 35ms; }
+.yg-spring-menu[data-state="open"] .yg-spring-option:nth-child(3) { animation-delay: 70ms; }
+.yg-spring-menu[data-state="open"] .yg-spring-option:nth-child(n+4) { animation-delay: 105ms; }
 .yg-spring-menu[data-state="open"] { animation: yg-spring-enter var(--yg-expand) var(--yg-selection) both; }
 .yg-spring-menu[data-state="closed"] { animation: yg-spring-exit var(--yg-travel) var(--yg-settle) both; }
 .yg-spring-viewport { padding: var(--yg-inset-layer); }
@@ -50,6 +53,7 @@
 .yg-spring-option[data-state="checked"] { background: var(--yg-action-soft); color: var(--yg-text); font-weight: 600; }
 
 .yg-spring-check { display: grid; place-items: center; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-action); font-weight: 700; }
+@keyframes yg-spring-row { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes yg-spring-roll { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes yg-spring-enter { from { opacity: 0; transform: translateY(-5px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes yg-spring-exit { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: translateY(-3px) scale(.98); } }
@@ -57,7 +61,8 @@
 .yg-command-button .yg-button:hover { background: var(--yg-hover); }
 .yg-command-button .yg-button:active { transform: scale(.98); }
 @media (prefers-reduced-motion: reduce) {
-  .yg-morph-tooltip-card, .yg-spring-menu[data-state], .yg-spring-value-roll { animation: none; }
+  .yg-spring-menu[data-state], .yg-spring-menu[data-state] .yg-spring-option, .yg-spring-value-roll { animation: none; }
+  .yg-morph-tooltip-card { transition: none; transform: translate(-50%, 0); }
   .yg-spring-trigger, .yg-spring-chevron { transition: none; }
   .yg-morph-tooltip-trigger, .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select, .yg-command-button .yg-button { transition: none; }
   .yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select:focus-within, .yg-command-button .yg-button:hover, .yg-command-button .yg-button:active { transform: none; }

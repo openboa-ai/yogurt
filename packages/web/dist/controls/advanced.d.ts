@@ -17,6 +17,7 @@ type CommandProps = {
     items: (Option & {
         hint?: string;
         icon?: IconName;
+        shortcut?: string;
     })[];
     onSelect: (id: string) => void;
 };
@@ -27,7 +28,10 @@ export declare function HoverCard({ label, children, }: {
     label: string;
     children: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Command({ label, title, items, onSelect }: CommandProps): import("react/jsx-runtime").JSX.Element;
+export declare function Command({ label, title, items, onSelect, presentation, triggerText, }: CommandProps & {
+    presentation?: "dialog" | "inline";
+    triggerText?: string;
+}): import("react/jsx-runtime").JSX.Element;
 export declare function Menubar({ label, menus, onSelect, }: {
     label: string;
     menus: {

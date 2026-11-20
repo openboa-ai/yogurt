@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 
 export function StreamingReply({ value, active = false }: { value: string; active?: boolean }) {
   return <div className="yg-streaming-reply" aria-busy={active || undefined}>
@@ -37,23 +37,49 @@ export function GhostSuggestion({ value, suggestion, onChange }: {
 export function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }: {
   value: string; onChange: (value: string) => void; onSubmit: () => void; busy?: boolean; onCancel?: () => void;
 }) {
+  const editor = useRef<HTMLDivElement>(null);
+  const measure = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const target = editor.current;
+    const source = measure.current;
+    if (!target || !source) return;
+    const resize = () => target.style.setProperty("--yg-prompt-editor-height", `${Math.min(source.offsetHeight, 88)}px`);
+    const observer = new ResizeObserver(resize);
+    observer.observe(source);
+    resize();
+    return () => observer.disconnect();
+  }, []);
+
   return <form className="yg-prompt-box" aria-label="Prompt" aria-busy={busy || undefined}
     onSubmit={(event) => { event.preventDefault(); if (!busy && value.trim()) onSubmit(); }}>
-    <div className="yg-prompt-editor" data-value={value}>
+    <div className="yg-prompt-panel">
+      <div className="yg-prompt-status-slot">
+        <div className="yg-prompt-status" role="status">
+          {busy && <><span className="yg-prompt-indicator" aria-hidden="true" /><span>Thinking</span></>}
+        </div>
+      </div>
+    </div>
+    <div className="yg-prompt-editor" ref={editor}>
+      <span className="yg-prompt-measure" ref={measure} aria-hidden="true">{value}{" "}</span>
       <textarea aria-label="Prompt" placeholder="Ask anything" rows={1} value={value}
-        onChange={(event) => onChange(event.currentTarget.value)} />
+        onChange={event => onChange(event.currentTarget.value)}
+        onKeyDown={event => {
+          if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) return;
+          event.preventDefault();
+          if (!busy && value.trim()) event.currentTarget.form?.requestSubmit();
+        }} />
     </div>
     <div className="yg-prompt-actions">
       <button className="yg-prompt-action" type={busy && onCancel ? "button" : "submit"}
-        aria-label={busy && onCancel ? "Stop" : "Send"} data-busy={busy || undefined}
+        aria-label={busy && onCancel ? "Stop" : "Send"} data-busy={busy && onCancel ? true : undefined}
         disabled={busy ? !onCancel : !value.trim()} onClick={busy && onCancel ? onCancel : undefined}>
-        <span className="yg-prompt-action-mark" aria-hidden="true">{busy && onCancel
-          ? <svg viewBox="0 0 16 16"><rect x="4" y="4" width="8" height="8" rx="1.5" fill="currentColor" /></svg>
-          : <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12V4M4.5 7.5 8 4l3.5 3.5" /></svg>}
+        <span className="yg-prompt-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
         </span>
+        <span className="yg-prompt-stop" aria-hidden="true" />
       </button>
     </div>
-    {busy && <div className="yg-prompt-status" role="status"><span aria-hidden="true" />Working on your request</div>}
   </form>;
 }
 

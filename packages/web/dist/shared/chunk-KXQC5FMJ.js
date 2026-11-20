@@ -2,17 +2,17 @@
 import {
   Checkbox,
   Field
-} from "./chunk-FXLGRFQX.js";
+} from "./chunk-IWFGMSSX.js";
 import {
   dist_exports12 as dist_exports
-} from "./chunk-PLMP3L2O.js";
+} from "./chunk-5SWGMKHQ.js";
 import {
   Button,
   IconButton
-} from "./chunk-A323HUK4.js";
+} from "./chunk-4A4FGE4R.js";
 import {
   cx
-} from "./chunk-RUS3W4HJ.js";
+} from "./chunk-3EP3O3HY.js";
 
 // packages/web/src/controls/inputs.tsx
 import {
@@ -52,6 +52,8 @@ function InputOTP({
     "div",
     {
       className: "yg-otp",
+      "data-complete": value.length >= count || void 0,
+      "data-disabled": disabled || void 0,
       style: { "--yg-digits": count },
       children: [
         /* @__PURE__ */ jsx(
@@ -73,7 +75,8 @@ function InputOTP({
           "span",
           {
             "data-cursor": i === Math.min(cursor, count - 1) || void 0,
-            children: value[i]
+            "data-filled": !!value[i] || void 0,
+            children: value[i] && /* @__PURE__ */ jsx("span", { className: "yg-otp-digit", children: value[i] }, value[i])
           },
           i
         )) })

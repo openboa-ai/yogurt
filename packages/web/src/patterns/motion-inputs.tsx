@@ -38,7 +38,7 @@ export function MentionPicker({ label, people, value, onChange }: {
   return <div className="yg-mention">
     <label className="yg-label" htmlFor={id}>{label}</label>
     <div className="yg-mention-surface">
-      <textarea id={id} ref={input} value={value} rows={3} aria-describedby={`${id}-hint`} aria-autocomplete="list" aria-expanded={open} aria-controls={open ? `${id}-list` : undefined} aria-activedescendant={open ? `${id}-option-${index}` : undefined}
+      <textarea id={id} ref={input} value={value} rows={2} placeholder="Write a comment" aria-describedby={`${id}-hint`} aria-autocomplete="list" aria-expanded={open} aria-controls={open ? `${id}-list` : undefined} aria-activedescendant={open ? `${id}-option-${index}` : undefined}
         onFocus={event => { setFocused(true); setCaret(event.currentTarget.selectionStart); }}
         onBlur={() => setFocused(false)}
         onSelect={event => { setCaret(event.currentTarget.selectionStart); setActive(0); }}
@@ -49,9 +49,8 @@ export function MentionPicker({ label, people, value, onChange }: {
           else if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); setActive((index + (event.key === "ArrowDown" ? 1 : options.length - 1)) % options.length); }
           else if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); select(options[index]); }
         }} />
-      <span className="yg-mention-hint" id={`${id}-hint`}><kbd>@</kbd> Mention someone</span>
+      <span className="yg-mention-hint" id={`${id}-hint`}>Type @ to mention</span>
       {open && <div id={`${id}-list`} className="yg-mention-list" role="listbox" aria-label="People">
-        <div className="yg-mention-list-heading" role="presentation">People <span>{options.length}</span></div>
         {options.map((person, i) => <button id={`${id}-option-${i}`} key={person.id} role="option" aria-selected={i === index} type="button" onMouseDown={event => event.preventDefault()} onClick={() => select(person)}><span aria-hidden="true">{Array.from(person.label)[0]?.toLocaleUpperCase()}</span>{person.label}</button>)}
       </div>}
     </div>

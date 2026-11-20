@@ -3,7 +3,7 @@ import { useId, useLayoutEffect, useRef, type ComponentProps, type ReactNode } f
 import { SegmentedControl as SDKSegment } from "@openai/apps-sdk-ui/components/SegmentedControl";
 import { Button } from "./actions.js";
 import { type Choices } from "./forms.js";
-import { cx, Icon } from "../foundation/foundation.js";
+import { cx, Icon, type IconName } from "../foundation/foundation.js";
 
 export function Link(props: ComponentProps<"a"> & { href: string }) {
   return <a {...props} className={cx("yg-link", props.className)} />;
@@ -163,7 +163,7 @@ export function Tabs({
   onValueChange,
 }: {
   label: string;
-  items: { id: string; label: string; panel: ReactNode; disabled?: boolean }[];
+  items: { id: string; label: string; panel: ReactNode; icon?: IconName; disabled?: boolean }[];
   value: string;
   onValueChange: (id: string) => void;
 }) {
@@ -207,7 +207,7 @@ export function Tabs({
               }
             }}
           >
-            {o.label}
+            {o.icon ? <><Icon name={o.icon} /><span className="yg-tab-label">{o.label}</span></> : o.label}
           </button>
         ))}
       </div>

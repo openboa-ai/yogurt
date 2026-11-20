@@ -41,6 +41,9 @@ declare const paths: {
     plus: string;
     copy: string;
     menu: string;
+    home: string;
+    bookmark: string;
+    person: string;
     moon: string;
     sun: string;
     arrow: string;

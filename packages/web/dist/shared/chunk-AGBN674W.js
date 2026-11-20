@@ -1,18 +1,18 @@
 "use client";
 import {
   dist_exports12 as dist_exports
-} from "./chunk-PLMP3L2O.js";
+} from "./chunk-5SWGMKHQ.js";
 import {
   Button,
   clsx_default,
   handlePressableMouseEnter,
   useResizeObserver,
   waitForAnimationFrame
-} from "./chunk-A323HUK4.js";
+} from "./chunk-4A4FGE4R.js";
 import {
   Icon,
   cx
-} from "./chunk-RUS3W4HJ.js";
+} from "./chunk-3EP3O3HY.js";
 
 // packages/web/src/controls/navigation.tsx
 import { useId, useLayoutEffect as useLayoutEffect2, useRef as useRef2 } from "react";
@@ -97,7 +97,7 @@ var Segment = ({ children, ...restProps }) => {
 SegmentedControl.Option = Segment;
 
 // packages/web/src/controls/navigation.tsx
-import { jsx, jsxs } from "react/jsx-runtime";
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 function Link(props) {
   return /* @__PURE__ */ jsx("a", { ...props, className: cx("yg-link", props.className) });
 }
@@ -244,7 +244,10 @@ function Tabs({
               onValueChange(enabled[next].id);
             }
           },
-          children: o.label
+          children: o.icon ? /* @__PURE__ */ jsxs(Fragment, { children: [
+            /* @__PURE__ */ jsx(Icon, { name: o.icon }),
+            /* @__PURE__ */ jsx("span", { className: "yg-tab-label", children: o.label })
+          ] }) : o.label
         },
         o.id
       ))

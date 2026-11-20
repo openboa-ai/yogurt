@@ -12,3 +12,9 @@ The interaction follow-up exercised the anchored spring picker with keyboard ope
 The shared source now drives the expanded shape scale, control and menu density, type hierarchy, layer elevation and motion. Review captures cover all 125 components, 14 editable blocks and 78 motion examples in desktop light and mobile dark appearance, with no page or specimen overflow. The three workflow captures show record browsing, a working request and decision review. All 21 playbook state links resolved at both review widths.
 
 The approved palette, material color roles, font family and signature data match the previous revision. The Native SDK test fixture installed the current Button and Switch, passed its three model and appearance tests, and passed strict markup validation. These fixture results establish token consumption and typed behavior. Native visual approval remains open.
+
+## Filled specimens and interaction detail
+
+The Prompt Box measures 380 × 52 px at rest, 380 × 69 px for a two-line entry, and 380 × 82 px while thinking, with a 24 px corner. The status appears above the editor. The command surface grows from 170 × 44 px to 320 × 286 px and its corner changes from 22 to 20 px. The segmented control measures 320 × 46 px, the tab pill is 43 px tall, the bottom bar is 60 px tall, and the four-row switch panel measures 320 × 252 px. Intrinsic tab widths follow the actual labels and font.
+
+The complete web inventory was rendered again in desktop light and mobile dark appearance. All 217 specimens fit their viewports. The guide also provides a two-handle interval fixture with combined value labels as the handles approach. Individual comparison covers the measured specimens and the displayed states. Motion review of the remaining specimens is still open.

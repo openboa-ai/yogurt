@@ -129,3 +129,34 @@
 .yg-profile-header > div { min-inline-size: 0; display: grid; gap: var(--boa-space-4); overflow-wrap: anywhere; }
 .yg-profile-card details { border-block-start: 1px solid var(--yg-surface-edge); }
 .yg-expand-card-body { line-height: 1.5; overflow-wrap: anywhere; }
+
+/* Card geometry and transitions */
+.yg-expand-card { width: min(320px, 100%); overflow: hidden; }
+.yg-expand-card summary { position: relative; min-height: 72px; box-sizing: border-box; padding: 12px; justify-content: start; gap: 12px; }
+.yg-expand-art { flex: none; width: 48px; height: 48px; border-radius: 12px; background: var(--yg-action-soft); }
+.yg-expand-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.yg-expand-card-body { padding: 4px 16px 18px; }
+.yg-stat-card { box-sizing: border-box; width: min(340px, 100%); min-block-size: 0; padding: 18px; border-radius: 24px; }
+.yg-stat-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.yg-stat-heading > div { min-inline-size: 0; }
+.yg-stat-label { display: block; font: var(--yg-font-help); }
+.yg-stat-value { font-size: 34px; line-height: 40px; letter-spacing: -.02em; }
+.yg-stat-detail { flex: none; max-inline-size: 45%; padding: 4px 9px; border-radius: 999px; background: var(--yg-action-soft); color: var(--yg-action); text-align: center; overflow-wrap: anywhere; }
+.yg-profile-card { box-sizing: border-box; width: min(320px, 100%); padding: 18px; border-radius: 24px; }
+.yg-profile-header { gap: 12px; }.yg-profile-avatar { width: 52px; height: 52px; }
+.yg-profile-card details { margin-top: 14px; }
+.yg-fan-cards-list:not([data-many]) { position: relative; display: block; height: 230px; overflow: visible; padding: 0; }
+.yg-fan-cards-list:not([data-many]) button { position: absolute; left: 50%; bottom: 0; box-sizing: border-box; display: flex; width: 150px; height: 196px; min-height: 0; padding: 10px; gap: 0; border-radius: 18px; transform-origin: 50% 100%; transform: translateX(calc(-50% + var(--yg-fan-offset) * 6px)) rotate(calc(var(--yg-fan-offset) * 3deg)); box-shadow: 0 2px 12px color-mix(in srgb, var(--yg-text) 12%, transparent); }
+.yg-fan-cards-list:not([data-many]):is(:hover, :focus-within) button { transform: translate(calc(-50% + var(--yg-fan-offset) * clamp(42px, 20vw, 78px)), calc(abs(var(--yg-fan-offset)) * 12px)) rotate(calc(var(--yg-fan-offset) * 12deg)); }
+.yg-fan-cards-list:not([data-many]) button:is(:hover, :focus-visible, [aria-pressed="true"]) { z-index: 3; translate: 0 -22px; }
+.yg-fan-cards-list button > svg { display: none; }
+.yg-fan-art { display: block; align-self: stretch; height: 100px; flex: none; border-radius: 12px; background: var(--yg-action-soft); }
+.yg-fan-index { margin-top: 12px; font-size: .7rem; }.yg-fan-label { display: block; flex: none; margin-top: 2px; }
+.yg-fan-detail { margin-top: 16px; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-fan-cards-list:not([data-many]) button { transition: transform 340ms cubic-bezier(.2,.9,.2,1.15), translate 250ms ease, background-color 180ms; }
+  .yg-expand-art { transition: width 300ms var(--yg-settle), height 300ms var(--yg-settle); }
+  .yg-stat-value { animation: yg-card-number 350ms var(--yg-settle); }
+  @keyframes yg-card-number { from { opacity: 0; transform: translateY(8px); } }
+}
+@media (prefers-reduced-motion: reduce) { .yg-fan-cards-list:not([data-many]) button { transition: none; } }

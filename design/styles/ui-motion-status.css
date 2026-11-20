@@ -1,6 +1,6 @@
 .yg-storage-meter {
-  inline-size: min(var(--yg-storage-measure), 100%);
-  padding: var(--yg-inset-panel) var(--boa-space-8) var(--boa-space-8);
+  inline-size: min(300px, 100%);
+  padding: 18px 8px 8px;
   border-radius: var(--yg-radius-sheet);
   background: var(--yg-raised-surface);
 }
@@ -19,10 +19,10 @@
   font-variant-numeric: tabular-nums;
 }
 .yg-storage-amount strong {
-  font: var(--yg-font-value);
-  letter-spacing: var(--boa-tracking-value);
+  font: var(--boa-role-weight-heading) 34px/40px var(--boa-font-family);
+  letter-spacing: -.03em;
 }
-.yg-storage-amount b { font: 650 18px/24px var(--boa-font-family); }
+.yg-storage-amount b { font: 650 18px/24px var(--boa-font-family); margin-block-end: 4px; }
 .yg-storage-amount span, .yg-storage-category-amount { color: var(--yg-muted); font: var(--yg-font-help); }
 .yg-storage-amount span { margin-inline-start: 4px; }
 .yg-storage-bar {
@@ -200,6 +200,7 @@
 .yg-task-list ol { list-style: none; margin: 0; padding: 0; }
 .yg-task-list > ol > li { position: relative; }
 .yg-task-line {
+  position: relative;
   display: grid;
   grid-template-columns: 14px minmax(0, 1fr) auto;
   align-items: start;
@@ -249,7 +250,8 @@ summary.yg-task-line:focus-visible {
   white-space: nowrap;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-task-list [data-active]::after {
+  .yg-task-list [data-active] > .yg-task-line::after,
+  .yg-task-list [data-active] > details > .yg-task-line::after {
     content: "";
     position: absolute;
     inset-inline: 0;
@@ -262,7 +264,7 @@ summary.yg-task-line:focus-visible {
   }
   .yg-task-marker path[pathLength] {
     stroke-dasharray: 1;
-    animation: yg-task-check var(--yg-panel) var(--yg-settle) both;
+    animation: yg-task-check 200ms cubic-bezier(.23, 1, .32, 1) both;
   }
   .yg-task-list details[open] > .yg-task-children {
     animation: yg-task-disclose var(--yg-travel) var(--yg-arrive) both;

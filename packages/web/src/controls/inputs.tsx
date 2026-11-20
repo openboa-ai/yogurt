@@ -66,6 +66,8 @@ export function InputOTP({
       {(binding) => (
         <div
           className="yg-otp"
+          data-complete={value.length >= count || undefined}
+          data-disabled={disabled || undefined}
           style={{ "--yg-digits": count } as CSSProperties}
         >
           <input
@@ -87,8 +89,9 @@ export function InputOTP({
               <span
                 key={i}
                 data-cursor={i === Math.min(cursor, count - 1) || undefined}
+                data-filled={!!value[i] || undefined}
               >
-                {value[i]}
+                {value[i] && <span key={value[i]} className="yg-otp-digit">{value[i]}</span>}
               </span>
             ))}
           </span>

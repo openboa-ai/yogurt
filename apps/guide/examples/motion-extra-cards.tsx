@@ -2,7 +2,7 @@ import { useState, useRef, type CSSProperties, type PointerEvent, type ReactNode
 import { Button, Checkbox } from "@openboa/yogurt";
 
 type Example = { id: string; title: string; body: ReactNode };
-const notes = ["Check that every reviewer has the release brief.", "Resolve open notes on the migration.", "Send the final checklist to the release lead."];
+const notes = [{ title: "Review kit", value: "12 items", detail: "Workspace collection · 24 pages", tags: ["Planning", "Team"] }, { title: "Handoff", value: "8 items", detail: "Project collection · 12 pages", tags: ["Notes", "Review"] }, { title: "Launch", value: "16 items", detail: "Release collection · 18 pages", tags: ["Planning", "Ready"] }];
 function Deck() {
   const [index, setIndex] = useState(0);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -14,7 +14,7 @@ function Deck() {
       onPointerMove={depth === 0 ? e => { if (start.current) setOffset({ x: e.clientX - start.current.x, y: (e.clientY - start.current.y) * .6 }); } : undefined}
       onPointerUp={depth === 0 ? () => { if (Math.abs(offset.x) > 110) advance(offset.x > 0 ? 1 : -1); else setOffset({ x: 0, y: 0 }); start.current = null; } : undefined}
       onPointerCancel={() => { start.current = null; setOffset({ x: 0, y: 0 }); }}>
-      <div className="extra-deck-preview"><i/><i/><div><i/><i/><i/></div></div><div className="extra-deck-body"><small>NOTE {(index + depth) % notes.length + 1} / {notes.length}</small><p>{notes[(index + depth) % notes.length]}</p></div>
+      <div className="extra-deck-preview"><span className="extra-deck-landscape"/></div><div className="extra-deck-body"><div className="extra-deck-title"><strong>{notes[(index + depth) % notes.length].title}</strong><b>{notes[(index + depth) % notes.length].value}</b></div><small>{notes[(index + depth) % notes.length].detail}</small><div className="extra-deck-tags">{notes[(index + depth) % notes.length].tags.map(tag => <span key={tag}>{tag}</span>)}</div></div>
       {depth === 0 && <span className="extra-deck-stamp" style={{ opacity: Math.min(Math.abs(offset.x) / 110, 1) }}>{offset.x > 0 ? "Next" : "Previous"}</span>}
     </article>)}
   </div><div className="extra-actions"><Button size="compact" emphasis="soft" onClick={() => advance(-1)}>Previous</Button><Button size="compact" emphasis="soft" onClick={() => advance(1)}>Next</Button></div></div>;
@@ -33,8 +33,8 @@ function BoardingPass() {
   return <div className="extra-pass"><div className="extra-pass-main"><div className="extra-pass-head"><strong>◉ &nbsp;Northbound <small>NB 214</small></strong><span>{changed ? "Gate change" : "On time"}</span></div><div className="extra-pass-route"><div><b>OSL</b><small>Oslo · 09:30</small></div><span aria-hidden="true">- - - ✈ - - -</span><div><b>BGO</b><small>10:25 · Bergen</small></div></div><div className="extra-pass-fields"><div><small>Gate</small><strong key={String(changed)}>{changed ? "B31" : "B12"}</strong>{changed && <del>B12</del>}</div><div><small>Boards</small><strong>09:00</strong></div><div><small>Seat</small><strong>18A</strong></div><div><small>Group</small><strong>2</strong></div></div><small>{changed ? "Gate moved to B31" : "Doors close before departure"}</small></div><div className="extra-pass-tear"/><div className="extra-pass-footer"><span className="extra-pass-barcode" aria-hidden="true"/><span><small>Passenger</small><strong>Alex Kim</strong><small>Saturday</small></span></div><Button size="compact" emphasis="soft" onClick={() => setChanged(!changed)}>{changed ? "Reset gate" : "Simulate gate change"}</Button></div>;
 }
 function Marker() {
-  const [marked, setMarked] = useState(false);
-  return <div className="extra-text"><p>Reviewers need <span className="extra-marker" data-marked={marked}>access to the source file</span>.</p><Button size="compact" emphasis="soft" onClick={() => setMarked(!marked)} aria-pressed={marked}>{marked ? "Remove highlight" : "Highlight phrase"}</Button></div>;
+  const [round, setRound] = useState(0);
+  return <div className="extra-marker-demo" key={round}><h2>Thoughtful work starts with <span className="extra-ink extra-ink-highlight">clearer notes</span>.</h2><p>Keep decisions <span className="extra-ink extra-ink-underline">close to the work</span>, find context in <span className="extra-ink extra-ink-circle">a moment</span>, and share a <span className="extra-ink extra-ink-box">single place</span> with your team. Leave <span className="extra-ink extra-ink-strike">scattered updates</span> behind.</p><Button size="compact" emphasis="quiet" onClick={() => setRound(round + 1)}>↻ &nbsp;Replay</Button></div>;
 }
 function ReadAlong() {
   const words = "Open the draft and check its revision before sending the review.".split(" ");

@@ -1,13 +1,13 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import * as Y from "@openboa/yogurt";
 
 function InvitePeople() {
   const [email, setEmail] = useState("");
   const [invites, setInvites] = useState<string[]>([]);
-  return <form className="motion-extra" onSubmit={e => { e.preventDefault(); const next = email.trim(); if (next && !invites.includes(next)) setInvites([...invites, next]); setEmail(""); }}>
-    <Y.TextField label="Email address" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="name@example.com" />
-    <Y.Button type="submit">Add person</Y.Button>{invites.length > 0 && <div className="motion-extra-chips">{invites.map(name => <button type="button" key={name} onClick={() => setInvites(invites.filter(item => item !== name))} aria-label={`Remove ${name}`}>{name} ×</button>)}</div>}
-    <small>People added here are a local preview.</small>
+  return <form className="motion-invite" onSubmit={e => { e.preventDefault(); const next = email.trim(); if (next && !invites.includes(next)) setInvites([...invites, next]); setEmail(""); }}>
+    <strong>Invite people</strong><span className="motion-invite-count">{invites.length} {invites.length === 1 ? "person" : "people"} added</span>
+    <div className="motion-invite-stack">{invites.map((name, index) => <button type="button" key={name} style={{left: `${index * 30}px`, zIndex: invites.length - index}} onClick={() => setInvites(invites.filter(item => item !== name))} aria-label={`Remove ${name}`} title={name}>{name.slice(0, 1).toUpperCase()}<span aria-hidden="true">×</span></button>)}</div>
+    <div className="motion-invite-entry"><label className="motion-extra-sr" htmlFor="motion-invite-email">Email address</label><input id="motion-invite-email" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="name@example.com" /><button type="submit">Add person</button></div><small>People added here are a local preview.</small>
   </form>;
 }
 function TagInput() {
@@ -24,15 +24,19 @@ function Stepper() {
 }
 function WheelPicker() {
   const options = ["Morning", "Midday", "Afternoon", "Evening"]; const [index, setIndex] = useState(0);
-  return <div className="motion-extra-wheel" role="group" aria-label="Preferred time"><Y.Button emphasis="quiet" aria-label="Previous time" onClick={() => setIndex((index + options.length - 1) % options.length)}>↑</Y.Button><output aria-live="polite">{options[index]}</output><Y.Button emphasis="quiet" aria-label="Next time" onClick={() => setIndex((index + 1) % options.length)}>↓</Y.Button></div>;
+  const start = useRef<number | null>(null);
+  const move = (delta: number) => setIndex(current => Math.max(0, Math.min(options.length - 1, current + delta)));
+  return <div className="motion-wheel-wrap"><span>Preferred time</span><div className="motion-wheel" role="listbox" tabIndex={0} aria-label="Preferred time" aria-activedescendant={`motion-wheel-${index}`} onKeyDown={e => { if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); move(e.key === "ArrowDown" ? 1 : -1); } }} onPointerDown={e => { start.current = e.clientY; e.currentTarget.setPointerCapture(e.pointerId); }} onPointerUp={e => { if (start.current !== null) { const delta = start.current - e.clientY; if (Math.abs(delta) > 15) move(Math.round(delta / 36) || Math.sign(delta)); start.current = null; } }} onPointerCancel={() => { start.current = null; }}>
+    <div className="motion-wheel-highlight"/><div className="motion-wheel-items" style={{transform: `translateY(${72 - index * 36}px)`}}>{options.map((option, i) => <div id={`motion-wheel-${i}`} role="option" aria-selected={index === i} key={option} onClick={() => setIndex(i)}>{option}</div>)}</div></div><output aria-live="polite">{options[index]}</output></div>;
 }
 function Scrubber() {
   const [position, setPosition] = useState(36);
   return <div className="motion-scrubber"><label htmlFor="motion-scrubber">Preview position</label><div className="motion-scrubber-bar"><span className="motion-scrubber-fill" style={{width: `${position}%`}}/><span className="motion-scrubber-ticks" aria-hidden="true"/><input id="motion-scrubber" type="range" min="0" max="100" value={position} onChange={e => setPosition(Number(e.target.value))} aria-valuetext={`${position}%`} /><span className="motion-scrubber-value" aria-hidden="true">{position}%</span></div></div>;
 }
 function UndoAction() {
-  const [saved, setSaved] = useState(true);
-  return <div className="motion-extra"><strong>{saved ? "Saved to reading list" : "Removed from reading list"}</strong><Y.Button emphasis="soft" onClick={() => setSaved(!saved)}>{saved ? "Remove" : "Undo removal"}</Y.Button><span role="status">{saved ? "Available for later" : "You can undo this change"}</span></div>;
+  const [phase, setPhase] = useState<"saved" | "pending" | "removed">("saved");
+  useEffect(() => { if (phase !== "pending") return; const timer = window.setTimeout(() => setPhase("removed"), 5000); return () => window.clearTimeout(timer); }, [phase]);
+  return <div className="motion-undo"><strong>{phase === "removed" ? "Removed from reading list" : "Saved to reading list"}</strong><button type="button" className="motion-undo-button" data-pending={phase === "pending" || undefined} onClick={() => setPhase(phase === "saved" ? "pending" : "saved")}><span key={phase}>{phase === "saved" ? "Remove" : phase === "pending" ? "Undo removal" : "Save again"}</span>{phase === "pending" && <i aria-hidden="true" />}</button><span role="status">{phase === "pending" ? "You can undo this change" : phase === "removed" ? "Removed" : "Available for later"}</span></div>;
 }
 function Refresh() {
   const [count, setCount] = useState(0);

@@ -33,7 +33,6 @@
   gap: var(--yg-gap-stack);
   align-content: start;
   background: var(--yg-raised-surface);
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
 }
 .yg-card p,
 .yg-section-line p,
@@ -532,7 +531,7 @@
   z-index: 8;
 }
 .yg-flyout {
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge), var(--yg-float-shadow);
+  box-shadow: var(--yg-float-shadow);
   max-height: var(--radix-popper-available-height, 80dvh);
   overflow: auto;
 }
@@ -579,7 +578,11 @@
   color: var(--yg-muted);
 }
 .yg-command-search:focus-within {
-  box-shadow: inset 0 0 0 var(--boa-stroke-focus) var(--yg-action);
+  background: var(--yg-focus-surface);
+  color: var(--yg-action);
+}
+@media (forced-colors: active) {
+  .yg-command-search:focus-within { outline: var(--boa-stroke-focus) solid Highlight; }
 }
 .yg-command-search input {
   inline-size: 100%;
@@ -895,3 +898,95 @@
     transition: none;
   }
 }
+
+.yg-inline-command {
+  --yg-inline-command-width: min(100%, 320px);
+  position: relative;
+  inline-size: min(100%, 170px);
+  block-size: 44px;
+  overflow: clip;
+  border-radius: 22px;
+  background: var(--yg-raised-surface);
+}
+.yg-inline-command[data-open="true"] {
+  inline-size: var(--yg-inline-command-width);
+  block-size: 286px;
+  border-radius: var(--yg-radius-card);
+}
+.yg-inline-command-trigger {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  inline-size: 100%;
+  block-size: 44px;
+  gap: var(--yg-gap-inline);
+  padding-inline: var(--yg-inset-row) var(--yg-inset-compact);
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: var(--yg-muted);
+  font: var(--yg-font-body);
+}
+.yg-inline-command-trigger:focus-visible { outline-offset: -2px; }
+.yg-inline-command :is(.yg-inline-command-trigger, .yg-command-search) > .yg-icon {
+  inline-size: var(--boa-space-18);
+  block-size: var(--boa-space-18);
+}
+.yg-inline-command-trigger > span { flex: 1; text-align: start; }
+.yg-inline-command kbd {
+  padding: var(--boa-space-2) var(--yg-gap-control);
+  border-radius: var(--yg-radius-small);
+  background: var(--yg-field);
+  color: var(--yg-muted);
+  font: var(--yg-font-meta);
+  white-space: nowrap;
+}
+.yg-inline-command[data-open="true"] > button { opacity: 0; }
+.yg-inline-command-panel {
+  position: absolute;
+  inset: 0 0 auto;
+  opacity: 0;
+}
+.yg-inline-command[data-open="true"] .yg-inline-command-panel { opacity: 1; }
+.yg-inline-command .yg-command-search {
+  min-block-size: var(--yg-size-featured);
+  padding-inline: var(--yg-inset-roomy);
+  background: transparent;
+}
+.yg-inline-command .yg-command-search:focus-within { color: var(--yg-action); }
+.yg-inline-command .yg-command-search input { font: var(--yg-font-reading); }
+.yg-inline-command .yg-command-list {
+  position: relative;
+  isolation: isolate;
+  max-block-size: 234px;
+  padding: 0 var(--yg-inset-layer) var(--yg-inset-layer);
+  background: transparent;
+}
+.yg-inline-command .yg-command-list [role="option"] {
+  min-block-size: var(--yg-size-row);
+  border-radius: var(--yg-radius-panel);
+  padding-inline: var(--yg-inset-regular);
+}
+.yg-inline-command .yg-command-list [role="option"] { position: relative; }
+.yg-inline-command .yg-command-list [role="option"][aria-selected="true"] { background: transparent; color: var(--yg-action); }
+.yg-inline-command-marker {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: var(--yg-inset-layer);
+  block-size: var(--yg-size-row);
+  translate: 0 calc(var(--yg-size-row) * var(--yg-command-index, 0));
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-action-soft);
+  pointer-events: none;
+}
+.yg-inline-command .yg-inline-command-panel > .yg-help { padding: var(--yg-inset-compact) var(--yg-inset-roomy); }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-inline-command {
+    transition: inline-size var(--yg-reveal) var(--yg-arrive),
+      block-size var(--yg-reveal) var(--yg-arrive), border-radius var(--yg-expand) var(--yg-arrive);
+  }
+  .yg-inline-command-panel { transition: opacity var(--yg-change) var(--yg-settle); }
+  .yg-inline-command-marker { transition: translate var(--yg-travel) var(--yg-arrive); }
+  .yg-inline-command[data-open="true"] [role="option"] { animation: yg-inline-option var(--yg-panel) var(--yg-arrive) both; }
+}
+@keyframes yg-inline-option { from { opacity: 0; translate: 0 4px; } }

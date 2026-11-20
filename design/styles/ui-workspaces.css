@@ -3,14 +3,13 @@
   gap: var(--yg-gap-row);
   min-width: 0;
   padding: var(--yg-inset-regular);
-  border: var(--boa-stroke-rule) solid var(--yg-surface-edge);
+  border: 0;
   border-radius: var(--yg-radius-sheet);
-  background: var(--yg-raised-surface);
-  transition: border-color var(--yg-change) var(--yg-settle);
+  background: var(--yg-field);
+  transition: background-color var(--yg-change) var(--yg-settle);
 }
 .yg-composer:focus-within {
-  border-color: var(--yg-active-edge);
-  box-shadow: 0 0 0 var(--boa-stroke-focus) var(--yg-action-soft);
+  background: var(--yg-focus-surface);
 }
 .yg-conversation-presence {
   display: flex;
@@ -31,6 +30,11 @@
   background: transparent;
   border: 0;
   font: var(--yg-font-editor);
+  caret-color: var(--yg-action);
+}
+.yg-composer textarea:focus-visible { outline: none; }
+@media (forced-colors: active) {
+  .yg-composer textarea:focus-visible { outline: var(--boa-stroke-focus) solid Highlight; }
 }
 .yg-composer textarea::placeholder { color: var(--yg-muted); }
 .yg-composer-sources {

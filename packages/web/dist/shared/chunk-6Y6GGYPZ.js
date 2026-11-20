@@ -2,11 +2,11 @@
 import {
   Button,
   IconButton
-} from "./chunk-A323HUK4.js";
+} from "./chunk-4A4FGE4R.js";
 import {
   Icon,
   cx
-} from "./chunk-RUS3W4HJ.js";
+} from "./chunk-3EP3O3HY.js";
 
 // packages/web/src/patterns/sidebar.tsx
 import {

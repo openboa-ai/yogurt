@@ -98,11 +98,17 @@ async function run(browser) {
     assert.deepEqual(await promptBox.evaluate(node => {
       const style = getComputedStyle(node);
       const text = getComputedStyle(node.querySelector("textarea"));
-      return [style.height, style.borderTopLeftRadius, text.fontSize, text.lineHeight, text.fontWeight];
-    }), ["52px", "24px", "15px", "22px", "450"]);
-    await promptBox.getByRole("textbox", {name:"Prompt"}).fill("Review the brief");
+      return [style.height, style.borderTopLeftRadius, style.borderTopWidth, text.fontSize, text.lineHeight, text.fontWeight];
+    }), ["52px", "24px", "0px", "15px", "22px", "450"]);
+    const promptInput = promptBox.getByRole("textbox", {name:"Prompt"});
+    await promptInput.fill("Review the brief");
+    await promptInput.press("Shift+Enter");
+    await promptInput.pressSequentially("Check the handoff");
+    assert.equal(await promptInput.inputValue(), "Review the brief\nCheck the handoff");
+    await page.waitForFunction(() => document.querySelector(".yg-prompt-editor").getBoundingClientRect().height >= 44);
     const send = promptBox.getByRole("button", {name:"Send"});
-    const contrast = await send.evaluate(button => {
+    const contrast = await send.evaluate(async button => {
+      await Promise.allSettled(button.getAnimations().map(animation => animation.finished));
       const resolved = getComputedStyle(button);
       const luminance = rgb => {
         const channels = rgb.match(/[\d.]+/g).slice(0, 3).map(value => Number(value) / 255);
@@ -112,6 +118,17 @@ async function run(browser) {
       return (luminance(resolved.color) + .05) / (luminance(resolved.backgroundColor) + .05);
     });
     assert(contrast >= 3, "The send icon is legible against its filled button");
+    await promptInput.press("Enter");
+    const thinkingStatus = promptBox.getByRole("status");
+    await thinkingStatus.getByText("Thinking", {exact: true}).waitFor();
+    await page.waitForFunction(() => {
+      const status = document.querySelector(".yg-prompt-status").getBoundingClientRect();
+      const input = document.querySelector(".yg-prompt-editor textarea").getBoundingClientRect();
+      return input.top - status.top >= 16;
+    });
+    await promptBox.getByRole("button", {name:"Stop"}).click();
+    await thinkingStatus.getByText("Thinking", {exact: true}).waitFor({state: "hidden"});
+    assert.equal(await promptBox.getAttribute("aria-busy"), null, "Stop closes the status and settles the control");
     const dropdown = await demo("spring-dropdown");
     const view = dropdown.getByRole("combobox", {name:"Workspace view"});
     await view.press("Space");
@@ -125,6 +142,34 @@ async function run(browser) {
     assert.match(await view.textContent(), /Files/);
     await options.waitFor({state:"hidden"});
     assert(await view.evaluate(node => node === document.activeElement));
+
+    const pillTabs = await demo("tab-pill");
+    const overviewTab = pillTabs.getByRole("tab", {name:"Overview"});
+    await overviewTab.press("ArrowRight");
+    assert.equal(await pillTabs.getByRole("tab", {name:"Projects"}).getAttribute("aria-selected"), "true");
+
+    const bottomBar = await demo("bottom-bar");
+    const savedTab = bottomBar.getByRole("tab", {name:"Saved"});
+    await savedTab.click();
+    assert.equal(await savedTab.getAttribute("aria-selected"), "true");
+    assert.equal(await bottomBar.getByRole("tab", {name:"Home"}).getAttribute("aria-selected"), "false");
+
+    const segmented = await demo("segmented-control");
+    await segmented.getByText("Year", {exact:true}).click();
+    assert.match(await segmented.getByRole("status").textContent(), /this year/);
+
+    const switches = await demo("toggle-switch");
+    const wifi = switches.getByRole("switch", {name:/Wi-Fi/});
+    assert.deepEqual(await wifi.evaluate(node => {
+      const {width, height} = node.getBoundingClientRect();
+      return [width, height];
+    }), [52, 32]);
+    await wifi.evaluate(node => Promise.allSettled(node.getAnimations({subtree:true}).map(animation => animation.finished)));
+    const rightInset = await wifi.evaluate(node =>
+      Math.round(node.getBoundingClientRect().right - node.querySelector("span").getBoundingClientRect().right));
+    assert.equal(rightInset, 3, "The checked thumb remains inside the track");
+    await wifi.press("Space");
+    assert.equal(await wifi.getAttribute("aria-checked"), "false");
 
     const command = await demo("command-palette");
     const open = command.getByRole("button", {name:"Open command palette"});
@@ -179,6 +224,20 @@ async function run(browser) {
     await files.getByText("brief.txt", {exact: true}).waitFor();
     await input.setInputFiles({name: "not-allowed.csv", mimeType: "text/csv", buffer: Buffer.from("Draft")});
     await files.getByText(/1 file was not added/).waitFor();
+
+    const price = await demo("range-slider");
+    const minimum = price.getByRole("slider", {name:"Minimum price"});
+    const maximum = price.getByRole("slider", {name:"Maximum price"});
+    await minimum.press("ArrowRight");
+    assert.equal(await minimum.getAttribute("aria-valuenow"), "200");
+    await maximum.press("ArrowLeft");
+    assert.equal(await maximum.getAttribute("aria-valuenow"), "750");
+    await minimum.press("End");
+    assert.equal(await minimum.getAttribute("aria-valuenow"), "750");
+    assert.equal(await maximum.getAttribute("aria-valuemin"), "750");
+    assert.equal(await price.locator(".yg-motion-range-area").getAttribute("data-joined"), "true");
+    await minimum.press("Home");
+    assert.equal(await minimum.getAttribute("aria-valuenow"), "0");
 
     const otp = (await demo("otp")).getByRole("textbox");
     await otp.fill("12a34567");

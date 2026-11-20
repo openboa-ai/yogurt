@@ -1,10 +1,10 @@
 "use client";
 import {
   Tabs
-} from "../shared/chunk-PPDMBFT5.js";
-import "../shared/chunk-PLMP3L2O.js";
-import "../shared/chunk-A323HUK4.js";
-import "../shared/chunk-RUS3W4HJ.js";
+} from "../shared/chunk-AGBN674W.js";
+import "../shared/chunk-5SWGMKHQ.js";
+import "../shared/chunk-4A4FGE4R.js";
+import "../shared/chunk-3EP3O3HY.js";
 export {
   Tabs
 };

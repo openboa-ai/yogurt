@@ -104,3 +104,15 @@
 .yg-mention-list-heading span { font-variant-numeric: tabular-nums; }
 
 @media (prefers-reduced-motion: no-preference) { .yg-file-drop-core { transition: transform var(--yg-change) var(--yg-settle), border-color var(--yg-change) var(--yg-settle); } .yg-file-drop[data-dragging] .yg-file-drop-core { transform: scale(1.06); } }
+
+.yg-mention { inline-size: min(100%, 320px); }
+.yg-mention-surface { box-sizing: border-box; gap: 12px; padding: 16px; border-radius: var(--yg-radius-panel); }
+.yg-mention textarea { min-block-size: 64px; font-size: 15px; line-height: 32px; }
+.yg-mention-hint { min-block-size: 36px; display: flex; align-items: center; }
+.yg-mention-list { box-sizing: border-box; inline-size: min(212px, 100%); min-inline-size: 0; padding: 4px; }
+.yg-mention-list button { box-sizing: border-box; min-block-size: 40px; padding: 0 10px; gap: 10px; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-mention-list button { transition: background-color 160ms var(--yg-settle); }
+  .yg-mention-list button > span { transition: transform 160ms var(--yg-settle), background-color 160ms var(--yg-settle); }
+  .yg-mention-list button[aria-selected="true"] > span { transform: scale(1.08); }
+}

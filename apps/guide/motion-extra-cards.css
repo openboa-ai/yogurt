@@ -128,3 +128,32 @@ button.extra-ticket[data-flipped="true"] { --flip: 180deg; background: transpare
 .extra-pass > button { margin: 0 20px 20px; justify-self: start; }
 @media (prefers-reduced-motion: no-preference) { .extra-pass-fields strong { animation: extra-pass-value 320ms cubic-bezier(.23,1,.32,1); } }
 @keyframes extra-pass-value { from { opacity: 0; transform: translateY(-8px); } }
+/* Deck: image, name and value, description, and compact tags. */
+.extra-deck-preview { display: block; padding: 0; position: relative; background: var(--yg-action-soft); }
+.extra-deck-landscape { display: block; width: 100%; height: 100%; background: radial-gradient(ellipse at 74% 25%, var(--yg-raised-surface) 0 14%, transparent 15%), linear-gradient(155deg, transparent 42%, var(--yg-action) 43% 60%, transparent 61%), linear-gradient(25deg, var(--yg-action-soft) 35%, var(--yg-raised-surface) 36% 58%, var(--yg-action-soft) 59%); }
+.extra-deck-title { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.extra-deck-title strong { font-size: 16px; letter-spacing: -.01em; }.extra-deck-title b { font-size: 14px; font-variant-numeric: tabular-nums; }
+.extra-deck-body > small { display: block; margin-top: 3px; font-size: 11px; }
+.extra-deck-tags { display: flex; gap: 6px; margin-top: 12px; }
+.extra-deck-tags span { padding: 5px 9px; border-radius: 999px; background: var(--yg-action-soft); font-size: 11px; line-height: 14px; }
+/* Reading-order marks: highlight, underline, circle, box, and strike. */
+.extra-marker-demo { box-sizing: border-box; width: min(100%, 576px); padding: 24px 8px; }
+.extra-marker-demo h2 { margin: 0; font-size: clamp(30px, 5vw, 41.6px); line-height: 1.15; letter-spacing: -.025em; font-weight: 600; text-wrap: balance; }
+.extra-marker-demo p { margin: 24px 0 0; color: var(--yg-muted); font-size: 17px; line-height: 32px; }
+.extra-marker-demo > button { margin-top: 32px; }
+.extra-ink { position: relative; z-index: 0; color: inherit; }
+.extra-ink::after { content: ""; position: absolute; z-index: -1; pointer-events: none; }
+.extra-ink-highlight::after { inset: 46% -2px 1%; background: var(--yg-action-soft); transform-origin: left; }
+.extra-ink-underline::after { inset: auto 0 0; border-bottom: 3px solid var(--yg-action); transform-origin: left; }
+.extra-ink-circle, .extra-ink-box { white-space: nowrap; }
+.extra-ink-circle::after { inset: -.12em -.2em; border: 2px solid var(--yg-action); border-radius: 50%; }
+.extra-ink-box::after { inset: -.08em -.14em; border: 2px solid var(--yg-action); border-radius: 3px; }
+.extra-ink-strike::after { inset: 52% 0 auto; border-top: 2px solid var(--yg-action); transform-origin: left; }
+@media (prefers-reduced-motion: no-preference) {
+ .extra-ink::after { animation: extra-mark-draw 550ms cubic-bezier(.45,.05,.25,1) both; }
+ .extra-ink-underline::after { animation-delay: 690ms; }.extra-ink-circle::after { animation-delay: 1380ms; }.extra-ink-box::after { animation-delay: 2070ms; }.extra-ink-strike::after { animation-delay: 2760ms; }
+}
+@keyframes extra-mark-draw { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+.extra-pass-tear { position: relative; }
+.extra-pass-tear::before, .extra-pass-tear::after { content: ""; position: absolute; top: -11px; width: 20px; height: 20px; border-radius: 50%; background: var(--yg-canvas); border: 1px solid var(--yg-surface-edge); }
+.extra-pass-tear::before { left: -27px; }.extra-pass-tear::after { right: -27px; }

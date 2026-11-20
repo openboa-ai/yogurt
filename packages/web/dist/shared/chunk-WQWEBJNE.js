@@ -4,7 +4,7 @@ import {
 } from "./chunk-5GJUJT3P.js";
 import {
   Inline
-} from "./chunk-RUS3W4HJ.js";
+} from "./chunk-3EP3O3HY.js";
 
 // packages/web/src/identity/agent-motion-data.ts
 var agentPresenceLabels = {

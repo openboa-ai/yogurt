@@ -42,12 +42,6 @@
   transition: background-color var(--yg-change, var(--yg-travel)) var(--yg-settle);
 }
 
-.yg-input:has(:is(input, textarea):focus-visible),
-.yg-select:has(select:focus-visible),
-.yg-standalone:focus-visible {
-  background-color: var(--yg-canvas);
-}
-
 .yg-switch [role="switch"] {
   transition: background-color var(--yg-travel) var(--yg-settle);
 }
@@ -317,3 +311,38 @@
       inset-inline-start var(--yg-change) var(--yg-settle);
   }
 }
+
+/* Keep one native input while giving each digit a clear visual position. */
+.yg-otp { inline-size: min(100%, calc(var(--yg-digits) * 48px + (var(--yg-digits) - 1) * 6px)); }
+.yg-otp input { cursor: text; }
+.yg-otp-slots { grid-template-columns: repeat(var(--yg-digits), minmax(0, 1fr)); gap: 6px; }
+.yg-otp-slots > span {
+  position: relative;
+  min-inline-size: 0;
+  min-block-size: 56px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  transition: background-color var(--yg-change, 180ms) var(--yg-settle, ease), border-color var(--yg-change, 180ms) var(--yg-settle, ease);
+}
+.yg-otp-slots > span[data-filled] { background: var(--yg-surface); border-color: var(--yg-surface-edge); }
+.yg-otp:focus-within [data-cursor]:not([data-filled])::after {
+  content: "";
+  inline-size: 2px;
+  block-size: 22px;
+  border-radius: 1px;
+  background: var(--yg-text);
+}
+.yg-otp[data-complete] .yg-otp-slots > span { background: var(--yg-action-soft); }
+.yg-otp[data-disabled] { opacity: .55; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-otp-digit { animation: yg-otp-digit-enter 220ms var(--yg-arrive, ease-out) both; }
+}
+@keyframes yg-otp-digit-enter {
+  from { opacity: 0; transform: translateY(4px) scale(.9); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .yg-otp-slots > span { transition: none; } }

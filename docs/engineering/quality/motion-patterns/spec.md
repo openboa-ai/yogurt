@@ -103,3 +103,13 @@ The owner selected a shared token revision followed by a review of every web com
 Reuse component styling in guide compositions. Keep separately measured dimensions when a gesture or unusually shaped feature depends on them. Reduced motion, keyboard and touch paths retain the same information and callbacks. All guide data and actions are local fixtures. This revision goes to the existing review preview for hands-on inspection.
 
 Verify resolved CSS against the shared token source and regenerate the Zig constants. Check baseline and active examples in the full Web inventory across light and dark, narrow and wide widths. Exercise focus, reduced motion and interruption on the affected families. Compare a browsing workflow, a composer and a decision with their standalone controls before updating the draft. Report Native visual evidence only from a running Native host.
+
+### Filled surface treatment
+
+The owner selected filled surfaces and Ink blue emphasis after inspecting the working request view. Group related content by using a surface tone and spacing. Use a blue fill change, blue caret and nearby blue action for an active editor. Use the same treatment for regular fields, suggestions and the command search. Keep distinct invalid and selected states. Retain a visible keyboard focus treatment for individual actions and a system focus indicator in forced colors. Recheck the resting and working composer, mobile picker and decision view after this change.
+
+The prompt uses a 380 px measure, a 52 px resting height, a 24 px corner and a 32 px visible action. Text growth keeps the action at the trailing edge. The 30 px thinking line opens above the text, and Send turns into Stop in place. Enter submits and Shift+Enter inserts a line. Composition events retain text entry. Touch leaves the visual circle unchanged and extends the hit area. Confirm that the composer closes its status when the host stops, and verify layout with reduced motion.
+
+### Individual specimen review
+
+Review matched specimens side by side in their empty, active and completed states. Use shared values only where they resolve to the intended dimensions and motion. Preserve each specimen's content arrangement, nesting, visible action, and state-specific scale in its component or recipe. Initial and interrupted frames must preserve what input was taken and how to proceed. Exercise pointer, keyboard and reduced-motion paths in the running guide. Retain local measurements or captures so the owner can distinguish a shared style change from an individually checked port.

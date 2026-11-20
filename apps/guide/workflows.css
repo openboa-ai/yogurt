@@ -41,7 +41,7 @@ body { margin: 0; }
 .workflow-record-detail { min-inline-size: 0; padding: var(--yg-inset-panel); }
 .workflow-back { display: none; }
 .workflow-conversation { display: grid; gap: var(--boa-space-24); max-inline-size: 41rem; margin-inline: auto; padding: var(--yg-inset-sheet); background: var(--yg-surface); border-radius: var(--yg-radius-card); }
-.workflow-conversation .yg-prompt-box { --yg-prompt-width: 100%; }
+.workflow-conversation .yg-prompt-box { justify-self: center; }
 .workflow-thread { min-block-size: clamp(230px, 40dvh, 360px); display: grid; align-content: start; gap: var(--yg-gap-stack); }
 .workflow-empty { align-self: center; padding-block: clamp(var(--boa-space-24), 8vh, var(--boa-space-64)); text-align: center; }
 .workflow-empty h2, .workflow-decision h2 { margin: 0; font: var(--yg-font-section); letter-spacing: var(--boa-tracking-heading); }

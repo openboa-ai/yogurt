@@ -82,3 +82,114 @@
 .yg-motion-checklist-item { min-height: 36px; box-sizing: border-box; gap: var(--yg-gap-inline); padding: var(--boa-space-8) var(--yg-inset-regular); border-radius: var(--yg-radius-control); font-size: 14px; line-height: 20px; }
 .yg-motion-dial-face { inline-size: 120px; }
 .yg-motion-dial-value { font-size: 14px; line-height: 20px; }
+
+/* Compact task list, password meter, and single-value range arrangements. */
+.yg-motion-range { box-sizing: border-box; width: min(320px, 100%); padding: 18px 20px 24px; border-radius: 24px; background: var(--yg-surface); gap: 0; }
+.yg-motion-range-heading { font-size: 16px; line-height: 20px; }
+.yg-motion-range-area { position: relative; height: 28px; margin-top: 52px; }
+.yg-motion-range-area input { position: absolute; inset: 0; height: 28px; min-height: 0; }
+.yg-motion-range-tip { position: absolute; bottom: 40px; transform: translateX(-50%); padding: 5px 10px; border-radius: 10px; background: var(--yg-action); color: var(--yg-on-action); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap; }
+@media (forced-colors: none) {
+  .yg-motion-range input::-webkit-slider-thumb { width: 28px; height: 28px; margin-top: -12px; border: 0; background: var(--yg-action); }
+  .yg-motion-range input::-moz-range-thumb { width: 28px; height: 28px; border: 0; background: var(--yg-action); }
+}
+.yg-motion-password { width: min(320px, 100%); gap: 0; }
+.yg-motion-password > label { margin: 0 0 8px 4px; font-size: 13px; color: var(--yg-muted); font-weight: 400; }
+.yg-motion-password-field { box-sizing: border-box; display: flex; align-items: center; height: 52px; padding: 0 6px 0 16px; border-radius: 16px; background: var(--yg-surface); }
+.yg-motion-password-field:focus-within { outline: 2px solid var(--yg-action); outline-offset: 2px; }
+.yg-motion-password-field input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--yg-text); font: inherit; font-size: 16px; letter-spacing: .04em; }
+.yg-motion-password-eye { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border: 0; border-radius: 12px; background: transparent; color: var(--yg-muted); cursor: pointer; }
+.yg-motion-password-eye:focus-visible { outline: 2px solid var(--yg-action); }
+.yg-motion-password-eye svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.9; }
+.yg-motion-password-slash { stroke-dasharray: 22; stroke-dashoffset: 0; transition: stroke-dashoffset var(--yg-change) var(--yg-settle); }
+.yg-motion-password-eye[aria-pressed="true"] .yg-motion-password-slash { stroke-dashoffset: 22; }
+.yg-motion-password-meter { gap: 6px; margin-top: 12px; }
+.yg-motion-password-meter span { height: 5px; overflow: hidden; border-radius: 3px; background: var(--yg-field); }
+.yg-motion-password-meter i { display: block; height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; border-radius: inherit; background: var(--yg-meter-color, var(--yg-action)); transition: transform var(--yg-change) var(--yg-settle), background-color var(--yg-change); transition-delay: calc(var(--yg-bar-index) * 60ms); }
+.yg-motion-password-meter i[data-active] { transform: scaleX(1); }
+.yg-motion-password[data-score="1"] { --yg-meter-color: var(--yg-danger); }
+.yg-motion-password[data-score="2"] { --yg-meter-color: var(--boa-color-orange-600, var(--yg-danger)); }
+.yg-motion-password[data-score="3"] { --yg-meter-color: var(--boa-color-yellow-600, var(--yg-action)); }
+.yg-motion-password[data-score="4"] { --yg-meter-color: var(--boa-color-green-600, var(--yg-action)); }
+.yg-motion-password-checks { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 10px; font-size: 12px; }
+.yg-motion-password-checks strong { color: var(--yg-meter-color, var(--yg-muted)); white-space: nowrap; }
+.yg-motion-password-checks span { text-align: right; }
+.yg-motion-checklist { box-sizing: border-box; width: min(320px, 100%); gap: 0; padding: 14px 16px 8px; border-radius: 24px; background: var(--yg-surface); }
+.yg-motion-checklist legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.yg-motion-checklist-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.yg-motion-checklist-heading strong { font-size: 16px; }
+.yg-motion-checklist-heading span { color: var(--yg-muted); font-size: 12px; }
+.yg-motion-checklist-heading b { color: var(--yg-text); font-variant-numeric: tabular-nums; }
+.yg-motion-checklist-item, .yg-motion-checklist-item:has(input:checked) { position: relative; min-height: 48px; gap: 12px; padding: 0; border: 0; border-radius: 0; background: transparent; }
+.yg-motion-checklist-item input { position: absolute; width: 24px; height: 24px; margin: 0; opacity: 0; }
+.yg-motion-checklist-box { display: grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 8px; background: var(--yg-field); color: var(--yg-on-action); transition: background-color var(--yg-change) var(--yg-settle), transform var(--yg-travel) var(--yg-arrive); }
+.yg-motion-checklist-box svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.8; stroke-dasharray: 18; stroke-dashoffset: 18; transition: stroke-dashoffset var(--yg-change) var(--yg-settle); }
+.yg-motion-checklist-item:has(input:checked) .yg-motion-checklist-box { background: var(--yg-action); }
+.yg-motion-checklist-item input:checked + .yg-motion-checklist-box svg { stroke-dashoffset: 0; transition-delay: 80ms; }
+.yg-motion-checklist-item input:focus-visible + .yg-motion-checklist-box { outline: 2px solid var(--yg-action); outline-offset: 2px; }
+.yg-motion-checklist-item:active .yg-motion-checklist-box { transform: scale(.85); }
+.yg-motion-checklist-text { position: relative; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--yg-change); }
+.yg-motion-checklist-text::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--yg-change) var(--yg-settle); }
+.yg-motion-checklist-item:has(input:checked) .yg-motion-checklist-text { color: var(--yg-muted); }
+.yg-motion-checklist-item:has(input:checked) .yg-motion-checklist-text::after { transform: scaleX(1); transition-delay: 160ms; }
+@media (prefers-reduced-motion: reduce) {
+  .yg-motion-password-slash, .yg-motion-password-meter i, .yg-motion-checklist-box, .yg-motion-checklist-box svg, .yg-motion-checklist-text, .yg-motion-checklist-text::after { transition: none !important; }
+  .yg-motion-checklist-item:active .yg-motion-checklist-box { transform: none; }
+}
+
+.yg-motion-range[data-interval] { background: var(--yg-raised-surface); }
+.yg-motion-range[data-interval] .yg-motion-range-heading {
+  align-items: baseline;
+  justify-content: start;
+  gap: var(--yg-gap-inline);
+}
+.yg-motion-range-heading > span { color: var(--yg-muted); font: var(--yg-font-meta); }
+.yg-motion-range[data-interval] .yg-motion-range-area { touch-action: pan-y; }
+.yg-motion-interval-track {
+  position: absolute;
+  inset: 12px 0 auto;
+  block-size: var(--boa-space-4);
+  border-radius: var(--yg-radius-pill);
+  background: var(--yg-field);
+}
+.yg-motion-interval-track > span {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: var(--yg-range-start) calc(100% - var(--yg-range-end));
+  border-radius: inherit;
+  background: var(--yg-action);
+}
+.yg-motion-range-area > [data-thumb] {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: var(--yg-thumb-position);
+  inline-size: 28px;
+  block-size: 28px;
+  margin-inline-start: -14px;
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--yg-action);
+  cursor: grab;
+  touch-action: none;
+}
+.yg-motion-range-area > [data-thumb]:active { cursor: grabbing; }
+.yg-motion-range-area > [data-thumb]:focus-visible { z-index: 1; }
+.yg-motion-range-area > :is([data-thumb="start"], [data-tip="start"]) { --yg-thumb-position: var(--yg-range-start); }
+.yg-motion-range-area > :is([data-thumb="end"], [data-tip="end"]) { --yg-thumb-position: var(--yg-range-end); }
+.yg-motion-range-area > [data-tip="joined"] {
+  --yg-thumb-position: calc((var(--yg-range-start) + var(--yg-range-end)) / 2);
+  opacity: 0;
+  scale: .9;
+}
+.yg-motion-range[data-interval] .yg-motion-range-tip {
+  inset-inline-start: var(--yg-thumb-position);
+}
+.yg-motion-range[data-interval] .yg-motion-range-tip:dir(rtl) { transform: translateX(50%); }
+.yg-motion-range-area[data-joined] > :is([data-tip="start"], [data-tip="end"]) { opacity: 0; scale: .9; }
+.yg-motion-range-area[data-joined] > [data-tip="joined"] { opacity: 1; scale: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-motion-range[data-interval] .yg-motion-range-tip {
+    transition: opacity var(--yg-change) var(--yg-settle), scale var(--yg-panel) var(--yg-selection);
+  }
+}

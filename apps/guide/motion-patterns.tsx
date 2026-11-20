@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  ActionMenu, BottomAction, Button, Command, Icon, IconButton, InputOTP,
+  ActionMenu, Button, Command, Icon, IconButton, InputOTP,
   ProjectMark, SegmentedControl, SidebarLayout, Stepper, Switch, Tabs, Text, TextField, ToastStack, Yogurt,
 } from "@openboa/yogurt";
 import {
@@ -21,9 +21,12 @@ const pages = [
   {id: "files", label: "Files"},
 ];
 const commands = [
-  {id: "overview", label: "Overview", hint: "Workspace home and recent updates", icon: "menu"},
-  {id: "notes", label: "Review notes", hint: "Open the release brief", icon: "copy"},
-  {id: "files", label: "Source files", hint: "Browse recent attachments", icon: "next"},
+  {id: "overview", label: "Overview", hint: "Workspace home and recent updates", shortcut: "O", icon: "menu"},
+  {id: "notes", label: "Review notes", hint: "Open the release brief", shortcut: "R", icon: "copy"},
+  {id: "files", label: "Source files", hint: "Browse recent attachments", shortcut: "F", icon: "next"},
+  {id: "records", label: "Find a record", hint: "Find an entry in the workspace", shortcut: "E", icon: "search"},
+  {id: "history", label: "Project history", hint: "See the latest revisions", shortcut: "H", icon: "clock"},
+  {id: "settings", label: "Workspace settings", hint: "Manage locally displayed settings", shortcut: "S", icon: "menu"},
 ] as const;
 const people = [
   {id: "kai", label: "Kai"},
@@ -65,16 +68,12 @@ function MentionExample() {
   return <MentionPicker label="Write a note" people={people} value={value} onChange={setValue} />;
 }
 
-function ChoiceExample({ kind }: {kind: "plan" | "focus" | "select" | "segments" | "dial"}) {
+function ChoiceExample({ kind }: {kind: "plan" | "focus" | "select" | "dial"}) {
   const [value, setValue] = useState(kind === "plan" ? "team" : kind === "focus" ? "all" : "overview");
   if (kind === "plan") return <PlanSwitch options={plans} value={value} onChange={setValue} />;
   if (kind === "focus") return <FocusPicker options={focusOptions} value={value} onChange={setValue} />;
   if (kind === "select") return <SpringDropdown label="Workspace view" options={pages} value={value} onChange={setValue} />;
-  if (kind === "dial") return <DetentDial options={pages} value={value} onChange={setValue} />;
-  return <div className="motion-sample-stack">
-    <SegmentedControl label="Workspace view" options={pages} value={value} onValueChange={setValue} />
-    <Text variant="help">Showing {pages.find(option => option.id === value)?.label.toLowerCase()}</Text>
-  </div>;
+  return <DetentDial options={pages} value={value} onChange={setValue} />;
 }
 
 const inbox = [
@@ -156,6 +155,7 @@ function ConversationExample({ kind }: {kind: "stream" | "prompt" | "thinking"})
   }
   function run() {
     clearInterval(timer.current);
+    if (kind === "prompt") setValue("");
     setReply("");
     setActive(true);
     let end = 0;
@@ -186,7 +186,7 @@ function CommandExample({ kind }: {kind: "button" | "palette" | "menu"}) {
   const [selection, setSelection] = useState("");
   return <div className="motion-sample-stack">
     {kind === "button" && <CommandButton label="Run command" items={pages} onSelect={setSelection} />}
-    {kind === "palette" && <Command label="Open command palette" title="Go to" items={[...commands]} onSelect={setSelection} />}
+    {kind === "palette" && <Command label="Open command palette" presentation="inline" triggerText="Search" items={[...commands]} onSelect={setSelection} />}
     {kind === "menu" && <ActionMenu label="View actions"
       items={pages.map(page => ({...page, disabled: page.id === selection}))} onSelect={setSelection} />}
     <Text variant="help" role="status">{selection ? `Opened ${(kind === "palette" ? commands : pages).find(page => page.id === selection)?.label}` : ""}</Text>
@@ -230,11 +230,58 @@ function TaskListExample() {
   </div>;
 }
 
+const periods = [
+  {id: "day", label: "Day"}, {id: "week", label: "Week"},
+  {id: "month", label: "Month"}, {id: "year", label: "Year"},
+];
+function SegmentsExample() {
+  const [period, setPeriod] = useState("week");
+  return <div className="motion-segmented">
+    <SegmentedControl label="Reporting period" options={periods} value={period} onValueChange={setPeriod} />
+    <div className="motion-segment-caption" role="status">
+      <span key={period}>Showing this <strong>{period}</strong></span>
+    </div>
+  </div>;
+}
+
+const workspaceTabs = [
+  {id: "overview", label: "Overview"}, {id: "projects", label: "Projects"},
+  {id: "team", label: "Team"}, {id: "settings", label: "Settings"},
+];
 function TabsExample({ smooth }: {smooth?: boolean}) {
   const [value, setValue] = useState("overview");
   return <div className={smooth ? "motion-smooth-tabs" : "motion-pill-tabs"}>
     <Tabs label={smooth ? "Sections" : "Workspace tabs"} value={value} onValueChange={setValue}
-      items={pages.map(page => ({...page, panel: <Text variant="help">{page.label} is open.</Text>}))} />
+      items={(smooth ? pages : workspaceTabs).map(page => ({
+        ...page, panel: smooth ? <Text variant="help">{page.label} is open.</Text> : null,
+      }))} />
+  </div>;
+}
+
+const destinations = [
+  {id: "home", label: "Home", icon: "home"},
+  {id: "search", label: "Search", icon: "search"},
+  {id: "saved", label: "Saved", icon: "bookmark"},
+  {id: "profile", label: "Profile", icon: "person"},
+] as const;
+function BottomBarExample() {
+  const [value, setValue] = useState("home");
+  return <div className="motion-bottom-bar">
+    <Tabs label="Destination" value={value} onValueChange={setValue}
+      items={destinations.map(item => ({...item, panel: null}))} />
+  </div>;
+}
+
+const preferences = [
+  {label: "Wi-Fi", help: "Home network", enabled: true},
+  {label: "Bluetooth", help: "2 devices", enabled: true},
+  {label: "Airplane mode", help: "Off", enabled: false},
+  {label: "Low power", help: "Saves battery", enabled: false},
+];
+function SwitchesExample() {
+  return <div className="motion-switches">
+    {preferences.map(option => <Switch key={option.label} label={option.label}
+      help={option.help} defaultChecked={option.enabled} />)}
   </div>;
 }
 
@@ -255,7 +302,7 @@ function SidebarExample() {
   </div>;
 }
 
-function FeedbackExample({ kind }: {kind: "bottom" | "otp" | "switch" | "notifications" | "save" | "hold" | "slide" | "stat" | "checks"}) {
+function FeedbackExample({ kind }: {kind: "otp" | "notifications" | "save" | "hold" | "slide" | "stat" | "checks"}) {
   const [count, setCount] = useState(0);
   const [value, setValue] = useState("");
   const [chosen, setChosen] = useState<string[]>([]);
@@ -270,15 +317,7 @@ function FeedbackExample({ kind }: {kind: "bottom" | "otp" | "switch" | "notific
     <Button emphasis="soft" size="compact" onClick={confirm}>Review a record</Button>
   </div>;
   if (kind === "checks") return <CheckboxList options={pages} value={chosen} onChange={setChosen} />;
-  if (kind === "bottom") return <div className="motion-sample-stack">
-    <Text variant="help" role="status">{count ? `Saved ${count} time${count === 1 ? "" : "s"}.` : "Review the workspace settings."}</Text>
-    <BottomAction>
-      <Button size="compact" emphasis="quiet" onClick={() => setCount(0)}>Reset</Button>
-      <Button size="compact" onClick={confirm}>Save changes</Button>
-    </BottomAction>
-  </div>;
   if (kind === "otp") return <InputOTP label="Verification code" length={6} value={value} onValueChange={setValue} />;
-  if (kind === "switch") return <Switch label="Send updates" checked={count === 1} onCheckedChange={checked => setCount(Number(checked))} />;
   if (kind === "notifications") return <div className="motion-sample-stack">
     <Button size="compact" emphasis="soft" onClick={() => {
       setNotices(items => [{id: String(count + 1), message: `Update ${count + 1} received.`}, ...items].slice(0, 3));
@@ -295,10 +334,13 @@ function FeedbackExample({ kind }: {kind: "bottom" | "otp" | "switch" | "notific
 }
 
 function RangeExample({ elastic }: {elastic?: boolean}) {
-  const [value, setValue] = useState(40);
-  return <div className={elastic ? "motion-elastic-range" : undefined}>
-    <RangeSlider label={elastic ? "Intensity" : "Volume"} value={value} onChange={setValue} />
+  const [value, setValue] = useState(elastic ? 40 : 190);
+  const [end, setEnd] = useState(760);
+  if (elastic) return <div className="motion-elastic-range">
+    <RangeSlider label="Intensity" value={value} onChange={setValue} />
   </div>;
+  return <RangeSlider label="Price" detail="per night" value={value} onChange={setValue}
+    end={end} onEndChange={setEnd} max={1000} step={10} formatValue={price => `$${price}`} />;
 }
 
 function SpringInputExample() {
@@ -321,7 +363,7 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "checkbox-list", title: "Checkbox list", body: <FeedbackExample kind="checks" />},
     {id: "detent-dial", title: "Detent dial", body: <ChoiceExample kind="dial" />},
     {id: "otp", title: "OTP", body: <FeedbackExample kind="otp" />},
-    {id: "toggle-switch", title: "Toggle switch", body: <FeedbackExample kind="switch" />},
+    {id: "toggle-switch", title: "Toggle switch", body: <SwitchesExample />},
     {id: "spring-input", title: "Spring input", body: <SpringInputExample />},
     {id: "elastic-slider", title: "Elastic slider", body: <RangeExample elastic />},
   ]},
@@ -333,8 +375,8 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "dynamic-menu", title: "Dynamic menu", body: <CommandExample kind="menu" />},
     {id: "tab-pill", title: "Tab pill", body: <TabsExample />},
     {id: "smooth-tabs", title: "Smooth tabs", body: <TabsExample smooth />},
-    {id: "segmented-control", title: "Segmented control", body: <ChoiceExample kind="segments" />},
-    {id: "bottom-bar", title: "Bottom bar", body: <FeedbackExample kind="bottom" />},
+    {id: "segmented-control", title: "Segmented control", body: <SegmentsExample />},
+    {id: "bottom-bar", title: "Bottom bar", body: <BottomBarExample />},
     {id: "sidebar-collapse", detail: "Keep workspace destinations available in a compact rail.", wide: true, title: "Sidebar collapse", body: <SidebarExample />},
   ]},
   {title: "Conversation and activity", id: "conversation", items: [

@@ -2,14 +2,19 @@ type Option = {
     id: string;
     label: string;
 };
-export declare function RangeSlider({ label, value, onChange, min, max, step }: {
+type RangeSliderProps = {
     label: string;
     value: number;
     onChange: (value: number) => void;
     min?: number;
     max?: number;
     step?: number;
-}): import("react/jsx-runtime").JSX.Element;
+    end?: number;
+    onEndChange?: (value: number) => void;
+    detail?: string;
+    formatValue?: (value: number) => string;
+};
+export declare function RangeSlider({ label, value, onChange, min, max, step, end, onEndChange, detail, formatValue, }: RangeSliderProps): import("react/jsx-runtime").JSX.Element;
 export declare function PasswordStrength({ value, onChange }: {
     value: string;
     onChange: (value: string) => void;

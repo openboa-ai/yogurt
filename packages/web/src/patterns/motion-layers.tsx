@@ -21,7 +21,7 @@ export function MorphTooltip({ label, detail }: { label: string; detail: string 
       <button type="button" className="yg-morph-tooltip-trigger" aria-describedby={open ? id : undefined}>
         {label}<span aria-hidden="true">i</span>
       </button>
-      <span id={id} role="tooltip" className="yg-morph-tooltip-card" data-open={open} hidden={!open}>
+      <span id={id} role="tooltip" className="yg-morph-tooltip-card" data-open={open} aria-hidden={!open}>
         <span>{detail}</span>
       </span>
     </span>

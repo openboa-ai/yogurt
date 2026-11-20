@@ -1,38 +1,126 @@
 "use client";
-import { useId, type CSSProperties } from "react";
+import { useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 
 type Option = { id: string; label: string };
 
-export function RangeSlider({ label, value, onChange, min = 0, max = 100, step = 1 }: {
-  label: string; value: number; onChange: (value: number) => void; min?: number; max?: number; step?: number;
-}) {
+type RangeSliderProps = {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  end?: number;
+  onEndChange?: (value: number) => void;
+  detail?: string;
+  formatValue?: (value: number) => string;
+};
+
+export function RangeSlider({
+  label, value, onChange, min = 0, max = 100, step = 1,
+  end, onEndChange, detail, formatValue = String,
+}: RangeSliderProps) {
   const id = useId();
-  const percent = max > min ? Math.max(0, Math.min(100, (value - min) / (max - min) * 100)) : 0;
-  return <div className="yg-motion-range">
-    <div className="yg-motion-range-heading"><label htmlFor={id}>{label}</label><output htmlFor={id}>{value}</output></div>
-    <input id={id} type="range" min={min} max={max} step={step} value={value} onChange={event => onChange(event.currentTarget.valueAsNumber)} style={{ "--yg-range-fill": `${percent}%` } as CSSProperties} />
-    <div className="yg-motion-range-ends" aria-hidden="true"><span>{min}</span><span>{max}</span></div>
+  const activeDrag = useRef<{ id: number; thumb: "start" | "end" } | null>(null);
+  const percent = (number: number) => max > min
+    ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
+  const first = percent(value);
+
+  if (end === undefined || !onEndChange) {
+    return <div className="yg-motion-range" style={{ "--yg-range-fill": `${first}%` } as CSSProperties}>
+      <div className="yg-motion-range-heading"><label htmlFor={id}>{label}</label></div>
+      <div className="yg-motion-range-area">
+        <span className="yg-motion-range-tip" aria-hidden="true" style={{left: `${first}%`}}>{formatValue(value)}</span>
+        <input id={id} type="range" min={min} max={max} step={step} value={value}
+          onChange={event => onChange(event.currentTarget.valueAsNumber)} />
+      </div>
+    </div>;
+  }
+
+  const last = percent(end);
+  const joined = last - first < 25;
+  const increment = step > 0 && Number.isFinite(step) ? step : 1;
+  const set = (thumb: "start" | "end", next: number) => {
+    const snapped = Number((min + Math.round((next - min) / increment) * increment).toFixed(10));
+    if (thumb === "start") onChange(Math.max(min, Math.min(end, snapped)));
+    else onEndChange(Math.max(value, Math.min(max, snapped)));
+  };
+  const position = (event: PointerEvent<HTMLDivElement>) => {
+    const box = event.currentTarget.getBoundingClientRect();
+    const direction = getComputedStyle(event.currentTarget).direction;
+    const x = direction === "rtl" ? box.right - event.clientX : event.clientX - box.left;
+    return min + Math.max(0, Math.min(1, x / Math.max(1, box.width))) * (max - min);
+  };
+  const onThumbKey = (event: KeyboardEvent<HTMLButtonElement>, side: "start" | "end", at: number) => {
+    const bounds = side === "start" ? [min, end] : [value, max];
+    const keys: Record<string, number> = {
+      ArrowDown: at - increment, ArrowLeft: at - increment,
+      ArrowUp: at + increment, ArrowRight: at + increment,
+      Home: bounds[0], End: bounds[1],
+    };
+    if (keys[event.key] === undefined) return;
+    event.preventDefault();
+    set(side, keys[event.key]);
+  };
+
+  return <div className="yg-motion-range" data-interval="" role="group" aria-labelledby={id}
+    style={{ "--yg-range-start": `${first}%`, "--yg-range-end": `${last}%` } as CSSProperties}>
+    <div className="yg-motion-range-heading"><strong id={id}>{label}</strong>{detail && <span>{detail}</span>}</div>
+    <div className="yg-motion-range-area" data-joined={joined || undefined}
+      onPointerDown={event => {
+        if (!event.isPrimary || event.button !== 0 || activeDrag.current) return;
+        const at = position(event);
+        const target = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-thumb]");
+        const side = target?.dataset.thumb === "start" || target?.dataset.thumb === "end"
+          ? target.dataset.thumb : Math.abs(at - value) <= Math.abs(at - end) ? "start" : "end";
+        activeDrag.current = {id: event.pointerId, thumb: side};
+        (target ?? event.currentTarget.querySelector<HTMLButtonElement>(`[data-thumb="${side}"]`))?.focus();
+        event.currentTarget.setPointerCapture(event.pointerId);
+        if (!target) set(side, at);
+      }}
+      onPointerMove={event => {
+        const drag = activeDrag.current;
+        if (drag?.id === event.pointerId) set(drag.thumb, position(event));
+      }}
+      onPointerUp={event => {
+        if (activeDrag.current?.id === event.pointerId) activeDrag.current = null;
+      }}
+      onPointerCancel={event => {
+        if (activeDrag.current?.id === event.pointerId) activeDrag.current = null;
+      }}
+      onLostPointerCapture={event => {
+        if (activeDrag.current?.id === event.pointerId) activeDrag.current = null;
+      }}>
+      <span className="yg-motion-interval-track" aria-hidden="true"><span /></span>
+      <span className="yg-motion-range-tip" data-tip="start" aria-hidden="true">{formatValue(value)}</span>
+      <span className="yg-motion-range-tip" data-tip="end" aria-hidden="true">{formatValue(end)}</span>
+      <span className="yg-motion-range-tip" data-tip="joined" aria-hidden="true">{formatValue(value)}–{formatValue(end)}</span>
+      <button type="button" role="slider" data-thumb="start" aria-label={`Minimum ${label.toLowerCase()}`}
+        aria-valuemin={min} aria-valuemax={end} aria-valuenow={value} aria-valuetext={formatValue(value)}
+        onKeyDown={event => onThumbKey(event, "start", value)} />
+      <button type="button" role="slider" data-thumb="end" aria-label={`Maximum ${label.toLowerCase()}`}
+        aria-valuemin={value} aria-valuemax={max} aria-valuenow={end} aria-valuetext={formatValue(end)}
+        onKeyDown={event => onThumbKey(event, "end", end)} />
+    </div>
   </div>;
 }
 
 export function PasswordStrength({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   const id = useId();
-  const checks = [
-    { label: "8 or more characters", passed: value.length >= 8 },
-    { label: "Uppercase and lowercase", passed: /[a-z]/.test(value) && /[A-Z]/.test(value) },
-    { label: "A number or symbol", passed: /[^a-zA-Z]/.test(value) },
-  ];
-  const count = checks.filter(check => check.passed).length;
-  return <div className="yg-motion-password">
-    <label htmlFor={id}>Password</label>
-    <input id={id} type="password" autoComplete="new-password" value={value} onChange={event => onChange(event.currentTarget.value)} aria-describedby={`${id}-checks`} />
-    <div className="yg-motion-password-meter" aria-hidden="true">{checks.map((check, index) => <span key={check.label} data-active={index < count || undefined} />)}</div>
-    <div id={`${id}-checks`} className="yg-motion-password-checks"><span>Local input checks: {count} of {checks.length} met</span><ul>{checks.map(check => <li key={check.label} data-passed={check.passed || undefined}><span aria-hidden="true">{check.passed ? "✓" : "○"}</span> {check.label}: {check.passed ? "met" : "not met"}</li>)}</ul></div>
+  const [shown, setShown] = useState(false);
+  const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
+  const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
+  return <div className="yg-motion-password" data-score={score}>
+    <label htmlFor={id}>Create a password</label>
+    <div className="yg-motion-password-field"><input id={id} type={shown ? "text" : "password"} autoComplete="new-password" value={value} onChange={event => onChange(event.currentTarget.value)} aria-describedby={`${id}-checks`} /><button type="button" className="yg-motion-password-eye" aria-label={shown ? "Hide password" : "Show password"} aria-pressed={shown} onClick={() => setShown(!shown)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.8"/><path className="yg-motion-password-slash" d="M4.5 4.5l15 15" /></svg></button></div>
+    <div className="yg-motion-password-meter" aria-hidden="true">{[0, 1, 2, 3].map(index => <span key={index} style={{ "--yg-bar-index": index } as CSSProperties}><i data-active={index < score || undefined} /></span>)}</div>
+    <div id={`${id}-checks`} className="yg-motion-password-checks"><strong key={word}>{word}</strong><span>8+ characters, mixed case, a number and a symbol</span></div>
   </div>;
 }
 
 export function CheckboxList({ options, value, onChange }: { options: Option[]; value: string[]; onChange: (value: string[]) => void }) {
-  return <fieldset className="yg-motion-checklist"><legend>Choose options</legend>{options.map(option => <label key={option.id} className="yg-motion-checklist-item"><input type="checkbox" checked={value.includes(option.id)} onChange={event => onChange(event.currentTarget.checked ? [...value, option.id] : value.filter(id => id !== option.id))} /><span>{option.label}</span></label>)}</fieldset>;
+  const count = options.filter(option => value.includes(option.id)).length;
+  return <fieldset className="yg-motion-checklist"><legend>Choose options</legend><div className="yg-motion-checklist-heading"><strong>Today</strong><span><b>{count}</b> of {options.length} done</span></div>{options.map(option => <label key={option.id} className="yg-motion-checklist-item"><input type="checkbox" checked={value.includes(option.id)} onChange={event => onChange(event.currentTarget.checked ? [...value, option.id] : value.filter(id => id !== option.id))} /><span className="yg-motion-checklist-box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8" /></svg></span><span className="yg-motion-checklist-text">{option.label}</span></label>)}</fieldset>;
 }
 
 export function DetentDial({ options, value, onChange }: { options: Option[]; value: string; onChange: (value: string) => void }) {

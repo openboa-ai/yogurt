@@ -1,6 +1,6 @@
 "use client";
 import {
-  useContext, useId, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode,
+  useContext, useId, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode,
 } from "react";
 import {
   Accordion as A,
@@ -62,7 +62,7 @@ export function Accordion({
 type CommandProps = {
   label: string;
   title?: string;
-  items: (Option & { hint?: string; icon?: IconName })[];
+  items: (Option & { hint?: string; icon?: IconName; shortcut?: string })[];
   onSelect: (id: string) => void;
 };
 export function ContextMenu({
@@ -147,7 +147,13 @@ export function HoverCard({
     </H.Root>
   );
 }
-export function Command({ label, title = label, items, onSelect }: CommandProps) {
+export function Command({
+  label, title = label, items, onSelect, presentation = "dialog", triggerText = label,
+}: CommandProps & { presentation?: "dialog" | "inline"; triggerText?: string }) {
+  const inline = presentation === "inline";
+  const trigger = useRef<HTMLButtonElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const previousOpen = useRef(false);
   const [open, setOpen] = useState(false),
     [query, setQuery] = useState(""),
     [active, setActive] = useState(""),
@@ -157,6 +163,19 @@ export function Command({ label, title = label, items, onSelect }: CommandProps)
     ),
     enabled = shown.filter((i) => !i.disabled);
   const current = enabled.find((i) => i.id === active) ?? enabled[0];
+  useLayoutEffect(() => {
+    if (!inline) return;
+    if (open) input.current?.focus();
+    else if (previousOpen.current) trigger.current?.focus();
+    previousOpen.current = open;
+  }, [inline, open]);
+
+  function start() {
+    setQuery("");
+    setActive("");
+    setOpen(true);
+  }
+
   function choose(item?: Option) {
     if (item && !item.disabled) {
       setOpen(false);
@@ -172,84 +191,107 @@ export function Command({ label, title = label, items, onSelect }: CommandProps)
       .getElementById(list + next.id)
       ?.scrollIntoView({ block: "nearest" });
   }
-  return (
-    <>
-      <Button
-        emphasis="soft"
-        onClick={() => {
-          setQuery("");
+  const panel = <>
+    <div className="yg-command-search">
+      <Icon name="search" />
+      <input
+        ref={input}
+        autoFocus={!inline}
+        role="combobox"
+        aria-label="Find a command"
+        placeholder={inline ? "Type a command" : "Find a command"}
+        aria-expanded={open}
+        aria-controls={list}
+        aria-autocomplete="list"
+        aria-activedescendant={current ? list + current.id : undefined}
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
           setActive("");
-          setOpen(true);
         }}
-      >
-        {label}
-      </Button>
-      <Dialog open={open} onOpenChange={setOpen} title={title}>
-        <div className="yg-command-search">
-          <Icon name="search" />
-          <input
-            autoFocus
-            role="combobox"
-            aria-label="Find a command"
-            placeholder="Find a command"
-            aria-expanded="true"
-            aria-controls={list}
-            aria-autocomplete="list"
-            aria-activedescendant={current ? list + current.id : undefined}
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setActive("");
-            }}
-            onKeyDown={(e) => {
-              if (e.nativeEvent.isComposing) return;
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                e.preventDefault();
-                move(e.key === "ArrowDown" ? 1 : -1);
-              }
-              if (e.key === "Enter") {
-                e.preventDefault();
-                choose(current);
-              }
-            }}
-          />
-        </div>
+        onKeyDown={(e) => {
+          if (e.nativeEvent.isComposing) return;
+          if (inline && e.key === "Escape") {
+            e.stopPropagation();
+            setOpen(false);
+          }
+          if (inline && e.altKey) {
+            const key = e.code.startsWith("Key") ? e.code.slice(3) : e.key;
+            const shortcut = shown.find(item => !item.disabled && item.shortcut?.toLowerCase() === key.toLowerCase());
+            if (shortcut) {
+              e.preventDefault();
+              choose(shortcut);
+              return;
+            }
+          }
+          if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            move(e.key === "ArrowDown" ? 1 : -1);
+          }
+          if (e.key === "Enter") {
+            e.preventDefault();
+            choose(current);
+          }
+        }}
+      />
+    </div>
+    <div
+      className="yg-command-list"
+      id={list}
+      role="listbox"
+      aria-label="Commands"
+      style={inline && current ? { "--yg-command-index": shown.indexOf(current) } as CSSProperties : undefined}
+    >
+      {inline && current && <span className="yg-inline-command-marker" aria-hidden="true" />}
+      {shown.map((i) => (
         <div
-          className="yg-command-list"
-          id={list}
-          role="listbox"
-          aria-label="Commands"
+          key={i.id}
+          id={list + i.id}
+          role="option"
+          aria-label={i.label}
+          aria-describedby={i.hint ? list + i.id + "-hint" : undefined}
+          aria-selected={current?.id === i.id}
+          aria-disabled={i.disabled}
+          aria-keyshortcuts={inline && i.shortcut ? `Alt+${i.shortcut}` : undefined}
+          onPointerMove={() => !i.disabled && setActive(i.id)}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => choose(i)}
         >
-          {shown.map((i) => (
-            <div
-              key={i.id}
-              id={list + i.id}
-              role="option"
-              aria-label={i.label}
-              aria-describedby={i.hint ? list + i.id + "-hint" : undefined}
-              aria-selected={current?.id === i.id}
-              aria-disabled={i.disabled}
-              onPointerMove={() => !i.disabled && setActive(i.id)}
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => choose(i)}
-            >
-              {i.icon && <Icon name={i.icon} />}
-              <span className="yg-command-copy">
-                <span>{i.label}</span>
-                {i.hint && <span className="yg-help" id={list + i.id + "-hint"}>{i.hint}</span>}
-              </span>
-              {current?.id === i.id && <kbd aria-hidden="true">↵</kbd>}
-            </div>
-          ))}
+          {!inline && i.icon && <Icon name={i.icon} />}
+          <span className="yg-command-copy">
+            <span>{i.label}</span>
+            {i.hint && <span className="yg-help" id={list + i.id + "-hint"} hidden={inline}>{i.hint}</span>}
+          </span>
+          {inline && i.shortcut ? <kbd aria-hidden="true" title={`Alt + ${i.shortcut}`}>{i.shortcut}</kbd>
+            : current?.id === i.id && <kbd aria-hidden="true">↵</kbd>}
         </div>
-        {!shown.length && (
-          <p className="yg-help" role="status">
-            No matching commands
-          </p>
-        )}
-      </Dialog>
-    </>
-  );
+      ))}
+    </div>
+    {!shown.length && (
+      <p className="yg-help" role="status">
+        No matching commands
+      </p>
+    )}
+  </>;
+
+  if (inline) return <div className="yg-inline-command" data-open={open} onKeyDown={event => {
+    if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      if (open) setOpen(false);
+      else start();
+    }
+  }}>
+    <button ref={trigger} className="yg-inline-command-trigger" type="button" onClick={start}
+      inert={open} aria-label={label} aria-expanded={open} aria-controls={list + "-panel"} aria-keyshortcuts="Meta+K Control+K">
+      <Icon name="search" /><span>{triggerText}</span><kbd>⌘K</kbd>
+    </button>
+    <div className="yg-inline-command-panel" id={list + "-panel"} inert={!open}>{panel}</div>
+  </div>;
+
+  return <>
+    <Button emphasis="soft" onClick={start}>{label}</Button>
+    <Dialog open={open} onOpenChange={setOpen} title={title}>{panel}</Dialog>
+  </>;
 }
 export function Menubar({
   label,

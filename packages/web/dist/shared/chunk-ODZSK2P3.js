@@ -1,12 +1,12 @@
 "use client";
 import {
   Dialog
-} from "./chunk-UNNWL6Q6.js";
+} from "./chunk-5ZALUUQO.js";
 import {
   Checkbox,
   RadioGroup,
   Textarea
-} from "./chunk-FXLGRFQX.js";
+} from "./chunk-IWFGMSSX.js";
 import {
   dist_exports2 as dist_exports,
   dist_exports4 as dist_exports2,
@@ -14,20 +14,21 @@ import {
   dist_exports6 as dist_exports4,
   dist_exports7 as dist_exports5,
   dist_exports8 as dist_exports6
-} from "./chunk-PLMP3L2O.js";
+} from "./chunk-5SWGMKHQ.js";
 import {
   Button,
   IconButton
-} from "./chunk-A323HUK4.js";
+} from "./chunk-4A4FGE4R.js";
 import {
   Icon,
   __export
-} from "./chunk-RUS3W4HJ.js";
+} from "./chunk-3EP3O3HY.js";
 
 // packages/web/src/controls/advanced.tsx
 import {
   useContext as useContext3,
   useId as useId2,
+  useLayoutEffect as useLayoutEffect3,
   useRef as useRef4,
   useState as useState4
 } from "react";
@@ -6451,12 +6452,34 @@ function HoverCard({
     )
   ] });
 }
-function Command({ label, title = label, items, onSelect }) {
+function Command({
+  label,
+  title = label,
+  items,
+  onSelect,
+  presentation = "dialog",
+  triggerText = label
+}) {
+  const inline = presentation === "inline";
+  const trigger = useRef4(null);
+  const input = useRef4(null);
+  const previousOpen = useRef4(false);
   const [open, setOpen] = useState4(false), [query, setQuery] = useState4(""), [active, setActive] = useState4(""), list = useId2();
   const shown = items.filter(
     (i) => i.label.toLowerCase().includes(query.trim().toLowerCase())
   ), enabled2 = shown.filter((i) => !i.disabled);
   const current = enabled2.find((i) => i.id === active) ?? enabled2[0];
+  useLayoutEffect3(() => {
+    if (!inline) return;
+    if (open) input.current?.focus();
+    else if (previousOpen.current) trigger.current?.focus();
+    previousOpen.current = open;
+  }, [inline, open]);
+  function start() {
+    setQuery("");
+    setActive("");
+    setOpen(true);
+  }
   function choose(item) {
     if (item && !item.disabled) {
       setOpen(false);
@@ -6470,60 +6493,64 @@ function Command({ label, title = label, items, onSelect }) {
     setActive(next.id);
     document.getElementById(list + next.id)?.scrollIntoView({ block: "nearest" });
   }
-  return /* @__PURE__ */ jsxs(Fragment, { children: [
-    /* @__PURE__ */ jsx(
-      Button,
-      {
-        emphasis: "soft",
-        onClick: () => {
-          setQuery("");
-          setActive("");
-          setOpen(true);
-        },
-        children: label
-      }
-    ),
-    /* @__PURE__ */ jsxs(Dialog, { open, onOpenChange: setOpen, title, children: [
-      /* @__PURE__ */ jsxs("div", { className: "yg-command-search", children: [
-        /* @__PURE__ */ jsx(Icon, { name: "search" }),
-        /* @__PURE__ */ jsx(
-          "input",
-          {
-            autoFocus: true,
-            role: "combobox",
-            "aria-label": "Find a command",
-            placeholder: "Find a command",
-            "aria-expanded": "true",
-            "aria-controls": list,
-            "aria-autocomplete": "list",
-            "aria-activedescendant": current ? list + current.id : void 0,
-            value: query,
-            onChange: (e) => {
-              setQuery(e.target.value);
-              setActive("");
-            },
-            onKeyDown: (e) => {
-              if (e.nativeEvent.isComposing) return;
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+  const panel = /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsxs("div", { className: "yg-command-search", children: [
+      /* @__PURE__ */ jsx(Icon, { name: "search" }),
+      /* @__PURE__ */ jsx(
+        "input",
+        {
+          ref: input,
+          autoFocus: !inline,
+          role: "combobox",
+          "aria-label": "Find a command",
+          placeholder: inline ? "Type a command" : "Find a command",
+          "aria-expanded": open,
+          "aria-controls": list,
+          "aria-autocomplete": "list",
+          "aria-activedescendant": current ? list + current.id : void 0,
+          value: query,
+          onChange: (e) => {
+            setQuery(e.target.value);
+            setActive("");
+          },
+          onKeyDown: (e) => {
+            if (e.nativeEvent.isComposing) return;
+            if (inline && e.key === "Escape") {
+              e.stopPropagation();
+              setOpen(false);
+            }
+            if (inline && e.altKey) {
+              const key = e.code.startsWith("Key") ? e.code.slice(3) : e.key;
+              const shortcut = shown.find((item) => !item.disabled && item.shortcut?.toLowerCase() === key.toLowerCase());
+              if (shortcut) {
                 e.preventDefault();
-                move(e.key === "ArrowDown" ? 1 : -1);
-              }
-              if (e.key === "Enter") {
-                e.preventDefault();
-                choose(current);
+                choose(shortcut);
+                return;
               }
             }
+            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+              e.preventDefault();
+              move(e.key === "ArrowDown" ? 1 : -1);
+            }
+            if (e.key === "Enter") {
+              e.preventDefault();
+              choose(current);
+            }
           }
-        )
-      ] }),
-      /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: "yg-command-list",
-          id: list,
-          role: "listbox",
-          "aria-label": "Commands",
-          children: shown.map((i) => /* @__PURE__ */ jsxs(
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "yg-command-list",
+        id: list,
+        role: "listbox",
+        "aria-label": "Commands",
+        style: inline && current ? { "--yg-command-index": shown.indexOf(current) } : void 0,
+        children: [
+          inline && current && /* @__PURE__ */ jsx("span", { className: "yg-inline-command-marker", "aria-hidden": "true" }),
+          shown.map((i) => /* @__PURE__ */ jsxs(
             "div",
             {
               id: list + i.id,
@@ -6532,24 +6559,57 @@ function Command({ label, title = label, items, onSelect }) {
               "aria-describedby": i.hint ? list + i.id + "-hint" : void 0,
               "aria-selected": current?.id === i.id,
               "aria-disabled": i.disabled,
+              "aria-keyshortcuts": inline && i.shortcut ? `Alt+${i.shortcut}` : void 0,
               onPointerMove: () => !i.disabled && setActive(i.id),
               onMouseDown: (e) => e.preventDefault(),
               onClick: () => choose(i),
               children: [
-                i.icon && /* @__PURE__ */ jsx(Icon, { name: i.icon }),
+                !inline && i.icon && /* @__PURE__ */ jsx(Icon, { name: i.icon }),
                 /* @__PURE__ */ jsxs("span", { className: "yg-command-copy", children: [
                   /* @__PURE__ */ jsx("span", { children: i.label }),
-                  i.hint && /* @__PURE__ */ jsx("span", { className: "yg-help", id: list + i.id + "-hint", children: i.hint })
+                  i.hint && /* @__PURE__ */ jsx("span", { className: "yg-help", id: list + i.id + "-hint", hidden: inline, children: i.hint })
                 ] }),
-                current?.id === i.id && /* @__PURE__ */ jsx("kbd", { "aria-hidden": "true", children: "\u21B5" })
+                inline && i.shortcut ? /* @__PURE__ */ jsx("kbd", { "aria-hidden": "true", title: `Alt + ${i.shortcut}`, children: i.shortcut }) : current?.id === i.id && /* @__PURE__ */ jsx("kbd", { "aria-hidden": "true", children: "\u21B5" })
               ]
             },
             i.id
           ))
-        }
-      ),
-      !shown.length && /* @__PURE__ */ jsx("p", { className: "yg-help", role: "status", children: "No matching commands" })
-    ] })
+        ]
+      }
+    ),
+    !shown.length && /* @__PURE__ */ jsx("p", { className: "yg-help", role: "status", children: "No matching commands" })
+  ] });
+  if (inline) return /* @__PURE__ */ jsxs("div", { className: "yg-inline-command", "data-open": open, onKeyDown: (event) => {
+    if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      if (open) setOpen(false);
+      else start();
+    }
+  }, children: [
+    /* @__PURE__ */ jsxs(
+      "button",
+      {
+        ref: trigger,
+        className: "yg-inline-command-trigger",
+        type: "button",
+        onClick: start,
+        inert: open,
+        "aria-label": label,
+        "aria-expanded": open,
+        "aria-controls": list + "-panel",
+        "aria-keyshortcuts": "Meta+K Control+K",
+        children: [
+          /* @__PURE__ */ jsx(Icon, { name: "search" }),
+          /* @__PURE__ */ jsx("span", { children: triggerText }),
+          /* @__PURE__ */ jsx("kbd", { children: "\u2318K" })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsx("div", { className: "yg-inline-command-panel", id: list + "-panel", inert: !open, children: panel })
+  ] });
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsx(Button, { emphasis: "soft", onClick: start, children: label }),
+    /* @__PURE__ */ jsx(Dialog, { open, onOpenChange: setOpen, title, children: panel })
   ] });
 }
 function Menubar({
