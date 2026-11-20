@@ -150,7 +150,7 @@ function webComponent(binding, manifest, id) {
   file("import");
   const stub = file("types");
   // The SDK build emits one named re-export per public component entry.
-  const reexport = /^export \{ ([\w$, ]+) \} from "(\.\.\/[\w-]+)\.js";$/.exec(readFileSync(stub, "utf8").trim());
+  const reexport = /^export \{ ([\w$, ]+) \} from "(\.\.\/(?:[\w-]+\/)*[\w-]+)\.js";$/.exec(readFileSync(stub, "utf8").trim());
   if (!reexport) throw Error(`The installed declaration for ${entry} has an unsupported format at ${stub}.`);
   const types = optionalFile(binding.kit, resolve(dirname(stub), reexport[2] + ".d.ts"));
   if (!types) throw Error(`The installed declaration for ${entry} refers to a missing module.`);
