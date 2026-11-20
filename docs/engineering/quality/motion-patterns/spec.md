@@ -21,3 +21,7 @@ The owner added streaming replies, inline suggestions, a prompt box, a thinking 
 Range, password guidance, checkbox lists and stepped dials are also in scope. Values stay keyboard-accessible with a visible current state. The password indicator describes local input checks. Drag and key changes select the same discrete dial values.
 
 Include agent steps, hold to confirm, smooth tabs, slide to confirm and notifications. Hold and slide operate on one explicit caller action, cancel safely on release or interruption and offer a keyboard action. The gallery shows agent steps from the supplied state and notifications from actual fixture events.
+
+## Review delivery
+
+Publish a temporary branch preview for hands-on review. Keep the comparison and existing library reachable from the preview. Leave the pull request unmerged until the owner finishes reviewing. Include additional reusable patterns identified during the catalog review and expose them as interactive examples.
