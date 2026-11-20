@@ -41,7 +41,11 @@ export function TaskList({ label, tasks }: {label: string; tasks: TaskListItem[]
   return (
     <section className="yg-task-list" aria-label={label}>
       <header><strong>{label}</strong><span role="status">{complete} of {tasks.length} done</span></header>
-      {tasks.length === 0 && <p className="yg-help">No steps yet.</p>}
+      {tasks.length > 0 ? (
+        <div className="yg-task-progress" aria-hidden="true">
+          {tasks.map(task => <span key={task.id} data-state={task.state} />)}
+        </div>
+      ) : <p className="yg-help">No steps yet.</p>}
       <ol>
         {tasks.map(task => (
           <li key={task.id} data-state={task.state} data-active={active === task.id || undefined}>

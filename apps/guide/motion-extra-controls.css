@@ -1,9 +1,8 @@
 .motion-extra { display: grid; justify-items: start; gap: var(--yg-gap-stack); width: min(100%, 320px); }
-.motion-extra label { display: grid; gap: 6px; width: 100%; font-weight: 600; }
-.motion-extra input:not([type="range"]) { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: var(--yg-raised-surface); color: inherit; font: inherit; }
+.motion-extra > .yg-field { inline-size: 100%; }
 .motion-extra small, .motion-extra > span { color: var(--yg-muted); }
 .motion-extra-chips, .motion-extra-toolbar, .motion-extra-rating { display: flex; flex-wrap: wrap; gap: 6px; }
-.motion-extra-chips button, .motion-extra-toolbar button { border: 0; border-radius: var(--yg-radius-control); padding: 7px 11px; background: var(--yg-action-soft); color: var(--yg-action); font: inherit; cursor: pointer; transition: transform 180ms var(--yg-settle); }
+.motion-extra-chips button, .motion-extra-toolbar button { border: 0; border-radius: var(--yg-radius-control); padding: var(--yg-inset-layer) var(--yg-inset-compact); min-block-size: var(--yg-size-compact); background: var(--yg-action-soft); color: var(--yg-action); font: inherit; cursor: pointer; transition: transform 180ms var(--yg-settle); }
 .motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: var(--yg-on-action); }
 .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: translateY(-2px); }
 .motion-extra-wheel { display: grid; justify-items: center; gap: 6px; min-width: 140px; }

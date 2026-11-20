@@ -1,6 +1,6 @@
 .yg-cart-control {
   --yg-cart-slot: var(--yg-size-regular);
-  --yg-cart-open: max(calc(3 * var(--boa-control-height)), calc(2 * var(--yg-cart-slot) + var(--boa-space-16)));
+  --yg-cart-open: calc(2 * var(--yg-cart-slot) + var(--boa-space-20));
   display: grid;
   justify-items: end;
   inline-size: var(--yg-cart-open);

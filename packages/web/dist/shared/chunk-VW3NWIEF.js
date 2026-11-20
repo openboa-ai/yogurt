@@ -6451,7 +6451,7 @@ function HoverCard({
     )
   ] });
 }
-function Command({ label, items, onSelect }) {
+function Command({ label, title = label, items, onSelect }) {
   const [open, setOpen] = useState4(false), [query, setQuery] = useState4(""), [active, setActive] = useState4(""), list = useId2();
   const shown = items.filter(
     (i) => i.label.toLowerCase().includes(query.trim().toLowerCase())
@@ -6483,37 +6483,39 @@ function Command({ label, items, onSelect }) {
         children: label
       }
     ),
-    /* @__PURE__ */ jsxs(Dialog, { open, onOpenChange: setOpen, title: label, children: [
-      /* @__PURE__ */ jsx(
-        "input",
-        {
-          autoFocus: true,
-          role: "combobox",
-          className: "yg-standalone",
-          "aria-label": "Find a command",
-          placeholder: "Find a command",
-          "aria-expanded": "true",
-          "aria-controls": list,
-          "aria-autocomplete": "list",
-          "aria-activedescendant": current ? list + current.id : void 0,
-          value: query,
-          onChange: (e) => {
-            setQuery(e.target.value);
-            setActive("");
-          },
-          onKeyDown: (e) => {
-            if (e.nativeEvent.isComposing) return;
-            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-              e.preventDefault();
-              move(e.key === "ArrowDown" ? 1 : -1);
-            }
-            if (e.key === "Enter") {
-              e.preventDefault();
-              choose(current);
+    /* @__PURE__ */ jsxs(Dialog, { open, onOpenChange: setOpen, title, children: [
+      /* @__PURE__ */ jsxs("div", { className: "yg-command-search", children: [
+        /* @__PURE__ */ jsx(Icon, { name: "search" }),
+        /* @__PURE__ */ jsx(
+          "input",
+          {
+            autoFocus: true,
+            role: "combobox",
+            "aria-label": "Find a command",
+            placeholder: "Find a command",
+            "aria-expanded": "true",
+            "aria-controls": list,
+            "aria-autocomplete": "list",
+            "aria-activedescendant": current ? list + current.id : void 0,
+            value: query,
+            onChange: (e) => {
+              setQuery(e.target.value);
+              setActive("");
+            },
+            onKeyDown: (e) => {
+              if (e.nativeEvent.isComposing) return;
+              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                e.preventDefault();
+                move(e.key === "ArrowDown" ? 1 : -1);
+              }
+              if (e.key === "Enter") {
+                e.preventDefault();
+                choose(current);
+              }
             }
           }
-        }
-      ),
+        )
+      ] }),
       /* @__PURE__ */ jsx(
         "div",
         {
@@ -6521,17 +6523,26 @@ function Command({ label, items, onSelect }) {
           id: list,
           role: "listbox",
           "aria-label": "Commands",
-          children: shown.map((i) => /* @__PURE__ */ jsx(
+          children: shown.map((i) => /* @__PURE__ */ jsxs(
             "div",
             {
               id: list + i.id,
               role: "option",
+              "aria-label": i.label,
+              "aria-describedby": i.hint ? list + i.id + "-hint" : void 0,
               "aria-selected": current?.id === i.id,
               "aria-disabled": i.disabled,
               onPointerMove: () => !i.disabled && setActive(i.id),
               onMouseDown: (e) => e.preventDefault(),
               onClick: () => choose(i),
-              children: i.label
+              children: [
+                i.icon && /* @__PURE__ */ jsx(Icon, { name: i.icon }),
+                /* @__PURE__ */ jsxs("span", { className: "yg-command-copy", children: [
+                  /* @__PURE__ */ jsx("span", { children: i.label }),
+                  i.hint && /* @__PURE__ */ jsx("span", { className: "yg-help", id: list + i.id + "-hint", children: i.hint })
+                ] }),
+                current?.id === i.id && /* @__PURE__ */ jsx("kbd", { "aria-hidden": "true", children: "\u21B5" })
+              ]
             },
             i.id
           ))

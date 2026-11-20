@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  ActionMenu, BottomAction, Button, Command, Heading, Icon, IconButton, InputOTP,
+  ActionMenu, BottomAction, Button, Command, Icon, IconButton, InputOTP,
   ProjectMark, SegmentedControl, SidebarLayout, Stepper, Switch, Tabs, Text, TextField, ToastStack, Yogurt,
 } from "@openboa/yogurt";
 import {
@@ -13,7 +13,6 @@ import {
 import { extraCards } from "./examples/motion-extra-cards";
 import { extraControls } from "./examples/motion-extra-controls";
 import { extraGestures } from "./examples/motion-extra-gestures";
-import { extraExpression } from "./examples/motion-extra-expression";
 import { extraUtilities } from "./examples/motion-extra-utilities";
 
 const pages = [
@@ -21,6 +20,11 @@ const pages = [
   {id: "notes", label: "Notes"},
   {id: "files", label: "Files"},
 ];
+const commands = [
+  {id: "overview", label: "Overview", hint: "Workspace home and recent updates", icon: "menu"},
+  {id: "notes", label: "Review notes", hint: "Open the release brief", icon: "copy"},
+  {id: "files", label: "Source files", hint: "Browse recent attachments", icon: "next"},
+] as const;
 const people = [
   {id: "kai", label: "Kai"},
   {id: "sol", label: "Sol"},
@@ -167,10 +171,10 @@ function CommandExample({ kind }: {kind: "button" | "palette" | "menu"}) {
   const [selection, setSelection] = useState("");
   return <div className="motion-sample-stack">
     {kind === "button" && <CommandButton label="Run command" items={pages} onSelect={setSelection} />}
-    {kind === "palette" && <Command label="Open command palette" items={pages} onSelect={setSelection} />}
+    {kind === "palette" && <Command label="Open command palette" title="Go to" items={[...commands]} onSelect={setSelection} />}
     {kind === "menu" && <ActionMenu label="View actions"
       items={pages.map(page => ({...page, disabled: page.id === selection}))} onSelect={setSelection} />}
-    <Text variant="help" role="status">{selection ? `Opened ${pages.find(page => page.id === selection)?.label}` : ""}</Text>
+    <Text variant="help" role="status">{selection ? `Opened ${(kind === "palette" ? commands : pages).find(page => page.id === selection)?.label}` : ""}</Text>
   </div>;
 }
 
@@ -195,7 +199,7 @@ function TaskListExample() {
       ] : undefined,
     }))} />
     <div className="motion-sample-actions">
-      <Button size="compact" emphasis="soft" disabled={active >= steps.length} onClick={() => {
+      <Button disabled={active >= steps.length} onClick={() => {
         if (failed) setFailed(false);
         else setActive(index => index + 1);
       }}>{failed ? "Retry step" : "Complete step"}</Button>
@@ -283,14 +287,14 @@ function SpringInputExample() {
   </div>;
 }
 
-type Demo = {id: string; title: string; body: ReactNode};
-const demos: {title: string; label: string; id: string; items: Demo[]}[] = [
-  {title: "Inputs and choices", label: "Inputs", id: "inputs", items: [
-    {id: "mention-picker", title: "Mention picker", body: <MentionExample />},
-    {id: "focus-mode", title: "Focus mode", body: <FocusModeExample />},
-    {id: "plan-switch", title: "Plan switch", body: <BillingExample />},
+type Demo = {id: string; title: string; body: ReactNode; detail?: string; wide?: boolean};
+const demos: {title: string; id: string; items: Demo[]}[] = [
+  {title: "Inputs and choices", id: "inputs", items: [
+    {id: "mention-picker", detail: "Type @ in the review note to mention a teammate.", title: "Mention picker", body: <MentionExample />},
+    {id: "focus-mode", detail: "Keep priority updates visible while the rest of the inbox goes quiet.", title: "Focus mode", body: <FocusModeExample />},
+    {id: "plan-switch", detail: "Compare a monthly and yearly subscription for the same workspace.", title: "Plan switch", body: <BillingExample />},
     {id: "letter-limit", title: "Letter limit", body: <WritingExample kind="limit" />},
-    {id: "file-drop", title: "File drop", body: <FilesExample />},
+    {id: "file-drop", detail: "Add source files to a review by dropping them here or opening the file picker.", title: "File drop", body: <FilesExample />},
     {id: "range-slider", title: "Range slider", body: <RangeExample />},
     {id: "password-strength", title: "Password strength", body: <WritingExample kind="password" />},
     {id: "checkbox-list", title: "Checkbox list", body: <FeedbackExample kind="checks" />},
@@ -300,29 +304,29 @@ const demos: {title: string; label: string; id: string; items: Demo[]}[] = [
     {id: "spring-input", title: "Spring input", body: <SpringInputExample />},
     {id: "elastic-slider", title: "Elastic slider", body: <RangeExample elastic />},
   ]},
-  {title: "Navigation and layers", label: "Navigation", id: "navigation", items: [
+  {title: "Navigation and layers", id: "navigation", items: [
     {id: "morph-tooltip", title: "Morph tooltip", body: <MorphTooltip label="Storage details" detail="Files in this workspace are visible to its members." />},
     {id: "spring-dropdown", title: "Spring dropdown", body: <ChoiceExample kind="select" />},
     {id: "command-button", title: "Command button", body: <CommandExample kind="button" />},
-    {id: "command-palette", title: "Command palette", body: <CommandExample kind="palette" />},
+    {id: "command-palette", detail: "Search destinations in the workspace. Use the arrow keys and Enter to open one.", title: "Command palette", body: <CommandExample kind="palette" />},
     {id: "dynamic-menu", title: "Dynamic menu", body: <CommandExample kind="menu" />},
     {id: "tab-pill", title: "Tab pill", body: <TabsExample />},
     {id: "smooth-tabs", title: "Smooth tabs", body: <TabsExample smooth />},
     {id: "segmented-control", title: "Segmented control", body: <ChoiceExample kind="segments" />},
     {id: "bottom-bar", title: "Bottom bar", body: <FeedbackExample kind="bottom" />},
-    {id: "sidebar-collapse", title: "Sidebar collapse", body: <SidebarExample />},
+    {id: "sidebar-collapse", detail: "Keep workspace destinations available in a compact rail.", wide: true, title: "Sidebar collapse", body: <SidebarExample />},
   ]},
-  {title: "Conversation and activity", label: "Conversation", id: "conversation", items: [
-    {id: "task-list", title: "Task list", body: <TaskListExample />},
-    {id: "prompt-box", title: "Prompt box", body: <ConversationExample kind="prompt" />},
+  {title: "Conversation and activity", id: "conversation", items: [
+    {id: "task-list", detail: "Follow a review from draft to handoff. Open a completed step to see its checklist, or retry a failed step.", wide: true, title: "Task list", body: <TaskListExample />},
+    {id: "prompt-box", detail: "Write a request for the review assistant and follow its response.", wide: true, title: "Prompt box", body: <ConversationExample kind="prompt" />},
     {id: "ghost-suggestion", title: "Ghost suggestion", body: <WritingExample kind="ghost" />},
     {id: "streaming-reply", title: "Streaming reply", body: <ConversationExample kind="stream" />},
     {id: "thinking", title: "Thinking indicator", body: <ConversationExample kind="thinking" />},
     {id: "agent-steps", title: "Agent steps", body: <StepExample agent />},
     {id: "activity-island", title: "Expandable activity", body: <ActivityIsland label="Workspace activity" summary="2 updates"><Text>Draft ready · Review requested</Text></ActivityIsland>},
   ]},
-  {title: "Cards and outcomes", label: "Cards", id: "feedback", items: [
-    {id: "storage-meter", title: "Storage meter", body: <StorageExample />},
+  {title: "Data and feedback", id: "feedback", items: [
+    {id: "storage-meter", detail: "Track the storage used by a workspace and see what changes as it fills up.", title: "Storage meter", body: <StorageExample />},
     {id: "expand-card", title: "Expand card", body: <ExpandCard title="Review the brief"><Text>See the source, changes and next action.</Text></ExpandCard>},
     {id: "fan-cards", title: "Fan cards", body: <FanCards items={steps} />},
     {id: "stat-card", title: "Stat card", body: <FeedbackExample kind="stat" />},
@@ -334,32 +338,64 @@ const demos: {title: string; label: string; id: string; items: Demo[]}[] = [
     {id: "hold-button", title: "Hold button", body: <FeedbackExample kind="hold" />},
     {id: "slide-confirm", title: "Slide to confirm", body: <FeedbackExample kind="slide" />},
   ]},
-  {title: "More controls", label: "Controls", id: "more-controls", items: [
+  {title: "Editing controls", id: "more-controls", items: [
     {id: "focus-options", title: "Focus options", body: <ChoiceExample kind="focus" />},
     {id: "plan-options", title: "Plan options", body: <ChoiceExample kind="plan" />},
     ...extraControls,
   ]},
-  {title: "More interactions", label: "Gestures", id: "gestures", items: extraGestures},
-  {title: "More cards and text", label: "Content", id: "more-cards", items: extraCards},
-  {title: "Utilities", label: "Utilities", id: "utilities", items: extraUtilities},
-  {title: "Expressive motion", label: "Expression", id: "expressive", items: extraExpression},
+  {title: "Manipulation", id: "gestures", items: extraGestures},
+  {title: "Content and documents", id: "more-cards", items: extraCards},
+  {title: "Utilities", id: "utilities", items: extraUtilities},
 ];
+
+const patterns = demos.flatMap(section => section.items.map(item => ({ ...item, section })));
+
+function locationPattern() {
+  const hash = window.location.hash.slice(1);
+  return patterns.find(pattern => pattern.id === hash)?.id ??
+    demos.find(section => section.id === hash)?.items[0]?.id ?? "task-list";
+}
 
 function Gallery() {
   const [appearance, setAppearance] = useState<"light" | "dark">(() =>
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const [selected, setSelected] = useState(locationPattern);
   const [query, setQuery] = useState("");
+  const [indexOpen, setIndexOpen] = useState(false);
+  const heading = useRef<HTMLHeadingElement>(null);
   const term = query.trim().toLowerCase();
-  const visible = demos.map(section => ({
+  const current = patterns.find(pattern => pattern.id === selected)!;
+  const matches = demos.map(section => ({
     ...section,
     items: term ? section.items.filter(item =>
       (section.title + " " + item.title).toLowerCase().includes(term)) : section.items,
   })).filter(section => section.items.length > 0);
 
   useEffect(() => {
-    const frame = requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
-    return () => cancelAnimationFrame(frame);
+    function followHash() {
+      setSelected(locationPattern());
+      setQuery("");
+    }
+    window.addEventListener("hashchange", followHash);
+    return () => window.removeEventListener("hashchange", followHash);
   }, []);
+
+  function choose(id: string) {
+    if (window.location.hash !== "#" + id) window.history.pushState(null, "", "#" + id);
+    setSelected(id);
+    setIndexOpen(false);
+    setQuery("");
+    requestAnimationFrame(() => {
+      heading.current?.focus({ preventScroll: true });
+      window.scrollTo(0, 0);
+    });
+  }
+
+  function followLink(event: MouseEvent<HTMLAnchorElement>, id: string) {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    choose(id);
+  }
 
   return <Yogurt appearance={appearance} className="motion-patterns-page">
     <main>
@@ -369,6 +405,7 @@ function Gallery() {
         </a>
         <nav aria-label="Yogurt">
           <a href="components.html">Components</a>
+          <a href="motion-patterns.html" aria-current="page">Patterns</a>
           <a href="motion-comparison.html">Compare motion</a>
           <a href="agents.html">Agents</a>
         </nav>
@@ -376,28 +413,48 @@ function Gallery() {
           icon={appearance === "dark" ? "sun" : "moon"}
           onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")} />
       </header>
-      <div className="motion-pattern-tools">
-        <div className="motion-pattern-intro">
-          <Heading level={1}>Motion patterns</Heading>
-          <label className="motion-pattern-search">
-            <span>Find a pattern</span>
-            <input type="search" placeholder="Search patterns" value={query} onChange={event => setQuery(event.target.value)} />
-          </label>
+      <div className="motion-pattern-layout">
+        <aside className="motion-pattern-index" data-open={indexOpen}>
+          <button className="motion-index-toggle" type="button" aria-expanded={indexOpen} aria-controls="pattern-directory"
+            onClick={() => setIndexOpen(value => !value)}>
+            <Icon name="menu" /> Browse patterns <Icon name="down" />
+          </button>
+          <div id="pattern-directory" className="motion-index-directory">
+            <p className="motion-index-title">Motion patterns</p>
+            <label className="motion-pattern-search">
+              <Icon name="search" />
+              <input type="search" aria-label="Find a pattern" placeholder="Find a pattern" value={query}
+                onChange={event => setQuery(event.target.value)}
+                onKeyDown={event => {
+                  if (event.key === "Enter" && term && matches[0]) choose(matches[0].items[0].id);
+                }} />
+            </label>
+            <nav aria-label="Pattern index">
+              {matches.map(section => <details key={section.id} open={!!term || current.section.id === section.id}>
+                <summary>{section.title}<Icon name="down" /></summary>
+                <ul>
+                  {section.items.map(item => <li key={item.id}>
+                    <a href={`#${item.id}`} aria-current={selected === item.id ? "location" : undefined}
+                      onClick={event => followLink(event, item.id)}>{item.title}</a>
+                  </li>)}
+                </ul>
+              </details>)}
+              {!matches.length && <Text role="status">No matching patterns.</Text>}
+            </nav>
+          </div>
+        </aside>
+        <div className="motion-pattern-main">
+          <header className="motion-pattern-intro">
+            <p>{current.section.title}</p>
+            <h1 ref={heading} tabIndex={-1}>{current.title}</h1>
+            {current.detail && <p className="motion-pattern-detail">{current.detail}</p>}
+          </header>
+          <article className="motion-pattern-article" key={current.id} id={current.id}
+            aria-label={current.title} data-wide={current.wide || undefined}>
+            <div className="motion-pattern-stage"><div className="motion-pattern-sample">{current.body}</div></div>
+          </article>
         </div>
-        <nav aria-label="Pattern sections" className="motion-section-nav">
-          {visible.map(section => <a key={section.id} href={`#${section.id}`}>{section.label}</a>)}
-        </nav>
       </div>
-      {!visible.length && <Text role="status">No matching patterns.</Text>}
-      {visible.map(section => <section key={section.id} id={section.id} aria-labelledby={section.id + "-title"}>
-        <Heading id={section.id + "-title"} level={2}>{section.title}</Heading>
-        <div className="motion-pattern-grid">
-          {section.items.map(item => <article key={item.id} id={item.id} aria-labelledby={item.id + "-title"}>
-            <Heading id={item.id + "-title"} level={3}>{item.title}</Heading>
-            <div className="motion-pattern-stage"><div className="motion-pattern-sample">{item.body}</div></div>
-          </article>)}
-        </div>
-      </section>)}
     </main>
   </Yogurt>;
 }

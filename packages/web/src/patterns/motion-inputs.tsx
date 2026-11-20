@@ -38,7 +38,7 @@ export function MentionPicker({ label, people, value, onChange }: {
   return <div className="yg-mention">
     <label className="yg-label" htmlFor={id}>{label}</label>
     <div className="yg-mention-surface">
-      <textarea id={id} ref={input} value={value} rows={3} aria-autocomplete="list" aria-expanded={open} aria-controls={open ? `${id}-list` : undefined} aria-activedescendant={open ? `${id}-option-${index}` : undefined}
+      <textarea id={id} ref={input} value={value} rows={3} aria-describedby={`${id}-hint`} aria-autocomplete="list" aria-expanded={open} aria-controls={open ? `${id}-list` : undefined} aria-activedescendant={open ? `${id}-option-${index}` : undefined}
         onFocus={event => { setFocused(true); setCaret(event.currentTarget.selectionStart); }}
         onBlur={() => setFocused(false)}
         onSelect={event => { setCaret(event.currentTarget.selectionStart); setActive(0); }}
@@ -49,9 +49,9 @@ export function MentionPicker({ label, people, value, onChange }: {
           else if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); setActive((index + (event.key === "ArrowDown" ? 1 : options.length - 1)) % options.length); }
           else if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); select(options[index]); }
         }} />
-      <span className="yg-mention-hint">Type @ to mention someone</span>
+      <span className="yg-mention-hint" id={`${id}-hint`}><kbd>@</kbd> Mention someone</span>
       {open && <div id={`${id}-list`} className="yg-mention-list" role="listbox" aria-label="People">
-        {options.map((person, i) => <button id={`${id}-option-${i}`} key={person.id} role="option" aria-selected={i === index} type="button" onMouseDown={event => event.preventDefault()} onClick={() => select(person)}><span aria-hidden="true">@</span>{person.label}</button>)}
+        {options.map((person, i) => <button id={`${id}-option-${i}`} key={person.id} role="option" aria-selected={i === index} type="button" onMouseDown={event => event.preventDefault()} onClick={() => select(person)}><span aria-hidden="true">{Array.from(person.label)[0]?.toLocaleUpperCase()}</span>{person.label}</button>)}
       </div>}
     </div>
   </div>;
@@ -82,6 +82,9 @@ export function FileDrop({ label, onFiles, accept, multiple = false }: {
     setMessage(rejected ? `${rejected} ${rejected === 1 ? "file was" : "files were"} not added${accept ? ` (accepted: ${accept})` : ""}.` : `${selected.length} ${selected.length === 1 ? "file" : "files"} selected.`);
     if (selected.length) onFiles(selected);
   }
+  const formats = accept?.split(",").map(rule => rule.trim()).filter(Boolean)
+    .map(rule => rule.endsWith("/*") ? rule.split("/")[0] + " files" :
+      (rule.split("/").at(-1) ?? rule).replace(/^\./, "").toUpperCase()).join(", ");
   return <div className="yg-file-drop-wrap">
     <span className="yg-label" id={`${id}-label`}>{label}</span>
     <div className="yg-file-drop" data-dragging={dragging || undefined}
@@ -89,11 +92,16 @@ export function FileDrop({ label, onFiles, accept, multiple = false }: {
       onDragOver={event => { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; }}
       onDragLeave={event => { event.preventDefault(); depth.current = Math.max(0, depth.current - 1); if (!depth.current) setDragging(false); }}
       onDrop={event => { event.preventDefault(); depth.current = 0; setDragging(false); receive(Array.from(event.dataTransfer.files)); }}>
-      <span className="yg-file-drop-mark" aria-hidden="true">↑</span>
-      <strong>Drop files here</strong><span>or choose from your device</span>
+      <svg className="yg-file-drop-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M12 16V4m-4 4 4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" />
+      </svg>
+      <div className="yg-file-drop-copy">
+        <strong>Drop files here</strong>
+        {formats && <span id={`${id}-formats`}>{formats}</span>}
+      </div>
       <label className="yg-file-drop-button" htmlFor={id}>Choose {multiple ? "files" : "a file"}</label>
-      <input id={id} type="file" aria-labelledby={`${id}-label`} accept={accept} multiple={multiple} onChange={event => { receive(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} />
-      {accept && <small>Accepted: {accept}</small>}
+      <input id={id} type="file" aria-labelledby={`${id}-label`} aria-describedby={formats ? `${id}-formats` : undefined} accept={accept} multiple={multiple} onChange={event => { receive(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} />
     </div>
     <span className="yg-file-drop-status" role="status">{message}</span>
   </div>;

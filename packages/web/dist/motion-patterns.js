@@ -2,7 +2,7 @@
 "use client";
 import {
   Command
-} from "./shared/chunk-4G43ASAW.js";
+} from "./shared/chunk-VW3NWIEF.js";
 import "./shared/chunk-UNNWL6Q6.js";
 import {
   Select
@@ -58,6 +58,7 @@ function MentionPicker({ label, people, value, onChange }) {
           ref: input,
           value,
           rows: 3,
+          "aria-describedby": `${id}-hint`,
           "aria-autocomplete": "list",
           "aria-expanded": open,
           "aria-controls": open ? `${id}-list` : void 0,
@@ -92,9 +93,12 @@ function MentionPicker({ label, people, value, onChange }) {
           }
         }
       ),
-      /* @__PURE__ */ jsx("span", { className: "yg-mention-hint", children: "Type @ to mention someone" }),
+      /* @__PURE__ */ jsxs("span", { className: "yg-mention-hint", id: `${id}-hint`, children: [
+        /* @__PURE__ */ jsx("kbd", { children: "@" }),
+        " Mention someone"
+      ] }),
       open && /* @__PURE__ */ jsx("div", { id: `${id}-list`, className: "yg-mention-list", role: "listbox", "aria-label": "People", children: options.map((person, i) => /* @__PURE__ */ jsxs("button", { id: `${id}-option-${i}`, role: "option", "aria-selected": i === index, type: "button", onMouseDown: (event) => event.preventDefault(), onClick: () => select(person), children: [
-        /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: "@" }),
+        /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: Array.from(person.label)[0]?.toLocaleUpperCase() }),
         person.label
       ] }, person.id)) })
     ] })
@@ -119,6 +123,7 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
     setMessage(rejected ? `${rejected} ${rejected === 1 ? "file was" : "files were"} not added${accept ? ` (accepted: ${accept})` : ""}.` : `${selected.length} ${selected.length === 1 ? "file" : "files"} selected.`);
     if (selected.length) onFiles(selected);
   }
+  const formats = accept?.split(",").map((rule) => rule.trim()).filter(Boolean).map((rule) => rule.endsWith("/*") ? rule.split("/")[0] + " files" : (rule.split("/").at(-1) ?? rule).replace(/^\./, "").toUpperCase()).join(", ");
   return /* @__PURE__ */ jsxs("div", { className: "yg-file-drop-wrap", children: [
     /* @__PURE__ */ jsx("span", { className: "yg-label", id: `${id}-label`, children: label }),
     /* @__PURE__ */ jsxs(
@@ -147,21 +152,32 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
           receive(Array.from(event.dataTransfer.files));
         },
         children: [
-          /* @__PURE__ */ jsx("span", { className: "yg-file-drop-mark", "aria-hidden": "true", children: "\u2191" }),
-          /* @__PURE__ */ jsx("strong", { children: "Drop files here" }),
-          /* @__PURE__ */ jsx("span", { children: "or choose from your device" }),
+          /* @__PURE__ */ jsx(
+            "svg",
+            {
+              className: "yg-file-drop-mark",
+              viewBox: "0 0 24 24",
+              fill: "none",
+              stroke: "currentColor",
+              strokeWidth: 1.7,
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              "aria-hidden": "true",
+              children: /* @__PURE__ */ jsx("path", { d: "M12 16V4m-4 4 4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" })
+            }
+          ),
+          /* @__PURE__ */ jsxs("div", { className: "yg-file-drop-copy", children: [
+            /* @__PURE__ */ jsx("strong", { children: "Drop files here" }),
+            formats && /* @__PURE__ */ jsx("span", { id: `${id}-formats`, children: formats })
+          ] }),
           /* @__PURE__ */ jsxs("label", { className: "yg-file-drop-button", htmlFor: id, children: [
             "Choose ",
             multiple ? "files" : "a file"
           ] }),
-          /* @__PURE__ */ jsx("input", { id, type: "file", "aria-labelledby": `${id}-label`, accept, multiple, onChange: (event) => {
+          /* @__PURE__ */ jsx("input", { id, type: "file", "aria-labelledby": `${id}-label`, "aria-describedby": formats ? `${id}-formats` : void 0, accept, multiple, onChange: (event) => {
             receive(Array.from(event.currentTarget.files ?? []));
             event.currentTarget.value = "";
-          } }),
-          accept && /* @__PURE__ */ jsxs("small", { children: [
-            "Accepted: ",
-            accept
-          ] })
+          } })
         ]
       }
     ),
@@ -270,10 +286,20 @@ function StorageMeter({ label, used, capacity, unit }) {
   const ratio = known ? Math.min(1, used / capacity) : 0;
   const ticks = 24;
   return /* @__PURE__ */ jsxs4("div", { className: "yg-storage-meter", "data-full": ratio === 1 || void 0, children: [
-    /* @__PURE__ */ jsxs4("div", { className: "yg-motion-detail-line", children: [
-      /* @__PURE__ */ jsx4("strong", { id, children: label }),
-      /* @__PURE__ */ jsx4("span", { children: known ? `${used} / ${capacity} ${unit}` : "Capacity unavailable" })
-    ] }),
+    /* @__PURE__ */ jsx4("strong", { id, className: "yg-storage-heading", children: label }),
+    known ? /* @__PURE__ */ jsxs4("div", { className: "yg-storage-amount", children: [
+      /* @__PURE__ */ jsxs4("strong", { children: [
+        used,
+        " ",
+        unit
+      ] }),
+      /* @__PURE__ */ jsxs4("span", { children: [
+        "of ",
+        capacity,
+        " ",
+        unit
+      ] })
+    ] }) : /* @__PURE__ */ jsx4("span", { className: "yg-help", children: "Capacity unavailable" }),
     known && /* @__PURE__ */ jsx4(
       "div",
       {
@@ -450,7 +476,7 @@ function ExpandCard({ title, children }) {
   return /* @__PURE__ */ jsxs6("details", { className: "yg-expand-card", children: [
     /* @__PURE__ */ jsxs6("summary", { children: [
       /* @__PURE__ */ jsx6("span", { children: title }),
-      /* @__PURE__ */ jsx6("span", { className: "yg-card-disclosure", "aria-hidden": "true", children: "+" })
+      /* @__PURE__ */ jsx6("span", { className: "yg-card-disclosure", children: /* @__PURE__ */ jsx6(Icon, { name: "plus" }) })
     ] }),
     /* @__PURE__ */ jsx6("div", { className: "yg-expand-card-body", children })
   ] });
@@ -459,16 +485,15 @@ function FanCards({ items }) {
   const [selectedId, setSelectedId] = useState5(null);
   const selected = items.find((item) => item.id === selectedId);
   return /* @__PURE__ */ jsxs6("div", { className: "yg-fan-cards", children: [
-    /* @__PURE__ */ jsx6("div", { className: "yg-fan-cards-list", "aria-label": "Cards", children: items.map((item, index) => /* @__PURE__ */ jsxs6(
+    /* @__PURE__ */ jsx6("div", { className: "yg-fan-cards-list", "aria-label": "Cards", children: items.map((item) => /* @__PURE__ */ jsxs6(
       "button",
       {
         type: "button",
         "aria-pressed": item.id === selected?.id,
         onClick: () => setSelectedId(item.id === selectedId ? null : item.id),
         children: [
-          /* @__PURE__ */ jsx6("span", { className: "yg-fan-number", "aria-hidden": "true", children: String(index + 1).padStart(2, "0") }),
           /* @__PURE__ */ jsx6("span", { children: item.label }),
-          /* @__PURE__ */ jsx6("span", { "aria-hidden": "true", children: "\u2197" })
+          /* @__PURE__ */ jsx6(Icon, { name: "next" })
         ]
       },
       item.id
@@ -760,7 +785,7 @@ function TaskList({ label, tasks }) {
         " done"
       ] })
     ] }),
-    tasks.length === 0 && /* @__PURE__ */ jsx9("p", { className: "yg-help", children: "No steps yet." }),
+    tasks.length > 0 ? /* @__PURE__ */ jsx9("div", { className: "yg-task-progress", "aria-hidden": "true", children: tasks.map((task) => /* @__PURE__ */ jsx9("span", { "data-state": task.state }, task.id)) }) : /* @__PURE__ */ jsx9("p", { className: "yg-help", children: "No steps yet." }),
     /* @__PURE__ */ jsx9("ol", { children: tasks.map((task) => /* @__PURE__ */ jsx9("li", { "data-state": task.state, "data-active": active === task.id || void 0, children: task.steps?.length ? /* @__PURE__ */ jsxs9("details", { children: [
       /* @__PURE__ */ jsxs9("summary", { className: "yg-task-line", children: [
         /* @__PURE__ */ jsx9(TaskLine, { task }),

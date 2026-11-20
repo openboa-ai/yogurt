@@ -2,6 +2,7 @@ const { chromium } = require("playwright-core");
 const { pathToFileURL } = require("node:url");
 const { resolve } = require("node:path");
 const assert = require("node:assert/strict");
+const { control, radius } = require("../design/tokens/brand.json");
 const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/components.html")).href;
 async function metrics(select) {
   return select.evaluate((el) => {
@@ -66,16 +67,16 @@ async function metrics(select) {
         document.querySelector(".specimen select")?.matches(":open"),
       );
       const entering = await metrics(select);
-      assert.ok(entering.first.height >= (touch ? 44 : 36));
+      assert.ok(entering.first.height >= (touch ? control.touch : control.height));
       await page.waitForFunction(() => getComputedStyle(
         document.querySelector(".specimen select"), "::picker(select)",
       ).translate === "none");
       const m = await metrics(select);
       assert.equal(m.appearance, "base-select");
-      assert.equal(m.corner, "12px");
+      assert.equal(m.corner, radius.panel + "px");
       assert.equal(m.check, "1");
       assert.ok(Math.abs(m.field.width - m.panelWidth) < 1, JSON.stringify(m));
-      assert.ok(m.first.height >= (touch ? 44 : 36));
+      assert.ok(m.first.height >= (touch ? control.touch : control.height));
       assert.ok(
         Math.abs(m.field.bottom + 8 - m.first.top) < 1 ||
           Math.abs(m.field.top - 8 - m.last.bottom) < 1,

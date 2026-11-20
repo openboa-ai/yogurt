@@ -1,10 +1,11 @@
 "use client";
 import { useState, type ReactNode } from "react";
+import { Icon } from "../foundation/foundation.js";
 
 export function ExpandCard({ title, children }: { title: string; children: ReactNode }) {
   return (
     <details className="yg-expand-card">
-      <summary><span>{title}</span><span className="yg-card-disclosure" aria-hidden="true">+</span></summary>
+      <summary><span>{title}</span><span className="yg-card-disclosure"><Icon name="plus" /></span></summary>
       <div className="yg-expand-card-body">{children}</div>
     </details>
   );
@@ -17,11 +18,10 @@ export function FanCards({ items }: { items: FanItem[] }) {
   return (
     <div className="yg-fan-cards">
       <div className="yg-fan-cards-list" aria-label="Cards">
-        {items.map((item, index) => (
+        {items.map(item => (
           <button key={item.id} type="button" aria-pressed={item.id === selected?.id}
             onClick={() => setSelectedId(item.id === selectedId ? null : item.id)}>
-            <span className="yg-fan-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-            <span>{item.label}</span><span aria-hidden="true">↗</span>
+            <span>{item.label}</span><Icon name="next" />
           </button>
         ))}
       </div>

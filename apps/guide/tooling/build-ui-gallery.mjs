@@ -55,7 +55,6 @@ const galleryStyles = [
     "apps/guide/motion-extra-controls.css",
     "apps/guide/motion-extra-gestures.css",
     "apps/guide/motion-extra-utilities.css",
-    "apps/guide/motion-extra-expression.css",
   ] : []),
 ];
 const familyStyles = ["design/styles/tokens.css", "design/styles/ui.css", "design/styles/ui-agent-motion.css", "apps/guide/agent-family.css"];

@@ -322,24 +322,26 @@
     "size": {
       "caption": 12,
       "ui": 14,
+      "interface": 15,
       "body": 16,
-      "subheading": 20,
+      "subheading": 22,
       "title": 32,
-      "headline": 44,
+      "headline": 40,
       "help": 13
     },
     "lineHeight": {
       "caption": 16,
       "ui": 20,
+      "interface": 22,
       "body": 24,
-      "subheading": 26,
+      "subheading": 28,
       "title": 36,
-      "headline": 48,
-      "help": 19
+      "headline": 44,
+      "help": 18
     },
     "tracking": {
       "body": -0.006,
-      "label": -0.012,
+      "label": -0.006,
       "heading": -0.027,
       "display": -0.045,
       "meta": 0.005
@@ -356,8 +358,11 @@
     "4": 4,
     "6": 6,
     "8": 8,
+    "10": 10,
     "12": 12,
+    "14": 14,
     "16": 16,
+    "18": 18,
     "20": 20,
     "24": 24,
     "32": 32,
@@ -365,9 +370,10 @@
     "64": 64
   },
   "radius": {
-    "control": 8,
-    "panel": 12,
-    "sheet": 16,
+    "control": 10,
+    "panel": 16,
+    "sheet": 20,
+    "card": 24,
     "round": 999,
     "small": 6
   },
@@ -376,10 +382,10 @@
     "focus": 2
   },
   "control": {
-    "height": 36,
+    "height": 40,
     "touch": 44,
-    "compact": 28,
-    "icon": 32,
+    "compact": 32,
+    "icon": 36,
     "glyph": 18
   },
   "signature": {

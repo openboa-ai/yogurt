@@ -153,17 +153,18 @@
     "radius-control": "radius.control",
     "radius-panel": "radius.panel",
     "radius-sheet": "radius.sheet",
+    "radius-card": "radius.card",
     "size-compact": "control.compact",
     "size-regular": "control.height",
     "size-touch": "control.touch",
     "size-icon": "control.icon",
     "glyph": "control.glyph",
-    "inset-compact": "space.8",
-    "inset-regular": "space.12",
-    "inset-roomy": "space.16",
+    "inset-compact": "space.10",
+    "inset-regular": "space.14",
+    "inset-roomy": "space.18",
     "inset-layer": "space.4",
-    "inset-panel": "space.16",
-    "inset-sheet": "space.20",
+    "inset-panel": "space.18",
+    "inset-sheet": "space.24",
     "gap-tight": "space.6",
     "gap-inline": "space.8",
     "gap-stack": "space.12",
@@ -175,12 +176,12 @@
     "track-inset": 3
   },
   "motion": {
-    "press": 80,
-    "layer": 120,
-    "travel": 160,
-    "change": 180,
-    "panel": 200,
-    "expand": 320,
+    "press": 100,
+    "layer": 150,
+    "travel": 180,
+    "change": 200,
+    "panel": 250,
+    "expand": 300,
     "busy": 750
   },
   "elevation": {
@@ -199,8 +200,12 @@
       "ui"
     ],
     "body": [
-      "ui",
+      "interface",
       "body"
+    ],
+    "compact": [
+      "help",
+      "ui"
     ],
     "help": [
       "help",

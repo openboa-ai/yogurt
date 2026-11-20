@@ -12,7 +12,7 @@ import {
 } from "radix-ui";
 import { DayPicker } from "react-day-picker";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
-import { Icon, type Option } from "../foundation/foundation.js";
+import { Icon, type IconName, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
 import { Dialog } from "./layers.js";
 import type { Destination } from "./navigation.js";
@@ -61,7 +61,8 @@ export function Accordion({
 }
 type CommandProps = {
   label: string;
-  items: Option[];
+  title?: string;
+  items: (Option & { hint?: string; icon?: IconName })[];
   onSelect: (id: string) => void;
 };
 export function ContextMenu({
@@ -146,7 +147,7 @@ export function HoverCard({
     </H.Root>
   );
 }
-export function Command({ label, items, onSelect }: CommandProps) {
+export function Command({ label, title = label, items, onSelect }: CommandProps) {
   const [open, setOpen] = useState(false),
     [query, setQuery] = useState(""),
     [active, setActive] = useState(""),
@@ -183,34 +184,36 @@ export function Command({ label, items, onSelect }: CommandProps) {
       >
         {label}
       </Button>
-      <Dialog open={open} onOpenChange={setOpen} title={label}>
-        <input
-          autoFocus
-          role="combobox"
-          className="yg-standalone"
-          aria-label="Find a command"
-          placeholder="Find a command"
-          aria-expanded="true"
-          aria-controls={list}
-          aria-autocomplete="list"
-          aria-activedescendant={current ? list + current.id : undefined}
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setActive("");
-          }}
-          onKeyDown={(e) => {
-            if (e.nativeEvent.isComposing) return;
-            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-              e.preventDefault();
-              move(e.key === "ArrowDown" ? 1 : -1);
-            }
-            if (e.key === "Enter") {
-              e.preventDefault();
-              choose(current);
-            }
-          }}
-        />
+      <Dialog open={open} onOpenChange={setOpen} title={title}>
+        <div className="yg-command-search">
+          <Icon name="search" />
+          <input
+            autoFocus
+            role="combobox"
+            aria-label="Find a command"
+            placeholder="Find a command"
+            aria-expanded="true"
+            aria-controls={list}
+            aria-autocomplete="list"
+            aria-activedescendant={current ? list + current.id : undefined}
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setActive("");
+            }}
+            onKeyDown={(e) => {
+              if (e.nativeEvent.isComposing) return;
+              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                e.preventDefault();
+                move(e.key === "ArrowDown" ? 1 : -1);
+              }
+              if (e.key === "Enter") {
+                e.preventDefault();
+                choose(current);
+              }
+            }}
+          />
+        </div>
         <div
           className="yg-command-list"
           id={list}
@@ -222,13 +225,20 @@ export function Command({ label, items, onSelect }: CommandProps) {
               key={i.id}
               id={list + i.id}
               role="option"
+              aria-label={i.label}
+              aria-describedby={i.hint ? list + i.id + "-hint" : undefined}
               aria-selected={current?.id === i.id}
               aria-disabled={i.disabled}
               onPointerMove={() => !i.disabled && setActive(i.id)}
               onMouseDown={(e) => e.preventDefault()}
               onClick={() => choose(i)}
             >
-              {i.label}
+              {i.icon && <Icon name={i.icon} />}
+              <span className="yg-command-copy">
+                <span>{i.label}</span>
+                {i.hint && <span className="yg-help" id={list + i.id + "-hint"}>{i.hint}</span>}
+              </span>
+              {current?.id === i.id && <kbd aria-hidden="true">↵</kbd>}
             </div>
           ))}
         </div>

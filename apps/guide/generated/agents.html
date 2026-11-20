@@ -3,7 +3,7 @@
 <style>/* Generated from design/tokens/brand.json by scripts/brand/export-css.mjs. */
 :root {
   --boa-palette-hues: neutral paper mist slate blue indigo violet purple magenta rose red coral orange ochre yellow lime green sage teal cyan earth gray-green;
-  --boa-spacing-steps: 2 4 6 8 12 16 20 24 32 48 64;
+  --boa-spacing-steps: 2 4 6 8 10 12 14 16 18 20 24 32 48 64;
   --boa-palette-steps: 0 25 50 100 200 250 300 400 500 600 700 750 800 850 900 950 975 1000;
   --boa-color-neutral-0: #FCFCFC;
   --boa-color-neutral-25: #FAFAFA;
@@ -282,20 +282,22 @@
   --boa-role-weight-wordmark: 760;
   --boa-size-caption: 12px;
   --boa-size-ui: 14px;
+  --boa-size-interface: 15px;
   --boa-size-body: 16px;
-  --boa-size-subheading: 20px;
+  --boa-size-subheading: 22px;
   --boa-size-title: 32px;
-  --boa-size-headline: 44px;
+  --boa-size-headline: 40px;
   --boa-size-help: 13px;
   --boa-line-height-caption: 16px;
   --boa-line-height-ui: 20px;
+  --boa-line-height-interface: 22px;
   --boa-line-height-body: 24px;
-  --boa-line-height-subheading: 26px;
+  --boa-line-height-subheading: 28px;
   --boa-line-height-title: 36px;
-  --boa-line-height-headline: 48px;
-  --boa-line-height-help: 19px;
+  --boa-line-height-headline: 44px;
+  --boa-line-height-help: 18px;
   --boa-tracking-body: -0.006em;
-  --boa-tracking-label: -0.012em;
+  --boa-tracking-label: -0.006em;
   --boa-tracking-heading: -0.027em;
   --boa-tracking-display: -0.045em;
   --boa-tracking-meta: 0.005em;
@@ -303,24 +305,28 @@
   --boa-space-4: 4px;
   --boa-space-6: 6px;
   --boa-space-8: 8px;
+  --boa-space-10: 10px;
   --boa-space-12: 12px;
+  --boa-space-14: 14px;
   --boa-space-16: 16px;
+  --boa-space-18: 18px;
   --boa-space-20: 20px;
   --boa-space-24: 24px;
   --boa-space-32: 32px;
   --boa-space-48: 48px;
   --boa-space-64: 64px;
-  --boa-radius-control: 8px;
-  --boa-radius-panel: 12px;
-  --boa-radius-sheet: 16px;
+  --boa-radius-control: 10px;
+  --boa-radius-panel: 16px;
+  --boa-radius-sheet: 20px;
+  --boa-radius-card: 24px;
   --boa-radius-round: 999px;
   --boa-radius-small: 6px;
   --boa-stroke-rule: 1px;
   --boa-stroke-focus: 2px;
-  --boa-control-height: 36px;
+  --boa-control-height: 40px;
   --boa-control-touch: 44px;
-  --boa-control-compact: 28px;
-  --boa-control-icon: 32px;
+  --boa-control-compact: 32px;
+  --boa-control-icon: 36px;
   --boa-control-glyph: 18px;
 }
 
@@ -498,6 +504,7 @@
   min-block-size: var(--yg-size-compact);
   padding-inline: var(--yg-inset-compact);
   border-radius: var(--yg-radius-small);
+  font: var(--yg-font-compact);
 }
 .yg-button[data-control-size="touch"] {
   min-block-size: var(--yg-size-touch);

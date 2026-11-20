@@ -172,6 +172,7 @@
   min-block-size: var(--yg-size-compact);
   padding-inline: var(--yg-inset-compact);
   border-radius: var(--yg-radius-small);
+  font: var(--yg-font-compact);
 }
 .yg-button[data-control-size="touch"] {
   min-block-size: var(--yg-size-touch);

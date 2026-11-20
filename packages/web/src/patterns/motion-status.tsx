@@ -16,10 +16,13 @@ export function StorageMeter({ label, used, capacity, unit }: {
   const ticks = 24;
   return (
     <div className="yg-storage-meter" data-full={ratio === 1 || undefined}>
-      <div className="yg-motion-detail-line">
-        <strong id={id}>{label}</strong>
-        <span>{known ? `${used} / ${capacity} ${unit}` : "Capacity unavailable"}</span>
-      </div>
+      <strong id={id} className="yg-storage-heading">{label}</strong>
+      {known ? (
+        <div className="yg-storage-amount">
+          <strong>{used} {unit}</strong>
+          <span>of {capacity} {unit}</span>
+        </div>
+      ) : <span className="yg-help">Capacity unavailable</span>}
       {known && (
         <div className="yg-storage-ticks" role="meter" aria-labelledby={id}
           aria-valuemin={0} aria-valuemax={capacity} aria-valuenow={Math.min(used, capacity)}

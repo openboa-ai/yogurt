@@ -5,15 +5,15 @@ function InvitePeople() {
   const [email, setEmail] = useState("");
   const [invites, setInvites] = useState<string[]>([]);
   return <form className="motion-extra" onSubmit={e => { e.preventDefault(); const next = email.trim(); if (next && !invites.includes(next)) setInvites([...invites, next]); setEmail(""); }}>
-    <label>Email address<input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="name@example.com" /></label>
-    <Y.Button type="submit">Add person</Y.Button><div className="motion-extra-chips">{invites.map(name => <button type="button" key={name} onClick={() => setInvites(invites.filter(item => item !== name))} aria-label={`Remove ${name}`}>{name} ×</button>)}</div>
+    <Y.TextField label="Email address" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="name@example.com" />
+    <Y.Button type="submit">Add person</Y.Button>{invites.length > 0 && <div className="motion-extra-chips">{invites.map(name => <button type="button" key={name} onClick={() => setInvites(invites.filter(item => item !== name))} aria-label={`Remove ${name}`}>{name} ×</button>)}</div>}
     <small>People added here are a local preview.</small>
   </form>;
 }
 function TagInput() {
   const [text, setText] = useState(""); const [tags, setTags] = useState(["Ideas", "Research"]);
   return <form className="motion-extra" onSubmit={e => { e.preventDefault(); const next = text.trim(); if (next && !tags.includes(next)) setTags([...tags, next]); setText(""); }}>
-    <label>Add a tag<input value={text} onChange={e => setText(e.target.value)} placeholder="Type a tag" /></label><Y.Button type="submit" emphasis="soft">Add tag</Y.Button>
+    <Y.TextField label="Add a tag" value={text} onChange={e => setText(e.target.value)} placeholder="Type a tag" /><Y.Button type="submit" emphasis="soft">Add tag</Y.Button>
     <div className="motion-extra-chips">{tags.map(tag => <button key={tag} type="button" onClick={() => setTags(tags.filter(t => t !== tag))} aria-label={`Remove ${tag}`}>{tag} ×</button>)}</div>
   </form>;
 }

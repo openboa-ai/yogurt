@@ -41,89 +41,125 @@ async function run(browser) {
         await page.screenshot({path: join(output, `yogurt-alignment-${width}.png`)});
     }
     await page.goto(gallery("motion-patterns"));
-    await page.getByRole("heading", {name: "Motion patterns", exact: true}).waitFor();
-    const cards = await page.locator(".motion-pattern-grid > article").all();
-    const ids = await page.locator(".motion-pattern-grid > article").evaluateAll(nodes => nodes.map(node => node.id));
-    assert.equal(ids.length, new Set(ids).size, "Gallery IDs are unique");
-    assert(cards.length >= 86, `Only ${cards.length} interactive patterns`);
-    const inactive = await page.locator(".motion-pattern-grid > article").evaluateAll(nodes =>
-      nodes.filter(node => !node.querySelector("button, input, select, textarea, summary, [tabindex]")).map(node => node.id));
-    assert.deepEqual(inactive, [], "Every pattern has a direct control");
-    const alignment = await page.locator(".motion-pattern-grid > article").evaluateAll(nodes =>
-      nodes.flatMap(article => {
-        const stage = article.querySelector(".motion-pattern-stage");
-        const sample = article.querySelector(".motion-pattern-sample");
-        const title = article.querySelector("h3");
-        const area = stage.getBoundingClientRect();
-        const content = sample.getBoundingClientRect();
-        const readingEdge = title.getBoundingClientRect().left;
-        return Math.abs(area.left + area.right - content.left - content.right) > 2 ||
-          Math.abs(readingEdge - content.left) > 1
-          ? [article.id] : [];
-      }));
-    assert.deepEqual(alignment, [], `Unaligned specimens at ${width}px`);
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
-    assert(overflow <= 1, JSON.stringify({width, overflow}));
+    await page.getByRole("heading", {name: "Task list", level: 1}).waitFor();
     if (output && width !== 768) await page.screenshot({path: join(output, `yogurt-motion-patterns-${width}.png`)});
+    const links = page.locator('[aria-label="Pattern index"] a');
+    const ids = await links.evaluateAll(nodes => nodes.map(node => node.hash.slice(1)));
+    assert.equal(ids.length, 78, "The retained patterns are indexed");
+    assert.equal(ids.length, new Set(ids).size, "Gallery IDs are unique");
+    for (const id of ["expressive", "rubber-dock", "pull-cord", "magnetic-press", "attention-ring"])
+      assert(!ids.includes(id), `Retired entry remains: ${id}`);
+    const article = page.locator(".motion-pattern-article");
+    const demo = async id => {
+      await page.evaluate(id => { window.location.hash = id; }, id);
+      const example = page.locator(".motion-pattern-article#" + id);
+      await example.waitFor();
+      return example;
+    };
+    for (const id of ids) {
+      const example = await demo(id);
+      const check = await example.evaluate(node => {
+        const heading = document.querySelector(".motion-pattern-intro h1").getBoundingClientRect();
+        const bounds = node.querySelector(".motion-pattern-sample").getBoundingClientRect();
+        return {
+          hasControl: !!node.querySelector("button, input, select, textarea, summary, [tabindex]"),
+          overflow: document.documentElement.scrollWidth - innerWidth,
+          readingEdge: Math.abs(bounds.left - heading.left),
+        };
+      });
+      assert(check.hasControl && check.overflow <= 1 && check.readingEdge <= 1, JSON.stringify({width, id, ...check}));
+    }
+    assert.equal(await article.count(), 1, "Only the chosen pattern is mounted");
+    await page.goto(gallery("motion-patterns") + "#task-list");
+    const indexToggle = page.getByRole("button", {name: "Browse patterns"});
+    if (await indexToggle.isVisible()) await indexToggle.click();
+    const search = page.getByRole("searchbox", {name: "Find a pattern"});
+    await search.fill("Expressive motion");
+    await page.getByText("No matching patterns.").waitFor();
+    await search.fill("Storage meter");
+    assert.equal(await links.count(), 1);
+    await search.press("Enter");
+    await page.locator(".motion-pattern-article#storage-meter").waitFor();
+    await page.waitForFunction(() => document.activeElement === document.querySelector(".motion-pattern-intro h1"));
+    if (await indexToggle.isVisible()) assert.equal(await indexToggle.getAttribute("aria-expanded"), "false");
+    await page.goBack();
+    await page.locator(".motion-pattern-article#task-list").waitFor();
     if (width !== 1440) {
       await page.close();
       continue;
     }
-    const demo = id => page.locator("article#" + id);
-    const focus = demo("focus-mode");
+    const primarySize = await page.locator("#task-list .yg-button").first().evaluate(node => ({
+      height: getComputedStyle(node).minBlockSize,
+      corner: getComputedStyle(node).borderTopLeftRadius,
+      font: getComputedStyle(node).fontSize,
+    }));
+    assert.deepEqual(primarySize, {height:"40px",corner:"10px",font:"14px"});
+    const command = await demo("command-palette");
+    const open = command.getByRole("button", {name:"Open command palette"});
+    await open.click();
+    const commandField = page.getByRole("combobox", {name:"Find a command"});
+    await commandField.fill("Source");
+    await commandField.press("Enter");
+    await command.getByText("Opened Source files").waitFor();
+    assert(await open.evaluate(node => node === document.activeElement));
+    const focus = await demo("focus-mode");
     await focus.getByRole("switch", {name:"Focus mode"}).click();
     assert.equal(await focus.getByRole("status").textContent(), "Priority only");
     assert.equal(await focus.locator("[data-deferred]").count(), 2);
-    const billing = demo("plan-switch");
+    const billing = await demo("plan-switch");
     await billing.getByText("Yearly", {exact:true}).click();
     assert.match(await billing.getByRole("status").textContent(), /\$240 billed yearly/);
 
-    const meter = demo("storage-meter").getByRole("meter");
-    await demo("storage-meter").getByRole("button", {name: "Add files"}).click();
+    const storage = await demo("storage-meter");
+    const meter = storage.getByRole("meter");
+    await storage.getByRole("button", {name: "Add files"}).click();
     assert.equal(await meter.getAttribute("aria-valuenow"), "76");
 
-    const mention = demo("mention-picker").locator("textarea");
+    const mentionExample = await demo("mention-picker");
+    const mention = mentionExample.locator("textarea");
     await mention.pressSequentially("Ask @ka");
-    await demo("mention-picker").getByRole("option", {name: "Kai"}).waitFor();
+    await mentionExample.getByRole("option", {name: "Kai"}).waitFor();
     await mention.press("Enter");
     assert.equal((await mention.inputValue()).trim(), "Ask @Kai");
     assert(await mention.evaluate(node => node === document.activeElement));
 
-    const ghost = demo("ghost-suggestion").getByRole("textbox");
+    const ghost = (await demo("ghost-suggestion")).getByRole("textbox");
     await ghost.focus();
     await ghost.press("ArrowRight");
     assert.equal(await ghost.inputValue(), "Review the workspace notes");
 
-    const input = demo("file-drop").locator('input[type="file"]');
+    const files = await demo("file-drop");
+    const input = files.locator('input[type="file"]');
     await input.setInputFiles({name: "brief.txt", mimeType: "text/plain", buffer: Buffer.from("Draft")});
-    await demo("file-drop").getByText("brief.txt", {exact: true}).waitFor();
+    await files.getByText("brief.txt", {exact: true}).waitFor();
     await input.setInputFiles({name: "not-allowed.csv", mimeType: "text/csv", buffer: Buffer.from("Draft")});
-    await demo("file-drop").getByText(/1 file was not added/).waitFor();
+    await files.getByText(/1 file was not added/).waitFor();
 
-    const otp = demo("otp").getByRole("textbox");
+    const otp = (await demo("otp")).getByRole("textbox");
     await otp.fill("12a34567");
     assert.equal(await otp.inputValue(), "123456");
 
-    const action = demo("loading-to-success");
+    const action = await demo("loading-to-success");
     await action.getByRole("button", {name: "Save changes"}).click();
     await action.getByRole("button", {name: "Saved", exact: true}).waitFor();
 
-    const hold = demo("hold-button").locator(".yg-hold-confirm");
+    const confirm = await demo("hold-button");
+    const hold = confirm.locator(".yg-hold-confirm");
     await hold.focus();
     await hold.press("Enter");
-    assert.equal((await demo("hold-button").getByRole("status").textContent()).trim(), "");
+    assert.equal((await confirm.getByRole("status").textContent()).trim(), "");
     await hold.press("Escape");
     await hold.press("Enter");
     await hold.press("Enter");
-    assert.equal((await demo("hold-button").getByRole("status").textContent()).trim(), "Approved 1 time.");
+    assert.equal((await confirm.getByRole("status").textContent()).trim(), "Approved 1 time.");
 
-    const island = demo("activity-island").getByRole("button");
+    const island = (await demo("activity-island")).getByRole("button");
     await island.click();
     assert.equal(await island.getAttribute("aria-expanded"), "true");
     await island.click();
     assert.equal(await island.getAttribute("aria-expanded"), "false");
 
-    const tasks = demo("task-list");
+    const tasks = await demo("task-list");
     const summary = tasks.locator("summary");
     await summary.press("Enter");
     await tasks.getByText("Verify the revision").waitFor();
@@ -136,7 +172,7 @@ async function run(browser) {
     await tasks.getByText("Running", {exact: true}).waitFor();
     if (output) await tasks.screenshot({path: join(output, "yogurt-task-list-review.png")});
 
-    const cart = demo("cart-button");
+    const cart = await demo("cart-button");
     const yogurt = cart.getByRole("group", {name: "Greek yogurt"});
     const subtotal = cart.locator("[data-cart-subtotal]");
     assert.equal(await subtotal.textContent(), "$7.00");
@@ -176,17 +212,16 @@ async function run(browser) {
 
     await page.emulateMedia({reducedMotion: "reduce"});
     assert.equal(await yogurt.locator(".yg-cart-stepper").evaluate(n => getComputedStyle(n).transitionDuration), "0s");
+    await demo("task-list");
     assert.equal(await tasks.locator("[data-active]").evaluate(n =>
       getComputedStyle(n, "::after").animationName), "none");
-    await demo("thinking").getByRole("button", {name: "Start thinking"}).click();
-    assert.equal(await demo("thinking").locator(".yg-thinking-shape").evaluate(n =>
+    const thinking = await demo("thinking");
+    await thinking.getByRole("button", {name: "Start thinking"}).click();
+    assert.equal(await thinking.locator(".yg-thinking-shape").evaluate(n =>
       n.getAnimations().length), 0);
 
-    const search = page.getByRole("searchbox", {name: "Find a pattern"});
-    await search.fill("Storage meter");
-    assert.equal(await page.locator(".motion-pattern-grid > article").count(), 1);
     await page.close();
-    console.log(JSON.stringify({interactivePatterns: cards.length, viewport: [320, 768, 1440], errors}));
+    console.log(JSON.stringify({interactivePatterns: ids.length, viewport: [320, 768, 1440], errors}));
   }
   assert.deepEqual(errors, []);
 }

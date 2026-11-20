@@ -1,5 +1,5 @@
 import { type ReactNode } from "react";
-import { type Option } from "../foundation/foundation.js";
+import { type IconName, type Option } from "../foundation/foundation.js";
 import type { Destination } from "./navigation.js";
 export declare function Accordion({ label, items, multiple, }: {
     label: string;
@@ -13,7 +13,11 @@ export declare function Accordion({ label, items, multiple, }: {
 }): import("react/jsx-runtime").JSX.Element;
 type CommandProps = {
     label: string;
-    items: Option[];
+    title?: string;
+    items: (Option & {
+        hint?: string;
+        icon?: IconName;
+    })[];
     onSelect: (id: string) => void;
 };
 export declare function ContextMenu({ label, items, onSelect, children, }: CommandProps & {
@@ -23,7 +27,7 @@ export declare function HoverCard({ label, children, }: {
     label: string;
     children: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Command({ label, items, onSelect }: CommandProps): import("react/jsx-runtime").JSX.Element;
+export declare function Command({ label, title, items, onSelect }: CommandProps): import("react/jsx-runtime").JSX.Element;
 export declare function Menubar({ label, menus, onSelect, }: {
     label: string;
     menus: {
