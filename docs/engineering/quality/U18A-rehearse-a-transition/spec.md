@@ -30,3 +30,26 @@ On a failed frame preserve the clip and failing input, repair the owning impleme
 | U18A-B | Replay with reduced motion, a narrow layout and the alternate surface. | State, announcement and focus remain correct without travel. Degraded or untested combinations keep an explicit status. | Switching off movement suppresses the state update or an opaque final panel flashes translucent. |
 
 Collect the observations above against the exact candidate and target. Record the reviewer, revision and outstanding results in a review or verification record when they exist. [Current evidence and open decisions](../../../status.md) · [Originating need](../../../intents/quality/I18-review-interaction-quality/intent.md)
+
+## Motion improvement · comparison phase
+
+The owner authorized a first comparison of Button, Select, Segmented control and Carousel, followed by expansion across the component and recipe catalog and a fresh review of all six agent performances. Track the program in [issue #6](https://github.com/openboa-ai/yogurt/issues/6). The outcomes for this phase are a runnable Web comparison, recorded interaction checks and an owner choice of motion treatment.
+
+| Scene | Candidate behavior | Acceptance evidence |
+| --- | --- | --- |
+| Button | Immediate surface press and a modest inset. Keep label bounds steady. Reveal the result in the action after the host reports it, while keeping the action footprint fixed. | Press, release outside, one activation, pending, success and failure with a stable target. |
+| Select | Open the opaque picker outward from its field with a short directional offset and expansion on supporting browsers. Keep native picker semantics. | Open at both viewport edges. Escape and reopen while entering. Confirm the selected option, trigger value and restored focus. |
+| Segmented control | Set the selection immediately and let the visual marker settle toward it. | During A → C → B, keep marker continuity and settle under B while its content and accessible value already agree. |
+| Carousel | Follow direct horizontal manipulation. Add depth between incoming and outgoing cards during travel. Preserve vertical scroll. Commit on release beyond the threshold, and restore on cancel. Buttons retain focus and keyboard operation. | Observe the dragged position, direction reversal, snap-back and one-step commit. Expose only the current slide to focus and accessibility. |
+
+Use the existing catalog exports and shared tokens. The comparison scopes the candidate treatment to the guide. Deliver the review via a branch preview. Check first, intermediate and settled frames in a browser, reduced motion, light and dark, and a narrow viewport. Record the host and the tested states. Native validation and signed-off component motion enter later slices after the owner selects the comparison. The existing I18 gate applies to a production quality claim.
+
+## Motion improvement · library rollout
+
+The owner accepted the comparison's motion strength and requested the full library treatment and centered carousel navigation. Apply the approved press, picker, selection and card movement to the shared Web implementation. Move the pager buttons as a centered pair independently of the status label. Connect each catalog entry to the shared treatment its behavior uses. Stationary reading elements retain stable geometry during adjacent changes.
+
+Use quick surface feedback for input and editing. A picker enters with directional travel and keeps hit areas at their actual size for every frame. Give anchored layers clear origins and opaque text. A presented dialog may settle on entry and leave the top layer on a short exit where supported. Dismissal must release input and restore focus immediately. Selection, list and composition transitions follow the latest identity without replaying unrelated siblings. Progress, notifications and result treatments follow the supplied state. Reduced motion keeps interaction and meaning while removing animated travel and repeats.
+
+Retune the six authored presence clips together. Preserve two eyes, the original silhouettes, the public state IDs and the shared Web and Zig pose source. Review roster and detail sizes. Record browser, compiled Native and installed Native observations independently.
+
+The verification slice covers every gallery entry for rendering and representative independent motion on press, choice, layering, direct manipulation, status, workspaces and presence. Keep SDK exports stable and retain the original focus and callback contracts.

@@ -1,5 +1,7 @@
 "use client";
-import { useId, useRef, useState, type ReactNode } from "react";
+import {
+  useContext, useId, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode,
+} from "react";
 import {
   Accordion as A,
   ContextMenu as C,
@@ -15,6 +17,7 @@ import { Button, IconButton } from "./actions.js";
 import { Dialog } from "./layers.js";
 import type { Destination } from "./navigation.js";
 import { Checkbox, RadioGroup, Textarea } from "./forms.js";
+import { CarouselMotionReview } from "./motion-review-context.js";
 
 export function Accordion({
   label,
@@ -356,6 +359,99 @@ export function Navbar({
     </header>
   );
 }
+type CarouselItem = { id: string; label: string; content: ReactNode };
+
+function CarouselStrip({ items, current, move }: {
+  items: CarouselItem[];
+  current: number;
+  move: (delta: number) => void;
+}) {
+  const gesture = useRef<{
+    pointer: number; x: number; y: number; direction: number; width: number; active: boolean; distance: number;
+  } | null>(null);
+  const [drag, setDrag] = useState<{ pixels: number; fraction: number } | null>(null);
+
+  function begin(event: PointerEvent<HTMLDivElement>) {
+    if (!event.isPrimary || event.button !== 0 ||
+        (event.target as Element).closest("a, button, input, select, textarea, [contenteditable]")) return;
+    gesture.current = {
+      pointer: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      direction: event.currentTarget.matches(":dir(rtl)") ? -1 : 1,
+      width: event.currentTarget.clientWidth,
+      active: false,
+      distance: 0,
+    };
+  }
+
+  function track(event: PointerEvent<HTMLDivElement>) {
+    const next = gesture.current;
+    if (!next || next.pointer !== event.pointerId) return;
+    const x = event.clientX - next.x;
+    if (!next.active) {
+      const y = Math.abs(event.clientY - next.y);
+      if (y >= 6 && y >= Math.abs(x)) {
+        gesture.current = null;
+        return;
+      }
+      if (Math.abs(x) < 6) return;
+      next.active = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    next.distance = x * next.direction;
+    const forward = next.distance < 0;
+    const atEdge = forward ? current >= items.length - 1 : current === 0;
+    const pixels = atEdge ? x * 0.24 : Math.max(-next.width, Math.min(next.width, x));
+    setDrag({ pixels, fraction: next.width ? pixels * next.direction / next.width : 0 });
+  }
+
+  function finish(event: PointerEvent<HTMLDivElement>, commit = false) {
+    const previous = gesture.current;
+    if (!previous || previous.pointer !== event.pointerId) return;
+    gesture.current = null;
+    setDrag(null);
+    if (!commit || !previous.active) return;
+
+    const delta = previous.distance;
+    const threshold = Math.min(64, previous.width * 0.24);
+    if (Math.abs(delta) >= threshold) move(delta < 0 ? 1 : -1);
+  }
+
+  return (
+    <div
+      className="yg-slide yg-carousel-viewport"
+      onPointerDown={begin}
+      onPointerMove={track}
+      onPointerUp={(event) => finish(event, true)}
+      onPointerCancel={finish}
+      onLostPointerCapture={(event) => {
+        if (event.target === event.currentTarget) finish(event);
+      }}
+      onPointerLeave={(event) => {
+        if (!gesture.current?.active) finish(event);
+      }}
+    >
+      <div
+        className="yg-carousel-strip"
+        data-dragging={drag !== null || undefined}
+        style={{ "--yg-carousel-page": current, "--yg-carousel-drag": `${drag?.pixels ?? 0}px` } as CSSProperties}
+      >
+        {items.map((item, index) => {
+          const distance = Math.min(1, Math.abs(index - current + (drag?.fraction ?? 0)));
+          return (
+            <div key={item.id} inert={index !== current} aria-hidden={index !== current || undefined}>
+              <div className="yg-carousel-card" style={{"--yg-carousel-distance": distance} as CSSProperties}>
+                {Math.abs(index - current) <= 1 ? item.content : null}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function Carousel({
   label,
   items,
@@ -366,6 +462,7 @@ export function Carousel({
   const [index, setIndex] = useState(0),
     start = useRef<number | null>(null),
     current = Math.max(0, Math.min(index, items.length - 1));
+  const useStrip = useContext(CarouselMotionReview);
   function move(delta: number) {
     setIndex(Math.max(0, Math.min(current + delta, items.length - 1)));
   }
@@ -375,24 +472,26 @@ export function Carousel({
       aria-label={label}
       aria-roledescription="carousel"
     >
-      <div
-        className="yg-slide"
-        onTouchStart={(e) => {
-          start.current = e.touches[0].clientX;
-        }}
-        onTouchCancel={() => {
-          start.current = null;
-        }}
-        onTouchEnd={(e) => {
-          if (start.current !== null) {
-            const delta = e.changedTouches[0].clientX - start.current;
-            if (Math.abs(delta) > 45) move(delta < 0 ? 1 : -1);
-          }
-          start.current = null;
-        }}
-      >
-        {items[current]?.content}
-      </div>
+      {useStrip ? <CarouselStrip items={items} current={current} move={move} /> : (
+        <div
+          className="yg-slide"
+          onTouchStart={(e) => {
+            start.current = e.touches[0].clientX;
+          }}
+          onTouchCancel={() => {
+            start.current = null;
+          }}
+          onTouchEnd={(e) => {
+            if (start.current !== null) {
+              const delta = e.changedTouches[0].clientX - start.current;
+              if (Math.abs(delta) > 45) move(delta < 0 ? 1 : -1);
+            }
+            start.current = null;
+          }}
+        >
+          {items[current]?.content}
+        </div>
+      )}
       <footer>
         <span aria-live="polite">
           {items.length
@@ -403,18 +502,20 @@ export function Carousel({
               items.length
             : "No items"}
         </span>
-        <IconButton
-          icon="back"
-          label="Previous slide"
-          disabled={!current}
-          onClick={() => move(-1)}
-        />
-        <IconButton
-          icon="next"
-          label="Next slide"
-          disabled={current >= items.length - 1}
-          onClick={() => move(1)}
-        />
+        <div className="yg-carousel-nav">
+          <IconButton
+            icon="back"
+            label="Previous slide"
+            aria-disabled={!current || undefined}
+            onClick={() => move(-1)}
+          />
+          <IconButton
+            icon="next"
+            label="Next slide"
+            aria-disabled={current >= items.length - 1 || undefined}
+            onClick={() => move(1)}
+          />
+        </div>
       </footer>
     </section>
   );

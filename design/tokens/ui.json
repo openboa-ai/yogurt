@@ -179,7 +179,9 @@
     "panel": [[12, 48, 18]]
   },
   "easing": {
-    "settle": "cubic-bezier(.2, 0, 0, 1)"
+    "settle": "cubic-bezier(.2, 0, 0, 1)",
+    "arrive": "cubic-bezier(.24, .8, .3, 1.04)",
+    "selection": "cubic-bezier(.22, .8, .25, 1.1)"
   },
   "types": {
     "action": [

@@ -1509,6 +1509,8 @@ npx yogurt add project-sidebar --target native
 <td>Keep meaning, focus and input feedback available with travel and repeated animation removed.</td>
 </tr>
 </tbody></table></div>
+<p>The catalog assigns each of the 139 entries one primary motion role. Shared controls keep that behavior in composed screens. Foundations, reading text and figures with fixed meaning stay in place. Editing and selection keep the active value readable immediately, and a motion cue settles around it. Choose a host result before presenting success or failure. A directly manipulated item stays coupled to the drag until release, even when animated settling is reduced.</p>
+<p>The Web renderer uses 80 ms for press feedback, 120 ms for small anchored cues, 160 ms for travel, 180 ms for changes and 200 ms for larger layers. Actions keep a steady label, menus stay opaque, and selection markers use a small settling overshoot. Carousel arrows keep their center when the slide label changes. The Native host maps its available widget timing slots and uses the shared avatar poses.</p>
 <h2>Eye and body motion</h2>
 <p>The current avatar uses <a href="../assets/agents/avatar-motion.json">six authored clips</a> for its body and two eyes. Direction, posture and rhythm distinguish the states.</p>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
@@ -3980,6 +3982,43 @@ npx yogurt add project-sidebar --target native
 </tr>
 </tbody></table></div>
 <p>Collect the observations above against the exact candidate and target. Record the reviewer, revision and outstanding results in a review or verification record when they exist. <a href="#status">Current evidence and open decisions</a> · <a href="#I18">Originating need</a></p>
+<h2>Motion improvement · comparison phase</h2>
+<p>The owner authorized a first comparison of Button, Select, Segmented control and Carousel, followed by expansion across the component and recipe catalog and a fresh review of all six agent performances. Track the program in <a href="https://github.com/openboa-ai/yogurt/issues/6">issue #6</a>. The outcomes for this phase are a runnable Web comparison, recorded interaction checks and an owner choice of motion treatment.</p>
+<div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Scene</th>
+<th>Candidate behavior</th>
+<th>Acceptance evidence</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Button</td>
+<td>Immediate surface press and a modest inset. Keep label bounds steady. Reveal the result in the action after the host reports it, while keeping the action footprint fixed.</td>
+<td>Press, release outside, one activation, pending, success and failure with a stable target.</td>
+</tr>
+<tr>
+<td>Select</td>
+<td>Open the opaque picker outward from its field with a short directional offset and expansion on supporting browsers. Keep native picker semantics.</td>
+<td>Open at both viewport edges. Escape and reopen while entering. Confirm the selected option, trigger value and restored focus.</td>
+</tr>
+<tr>
+<td>Segmented control</td>
+<td>Set the selection immediately and let the visual marker settle toward it.</td>
+<td>During A → C → B, keep marker continuity and settle under B while its content and accessible value already agree.</td>
+</tr>
+<tr>
+<td>Carousel</td>
+<td>Follow direct horizontal manipulation. Add depth between incoming and outgoing cards during travel. Preserve vertical scroll. Commit on release beyond the threshold, and restore on cancel. Buttons retain focus and keyboard operation.</td>
+<td>Observe the dragged position, direction reversal, snap-back and one-step commit. Expose only the current slide to focus and accessibility.</td>
+</tr>
+</tbody></table></div>
+<p>Use the existing catalog exports and shared tokens. The comparison scopes the candidate treatment to the guide. Deliver the review via a branch preview. Check first, intermediate and settled frames in a browser, reduced motion, light and dark, and a narrow viewport. Record the host and the tested states. Native validation and signed-off component motion enter later slices after the owner selects the comparison. The existing I18 gate applies to a production quality claim.</p>
+<h2>Motion improvement · library rollout</h2>
+<p>The owner accepted the comparison&#39;s motion strength and requested the full library treatment and centered carousel navigation. Apply the approved press, picker, selection and card movement to the shared Web implementation. Move the pager buttons as a centered pair independently of the status label. Connect each catalog entry to the shared treatment its behavior uses. Stationary reading elements retain stable geometry during adjacent changes.</p>
+<p>Use quick surface feedback for input and editing. A picker enters with directional travel and keeps hit areas at their actual size for every frame. Give anchored layers clear origins and opaque text. A presented dialog may settle on entry and leave the top layer on a short exit where supported. Dismissal must release input and restore focus immediately. Selection, list and composition transitions follow the latest identity without replaying unrelated siblings. Progress, notifications and result treatments follow the supplied state. Reduced motion keeps interaction and meaning while removing animated travel and repeats.</p>
+<p>Retune the six authored presence clips together. Preserve two eyes, the original silhouettes, the public state IDs and the shared Web and Zig pose source. Review roster and detail sizes. Record browser, compiled Native and installed Native observations independently.</p>
+<p>The verification slice covers every gallery entry for rendering and representative independent motion on press, choice, layering, direct manipulation, status, workspaces and presence. Keep SDK exports stable and retain the original focus and callback contracts.</p>
 <footer><a href="engineering/quality/U18A-rehearse-a-transition/spec.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="U19A"><a class="return" href="#overview">All design records</a><h1>U19A · Resolve and roll back a project pin</h1>
 <p>Design: DRAFT, revision 2. Implementation: NOT ADMITTED. Evidence for this change: NOT_RUN.</p>

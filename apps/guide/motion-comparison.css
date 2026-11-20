@@ -1,0 +1,156 @@
+body:has(#yogurt-motion-comparison) {
+  margin: 0;
+}
+
+.motion-comparison-theme {
+  min-block-size: 100vh;
+  color: var(--yg-text);
+  background: var(--yg-canvas);
+}
+
+.motion-comparison {
+  display: grid;
+  gap: var(--boa-space-32);
+  max-inline-size: 68rem;
+  margin-inline: auto;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.motion-heading,
+.motion-scene-heading,
+.motion-save-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--boa-space-12);
+}
+
+.motion-heading,
+.motion-scene-heading {
+  justify-content: space-between;
+  align-items: end;
+}
+
+.motion-heading h1 {
+  margin: var(--boa-space-8) 0;
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.08;
+}
+
+.motion-home {
+  color: var(--yg-action);
+  font-weight: 700;
+}
+
+.motion-scene,
+.motion-control-stack {
+  display: grid;
+  gap: var(--boa-space-12);
+}
+
+.motion-scene h2 {
+  margin: 0;
+}
+
+.motion-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--boa-space-12);
+}
+
+.motion-example {
+  min-inline-size: 0;
+  display: grid;
+  align-content: start;
+  gap: var(--boa-space-24);
+  padding: var(--boa-space-24);
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-surface);
+}
+
+.motion-variant {
+  color: var(--yg-muted);
+  font: var(--yg-font-action);
+}
+
+.motion-result[data-result="success"] { color: var(--yg-success); }
+.motion-result[data-result="failure"] { color: var(--yg-danger); }
+
+.motion-save-row > button {
+  min-inline-size: 8rem;
+}
+
+.motion-visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.motion-button-result {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--boa-space-4);
+  animation: motion-confirm var(--yg-panel) cubic-bezier(.22, .85, .32, 1.15) both;
+}
+
+@keyframes motion-confirm {
+  from { translate: 0 5px; scale: .92; }
+  to { translate: 0 0; scale: 1; }
+}
+
+.motion-segment-panel {
+  min-block-size: var(--boa-space-24);
+}
+
+[data-motion-candidate] .motion-segment-panel > span {
+  display: inline-block;
+  animation: motion-panel-arrive var(--yg-change) var(--yg-settle) both;
+}
+
+@keyframes motion-panel-arrive {
+  from { translate: 6px 0; }
+  to { translate: 0 0; }
+}
+
+.motion-slide-card {
+  display: grid;
+  align-content: center;
+  gap: var(--boa-space-4);
+  min-block-size: 7rem;
+  padding: var(--boa-space-12);
+  border-radius: var(--yg-radius-control);
+  background: var(--yg-surface);
+}
+
+.motion-slide-card > * {
+  margin: 0;
+}
+
+/* Candidate timing is scoped to the comparison. */
+[data-motion-candidate] .yg-button.motion-press[data-result="success"] {
+  background: var(--yg-success-soft);
+  color: var(--yg-success);
+}
+
+[data-motion-candidate] .yg-button.motion-press[data-result="failure"] {
+  background: var(--yg-danger-soft);
+  color: var(--yg-danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-button-result,
+  [data-motion-candidate] .motion-segment-panel > span { animation: none; }
+}
+
+.motion-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--boa-space-12);
+}
+
+@media (max-width: 36rem) {
+  .motion-pair { grid-template-columns: 1fr; }
+}

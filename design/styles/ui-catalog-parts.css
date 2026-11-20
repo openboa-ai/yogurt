@@ -598,11 +598,20 @@
   touch-action: pan-y;
 }
 .yg-carousel footer {
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
   gap: var(--boa-space-4);
+  margin-block-start: var(--boa-space-8);
 }
-.yg-carousel footer span {
-  margin-inline-end: auto;
+.yg-carousel footer > span {
+  overflow-wrap: anywhere;
+}
+.yg-carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--boa-space-4);
 }
 .yg-stepper {
   display: grid;

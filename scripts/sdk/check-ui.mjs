@@ -67,9 +67,11 @@ assert.deepEqual(
   motion.map(({ id }) => id),
   [...catalog, ...blocks].map(({ id }) => id),
 );
+const motionRoles = new Set(["Still", "Press", "Field", "Selection", "Layer", "Direct", "Outcome", "Presence", "Composition"]);
 for (const entry of motion) {
   assert(entry.treatment.trim().length > 0, entry.id);
-  assert.deepEqual(Object.keys(entry).sort(), ["id", "treatment"]);
+  assert(motionRoles.has(entry.role), entry.id);
+  assert.deepEqual(Object.keys(entry).sort(), ["id", "role", "treatment"]);
 }
 for (const block of blocks) {
   assert(!componentIds.has(block.id), block.id);

@@ -31,3 +31,7 @@ The handbook generator writes `docs/index.html`. The guide consumes the shared [
 Run `node apps/guide/tooling/build-site.mjs` from the repository root and open `site/index.html` for the offline guide. The build copies `pages/` to the site root and keeps the existing guide URLs for the generated galleries, handbook and shared design assets. See the [path map](tooling/site-layout.mjs) for the inputs to each published route. The [Vercel configuration](../../vercel.json) serves the same output from the project's Git integration. The custom domain for the guide is `yogurt.openboa.ai`.
 
 [U17A · Resolve a task to design guidance on the pinned version](../../docs/engineering/guidance/U17A-index-design-guidance/spec.md) · [Design portfolio](../../docs/README.md)
+
+## Component motion comparison
+
+Generate the comparison with `node apps/guide/tooling/build-ui-gallery.mjs --motion-comparison`, then build the site. Open `site/motion-comparison.html` to compare the current and candidate interactions. Run `node checks/web-motion-comparison.cjs` from the repository root to exercise interrupted input, keyboard selection and touch drag. The review can follow the system appearance or switch between light and dark.

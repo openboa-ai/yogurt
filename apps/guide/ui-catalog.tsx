@@ -369,7 +369,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                     </p>
                     {motion.filter((item) => item.id === id).map((item) => (
                       <p className="yg-help" key={item.id}>
-                        {item.treatment}
+                        <strong>{item.role}</strong> · {item.treatment}
                       </p>
                     ))}
                     <code>
