@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  ActionMenu, BottomAction, Button, Command, Heading, IconButton, InputOTP,
-  SegmentedControl, SidebarLayout, Stepper, Switch, Tabs, Text, TextField, ToastStack, Yogurt,
+  ActionMenu, BottomAction, Button, Command, Heading, Icon, IconButton, InputOTP,
+  ProjectMark, SegmentedControl, SidebarLayout, Stepper, Switch, Tabs, Text, TextField, ToastStack, Yogurt,
 } from "@openboa/yogurt";
 import {
   ActivityIsland, CheckboxList, CommandButton, CopyButton, DetentDial, ExpandCard, FanCards, FileDrop,
@@ -66,6 +66,45 @@ function ChoiceExample({ kind }: {kind: "plan" | "focus" | "select" | "segments"
   return <div className="motion-sample-stack">
     <SegmentedControl label="Workspace view" options={pages} value={value} onValueChange={setValue} />
     <Text variant="help">Showing {pages.find(option => option.id === value)?.label.toLowerCase()}</Text>
+  </div>;
+}
+
+const inbox = [
+  { name: "Review requested", detail: "Release brief", icon: "check", priority: true },
+  { name: "Weekly digest", detail: "Project activity", icon: "info", priority: false },
+  { name: "Planning reminder", detail: "Tomorrow at 10", icon: "clock", priority: false },
+] as const;
+
+function FocusModeExample() {
+  const [focus, setFocus] = useState(false);
+  return <div className="motion-context-panel">
+    <header><strong>Inbox</strong><Text variant="help" role="status">{focus ? "Priority only" : "All updates"}</Text></header>
+    <ul className="motion-focus-inbox">
+      {inbox.map(item => <li key={item.name} data-deferred={focus && !item.priority || undefined}>
+        <span className="motion-context-icon"><Icon name={item.icon} /></span>
+        <span><strong>{item.name}</strong><span>{item.detail}</span></span>
+        <Text variant="meta">{focus && !item.priority ? "Quiet" : item.priority ? "Priority" : ""}</Text>
+      </li>)}
+    </ul>
+    <Switch label="Focus mode" checked={focus} onCheckedChange={setFocus} />
+  </div>;
+}
+
+const billingOptions = [{id: "monthly", label: "Monthly"}, {id: "yearly", label: "Yearly"}];
+function BillingExample() {
+  const [cadence, setCadence] = useState("monthly");
+  const annual = cadence === "yearly";
+  return <div className="motion-context-panel">
+    <header><strong>Workspace Plus</strong><SegmentedControl label="Billing period"
+      options={billingOptions} value={cadence} onValueChange={setCadence} /></header>
+    <div className="motion-billing-price" role="status">
+      <div><strong>{annual ? "$20" : "$24"}</strong><Text variant="help">per month</Text></div>
+      <Text variant="help">{annual ? "$240 billed yearly" : "$24 billed monthly"}</Text>
+    </div>
+    <ul className="motion-plan-benefits">
+      <li><Icon name="check" /> Shared projects and reviews</li>
+      <li><Icon name="check" /> Extended activity history</li>
+    </ul>
   </div>;
 }
 
@@ -245,11 +284,11 @@ function SpringInputExample() {
 }
 
 type Demo = {id: string; title: string; body: ReactNode};
-const demos: {title: string; id: string; items: Demo[]}[] = [
-  {title: "Inputs and choices", id: "inputs", items: [
+const demos: {title: string; label: string; id: string; items: Demo[]}[] = [
+  {title: "Inputs and choices", label: "Inputs", id: "inputs", items: [
     {id: "mention-picker", title: "Mention picker", body: <MentionExample />},
-    {id: "focus-mode", title: "Focus mode", body: <ChoiceExample kind="focus" />},
-    {id: "plan-switch", title: "Plan switch", body: <ChoiceExample kind="plan" />},
+    {id: "focus-mode", title: "Focus mode", body: <FocusModeExample />},
+    {id: "plan-switch", title: "Plan switch", body: <BillingExample />},
     {id: "letter-limit", title: "Letter limit", body: <WritingExample kind="limit" />},
     {id: "file-drop", title: "File drop", body: <FilesExample />},
     {id: "range-slider", title: "Range slider", body: <RangeExample />},
@@ -261,7 +300,7 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "spring-input", title: "Spring input", body: <SpringInputExample />},
     {id: "elastic-slider", title: "Elastic slider", body: <RangeExample elastic />},
   ]},
-  {title: "Navigation and layers", id: "navigation", items: [
+  {title: "Navigation and layers", label: "Navigation", id: "navigation", items: [
     {id: "morph-tooltip", title: "Morph tooltip", body: <MorphTooltip label="Storage details" detail="Files in this workspace are visible to its members." />},
     {id: "spring-dropdown", title: "Spring dropdown", body: <ChoiceExample kind="select" />},
     {id: "command-button", title: "Command button", body: <CommandExample kind="button" />},
@@ -273,7 +312,7 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "bottom-bar", title: "Bottom bar", body: <FeedbackExample kind="bottom" />},
     {id: "sidebar-collapse", title: "Sidebar collapse", body: <SidebarExample />},
   ]},
-  {title: "Conversation and activity", id: "conversation", items: [
+  {title: "Conversation and activity", label: "Conversation", id: "conversation", items: [
     {id: "task-list", title: "Task list", body: <TaskListExample />},
     {id: "prompt-box", title: "Prompt box", body: <ConversationExample kind="prompt" />},
     {id: "ghost-suggestion", title: "Ghost suggestion", body: <WritingExample kind="ghost" />},
@@ -282,7 +321,7 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "agent-steps", title: "Agent steps", body: <StepExample agent />},
     {id: "activity-island", title: "Expandable activity", body: <ActivityIsland label="Workspace activity" summary="2 updates"><Text>Draft ready · Review requested</Text></ActivityIsland>},
   ]},
-  {title: "Cards and outcomes", id: "feedback", items: [
+  {title: "Cards and outcomes", label: "Cards", id: "feedback", items: [
     {id: "storage-meter", title: "Storage meter", body: <StorageExample />},
     {id: "expand-card", title: "Expand card", body: <ExpandCard title="Review the brief"><Text>See the source, changes and next action.</Text></ExpandCard>},
     {id: "fan-cards", title: "Fan cards", body: <FanCards items={steps} />},
@@ -295,11 +334,15 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "hold-button", title: "Hold button", body: <FeedbackExample kind="hold" />},
     {id: "slide-confirm", title: "Slide to confirm", body: <FeedbackExample kind="slide" />},
   ]},
-  {title: "More controls", id: "more-controls", items: extraControls},
-  {title: "More interactions", id: "gestures", items: extraGestures},
-  {title: "More cards and text", id: "more-cards", items: extraCards},
-  {title: "Utilities", id: "utilities", items: extraUtilities},
-  {title: "Expressive motion", id: "expressive", items: extraExpression},
+  {title: "More controls", label: "Controls", id: "more-controls", items: [
+    {id: "focus-options", title: "Focus options", body: <ChoiceExample kind="focus" />},
+    {id: "plan-options", title: "Plan options", body: <ChoiceExample kind="plan" />},
+    ...extraControls,
+  ]},
+  {title: "More interactions", label: "Gestures", id: "gestures", items: extraGestures},
+  {title: "More cards and text", label: "Content", id: "more-cards", items: extraCards},
+  {title: "Utilities", label: "Utilities", id: "utilities", items: extraUtilities},
+  {title: "Expressive motion", label: "Expression", id: "expressive", items: extraExpression},
 ];
 
 function Gallery() {
@@ -321,26 +364,28 @@ function Gallery() {
   return <Yogurt appearance={appearance} className="motion-patterns-page">
     <main>
       <header className="motion-patterns-header">
-        <div>
-          <nav aria-label="Yogurt">
-            <a href="components.html">Components</a>
-            <a href="motion-comparison.html">Current and candidate</a>
-            <a href="agents.html">Agents</a>
-          </nav>
-          <Heading level={1}>Motion patterns</Heading>
-          <Text>Try each component in place. Use Tab to explore with a keyboard.</Text>
-        </div>
+        <a className="motion-pattern-brand" href="components.html">
+          <ProjectMark project="openboa" size={26} /> Yogurt
+        </a>
+        <nav aria-label="Yogurt">
+          <a href="components.html">Components</a>
+          <a href="motion-comparison.html">Compare motion</a>
+          <a href="agents.html">Agents</a>
+        </nav>
         <IconButton label={appearance === "dark" ? "Use light appearance" : "Use dark appearance"}
           icon={appearance === "dark" ? "sun" : "moon"}
           onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")} />
       </header>
       <div className="motion-pattern-tools">
-        <label className="motion-pattern-search">
-          <span>Find a pattern</span>
-          <input type="search" placeholder="Search patterns" value={query} onChange={event => setQuery(event.target.value)} />
-        </label>
+        <div className="motion-pattern-intro">
+          <Heading level={1}>Motion patterns</Heading>
+          <label className="motion-pattern-search">
+            <span>Find a pattern</span>
+            <input type="search" placeholder="Search patterns" value={query} onChange={event => setQuery(event.target.value)} />
+          </label>
+        </div>
         <nav aria-label="Pattern sections" className="motion-section-nav">
-          {visible.map(section => <a key={section.id} href={`#${section.id}`}>{section.title}</a>)}
+          {visible.map(section => <a key={section.id} href={`#${section.id}`}>{section.label}</a>)}
         </nav>
       </div>
       {!visible.length && <Text role="status">No matching patterns.</Text>}
@@ -349,7 +394,7 @@ function Gallery() {
         <div className="motion-pattern-grid">
           {section.items.map(item => <article key={item.id} id={item.id} aria-labelledby={item.id + "-title"}>
             <Heading id={item.id + "-title"} level={3}>{item.title}</Heading>
-            <div className="motion-pattern-stage">{item.body}</div>
+            <div className="motion-pattern-stage"><div className="motion-pattern-sample">{item.body}</div></div>
           </article>)}
         </div>
       </section>)}

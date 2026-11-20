@@ -12,9 +12,9 @@ function Approval() {
   return <div className="utility-demo utility-panel"><small>TOOL REQUEST</small><strong>Read project notes</strong><span>Allow this preview to use the selected notes?</span>{state === "pending" ? <div className="utility-row"><Button size="compact" emphasis="soft" onClick={() => setState("declined")}>Decline</Button><Button size="compact" onClick={() => setState("approved")}>Allow once</Button></div> : <><span role="status">{state === "approved" ? "Allowed in preview" : "Declined in preview"}</span><Button size="compact" emphasis="quiet" onClick={() => setState("pending")}>Reset</Button></>}</div>;
 }
 const groceries = [
-  { id: "yogurt", name: "Greek yogurt", detail: "Plain · 500 g", price: 420, tone: "dairy" },
-  { id: "blueberries", name: "Blueberries", detail: "Fresh · 125 g", price: 350, tone: "fruit" },
-  { id: "granola", name: "Maple granola", detail: "Toasted oats · 300 g", price: 560, tone: "grain" },
+  { id: "yogurt", name: "Greek yogurt", detail: "500 g", price: 420 },
+  { id: "blueberries", name: "Blueberries", detail: "125 g", price: 350 },
+  { id: "granola", name: "Maple granola", detail: "300 g", price: 560 },
 ];
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
@@ -25,10 +25,10 @@ function Cart() {
   const count = Object.values(cart).reduce((total, quantity) => total + quantity, 0);
   return (
     <div className="utility-cart">
+      <div className="utility-cart-header"><strong>Cart</strong><span>{count} {count === 1 ? "item" : "items"}</span></div>
       <ul>
         {groceries.map(item => (
           <li key={item.id}>
-            <span className="utility-cart-marker" aria-hidden="true" data-tone={item.tone} />
             <div className="utility-cart-product">
               <strong>{item.name}</strong>
               <span>{item.detail} · {currency.format(item.price / 100)}</span>
@@ -42,7 +42,7 @@ function Cart() {
         ))}
       </ul>
       <div className="utility-cart-total">
-        <div><span>{count} {count === 1 ? "item" : "items"} · Subtotal</span>
+        <div><span>Subtotal</span>
           <strong data-cart-subtotal>{currency.format(subtotal / 100)}</strong></div>
         <Button disabled={!count || confirmed} onClick={() => setConfirmed(true)}>
           {confirmed ? "Cart reviewed" : "Review cart"}

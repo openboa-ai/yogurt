@@ -22,6 +22,7 @@ const stylesheet = [
   ...declarations("role-weight", type.roleWeight),
   ...declarations("size", type.size, "px"),
   ...declarations("line-height", type.lineHeight, "px"),
+  ...declarations("tracking", type.tracking, "em"),
   ...declarations("space", space, "px"),
   ...declarations("radius", radius, "px"),
   ...declarations("stroke", stroke, "px"),

@@ -23,13 +23,13 @@
 .yg-gradient,
 .yg-slide,
 .yg-sidebar {
-  padding: var(--boa-space-16);
+  padding: var(--yg-inset-panel);
   border-radius: var(--yg-radius-panel);
   background: var(--yg-surface);
 }
 .yg-card {
   display: grid;
-  gap: var(--boa-space-12);
+  gap: var(--yg-gap-stack);
   align-content: start;
   background: var(--yg-raised-surface);
   box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
@@ -526,7 +526,7 @@
 }
 .yg-flyout,
 .yg-command-list {
-  padding: var(--boa-space-4);
+  padding: var(--yg-inset-layer);
   border-radius: var(--yg-radius-panel);
   background: var(--yg-raised-surface);
   color: var(--yg-text);

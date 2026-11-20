@@ -325,20 +325,27 @@
       "body": 16,
       "subheading": 20,
       "title": 32,
-      "headline": 48,
+      "headline": 44,
       "help": 13
     },
     "lineHeight": {
       "caption": 16,
       "ui": 20,
       "body": 24,
-      "subheading": 28,
+      "subheading": 26,
       "title": 36,
-      "headline": 52,
-      "help": 18
+      "headline": 48,
+      "help": 19
+    },
+    "tracking": {
+      "body": -0.006,
+      "label": -0.012,
+      "heading": -0.027,
+      "display": -0.045,
+      "meta": 0.005
     },
     "roleWeight": {
-      "heading": 525,
+      "heading": 570,
       "body": 425,
       "ui": 550,
       "wordmark": 760
@@ -347,9 +354,11 @@
   "space": {
     "2": 2,
     "4": 4,
+    "6": 6,
     "8": 8,
     "12": 12,
     "16": 16,
+    "20": 20,
     "24": 24,
     "32": 32,
     "48": 48,
@@ -358,6 +367,7 @@
   "radius": {
     "control": 8,
     "panel": 12,
+    "sheet": 16,
     "round": 999,
     "small": 6
   },

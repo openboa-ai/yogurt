@@ -1,7 +1,7 @@
 .yg-morph-tooltip { position: relative; display: inline-flex; }
 .yg-morph-tooltip-trigger {
-  display: inline-flex; align-items: center; gap: var(--boa-space-8);
-  min-block-size: 40px; padding: var(--boa-space-8) var(--boa-space-12); border: 1px solid var(--yg-off);
+  display: inline-flex; align-items: center; gap: var(--yg-gap-inline);
+  min-block-size: var(--yg-size-regular); padding: var(--yg-inset-layer) var(--yg-inset-regular); border: 1px solid var(--yg-off);
   border-radius: var(--yg-radius-control); background: var(--yg-field); color: var(--yg-text);
   font: inherit; cursor: pointer;
   transition: background-color var(--yg-travel) var(--yg-settle), transform var(--yg-travel) var(--yg-settle);
@@ -11,13 +11,13 @@
 .yg-morph-tooltip-trigger span { display: inline-grid; place-items: center; inline-size: 16px; block-size: 16px; color: var(--yg-muted); line-height: 1; transition: transform var(--yg-travel) var(--yg-settle); }
 .yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span { transform: translate(2px, -2px); }
 .yg-morph-tooltip-card {
-  position: absolute; z-index: 10; inset-block-end: calc(100% + 10px); inset-inline-start: 50%;
-  display: grid; gap: var(--boa-space-8); width: max-content; max-width: min(240px, 80vw);
-  padding: var(--boa-space-12); border: 1px solid var(--yg-off); border-radius: var(--yg-radius-panel);
-  background: var(--yg-surface); color: var(--yg-text); box-shadow: 0 6px 20px rgb(0 0 0 / 0.10);
+  position: absolute; z-index: 10; inset-block-end: calc(100% + var(--yg-gap-inline)); inset-inline-start: 50%;
+  display: grid; gap: var(--yg-gap-inline); width: max-content; max-width: min(240px, 80vw);
+  padding: var(--yg-inset-regular); border: 1px solid var(--yg-off); border-radius: var(--yg-radius-panel);
+  background: var(--yg-surface); color: var(--yg-text); box-shadow: var(--yg-float-shadow);
   line-height: 1.45; overflow-wrap: anywhere;
   transform: translateX(-50%); transform-origin: center bottom;
-  animation: yg-morph-arrive 320ms cubic-bezier(.2, 1.3, .35, 1) both;
+  animation: yg-morph-arrive var(--yg-expand) var(--yg-selection) both;
 }
 .yg-morph-tooltip-card[hidden] { display: none; }
 .yg-morph-tooltip-kicker { color: var(--yg-text); font-weight: 650; }
@@ -26,9 +26,9 @@
   70% { opacity: 1; transform: translate(-50%, -2px) scale(1.02, 1); }
   to { opacity: 1; transform: translate(-50%, 0) scale(1); }
 }
-.yg-spring-dropdown .yg-select { transition: transform 260ms cubic-bezier(.2, 1.3, .35, 1), background-color var(--yg-travel) var(--yg-settle); }
+.yg-spring-dropdown .yg-select { transition: transform var(--yg-change) var(--yg-selection), background-color var(--yg-travel) var(--yg-settle); }
 .yg-spring-dropdown .yg-select:focus-within { background: var(--yg-hover); }
-.yg-command-button .yg-button { transition: transform 260ms cubic-bezier(.2, 1.3, .35, 1), background-color var(--yg-travel) var(--yg-settle); }
+.yg-command-button .yg-button { transition: transform var(--yg-change) var(--yg-selection), background-color var(--yg-travel) var(--yg-settle); }
 .yg-command-button .yg-button:hover { transform: translateY(-2px); }
 .yg-command-button .yg-button:active { transform: translateY(1px) scale(.98); }
 @media (prefers-reduced-motion: reduce) {

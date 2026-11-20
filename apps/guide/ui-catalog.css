@@ -135,8 +135,10 @@ body {
 }
 .catalog-intro h1 {
   margin: 0;
-  font: 525 clamp(31px, 4.5vw, 46px) / 1.08 var(--boa-font-family);
-  letter-spacing: -0.055em;
+  font: var(--yg-font-display);
+  font-size: clamp(var(--boa-size-title), 4.5vw, var(--boa-size-headline));
+  line-height: 1.08;
+  letter-spacing: var(--boa-tracking-display);
 }
 .preview-tools,
 .preview-caption {

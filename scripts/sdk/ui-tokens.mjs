@@ -114,8 +114,13 @@ const zig = [
   ...Object.entries(ui.motion).map(
     ([k, v]) => "pub const " + k + "_ms: u32 = " + v + ";",
   ),
-  ...Object.entries(ui.types).map(
-    ([k, [s]]) => "pub const " + k + "_type: f32 = " + brand.type.size[s] + ";",
+  ...Object.entries(ui.types).flatMap(([role, [size, weight]]) => [
+    "pub const " + role + "_type: f32 = " + brand.type.size[size] + ";",
+    "pub const " + role + "_line_height: f32 = " + brand.type.lineHeight[size] + ";",
+    "pub const " + role + "_weight: u16 = " + (brand.type.weight[weight] ?? brand.type.roleWeight[weight]) + ";",
+  ]),
+  ...Object.entries(brand.type.tracking).map(
+    ([role, value]) => "pub const " + role + "_tracking: f32 = " + value + ";",
   ),
 ];
 writeFileSync(nativeDir + "/tokens.zig", zig.join("\n") + "\n");

@@ -1,6 +1,6 @@
 .yg-cart-control {
   --yg-cart-slot: var(--yg-size-regular);
-  --yg-cart-open: calc(3 * var(--yg-cart-slot));
+  --yg-cart-open: max(calc(3 * var(--boa-control-height)), calc(2 * var(--yg-cart-slot) + var(--boa-space-16)));
   display: grid;
   justify-items: end;
   inline-size: var(--yg-cart-open);
@@ -12,7 +12,7 @@
   position: relative;
   display: grid;
   place-items: center;
-  inline-size: min(100%, calc(2 * var(--yg-cart-slot) + var(--boa-space-8)));
+  inline-size: min(100%, calc(2 * var(--boa-control-height) + var(--yg-gap-inline)));
   block-size: var(--yg-cart-slot);
   border-radius: var(--yg-radius-control);
   background: var(--yg-action-soft);
@@ -76,7 +76,7 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .yg-cart-stepper {
-    transition: inline-size 320ms var(--yg-arrive), color var(--yg-panel) var(--yg-settle),
+    transition: inline-size var(--yg-expand) var(--yg-arrive), color var(--yg-panel) var(--yg-settle),
       background-color var(--yg-panel) var(--yg-settle);
   }
   .yg-cart-quantity span {

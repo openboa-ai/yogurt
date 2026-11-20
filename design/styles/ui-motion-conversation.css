@@ -19,7 +19,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--yg-off);
-  border-radius: var(--yg-radius-panel, 12px);
+  border-radius: var(--yg-radius-panel);
   background: var(--yg-field);
 }
 .yg-ghost-input:focus-within { outline: 2px solid var(--yg-action); outline-offset: 2px; }
@@ -40,7 +40,7 @@
   gap: var(--boa-space-8);
   padding: var(--boa-space-12);
   border: 1px solid var(--yg-off);
-  border-radius: var(--yg-radius-panel, 12px);
+  border-radius: var(--yg-radius-panel);
   background: var(--yg-field);
   transition: border-color var(--yg-travel) var(--yg-settle), box-shadow var(--yg-travel) var(--yg-settle);
 }
@@ -72,9 +72,9 @@
   .yg-thinking-shape, .yg-streaming-cursor { background: CanvasText; }
 }
 
-.yg-ghost-input, .yg-prompt-box { border-color: color-mix(in srgb, var(--yg-text) 13%, transparent); background: color-mix(in srgb, var(--yg-surface) 78%, var(--yg-field)); }
+.yg-ghost-input, .yg-prompt-box { border-color: var(--yg-surface-edge); background: color-mix(in srgb, var(--yg-surface) 78%, var(--yg-field)); }
 .yg-ghost-input:focus-within, .yg-prompt-box:focus-within { outline: none; border-color: var(--yg-action); box-shadow: 0 0 0 2px var(--yg-action-soft); }
-.yg-prompt-box { gap: 10px; padding: 16px; }
+.yg-prompt-box { gap: 10px; padding: var(--yg-inset-panel); }
 .yg-prompt-box textarea { box-sizing: border-box; line-height: 1.5; }
 .yg-prompt-actions { padding-top: 4px; }
 .yg-ghost-suffix, .yg-ghost-hint { color: var(--yg-muted); }

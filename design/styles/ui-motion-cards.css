@@ -1,6 +1,6 @@
 :where(.yg-expand-card, .yg-stat-card, .yg-profile-card) {
   border: 1px solid var(--yg-off);
-  border-radius: var(--yg-radius-panel, 12px);
+  border-radius: var(--yg-radius-panel);
   background: var(--yg-canvas);
   color: var(--yg-action);
 }
@@ -17,11 +17,11 @@
 .yg-expand-card[open] .yg-card-disclosure { transform: rotate(45deg); }
 .yg-expand-card-body { padding: 0 20px 20px; }
 .yg-fan-cards { display: grid; gap: 16px; }
-.yg-fan-cards-list { display: flex; align-items: stretch; gap: 8px; overflow-x: auto; padding: 8px 2px; }
+.yg-fan-cards-list { display: flex; align-items: stretch; gap: var(--yg-gap-inline); overflow-x: auto; padding: 8px 2px; }
 .yg-fan-cards-list button {
   display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between;
-  gap: 24px; min-width: 112px; min-height: 142px; padding: 16px; border: 1px solid var(--yg-off);
-  border-radius: var(--yg-radius-panel, 12px); color: inherit; background: var(--yg-canvas);
+  gap: 24px; min-width: 112px; min-height: 142px; padding: var(--yg-inset-panel); border: 1px solid var(--yg-off);
+  border-radius: var(--yg-radius-panel); color: inherit; background: var(--yg-canvas);
   font: inherit; text-align: start; cursor: pointer;
 }
 .yg-fan-cards-list button:nth-child(even) { transform: rotate(2deg); }
@@ -30,7 +30,7 @@
 .yg-fan-cards-list button > :last-child { align-self: flex-end; }
 .yg-fan-number { font-size: .75em; opacity: .65; }
 .yg-fan-detail { display: grid; gap: 4px; margin: 0; }
-.yg-stat-card { display: grid; gap: 8px; padding: 20px; }
+.yg-stat-card { display: grid; gap: var(--yg-gap-inline); padding: 20px; }
 .yg-stat-label, .yg-stat-detail { font-size: .875em; }
 .yg-stat-value { display: block; font-size: 2.5rem; line-height: 1; font-variant-numeric: tabular-nums; }
 .yg-profile-card { padding: 20px; }

@@ -39,3 +39,13 @@ Apply the refinement to shared Web styles and to the standalone patterns, with b
 The owner requested a cart action that opens into a quantity control within the same row. The add button expands from its trailing edge, reveals the current count and exposes decrease and increase controls. Decrease removes the line at one. A held button repeats within the available quantity and a held decrease stops at one. Releasing, moving away, Escape or losing focus stops the repeat. Keyboard activation changes the count once and removing the last item returns focus to Add. Reduced motion keeps the state change and removes the transition.
 
 Expose the controlled Web pattern from the existing motion package. The catalog uses local grocery quantities and a derived subtotal. The example records a preview action only. Verify the opening, increment, decrement, remove, repeat, limit, subtotal and keyboard behavior in the existing draft preview.
+
+## Shared geometry and surfaces
+
+Use the existing 6, 8 and 12 CSS pixel corner roles for interior controls, controls and panels. Keep the round role for circular controls and elements whose shape conveys their state. Generate panel and layer insets, inline and stack gaps, layer offsets and expansion timing from the shared Web and Native token source. Keep the existing color palette, type family and wordmark. Use the same compact, regular and touch metrics across the motion examples. The gallery aligns specimen titles on one inset and centers each preview within the available width. Wide specimens retain their readable content measure. At 320 CSS pixels the cart keeps the product and quantity on one row with 44 pixel targets. Show the same alignment before and after expanding Add.
+
+## Interface hierarchy
+
+Use a tight gap for related parts inside a single control, an inline gap for adjacent controls, a stack gap for independent rows and a section gap between groups. Small anchored menus use their layer inset. Use the panel inset for content cards and the sheet inset for modal content. Keep a list's main action, secondary text and status readable on both ambient and raised surfaces. Use type roles for display, headings, labels and supporting text. Body and labels keep their current size and gain distinct weights. Use tighter heading tracking and dedicated tracking for small metadata. Export matching metrics for Web and Zig.
+
+Verify the hierarchy in the gallery at the item level. Use a focus setting that changes the emphasis of example notifications and a billing cadence that changes a single plan's price and terms in place. Give each state a plain-language indicator and keep the surrounding panel stable across changes.

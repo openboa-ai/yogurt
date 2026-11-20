@@ -953,7 +953,7 @@ npx yogurt add project-settings --target native
 </tr>
 <tr>
 <td>One family, distinct voices at size</td>
-<td>Use Rethink Sans throughout. In the active control study, action and row labels use 500, headings 525 and secondary text 400. The outlined B2 company nameplate uses 760. The existing body is 16/24 and compact interface text 14/20. Use tabular figures where people compare values.</td>
+<td>Use Rethink Sans throughout. Action and row labels use 550, headings use 570, and supporting text uses 425. The outlined B2 company nameplate uses 760. The existing body is 16/24 and compact interface text 14/20. Use tabular figures where people compare values.</td>
 <td>Read an actual action label and its consequence together. The label is clear, the paragraph has breathing room, and numbers stay aligned while a result changes.</td>
 </tr>
 <tr>
@@ -1402,6 +1402,11 @@ npx yogurt add project-sidebar --target native
 <li>A profile avatar and an agent silhouette convey different identities. The generic avatar&#39;s background covered the space around the agent&#39;s silhouette when they used the same style. Shared reuse must carry the same meaning as well as comparable geometry. <a href="#workspace-patterns">Workspace patterns</a></li>
 <li>Two projects can have a source with the same local ID. The common project view preserves project scope and leaves authorization and selection with the host. <a href="#sdk-evidence">Workspace verification</a></li>
 </ul>
+<h2>Interface geometry</h2>
+<p>Use the spacing and corner scales in <code>design/tokens/brand.json</code> and give their applications named roles in <code>design/tokens/ui.json</code>. Use the generated CSS or Zig roles in the renderer. Match elevation to the UI layer. Use the low shadow for a raised control, the floating shadow for a picker and the panel shadow for a modal.</p>
+<p>Stack independent rows with the stack gap and group neighboring controls with the inline gap. Use the tight gap for a label and its supporting content. Apply the layer inset to anchored menus, the panel inset to cards and the sheet inset to modal content. Use the inner radius for controls within another control, the control radius for fields and buttons, and the panel or sheet radius for the corresponding surface. Place icons and labels on a common centerline. Keep a control&#39;s hit area and the space it reserves stable while its state changes.</p>
+<h3>Typography</h3>
+<p>Use Rethink Sans for interface text. Apply display and heading roles to titles, the action role to control labels and the body role to reading text. Use help and metadata roles for supporting information. Use the assigned tracking and line height to preserve hierarchy and readability in dense controls.</p>
 <footer><a href="design-system-rules.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="craft"><a class="return" href="#overview">All design records</a><h1>Component craft and motion</h1>
 <p>A person should be able to see what their input did, where the interface moved and when it is ready for the next action.</p>

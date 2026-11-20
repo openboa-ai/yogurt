@@ -4,9 +4,9 @@
 .system-title nav a { text-decoration: underline; }
 .system-guide .spread > :nth-child(2) { min-width: 0; max-width: 43rem; }
 .type-scale, .space-scale { list-style: none; padding: 0; margin: 0; }
-.type-scale li { display: flex; align-items: baseline; justify-content: space-between; column-gap: var(--boa-space-16); padding-block: var(--boa-space-8); border-bottom: 1px solid var(--boa-color-gray-green-200); }
+.type-scale li { display: flex; align-items: baseline; justify-content: space-between; column-gap: var(--boa-space-16); padding-block: var(--boa-space-8); }
 .type-scale li:first-child { padding-top: 0; }
-.type-scale li > span { font-size: var(--size); line-height: var(--line); font-weight: var(--weight, var(--boa-role-weight-heading)); letter-spacing: -.025em; }
+.type-scale li > span { font-size: var(--size); line-height: var(--line); font-weight: var(--weight, var(--boa-role-weight-heading)); letter-spacing: var(--tracking, var(--boa-tracking-heading)); }
 .type-scale small, .space-scale, .dimensions, .feedback { font-size: var(--boa-size-ui); line-height: var(--boa-line-height-ui); }
 .type-scale small, .space-scale, .token-choice { font-variant-numeric: tabular-nums; }
 .type-scale small { color: var(--boa-color-gray-green-700); white-space: nowrap; }

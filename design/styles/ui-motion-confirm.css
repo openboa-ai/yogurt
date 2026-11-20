@@ -2,7 +2,7 @@
   position: relative;
   display: inline-grid;
   place-items: center;
-  min-block-size: 48px;
+  min-block-size: var(--yg-size-touch);
   min-inline-size: 220px;
   padding: var(--boa-space-12) var(--boa-space-24);
   overflow: hidden;

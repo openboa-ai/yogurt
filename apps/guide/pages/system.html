@@ -28,12 +28,13 @@
       <div>
         <p class="section-intro">Choose the role first. A title introduces a page, body text carries the explanation, and an interface label names an action or value. The figures give size and line height in pixels, followed by weight.</p>
         <ul class="type-scale" aria-label="Type size, line height and weight">
-          <li><span style="--size:var(--boa-size-headline);--line:var(--boa-line-height-headline)">Headline</span><small>48 / 52 · 525</small></li>
-          <li><span style="--size:var(--boa-size-title);--line:var(--boa-line-height-title)">Title</span><small>32 / 36 · 525</small></li>
-          <li><span style="--size:var(--boa-size-subheading);--line:var(--boa-line-height-subheading)">Subheading</span><small>20 / 28 · 525</small></li>
-          <li><span style="--size:var(--boa-size-body);--line:var(--boa-line-height-body);--weight:var(--boa-role-weight-body)">Body</span><small>16 / 24 · 425</small></li>
-          <li><span style="--size:var(--boa-size-ui);--line:var(--boa-line-height-ui);--weight:var(--boa-role-weight-ui)">Interface</span><small>14 / 20 · 550</small></li>
-          <li><span style="--size:var(--boa-size-caption);--line:var(--boa-line-height-caption);--weight:var(--boa-role-weight-body)">Caption</span><small>12 / 16 · 425</small></li>
+          <li data-type="headline" data-weight="role-weight-heading" data-tracking="display"><span>Headline</span><small>44 / 48 · 570</small></li>
+          <li data-type="title" data-weight="role-weight-heading" data-tracking="heading"><span>Title</span><small>32 / 36 · 570</small></li>
+          <li data-type="subheading" data-weight="role-weight-heading" data-tracking="heading"><span>Subheading</span><small>20 / 26 · 570</small></li>
+          <li data-type="body" data-weight="role-weight-body" data-tracking="body"><span>Body</span><small>16 / 24 · 425</small></li>
+          <li data-type="ui" data-weight="role-weight-ui" data-tracking="label"><span>Interface label</span><small>14 / 20 · 550</small></li>
+          <li data-type="help" data-weight="role-weight-body" data-tracking="body"><span>Supporting text</span><small>13 / 19 · 425</small></li>
+          <li data-type="caption" data-weight="weight-regular" data-tracking="meta"><span>Caption</span><small>12 / 16 · 400</small></li>
         </ul>
         <p class="resource-link">Use <code>.boa-numbers</code> on comparable IDs, times and amounts. The company wordmark uses its own outlined 760 artwork. <a href="index.html#logo">Choose a logo master</a></p>
       </div>
@@ -62,12 +63,12 @@
     <section id="dimensions" class="spread" aria-labelledby="dimensions-title">
       <div class="margin"><h2 id="dimensions-title">Dimensions</h2><p>Design pixels</p></div>
       <div>
-        <p class="section-intro">In the roster, 4 px joins a label to its field, 12 px separates the filters, and 24 px frames the panel. On narrow screens the panel inset becomes 16 px. Use the smaller gaps for elements people read together.</p>
+        <p class="section-intro">Use 6 px between related parts, 8 px between adjacent controls and 12 px between rows. Separate sections by 24 px. Use 4 px inside anchored menus, 16 px inside panels and 20 px inside modal sheets.</p>
         <h3>Spacing</h3>
         <ul class="space-scale" id="spaces" aria-label="Spacing scale in pixels"></ul>
         <dl class="dimensions">
-          <div><dt>Corners</dt><dd>Existing kit: 6 px controls · 12 px panels · fully round indicators. <a href="examples/basic-controls/index.html">Compare proposed control shapes</a></dd></div>
-          <div><dt>Controls</dt><dd>40 px height · 44 px on touch</dd></div>
+          <div><dt>Corners</dt><dd>6 px inner corners · 8 px controls · 12 px panels · 16 px sheets. <a href="components.html">Try the controls</a></dd></div>
+          <div><dt>Controls</dt><dd>28 px compact · 36 px regular · 44 px on touch</dd></div>
           <div><dt>Lines</dt><dd>1 px rules · 2 px focus outlines</dd></div>
         </dl>
       </div>

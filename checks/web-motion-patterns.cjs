@@ -49,6 +49,19 @@ async function run(browser) {
     const inactive = await page.locator(".motion-pattern-grid > article").evaluateAll(nodes =>
       nodes.filter(node => !node.querySelector("button, input, select, textarea, summary, [tabindex]")).map(node => node.id));
     assert.deepEqual(inactive, [], "Every pattern has a direct control");
+    const alignment = await page.locator(".motion-pattern-grid > article").evaluateAll(nodes =>
+      nodes.flatMap(article => {
+        const stage = article.querySelector(".motion-pattern-stage");
+        const sample = article.querySelector(".motion-pattern-sample");
+        const title = article.querySelector("h3");
+        const area = stage.getBoundingClientRect();
+        const content = sample.getBoundingClientRect();
+        const readingEdge = title.getBoundingClientRect().left;
+        return Math.abs(area.left + area.right - content.left - content.right) > 2 ||
+          Math.abs(readingEdge - content.left) > 1
+          ? [article.id] : [];
+      }));
+    assert.deepEqual(alignment, [], `Unaligned specimens at ${width}px`);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
     assert(overflow <= 1, JSON.stringify({width, overflow}));
     if (output && width !== 768) await page.screenshot({path: join(output, `yogurt-motion-patterns-${width}.png`)});
@@ -57,6 +70,14 @@ async function run(browser) {
       continue;
     }
     const demo = id => page.locator("article#" + id);
+    const focus = demo("focus-mode");
+    await focus.getByRole("switch", {name:"Focus mode"}).click();
+    assert.equal(await focus.getByRole("status").textContent(), "Priority only");
+    assert.equal(await focus.locator("[data-deferred]").count(), 2);
+    const billing = demo("plan-switch");
+    await billing.getByText("Yearly", {exact:true}).click();
+    assert.match(await billing.getByRole("status").textContent(), /\$240 billed yearly/);
+
     const meter = demo("storage-meter").getByRole("meter");
     await demo("storage-meter").getByRole("button", {name: "Add files"}).click();
     assert.equal(await meter.getAttribute("aria-valuenow"), "76");

@@ -26,6 +26,7 @@
   --yg-radius-small: var(--boa-radius-small);
   --yg-radius-control: var(--boa-radius-control);
   --yg-radius-panel: var(--boa-radius-panel);
+  --yg-radius-sheet: var(--boa-radius-sheet);
   --yg-size-compact: var(--boa-control-compact);
   --yg-size-regular: var(--boa-control-height);
   --yg-size-touch: var(--boa-control-touch);
@@ -34,6 +35,14 @@
   --yg-inset-compact: var(--boa-space-8);
   --yg-inset-regular: var(--boa-space-12);
   --yg-inset-roomy: var(--boa-space-16);
+  --yg-inset-layer: var(--boa-space-4);
+  --yg-inset-panel: var(--boa-space-16);
+  --yg-inset-sheet: var(--boa-space-20);
+  --yg-gap-tight: var(--boa-space-6);
+  --yg-gap-inline: var(--boa-space-8);
+  --yg-gap-stack: var(--boa-space-12);
+  --yg-gap-section: var(--boa-space-24);
+  --yg-offset-layer: var(--boa-space-4);
   --yg-switch-width: 32px;
   --yg-switch-height: 19px;
   --yg-thumb-size: 13px;
@@ -43,18 +52,20 @@
   --yg-travel: 160ms;
   --yg-change: 180ms;
   --yg-panel: 200ms;
+  --yg-expand: 320ms;
   --yg-busy: 750ms;
   --yg-settle: cubic-bezier(.2, 0, 0, 1);
   --yg-arrive: cubic-bezier(.24, .8, .3, 1.04);
   --yg-selection: cubic-bezier(.22, .8, .25, 1.1);
-  --yg-lift-shadow: 0 2px 8px color-mix(in srgb, var(--boa-color-neutral-1000) 10%, transparent);
-  --yg-float-shadow: 0 1px 3px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent), 0 6px 20px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent);
-  --yg-panel-shadow: 0 12px 48px color-mix(in srgb, var(--boa-color-neutral-1000) 18%, transparent);
-  --yg-font-action: var(--boa-weight-medium) 0.875rem/1.25rem var(--boa-font-family);
-  --yg-font-body: var(--boa-weight-regular) 0.875rem/1.25rem var(--boa-font-family);
-  --yg-font-help: var(--boa-weight-regular) 0.8125rem/1.125rem var(--boa-font-family);
+  --yg-lift-shadow: 0 1px 4px color-mix(in srgb, var(--boa-color-neutral-1000) 10%, transparent);
+  --yg-float-shadow: 0 1px 3px color-mix(in srgb, var(--boa-color-neutral-1000) 10%, transparent), 0 5px 18px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent);
+  --yg-panel-shadow: 0 10px 40px color-mix(in srgb, var(--boa-color-neutral-1000) 18%, transparent);
+  --yg-font-action: var(--boa-role-weight-ui) 0.875rem/1.25rem var(--boa-font-family);
+  --yg-font-body: var(--boa-role-weight-body) 0.875rem/1.25rem var(--boa-font-family);
+  --yg-font-help: var(--boa-role-weight-body) 0.8125rem/1.1875rem var(--boa-font-family);
   --yg-font-meta: var(--boa-weight-regular) 0.75rem/1rem var(--boa-font-family);
-  --yg-font-heading: var(--boa-role-weight-heading) 1.25rem/1.75rem var(--boa-font-family);
+  --yg-font-heading: var(--boa-role-weight-heading) 1.25rem/1.625rem var(--boa-font-family);
+  --yg-font-display: var(--boa-role-weight-heading) 2.75rem/3rem var(--boa-font-family);
   --yg-font-touch: var(--boa-weight-regular) 1rem/1.5rem var(--boa-font-family);
 }
 .yg-root[data-material="paper"] {

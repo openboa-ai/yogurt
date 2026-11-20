@@ -24,3 +24,13 @@ Design review checks the reuse decision and the screen. Run `yogurt check` again
 - The sidebar examples share collapse, modal dismissal and focus behavior. The project chooses a directory, agent roster or another composition using the same shell. A fixed sidebar would require each app to work around its fields and menu structure. [Sidebar composition](sidebar.md)
 - A profile avatar and an agent silhouette convey different identities. The generic avatar's background covered the space around the agent's silhouette when they used the same style. Shared reuse must carry the same meaning as well as comparable geometry. [Workspace patterns](workspace-patterns.md)
 - Two projects can have a source with the same local ID. The common project view preserves project scope and leaves authorization and selection with the host. [Workspace verification](engineering/controls/component-library/verification.md)
+
+## Interface geometry
+
+Use the spacing and corner scales in `design/tokens/brand.json` and give their applications named roles in `design/tokens/ui.json`. Use the generated CSS or Zig roles in the renderer. Match elevation to the UI layer. Use the low shadow for a raised control, the floating shadow for a picker and the panel shadow for a modal.
+
+Stack independent rows with the stack gap and group neighboring controls with the inline gap. Use the tight gap for a label and its supporting content. Apply the layer inset to anchored menus, the panel inset to cards and the sheet inset to modal content. Use the inner radius for controls within another control, the control radius for fields and buttons, and the panel or sheet radius for the corresponding surface. Place icons and labels on a common centerline. Keep a control's hit area and the space it reserves stable while its state changes.
+
+### Typography
+
+Use Rethink Sans for interface text. Apply display and heading roles to titles, the action role to control labels and the body role to reading text. Use help and metadata roles for supporting information. Use the assigned tracking and line height to preserve hierarchy and readability in dense controls.
