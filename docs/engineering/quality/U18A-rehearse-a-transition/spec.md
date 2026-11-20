@@ -43,3 +43,13 @@ The owner authorized a first comparison of Button, Select, Segmented control and
 | Carousel | Follow direct horizontal manipulation. Add depth between incoming and outgoing cards during travel. Preserve vertical scroll. Commit on release beyond the threshold, and restore on cancel. Buttons retain focus and keyboard operation. | Observe the dragged position, direction reversal, snap-back and one-step commit. Expose only the current slide to focus and accessibility. |
 
 Use the existing catalog exports and shared tokens. The comparison scopes the candidate treatment to the guide. Deliver the review via a branch preview. Check first, intermediate and settled frames in a browser, reduced motion, light and dark, and a narrow viewport. Record the host and the tested states. Native validation and signed-off component motion enter later slices after the owner selects the comparison. The existing I18 gate applies to a production quality claim.
+
+## Motion improvement · library rollout
+
+The owner accepted the comparison's motion strength and requested the full library treatment and centered carousel navigation. Apply the approved press, picker, selection and card movement to the shared Web implementation. Move the pager buttons as a centered pair independently of the status label. Connect each catalog entry to the shared treatment its behavior uses. Stationary reading elements retain stable geometry during adjacent changes.
+
+Use quick surface feedback for input and editing. Give anchored layers clear origins and opaque text. A presented dialog may settle on entry and leave the top layer on a short exit where supported. Dismissal must release input and restore focus immediately. Selection, list and composition transitions follow the latest identity without replaying unrelated siblings. Progress, notifications and result treatments follow the supplied state. Reduced motion keeps interaction and meaning while removing animated travel and repeats.
+
+Retune the six authored presence clips together. Preserve two eyes, the original silhouettes, the public state IDs and the shared Web and Zig pose source. Review roster and detail sizes. Record browser, compiled Native and installed Native observations independently.
+
+The verification slice covers every gallery entry for rendering and representative independent motion on press, choice, layering, direct manipulation, status, workspaces and presence. Keep SDK exports stable and retain the original focus and callback contracts.
