@@ -163,15 +163,44 @@ export function Select({
   error,
   options,
   placeholder,
+  onPointerDown,
+  onKeyDown,
   ...props
 }: FieldInfo &
   ComponentProps<"select"> & { options: Option[]; placeholder?: string }) {
   const dropdown = !props.multiple && (props.size ?? 1) <= 1;
+  function positionPicker(select: HTMLSelectElement) {
+    if (!dropdown || !select.ownerDocument.defaultView?.CSS.supports("appearance", "base-select")) return;
+    const viewport = select.ownerDocument.defaultView;
+    const viewHeight = viewport.visualViewport?.height ?? viewport.innerHeight;
+    const viewTop = viewport.visualViewport?.offsetTop ?? 0;
+    const bounds = select.getBoundingClientRect();
+    const desired = Math.min(288, select.offsetHeight * select.options.length + 16);
+    const above = bounds.top - viewTop;
+    const below = viewTop + viewHeight - bounds.bottom;
+    if (select.parentElement) {
+      select.parentElement.dataset.pickerSide = below < desired && above > below ? "above" : "below";
+    }
+  }
+
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
         <div className="yg-select" data-dropdown={dropdown || undefined}>
-          <select {...props} {...binding}>
+          <select
+            {...props}
+            {...binding}
+            onPointerDown={event => {
+              onPointerDown?.(event);
+              if (!event.defaultPrevented) positionPicker(event.currentTarget);
+            }}
+            onKeyDown={event => {
+              onKeyDown?.(event);
+              if (!event.defaultPrevented && !event.currentTarget.matches(":open")) {
+                positionPicker(event.currentTarget);
+              }
+            }}
+          >
             {placeholder && <option value="">{placeholder}</option>}
             {options.map((o) => (
               <option key={o.id} value={o.id} disabled={o.disabled}>

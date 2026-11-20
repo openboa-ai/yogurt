@@ -80,7 +80,7 @@
     "gallery:agents": "node scripts/build-ui-gallery.mjs --agents",
     "check:agents": "node checks/agent-family.mjs && node checks/web-agent-family.cjs",
     "check:ui": "node scripts/check-ui.mjs",
-    "check:web": "node checks/web-library.cjs && node checks/web-select.cjs && node checks/web-workspaces.cjs && node checks/web-sidebars.cjs && node checks/web-motion.cjs"
+    "check:web": "node checks/web-library.cjs && node checks/web-select.cjs && node checks/web-workspaces.cjs && node checks/web-sidebars.cjs && node checks/web-motion.cjs && node checks/web-motion-comparison.cjs"
   },
   "peerDependencies": {
     "react": ">=19.2.0 <20",

@@ -256,6 +256,37 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     assert.equal(await last.getAttribute("data-state"), "on");
     assert(boundsMatch(await marker.boundingBox(), await last.boundingBox()));
 
+    for (const id of ["dialog", "sheet", "drawer"]) {
+      const layer = await open(id);
+      const trigger = layer.getByRole("button", {name: "Edit view", exact: true});
+      await trigger.click();
+      const modal = layer.getByRole("dialog", {name: "Edit view"});
+      await modal.waitFor();
+      assert.equal(await modal.evaluate(el => getComputedStyle(el).opacity), "1");
+      assert.equal(await modal.evaluate(el => getComputedStyle(el).animationName), "yg-enter");
+      await page.keyboard.press("Escape");
+      await modal.waitFor({state: "hidden"});
+      assert(await trigger.evaluate(el => document.activeElement === el));
+      await trigger.click();
+      await modal.getByRole("button", {name: "Done"}).click();
+      await modal.waitFor({state: "hidden"});
+      assert(await trigger.evaluate(el => document.activeElement === el));
+      assert.equal(await layer.getByRole("status").textContent(), "View updated.");
+    }
+
+    const progress = await open("progress");
+    await progress.getByRole("button", {name: "Review next record"}).click();
+    const value = progress.getByRole("progressbar");
+    assert.equal(await value.getAttribute("value"), "1");
+    assert(await progress.locator(".yg-progress-track > span").evaluate(el =>
+      getComputedStyle(el).transitionProperty.includes("transform")));
+
+    const toast = await open("toast");
+    await toast.getByRole("button", {name: "Save view"}).click();
+    const saved = toast.locator(".yg-toast");
+    assert.equal(await saved.getByRole("status").textContent(), "View saved.");
+    assert.equal(await saved.evaluate(el => getComputedStyle(el).animationName), "yg-toast-arrive");
+
     await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "dark" });
     await page.setViewportSize({width:390,height:850});
     const reduced = await open("agent-avatar");

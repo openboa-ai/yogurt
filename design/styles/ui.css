@@ -531,8 +531,9 @@
   border-radius: var(--yg-radius-panel);
   padding: var(--boa-space-4);
   box-shadow: var(--yg-float-shadow);
-  --yg-enter-y: -4px;
-  animation: yg-enter var(--yg-layer) var(--yg-settle);
+  --yg-enter-y: calc(-1 * var(--boa-space-8));
+  transform-origin: top left;
+  animation: yg-enter var(--yg-travel) var(--yg-arrive);
 }
 .yg-options {
   width: 100%;
@@ -554,7 +555,6 @@
 }
 @keyframes yg-enter {
   from {
-    opacity: .72;
     translate: var(--yg-enter-x, 0) var(--yg-enter-y, 0);
   }
 }
@@ -698,8 +698,8 @@
 .yg-dialog[open] {
   display: grid;
   gap: var(--boa-space-12);
-  --yg-enter-y: 5px;
-  animation: yg-enter var(--yg-panel) var(--yg-settle);
+  --yg-enter-y: var(--boa-space-8);
+  animation: yg-enter var(--yg-panel) var(--yg-arrive);
 }
 .yg-dialog::backdrop {
   background: color-mix(
@@ -708,16 +708,22 @@
     transparent
   );
 }
+.yg-dialog[open]::backdrop {
+  animation: yg-dim var(--yg-travel) var(--yg-settle);
+}
+@keyframes yg-dim {
+  from { opacity: 0; }
+}
 .yg-modal-header {
   justify-content: space-between;
   flex-wrap: nowrap;
 }
 .yg-sheet[open] {
-  --yg-enter-x: 12px;
+  --yg-enter-x: var(--boa-space-16);
   --yg-enter-y: 0;
 }
-.yg-sheet[open]:dir(rtl) { --yg-enter-x: -12px; }
-.yg-dialog.yg-drawer[open] { --yg-enter-y: 12px; }
+.yg-sheet[open]:dir(rtl) { --yg-enter-x: calc(-1 * var(--boa-space-16)); }
+.yg-dialog.yg-drawer[open] { --yg-enter-y: var(--boa-space-16); }
 .yg-sheet {
   margin-inline-end: 0;
   height: 100dvh;
@@ -729,7 +735,7 @@
   .yg-sheet[open],
   .yg-sheet[open]:dir(rtl) {
     --yg-enter-x: 0px;
-    --yg-enter-y: 12px;
+    --yg-enter-y: var(--boa-space-16);
   }
   .yg-sheet {
     margin: auto 0 0;

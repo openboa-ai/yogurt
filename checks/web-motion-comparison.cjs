@@ -4,7 +4,7 @@ const { pathToFileURL } = require("node:url");
 const { chromium } = require("playwright-core");
 
 const url = process.env.YOGURT_MOTION_URL ||
-  pathToFileURL(join(__dirname, "../site/motion-comparison.html")).href;
+  pathToFileURL(join(__dirname, "../apps/guide/generated/motion-comparison.html")).href;
 const output = process.env.YOGURT_CAPTURE_DIR;
 const recording = process.env.YOGURT_RECORD_DIR;
 const translations = (locator) =>
@@ -29,7 +29,7 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     const candidate = (name) => page.getByRole("region", {name, exact: true})
       .getByRole("group", {name: "Candidate", exact: true});
     const action = candidate("Button");
-    const save = action.getByRole("button", {name: "Save changes"});
+    const save = action.locator(".yg-button[data-result]");
     const result = action.getByRole("status");
     const states = [];
     await result.evaluate(node => {
@@ -49,11 +49,13 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     assert.equal(await save.getAttribute("aria-busy"), "true");
     await page.keyboard.press("Enter");
     await result.locator('xpath=self::*[@data-result="success"]').waitFor();
+    await action.getByRole("button", {name: "Saved", exact: true}).waitFor();
     states.push(...await result.evaluate(() => window.motionResults));
     assert.deepEqual(states, ["pending", "success"]);
     await action.getByRole("combobox").selectOption("failure");
     await save.click();
     await result.locator('xpath=self::*[@data-result="failure"]').waitFor();
+    await action.getByRole("button", {name: "Try again", exact: true}).waitFor();
     assert.deepEqual(await save.boundingBox(), before);
 
     const select = candidate("Select").getByRole("combobox", {name: "Workspace"});
@@ -86,7 +88,7 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
       new MutationObserver(() => window.motionSelections.push(node.dataset.segmentResult))
         .observe(node, {attributes: true, attributeFilter: ["data-segment-result"]});
     });
-    await page.getByRole("button", {name: "Replay selection"}).click();
+    await page.getByRole("button", {name: "Replay a quick reversal"}).click();
     await segmented.locator('[data-segment-result="activity"]').waitFor();
     assert.deepEqual(await page.evaluate(() => window.motionSelections), ["files", "activity"]);
     assert.equal(await segmented.locator('.yg-segment button[data-state="on"]').textContent(), "Activity");
@@ -103,6 +105,8 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     const strip = carousel.locator(".yg-carousel-strip");
     await viewport.scrollIntoViewIfNeeded();
     const box = await viewport.boundingBox();
+    const nav = await carousel.locator(".yg-carousel-nav").boundingBox();
+    assert(Math.abs(nav.x + nav.width / 2 - (box.x + box.width / 2)) < 1);
     const center = {x: box.x + box.width / 2, y: box.y + box.height / 2};
     const rest = await stripLeft(strip);
     await page.mouse.move(center.x, center.y);
@@ -136,6 +140,8 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     const touchViewport = narrow.locator(".yg-carousel-viewport");
     await touchViewport.scrollIntoViewIfNeeded();
     const t = await touchViewport.boundingBox();
+    const touchNav = await narrow.locator('[data-motion-candidate] .yg-carousel-nav').boundingBox();
+    assert(Math.abs(touchNav.x + touchNav.width / 2 - (t.x + t.width / 2)) < 1);
     const x = Math.round(t.x + t.width / 2);
     const y = Math.round(t.y + t.height / 2);
     await touch.send("Input.dispatchTouchEvent", {type: "touchStart", touchPoints: [{x, y}]});

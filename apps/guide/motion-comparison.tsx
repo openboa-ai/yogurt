@@ -53,7 +53,7 @@ function Compare({ id, title, instruction, action, children }: {
       </div>
       <div className="motion-pair">
         {[false, true].map(candidate => (
-          <div className="motion-example" key={String(candidate)} data-motion-candidate={candidate || undefined}
+          <div className="motion-example" key={String(candidate)} data-motion-candidate={candidate || undefined} data-motion-baseline={!candidate || undefined}
             aria-label={candidate ? "Candidate" : "Current"} role="group">
             <span className="motion-variant">{candidate ? "Candidate" : "Current"}</span>
             {children(candidate)}
@@ -81,7 +81,8 @@ function SaveExample({ candidate }: { candidate: boolean }) {
         options={[{id: "success", label: "Success"}, {id: "failure", label: "Failure"}]} />
       <div className="motion-save-row">
         <Button className={candidate ? "motion-press" : undefined} pending={state === "pending"} onClick={save}
-          aria-label="Save changes" data-result={state}>
+          aria-label={candidate && state === "success" ? "Saved" :
+            candidate && state === "failure" ? "Try again" : "Save changes"} data-result={state}>
           {candidate && (state === "success" || state === "failure") ? (
             <span className="motion-button-result" key={state}>
               <Icon name={state === "success" ? "check" : "close"} />
@@ -118,25 +119,6 @@ function SegmentExample({ replay }: { replay: number }) {
   );
 }
 
-function WorkspacePicker() {
-  const [side, setSide] = useState("below");
-
-  function measure(select: HTMLSelectElement) {
-    const field = select.getBoundingClientRect();
-    const row = select.offsetHeight;
-    const required = row * workspaces.length + 16;
-    setSide(window.innerHeight - field.bottom < required && field.top >= required ? "above" : "below");
-  }
-
-  return (
-    <div data-picker-side={side}>
-      <Select label="Workspace" options={workspaces} defaultValue="studio"
-        onPointerDown={event => measure(event.currentTarget)}
-        onKeyDown={event => measure(event.currentTarget)} />
-    </div>
-  );
-}
-
 type Appearance = "light" | "dark" | "auto";
 function MotionComparison() {
   const [appearance, setAppearance] = useState<Appearance>("auto");
@@ -147,7 +129,11 @@ function MotionComparison() {
       <main className="motion-comparison">
         <header className="motion-heading">
           <div>
-            <a className="motion-home" href="index.html">Yogurt</a>
+            <nav className="motion-links" aria-label="Yogurt">
+              <a className="motion-home" href="index.html">Yogurt</a>
+              <a className="motion-home" href="components.html">Component library</a>
+              <a className="motion-home" href="agents.html">Agent motion</a>
+            </nav>
             <Heading level={1}>Component motion</Heading>
             <Text>Try the same interaction in both versions.</Text>
           </div>
@@ -157,12 +143,12 @@ function MotionComparison() {
         <Compare id="button" title="Button" instruction="Press and release. Choose a failure result to check recovery.">
           {candidate => <SaveExample candidate={candidate} />}
         </Compare>
-        <Compare id="select" title="Select" instruction="Open the list, dismiss with Escape, then reopen and choose a workspace.">
-          {() => <WorkspacePicker />}
+        <Compare id="select" title="Select" instruction="Open and choose a workspace. Picker motion uses browser support.">
+          {() => <Select label="Workspace" options={workspaces} defaultValue="studio" />}
         </Compare>
         <Compare id="segmented-control" title="Segmented control"
           instruction="Switch views quickly, or replay the same sequence in both."
-          action={<Button emphasis="soft" size="compact" onClick={() => setReplay(count => count + 1)}>Replay selection</Button>}>
+          action={<Button emphasis="soft" size="compact" onClick={() => setReplay(count => count + 1)}>Replay a quick reversal</Button>}>
           {() => <SegmentExample replay={replay} />}
         </Compare>
         <Compare id="carousel" title="Carousel" instruction="Drag horizontally, change direction, then release. The arrows work with a keyboard.">

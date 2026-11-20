@@ -12,7 +12,7 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
         .radius = .{ .sm = ui.radius_small, .md = ui.radius_control, .lg = ui.radius_panel },
         .metrics = .{ .control_height_sm = ui.size_compact, .control_height = ui.size_regular, .control_height_lg = ui.size_touch, .button_inset_sm = ui.inset_compact, .button_inset = ui.inset_regular, .button_inset_lg = ui.inset_roomy },
         .typography = .{ .font_id = font_id, .mono_font_id = font_id, .button_font_id = button_font_id, .body_size = ui.body_type, .label_size = ui.help_type, .button_size = ui.action_type, .heading_size = ui.heading_type, .title_size = ui.heading_type },
-        .motion = .{ .fast_ms = ui.press_ms, .normal_ms = ui.travel_ms, .slow_ms = ui.travel_ms },
+        .motion = .{ .fast_ms = ui.press_ms, .normal_ms = ui.travel_ms, .slow_ms = ui.panel_ms },
         .controls = .{
             .switch_control = .{ .background = r.off, .active_background = r.action, .foreground = r.thumb, .active_foreground = r.on_action },
             .button_primary = .{ .background = r.action, .hover_background = r.action_hover, .pressed_background = r.action_press, .foreground = r.on_action, .radius = ui.radius_control, .disabled_background = r.hover, .disabled_foreground = r.muted },

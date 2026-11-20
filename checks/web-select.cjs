@@ -65,6 +65,11 @@ async function metrics(select) {
       await page.waitForFunction(() =>
         document.querySelector(".specimen select")?.matches(":open"),
       );
+      const entering = await metrics(select);
+      assert.ok(entering.first.height >= (touch ? 44 : 36));
+      await page.waitForFunction(() => getComputedStyle(
+        document.querySelector(".specimen select"), "::picker(select)",
+      ).translate === "none");
       const m = await metrics(select);
       assert.equal(m.appearance, "base-select");
       assert.equal(m.corner, "12px");

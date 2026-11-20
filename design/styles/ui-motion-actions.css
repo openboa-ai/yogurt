@@ -142,8 +142,7 @@
 
 @keyframes yg-toast-arrive {
   from {
-    opacity: 0.75;
-    transform: translateY(var(--boa-space-4));
+    translate: 0 var(--boa-space-8);
   }
 }
 
@@ -187,5 +186,134 @@
   .yg-progress progress:not([value]) + .yg-progress-track > span,
   .yg-toast {
     animation: none;
+  }
+}
+
+
+.yg-root .yg-button:where(:not([data-motion-baseline] *)) {
+  box-shadow: inset 0 0 transparent;
+  transition: background-color var(--yg-press) linear,
+    box-shadow var(--yg-press) var(--yg-settle);
+}
+.yg-root .yg-button:where(:not([data-motion-baseline] *)):active:not(:disabled, [aria-disabled="true"]) {
+  box-shadow: inset 0 2px color-mix(in srgb, var(--boa-color-neutral-950) 28%, transparent);
+  transition-duration: 0ms;
+}
+.yg-root .yg-button:where(:not([data-motion-baseline] *)):active .yg-button-label {
+  transform: none;
+}
+
+@supports (appearance: base-select) {
+  .yg-select[data-dropdown]:where(:not([data-motion-baseline] *)) {
+    --yg-picker-offset: calc(-1 * var(--boa-space-8));
+    --yg-picker-origin: top center;
+  }
+  .yg-select[data-picker-side="above"] {
+    --yg-picker-offset: var(--boa-space-8);
+    --yg-picker-origin: bottom center;
+  }
+  .yg-root .yg-select[data-dropdown]:where(:not([data-motion-baseline] *)) select:open::picker(select) {
+    transform-origin: var(--yg-picker-origin);
+    animation: yg-picker-arrive var(--yg-panel) var(--yg-arrive);
+  }
+}
+
+@keyframes yg-picker-arrive {
+  from { translate: 0 var(--yg-picker-offset); }
+  to { translate: 0 0; }
+}
+
+.yg-slide.yg-carousel-viewport {
+  padding: 0;
+  overflow: clip;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
+}
+.yg-carousel-strip {
+  --yg-carousel-direction: -1;
+  display: flex;
+  translate: calc(var(--yg-carousel-page) * var(--yg-carousel-direction) * 100% + var(--yg-carousel-drag));
+  transition: translate var(--yg-change) var(--yg-settle);
+}
+.yg-carousel-strip:dir(rtl) { --yg-carousel-direction: 1; }
+.yg-carousel-strip > div {
+  flex: 0 0 100%;
+  min-inline-size: 0;
+  padding: var(--boa-space-16);
+}
+.yg-carousel-card {
+  scale: calc(1 - .075 * var(--yg-carousel-distance));
+  translate: 0 calc(var(--boa-space-8) * var(--yg-carousel-distance));
+  transition: scale var(--yg-change) var(--yg-settle), translate var(--yg-change) var(--yg-settle);
+}
+.yg-carousel-strip[data-dragging],
+.yg-carousel-strip[data-dragging] .yg-carousel-card {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yg-carousel-strip, .yg-carousel-card { transition: none; }
+  .yg-carousel-card { scale: 1; translate: none; }
+  .yg-root .yg-select[data-dropdown]:where(:not([data-motion-baseline] *)) select:open::picker(select) {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .yg-button[aria-busy="true"] .yg-button-pending {
+    animation: yg-result-arrive var(--yg-travel) var(--yg-arrive) both;
+  }
+
+  :is(.yg-input, .yg-select):has(:is(input, textarea, select)[aria-invalid="true"]) {
+    animation: yg-field-invalid var(--yg-change) var(--yg-settle);
+  }
+
+  :is(.yg-notice, .yg-result, .yg-skeleton) {
+    animation: yg-result-arrive var(--yg-change) var(--yg-arrive) both;
+  }
+
+  :is(.yg-status, .yg-badge)[data-tone] {
+    transition: color var(--yg-press) var(--yg-settle),
+      background-color var(--yg-press) var(--yg-settle);
+  }
+
+  :is(.yg-row, .yg-workspace-row-body, .yg-agent-row, .yg-nav-list a, .yg-attachment,
+      .yg-sidebar-item-row a, .yg-sidebar-item-row button, .yg-table-sort,
+      .yg-options [role="option"], .yg-anchored-panel [role="menuitem"]) {
+    transition: background-color var(--yg-press) var(--yg-settle),
+      border-color var(--yg-press) var(--yg-settle);
+  }
+
+  .yg-disclosure[open] > div {
+    animation: yg-result-arrive var(--yg-travel) var(--yg-settle) both;
+  }
+
+  .yg-flyout[data-state="open"] {
+    transform-origin: var(--radix-popper-transform-origin, top center);
+    animation: yg-floating-arrive var(--yg-travel) var(--yg-arrive);
+  }
+
+  [data-state="open"].yg-accordion-content {
+    animation: yg-result-arrive var(--yg-travel) var(--yg-settle) both;
+  }
+}
+
+@keyframes yg-result-arrive {
+  from { translate: 0 var(--boa-space-4); }
+}
+
+@keyframes yg-field-invalid {
+  from { box-shadow: 0 0 0 2px var(--yg-danger-soft); }
+  to { box-shadow: 0 0 0 0 transparent; }
+}
+
+@keyframes yg-floating-arrive {
+  from { translate: 0 calc(-1 * var(--boa-space-4)); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .yg-bar-track i {
+    transition: inline-size var(--yg-change) var(--yg-settle),
+      inset-inline-start var(--yg-change) var(--yg-settle);
   }
 }

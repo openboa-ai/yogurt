@@ -383,14 +383,46 @@ function Select({
   error,
   options,
   placeholder,
+  onPointerDown,
+  onKeyDown,
   ...props
 }) {
   const dropdown = !props.multiple && (props.size ?? 1) <= 1;
+  function positionPicker(select) {
+    if (!dropdown || !select.ownerDocument.defaultView?.CSS.supports("appearance", "base-select")) return;
+    const viewport = select.ownerDocument.defaultView;
+    const viewHeight = viewport.visualViewport?.height ?? viewport.innerHeight;
+    const viewTop = viewport.visualViewport?.offsetTop ?? 0;
+    const bounds = select.getBoundingClientRect();
+    const desired = Math.min(288, select.offsetHeight * select.options.length + 16);
+    const above = bounds.top - viewTop;
+    const below = viewTop + viewHeight - bounds.bottom;
+    if (select.parentElement) {
+      select.parentElement.dataset.pickerSide = below < desired && above > below ? "above" : "below";
+    }
+  }
   return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs("div", { className: "yg-select", "data-dropdown": dropdown || void 0, children: [
-    /* @__PURE__ */ jsxs("select", { ...props, ...binding, children: [
-      placeholder && /* @__PURE__ */ jsx("option", { value: "", children: placeholder }),
-      options.map((o2) => /* @__PURE__ */ jsx("option", { value: o2.id, disabled: o2.disabled, children: o2.label }, o2.id))
-    ] }),
+    /* @__PURE__ */ jsxs(
+      "select",
+      {
+        ...props,
+        ...binding,
+        onPointerDown: (event) => {
+          onPointerDown?.(event);
+          if (!event.defaultPrevented) positionPicker(event.currentTarget);
+        },
+        onKeyDown: (event) => {
+          onKeyDown?.(event);
+          if (!event.defaultPrevented && !event.currentTarget.matches(":open")) {
+            positionPicker(event.currentTarget);
+          }
+        },
+        children: [
+          placeholder && /* @__PURE__ */ jsx("option", { value: "", children: placeholder }),
+          options.map((o2) => /* @__PURE__ */ jsx("option", { value: o2.id, disabled: o2.disabled, children: o2.label }, o2.id))
+        ]
+      }
+    ),
     dropdown && /* @__PURE__ */ jsx(Icon, { name: "down" })
   ] }) });
 }

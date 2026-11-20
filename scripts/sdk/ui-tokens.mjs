@@ -39,7 +39,8 @@ for (const [k, v] of Object.entries(ui.geometry))
   );
 for (const [k, v] of Object.entries(ui.motion))
   css.push("  --yg-" + k + ": " + v + "ms;");
-css.push("  --yg-settle: " + ui.easing.settle + ";");
+for (const [role, curve] of Object.entries(ui.easing))
+  css.push("  --yg-" + role + ": " + curve + ";");
 for (const [name, layers] of Object.entries(ui.elevation)) {
   const shadows = layers.map(([y, blur, opacity]) =>
     "0 " + y + "px " + blur + "px color-mix(in srgb, " +

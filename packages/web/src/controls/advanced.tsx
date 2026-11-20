@@ -462,7 +462,7 @@ export function Carousel({
   const [index, setIndex] = useState(0),
     start = useRef<number | null>(null),
     current = Math.max(0, Math.min(index, items.length - 1));
-  const review = useContext(CarouselMotionReview);
+  const useStrip = useContext(CarouselMotionReview);
   function move(delta: number) {
     setIndex(Math.max(0, Math.min(current + delta, items.length - 1)));
   }
@@ -472,7 +472,7 @@ export function Carousel({
       aria-label={label}
       aria-roledescription="carousel"
     >
-      {review ? <CarouselStrip items={items} current={current} move={move} /> : (
+      {useStrip ? <CarouselStrip items={items} current={current} move={move} /> : (
         <div
           className="yg-slide"
           onTouchStart={(e) => {
@@ -502,18 +502,20 @@ export function Carousel({
               items.length
             : "No items"}
         </span>
-        <IconButton
-          icon="back"
-          label="Previous slide"
-          disabled={!current}
-          onClick={() => move(-1)}
-        />
-        <IconButton
-          icon="next"
-          label="Next slide"
-          disabled={current >= items.length - 1}
-          onClick={() => move(1)}
-        />
+        <div className="yg-carousel-nav">
+          <IconButton
+            icon="back"
+            label="Previous slide"
+            disabled={!current}
+            onClick={() => move(-1)}
+          />
+          <IconButton
+            icon="next"
+            label="Next slide"
+            disabled={current >= items.length - 1}
+            onClick={() => move(1)}
+          />
+        </div>
       </footer>
     </section>
   );

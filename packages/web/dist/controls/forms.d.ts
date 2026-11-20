@@ -27,7 +27,7 @@ export declare function SearchField({ id, label, help, error, value, onValueChan
     name?: string;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Textarea({ id, label, help, error, className, ...props }: FieldInfo & ComponentProps<"textarea">): import("react/jsx-runtime").JSX.Element;
-export declare function Select({ id, label, help, error, options, placeholder, ...props }: FieldInfo & ComponentProps<"select"> & {
+export declare function Select({ id, label, help, error, options, placeholder, onPointerDown, onKeyDown, ...props }: FieldInfo & ComponentProps<"select"> & {
     options: Option[];
     placeholder?: string;
 }): import("react/jsx-runtime").JSX.Element;

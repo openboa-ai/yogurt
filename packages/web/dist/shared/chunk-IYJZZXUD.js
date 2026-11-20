@@ -6,7 +6,7 @@ import {
   Checkbox,
   RadioGroup,
   Textarea
-} from "./chunk-HCN54DKB.js";
+} from "./chunk-7OVEFMFK.js";
 import {
   dist_exports2 as dist_exports,
   dist_exports4 as dist_exports2,
@@ -25,7 +25,12 @@ import {
 } from "./chunk-RUS3W4HJ.js";
 
 // packages/web/src/controls/advanced.tsx
-import { useId as useId2, useRef as useRef4, useState as useState4 } from "react";
+import {
+  useContext as useContext3,
+  useId as useId2,
+  useRef as useRef4,
+  useState as useState4
+} from "react";
 
 // node_modules/@date-fns/tz/constants/index.js
 var constructFromSymbol = Symbol.for("constructDateFrom");
@@ -6343,6 +6348,10 @@ function PanelResizeHandle({
 }
 PanelResizeHandle.displayName = "PanelResizeHandle";
 
+// packages/web/src/controls/motion-review-context.ts
+import { createContext as createContext3 } from "react";
+var CarouselMotionReview = createContext3(true);
+
 // packages/web/src/controls/advanced.tsx
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 function Accordion({
@@ -6613,11 +6622,86 @@ function Navbar({
     action
   ] });
 }
+function CarouselStrip({ items, current, move }) {
+  const gesture = useRef4(null);
+  const [drag, setDrag] = useState4(null);
+  function begin(event) {
+    if (!event.isPrimary || event.button !== 0 || event.target.closest("a, button, input, select, textarea, [contenteditable]")) return;
+    gesture.current = {
+      pointer: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      direction: event.currentTarget.matches(":dir(rtl)") ? -1 : 1,
+      width: event.currentTarget.clientWidth,
+      active: false,
+      distance: 0
+    };
+  }
+  function track(event) {
+    const next = gesture.current;
+    if (!next || next.pointer !== event.pointerId) return;
+    const x = event.clientX - next.x;
+    if (!next.active) {
+      const y = Math.abs(event.clientY - next.y);
+      if (y >= 6 && y >= Math.abs(x)) {
+        gesture.current = null;
+        return;
+      }
+      if (Math.abs(x) < 6) return;
+      next.active = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    next.distance = x * next.direction;
+    const forward = next.distance < 0;
+    const atEdge = forward ? current >= items.length - 1 : current === 0;
+    const pixels = atEdge ? x * 0.24 : Math.max(-next.width, Math.min(next.width, x));
+    setDrag({ pixels, fraction: next.width ? pixels * next.direction / next.width : 0 });
+  }
+  function finish(event, commit = false) {
+    const previous = gesture.current;
+    if (!previous || previous.pointer !== event.pointerId) return;
+    gesture.current = null;
+    setDrag(null);
+    if (!commit || !previous.active) return;
+    const delta = previous.distance;
+    const threshold = Math.min(64, previous.width * 0.24);
+    if (Math.abs(delta) >= threshold) move(delta < 0 ? 1 : -1);
+  }
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      className: "yg-slide yg-carousel-viewport",
+      onPointerDown: begin,
+      onPointerMove: track,
+      onPointerUp: (event) => finish(event, true),
+      onPointerCancel: finish,
+      onLostPointerCapture: (event) => {
+        if (event.target === event.currentTarget) finish(event);
+      },
+      onPointerLeave: (event) => {
+        if (!gesture.current?.active) finish(event);
+      },
+      children: /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "yg-carousel-strip",
+          "data-dragging": drag !== null || void 0,
+          style: { "--yg-carousel-page": current, "--yg-carousel-drag": `${drag?.pixels ?? 0}px` },
+          children: items.map((item, index) => {
+            const distance = Math.min(1, Math.abs(index - current + (drag?.fraction ?? 0)));
+            return /* @__PURE__ */ jsx("div", { inert: index !== current, "aria-hidden": index !== current || void 0, children: /* @__PURE__ */ jsx("div", { className: "yg-carousel-card", style: { "--yg-carousel-distance": distance }, children: Math.abs(index - current) <= 1 ? item.content : null }) }, item.id);
+          })
+        }
+      )
+    }
+  );
+}
 function Carousel({
   label,
   items
 }) {
   const [index, setIndex] = useState4(0), start = useRef4(null), current = Math.max(0, Math.min(index, items.length - 1));
+  const useStrip = useContext3(CarouselMotionReview);
   function move(delta) {
     setIndex(Math.max(0, Math.min(current + delta, items.length - 1)));
   }
@@ -6628,7 +6712,7 @@ function Carousel({
       "aria-label": label,
       "aria-roledescription": "carousel",
       children: [
-        /* @__PURE__ */ jsx(
+        useStrip ? /* @__PURE__ */ jsx(CarouselStrip, { items, current, move }) : /* @__PURE__ */ jsx(
           "div",
           {
             className: "yg-slide",
@@ -6650,24 +6734,26 @@ function Carousel({
         ),
         /* @__PURE__ */ jsxs("footer", { children: [
           /* @__PURE__ */ jsx("span", { "aria-live": "polite", children: items.length ? items[current].label + " \xB7 " + (current + 1) + " / " + items.length : "No items" }),
-          /* @__PURE__ */ jsx(
-            IconButton,
-            {
-              icon: "back",
-              label: "Previous slide",
-              disabled: !current,
-              onClick: () => move(-1)
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            IconButton,
-            {
-              icon: "next",
-              label: "Next slide",
-              disabled: current >= items.length - 1,
-              onClick: () => move(1)
-            }
-          )
+          /* @__PURE__ */ jsxs("div", { className: "yg-carousel-nav", children: [
+            /* @__PURE__ */ jsx(
+              IconButton,
+              {
+                icon: "back",
+                label: "Previous slide",
+                disabled: !current,
+                onClick: () => move(-1)
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              IconButton,
+              {
+                icon: "next",
+                label: "Next slide",
+                disabled: current >= items.length - 1,
+                onClick: () => move(1)
+              }
+            )
+          ] })
         ] })
       ]
     }

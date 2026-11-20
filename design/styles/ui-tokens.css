@@ -45,6 +45,8 @@
   --yg-panel: 200ms;
   --yg-busy: 750ms;
   --yg-settle: cubic-bezier(.2, 0, 0, 1);
+  --yg-arrive: cubic-bezier(.24, .8, .3, 1.04);
+  --yg-selection: cubic-bezier(.22, .8, .25, 1.1);
   --yg-lift-shadow: 0 2px 8px color-mix(in srgb, var(--boa-color-neutral-1000) 10%, transparent);
   --yg-float-shadow: 0 1px 3px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent), 0 6px 20px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent);
   --yg-panel-shadow: 0 12px 48px color-mix(in srgb, var(--boa-color-neutral-1000) 18%, transparent);
