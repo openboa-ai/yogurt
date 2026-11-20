@@ -8,7 +8,7 @@
   display: grid;
   gap: var(--yg-gap-inline);
   padding: var(--yg-inset-regular);
-  border-radius: var(--yg-radius-panel);
+  border-radius: var(--yg-radius-control);
   background: var(--yg-raised-surface);
   box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
 }
@@ -17,18 +17,20 @@
 }
 .yg-mention textarea {
   inline-size: 100%;
-  min-block-size: 4.5rem;
+  box-sizing: border-box;
+  min-block-size: 3.75rem;
   padding: 0;
   resize: vertical;
   border: 0;
   outline: none;
   background: transparent;
+  color: var(--yg-text);
   font: var(--yg-font-body);
 }
 .yg-mention textarea:focus-visible { outline: none; }
 .yg-mention-hint, .yg-file-drop-status {
   color: var(--yg-muted);
-  font: var(--yg-font-help);
+  font: var(--yg-font-meta);
 }
 .yg-mention-hint { display: flex; align-items: center; gap: var(--yg-gap-tight); }
 .yg-mention-hint kbd, .yg-command-list kbd {
@@ -49,7 +51,7 @@
   min-inline-size: min(100%, 15rem);
   max-block-size: 14rem;
   overflow: auto;
-  padding: var(--yg-inset-layer);
+  padding: var(--yg-gap-tight);
   border-radius: var(--yg-radius-panel);
   background: var(--yg-raised-surface);
   box-shadow: inset 0 0 0 1px var(--yg-surface-edge), var(--yg-float-shadow);
@@ -60,7 +62,7 @@
   gap: var(--yg-gap-inline);
   inline-size: 100%;
   min-block-size: var(--yg-size-regular);
-  padding: var(--yg-inset-layer) var(--yg-inset-compact);
+  padding: var(--yg-gap-tight) var(--yg-inset-compact);
   border: 0;
   border-radius: var(--yg-radius-small);
   background: transparent;
@@ -88,15 +90,16 @@
   align-items: center;
   gap: var(--yg-gap-stack);
   padding: var(--yg-inset-regular);
-  border: 1px dashed var(--yg-off);
+  border: var(--boa-stroke-rule) dashed var(--yg-surface-edge);
   border-radius: var(--yg-radius-panel);
   background: var(--yg-raised-surface);
 }
 .yg-file-drop[data-dragging] { border-color: var(--yg-action); background: var(--yg-action-soft); }
 .yg-file-drop-mark {
-  inline-size: var(--yg-size-icon);
-  block-size: var(--yg-size-icon);
-  padding: var(--yg-gap-tight);
+  box-sizing: border-box;
+  inline-size: var(--yg-size-regular);
+  block-size: var(--yg-size-regular);
+  padding: var(--yg-inset-compact);
   border-radius: var(--yg-radius-control);
   background: var(--yg-field);
   color: var(--yg-action);
@@ -108,11 +111,12 @@
   display: grid;
   place-items: center;
   min-block-size: var(--yg-size-regular);
-  padding-inline: var(--yg-inset-compact);
+  padding-inline: var(--yg-inset-regular);
   border-radius: var(--yg-radius-control);
   background: var(--yg-action-soft);
   color: var(--yg-action);
-  font: var(--yg-font-action);
+  font: var(--yg-font-label);
+  white-space: nowrap;
   cursor: pointer;
 }
 .yg-file-drop-button:hover { background: var(--yg-action-soft-hover); }
@@ -122,6 +126,14 @@
   outline-offset: 2px;
 }
 .yg-file-drop-status:empty { display: none; }
+@media (max-width: 25rem) {
+  .yg-file-drop { grid-template-columns: auto minmax(0, 1fr); gap: var(--yg-gap-inline); }
+  .yg-file-drop-button { grid-column: 2; justify-self: start; }
+}
+@media (pointer: coarse) {
+  .yg-mention-list button, .yg-file-drop-button { min-block-size: var(--yg-size-touch); }
+  .yg-mention textarea { font: var(--yg-font-touch); }
+}
 @media (prefers-reduced-motion: no-preference) {
   .yg-mention-list { animation: yg-input-arrive var(--yg-travel) var(--yg-settle); }
   .yg-file-drop { transition: background-color var(--yg-travel) var(--yg-settle), border-color var(--yg-travel) var(--yg-settle); }

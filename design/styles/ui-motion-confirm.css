@@ -3,8 +3,8 @@
   display: inline-grid;
   place-items: center;
   min-block-size: var(--yg-size-touch);
-  min-inline-size: 220px;
-  padding: var(--boa-space-12) var(--boa-space-24);
+  min-inline-size: 180px;
+  padding: 8px 12px;
   overflow: hidden;
   border: 1px solid var(--yg-off);
   border-radius: var(--yg-radius-control);
@@ -15,11 +15,14 @@
   line-height: 1.25;
   cursor: pointer;
   user-select: none;
+  box-sizing: border-box;
 }
 .yg-hold-confirm:focus-visible, .yg-slide-confirm:focus-visible {
   outline: var(--boa-stroke-focus) solid var(--yg-action);
   outline-offset: 3px;
 }
+.yg-hold-confirm:hover, .yg-slide-confirm:hover { background: var(--yg-hover); }
+.yg-hold-confirm:active, .yg-slide-confirm:active { border-color: var(--yg-action); }
 .yg-confirm-fill {
   position: absolute;
   inset: 0;
@@ -29,18 +32,18 @@
   pointer-events: none;
 }
 .yg-confirm-label { position: relative; z-index: 1; text-align: center; pointer-events: none; }
-.yg-slide-confirm { touch-action: pan-y; padding-inline: 56px 16px; }
+.yg-slide-confirm { touch-action: pan-y; padding-inline: 48px 12px; }
 .yg-slide-confirm-handle {
   position: absolute;
-  left: calc(4px + var(--yg-confirm-progress, 0) * (100% - 48px));
-  inline-size: 40px;
-  block-size: 40px;
+  left: calc(4px + var(--yg-confirm-progress, 0) * (100% - 40px));
+  inline-size: 32px;
+  block-size: 32px;
   display: grid;
   place-items: center;
   border-radius: var(--yg-radius-control);
   background: var(--yg-action);
   color: var(--yg-on-action, white);
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
   pointer-events: none;
 }

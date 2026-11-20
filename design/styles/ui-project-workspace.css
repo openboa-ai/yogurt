@@ -16,8 +16,8 @@
   gap: var(--boa-space-8);
   flex: 1 1 auto;
   min-inline-size: 0;
-  min-block-size: var(--yg-size-touch);
-  padding: var(--boa-space-8) var(--boa-space-12);
+  min-block-size: var(--yg-size-regular);
+  padding: var(--boa-space-6) var(--yg-inset-compact);
   border: 0;
   border-radius: inherit;
   background: transparent;
@@ -28,6 +28,10 @@
 
 button.yg-workspace-row-body {
   cursor: pointer;
+}
+
+@media (pointer: coarse) {
+  button.yg-workspace-row-body { min-block-size: var(--yg-size-touch); }
 }
 
 button.yg-workspace-row-body:hover {
@@ -51,9 +55,9 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
   display: inline-grid;
   flex: none;
   place-items: center;
-  inline-size: var(--boa-space-32);
-  block-size: var(--boa-space-32);
-  border-radius: var(--yg-radius-control);
+  inline-size: var(--boa-space-24);
+  block-size: var(--boa-space-24);
+  border-radius: var(--yg-radius-small);
   background: var(--yg-field);
   color: var(--yg-action);
 }
@@ -77,7 +81,7 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
   max-inline-size: 38%;
   overflow-wrap: anywhere;
   color: var(--yg-muted);
-  font: var(--yg-font-help);
+  font: var(--yg-font-meta);
   text-align: end;
 }
 

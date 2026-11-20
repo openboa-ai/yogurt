@@ -322,9 +322,9 @@
     "size": {
       "caption": 12,
       "ui": 14,
-      "interface": 15,
+      "interface": 14,
       "body": 16,
-      "subheading": 22,
+      "subheading": 20,
       "title": 32,
       "headline": 40,
       "help": 13
@@ -332,9 +332,9 @@
     "lineHeight": {
       "caption": 16,
       "ui": 20,
-      "interface": 22,
+      "interface": 20,
       "body": 24,
-      "subheading": 28,
+      "subheading": 26,
       "title": 36,
       "headline": 44,
       "help": 18
@@ -370,10 +370,10 @@
     "64": 64
   },
   "radius": {
-    "control": 10,
-    "panel": 16,
-    "sheet": 20,
-    "card": 24,
+    "control": 8,
+    "panel": 12,
+    "sheet": 16,
+    "card": 16,
     "round": 999,
     "small": 6
   },
@@ -382,11 +382,11 @@
     "focus": 2
   },
   "control": {
-    "height": 40,
+    "height": 36,
     "touch": 44,
-    "compact": 32,
-    "icon": 36,
-    "glyph": 18
+    "compact": 30,
+    "icon": 32,
+    "glyph": 16
   },
   "signature": {
     "capHeight": 60,

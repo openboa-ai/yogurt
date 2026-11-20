@@ -1,5 +1,5 @@
 :where(.yg-expand-card, .yg-stat-card, .yg-profile-card) {
-  border-radius: var(--yg-radius-card);
+  border-radius: var(--yg-radius-panel);
   background: var(--yg-surface);
   color: var(--yg-text);
 }
@@ -9,7 +9,7 @@
   justify-content: space-between;
   gap: var(--yg-gap-stack);
   min-block-size: var(--yg-size-touch);
-  padding: var(--yg-inset-panel);
+  padding: var(--yg-inset-regular) var(--yg-inset-panel);
   font: var(--yg-font-action);
   cursor: pointer;
   list-style: none;
@@ -24,6 +24,7 @@
   border-radius: var(--yg-radius-control);
   background: var(--yg-field);
   color: var(--yg-action);
+  font-size: var(--boa-size-subheading);
 }
 .yg-expand-card[open] .yg-card-disclosure { rotate: 45deg; }
 .yg-expand-card-body {
@@ -36,16 +37,16 @@
   align-items: stretch;
   gap: var(--yg-gap-inline);
   overflow-x: auto;
-  padding: var(--yg-inset-compact) var(--boa-space-4);
+  padding: var(--yg-inset-compact) var(--boa-space-4) var(--yg-inset-regular);
 }
 .yg-fan-cards-list button {
   display: flex;
-  flex: 1 0 8rem;
+  flex: 1 0 7.5rem;
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--yg-gap-stack);
-  min-block-size: 6rem;
+  gap: var(--yg-inset-panel);
+  min-block-size: 8rem;
   padding: var(--yg-inset-regular);
   border: 0;
   border-radius: var(--yg-radius-panel);
@@ -64,8 +65,8 @@
 .yg-fan-detail > span { color: var(--yg-muted); }
 .yg-stat-card {
   display: grid;
-  gap: var(--yg-gap-tight);
-  padding: var(--yg-inset-sheet);
+  gap: var(--yg-gap-inline);
+  padding: var(--yg-inset-panel);
 }
 .yg-stat-label { font: var(--yg-font-action); }
 .yg-stat-detail, .yg-profile-header p {
@@ -76,6 +77,8 @@
 .yg-stat-value {
   display: block;
   font: var(--yg-font-display);
+  font-size: clamp(2.25rem, 5vi, 3rem);
+  line-height: 1.05;
   letter-spacing: var(--boa-tracking-display);
   font-variant-numeric: tabular-nums;
 }
@@ -93,7 +96,7 @@
   color: var(--yg-action);
   font: var(--yg-font-action);
 }
-.yg-profile-card details { margin-block-start: var(--yg-gap-stack); }
+.yg-profile-card details { margin-block-start: var(--yg-gap-stack); padding-block-start: var(--yg-gap-inline); }
 .yg-profile-card summary { cursor: pointer; font: var(--yg-font-action); }
 .yg-profile-extra { padding-block-start: var(--yg-gap-inline); color: var(--yg-muted); }
 :where(.yg-expand-card summary, .yg-fan-cards button, .yg-profile-card summary):focus-visible {

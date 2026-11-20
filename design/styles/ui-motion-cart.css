@@ -37,6 +37,7 @@
   background: transparent;
   color: inherit;
   font: var(--yg-font-action);
+  line-height: 1;
   white-space: nowrap;
   touch-action: manipulation;
   user-select: none;
@@ -59,8 +60,11 @@
 .yg-cart-increase[aria-disabled="true"] {
   opacity: .55;
 }
+.yg-cart-stepper .yg-icon { inline-size: var(--yg-glyph); block-size: var(--yg-glyph); flex: none; }
 .yg-cart-quantity {
   font: var(--yg-font-action);
+  font-weight: var(--boa-weight-semibold);
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 .yg-cart-quantity span {

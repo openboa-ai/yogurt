@@ -16,11 +16,27 @@
 .extra-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .extra-counter { display: flex; align-items: center; gap: 20px; }
 .extra-counter button:disabled { opacity: .45; cursor: default; }
-.extra-page, .extra-zoom-frame, .extra-card { border: 1px solid var(--yg-surface-edge); background: var(--yg-field); border-radius: var(--yg-radius-panel); padding: var(--yg-inset-panel); }
-.extra-page span, .extra-card small { font-size: .75em; opacity: .7; }
+.extra-gesture-page, .extra-zoom-frame, .extra-card { border: 1px solid var(--yg-surface-edge); background: var(--yg-field); border-radius: var(--yg-radius-panel); padding: var(--yg-inset-panel); }
+.extra-gesture-page span, .extra-card small { font-size: .75em; opacity: .7; }
 .extra-zoom-frame { height: 100px; display: grid; place-items: center; overflow: hidden; }
 .extra-zoom-frame > div { font-size: 36px; transition: transform 180ms ease; }
 .extra-card { display: grid; gap: 20px; min-height: 100px; }
 .extra-card strong { font-variant-numeric: tabular-nums; letter-spacing: .06em; }
 .extra-card span { font-size: .8em; }
 @media (prefers-reduced-motion: reduce) { .extra-exposure-preview, .extra-zoom-frame > div { transition: none; } }
+
+.extra-gesture, .extra-rating { font-size: 14px; line-height: 20px; }
+.extra-gesture { gap: 12px; }
+.extra-gesture p, .extra-rating p { margin: 0; }
+.extra-gesture label output { font-variant-numeric: tabular-nums; }
+.extra-disclosure, .extra-gesture-page, .extra-zoom-frame, .extra-card { box-sizing: border-box; border-radius: 8px; padding: 12px; }
+.extra-toolbar { gap: 8px; margin-top: 8px; }
+.extra-toolbar > button, .extra-counter button { min-height: 36px; font: inherit; font-size: 13px; line-height: 18px; }
+.extra-counter output { min-width: 20px; text-align: center; font-variant-numeric: tabular-nums; }
+.extra-rating label { display: grid; place-items: center; min-width: 36px; min-height: 36px; font-size: 26px; line-height: 1; }
+.extra-rating p { margin: 8px 0; color: var(--yg-muted); font-size: 13px; line-height: 18px; }
+.extra-gesture-page span, .extra-card small { font-size: 12px; line-height: 16px; }
+.extra-gesture-page p { margin-top: 8px; }
+.extra-card { gap: 12px; }
+.extra-card strong { overflow-wrap: anywhere; }
+.extra-gesture :is(button, input, summary):focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }

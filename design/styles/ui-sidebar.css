@@ -84,7 +84,7 @@
 }
 .yg-sidebar-group-header h3 {
   margin: var(--boa-space-4) 0;
-  font: var(--yg-font-help);
+  font: var(--yg-font-label);
   color: var(--yg-muted);
   overflow-wrap: anywhere;
 }
@@ -120,7 +120,6 @@
 .yg-sidebar-layout[data-panel="rail"] .yg-sidebar-item[data-contains-current="true"] {
   background: var(--yg-action-soft);
   color: var(--yg-action);
-  box-shadow: inset 0 0 0 1px var(--yg-active-edge);
 }
 @media (hover: hover) {
   .yg-sidebar-item:hover:not(:disabled, [aria-current="page"]) { background: var(--yg-hover); }

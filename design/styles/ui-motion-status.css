@@ -249,3 +249,29 @@ summary.yg-task-line:hover { background: var(--yg-field); }
 .yg-storage-ticks { gap: var(--boa-space-4); }
 .yg-storage-ticks > span { block-size: var(--boa-space-12); }
 .yg-activity-island > button:focus-visible, .yg-task-list summary:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
+
+/* Align state, label and disclosure on the same compact row. */
+.yg-storage-meter { gap: var(--boa-space-8); padding: var(--boa-space-12); border-radius: 12px; }
+.yg-storage-ticks { gap: 3px; }
+.yg-storage-ticks > span { block-size: 8px; scale: 1; }
+.yg-motion-detail-line { min-block-size: 30px; }
+.yg-activity-island { border-radius: 12px; }
+.yg-activity-island > button { min-block-size: 44px; padding: 8px 12px; gap: 8px; }
+.yg-island-content { padding: 0 12px 12px; }
+.yg-task-list { padding: 12px; border-radius: 12px; }
+.yg-task-list > header { min-block-size: 30px; padding: 0 4px 8px; }
+.yg-task-list > header > strong { font-size: 1rem; }
+.yg-task-list ol { gap: 0; }
+.yg-task-list > ol > li { background: transparent; border-radius: 8px; }
+.yg-task-line { grid-template-columns: 20px minmax(0, 1fr) auto; min-block-size: 36px; padding: 6px 8px; gap: 8px; }
+summary.yg-task-line { grid-template-columns: 20px minmax(0, 1fr) auto 16px; }
+.yg-task-marker { width: 20px; height: 20px; background: transparent; }
+.yg-task-list [data-active] > div .yg-task-marker,
+.yg-task-list [data-active] > details > summary .yg-task-marker { background: transparent; }
+.yg-task-list [data-active] { background: var(--yg-action-soft); }
+.yg-task-list .yg-task-children { padding: 0 8px 8px 28px; }
+.yg-task-list .yg-task-children .yg-task-line { min-block-size: 36px; }
+.yg-task-state { line-height: 1.2; }
+@media (pointer: coarse) {
+  .yg-task-line, .yg-task-list .yg-task-children .yg-task-line { min-block-size: 44px; }
+}

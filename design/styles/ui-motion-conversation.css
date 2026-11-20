@@ -78,3 +78,14 @@
 .yg-prompt-box textarea { box-sizing: border-box; line-height: 1.5; }
 .yg-prompt-actions { padding-top: 4px; }
 .yg-ghost-suffix, .yg-ghost-hint { color: var(--yg-muted); }
+
+.yg-ghost-field { gap: 8px; }
+.yg-ghost-field label { font-size: 13px; line-height: 18px; }
+.yg-ghost-input { border-radius: 8px; }
+.yg-ghost-input input, .yg-ghost-mirror { min-height: 36px; padding: 8px 12px; font-size: 14px; line-height: 20px; }
+.yg-ghost-hint { font-size: 12px; line-height: 16px; }
+.yg-prompt-box { gap: 8px; padding: 12px; border-radius: 12px; }
+.yg-prompt-box textarea { min-height: 60px; padding: 0; font-size: 14px; line-height: 20px; }
+.yg-prompt-actions { padding-top: 0; }
+.yg-streaming-reply { font-size: 14px; line-height: 20px; }
+.yg-thinking { gap: 8px; font-size: 13px; line-height: 18px; }

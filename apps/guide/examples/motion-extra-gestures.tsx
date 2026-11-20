@@ -19,7 +19,7 @@ function Quantity() {
 }
 function Pages() {
   const [page, setPage] = useState(1);
-  return <div className="extra-gesture"><div className="extra-page"><span>Note {page} of 3</span><p>{["Collect the first thoughts.", "Make room for review.", "Share the next step."][page - 1]}</p></div><div className="extra-toolbar"><Button size="compact" emphasis="soft" disabled={page === 1} onClick={() => setPage(page - 1)}>Previous</Button><Button size="compact" emphasis="soft" disabled={page === 3} onClick={() => setPage(page + 1)}>Next</Button></div></div>;
+  return <div className="extra-gesture"><div className="extra-gesture-page"><span>Note {page} of 3</span><p>{["Collect the first thoughts.", "Make room for review.", "Share the next step."][page - 1]}</p></div><div className="extra-toolbar"><Button size="compact" emphasis="soft" disabled={page === 1} onClick={() => setPage(page - 1)}>Previous</Button><Button size="compact" emphasis="soft" disabled={page === 3} onClick={() => setPage(page + 1)}>Next</Button></div></div>;
 }
 function Zoom() {
   const [zoom, setZoom] = useState(100);

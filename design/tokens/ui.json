@@ -159,12 +159,12 @@
     "size-touch": "control.touch",
     "size-icon": "control.icon",
     "glyph": "control.glyph",
-    "inset-compact": "space.10",
-    "inset-regular": "space.14",
-    "inset-roomy": "space.18",
+    "inset-compact": "space.8",
+    "inset-regular": "space.12",
+    "inset-roomy": "space.16",
     "inset-layer": "space.4",
-    "inset-panel": "space.18",
-    "inset-sheet": "space.24",
+    "inset-panel": "space.16",
+    "inset-sheet": "space.20",
     "gap-tight": "space.6",
     "gap-inline": "space.8",
     "gap-stack": "space.12",
@@ -186,7 +186,7 @@
   },
   "elevation": {
     "lift": [[1, 4, 10]],
-    "float": [[1, 3, 10], [5, 18, 12]],
+    "float": [[1, 2, 8], [4, 12, 10]],
     "panel": [[10, 40, 18]]
   },
   "easing": {
@@ -204,6 +204,10 @@
       "body"
     ],
     "compact": [
+      "help",
+      "ui"
+    ],
+    "label": [
       "help",
       "ui"
     ],

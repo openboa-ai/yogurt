@@ -60,6 +60,12 @@ Verify the full retained index and its direct links at desktop and narrow widths
 
 ## Geometry and type revision
 
-Use 32, 40 and 44 CSS pixel targets for compact, regular and touch controls. Apply a 6 pixel corner to smaller controls, 10 to regular controls, 16 to panels, 20 to sheets and 24 to cards. Reserve circular and capsule corners for identities and controls that communicate travel. Use 10, 14 and 18 pixel control insets, 18 pixels for a panel and 24 for a sheet. Use the 13/18 compact action and help roles, 14/20 regular labels, 15/22 interface body and 22/28 section headings. The display role uses 40/44 Rethink Sans. Use short feedback for a press, 150 to 250 milliseconds for most state changes, and up to 300 milliseconds for a surface expansion.
+Reserve circular and capsule corners for identities and controls that communicate travel. The display role uses 40/44 Rethink Sans. Use short feedback for a press, 150 to 250 milliseconds for most state changes, and up to 300 milliseconds for a surface expansion. Use the control geometry and interface type roles defined in Component proportions review.
 
 Use the geometry and type scales through the shared token generator and the native output. Preserve palette, font family and company mark. Verify computed values on the actual button and field, test narrow layouts and common interaction states, and make the current scale visible in the design guide.
+
+## Component proportions review
+
+Review the individual components in the pattern index and the SDK library. Use a compact desktop control rhythm with a 30 pixel small action, 36 pixel regular control and 44 pixel touch target. Use a 6 pixel inner corner, 8 pixel control corner, 12 pixel small panel corner and 16 pixel card and modal corners. Use 14/20 for interface body and actions, 13/18 for labels and compact actions, and 12/16 for short metadata. Use the 8 and 12 pixel insets for small and regular controls. Keep icon, text, and status baselines aligned with their own control group.
+
+Apply the rhythm to inputs and choices, navigation and overlays, cards and progress, confirmations, lists, feedback, and gallery examples. Give state a local visual expression. Use one clear field boundary and keep progress, help and status within their respective components. Make the dimensions part of actual component styling and verify the original control behavior. Preserve the established palette, font family, public IDs and pattern inventory. Compare the full standalone catalog locally and capture representative desktop and mobile states in both appearances before updating the draft preview. Keep the draft open for visual review.

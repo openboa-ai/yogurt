@@ -30,7 +30,7 @@
 .yg-card {
   display: grid;
   border-radius: var(--yg-radius-card);
-  gap: var(--yg-gap-stack);
+  gap: var(--yg-gap-inline);
   align-content: start;
   background: var(--yg-raised-surface);
   box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
@@ -565,14 +565,15 @@
   overflow: auto;
 }
 .yg-dialog:has(.yg-command-search) {
-  width: min(30rem, calc(100% - 32px));
+  width: min(28rem, calc(100% - 32px));
   gap: var(--yg-gap-inline);
+  padding: var(--yg-inset-regular);
 }
 .yg-command-search {
   display: flex;
   align-items: center;
   gap: var(--yg-gap-inline);
-  min-block-size: var(--yg-size-touch);
+  min-block-size: var(--yg-size-regular);
   padding-inline: var(--yg-inset-regular);
   border-radius: var(--yg-radius-control);
   background: var(--yg-field);
@@ -584,7 +585,7 @@
 .yg-command-search input {
   inline-size: 100%;
   min-inline-size: 0;
-  min-block-size: var(--yg-size-touch);
+  min-block-size: var(--yg-size-regular);
   padding: 0;
   border: 0;
   outline: none;
@@ -593,6 +594,12 @@
   font: var(--yg-font-body);
 }
 .yg-command-search input:focus-visible { outline: none; }
+@media (pointer: coarse) {
+  .yg-command-search,
+  .yg-command-search input,
+  .yg-command-list [role="option"] { min-block-size: var(--yg-size-touch); }
+  .yg-command-search input { font: var(--yg-font-touch); }
+}
 .yg-command-list [role="option"] {
   gap: var(--yg-gap-inline);
   justify-content: space-between;

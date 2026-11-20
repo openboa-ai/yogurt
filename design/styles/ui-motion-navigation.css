@@ -13,12 +13,13 @@
   height: var(--yg-selection-height);
   translate: var(--yg-selection-x) var(--yg-selection-y);
   border-radius: var(--yg-radius-small);
+  box-sizing: border-box;
   background: var(--yg-action-soft);
   pointer-events: none;
 }
 .yg-segment > .yg-selection-marker {
   background: var(--yg-raised-surface);
-  box-shadow: 0 1px 2px var(--yg-surface-edge), inset 0 0 0 1px var(--yg-surface-edge);
+  box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
 }
 
 @media (forced-colors: none) {

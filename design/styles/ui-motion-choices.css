@@ -37,3 +37,20 @@
 @media (forced-colors: active) { .yg-focus-choice[data-selected], .yg-plan-choice[data-selected] { outline: 2px solid Highlight; outline-offset: -2px; } }
 
 @keyframes yg-choice-confirm { from { scale: .72; } to { scale: 1; } }
+
+.yg-focus-picker, .yg-plan-switch { gap: 8px; }
+.yg-focus-choice, .yg-plan-choice { border-radius: 12px; }
+.yg-focus-choice { gap: 12px; padding: 12px; }
+.yg-focus-orbit { width: 36px; height: 36px; }
+.yg-choice-copy { gap: 2px; }
+.yg-choice-copy > strong, .yg-plan-heading strong { font-size: 14px; line-height: 20px; }
+.yg-choice-copy > span, .yg-plan-description { font-size: 12px; line-height: 16px; }
+.yg-choice-check { width: 20px; height: 20px; }
+.yg-plan-choice { gap: 8px; min-height: 0; padding: 12px; }
+.yg-plan-price { margin-top: 4px; font-size: 20px; line-height: 24px; }
+.yg-letter-limit { gap: 8px; }
+.yg-letter-limit > label { font-size: 13px; line-height: 18px; }
+.yg-letter-field { border-radius: 8px; }
+.yg-letter-field textarea { min-height: 96px; padding: 12px; font-size: 14px; line-height: 20px; }
+.yg-letter-meter { margin: 0 12px 10px; }
+.yg-letter-count { font-size: 12px; line-height: 16px; }

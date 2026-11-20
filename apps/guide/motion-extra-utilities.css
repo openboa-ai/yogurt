@@ -69,3 +69,18 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: -.02em;
 }
+
+.utility-demo, .utility-cart { font-size: 14px; line-height: 20px; }
+.utility-demo { gap: 12px; }
+.utility-demo small { font-size: 12px; line-height: 16px; letter-spacing: .04em; }
+.utility-panel { padding: 12px; border: 1px solid var(--yg-surface-edge); border-radius: 12px; background: var(--yg-canvas); }
+.utility-record, .utility-lock, .utility-bell { width: 44px; height: 44px; font-size: 21px; }
+.utility-dots { gap: 0; }
+.utility-dots button { position: relative; width: 36px; height: 36px; background: transparent; opacity: 1; }
+.utility-dots button::after { content: ""; position: absolute; inset: 14px; border-radius: 50%; background: var(--yg-action); opacity: .35; }
+.utility-dots button[aria-current] { width: 36px; }
+.utility-dots button[aria-current]::after { opacity: 1; }
+.utility-label input { min-height: 36px; padding: 8px 12px; }
+.utility-greeting { margin: 0; font-size: 18px; line-height: 24px; }
+.utility-cart { padding: 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--yg-surface-edge); }
+.utility-cart-total { border-top: 1px solid var(--yg-surface-edge); }

@@ -3,10 +3,11 @@
   display: inline-flex; align-items: center; gap: var(--yg-gap-inline);
   min-block-size: var(--yg-size-regular); padding: var(--yg-inset-layer) var(--yg-inset-regular); border: 1px solid var(--yg-off);
   border-radius: var(--yg-radius-control); background: var(--yg-field); color: var(--yg-text);
-  font: inherit; cursor: pointer;
+  font: inherit; font-weight: 600; line-height: 1.2; cursor: pointer;
   transition: background-color var(--yg-travel) var(--yg-settle), transform var(--yg-travel) var(--yg-settle);
 }
-.yg-morph-tooltip-trigger:hover { background: var(--yg-action-soft); }
+.yg-morph-tooltip-trigger:hover { background: var(--yg-hover); }
+.yg-morph-tooltip-trigger:active { background: var(--yg-action-soft); }
 .yg-morph-tooltip-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
 .yg-morph-tooltip-trigger span { display: inline-grid; place-items: center; inline-size: 16px; block-size: 16px; color: var(--yg-muted); line-height: 1; transition: transform var(--yg-travel) var(--yg-settle); }
 .yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span { transform: translate(2px, -2px); }
@@ -14,7 +15,7 @@
   position: absolute; z-index: 10; inset-block-end: calc(100% + var(--yg-gap-inline)); inset-inline-start: 50%;
   display: grid; gap: var(--yg-gap-inline); width: max-content; max-width: min(240px, 80vw);
   padding: var(--yg-inset-regular); border: 1px solid var(--yg-off); border-radius: var(--yg-radius-panel);
-  background: var(--yg-surface); color: var(--yg-text); box-shadow: var(--yg-float-shadow);
+  background: var(--yg-surface); color: var(--yg-text); box-shadow: 0 2px 8px rgb(0 0 0 / .10);
   line-height: 1.45; overflow-wrap: anywhere;
   transform: translateX(-50%); transform-origin: center bottom;
   animation: yg-morph-arrive var(--yg-expand) var(--yg-selection) both;
@@ -29,8 +30,8 @@
 .yg-spring-dropdown .yg-select { transition: transform var(--yg-change) var(--yg-selection), background-color var(--yg-travel) var(--yg-settle); }
 .yg-spring-dropdown .yg-select:focus-within { background: var(--yg-hover); }
 .yg-command-button .yg-button { transition: transform var(--yg-change) var(--yg-selection), background-color var(--yg-travel) var(--yg-settle); }
-.yg-command-button .yg-button:hover { transform: translateY(-2px); }
-.yg-command-button .yg-button:active { transform: translateY(1px) scale(.98); }
+.yg-command-button .yg-button:hover { background: var(--yg-hover); }
+.yg-command-button .yg-button:active { transform: scale(.98); }
 @media (prefers-reduced-motion: reduce) {
   .yg-morph-tooltip-card { animation: none; }
   .yg-morph-tooltip-trigger, .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select, .yg-command-button .yg-button { transition: none; }

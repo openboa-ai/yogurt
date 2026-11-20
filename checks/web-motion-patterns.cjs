@@ -93,7 +93,7 @@ async function run(browser) {
       corner: getComputedStyle(node).borderTopLeftRadius,
       font: getComputedStyle(node).fontSize,
     }));
-    assert.deepEqual(primarySize, {height:"40px",corner:"10px",font:"14px"});
+    assert.deepEqual(primarySize, {height:"36px",corner:"8px",font:"14px"});
     const command = await demo("command-palette");
     const open = command.getByRole("button", {name:"Open command palette"});
     await open.click();

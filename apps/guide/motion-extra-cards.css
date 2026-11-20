@@ -26,3 +26,17 @@
   .extra-page, .extra-word { animation: extra-card-arrive var(--yg-change) var(--yg-settle); }
 }
 @keyframes extra-card-arrive { from { opacity: 0; transform: translateY(5px); } }
+
+/* Standalone examples share a compact reading rhythm. */
+:where(.extra-deck, .extra-pages, .extra-reading, .extra-text, .extra-note, .extra-pass, .extra-check-card, .extra-ticket) { font-size: 14px; line-height: 20px; }
+:where(.extra-deck-sheet, .extra-page, .extra-note, .extra-pass, .extra-check-card, .extra-ticket) { box-sizing: border-box; border-radius: 12px; padding: 12px; box-shadow: none; }
+:where(.extra-deck-sheet, .extra-page) { min-height: 112px; }
+:where(.extra-deck-sheet, .extra-page, .extra-note) p { margin: 12px 0 0; font-size: 16px; line-height: 24px; font-weight: 600; }
+:where(.extra-deck-sheet, .extra-page, .extra-note, .extra-pass, .extra-ticket) small { color: var(--yg-muted); font-size: 12px; line-height: 16px; letter-spacing: .04em; }
+.extra-ticket { gap: 12px; transform: none; }
+.extra-ticket[data-tilt="true"] { transform: rotate(2deg); }
+.extra-ticket strong, .extra-pass strong { font-size: 18px; line-height: 24px; }
+.extra-text p { font-size: 18px; line-height: 28px; }
+.extra-note { background: var(--yg-canvas); }
+.extra-note > button { margin-top: 12px; }
+.extra-check-card[data-done="true"] { background: var(--yg-canvas); }

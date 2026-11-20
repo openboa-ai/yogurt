@@ -14,3 +14,13 @@
 .motion-extra button:focus-visible, .motion-extra input:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
 @keyframes motion-extra-turn { from { transform: rotate(-90deg) scale(.8); opacity: .4; } to { transform: rotate(0) scale(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .motion-extra-refresh { animation: none; } .motion-extra-chips button, .motion-extra-toolbar button, .motion-extra-track span { transition: none; } .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: none; } }
+
+.motion-extra { gap: 12px; font-size: 14px; line-height: 20px; }
+.motion-extra small, .motion-extra > span { font-size: 13px; line-height: 18px; }
+.motion-extra-chips, .motion-extra-toolbar { gap: 8px; }
+.motion-extra-chips button, .motion-extra-toolbar button { min-height: 30px; padding: 6px 8px; border: 1px solid var(--yg-surface-edge); background: var(--yg-canvas); color: inherit; font-size: 13px; line-height: 18px; }
+.motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: none; background: var(--yg-field); }
+.motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: var(--yg-on-action); }
+.motion-extra-wheel output { min-height: 44px; border: 1px solid var(--yg-surface-edge); border-radius: 8px; background: var(--yg-canvas); color: inherit; }
+.motion-extra-refresh { width: 44px; height: 44px; font-size: 22px; }
+.motion-extra-rating button { min-width: 36px; min-height: 36px; font-size: 24px; line-height: 1; }

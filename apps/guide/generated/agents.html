@@ -282,17 +282,17 @@
   --boa-role-weight-wordmark: 760;
   --boa-size-caption: 12px;
   --boa-size-ui: 14px;
-  --boa-size-interface: 15px;
+  --boa-size-interface: 14px;
   --boa-size-body: 16px;
-  --boa-size-subheading: 22px;
+  --boa-size-subheading: 20px;
   --boa-size-title: 32px;
   --boa-size-headline: 40px;
   --boa-size-help: 13px;
   --boa-line-height-caption: 16px;
   --boa-line-height-ui: 20px;
-  --boa-line-height-interface: 22px;
+  --boa-line-height-interface: 20px;
   --boa-line-height-body: 24px;
-  --boa-line-height-subheading: 28px;
+  --boa-line-height-subheading: 26px;
   --boa-line-height-title: 36px;
   --boa-line-height-headline: 44px;
   --boa-line-height-help: 18px;
@@ -315,19 +315,19 @@
   --boa-space-32: 32px;
   --boa-space-48: 48px;
   --boa-space-64: 64px;
-  --boa-radius-control: 10px;
-  --boa-radius-panel: 16px;
-  --boa-radius-sheet: 20px;
-  --boa-radius-card: 24px;
+  --boa-radius-control: 8px;
+  --boa-radius-panel: 12px;
+  --boa-radius-sheet: 16px;
+  --boa-radius-card: 16px;
   --boa-radius-round: 999px;
   --boa-radius-small: 6px;
   --boa-stroke-rule: 1px;
   --boa-stroke-focus: 2px;
-  --boa-control-height: 40px;
+  --boa-control-height: 36px;
   --boa-control-touch: 44px;
-  --boa-control-compact: 32px;
-  --boa-control-icon: 36px;
-  --boa-control-glyph: 18px;
+  --boa-control-compact: 30px;
+  --boa-control-icon: 32px;
+  --boa-control-glyph: 16px;
 }
 
 
@@ -433,7 +433,7 @@
 }
 .yg-label {
   display: block;
-  font: var(--yg-font-action);
+  font: var(--yg-font-label);
   letter-spacing: var(--boa-tracking-label);
 }
 .yg-stack,
@@ -488,7 +488,7 @@
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  gap: var(--boa-space-8);
+  gap: var(--yg-gap-tight);
   min-block-size: var(--yg-size-regular);
   padding: var(--boa-space-4) var(--yg-inset-regular);
   border-radius: var(--yg-radius-control);
@@ -509,9 +509,6 @@
 .yg-button[data-control-size="touch"] {
   min-block-size: var(--yg-size-touch);
   padding-inline: var(--yg-inset-roomy);
-}
-.yg-button[data-emphasis="filled"] {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--yg-on-action) 14%, transparent);
 }
 .yg-button[data-emphasis="soft"] {
   background: var(--yg-action-soft);
@@ -547,7 +544,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-gap-tight);
 }
 .yg-button-label {
   transition: transform var(--yg-press) var(--yg-settle);
@@ -595,7 +592,7 @@
   }
 }
 .yg-field {
-  gap: var(--yg-gap-tight);
+  gap: var(--boa-space-4);
 }
 .yg-field > :is(.yg-help, .yg-error) {
   padding-inline: var(--boa-space-2);
@@ -619,7 +616,7 @@
   width: 100%;
   min-width: 0;
   min-height: var(--yg-size-regular);
-  background: color-mix(in srgb, var(--yg-field) 65%, var(--yg-canvas));
+  background: var(--yg-canvas);
   box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
   border: 0;
   border-radius: var(--yg-radius-control);
@@ -628,7 +625,7 @@
 .yg-input:has(input:focus-visible, textarea:focus-visible),
 .yg-select:has(select:focus-visible) {
   outline: var(--boa-stroke-focus) solid var(--yg-action);
-  outline-offset: 2px;
+  outline-offset: -1px;
 }
 .yg-input:has([aria-invalid="true"]),
 .yg-select:has([aria-invalid="true"]),
@@ -1002,11 +999,11 @@
 .yg-tabs [role="tab"] {
   border: 0;
   border-radius: var(--yg-radius-small);
-  padding: var(--boa-space-4) var(--boa-space-12);
+  padding: var(--boa-space-4) var(--yg-inset-compact);
   min-height: var(--yg-size-compact);
   background: transparent;
   color: var(--yg-muted);
-  font: var(--yg-font-action);
+  font: var(--yg-font-compact);
 }
 .yg-segment button[data-state="on"] {
   background: var(--yg-canvas);
@@ -1079,6 +1076,10 @@
   justify-content: space-between;
   flex-wrap: nowrap;
 }
+.yg-modal-header > .yg-heading {
+  font-size: var(--boa-size-body);
+  line-height: var(--boa-line-height-body);
+}
 .yg-sheet[open] {
   --yg-enter-x: var(--boa-space-16);
   --yg-enter-y: 0;
@@ -1125,7 +1126,7 @@
   gap: var(--boa-space-4);
   background: var(--yg-tone-bg, var(--yg-field));
   color: var(--yg-tone-fg, var(--yg-muted));
-  padding: var(--boa-space-2) var(--boa-space-8);
+  padding: var(--boa-space-2) var(--boa-space-6);
   border-radius: var(--yg-radius-small);
   font: var(--yg-font-meta);
   font-variant-numeric: tabular-nums;
@@ -1133,17 +1134,20 @@
 .yg-row {
   display: flex;
   align-items: center;
-  gap: var(--boa-space-12);
+  gap: var(--boa-space-8);
   color: var(--yg-text);
   font: var(--yg-font-body);
   text-decoration: none;
   background: transparent;
   border: 0;
   width: 100%;
-  min-height: var(--yg-size-touch);
-  padding: var(--boa-space-8);
+  min-height: var(--yg-size-regular);
+  padding: var(--boa-space-6) var(--yg-inset-compact);
   border-radius: var(--yg-radius-control);
   text-align: start;
+}
+@media (pointer: coarse) {
+  :is(a, button).yg-row { min-height: var(--yg-size-touch); }
 }
 .yg-row-label {
   flex: 1;
@@ -1188,6 +1192,7 @@
   background: var(--yg-tone-bg, var(--yg-field));
   color: var(--yg-tone-fg, var(--yg-text));
 }
+.yg-notice > .yg-icon { margin-block-start: var(--boa-space-2); }
 .yg-notice strong,
 .yg-message strong {
   font-weight: var(--boa-weight-medium);
@@ -1227,7 +1232,7 @@
 .yg-progress progress {
   width: 100%;
   appearance: none;
-  height: 6px;
+  height: var(--boa-space-4);
   border: 0;
   border-radius: var(--boa-radius-round);
   overflow: hidden;
@@ -1305,10 +1310,10 @@
 }
 .yg-table :is(th, td) {
   text-align: start;
-  padding: var(--boa-space-8);
+  padding: var(--boa-space-8) var(--yg-inset-regular);
 }
 .yg-table th {
-  font: var(--yg-font-help);
+  font: var(--yg-font-label);
   color: var(--yg-muted);
   background: var(--yg-surface);
 }

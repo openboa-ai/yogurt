@@ -2,7 +2,7 @@
   display: grid;
   gap: var(--boa-space-8);
   min-width: 0;
-  padding: var(--boa-space-12);
+  padding: var(--yg-inset-regular);
   border: 1px solid var(--yg-surface-edge);
   border-radius: var(--yg-radius-panel);
   background: var(--yg-raised-surface);
@@ -24,7 +24,7 @@
   width: 100%;
   min-width: 0;
   min-block-size: var(--yg-size-touch);
-  padding: var(--boa-space-4);
+  padding: var(--boa-space-4) 0;
   resize: vertical;
   color: var(--yg-text);
   background: transparent;
@@ -78,7 +78,7 @@
   flex-wrap: wrap;
   gap: var(--boa-space-8);
   min-width: 0;
-  padding: var(--boa-space-8);
+  padding: var(--boa-space-6) var(--yg-inset-compact);
   border-radius: var(--yg-radius-control);
 }
 .yg-artifact-layout { display: grid; gap: var(--boa-space-12); }
