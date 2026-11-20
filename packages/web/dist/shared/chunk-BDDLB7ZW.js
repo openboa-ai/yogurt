@@ -1,5 +1,10 @@
 "use client";
 import {
+  advanceSprings,
+  snap,
+  spring
+} from "./chunk-DRQJWO7S.js";
+import {
   words
 } from "./chunk-5GJUJT3P.js";
 import {
@@ -12,32 +17,6 @@ import {
 
 // packages/web/src/controls/layers.tsx
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-
-// packages/web/src/foundation/spring-motion.ts
-function spring(position, stiffness, damping) {
-  return { position, velocity: 0, target: position, stiffness, damping };
-}
-function snap(s, position) {
-  s.position = s.target = position;
-  s.velocity = 0;
-}
-function advanceSprings(springs, elapsed) {
-  const delta = Math.min(Math.max(0, elapsed), 1 / 30) / 4;
-  let moving = false;
-  for (const s of springs) {
-    if (Math.abs(s.position - s.target) < 1e-3 && Math.abs(s.velocity) < 1e-3) {
-      snap(s, s.target);
-      continue;
-    }
-    for (let sample = 0; sample < 4; sample++) {
-      const acceleration = s.stiffness * (s.target - s.position) - s.damping * s.velocity;
-      s.velocity += acceleration * delta;
-      s.position += s.velocity * delta;
-    }
-    moving = true;
-  }
-  return moving;
-}
 
 // packages/web/src/controls/action-menu-motion.ts
 function animateActionMenu(root) {
@@ -479,9 +458,6 @@ function Tooltip({
 }
 
 export {
-  spring,
-  snap,
-  advanceSprings,
   Disclosure,
   ActionMenu,
   Popover,

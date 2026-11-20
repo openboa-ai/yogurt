@@ -19,7 +19,7 @@ export declare function NavigationList({ items, current, label, }: {
     label: string;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function SegmentedControl({ label, options, value, onValueChange, disabled, }: Choices): import("react/jsx-runtime").JSX.Element;
-export declare function Tabs({ label, items, value, onValueChange, }: {
+export declare function Tabs({ label, items, value, onValueChange, presentation, }: {
     label: string;
     items: {
         id: string;
@@ -30,6 +30,7 @@ export declare function Tabs({ label, items, value, onValueChange, }: {
     }[];
     value: string;
     onValueChange: (id: string) => void;
+    presentation?: "pill" | "dock";
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Pagination({ page, pages, onPageChange, label, }: {
     page: number;

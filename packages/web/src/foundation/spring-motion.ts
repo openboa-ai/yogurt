@@ -26,3 +26,32 @@ export function advanceSprings(springs: readonly Spring[], elapsed: number): boo
   }
   return moving;
 }
+
+export function playSprings(springs: readonly Spring[], paint: () => void): () => void {
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  let frame = 0;
+  let last = performance.now();
+  function step(time: number) {
+    const moving = advanceSprings(springs, (time - last) / 1000);
+    last = time;
+    paint();
+    frame = moving ? requestAnimationFrame(step) : 0;
+  }
+  function settle() {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    springs.forEach(state => snap(state, state.target));
+    paint();
+  }
+  function change() { if (preference.matches) settle(); }
+  if (preference.matches) settle();
+  else {
+    paint();
+    frame = requestAnimationFrame(step);
+  }
+  preference.addEventListener("change", change);
+  return () => {
+    cancelAnimationFrame(frame);
+    preference.removeEventListener("change", change);
+  };
+}

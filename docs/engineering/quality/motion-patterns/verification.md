@@ -17,7 +17,7 @@ The approved palette, material color roles, font family and signature data match
 
 The Prompt Box measures 380 × 52 px at rest, 380 × 69 px for a two-line entry, and 380 × 82 px while thinking, with a 24 px corner. The status appears above the editor. The command surface grows from 170 × 44 px to 320 × 286 px and its corner changes from 22 to 20 px. The segmented control measures 320 × 46 px, the tab pill is 43 px tall, the bottom bar is 60 px tall, and the four-row switch panel measures 320 × 252 px. Intrinsic tab widths follow the actual labels and font.
 
-The complete web inventory was rendered again in desktop light and mobile dark appearance. All 217 specimens fit their viewports. The guide also provides a two-handle interval fixture with combined value labels as the handles approach. Individual comparison covers the measured specimens and the displayed states. Motion review of the remaining specimens is still open.
+The complete web inventory was rendered again in desktop light and mobile dark appearance. All 217 specimens fit their viewports. The guide also provides a two-handle interval fixture with combined value labels as the handles approach.
 
 ## Neutral interaction surfaces
 
@@ -43,4 +43,10 @@ The switch test checks the thumb stretch on a state change and reverses it with 
 
 The interaction suite discovers the guide's 78 example IDs and exercises a registered action for each. It checks outcomes such as a rejected overflow character, a drawn check, a completed file preparation, a changed page, a returned focus target, and an accepted choice. Layout coverage remains at 320, 768, and 1440 CSS pixels. The interaction suite also checks independently moving menu dimensions rather than only the final open panel.
 
-The spring picker frame samples show height overshoot at all three widths, separate opacity and staggered rows, a stable anchor gap, and a selected check drawing before the fold. The running gallery review also includes the expanding menu, file preparation, reading highlight, card throw, and storage feedback. Full motion comparison across the catalog remains open.
+The spring picker frame samples show height overshoot at all three widths, separate opacity and staggered rows, a stable anchor gap, and a selected check drawing before the fold. The running gallery review also includes the expanding menu, file preparation, reading highlight, card throw, and storage feedback.
+
+## Complete catalog interaction review
+
+The guide exercised all 78 specimens. Browser captures sampled intermediate frames in every specimen. The review used paired runs for 63 examples and exercised the 15 original guide interactions directly. Paired runs observe travel and state changes through a representative interaction. They do not establish that every frame or alternate state has identical timing.
+
+The interaction suite also checks a clipboard roll followed by a ready state, a pending action at its narrow width, tooltip travel between triggers, OTP confirmation, rubber overshoot with a clamped value, the wheel under drag and keyboard input, toolbar marker travel, the profile action while its width changes, swipe dismissal of a notification, and a thinking indicator after its second dot lifts.

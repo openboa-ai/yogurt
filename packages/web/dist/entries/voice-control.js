@@ -1,10 +1,11 @@
 "use client";
 import {
   VoiceControl
-} from "../shared/chunk-ZHOWLO2Z.js";
+} from "../shared/chunk-SGDQ6H4M.js";
 import "../shared/chunk-VXM3BMGO.js";
 import "../shared/chunk-WT75ABWC.js";
-import "../shared/chunk-56BSJQX7.js";
+import "../shared/chunk-BDDLB7ZW.js";
+import "../shared/chunk-DRQJWO7S.js";
 import "../shared/chunk-5GJUJT3P.js";
 import "../shared/chunk-5SWGMKHQ.js";
 import "../shared/chunk-P4D5QO3L.js";

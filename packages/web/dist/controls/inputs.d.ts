@@ -8,13 +8,14 @@ export declare function InputGroup({ label, leading, trailing, help, error, id, 
     help?: string;
     error?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function InputOTP({ label, length, value, onValueChange, name, disabled, help, error, }: {
+export declare function InputOTP({ label, length, value, onValueChange, name, disabled, verified, help, error, }: {
     label: string;
     length?: number;
     value: string;
     onValueChange: (v: string) => void;
     name?: string;
     disabled?: boolean;
+    verified?: boolean;
     help?: string;
     error?: string;
 }): import("react/jsx-runtime").JSX.Element;

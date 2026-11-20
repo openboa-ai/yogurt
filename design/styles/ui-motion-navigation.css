@@ -77,9 +77,6 @@
   .yg-segment:not([data-motion-baseline] *) .yg-selection-marker[data-slide] {
     transition: translate var(--yg-motion-nav-divider), width var(--yg-motion-nav-divider);
   }
-  .motion-bottom-bar .yg-tabs .yg-selection-marker[data-slide] {
-    transition: translate var(--yg-motion-nav-bottom), width var(--yg-motion-nav-bottom);
-  }
   .yg-tabs [role="tabpanel"]:not([hidden]) {
     animation: yg-section-arrive var(--yg-change) var(--yg-settle);
   }

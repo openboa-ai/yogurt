@@ -38,11 +38,13 @@
 @media (pointer: coarse) { .motion-extra-toolbar button { min-block-size: var(--yg-size-touch); } }
 
 .motion-tag, .motion-scrubber { width: min(320px, 100%); display: grid; gap: var(--yg-gap-inline); }
-.motion-tag > label, .motion-scrubber > label { font: var(--yg-font-action); }
+.motion-tag > label { font: var(--yg-font-action); }
 .motion-tag-field { box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: var(--yg-gap-control); min-height: 52px; padding: var(--boa-space-8); border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-popover); background: var(--yg-raised-surface); }
 .motion-tag-field:focus-within { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 .motion-tag-field input { flex: 1; min-width: 90px; height: 32px; padding: 0 var(--yg-inset-layer); border: 0; outline: 0; color: var(--yg-text); background: transparent; font: inherit; }
 .motion-tag-chip { display: inline-flex; align-items: center; height: 32px; gap: var(--boa-space-2); padding-left: var(--yg-inset-compact); border-radius: 10px; background: var(--yg-field); }
+.motion-tag-travel { display: inline-flex; flex: none; overflow: clip; min-inline-size: 0; max-inline-size: 100%; }
+.motion-tag-travel > .motion-tag-chip { flex: none; inline-size: max-content; transform-origin: left center; }
 .motion-tag-chip button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; background: none; color: var(--yg-muted); cursor: pointer; font: inherit; }
 .motion-stepper { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--yg-gap-stack); width: min(320px, 100%); padding: var(--yg-inset-roomy) var(--yg-inset-roomy) var(--yg-inset-roomy) var(--boa-space-20); border-radius: var(--yg-radius-sheet); background: var(--yg-raised-surface); }
 .motion-stepper > div:first-child { display: grid; gap: var(--yg-gap-tight); }
@@ -52,15 +54,25 @@
 .motion-stepper-actions button:disabled { opacity: .4; cursor: default; }
 .motion-stepper-actions output { display: grid; place-items: center; width: 40px; height: 32px; overflow: hidden; font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .motion-stepper-actions output span { display: block; }
-.motion-scrubber-bar { position: relative; height: 36px; overflow: hidden; border-radius: var(--yg-radius-control); background: var(--yg-field); }
-.motion-scrubber-fill { position: absolute; inset: 0 auto 0 0; background: var(--yg-field); }
-.motion-scrubber-ticks { position: absolute; inset: 15px 12px; background: repeating-linear-gradient(to right, var(--yg-muted) 0 1px, transparent 1px 12px); opacity: .4; }
-.motion-scrubber-bar input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: .01; cursor: pointer; }
-.motion-scrubber-bar:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
-.motion-scrubber-value { position: absolute; right: 10px; top: 8px; font-variant-numeric: tabular-nums; pointer-events: none; }
+.motion-scrubber-bar { position: relative; height: 36px; overflow: hidden; border-radius: var(--yg-radius-control); background: var(--yg-field); cursor: pointer; touch-action: none; user-select: none; }
+.motion-scrubber-fill, .motion-scrubber-ticks, .motion-scrubber-handle { position: absolute; pointer-events: none; }
+.motion-scrubber-fill { inset-block: 0; inset-inline-start: 0; inline-size: var(--scrub-progress); border-radius: inherit; background: color-mix(in srgb, var(--yg-text) 14%, transparent); }
+.motion-scrubber-ticks { inset: 15px 5% 15px 15%; opacity: .25; background: repeating-linear-gradient(to right, var(--yg-text) 0 1px, transparent 1px 11.11%); }
+.motion-scrubber-handle { inset-block-start: 50%; inset-inline-start: var(--scrub-progress); translate: -7px -50%; }
+.motion-scrubber-bar:dir(rtl) .motion-scrubber-handle { translate: 7px -50%; }
+.motion-scrubber-handle i { display: block; width: 4px; height: 22px; border-radius: 100px; background: var(--yg-text); scale: .7; opacity: .15; }
+.motion-scrubber-bar:is([data-active], :focus-visible) .motion-scrubber-handle i { opacity: .8; scale: 1; }
+.motion-scrubber-bar:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
+.motion-scrubber-label, .motion-scrubber-value { position: absolute; top: 50%; translate: 0 -50%; font: var(--yg-font-action); pointer-events: none; }
+.motion-scrubber-label { inset-inline-start: 12px; }
+.motion-scrubber-value { inset-inline-end: 10px; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-scrubber-bar:not([data-dragging]) .motion-scrubber-fill { transition: inline-size 150ms cubic-bezier(.23, 1, .32, 1); }
+  .motion-scrubber-bar:not([data-dragging]) .motion-scrubber-handle { transition: inset-inline-start 150ms cubic-bezier(.23, 1, .32, 1); }
+  .motion-scrubber-handle i { transition: opacity 250ms linear(0, .36, .74, .94, 1.01, 1.02, 1), scale 250ms linear(0, .36, .74, .94, 1.01, 1.02, 1); }
+}
 .motion-tag button:focus-visible, .motion-stepper button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) {
-  .motion-tag-chip { animation: motion-tag-enter var(--yg-motion-tag-enter) both; }
   .motion-stepper-actions output { --yg-step-motion-edge: 14px; }
   .motion-stepper-actions output[data-decreasing] { --yg-step-motion-edge: -14px; }
   .motion-stepper-actions output .motion-stepper-in { animation: motion-step-number var(--yg-motion-stepper-spin) both; }
@@ -96,8 +108,6 @@
 @keyframes motion-refresh-spin { to { rotate: 1turn; } }
 .motion-wheel { touch-action: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .motion-wheel-items { transition: transform var(--yg-motion-wheel); }
-  .motion-wheel[data-dragging] .motion-wheel-items { transition: none; }
   .motion-extra-rating [data-filled] { animation: extra-rating-pop var(--yg-motion-rating-pop); }
 }
 
@@ -114,10 +124,12 @@
 .motion-invite small { margin-top: 8px; }
 .motion-wheel-wrap { display: grid; gap: 8px; width: 160px; }
 .motion-wheel-wrap > output { color: var(--yg-muted); font-size: 13px; }
-.motion-wheel { position: relative; height: 180px; overflow: hidden; border: 1px solid var(--yg-surface-edge); border-radius: 16px; background: var(--yg-raised-surface); touch-action: none; cursor: grab; }
-.motion-wheel-highlight { position: absolute; inset: 72px 8px auto; height: 36px; border-radius: 8px; background: var(--yg-field); }
-.motion-wheel-items { position: relative; }
-.motion-wheel-items > div { display: grid; place-items: center; height: 36px; color: var(--yg-muted); cursor: pointer; }
+.motion-wheel { position: relative; height: 222px; overflow: hidden; border-radius: var(--yg-radius-panel); background: var(--yg-raised-surface); touch-action: none; cursor: grab; user-select: none; }
+.motion-wheel:active { cursor: grabbing; }
+.motion-wheel-highlight { position: absolute; inset: calc(50% - 18px) 8px auto; height: 36px; border-radius: var(--yg-radius-control); background: var(--yg-field); }
+.motion-wheel-perspective { position: absolute; inset: 0; perspective: 1000px; mask-image: linear-gradient(transparent, #000 34%, #000 66%, transparent); pointer-events: none; }
+.motion-wheel-items { position: absolute; inset: 50% 0 auto; transform-style: preserve-3d; transform: translateZ(-102.08px) rotateX(var(--wheel-turn, 0deg)); }
+.motion-wheel-items > div { position: absolute; inset: -18px 0 auto; display: grid; place-items: center; height: 36px; backface-visibility: hidden; color: var(--yg-muted); }
 .motion-wheel-items > [aria-selected="true"] { color: var(--yg-text); font-weight: 600; }
 .motion-undo { display: grid; justify-items: start; gap: 12px; }
 .motion-undo > span { min-height: 20px; color: var(--yg-muted); }
@@ -132,3 +144,13 @@
 @keyframes motion-invite-enter { from { opacity: 0; transform: translateX(-12px) scale(.8); } }
 @keyframes motion-undo-label { from { opacity: 0; transform: translateY(8px); } }
 @keyframes motion-undo-time { to { transform: scaleX(0); } }
+
+.motion-format-tools { position: relative; display: flex; gap: var(--yg-gap-control); padding: var(--yg-inset-layer); border-radius: var(--yg-radius-card); background: var(--yg-field); }
+.motion-format-tools button { position: relative; flex: 1; min-block-size: var(--yg-size-compact); padding: var(--yg-inset-layer) var(--yg-inset-compact); border: 0; border-radius: var(--yg-radius-control); background: transparent; color: var(--yg-text); font: var(--yg-font-action); cursor: pointer; }
+.motion-format-tools button:not([aria-pressed="true"]):hover { background: var(--yg-surface); }
+.motion-format-tools button[aria-pressed="true"] { color: var(--yg-on-inverse); }
+.motion-format-tools button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
+.motion-format-marker { position: absolute; inset-block: var(--yg-inset-layer); border-radius: var(--yg-radius-control); background: var(--yg-inverse); pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-format-tools button { transition: color 150ms ease-out, background-color 150ms ease-out; }
+}

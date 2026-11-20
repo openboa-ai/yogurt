@@ -2,12 +2,14 @@
 "use client";
 import {
   Command
-} from "./shared/chunk-WAIV4D2Y.js";
+} from "./shared/chunk-N2XUANY7.js";
+import "./shared/chunk-BDDLB7ZW.js";
 import {
   advanceSprings,
+  playSprings,
   snap,
   spring
-} from "./shared/chunk-56BSJQX7.js";
+} from "./shared/chunk-DRQJWO7S.js";
 import "./shared/chunk-WWQHEDM4.js";
 import "./shared/chunk-5GJUJT3P.js";
 import {
@@ -735,27 +737,192 @@ function CommandButton({ label, items, onSelect }) {
   return /* @__PURE__ */ jsx3("div", { className: "yg-command-button", children: /* @__PURE__ */ jsx3(Command, { label, items, onSelect }) });
 }
 
+// packages/web/src/patterns/tooltip-bar.tsx
+import { useEffect as useEffect2, useId as useId4, useLayoutEffect as useLayoutEffect3, useRef as useRef4, useState as useState4 } from "react";
+import { jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
+var unit = (value) => Math.min(1, Math.max(0, value));
+function MorphTooltipBar({ label, tools, value, onChange }) {
+  const id = useId4();
+  const bar = useRef4(null);
+  const hide = useRef4(void 0);
+  const [active, setActive] = useState4(null);
+  const lastActive = useRef4(null);
+  const [dial] = useState4(() => ({
+    tipLeft: spring(0, 620, 36),
+    tipRight: spring(0, 620, 36),
+    tail: spring(0, 300, 22),
+    left: spring(0, 620, 36),
+    right: spring(0, 620, 36),
+    opacity: spring(0, 420, 24),
+    labels: /* @__PURE__ */ new Map()
+  }));
+  useEffect2(() => () => clearTimeout(hide.current), []);
+  useLayoutEffect3(() => {
+    const root = bar.current;
+    if (!root) return;
+    const buttons = Array.from(root.querySelectorAll("button[data-tool]"));
+    const labels = Array.from(root.querySelectorAll("[data-tooltip-label]"));
+    let stop;
+    const arrange = () => {
+      const current = buttons.findIndex((button) => button.dataset.tool === active);
+      const previous = buttons.findIndex((button) => button.dataset.tool === lastActive.current);
+      const selected = buttons[current], description = labels[current];
+      const inPlace = dial.opacity.position < 0.3;
+      const direction = previous < 0 ? 0 : Math.sign((selected?.offsetLeft ?? 0) - (buttons[previous]?.offsetLeft ?? 0));
+      if (selected && description) {
+        const center = selected.offsetLeft + selected.offsetWidth / 2;
+        const half = Math.min(description.offsetWidth / 2, root.clientWidth / 2);
+        const left = Math.min(root.clientWidth - half * 2, Math.max(0, center - half));
+        const tracks = [
+          [dial.tipLeft, left],
+          [dial.tipRight, left + half * 2],
+          [dial.left, selected.offsetLeft],
+          [dial.right, selected.offsetLeft + selected.offsetWidth],
+          [dial.tail, center]
+        ];
+        for (const [track, target] of tracks) {
+          if (inPlace) snap(track, target);
+          else track.target = target;
+        }
+        if (direction) {
+          const leading = direction > 0 ? [dial.tipRight, dial.right] : [dial.tipLeft, dial.left];
+          const trailing = direction > 0 ? [dial.tipLeft, dial.left] : [dial.tipRight, dial.right];
+          leading.forEach((track) => {
+            track.stiffness = 620;
+            track.damping = 36;
+          });
+          trailing.forEach((track) => {
+            track.stiffness = 190;
+            track.damping = 19;
+          });
+        }
+        lastActive.current = active;
+      }
+      for (const node of labels) {
+        const tool = node.dataset.tooltipLabel;
+        const track = dial.labels.get(tool) ?? { visibility: spring(0, 420, 32), direction: 0 };
+        dial.labels.set(tool, track);
+        const visible = Number(tool === active);
+        if (inPlace && selected) {
+          snap(track.visibility, visible);
+          track.direction = 0;
+        } else if (selected && track.visibility.target !== visible) {
+          track.direction = visible ? direction : -direction;
+          track.visibility.target = visible;
+        }
+      }
+      dial.opacity.target = Number(current >= 0);
+      const axes = [
+        dial.tipLeft,
+        dial.tipRight,
+        dial.tail,
+        dial.left,
+        dial.right,
+        dial.opacity,
+        ...labels.map((node) => dial.labels.get(node.dataset.tooltipLabel).visibility)
+      ];
+      stop?.();
+      stop = playSprings(axes, () => {
+        const shown = Math.min(1.15, Math.max(0, dial.opacity.position));
+        const width = Math.max(30, dial.tipRight.position - dial.tipLeft.position);
+        const start = Math.min(Math.max(0, dial.tipLeft.position), Math.max(0, root.clientWidth - width));
+        const tail = Math.max(start + 8, Math.min(start + width - 8, dial.tail.position));
+        root.style.setProperty("--yg-tooltip-open", String(shown));
+        root.style.setProperty("--yg-tooltip-left", `${start}px`);
+        root.style.setProperty("--yg-tooltip-width", `${width}px`);
+        root.style.setProperty("--yg-tooltip-tail", `${tail}px`);
+        root.style.setProperty("--yg-tooltip-marker", `${dial.left.position}px`);
+        root.style.setProperty("--yg-tooltip-marker-width", `${Math.max(0, dial.right.position - dial.left.position)}px`);
+        labels.forEach((node) => {
+          const track = dial.labels.get(node.dataset.tooltipLabel);
+          const opacity = unit(track.visibility.position);
+          node.style.setProperty("--yg-tooltip-copy", String(opacity));
+          node.style.setProperty("--yg-tooltip-copy-x", `${track.direction * (1 - opacity) * 14}px`);
+        });
+      });
+    };
+    arrange();
+    const resize = new ResizeObserver(arrange);
+    resize.observe(root);
+    labels.forEach((node) => resize.observe(node));
+    return () => {
+      resize.disconnect();
+      stop?.();
+    };
+  }, [active, dial, tools]);
+  function reveal(tool) {
+    clearTimeout(hide.current);
+    setActive(tool);
+  }
+  function leave() {
+    clearTimeout(hide.current);
+    hide.current = setTimeout(() => setActive(null), 140);
+  }
+  return /* @__PURE__ */ jsxs4(
+    "div",
+    {
+      className: "yg-tooltip-bar",
+      ref: bar,
+      role: "toolbar",
+      "aria-label": label,
+      style: { gridTemplateColumns: `repeat(${Math.max(1, tools.length)}, minmax(0, 1fr))` },
+      onPointerLeave: leave,
+      onBlur: (event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) leave();
+      },
+      onKeyDown: (event) => {
+        if (event.key !== "Escape") return;
+        clearTimeout(hide.current);
+        setActive(null);
+      },
+      children: [
+        /* @__PURE__ */ jsx4("span", { className: "yg-tooltip-bar-marker", "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx4("span", { className: "yg-tooltip-bar-tail", "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx4("span", { className: "yg-tooltip-bar-bubble", id, role: "tooltip", "aria-hidden": active === null, children: tools.map((tool) => /* @__PURE__ */ jsx4("span", { "data-tooltip-label": tool.id, "aria-hidden": tool.id !== active, children: tool.detail }, tool.id)) }),
+        tools.map((tool) => /* @__PURE__ */ jsx4(
+          "button",
+          {
+            type: "button",
+            "data-tool": tool.id,
+            "aria-label": tool.label,
+            "aria-pressed": value === tool.id,
+            "aria-describedby": active === tool.id ? id : void 0,
+            onPointerEnter: () => reveal(tool.id),
+            onFocus: () => reveal(tool.id),
+            onClick: () => {
+              reveal(tool.id);
+              onChange(tool.id);
+            },
+            children: /* @__PURE__ */ jsx4(Icon, { name: tool.icon })
+          },
+          tool.id
+        ))
+      ]
+    }
+  );
+}
+
 // packages/web/src/patterns/motion-status.tsx
-import { useId as useId4, useState as useState4 } from "react";
-import { Fragment, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
+import { useEffect as useEffect3, useId as useId5, useLayoutEffect as useLayoutEffect4, useRef as useRef5, useState as useState5 } from "react";
+import { Fragment, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 function StorageAmount({ value }) {
   const [whole, fraction] = String(value).split(".");
   const groups = [{ digits: whole, decimal: false }, { digits: fraction, decimal: true }];
-  return /* @__PURE__ */ jsx4("strong", { className: "yg-storage-count", "aria-hidden": "true", children: groups.map(({ digits, decimal }) => digits && /* @__PURE__ */ jsxs4("span", { children: [
+  return /* @__PURE__ */ jsx5("strong", { className: "yg-storage-count", "aria-hidden": "true", children: groups.map(({ digits, decimal }) => digits && /* @__PURE__ */ jsxs5("span", { children: [
     decimal && ".",
     Array.from(digits, (digit, index) => {
       const column = digits.length - index - 1;
-      if (!/^[0-9]$/.test(digit)) return /* @__PURE__ */ jsx4("span", { children: digit }, column);
-      return /* @__PURE__ */ jsx4("span", { className: "yg-storage-reel", style: {
+      if (!/^[0-9]$/.test(digit)) return /* @__PURE__ */ jsx5("span", { children: digit }, column);
+      return /* @__PURE__ */ jsx5("span", { className: "yg-storage-reel", style: {
         "--yg-reel-digit": Number(digit),
         "--yg-reel-delay": column + (decimal ? 0 : fraction?.length ?? 0)
-      }, children: /* @__PURE__ */ jsx4("span", { children: Array.from("0123456789", (number) => /* @__PURE__ */ jsx4("span", { children: number }, number)) }) }, column);
+      }, children: /* @__PURE__ */ jsx5("span", { children: Array.from("0123456789", (number) => /* @__PURE__ */ jsx5("span", { children: number }, number)) }) }, column);
     })
   ] }, String(decimal))) });
 }
-function StorageMeter({ label, used, capacity, unit, categories = [] }) {
-  const id = useId4();
-  const [expanded, setExpanded] = useState4(null);
+function StorageMeter({ label, used, capacity, unit: unit2, categories = [] }) {
+  const id = useId5();
+  const [expanded, setExpanded] = useState5(null);
   const known = Number.isFinite(used) && Number.isFinite(capacity) && capacity > 0 && used >= 0;
   const ratio = known ? Math.min(1, used / capacity) : 0;
   let available = known ? Math.min(used, capacity) : 0;
@@ -767,20 +934,20 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
   });
   if (available > 0) bars.push({ fraction: available / capacity });
   const highlighted = bars.some((bar) => bar.id === expanded && bar.fraction > 0);
-  return /* @__PURE__ */ jsxs4("section", { className: "yg-storage-meter", "data-full": ratio === 1 || void 0, children: [
-    /* @__PURE__ */ jsx4("strong", { id, className: "yg-storage-heading", children: label }),
-    known ? /* @__PURE__ */ jsxs4(Fragment, { children: [
-      /* @__PURE__ */ jsxs4("div", { className: "yg-storage-amount", children: [
-        /* @__PURE__ */ jsx4(StorageAmount, { value: used }),
-        /* @__PURE__ */ jsx4("b", { "aria-hidden": "true", children: unit }),
-        /* @__PURE__ */ jsxs4("span", { children: [
+  return /* @__PURE__ */ jsxs5("section", { className: "yg-storage-meter", "data-full": ratio === 1 || void 0, children: [
+    /* @__PURE__ */ jsx5("strong", { id, className: "yg-storage-heading", children: label }),
+    known ? /* @__PURE__ */ jsxs5(Fragment, { children: [
+      /* @__PURE__ */ jsxs5("div", { className: "yg-storage-amount", children: [
+        /* @__PURE__ */ jsx5(StorageAmount, { value: used }),
+        /* @__PURE__ */ jsx5("b", { "aria-hidden": "true", children: unit2 }),
+        /* @__PURE__ */ jsxs5("span", { children: [
           "of ",
           capacity,
           " ",
-          unit
+          unit2
         ] })
       ] }),
-      /* @__PURE__ */ jsx4(
+      /* @__PURE__ */ jsx5(
         "div",
         {
           className: "yg-storage-bar",
@@ -789,9 +956,9 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
           "aria-valuemin": 0,
           "aria-valuemax": capacity,
           "aria-valuenow": Math.min(used, capacity),
-          "aria-valuetext": `${used} of ${capacity} ${unit} used`,
+          "aria-valuetext": `${used} of ${capacity} ${unit2} used`,
           "data-highlight": highlighted || void 0,
-          children: bars.map(({ id: categoryId, fraction, tone }) => /* @__PURE__ */ jsx4(
+          children: bars.map(({ id: categoryId, fraction, tone }) => /* @__PURE__ */ jsx5(
             "span",
             {
               "data-tone": tone,
@@ -802,11 +969,11 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
           ))
         }
       ),
-      breakdown.length > 0 && /* @__PURE__ */ jsx4("ul", { className: "yg-storage-categories", children: breakdown.map((category, index) => {
+      breakdown.length > 0 && /* @__PURE__ */ jsx5("ul", { className: "yg-storage-categories", children: breakdown.map((category, index) => {
         const opened = expanded === category.id;
         const detailId = `${id}-category-${index}`;
-        return /* @__PURE__ */ jsxs4("li", { "data-open": opened || void 0, children: [
-          /* @__PURE__ */ jsxs4(
+        return /* @__PURE__ */ jsxs5("li", { "data-open": opened || void 0, children: [
+          /* @__PURE__ */ jsxs5(
             "button",
             {
               type: "button",
@@ -815,38 +982,87 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
               "aria-pressed": category.detail ? void 0 : opened,
               "aria-controls": category.detail ? detailId : void 0,
               children: [
-                /* @__PURE__ */ jsx4("span", { className: "yg-storage-dot", "data-tone": index % 3, "aria-hidden": "true" }),
-                /* @__PURE__ */ jsx4("span", { children: category.label }),
-                /* @__PURE__ */ jsxs4("span", { className: "yg-storage-category-amount", children: [
+                /* @__PURE__ */ jsx5("span", { className: "yg-storage-dot", "data-tone": index % 3, "aria-hidden": "true" }),
+                /* @__PURE__ */ jsx5("span", { children: category.label }),
+                /* @__PURE__ */ jsxs5("span", { className: "yg-storage-category-amount", children: [
                   category.amount,
                   " ",
-                  unit
+                  unit2
                 ] })
               ]
             }
           ),
-          category.detail && /* @__PURE__ */ jsx4("div", { className: "yg-storage-reveal", id: detailId, inert: !opened, children: /* @__PURE__ */ jsx4("div", { children: /* @__PURE__ */ jsx4("div", { className: "yg-storage-category-detail", children: category.detail }) }) })
+          category.detail && /* @__PURE__ */ jsx5("div", { className: "yg-storage-reveal", id: detailId, inert: !opened, children: /* @__PURE__ */ jsx5("div", { children: /* @__PURE__ */ jsx5("div", { className: "yg-storage-category-detail", children: category.detail }) }) })
         ] }, category.id);
       }) })
-    ] }) : /* @__PURE__ */ jsx4("span", { className: "yg-help", children: "Capacity unavailable" })
+    ] }) : /* @__PURE__ */ jsx5("span", { className: "yg-help", children: "Capacity unavailable" })
   ] });
 }
 function ActivityIsland({ label, summary, children }) {
-  const id = useId4();
-  const [open, setOpen] = useState4(false);
-  return /* @__PURE__ */ jsxs4("section", { className: "yg-activity-island", "data-open": open, children: [
-    /* @__PURE__ */ jsxs4("button", { type: "button", "aria-expanded": open, "aria-controls": id, onClick: () => setOpen((value) => !value), children: [
-      /* @__PURE__ */ jsx4(Icon, { name: "clock" }),
-      /* @__PURE__ */ jsx4("span", { children: label }),
-      /* @__PURE__ */ jsx4("span", { className: "yg-island-summary", children: summary }),
-      /* @__PURE__ */ jsx4(Icon, { name: "down" })
+  const id = useId5();
+  const [open, setOpen] = useState5(false);
+  const capsule = useRef5(null);
+  const panel = useRef5(null);
+  const [tracks] = useState5(() => ({
+    width: spring(244, 380, 24),
+    height: spring(44, 300, 22),
+    press: spring(1, 520, 18),
+    copy: spring(0, 260, 28)
+  }));
+  useLayoutEffect4(() => {
+    const visible = capsule.current, content = panel.current;
+    if (!visible || !content) return;
+    let stop;
+    const sync = () => {
+      const room = visible.parentElement?.clientWidth ?? 340;
+      tracks.width.target = Math.min(room, open ? 340 : 244);
+      tracks.height.target = 44 + (open ? content.offsetHeight : 0);
+      tracks.height.stiffness = open ? 300 : 390;
+      tracks.copy.target = Number(open);
+      stop?.();
+      stop = playSprings(Object.values(tracks), () => {
+        const h = Math.max(44, tracks.height.position);
+        const give = Math.min(0.05, Math.max(-0.05, -tracks.height.velocity / 7e3));
+        visible.style.setProperty("--yg-island-w", `${tracks.width.position * (1 + give)}px`);
+        visible.style.setProperty("--yg-island-h", `${h}px`);
+        visible.style.setProperty("--yg-island-radius", `${Math.min(32, h / 2)}px`);
+        visible.style.setProperty("--yg-island-press", String(tracks.press.position));
+        visible.style.setProperty("--yg-island-copy", String(Math.min(1, Math.max(0, tracks.copy.position))));
+      });
+    };
+    sync();
+    let parentWidth = visible.parentElement?.clientWidth;
+    const changes = new ResizeObserver((entries) => {
+      const width = visible.parentElement?.clientWidth;
+      if (width === parentWidth && entries.every((entry) => entry.target !== content)) return;
+      parentWidth = width;
+      sync();
+    });
+    changes.observe(content);
+    if (visible.parentElement) changes.observe(visible.parentElement);
+    return () => {
+      changes.disconnect();
+      stop?.();
+    };
+  }, [open, tracks]);
+  return /* @__PURE__ */ jsxs5("section", { ref: capsule, className: "yg-activity-island", "data-open": open, children: [
+    /* @__PURE__ */ jsxs5("button", { type: "button", "aria-expanded": open, "aria-controls": id, onClick: () => {
+      tracks.press.velocity -= open ? 1 : 1.6;
+      setOpen((value) => !value);
+    }, children: [
+      /* @__PURE__ */ jsx5(Icon, { name: "clock" }),
+      /* @__PURE__ */ jsx5("span", { children: label }),
+      /* @__PURE__ */ jsx5("span", { className: "yg-island-summary", children: summary }),
+      /* @__PURE__ */ jsx5(Icon, { name: "down" })
     ] }),
-    /* @__PURE__ */ jsx4("div", { className: "yg-island-reveal", id, inert: !open, children: /* @__PURE__ */ jsx4("div", { children: /* @__PURE__ */ jsx4("div", { className: "yg-island-content", children }) }) })
+    /* @__PURE__ */ jsx5("div", { className: "yg-island-reveal", id, inert: !open, children: /* @__PURE__ */ jsx5("div", { className: "yg-island-content", ref: panel, children }) })
   ] });
 }
-function LoadingSuccessButton({ label, pendingLabel, successLabel, errorLabel, state, onAction }) {
+function LoadingSuccessButton({ presentation, ...props }) {
+  if (presentation === "morphing") return /* @__PURE__ */ jsx5(MorphingResultAction, { ...props });
+  const { label, pendingLabel, successLabel, errorLabel, state, onAction } = props;
   const result = state === "success" ? successLabel : state === "error" ? errorLabel : null;
-  return /* @__PURE__ */ jsx4(
+  return /* @__PURE__ */ jsx5(
     Button,
     {
       className: "yg-result-action",
@@ -854,86 +1070,258 @@ function LoadingSuccessButton({ label, pendingLabel, successLabel, errorLabel, s
       pending: state === "pending",
       pendingLabel,
       onClick: onAction,
-      children: /* @__PURE__ */ jsxs4("span", { className: "yg-result-action-label", children: [
-        /* @__PURE__ */ jsx4("span", { "aria-hidden": "true", className: "yg-result-action-measure", children: label }),
-        /* @__PURE__ */ jsxs4("span", { "aria-hidden": "true", className: "yg-result-action-measure", children: [
-          /* @__PURE__ */ jsx4(Icon, { name: "check" }),
+      children: /* @__PURE__ */ jsxs5("span", { className: "yg-result-action-label", children: [
+        /* @__PURE__ */ jsx5("span", { "aria-hidden": "true", className: "yg-result-action-measure", children: label }),
+        /* @__PURE__ */ jsxs5("span", { "aria-hidden": "true", className: "yg-result-action-measure", children: [
+          /* @__PURE__ */ jsx5(Icon, { name: "check" }),
           " ",
           successLabel
         ] }),
-        /* @__PURE__ */ jsxs4("span", { "aria-hidden": "true", className: "yg-result-action-measure", children: [
-          /* @__PURE__ */ jsx4(Icon, { name: "close" }),
+        /* @__PURE__ */ jsxs5("span", { "aria-hidden": "true", className: "yg-result-action-measure", children: [
+          /* @__PURE__ */ jsx5(Icon, { name: "close" }),
           " ",
           errorLabel
         ] }),
-        /* @__PURE__ */ jsxs4("span", { "data-result": result !== null || void 0, children: [
-          result && /* @__PURE__ */ jsx4(Icon, { name: state === "success" ? "check" : "close" }),
+        /* @__PURE__ */ jsxs5("span", { "data-result": result !== null || void 0, children: [
+          result && /* @__PURE__ */ jsx5(Icon, { name: state === "success" ? "check" : "close" }),
           result ?? label
         ] }, state)
       ] })
     }
   );
 }
+function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, state, onAction }) {
+  const ref = useRef5(null);
+  const [motion] = useState5(() => ({
+    width: spring(168, 300, 22),
+    label: spring(1, 400, 30),
+    spinner: spring(0, 300, 28),
+    result: spring(0, 220, 20),
+    color: spring(0, 200, 30),
+    check: spring(0, 120, 20)
+  }));
+  const pending = state === "pending", success = state === "success", result = success || state === "error";
+  useLayoutEffect4(() => {
+    const button = ref.current;
+    if (!button) return;
+    const tracked = Object.values(motion);
+    motion.width.target = pending ? 56 : result ? 140 : 168;
+    const restore = state === "idle" && motion.result.position > 0.05;
+    motion.label.target = state === "idle" && !restore ? 1 : 0;
+    motion.spinner.target = Number(pending);
+    motion.result.target = Number(result);
+    motion.color.target = Number(success);
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!success || reduced) motion.check.target = Number(success);
+    if (restore && reduced) motion.label.target = 1;
+    const paint = () => {
+      for (const [name, track] of Object.entries(motion)) {
+        button.style.setProperty(`--yg-result-${name}`, name === "width" ? `${track.position}px` : String(track.position));
+      }
+    };
+    let stop = playSprings(tracked, paint);
+    const delay = reduced ? 0 : success ? 150 : restore ? 120 : 0;
+    const timed = delay ? setTimeout(() => {
+      if (success) motion.check.target = 1;
+      else motion.label.target = 1;
+      stop();
+      stop = playSprings(tracked, paint);
+    }, delay) : void 0;
+    return () => {
+      clearTimeout(timed);
+      stop();
+    };
+  }, [motion, pending, result, state, success]);
+  const accessible = pending ? pendingLabel : success ? successLabel : result ? errorLabel : label;
+  return /* @__PURE__ */ jsxs5(
+    "button",
+    {
+      className: "yg-result-morph",
+      ref,
+      type: "button",
+      "aria-label": accessible,
+      "aria-busy": pending || void 0,
+      disabled: pending,
+      "data-outcome": state,
+      onClick: onAction,
+      children: [
+        /* @__PURE__ */ jsx5("span", { className: "yg-result-morph-label", "aria-hidden": "true", children: label }),
+        /* @__PURE__ */ jsx5("span", { className: "yg-result-morph-spinner", "aria-hidden": "true", children: /* @__PURE__ */ jsx5("i", {}) }),
+        /* @__PURE__ */ jsxs5("span", { className: "yg-result-morph-feedback", "aria-hidden": "true", children: [
+          state === "error" ? /* @__PURE__ */ jsx5(Icon, { name: "close" }) : /* @__PURE__ */ jsx5("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx5("path", { d: "m4.5 12 5 5L20 7", pathLength: "22" }) }),
+          state === "error" ? errorLabel : successLabel
+        ] })
+      ]
+    }
+  );
+}
 function CopyButton({ value }) {
-  const [state, setState] = useState4("idle");
+  const [state, setState] = useState5("idle");
+  const [copied, setCopied] = useState5(0);
+  const pending = useRef5(false);
+  const roll = useRef5(null);
+  const ready = useRef5(null);
+  const done = useRef5(null);
+  const [motion] = useState5(() => ({ label: spring(0, 260, 20), icon: spring(0, 420, 18), width: spring(0, 300, 24) }));
+  useLayoutEffect4(() => {
+    const label = state === "success" ? done.current : ready.current;
+    const node = roll.current;
+    if (!label || !node) return;
+    const sync = () => {
+      motion.label.target = motion.icon.target = Number(state === "success");
+      motion.width.target = label.offsetWidth;
+      if (motion.width.position === 0) snap(motion.width, motion.width.target);
+      stop?.();
+      stop = playSprings(Object.values(motion), () => {
+        node.parentElement?.style.setProperty("--yg-copy-roll", String(motion.label.position));
+        node.parentElement?.style.setProperty("--yg-copy-icon", String(motion.icon.position));
+        node.style.inlineSize = `${motion.width.position}px`;
+      });
+    };
+    let stop;
+    const resize = new ResizeObserver(sync);
+    resize.observe(label);
+    sync();
+    return () => {
+      resize.disconnect();
+      stop?.();
+    };
+  }, [motion, state]);
+  useEffect3(() => {
+    if (state !== "success") return;
+    const reset = setTimeout(() => setState("idle"), 1800);
+    return () => clearTimeout(reset);
+  }, [copied, state]);
   async function copy() {
-    setState("pending");
+    if (pending.current) return;
+    pending.current = true;
+    setState((current) => current === "success" ? current : "pending");
     try {
       await navigator.clipboard.writeText(value);
       setState("success");
+      setCopied((count) => count + 1);
     } catch {
       setState("error");
+    } finally {
+      pending.current = false;
     }
   }
-  return /* @__PURE__ */ jsxs4("div", { className: "yg-copy-action", children: [
-    /* @__PURE__ */ jsx4(
-      LoadingSuccessButton,
+  const actionLabel = state === "success" ? "Copied" : state === "error" ? "Try again" : "Copy";
+  return /* @__PURE__ */ jsxs5("div", { className: "yg-copy-action", children: [
+    /* @__PURE__ */ jsxs5(
+      "button",
       {
-        label: "Copy",
-        pendingLabel: "Copying",
-        successLabel: "Copied",
-        errorLabel: "Try again",
-        state,
-        onAction: copy
+        className: "yg-copy-button",
+        type: "button",
+        "aria-label": actionLabel,
+        disabled: state === "pending",
+        "data-outcome": state,
+        onClick: copy,
+        children: [
+          /* @__PURE__ */ jsxs5("span", { className: "yg-copy-icons", "aria-hidden": "true", children: [
+            /* @__PURE__ */ jsx5(Icon, { name: "copy" }),
+            /* @__PURE__ */ jsx5(Icon, { name: "check" })
+          ] }),
+          /* @__PURE__ */ jsx5("span", { ref: roll, className: "yg-copy-roll", "aria-hidden": "true", children: /* @__PURE__ */ jsxs5("span", { children: [
+            /* @__PURE__ */ jsx5("span", { ref: ready, children: state === "error" ? "Try again" : "Copy" }),
+            /* @__PURE__ */ jsx5("span", { ref: done, children: "Copied" })
+          ] }) })
+        ]
       }
     ),
-    /* @__PURE__ */ jsx4("span", { role: "status", className: "yg-help", children: state === "error" ? "Clipboard unavailable. Select and copy the text." : state === "success" ? "Copied to clipboard." : "" })
+    /* @__PURE__ */ jsx5("span", { role: "status", className: "yg-help", children: state === "error" ? "Clipboard unavailable. Select and copy the text." : state === "success" ? "Copied to clipboard." : "" })
   ] });
 }
 
 // packages/web/src/patterns/motion-conversation.tsx
-import { useId as useId5, useLayoutEffect as useLayoutEffect3, useRef as useRef4, useState as useState5 } from "react";
-import { Fragment as Fragment2, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
+import { useEffect as useEffect4, useId as useId6, useLayoutEffect as useLayoutEffect5, useRef as useRef6, useState as useState6 } from "react";
+import { Fragment as Fragment2, jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
 function StreamingReply({ value, active = false }) {
-  return /* @__PURE__ */ jsx5("div", { className: "yg-streaming-reply", "aria-busy": active || void 0, children: value ? /* @__PURE__ */ jsx5("span", { children: value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : /* @__PURE__ */ jsx5("span", { className: "yg-streaming-word", children: part }, index)) }) : active ? /* @__PURE__ */ jsx5("span", { className: "yg-streaming-wait", children: "Thinking" }) : null });
+  const surface = useRef6(null);
+  const reply = useRef6(null);
+  const wait = useRef6(null);
+  const wasActive = useRef6(active);
+  const mounted = useRef6(false);
+  const [motion] = useState6(() => ({ width: spring(0, 260, 26), height: spring(40, 260, 26), waiting: spring(1, 300, 30) }));
+  const streaming = active || wasActive.current;
+  useLayoutEffect5(() => {
+    const box = surface.current, words = reply.current, thinking = wait.current;
+    if (!box || !words || !thinking) return;
+    let stop;
+    const resize = () => {
+      const max = box.clientWidth;
+      box.style.setProperty("--yg-reply-available", `${max}px`);
+      const inline = value ? max : Math.min(max, thinking.offsetWidth + 28);
+      const block = Math.max(40, words.offsetHeight + 18);
+      const waitOpacity = Number(active && !value);
+      if (!mounted.current) {
+        snap(motion.width, inline);
+        snap(motion.height, block);
+        snap(motion.waiting, waitOpacity);
+      } else {
+        motion.width.target = inline;
+        motion.height.target = block;
+        motion.waiting.target = waitOpacity;
+      }
+      mounted.current = true;
+      stop?.();
+      stop = playSprings(Object.values(motion), () => {
+        box.style.setProperty("--yg-reply-width", `${motion.width.position}px`);
+        box.style.setProperty("--yg-reply-height", `${motion.height.position}px`);
+        box.style.setProperty("--yg-reply-waiting", String(motion.waiting.position));
+      });
+    };
+    if (active) wasActive.current = true;
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(words);
+    return () => {
+      observer.disconnect();
+      stop?.();
+    };
+  }, [active, motion, value]);
+  return /* @__PURE__ */ jsx6("div", { ref: surface, className: "yg-streaming-shell", children: /* @__PURE__ */ jsxs6("div", { className: "yg-streaming-reply", "aria-busy": active || void 0, "data-streaming": streaming || void 0, children: [
+    /* @__PURE__ */ jsx6("span", { ref: wait, className: "yg-streaming-wait", "aria-hidden": !active || !!value, children: active || value ? "Thinking" : "" }),
+    /* @__PURE__ */ jsx6("div", { ref: reply, className: "yg-streaming-body", children: value && value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : /* @__PURE__ */ jsx6("span", { className: "yg-streaming-word", children: part }, index)) })
+  ] }) });
 }
 function GhostSuggestion({ value, suggestion, onChange }) {
-  const id = useId5();
-  const [atEnd, setAtEnd] = useState5(true);
-  const mirror = useRef4(null);
+  const id = useId6();
+  const [atEnd, setAtEnd] = useState6(true);
+  const [accepted, setAccepted] = useState6(null);
+  const mirror = useRef6(null);
   const suffix = value && suggestion.startsWith(value) ? suggestion.slice(value.length) : "";
   const show = atEnd && !!suffix;
-  return /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-field", children: [
-    /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-head", children: [
-      /* @__PURE__ */ jsx5("label", { htmlFor: id, children: "Your message" }),
-      show && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-key", "aria-hidden": "true", children: "Tab \u21B9" })
+  const rolling = accepted && accepted.prefix + accepted.suffix === value;
+  useEffect4(() => {
+    if (!accepted) return;
+    const timer = setTimeout(() => setAccepted(null), Math.min(400, Array.from(accepted.suffix).length * 16) + 420);
+    return () => clearTimeout(timer);
+  }, [accepted]);
+  return /* @__PURE__ */ jsxs6("div", { className: "yg-ghost-field", children: [
+    /* @__PURE__ */ jsxs6("div", { className: "yg-ghost-head", children: [
+      /* @__PURE__ */ jsx6("label", { htmlFor: id, children: "Your message" }),
+      show && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-key", "aria-hidden": "true", children: "Tab \u21B9" })
     ] }),
-    /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-input", children: [
-      /* @__PURE__ */ jsxs5("div", { ref: mirror, className: "yg-ghost-mirror", "aria-hidden": "true", children: [
-        /* @__PURE__ */ jsx5("span", { children: value }),
-        show && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-suffix", children: Array.from(suffix).map((letter, index) => /* @__PURE__ */ jsx5("span", { style: { animationDelay: `${Math.min(index * 8, 200)}ms` }, children: letter }, index)) })
+    /* @__PURE__ */ jsxs6("div", { className: "yg-ghost-input", children: [
+      /* @__PURE__ */ jsxs6("div", { ref: mirror, className: "yg-ghost-mirror", "aria-hidden": "true", "data-accepted": rolling || void 0, children: [
+        /* @__PURE__ */ jsx6("span", { children: rolling ? accepted.prefix : value }),
+        show && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-suffix", children: Array.from(suffix).map((letter, index) => /* @__PURE__ */ jsx6("span", { style: { animationDelay: `${Math.min(index * 8, 200)}ms` }, children: letter }, index)) }),
+        rolling && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-accepted", children: Array.from(accepted.suffix).map((letter, index) => /* @__PURE__ */ jsx6("span", { style: { animationDelay: `${Math.min(index * 16, 400)}ms` }, children: letter }, index)) })
       ] }),
-      /* @__PURE__ */ jsx5(
+      /* @__PURE__ */ jsx6(
         "input",
         {
           id,
           value,
           autoComplete: "off",
           "aria-describedby": show ? `${id}-hint` : void 0,
+          "data-accepted": rolling || void 0,
           onScroll: (event) => {
             if (mirror.current) mirror.current.scrollLeft = event.currentTarget.scrollLeft;
           },
           onChange: (event) => {
+            setAccepted(null);
             onChange(event.currentTarget.value);
             setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length);
           },
@@ -941,19 +1329,20 @@ function GhostSuggestion({ value, suggestion, onChange }) {
           onKeyDown: (event) => {
             if (show && (event.key === "Tab" || event.key === "ArrowRight") && !event.nativeEvent.isComposing) {
               event.preventDefault();
+              setAccepted({ prefix: value, suffix });
               onChange(suggestion);
             }
           }
         }
       )
     ] }),
-    show && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-hint", id: `${id}-hint`, children: "Press Tab or right arrow to accept" })
+    show && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-hint", id: `${id}-hint`, children: "Press Tab or right arrow to accept" })
   ] });
 }
 function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
-  const editor = useRef4(null);
-  const measure = useRef4(null);
-  useLayoutEffect3(() => {
+  const editor = useRef6(null);
+  const measure = useRef6(null);
+  useLayoutEffect5(() => {
     const target = editor.current;
     const source = measure.current;
     if (!target || !source) return;
@@ -963,7 +1352,7 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
     resize();
     return () => observer.disconnect();
   }, []);
-  return /* @__PURE__ */ jsxs5(
+  return /* @__PURE__ */ jsxs6(
     "form",
     {
       className: "yg-prompt-box",
@@ -974,16 +1363,16 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
         if (!busy && value.trim()) onSubmit();
       },
       children: [
-        /* @__PURE__ */ jsx5("div", { className: "yg-prompt-panel", children: /* @__PURE__ */ jsx5("div", { className: "yg-prompt-status-slot", children: /* @__PURE__ */ jsx5("div", { className: "yg-prompt-status", role: "status", children: busy && /* @__PURE__ */ jsxs5(Fragment2, { children: [
-          /* @__PURE__ */ jsx5("span", { className: "yg-prompt-indicator", "aria-hidden": "true" }),
-          /* @__PURE__ */ jsx5("span", { children: "Thinking" })
+        /* @__PURE__ */ jsx6("div", { className: "yg-prompt-panel", children: /* @__PURE__ */ jsx6("div", { className: "yg-prompt-status-slot", children: /* @__PURE__ */ jsx6("div", { className: "yg-prompt-status", role: "status", children: busy && /* @__PURE__ */ jsxs6(Fragment2, { children: [
+          /* @__PURE__ */ jsx6("span", { className: "yg-prompt-indicator", "aria-hidden": "true" }),
+          /* @__PURE__ */ jsx6("span", { children: "Thinking" })
         ] }) }) }) }),
-        /* @__PURE__ */ jsxs5("div", { className: "yg-prompt-editor", ref: editor, children: [
-          /* @__PURE__ */ jsxs5("span", { className: "yg-prompt-measure", ref: measure, "aria-hidden": "true", children: [
+        /* @__PURE__ */ jsxs6("div", { className: "yg-prompt-editor", ref: editor, children: [
+          /* @__PURE__ */ jsxs6("span", { className: "yg-prompt-measure", ref: measure, "aria-hidden": "true", children: [
             value,
             " "
           ] }),
-          /* @__PURE__ */ jsx5(
+          /* @__PURE__ */ jsx6(
             "textarea",
             {
               "aria-label": "Prompt",
@@ -999,7 +1388,7 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
             }
           )
         ] }),
-        /* @__PURE__ */ jsx5("div", { className: "yg-prompt-actions", children: /* @__PURE__ */ jsxs5(
+        /* @__PURE__ */ jsx6("div", { className: "yg-prompt-actions", children: /* @__PURE__ */ jsxs6(
           "button",
           {
             className: "yg-prompt-action",
@@ -1009,8 +1398,8 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
             disabled: busy ? !onCancel : !value.trim(),
             onClick: busy && onCancel ? onCancel : void 0,
             children: [
-              /* @__PURE__ */ jsx5("span", { className: "yg-prompt-arrow", "aria-hidden": "true", children: /* @__PURE__ */ jsx5("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.4", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx5("path", { d: "M12 19V5M6 11l6-6 6 6" }) }) }),
-              /* @__PURE__ */ jsx5("span", { className: "yg-prompt-stop", "aria-hidden": "true" })
+              /* @__PURE__ */ jsx6("span", { className: "yg-prompt-arrow", "aria-hidden": "true", children: /* @__PURE__ */ jsx6("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.4", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx6("path", { d: "M12 19V5M6 11l6-6 6 6" }) }) }),
+              /* @__PURE__ */ jsx6("span", { className: "yg-prompt-stop", "aria-hidden": "true" })
             ]
           }
         ) })
@@ -1019,91 +1408,539 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
   );
 }
 function ThinkingIndicator({ label = "Thinking", active = true }) {
-  const filter = useId5();
+  const filter = useId6();
+  const node = useRef6(null);
+  useLayoutEffect5(() => {
+    if (!active || !node.current) return;
+    const dots = Array.from(node.current.querySelectorAll("i"));
+    const axes = dots.map(() => spring(0, 420, 14));
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0, clock = 0, previous = performance.now(), hop = 0.3, index = 0;
+    function tick(time) {
+      const elapsed = Math.min(1 / 30, (time - previous) / 1e3);
+      previous = time;
+      clock += elapsed;
+      if (clock >= hop) {
+        axes[index % axes.length].velocity = -95;
+        index++;
+        hop += index % axes.length ? 0.16 : 0.46;
+      }
+      advanceSprings(axes, elapsed);
+      dots.forEach((dot, i) => {
+        dot.style.translate = `0 ${axes[i].position}px`;
+      });
+      frame = requestAnimationFrame(tick);
+    }
+    function sync() {
+      cancelAnimationFrame(frame);
+      if (media.matches) {
+        axes.forEach((axis) => snap(axis, 0));
+        dots.forEach((dot) => dot.style.removeProperty("translate"));
+      } else {
+        previous = performance.now();
+        frame = requestAnimationFrame(tick);
+      }
+    }
+    sync();
+    media.addEventListener("change", sync);
+    return () => {
+      cancelAnimationFrame(frame);
+      media.removeEventListener("change", sync);
+    };
+  }, [active]);
   if (!active) return null;
-  return /* @__PURE__ */ jsxs5("div", { className: "yg-thinking", role: "status", "aria-label": label, children: [
-    /* @__PURE__ */ jsx5("svg", { width: "0", height: "0", "aria-hidden": "true", focusable: "false", children: /* @__PURE__ */ jsx5("defs", { children: /* @__PURE__ */ jsxs5("filter", { id: filter, children: [
-      /* @__PURE__ */ jsx5("feGaussianBlur", { in: "SourceGraphic", stdDeviation: "2", result: "blur" }),
-      /* @__PURE__ */ jsx5("feColorMatrix", { in: "blur", mode: "matrix", values: "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" })
+  return /* @__PURE__ */ jsxs6("div", { className: "yg-thinking", role: "status", "aria-label": label, children: [
+    /* @__PURE__ */ jsx6("svg", { width: "0", height: "0", "aria-hidden": "true", focusable: "false", children: /* @__PURE__ */ jsx6("defs", { children: /* @__PURE__ */ jsxs6("filter", { id: filter, children: [
+      /* @__PURE__ */ jsx6("feGaussianBlur", { in: "SourceGraphic", stdDeviation: "2", result: "blur" }),
+      /* @__PURE__ */ jsx6("feColorMatrix", { in: "blur", mode: "matrix", values: "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" })
     ] }) }) }),
-    /* @__PURE__ */ jsxs5("span", { className: "yg-thinking-dots", "aria-hidden": "true", style: { filter: `url(#${filter})` }, children: [
-      /* @__PURE__ */ jsx5("i", {}),
-      /* @__PURE__ */ jsx5("i", {}),
-      /* @__PURE__ */ jsx5("i", {})
+    /* @__PURE__ */ jsxs6("span", { ref: node, className: "yg-thinking-dots", "aria-hidden": "true", style: { filter: `url(#${filter})` }, children: [
+      /* @__PURE__ */ jsx6("i", {}),
+      /* @__PURE__ */ jsx6("i", {}),
+      /* @__PURE__ */ jsx6("i", {})
     ] })
   ] });
 }
 
 // packages/web/src/patterns/motion-cards.tsx
-import { useState as useState6 } from "react";
-import { jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
+import { useLayoutEffect as useLayoutEffect6, useRef as useRef7, useState as useState7 } from "react";
+import { jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
 function ExpandCard({ title, children }) {
-  return /* @__PURE__ */ jsxs6("details", { className: "yg-expand-card", children: [
-    /* @__PURE__ */ jsxs6("summary", { children: [
-      /* @__PURE__ */ jsx6("span", { className: "yg-expand-art", "aria-hidden": "true" }),
-      /* @__PURE__ */ jsx6("span", { className: "yg-expand-title", children: title }),
-      /* @__PURE__ */ jsx6("span", { className: "yg-card-disclosure", children: /* @__PURE__ */ jsx6(Icon, { name: "plus" }) })
+  const card = useRef7(null);
+  const [open, setOpen] = useState7(false);
+  const [motion] = useState7(() => ({ shape: spring(0, 240, 21), copy: spring(0, 260, 28) }));
+  useLayoutEffect6(() => {
+    const root = card.current;
+    if (!root) return;
+    motion.shape.target = Number(open);
+    if (!open) motion.copy.target = 0;
+    const paint = () => {
+      root.style.setProperty("--yg-card-expansion", String(motion.shape.position));
+      root.style.setProperty("--yg-card-content", String(motion.copy.position));
+    };
+    const states = Object.values(motion);
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (open && reduced) motion.copy.target = 1;
+    let stop = playSprings(states, paint);
+    const reveal = open && !reduced ? setTimeout(() => {
+      motion.copy.target = 1;
+      stop();
+      stop = playSprings(states, paint);
+    }, 160) : void 0;
+    return () => {
+      clearTimeout(reveal);
+      stop();
+    };
+  }, [motion, open]);
+  return /* @__PURE__ */ jsxs7("details", { ref: card, className: "yg-expand-card", onToggle: (event) => setOpen(event.currentTarget.open), children: [
+    /* @__PURE__ */ jsxs7("summary", { children: [
+      /* @__PURE__ */ jsx7("span", { className: "yg-expand-art", "aria-hidden": "true" }),
+      /* @__PURE__ */ jsx7("span", { className: "yg-expand-title", children: title }),
+      /* @__PURE__ */ jsx7("span", { className: "yg-card-disclosure", children: /* @__PURE__ */ jsx7(Icon, { name: "plus" }) })
     ] }),
-    /* @__PURE__ */ jsx6("div", { className: "yg-expand-card-body", children })
+    /* @__PURE__ */ jsx7("div", { className: "yg-expand-card-body", children })
   ] });
 }
 function FanCards({ items }) {
-  const [selectedId, setSelectedId] = useState6(null);
+  const [selectedId, setSelectedId] = useState7(null);
+  const [highlight, setHighlight] = useState7(null);
+  const [pointer, setPointer] = useState7(false);
+  const [keyboard, setKeyboard] = useState7(false);
   const selected = items.find((item) => item.id === selectedId);
-  return /* @__PURE__ */ jsxs6("div", { className: "yg-fan-cards", children: [
-    /* @__PURE__ */ jsx6("div", { className: "yg-fan-cards-list", "aria-label": "Cards", "data-many": items.length > 3 || void 0, children: items.map((item, index) => /* @__PURE__ */ jsxs6(
-      "button",
+  const list = useRef7(null);
+  const [spread] = useState7(() => spring(0, 220, 18));
+  const tracks = useRef7(/* @__PURE__ */ new Map());
+  const kick = useRef7(null);
+  useLayoutEffect6(() => {
+    const root = list.current;
+    if (!root || items.length > 3) return;
+    const buttons = Array.from(root.querySelectorAll("button[data-card]"));
+    const active = pointer || keyboard;
+    spread.target = Number(active);
+    const states = [spread];
+    const live = new Set(items.map((item) => item.id));
+    tracks.current.forEach((_, id) => {
+      if (!live.has(id)) tracks.current.delete(id);
+    });
+    const rows = buttons.map((button, index) => {
+      const id = button.dataset.card;
+      const tracksForCard = tracks.current.get(id) ?? { lift: spring(0, 420, 20), scale: spring(1, 420, 22) };
+      const hot = active && id === highlight;
+      tracksForCard.lift.target = hot ? -22 : 0;
+      tracksForCard.scale.target = hot ? 1.06 : 1;
+      if (id === kick.current) tracksForCard.lift.velocity = -260;
+      states.push(tracksForCard.lift, tracksForCard.scale);
+      tracks.current.set(id, tracksForCard);
+      button.style.zIndex = hot ? "5" : index === 1 ? "3" : "2";
+      return { button, tracks: tracksForCard, index: index - (items.length - 1) / 2 };
+    });
+    kick.current = null;
+    const render = () => {
+      const room = Math.min(78, Math.max(24, (root.offsetWidth - 166) / 2));
+      rows.forEach(({ button, tracks: tracks2, index }) => {
+        const x = index * (6 + spread.position * (room - 6));
+        const y = Math.abs(index) * spread.position * 12 + tracks2.lift.position;
+        button.style.setProperty("--yg-fan-transform", `translate(calc(-50% + ${x}px), ${y}px) rotate(${index * (3 + spread.position * 9)}deg) scale(${tracks2.scale.position})`);
+      });
+    };
+    let stop = playSprings(states, render);
+    const sizes = new ResizeObserver(() => {
+      stop();
+      stop = playSprings(states, render);
+    });
+    sizes.observe(root);
+    return () => {
+      sizes.disconnect();
+      stop();
+    };
+  }, [highlight, items, keyboard, pointer, selectedId, spread]);
+  return /* @__PURE__ */ jsxs7("div", { className: "yg-fan-cards", children: [
+    /* @__PURE__ */ jsx7(
+      "div",
       {
-        type: "button",
-        style: { "--yg-fan-offset": index - (items.length - 1) / 2 },
-        "aria-pressed": item.id === selected?.id,
-        onClick: () => setSelectedId(item.id === selectedId ? null : item.id),
-        children: [
-          /* @__PURE__ */ jsx6("span", { className: "yg-fan-art", "aria-hidden": "true" }),
-          /* @__PURE__ */ jsx6("span", { className: "yg-fan-index", "aria-hidden": "true", children: String(index + 1).padStart(2, "0") }),
-          /* @__PURE__ */ jsx6("span", { className: "yg-fan-label", children: item.label }),
-          /* @__PURE__ */ jsx6(Icon, { name: "next" })
-        ]
-      },
-      item.id
-    )) }),
-    selected && /* @__PURE__ */ jsxs6("p", { className: "yg-fan-detail", children: [
-      /* @__PURE__ */ jsx6("strong", { children: selected.label }),
-      /* @__PURE__ */ jsx6("span", { children: selected.detail })
+        className: "yg-fan-cards-list",
+        ref: list,
+        "aria-label": "Cards",
+        "data-many": items.length > 3 || void 0,
+        onPointerEnter: () => setPointer(true),
+        onPointerLeave: () => {
+          setPointer(false);
+          setHighlight(null);
+        },
+        onBlur: (event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setKeyboard(false);
+        },
+        children: items.map((item, index) => /* @__PURE__ */ jsxs7(
+          "button",
+          {
+            type: "button",
+            "data-card": item.id,
+            style: { "--yg-fan-offset": index - (items.length - 1) / 2 },
+            "aria-pressed": item.id === selected?.id,
+            onPointerEnter: () => setHighlight(item.id),
+            onFocus: (event) => {
+              if (event.currentTarget.matches(":focus-visible")) {
+                setKeyboard(true);
+                setHighlight(item.id);
+              }
+            },
+            onClick: () => {
+              kick.current = item.id;
+              setSelectedId(item.id === selectedId ? null : item.id);
+            },
+            children: [
+              /* @__PURE__ */ jsx7("span", { className: "yg-fan-art", "aria-hidden": "true" }),
+              /* @__PURE__ */ jsx7("span", { className: "yg-fan-index", "aria-hidden": "true", children: String(index + 1).padStart(2, "0") }),
+              /* @__PURE__ */ jsx7("span", { className: "yg-fan-label", children: item.label }),
+              /* @__PURE__ */ jsx7(Icon, { name: "next" })
+            ]
+          },
+          item.id
+        ))
+      }
+    ),
+    selected && /* @__PURE__ */ jsxs7("p", { className: "yg-fan-detail", children: [
+      /* @__PURE__ */ jsx7("strong", { children: selected.label }),
+      /* @__PURE__ */ jsx7("span", { children: selected.detail })
     ] })
   ] });
 }
-function StatCard({ label, value, detail }) {
-  return /* @__PURE__ */ jsx6("section", { className: "yg-stat-card", "aria-label": label, children: /* @__PURE__ */ jsxs6("div", { className: "yg-stat-heading", children: [
-    /* @__PURE__ */ jsxs6("div", { children: [
-      /* @__PURE__ */ jsx6("span", { className: "yg-stat-label", children: label }),
-      /* @__PURE__ */ jsx6("strong", { className: "yg-stat-value", children: value.toLocaleString() }, value)
-    ] }),
-    detail && /* @__PURE__ */ jsx6("span", { className: "yg-stat-detail", children: detail })
-  ] }) });
+function StatSeries({ values }) {
+  const stroke = useRef7(null), fill = useRef7(null);
+  const dot = useRef7(null);
+  const axes = useRef7([]);
+  useLayoutEffect6(() => {
+    const safe = values.map((value) => Number.isFinite(value) ? value : 0);
+    if (axes.current.length !== safe.length) axes.current = safe.map((value) => spring(value, 200, 17));
+    const points = axes.current;
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    function paint() {
+      if (!points.length) return;
+      const coordinates = points.map(({ position }, i) => [
+        4 + i / Math.max(1, points.length - 1) * 288,
+        8 + (1 - Math.min(1.05, Math.max(-0.05, position))) * 80
+      ]);
+      let curve = `M${coordinates[0].join(" ")}`;
+      for (let i = 0; i < coordinates.length - 1; i++) {
+        const a = coordinates[i - 1] ?? coordinates[i], b = coordinates[i];
+        const c = coordinates[i + 1], d = coordinates[i + 2] ?? c;
+        const first = b.map((value, axis) => value + (c[axis] - a[axis]) / 6);
+        const second = c.map((value, axis) => value - (d[axis] - b[axis]) / 6);
+        curve += ` C${first.join(" ")} ${second.join(" ")} ${c.join(" ")}`;
+      }
+      const last = coordinates[coordinates.length - 1];
+      stroke.current?.setAttribute("d", curve);
+      fill.current?.setAttribute("d", `${curve} L${last[0]} 96 L4 96 Z`);
+      dot.current?.setAttribute("cx", String(last[0]));
+      dot.current?.setAttribute("cy", String(last[1]));
+    }
+    let frame = 0, previous = performance.now(), start = previous;
+    function tick(time) {
+      let waiting = false;
+      points.forEach((point, index) => {
+        if (time - start < index * 30) waiting = true;
+        else point.target = safe[index];
+      });
+      const moving = advanceSprings(points, (time - previous) / 1e3);
+      previous = time;
+      paint();
+      if (moving || waiting) frame = requestAnimationFrame(tick);
+      else frame = 0;
+    }
+    function sync() {
+      cancelAnimationFrame(frame);
+      if (media.matches) {
+        points.forEach((point, index) => snap(point, safe[index]));
+        paint();
+      } else {
+        paint();
+        start = previous = performance.now();
+        frame = requestAnimationFrame(tick);
+      }
+    }
+    sync();
+    media.addEventListener("change", sync);
+    return () => {
+      cancelAnimationFrame(frame);
+      media.removeEventListener("change", sync);
+    };
+  }, [values]);
+  return /* @__PURE__ */ jsxs7("svg", { viewBox: "0 0 296 96", className: "yg-stat-series", "aria-hidden": "true", children: [
+    /* @__PURE__ */ jsx7("path", { ref: fill, className: "yg-stat-area" }),
+    /* @__PURE__ */ jsx7("path", { ref: stroke, className: "yg-stat-line" }),
+    /* @__PURE__ */ jsx7("circle", { ref: dot, r: "4" })
+  ] });
 }
-function ProfileCard({ name, detail, initials, children }) {
-  return /* @__PURE__ */ jsxs6("section", { className: "yg-profile-card", children: [
-    /* @__PURE__ */ jsxs6("div", { className: "yg-profile-header", children: [
-      /* @__PURE__ */ jsx6("span", { className: "yg-profile-avatar", "aria-hidden": "true", children: initials }),
-      /* @__PURE__ */ jsxs6("div", { children: [
-        /* @__PURE__ */ jsx6("strong", { children: name }),
-        /* @__PURE__ */ jsx6("p", { children: detail })
+function StatCard({ label, value, detail, series }) {
+  const total = useRef7(null);
+  const [motion] = useState7(() => spring(value, 160, 22));
+  useLayoutEffect6(() => {
+    motion.target = value;
+    if (!Number.isFinite(value) || !Number.isFinite(motion.position)) {
+      snap(motion, value);
+      return;
+    }
+    return playSprings([motion], () => {
+      if (total.current) total.current.textContent = (Number.isInteger(value) ? Math.round(motion.position) : Math.round(motion.position * 10) / 10).toLocaleString();
+    });
+  }, [motion, value]);
+  return /* @__PURE__ */ jsxs7("section", { className: "yg-stat-card", "aria-label": label, children: [
+    /* @__PURE__ */ jsxs7("div", { className: "yg-stat-heading", children: [
+      /* @__PURE__ */ jsxs7("div", { children: [
+        /* @__PURE__ */ jsx7("span", { className: "yg-stat-label", children: label }),
+        /* @__PURE__ */ jsx7("strong", { className: "yg-stat-value", ref: total, children: value.toLocaleString() })
+      ] }),
+      detail && /* @__PURE__ */ jsx7("span", { className: "yg-stat-detail", children: detail })
+    ] }),
+    series && series.length > 1 && /* @__PURE__ */ jsx7(StatSeries, { values: series })
+  ] });
+}
+function ProfileCard({ name, detail, initials, children, actions }) {
+  return /* @__PURE__ */ jsxs7("section", { className: "yg-profile-card", children: [
+    /* @__PURE__ */ jsxs7("div", { className: "yg-profile-header", children: [
+      /* @__PURE__ */ jsx7("span", { className: "yg-profile-avatar", "aria-hidden": "true", children: initials }),
+      /* @__PURE__ */ jsxs7("div", { children: [
+        /* @__PURE__ */ jsx7("strong", { children: name }),
+        /* @__PURE__ */ jsx7("p", { children: detail })
       ] })
     ] }),
-    children != null && /* @__PURE__ */ jsxs6("details", { children: [
-      /* @__PURE__ */ jsxs6("summary", { children: [
+    children != null && /* @__PURE__ */ jsxs7("details", { children: [
+      /* @__PURE__ */ jsxs7("summary", { children: [
         "More about ",
         name
       ] }),
-      /* @__PURE__ */ jsx6("div", { className: "yg-profile-extra", children })
-    ] })
+      /* @__PURE__ */ jsx7("div", { className: "yg-profile-extra", children })
+    ] }),
+    actions
   ] });
 }
 
 // packages/web/src/patterns/motion-stepped.tsx
-import { useId as useId6, useRef as useRef5, useState as useState7 } from "react";
-import { jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
+import { useId as useId8, useLayoutEffect as useLayoutEffect8, useRef as useRef9, useState as useState8 } from "react";
+
+// packages/web/src/patterns/elastic-range.tsx
+import { useId as useId7, useLayoutEffect as useLayoutEffect7, useRef as useRef8 } from "react";
+import { jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
+var clamp2 = (n, min, max) => Math.min(max, Math.max(min, n));
+var radius = 12;
+function animateRange(element, initial) {
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  const thumb = spring(0, 900, 50), dropX = spring(0, 260, 18);
+  const dropY = spring(16, 420, 22), dropScale = spring(0.5, 420, 22), press = spring(1, 520, 16);
+  const tracks = [thumb, dropX, dropY, dropScale, press];
+  let ratio = initial, width = 0, frame = 0, previous = 0;
+  const x = () => radius + ratio * Math.max(1, width - radius * 2);
+  function paint() {
+    const stretch = 1 + Math.min(Math.abs(thumb.velocity) / 2400, 0.4);
+    element.style.setProperty("--yg-elastic-thumb", `${thumb.position}px`);
+    element.style.setProperty("--yg-elastic-fill", `${clamp2(thumb.position, 0, width) * clamp2((thumb.position - radius) / radius, 0, 1)}px`);
+    element.style.setProperty("--yg-elastic-stretch", String(stretch * press.position));
+    element.style.setProperty("--yg-elastic-squash", String(press.position / stretch));
+    element.style.setProperty("--yg-elastic-drop-x", `${dropX.position}px`);
+    element.style.setProperty("--yg-elastic-drop-y", `${dropY.position}px`);
+    element.style.setProperty("--yg-elastic-drop-scale", String(dropScale.position));
+    element.style.setProperty("--yg-elastic-tilt", `${clamp2((dropX.position - thumb.position) * 0.9, -28, 28)}deg`);
+    element.style.setProperty("--yg-elastic-label-opacity", String(clamp2((dropScale.position - 0.7) / 0.25, 0, 1)));
+  }
+  function tick(time) {
+    dropX.target = thumb.position;
+    const moving = advanceSprings(tracks, (time - previous) / 1e3);
+    previous = time;
+    paint();
+    frame = moving ? requestAnimationFrame(tick) : 0;
+  }
+  function wake() {
+    if (preference.matches) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      snap(thumb, x());
+      snap(dropX, thumb.position);
+      [dropY, dropScale, press].forEach((track) => snap(track, track.target));
+      paint();
+    } else if (!frame) {
+      previous = performance.now();
+      frame = requestAnimationFrame(tick);
+    }
+  }
+  function resize() {
+    const next = element.clientWidth;
+    if (!next || width === next) return;
+    width = next;
+    snap(thumb, x());
+    snap(dropX, x());
+    paint();
+  }
+  const observer = new ResizeObserver(resize);
+  observer.observe(element);
+  preference.addEventListener("change", wake);
+  resize();
+  return {
+    controlled(next, dragging) {
+      ratio = next;
+      if (dragging) return;
+      thumb.stiffness = 420;
+      thumb.damping = 34;
+      thumb.target = x();
+      wake();
+    },
+    drag(next, raw) {
+      ratio = next;
+      thumb.stiffness = 900;
+      thumb.damping = 50;
+      const limit = Math.max(radius, width - radius);
+      const edge = clamp2(raw, radius, limit);
+      const off = raw - edge;
+      thumb.target = edge + Math.sign(off) * 18 * (1 - 1 / (Math.abs(off) * 0.55 / 18 + 1));
+      wake();
+    },
+    release(next) {
+      ratio = next;
+      thumb.stiffness = 300;
+      thumb.damping = 14;
+      thumb.target = x();
+      wake();
+    },
+    presence(dragging, lifted, hovered) {
+      dropY.target = dragging || lifted ? -22 : 16;
+      dropScale.target = dragging || lifted ? 1 : 0.5;
+      press.target = dragging ? 1.16 : hovered ? 1.08 : 1;
+      wake();
+    },
+    dispose() {
+      observer.disconnect();
+      preference.removeEventListener("change", wake);
+      cancelAnimationFrame(frame);
+    }
+  };
+}
+function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
+  const id = useId7(), filter = useId7();
+  const rail = useRef8(null), hit = useRef8(null);
+  const motion = useRef8(null);
+  const drag = useRef8(null);
+  const hover = useRef8(false), focused = useRef8(false);
+  const ratio = max > min ? clamp2((value - min) / (max - min), 0, 1) : 0;
+  const valueOnMount = useRef8(ratio);
+  useLayoutEffect7(() => {
+    if (!rail.current) return;
+    const controller = animateRange(rail.current, valueOnMount.current);
+    motion.current = controller;
+    return () => {
+      controller.dispose();
+      motion.current = null;
+    };
+  }, []);
+  useLayoutEffect7(() => {
+    motion.current?.controlled(ratio, drag.current !== null);
+  }, [ratio]);
+  function sync() {
+    motion.current?.presence(drag.current !== null, focused.current, hover.current);
+  }
+  function aim(event) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+    const raw = rtl ? rect.right - event.clientX : event.clientX - rect.left;
+    const next = clamp2((raw - radius) / Math.max(1, rect.width - radius * 2), 0, 1);
+    const increment = Number.isFinite(step) && step > 0 ? step : 1;
+    const value2 = clamp2(min + Math.round((max - min) * next / increment) * increment, min, max);
+    motion.current?.drag(next, raw);
+    onChange(Number(value2.toFixed(10)));
+  }
+  function stop(event) {
+    if (event.pointerId !== drag.current) return;
+    drag.current = null;
+    motion.current?.release(ratio);
+    sync();
+  }
+  function key(event) {
+    const offsets = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1, PageUp: 2, PageDown: -2 };
+    if (!(event.key in offsets) && event.key !== "Home" && event.key !== "End") return;
+    event.preventDefault();
+    const next = event.key === "Home" ? min : event.key === "End" ? max : clamp2(value + offsets[event.key] * step, min, max);
+    focused.current = true;
+    sync();
+    onChange(Number(next.toFixed(10)));
+  }
+  return /* @__PURE__ */ jsxs8("div", { className: "yg-elastic-range", children: [
+    /* @__PURE__ */ jsx8("label", { htmlFor: id, children: label }),
+    /* @__PURE__ */ jsx8("svg", { width: "0", height: "0", "aria-hidden": "true", children: /* @__PURE__ */ jsx8("defs", { children: /* @__PURE__ */ jsxs8("filter", { id: filter, x: "-30%", y: "-100%", width: "160%", height: "240%", children: [
+      /* @__PURE__ */ jsx8("feGaussianBlur", { stdDeviation: "8", result: "blur" }),
+      /* @__PURE__ */ jsx8("feColorMatrix", { in: "blur", type: "matrix", values: "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -10" })
+    ] }) }) }),
+    /* @__PURE__ */ jsxs8(
+      "div",
+      {
+        ref: rail,
+        className: "yg-elastic-rail",
+        onPointerDown: (event) => {
+          if (!event.isPrimary || event.button !== 0 || drag.current !== null) return;
+          drag.current = event.pointerId;
+          event.currentTarget.setPointerCapture(event.pointerId);
+          hit.current?.focus({ preventScroll: true });
+          aim(event);
+          sync();
+        },
+        onPointerMove: (event) => {
+          if (drag.current === event.pointerId) aim(event);
+        },
+        onPointerUp: stop,
+        onPointerCancel: stop,
+        onLostPointerCapture: stop,
+        onPointerEnter: (event) => {
+          hover.current = event.pointerType === "mouse";
+          sync();
+        },
+        onPointerLeave: () => {
+          hover.current = false;
+          sync();
+        },
+        children: [
+          /* @__PURE__ */ jsx8("span", { className: "yg-elastic-track", "aria-hidden": "true", children: /* @__PURE__ */ jsx8("i", {}) }),
+          /* @__PURE__ */ jsxs8("span", { className: "yg-elastic-goo", "aria-hidden": "true", style: { filter: `url(#${filter})` }, children: [
+            /* @__PURE__ */ jsx8("i", { className: "yg-elastic-thumb" }),
+            /* @__PURE__ */ jsx8("i", { className: "yg-elastic-drop" })
+          ] }),
+          /* @__PURE__ */ jsx8("span", { className: "yg-elastic-value", "aria-hidden": "true", children: formatValue(value) }),
+          /* @__PURE__ */ jsx8(
+            "button",
+            {
+              ref: hit,
+              type: "button",
+              role: "slider",
+              id,
+              "aria-label": label,
+              "aria-valuemin": min,
+              "aria-valuemax": max,
+              "aria-valuenow": value,
+              "aria-valuetext": formatValue(value),
+              onKeyDown: key,
+              onFocus: (event) => {
+                focused.current = event.currentTarget.matches(":focus-visible");
+                sync();
+              },
+              onBlur: () => {
+                focused.current = false;
+                sync();
+              }
+            }
+          )
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsx8("div", { className: "yg-elastic-marks", "aria-hidden": "true", children: Array.from({ length: 21 }, (_, i) => /* @__PURE__ */ jsx8(
+      "i",
+      {
+        "data-major": i % 5 === 0 || void 0,
+        "data-passed": i / 20 <= ratio && ratio > 0 || void 0
+      },
+      i
+    )) }),
+    /* @__PURE__ */ jsx8("div", { className: "yg-elastic-labels", "aria-hidden": "true", children: [0, 0.25, 0.5, 0.75, 1].map((position) => /* @__PURE__ */ jsx8("span", { style: { "--yg-scale-position": position }, children: formatValue(min + position * (max - min)) }, position)) })
+  ] });
+}
+
+// packages/web/src/patterns/motion-stepped.tsx
+import { jsx as jsx9, jsxs as jsxs9 } from "react/jsx-runtime";
 function RangeSlider({
   label,
   value,
@@ -1114,18 +1951,97 @@ function RangeSlider({
   end,
   onEndChange,
   detail,
-  formatValue = String
+  formatValue = String,
+  presentation = "standard"
 }) {
-  const id = useId6();
-  const activeDrag = useRef5(null);
+  const id = useId8();
+  const interval = useRef9(null);
+  const activeDrag = useRef9(null);
   const percent = (number) => max > min ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
   const first = percent(value);
+  const last = end === void 0 ? first : percent(end);
+  const [motion] = useState8(() => ({
+    start: spring(first, 260, 24),
+    end: spring(last, 260, 24),
+    merge: spring(0, 300, 26)
+  }));
+  useLayoutEffect8(() => {
+    const rail = interval.current;
+    const root = rail?.parentElement;
+    if (!rail || !root) return;
+    const firstTip = rail.querySelector('[data-tip="start"]');
+    const lastTip = rail.querySelector('[data-tip="end"]');
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const tracks = Object.values(motion);
+    let frame = 0, previous = performance.now(), width = 0, need = 0;
+    function paint() {
+      const a = motion.start.position, b = motion.end.position;
+      const middle = (a + b) / 2;
+      const amount = Math.max(0, Math.min(1, motion.merge.position));
+      const tilt = (velocity) => Math.max(-12, Math.min(12, -velocity * width / 100 * 0.02));
+      const settings = {
+        "--yg-range-start": `${a}%`,
+        "--yg-range-end": `${b}%`,
+        "--yg-tip-first": `${a + (middle - a) * amount}%`,
+        "--yg-tip-last": `${b + (middle - b) * amount}%`,
+        "--yg-tip-middle": `${middle}%`,
+        "--yg-tip-first-tilt": `${tilt(motion.start.velocity)}deg`,
+        "--yg-tip-last-tilt": `${tilt(motion.end.velocity)}deg`,
+        "--yg-tip-middle-tilt": `${tilt((motion.start.velocity + motion.end.velocity) / 2)}deg`,
+        "--yg-tip-merge": String(amount)
+      };
+      for (const [key, value2] of Object.entries(settings)) root?.style.setProperty(key, value2);
+    }
+    function targetMerge() {
+      motion.merge.target = Number((motion.end.position - motion.start.position) * width / 100 < need);
+    }
+    function tick(now) {
+      targetMerge();
+      const moving = advanceSprings(tracks, (now - previous) / 1e3);
+      previous = now;
+      paint();
+      frame = moving ? requestAnimationFrame(tick) : 0;
+    }
+    function work() {
+      if (!rail) return;
+      width = rail.clientWidth;
+      need = ((firstTip?.offsetWidth ?? 0) + (lastTip?.offsetWidth ?? 0)) / 2 + 8;
+      motion.start.target = first;
+      motion.end.target = last;
+      cancelAnimationFrame(frame);
+      if (media.matches) {
+        snap(motion.start, first);
+        snap(motion.end, last);
+        targetMerge();
+        snap(motion.merge, motion.merge.target);
+        paint();
+      } else {
+        previous = performance.now();
+        paint();
+        frame = requestAnimationFrame(tick);
+      }
+    }
+    work();
+    const size = new ResizeObserver(work);
+    size.observe(rail);
+    if (firstTip) size.observe(firstTip);
+    if (lastTip) size.observe(lastTip);
+    media.addEventListener("change", work);
+    return () => {
+      size.disconnect();
+      media.removeEventListener("change", work);
+      cancelAnimationFrame(frame);
+    };
+  }, [first, last, motion]);
   if (end === void 0 || !onEndChange) {
-    return /* @__PURE__ */ jsxs7("div", { className: "yg-motion-range", style: { "--yg-range-fill": `${first}%` }, children: [
-      /* @__PURE__ */ jsx7("div", { className: "yg-motion-range-heading", children: /* @__PURE__ */ jsx7("label", { htmlFor: id, children: label }) }),
-      /* @__PURE__ */ jsxs7("div", { className: "yg-motion-range-area", children: [
-        /* @__PURE__ */ jsx7("span", { className: "yg-motion-range-tip", "aria-hidden": "true", style: { left: `${first}%` }, children: formatValue(value) }),
-        /* @__PURE__ */ jsx7(
+    if (presentation === "elastic") {
+      return /* @__PURE__ */ jsx9(ElasticRange, { label, value, onChange, min, max, step, formatValue });
+    }
+    return /* @__PURE__ */ jsxs9("div", { className: "yg-motion-range", style: { "--yg-range-fill": `${first}%` }, children: [
+      /* @__PURE__ */ jsx9("div", { className: "yg-motion-range-heading", children: /* @__PURE__ */ jsx9("label", { htmlFor: id, children: label }) }),
+      /* @__PURE__ */ jsxs9("div", { className: "yg-motion-range-area", children: [
+        /* @__PURE__ */ jsx9("span", { className: "yg-motion-range-tip", "aria-hidden": "true", style: { left: `${first}%` }, children: formatValue(value) }),
+        /* @__PURE__ */ jsx9(
           "input",
           {
             id,
@@ -1140,7 +2056,6 @@ function RangeSlider({
       ] })
     ] });
   }
-  const last = percent(end);
   const joined = last - first < 25;
   const increment = step > 0 && Number.isFinite(step) ? step : 1;
   const set = (thumb, next) => {
@@ -1168,7 +2083,7 @@ function RangeSlider({
     event.preventDefault();
     set(side, keys[event.key]);
   };
-  return /* @__PURE__ */ jsxs7(
+  return /* @__PURE__ */ jsxs9(
     "div",
     {
       className: "yg-motion-range",
@@ -1177,15 +2092,17 @@ function RangeSlider({
       "aria-labelledby": id,
       style: { "--yg-range-start": `${first}%`, "--yg-range-end": `${last}%` },
       children: [
-        /* @__PURE__ */ jsxs7("div", { className: "yg-motion-range-heading", children: [
-          /* @__PURE__ */ jsx7("strong", { id, children: label }),
-          detail && /* @__PURE__ */ jsx7("span", { children: detail })
+        /* @__PURE__ */ jsxs9("div", { className: "yg-motion-range-heading", children: [
+          /* @__PURE__ */ jsx9("strong", { id, children: label }),
+          detail && /* @__PURE__ */ jsx9("span", { children: detail })
         ] }),
-        /* @__PURE__ */ jsxs7(
+        /* @__PURE__ */ jsxs9(
           "div",
           {
             className: "yg-motion-range-area",
+            ref: interval,
             "data-joined": joined || void 0,
+            "data-spring": "",
             onPointerDown: (event) => {
               if (!event.isPrimary || event.button !== 0 || activeDrag.current) return;
               const at = position(event);
@@ -1210,15 +2127,15 @@ function RangeSlider({
               if (activeDrag.current?.id === event.pointerId) activeDrag.current = null;
             },
             children: [
-              /* @__PURE__ */ jsx7("span", { className: "yg-motion-interval-track", "aria-hidden": "true", children: /* @__PURE__ */ jsx7("span", {}) }),
-              /* @__PURE__ */ jsx7("span", { className: "yg-motion-range-tip", "data-tip": "start", "aria-hidden": "true", children: formatValue(value) }),
-              /* @__PURE__ */ jsx7("span", { className: "yg-motion-range-tip", "data-tip": "end", "aria-hidden": "true", children: formatValue(end) }),
-              /* @__PURE__ */ jsxs7("span", { className: "yg-motion-range-tip", "data-tip": "joined", "aria-hidden": "true", children: [
+              /* @__PURE__ */ jsx9("span", { className: "yg-motion-interval-track", "aria-hidden": "true", children: /* @__PURE__ */ jsx9("span", {}) }),
+              /* @__PURE__ */ jsx9("span", { className: "yg-motion-range-tip", "data-tip": "start", "aria-hidden": "true", children: formatValue(value) }),
+              /* @__PURE__ */ jsx9("span", { className: "yg-motion-range-tip", "data-tip": "end", "aria-hidden": "true", children: formatValue(end) }),
+              /* @__PURE__ */ jsxs9("span", { className: "yg-motion-range-tip", "data-tip": "joined", "aria-hidden": "true", children: [
                 formatValue(value),
                 "\u2013",
                 formatValue(end)
               ] }),
-              /* @__PURE__ */ jsx7(
+              /* @__PURE__ */ jsx9(
                 "button",
                 {
                   type: "button",
@@ -1232,7 +2149,7 @@ function RangeSlider({
                   onKeyDown: (event) => onThumbKey(event, "start", value)
                 }
               ),
-              /* @__PURE__ */ jsx7(
+              /* @__PURE__ */ jsx9(
                 "button",
                 {
                   type: "button",
@@ -1254,78 +2171,78 @@ function RangeSlider({
   );
 }
 function PasswordStrength({ value, onChange }) {
-  const id = useId6();
-  const [shown, setShown] = useState7(false);
+  const id = useId8();
+  const [shown, setShown] = useState8(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
-  return /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password", "data-score": score, children: [
-    /* @__PURE__ */ jsx7("label", { htmlFor: id, children: "Create a password" }),
-    /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password-field", children: [
-      /* @__PURE__ */ jsx7("input", { id, type: shown ? "text" : "password", autoComplete: "new-password", value, onChange: (event) => onChange(event.currentTarget.value), "aria-describedby": `${id}-checks` }),
-      /* @__PURE__ */ jsx7("button", { type: "button", className: "yg-motion-password-eye", "aria-label": shown ? "Hide password" : "Show password", "aria-pressed": shown, onClick: () => setShown(!shown), children: /* @__PURE__ */ jsxs7("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", children: [
-        /* @__PURE__ */ jsx7("path", { d: "M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" }),
-        /* @__PURE__ */ jsx7("circle", { cx: "12", cy: "12", r: "2.8" }),
-        /* @__PURE__ */ jsx7("path", { className: "yg-motion-password-slash", d: "M4.5 4.5l15 15" })
+  return /* @__PURE__ */ jsxs9("div", { className: "yg-motion-password", "data-score": score, children: [
+    /* @__PURE__ */ jsx9("label", { htmlFor: id, children: "Create a password" }),
+    /* @__PURE__ */ jsxs9("div", { className: "yg-motion-password-field", children: [
+      /* @__PURE__ */ jsx9("input", { id, type: shown ? "text" : "password", autoComplete: "new-password", value, onChange: (event) => onChange(event.currentTarget.value), "aria-describedby": `${id}-checks` }),
+      /* @__PURE__ */ jsx9("button", { type: "button", className: "yg-motion-password-eye", "aria-label": shown ? "Hide password" : "Show password", "aria-pressed": shown, onClick: () => setShown(!shown), children: /* @__PURE__ */ jsxs9("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", children: [
+        /* @__PURE__ */ jsx9("path", { d: "M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" }),
+        /* @__PURE__ */ jsx9("circle", { cx: "12", cy: "12", r: "2.8" }),
+        /* @__PURE__ */ jsx9("path", { className: "yg-motion-password-slash", d: "M4.5 4.5l15 15" })
       ] }) })
     ] }),
-    /* @__PURE__ */ jsx7("div", { className: "yg-motion-password-meter", "aria-hidden": "true", children: [0, 1, 2, 3].map((index) => /* @__PURE__ */ jsx7("span", { style: { "--yg-bar-index": index }, children: /* @__PURE__ */ jsx7("i", { "data-active": index < score || void 0 }) }, index)) }),
-    /* @__PURE__ */ jsxs7("div", { id: `${id}-checks`, className: "yg-motion-password-checks", children: [
-      /* @__PURE__ */ jsx7("strong", { children: word }, word),
-      /* @__PURE__ */ jsx7("span", { children: "8+ characters, mixed case, a number and a symbol" })
+    /* @__PURE__ */ jsx9("div", { className: "yg-motion-password-meter", "aria-hidden": "true", children: [0, 1, 2, 3].map((index) => /* @__PURE__ */ jsx9("span", { style: { "--yg-bar-index": index }, children: /* @__PURE__ */ jsx9("i", { "data-active": index < score || void 0 }) }, index)) }),
+    /* @__PURE__ */ jsxs9("div", { id: `${id}-checks`, className: "yg-motion-password-checks", children: [
+      /* @__PURE__ */ jsx9("strong", { children: word }, word),
+      /* @__PURE__ */ jsx9("span", { children: "8+ characters, mixed case, a number and a symbol" })
     ] })
   ] });
 }
 function CheckboxList({ options, value, onChange }) {
   const count = options.filter((option) => value.includes(option.id)).length;
-  return /* @__PURE__ */ jsxs7("fieldset", { className: "yg-motion-checklist", children: [
-    /* @__PURE__ */ jsx7("legend", { children: "Choose options" }),
-    /* @__PURE__ */ jsxs7("div", { className: "yg-motion-checklist-heading", children: [
-      /* @__PURE__ */ jsx7("strong", { children: "Today" }),
-      /* @__PURE__ */ jsxs7("span", { children: [
-        /* @__PURE__ */ jsx7("b", { children: count }),
+  return /* @__PURE__ */ jsxs9("fieldset", { className: "yg-motion-checklist", children: [
+    /* @__PURE__ */ jsx9("legend", { children: "Choose options" }),
+    /* @__PURE__ */ jsxs9("div", { className: "yg-motion-checklist-heading", children: [
+      /* @__PURE__ */ jsx9("strong", { children: "Today" }),
+      /* @__PURE__ */ jsxs9("span", { children: [
+        /* @__PURE__ */ jsx9("b", { children: count }),
         " of ",
         options.length,
         " done"
       ] })
     ] }),
-    options.map((option) => /* @__PURE__ */ jsxs7("label", { className: "yg-motion-checklist-item", children: [
-      /* @__PURE__ */ jsx7("input", { type: "checkbox", checked: value.includes(option.id), onChange: (event) => onChange(event.currentTarget.checked ? [...value, option.id] : value.filter((id) => id !== option.id)) }),
-      /* @__PURE__ */ jsx7("span", { className: "yg-motion-checklist-box", "aria-hidden": "true", children: /* @__PURE__ */ jsx7("svg", { viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx7("path", { d: "M6 12.5l4 4L18 8" }) }) }),
-      /* @__PURE__ */ jsx7("span", { className: "yg-motion-checklist-text", children: option.label })
+    options.map((option) => /* @__PURE__ */ jsxs9("label", { className: "yg-motion-checklist-item", children: [
+      /* @__PURE__ */ jsx9("input", { type: "checkbox", checked: value.includes(option.id), onChange: (event) => onChange(event.currentTarget.checked ? [...value, option.id] : value.filter((id) => id !== option.id)) }),
+      /* @__PURE__ */ jsx9("span", { className: "yg-motion-checklist-box", "aria-hidden": "true", children: /* @__PURE__ */ jsx9("svg", { viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx9("path", { d: "M6 12.5l4 4L18 8" }) }) }),
+      /* @__PURE__ */ jsx9("span", { className: "yg-motion-checklist-text", children: option.label })
     ] }, option.id))
   ] });
 }
 function DetentDial({ options, value, onChange }) {
-  const id = useId6();
+  const id = useId8();
   const index = options.findIndex((option) => option.id === value);
   const selected = Math.max(0, index);
   const choose = (next) => {
     if (options.length) onChange(options[(next + options.length) % options.length].id);
   };
-  return /* @__PURE__ */ jsxs7("div", { className: "yg-motion-dial", children: [
-    /* @__PURE__ */ jsx7("label", { htmlFor: id, children: "Selection" }),
-    /* @__PURE__ */ jsxs7("div", { className: "yg-motion-dial-face", style: { "--yg-dial-angle": `${options.length > 1 ? -135 + 270 * selected / (options.length - 1) : 0}deg` }, children: [
-      /* @__PURE__ */ jsx7("span", { className: "yg-motion-dial-marker", "aria-hidden": "true" }),
-      /* @__PURE__ */ jsx7("span", { className: "yg-motion-dial-value", children: options[index]?.label ?? "No selection" })
+  return /* @__PURE__ */ jsxs9("div", { className: "yg-motion-dial", children: [
+    /* @__PURE__ */ jsx9("label", { htmlFor: id, children: "Selection" }),
+    /* @__PURE__ */ jsxs9("div", { className: "yg-motion-dial-face", style: { "--yg-dial-angle": `${options.length > 1 ? -135 + 270 * selected / (options.length - 1) : 0}deg` }, children: [
+      /* @__PURE__ */ jsx9("span", { className: "yg-motion-dial-marker", "aria-hidden": "true" }),
+      /* @__PURE__ */ jsx9("span", { className: "yg-motion-dial-value", children: options[index]?.label ?? "No selection" })
     ] }),
-    /* @__PURE__ */ jsx7("input", { id, type: "range", min: 0, max: Math.max(0, options.length - 1), step: 1, value: selected, disabled: !options.length, "aria-valuetext": options[index]?.label ?? "No selection", onChange: (event) => choose(event.currentTarget.valueAsNumber), onKeyDown: (event) => {
+    /* @__PURE__ */ jsx9("input", { id, type: "range", min: 0, max: Math.max(0, options.length - 1), step: 1, value: selected, disabled: !options.length, "aria-valuetext": options[index]?.label ?? "No selection", onChange: (event) => choose(event.currentTarget.valueAsNumber), onKeyDown: (event) => {
       if (["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown"].includes(event.key) && options.length) {
         event.preventDefault();
         choose(selected + (event.key === "ArrowRight" || event.key === "ArrowUp" ? 1 : -1));
       }
     } }),
-    /* @__PURE__ */ jsx7("div", { className: "yg-motion-dial-options", "aria-hidden": "true", children: options.map((option) => /* @__PURE__ */ jsx7("span", { "data-selected": option.id === value || void 0, children: option.label }, option.id)) })
+    /* @__PURE__ */ jsx9("div", { className: "yg-motion-dial-options", "aria-hidden": "true", children: options.map((option) => /* @__PURE__ */ jsx9("span", { "data-selected": option.id === value || void 0, children: option.label }, option.id)) })
   ] });
 }
 
 // packages/web/src/patterns/motion-confirm.tsx
-import { useEffect as useEffect2, useRef as useRef6, useState as useState8 } from "react";
-import { jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
+import { useEffect as useEffect5, useRef as useRef10, useState as useState9 } from "react";
+import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
 function useConfirmation(onConfirm) {
-  const [done, setDone] = useState8(false);
-  const locked = useRef6(false);
-  const timer = useRef6(null);
-  useEffect2(() => () => {
+  const [done, setDone] = useState9(false);
+  const locked = useRef10(false);
+  const timer = useRef10(null);
+  useEffect5(() => () => {
     if (timer.current) clearTimeout(timer.current);
   }, []);
   const confirm = () => {
@@ -1341,12 +2258,12 @@ function useConfirmation(onConfirm) {
   return { done, locked, confirm };
 }
 function HoldButton({ label, onConfirm }) {
-  const [progress, setProgress] = useState8(0);
-  const [armed, setArmed] = useState8(false);
-  const [holding, setHolding] = useState8(false);
-  const active = useRef6(null);
-  const frame = useRef6(null);
-  const callback = useRef6(onConfirm);
+  const [progress, setProgress] = useState9(0);
+  const [armed, setArmed] = useState9(false);
+  const [holding, setHolding] = useState9(false);
+  const active = useRef10(null);
+  const frame = useRef10(null);
+  const callback = useRef10(onConfirm);
   callback.current = onConfirm;
   const { done, locked, confirm } = useConfirmation(() => callback.current());
   const cancel = () => {
@@ -1356,7 +2273,7 @@ function HoldButton({ label, onConfirm }) {
     setHolding(false);
     setProgress(0);
   };
-  useEffect2(() => () => {
+  useEffect5(() => () => {
     if (frame.current !== null) cancelAnimationFrame(frame.current);
   }, []);
   const start = (event) => {
@@ -1379,7 +2296,7 @@ function HoldButton({ label, onConfirm }) {
     };
     frame.current = requestAnimationFrame(tick);
   };
-  return /* @__PURE__ */ jsxs8(
+  return /* @__PURE__ */ jsxs10(
     "button",
     {
       type: "button",
@@ -1415,18 +2332,18 @@ function HoldButton({ label, onConfirm }) {
         } else setArmed(true);
       },
       children: [
-        /* @__PURE__ */ jsx8("span", { className: "yg-confirm-fill", "aria-hidden": "true" }),
-        /* @__PURE__ */ jsx8("span", { className: "yg-confirm-label", children: done ? /* @__PURE__ */ jsx8(Icon, { name: "check" }) : armed ? `Confirm ${label}` : label })
+        /* @__PURE__ */ jsx10("span", { className: "yg-confirm-fill", "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx10("span", { className: "yg-confirm-label", children: done ? /* @__PURE__ */ jsx10(Icon, { name: "check" }) : armed ? `Confirm ${label}` : label })
       ]
     }
   );
 }
 function SlideConfirm({ label, onConfirm }) {
-  const [progress, setProgress] = useState8(0);
-  const [armed, setArmed] = useState8(false);
-  const [dragging, setDragging] = useState8(false);
-  const active = useRef6(null);
-  const value = useRef6(0);
+  const [progress, setProgress] = useState9(0);
+  const [armed, setArmed] = useState9(false);
+  const [dragging, setDragging] = useState9(false);
+  const active = useRef10(null);
+  const value = useRef10(0);
   const { done, locked, confirm } = useConfirmation(onConfirm);
   const reset = () => {
     active.current = null;
@@ -1442,7 +2359,7 @@ function SlideConfirm({ label, onConfirm }) {
     drag.samples.push({ x: event.clientX, time: event.timeStamp });
     setProgress(value.current);
   };
-  return /* @__PURE__ */ jsxs8(
+  return /* @__PURE__ */ jsxs10(
     "button",
     {
       type: "button",
@@ -1500,16 +2417,16 @@ function SlideConfirm({ label, onConfirm }) {
         } else setArmed(true);
       },
       children: [
-        /* @__PURE__ */ jsx8("span", { className: "yg-confirm-label", children: armed ? `Confirm ${label}` : label }),
-        /* @__PURE__ */ jsx8("span", { className: "yg-confirm-fill", "aria-hidden": "true", children: done ? "Confirmed" : label }),
-        /* @__PURE__ */ jsx8("span", { className: "yg-slide-confirm-handle", "aria-hidden": "true", children: /* @__PURE__ */ jsx8(Icon, { name: done ? "check" : "arrow" }) })
+        /* @__PURE__ */ jsx10("span", { className: "yg-confirm-label", children: armed ? `Confirm ${label}` : label }),
+        /* @__PURE__ */ jsx10("span", { className: "yg-confirm-fill", "aria-hidden": "true", children: done ? "Confirmed" : label }),
+        /* @__PURE__ */ jsx10("span", { className: "yg-slide-confirm-handle", "aria-hidden": "true", children: /* @__PURE__ */ jsx10(Icon, { name: done ? "check" : "arrow" }) })
       ]
     }
   );
 }
 
 // packages/web/src/patterns/motion-task-list.tsx
-import { Fragment as Fragment3, jsx as jsx9, jsxs as jsxs9 } from "react/jsx-runtime";
+import { Fragment as Fragment3, jsx as jsx11, jsxs as jsxs11 } from "react/jsx-runtime";
 var stateName = {
   queued: "Queued",
   running: "Running",
@@ -1518,46 +2435,46 @@ var stateName = {
 };
 function TaskLine({ task }) {
   const showState = task.state === "failed";
-  return /* @__PURE__ */ jsxs9(Fragment3, { children: [
-    /* @__PURE__ */ jsx9("span", { className: "yg-task-marker", "aria-hidden": "true", children: task.state === "done" ? /* @__PURE__ */ jsx9("svg", { viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsx9("path", { pathLength: "1", d: "M5 12.5l4.2 4.2L19 7" }) }) : task.state === "failed" ? /* @__PURE__ */ jsx9(Icon, { name: "close" }) : null }),
-    /* @__PURE__ */ jsx9("span", { className: "yg-task-copy", children: /* @__PURE__ */ jsx9("strong", { children: task.label }) }),
-    /* @__PURE__ */ jsxs9("span", { className: "yg-task-meta", children: [
-      task.detail && !showState && /* @__PURE__ */ jsx9("span", { className: "yg-task-note", children: task.detail }),
-      /* @__PURE__ */ jsx9("span", { className: showState ? "yg-task-state" : "yg-task-sr", children: stateName[task.state] })
+  return /* @__PURE__ */ jsxs11(Fragment3, { children: [
+    /* @__PURE__ */ jsx11("span", { className: "yg-task-marker", "aria-hidden": "true", children: task.state === "done" ? /* @__PURE__ */ jsx11("svg", { viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsx11("path", { pathLength: "1", d: "M5 12.5l4.2 4.2L19 7" }) }) : task.state === "failed" ? /* @__PURE__ */ jsx11(Icon, { name: "close" }) : null }),
+    /* @__PURE__ */ jsx11("span", { className: "yg-task-copy", children: /* @__PURE__ */ jsx11("strong", { children: task.label }) }),
+    /* @__PURE__ */ jsxs11("span", { className: "yg-task-meta", children: [
+      task.detail && !showState && /* @__PURE__ */ jsx11("span", { className: "yg-task-note", children: task.detail }),
+      /* @__PURE__ */ jsx11("span", { className: showState ? "yg-task-state" : "yg-task-sr", children: stateName[task.state] })
     ] })
   ] });
 }
 function TaskList({ label, tasks }) {
   const complete = tasks.filter((task) => task.state === "done").length;
   const active = tasks.find((task) => task.state === "running")?.id;
-  return /* @__PURE__ */ jsxs9("section", { className: "yg-task-list", "aria-label": label, children: [
-    /* @__PURE__ */ jsxs9("header", { children: [
-      /* @__PURE__ */ jsx9("strong", { children: label }),
-      /* @__PURE__ */ jsxs9("span", { role: "status", children: [
-        /* @__PURE__ */ jsxs9("span", { className: "yg-task-sr", children: [
+  return /* @__PURE__ */ jsxs11("section", { className: "yg-task-list", "aria-label": label, children: [
+    /* @__PURE__ */ jsxs11("header", { children: [
+      /* @__PURE__ */ jsx11("strong", { children: label }),
+      /* @__PURE__ */ jsxs11("span", { role: "status", children: [
+        /* @__PURE__ */ jsxs11("span", { className: "yg-task-sr", children: [
           complete,
           " of ",
           tasks.length,
           " done"
         ] }),
-        /* @__PURE__ */ jsxs9("span", { "aria-hidden": "true", children: [
+        /* @__PURE__ */ jsxs11("span", { "aria-hidden": "true", children: [
           complete,
           "/",
           tasks.length
         ] })
       ] })
     ] }),
-    tasks.length === 0 && /* @__PURE__ */ jsx9("p", { className: "yg-help", children: "No steps yet." }),
-    /* @__PURE__ */ jsx9("ol", { children: tasks.map((task) => /* @__PURE__ */ jsx9("li", { "data-state": task.state, "data-active": active === task.id || void 0, children: task.steps?.length ? /* @__PURE__ */ jsxs9("details", { open: true, children: [
-      /* @__PURE__ */ jsx9("summary", { className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task }) }),
-      /* @__PURE__ */ jsx9("ol", { className: "yg-task-children", children: task.steps.map((step) => /* @__PURE__ */ jsx9("li", { "data-state": step.state, className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task: step }) }, step.id)) })
-    ] }) : /* @__PURE__ */ jsx9("div", { className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task }) }) }, task.id)) })
+    tasks.length === 0 && /* @__PURE__ */ jsx11("p", { className: "yg-help", children: "No steps yet." }),
+    /* @__PURE__ */ jsx11("ol", { children: tasks.map((task) => /* @__PURE__ */ jsx11("li", { "data-state": task.state, "data-active": active === task.id || void 0, children: task.steps?.length ? /* @__PURE__ */ jsxs11("details", { open: true, children: [
+      /* @__PURE__ */ jsx11("summary", { className: "yg-task-line", children: /* @__PURE__ */ jsx11(TaskLine, { task }) }),
+      /* @__PURE__ */ jsx11("ol", { className: "yg-task-children", children: task.steps.map((step) => /* @__PURE__ */ jsx11("li", { "data-state": step.state, className: "yg-task-line", children: /* @__PURE__ */ jsx11(TaskLine, { task: step }) }, step.id)) })
+    ] }) : /* @__PURE__ */ jsx11("div", { className: "yg-task-line", children: /* @__PURE__ */ jsx11(TaskLine, { task }) }) }, task.id)) })
   ] });
 }
 
 // packages/web/src/patterns/motion-cart.tsx
-import { useEffect as useEffect3, useLayoutEffect as useLayoutEffect4, useRef as useRef7, useState as useState9 } from "react";
-import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
+import { useEffect as useEffect6, useLayoutEffect as useLayoutEffect9, useRef as useRef11, useState as useState10 } from "react";
+import { jsx as jsx12, jsxs as jsxs12 } from "react/jsx-runtime";
 var holdDelay = 380;
 var initialRepeat = 150;
 var minimumRepeat = 55;
@@ -1565,27 +2482,27 @@ var limitNoticeDuration = 1600;
 function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "Add" }) {
   const limit = Number.isFinite(max) ? Math.max(0, Math.floor(max)) : 99;
   const count = Number.isFinite(quantity) ? Math.max(0, Math.min(limit, Math.floor(quantity))) : 0;
-  const previous = useRef7(count);
+  const previous = useRef11(count);
   const goingDown = count < previous.current;
   const lastCount = previous.current;
-  useLayoutEffect4(() => {
+  useLayoutEffect9(() => {
     previous.current = count;
   }, [count]);
-  const [showLimit, setShowLimit] = useState9(false);
-  const notice = useRef7(void 0);
+  const [showLimit, setShowLimit] = useState10(false);
+  const notice = useRef11(void 0);
   const open = count > 0;
   const reachedLimit = count >= limit;
-  const latest = useRef7({ count, limit, onQuantityChange });
+  const latest = useRef11({ count, limit, onQuantityChange });
   latest.current = { count, limit, onQuantityChange };
-  const increase = useRef7(null);
-  const pointer = useRef7(void 0);
-  const timer = useRef7(void 0);
-  const skipClick = useRef7(false);
+  const increase = useRef11(null);
+  const pointer = useRef11(void 0);
+  const timer = useRef11(void 0);
+  const skipClick = useRef11(false);
   function stop() {
     clearTimeout(timer.current);
     pointer.current = void 0;
   }
-  useEffect3(() => {
+  useEffect6(() => {
     window.addEventListener("blur", stop);
     return () => {
       window.removeEventListener("blur", stop);
@@ -1645,7 +2562,7 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
     if (detail === 0 || !skipClick.current) change(direction, false);
     skipClick.current = false;
   }
-  return /* @__PURE__ */ jsxs10(
+  return /* @__PURE__ */ jsxs12(
     "div",
     {
       className: "yg-cart-control",
@@ -1662,9 +2579,9 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
         if (!event.currentTarget.contains(event.relatedTarget)) stop();
       },
       children: [
-        /* @__PURE__ */ jsx10("span", { className: "yg-cart-limit", role: "status", children: showLimit && reachedLimit ? `Limit ${limit} per order` : null }),
-        /* @__PURE__ */ jsxs10("div", { className: "yg-cart-stepper", children: [
-          /* @__PURE__ */ jsx10(
+        /* @__PURE__ */ jsx12("span", { className: "yg-cart-limit", role: "status", children: showLimit && reachedLimit ? `Limit ${limit} per order` : null }),
+        /* @__PURE__ */ jsxs12("div", { className: "yg-cart-stepper", children: [
+          /* @__PURE__ */ jsx12(
             "button",
             {
               type: "button",
@@ -1674,7 +2591,7 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
               ...pointerHandlers,
               onPointerDown: (event) => start(event, -1),
               onClick: (event) => activate(-1, event.detail),
-              children: /* @__PURE__ */ jsx10(
+              children: /* @__PURE__ */ jsx12(
                 "svg",
                 {
                   className: "yg-icon",
@@ -1685,16 +2602,16 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
                   strokeWidth: 1.7,
                   strokeLinecap: "round",
                   strokeLinejoin: "round",
-                  children: /* @__PURE__ */ jsx10("path", { d: count === 1 ? "M4 6h16M9 6V4h6v2m3 0-1 14H7L6 6m4 4v6m4-6v6" : "M5 12h14" })
+                  children: /* @__PURE__ */ jsx12("path", { d: count === 1 ? "M4 6h16M9 6V4h6v2m3 0-1 14H7L6 6m4 4v6m4-6v6" : "M5 12h14" })
                 }
               )
             }
           ),
-          /* @__PURE__ */ jsx10("output", { className: "yg-cart-quantity", "aria-label": `Quantity of ${label}`, "data-quantity": count, hidden: !open, children: /* @__PURE__ */ jsxs10("span", { className: "yg-cart-roll", "data-direction": goingDown ? "down" : "up", children: [
-            lastCount !== count && lastCount > 0 && /* @__PURE__ */ jsx10("span", { className: "yg-cart-previous", "aria-hidden": "true", children: lastCount }),
-            /* @__PURE__ */ jsx10("span", { className: "yg-cart-current", children: count })
+          /* @__PURE__ */ jsx12("output", { className: "yg-cart-quantity", "aria-label": `Quantity of ${label}`, "data-quantity": count, hidden: !open, children: /* @__PURE__ */ jsxs12("span", { className: "yg-cart-roll", "data-direction": goingDown ? "down" : "up", children: [
+            lastCount !== count && lastCount > 0 && /* @__PURE__ */ jsx12("span", { className: "yg-cart-previous", "aria-hidden": "true", children: lastCount }),
+            /* @__PURE__ */ jsx12("span", { className: "yg-cart-current", children: count })
           ] }, count) }),
-          /* @__PURE__ */ jsxs10(
+          /* @__PURE__ */ jsxs12(
             "button",
             {
               ref: increase,
@@ -1706,8 +2623,8 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
               onPointerDown: (event) => start(event, 1),
               onClick: (event) => activate(1, event.detail),
               children: [
-                !open && /* @__PURE__ */ jsx10("span", { children: addLabel }),
-                /* @__PURE__ */ jsx10(Icon, { name: "plus" })
+                !open && /* @__PURE__ */ jsx12("span", { children: addLabel }),
+                /* @__PURE__ */ jsx12(Icon, { name: "plus" })
               ]
             }
           )
@@ -1733,6 +2650,7 @@ export {
   LoadingSuccessButton,
   MentionPicker,
   MorphTooltip,
+  MorphTooltipBar,
   PasswordStrength,
   PlanSwitch,
   ProfileCard,

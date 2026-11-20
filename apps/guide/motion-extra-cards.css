@@ -199,3 +199,19 @@ button.extra-ticket[data-flipped="true"] { --flip: 180deg; background: transpare
 .extra-pass-tear { position: relative; }
 .extra-pass-tear::before, .extra-pass-tear::after { content: ""; position: absolute; top: -11px; width: 20px; height: 20px; border-radius: 50%; background: var(--yg-canvas); border: 1px solid var(--yg-surface-edge); }
 .extra-pass-tear::before { left: -27px; }.extra-pass-tear::after { right: -27px; }
+
+.motion-profile-content { --profile-open: 0; --profile-tens: 8; --profile-ones: 9; display: grid; gap: var(--yg-gap-inline); }
+.motion-profile-content p { margin: 0; color: var(--yg-muted); font: var(--yg-font-reading); }
+.motion-profile-count { display: flex; align-items: center; gap: .35em; color: var(--yg-muted); font: var(--yg-font-meta); }
+.motion-profile-count strong { display: inline-flex; align-items: center; font-variant-numeric: tabular-nums; color: var(--yg-text); }
+.motion-profile-reel { display: inline-block; height: 1.2em; overflow: clip; }
+.motion-profile-reel span { display: block; line-height: 1.2em; }
+.motion-profile-actions { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: var(--yg-gap-inline); }
+.motion-profile-actions button { position: relative; height: var(--yg-size-row); overflow: clip; border: 0; border-radius: var(--yg-radius-control); background: var(--yg-field); color: var(--yg-text); font: var(--yg-font-action); cursor: pointer; }
+.motion-profile-actions button:first-child { z-index: 1; inline-size: calc(100% + (100% + var(--yg-gap-inline)) * (1 - var(--profile-open))); }
+.motion-profile-actions button:first-child i { position: absolute; inset: 0; background: var(--yg-inverse); opacity: calc(1 - var(--profile-open)); }
+.motion-profile-actions button:first-child span { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.motion-profile-actions button:first-child span:nth-child(2) { color: var(--yg-on-inverse); opacity: calc(1 - var(--profile-open)); translate: 0 calc(var(--profile-open) * -12px); }
+.motion-profile-actions button:first-child span:last-child { opacity: var(--profile-open); translate: 0 calc((1 - var(--profile-open)) * 12px); }
+.motion-profile-actions button:last-child { opacity: var(--profile-open); translate: calc((1 - var(--profile-open)) * 24px) 0; scale: calc(.9 + var(--profile-open) * .1); }
+.motion-profile-actions button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }

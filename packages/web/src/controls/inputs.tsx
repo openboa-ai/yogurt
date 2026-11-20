@@ -10,7 +10,7 @@ import {
 import { ToggleGroup as RadixGroup } from "radix-ui";
 import { Button, IconButton } from "./actions.js";
 import { Checkbox, Field } from "./forms.js";
-import { cx, type Option } from "../foundation/foundation.js";
+import { cx, Icon, type Option } from "../foundation/foundation.js";
 
 type Input = Omit<ComponentProps<"input">, "size" | "prefix">;
 export function InputGroup({
@@ -47,6 +47,7 @@ export function InputOTP({
   onValueChange,
   name,
   disabled,
+  verified = false,
   help,
   error,
 }: {
@@ -56,17 +57,20 @@ export function InputOTP({
   onValueChange: (v: string) => void;
   name?: string;
   disabled?: boolean;
+  verified?: boolean;
   help?: string;
   error?: string;
 }) {
   const count = Math.max(1, Math.min(12, Math.trunc(length) || 6));
   const [cursor, setCursor] = useState(0);
+  const confirmed = verified && value.length >= count;
   return (
     <Field {...{ label, help, error }}>
       {(binding) => (
         <div
           className="yg-otp"
           data-complete={value.length >= count || undefined}
+          data-verified={confirmed || undefined}
           data-disabled={disabled || undefined}
           style={{ "--yg-digits": count } as CSSProperties}
         >
@@ -95,6 +99,7 @@ export function InputOTP({
               </span>
             ))}
           </span>
+          {confirmed && <span role="status" className="yg-otp-confirmation"><Icon name="check" /> Verified</span>}
         </div>
       )}
     </Field>

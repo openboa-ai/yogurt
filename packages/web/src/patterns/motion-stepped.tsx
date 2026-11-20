@@ -1,5 +1,7 @@
 "use client";
-import { useId, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import { useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
+import { ElasticRange } from "./elastic-range.js";
+import { advanceSprings, snap, spring } from "../foundation/spring-motion.js";
 
 type Option = { id: string; label: string };
 
@@ -14,19 +16,83 @@ type RangeSliderProps = {
   onEndChange?: (value: number) => void;
   detail?: string;
   formatValue?: (value: number) => string;
+  presentation?: "standard" | "elastic";
 };
 
 export function RangeSlider({
   label, value, onChange, min = 0, max = 100, step = 1,
-  end, onEndChange, detail, formatValue = String,
+  end, onEndChange, detail, formatValue = String, presentation = "standard",
 }: RangeSliderProps) {
   const id = useId();
+  const interval = useRef<HTMLDivElement>(null);
   const activeDrag = useRef<{ id: number; thumb: "start" | "end" } | null>(null);
   const percent = (number: number) => max > min
     ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
   const first = percent(value);
+  const last = end === undefined ? first : percent(end);
+  const [motion] = useState(() => ({
+    start: spring(first,260,24), end: spring(last,260,24), merge: spring(0,300,26),
+  }));
+  useLayoutEffect(() => {
+    const rail = interval.current;
+    const root = rail?.parentElement;
+    if (!rail || !root) return;
+    const firstTip = rail.querySelector<HTMLElement>('[data-tip="start"]');
+    const lastTip = rail.querySelector<HTMLElement>('[data-tip="end"]');
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const tracks = Object.values(motion);
+    let frame = 0, previous = performance.now(), width = 0, need = 0;
+    function paint() {
+      const a = motion.start.position, b = motion.end.position;
+      const middle = (a+b)/2;
+      const amount = Math.max(0, Math.min(1, motion.merge.position));
+      const tilt = (velocity: number) => Math.max(-12,Math.min(12,-velocity*width/100*.02));
+      const settings = {
+        "--yg-range-start": `${a}%`, "--yg-range-end": `${b}%`,
+        "--yg-tip-first": `${a + (middle-a)*amount}%`, "--yg-tip-last": `${b + (middle-b)*amount}%`,
+        "--yg-tip-middle": `${middle}%`, "--yg-tip-first-tilt": `${tilt(motion.start.velocity)}deg`,
+        "--yg-tip-last-tilt": `${tilt(motion.end.velocity)}deg`,
+        "--yg-tip-middle-tilt": `${tilt((motion.start.velocity+motion.end.velocity)/2)}deg`,
+        "--yg-tip-merge": String(amount),
+      };
+      for (const [key, value] of Object.entries(settings)) root?.style.setProperty(key,value);
+    }
+    function targetMerge() { motion.merge.target = Number((motion.end.position-motion.start.position)*width/100<need); }
+    function tick(now: number) {
+      targetMerge();
+      const moving = advanceSprings(tracks,(now-previous)/1000);
+      previous = now;
+      paint();
+      frame = moving ? requestAnimationFrame(tick) : 0;
+    }
+    function work() {
+      if (!rail) return;
+      width = rail.clientWidth;
+      need = ((firstTip?.offsetWidth ?? 0)+(lastTip?.offsetWidth ?? 0))/2+8;
+      motion.start.target=first; motion.end.target=last;
+      cancelAnimationFrame(frame);
+      if (media.matches) {
+        snap(motion.start,first); snap(motion.end,last);
+        targetMerge(); snap(motion.merge,motion.merge.target); paint();
+      } else {
+        previous=performance.now();
+        paint();
+        frame=requestAnimationFrame(tick);
+      }
+    }
+    work();
+    const size=new ResizeObserver(work);
+    size.observe(rail);
+    if (firstTip) size.observe(firstTip);
+    if (lastTip) size.observe(lastTip);
+    media.addEventListener("change",work);
+    return ()=>{size.disconnect();media.removeEventListener("change",work);cancelAnimationFrame(frame);};
+  },[first,last,motion]);
 
   if (end === undefined || !onEndChange) {
+    if (presentation === "elastic") {
+      return <ElasticRange label={label} value={value} onChange={onChange} min={min} max={max} step={step} formatValue={formatValue} />;
+    }
     return <div className="yg-motion-range" style={{ "--yg-range-fill": `${first}%` } as CSSProperties}>
       <div className="yg-motion-range-heading"><label htmlFor={id}>{label}</label></div>
       <div className="yg-motion-range-area">
@@ -37,7 +103,6 @@ export function RangeSlider({
     </div>;
   }
 
-  const last = percent(end);
   const joined = last - first < 25;
   const increment = step > 0 && Number.isFinite(step) ? step : 1;
   const set = (thumb: "start" | "end", next: number) => {
@@ -66,7 +131,7 @@ export function RangeSlider({
   return <div className="yg-motion-range" data-interval="" role="group" aria-labelledby={id}
     style={{ "--yg-range-start": `${first}%`, "--yg-range-end": `${last}%` } as CSSProperties}>
     <div className="yg-motion-range-heading"><strong id={id}>{label}</strong>{detail && <span>{detail}</span>}</div>
-    <div className="yg-motion-range-area" data-joined={joined || undefined}
+    <div className="yg-motion-range-area" ref={interval} data-joined={joined || undefined} data-spring=""
       onPointerDown={event => {
         if (!event.isPrimary || event.button !== 0 || activeDrag.current) return;
         const at = position(event);

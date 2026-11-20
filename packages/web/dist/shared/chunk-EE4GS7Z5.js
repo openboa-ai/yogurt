@@ -11,6 +11,7 @@ import {
   IconButton
 } from "./chunk-P4D5QO3L.js";
 import {
+  Icon,
   cx
 } from "./chunk-3EP3O3HY.js";
 
@@ -43,16 +44,19 @@ function InputOTP({
   onValueChange,
   name,
   disabled,
+  verified = false,
   help,
   error
 }) {
   const count = Math.max(1, Math.min(12, Math.trunc(length) || 6));
   const [cursor, setCursor] = useState(0);
+  const confirmed = verified && value.length >= count;
   return /* @__PURE__ */ jsx(Field, { ...{ label, help, error }, children: (binding) => /* @__PURE__ */ jsxs(
     "div",
     {
       className: "yg-otp",
       "data-complete": value.length >= count || void 0,
+      "data-verified": confirmed || void 0,
       "data-disabled": disabled || void 0,
       style: { "--yg-digits": count },
       children: [
@@ -79,7 +83,11 @@ function InputOTP({
             children: value[i] && /* @__PURE__ */ jsx("span", { className: "yg-otp-digit", children: value[i] }, value[i])
           },
           i
-        )) })
+        )) }),
+        confirmed && /* @__PURE__ */ jsxs("span", { role: "status", className: "yg-otp-confirmation", children: [
+          /* @__PURE__ */ jsx(Icon, { name: "check" }),
+          " Verified"
+        ] })
       ]
     }
   ) });

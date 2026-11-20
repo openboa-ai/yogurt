@@ -136,12 +136,32 @@
 .yg-expand-art { flex: none; width: 48px; height: 48px; border-radius: 12px; background: var(--yg-field); }
 .yg-expand-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .yg-expand-card-body { padding: 4px 16px 18px; }
+.yg-expand-card { --card-open: clamp(0, var(--yg-card-expansion, 0), 1); }
+.yg-expand-card summary { block-size: calc(72px + var(--yg-card-expansion, 0) * 104px); }
+.yg-expand-card summary > .yg-expand-art {
+  position: absolute; inset: 12px auto auto 12px;
+  width: calc(48px + var(--card-open) * (100% - 72px));
+  height: max(48px, calc(48px + var(--yg-card-expansion, 0) * 56px));
+  border-radius: calc(12px + 4px * var(--card-open));
+}
+.yg-expand-title {
+  position: absolute; inset-inline: calc(72px - 56px * var(--card-open)) 44px;
+  inset-block-start: calc(25px + 103px * var(--yg-card-expansion, 0));
+}
+.yg-expand-card .yg-card-disclosure { position: absolute; inset: 21px 12px auto auto; }
+.yg-expand-card-body {
+  opacity: clamp(0, var(--yg-card-content, 1), 1);
+  translate: 0 calc((1 - var(--yg-card-content, 1)) * 10px);
+}
 .yg-stat-card { box-sizing: border-box; width: min(340px, 100%); min-block-size: 0; padding: 18px; border-radius: 24px; }
 .yg-stat-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .yg-stat-heading > div { min-inline-size: 0; }
 .yg-stat-label { display: block; font: var(--yg-font-help); }
 .yg-stat-value { font-size: 34px; line-height: 40px; letter-spacing: -.02em; }
 .yg-stat-detail { flex: none; max-inline-size: 45%; padding: 4px 9px; border-radius: 999px; background: var(--yg-field); color: var(--yg-inverse); text-align: center; overflow-wrap: anywhere; }
+.yg-stat-series { display: block; inline-size: 100%; block-size: auto; overflow: visible; color: var(--yg-action); fill: currentColor; }
+.yg-stat-area { fill: color-mix(in srgb, currentColor 12%, transparent); }
+.yg-stat-line { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .yg-profile-card { box-sizing: border-box; width: min(320px, 100%); padding: 18px; border-radius: 24px; }
 .yg-profile-header { gap: 12px; }.yg-profile-avatar { width: 52px; height: 52px; }
 .yg-profile-card details { margin-top: 14px; }
@@ -153,14 +173,16 @@
 .yg-fan-art { display: block; align-self: stretch; height: 100px; flex: none; border-radius: 12px; background: var(--yg-field); }
 .yg-fan-index { margin-top: 12px; font-size: .7rem; }.yg-fan-label { display: block; flex: none; margin-top: 2px; }
 .yg-fan-detail { margin-top: 16px; }
+.yg-fan-cards-list:not([data-many]) button,
+.yg-fan-cards-list:not([data-many]):is(:hover, :focus-within) button {
+  transform: var(--yg-fan-transform, translateX(-50%));
+}
+.yg-fan-cards-list:not([data-many]) button:is(:hover, :focus-visible, [aria-pressed="true"]) { translate: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-fan-cards-list:not([data-many]) button {
-    transition: transform var(--yg-motion-card-fan), translate var(--yg-motion-card-lift), background-color var(--yg-change);
-  }
-  .yg-expand-art { transition: width var(--yg-motion-card-open), height var(--yg-motion-card-open); }
-  .yg-expand-card[open] .yg-expand-card-body { animation: yg-card-arrive var(--yg-motion-card-open) both; }
+  .yg-fan-cards-list:not([data-many]) button { transition: background-color var(--yg-change); }
   .yg-profile-card details[open] .yg-profile-extra { animation: yg-card-arrive var(--yg-motion-card-detail) both; }
-  .yg-stat-value { animation: yg-card-number var(--yg-motion-step-fill); }
-  @keyframes yg-card-number { from { opacity: 0; transform: translateY(8px); } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yg-expand-card-body { opacity: 1; translate: none; }
 }
 @media (prefers-reduced-motion: reduce) { .yg-fan-cards-list:not([data-many]) button { transition: none; } }

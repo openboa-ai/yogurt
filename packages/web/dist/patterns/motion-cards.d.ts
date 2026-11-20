@@ -11,15 +11,17 @@ type FanItem = {
 export declare function FanCards({ items }: {
     items: FanItem[];
 }): import("react/jsx-runtime").JSX.Element;
-export declare function StatCard({ label, value, detail }: {
+export declare function StatCard({ label, value, detail, series }: {
     label: string;
     value: number;
     detail?: string;
+    series?: readonly number[];
 }): import("react/jsx-runtime").JSX.Element;
-export declare function ProfileCard({ name, detail, initials, children }: {
+export declare function ProfileCard({ name, detail, initials, children, actions }: {
     name: string;
     detail: string;
     initials: string;
     children?: ReactNode;
+    actions?: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
 export {};

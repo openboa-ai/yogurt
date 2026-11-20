@@ -4,6 +4,7 @@ import { SegmentedControl as SDKSegment } from "@openai/apps-sdk-ui/components/S
 import { Button } from "./actions.js";
 import { type Choices } from "./forms.js";
 import { cx, Icon, type IconName } from "../foundation/foundation.js";
+import { animateTabMarker } from "./tab-motion.js";
 
 export function Link(props: ComponentProps<"a"> & { href: string }) {
   return <a {...props} className={cx("yg-link", props.className)} />;
@@ -61,13 +62,14 @@ export function NavigationList({
   );
 }
 
-function SelectionMarker({ selector }: { selector: string }) {
+function SelectionMarker({ selector, presentation }: { selector: string; presentation?: "pill" | "dock" }) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
     const marker = ref.current;
     const group = marker?.parentElement;
     if (!marker || !group) return;
+    if (presentation) return animateTabMarker(marker, group, presentation);
 
     let previous: {
       button: HTMLButtonElement;
@@ -128,7 +130,7 @@ function SelectionMarker({ selector }: { selector: string }) {
       sizes?.disconnect();
       changes.disconnect();
     };
-  }, [selector]);
+  }, [presentation, selector]);
 
   return <span ref={ref} className="yg-selection-marker" aria-hidden="true" />;
 }
@@ -165,20 +167,22 @@ export function Tabs({
   items,
   value,
   onValueChange,
+  presentation,
 }: {
   label: string;
   items: { id: string; label: string; panel: ReactNode; icon?: IconName; disabled?: boolean }[];
   value: string;
   onValueChange: (id: string) => void;
+  presentation?: "pill" | "dock";
 }) {
   const uid = useId();
   const refs = useRef(new Map<string, HTMLButtonElement>());
   const enabled = items.filter((o) => !o.disabled);
   const selected = enabled.some((i) => i.id === value) ? value : enabled[0]?.id;
   return (
-    <div className="yg-tabs">
+    <div className="yg-tabs" data-presentation={presentation}>
       <div role="tablist" aria-label={label}>
-        <SelectionMarker selector=':scope > button[aria-selected="true"]' />
+        <SelectionMarker selector=':scope > button[aria-selected="true"]' presentation={presentation} />
         {items.map((o) => (
           <button
             key={o.id}
@@ -211,7 +215,7 @@ export function Tabs({
               }
             }}
           >
-            {o.icon ? <><Icon name={o.icon} /><span className="yg-tab-label">{o.label}</span></> : o.label}
+            {o.icon ? <><Icon name={o.icon} /><span className="yg-tab-label"><span>{o.label}</span></span></> : o.label}
           </button>
         ))}
       </div>

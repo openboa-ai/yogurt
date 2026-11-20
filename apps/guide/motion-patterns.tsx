@@ -1,19 +1,21 @@
-import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
   ActionMenu, Button, Command, Icon, IconButton, InputOTP,
-  ProjectMark, SegmentedControl, SidebarLayout, Stepper, Switch, Tabs, Text, TextField, ToastStack, Yogurt,
+  ProjectMark, SegmentedControl, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
 } from "@openboa/yogurt";
 import {
   ActivityIsland, CheckboxList, CommandButton, CopyButton, DetentDial, ExpandCard, FanCards, FileDrop,
   FocusPicker, GhostSuggestion, HoldButton, LetterLimit, LoadingSuccessButton, MentionPicker,
-  MorphTooltip, PasswordStrength, PlanSwitch, ProfileCard, PromptBox, RangeSlider, SlideConfirm,
+  MorphTooltipBar, PasswordStrength, PlanSwitch, PromptBox, RangeSlider, SlideConfirm,
   SpringDropdown, StatCard, StorageMeter, StreamingReply, TaskList, ThinkingIndicator,
 } from "@openboa/yogurt/motion-patterns";
-import { extraCards } from "./examples/motion-extra-cards";
+import { extraCards, ReviewerProfile } from "./examples/motion-extra-cards";
 import { extraControls } from "./examples/motion-extra-controls";
 import { extraGestures } from "./examples/motion-extra-gestures";
 import { extraUtilities } from "./examples/motion-extra-utilities";
+import { SpringInputExample } from "./examples/spring-field";
+import { NotificationStackExample } from "./examples/notification-stack";
 
 const pages = [
   {id: "overview", label: "Overview"},
@@ -106,7 +108,20 @@ const inbox = [
 
 function FocusModeExample() {
   const [focus, setFocus] = useState(false);
-  return <div className="motion-context-panel motion-focus" data-focused={focus}>
+  const [phase, setPhase] = useState<"spread" | "stack" | "tucked">("spread");
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  function change(next: boolean) {
+    clearTimeout(timer.current);
+    setFocus(next);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setPhase(next ? "tucked" : "spread");
+      return;
+    }
+    setPhase("stack");
+    timer.current = setTimeout(() => setPhase(next ? "tucked" : "spread"), next ? 240 : 260);
+  }
+  return <div className="motion-context-panel motion-focus" data-focused={focus} data-phase={phase}>
     <ul className="motion-focus-inbox">
       {inbox.map(item => <li key={item.name} data-deferred={focus && !item.priority || undefined}>
         <span className="motion-context-icon"><Icon name={item.icon} /></span>
@@ -117,34 +132,56 @@ function FocusModeExample() {
     <div className="motion-focus-bar">
       <span className="motion-focus-symbol"><Icon name="moon" /></span>
       <Text role="status" className="motion-focus-summary">{focus ? "Priority only" : "All updates"}</Text>
-      <span className="motion-focus-count" aria-hidden="true" key={String(focus)}>{focus ? 1 : inbox.length}</span>
-      <Switch label="Focus mode" checked={focus} onCheckedChange={setFocus} />
+      <span className="motion-focus-count" aria-hidden="true" key={phase === "tucked" ? "held" : "visible"}>
+        {phase === "tucked" ? 1 : inbox.length}
+      </span>
+      <Switch label="Focus mode" checked={focus} onCheckedChange={change} />
     </div>
   </div>;
 }
 
 const billingOptions = [{id: "monthly", label: "Monthly"}, {id: "yearly", label: "Yearly"}];
+function PriceDigits({ annual }: {annual: boolean}) {
+  return <strong className="motion-billing-reels" aria-label={annual ? "20" : "24"}>
+    {Array.from(annual ? "20" : "24", (digit,index) =>
+      <span className="motion-billing-digit" key={index} aria-hidden="true"
+        style={{"--yg-plan-digit": Number(digit), "--yg-plan-wait": `${index * 45}ms`} as CSSProperties}>
+        <span>{Array.from("0123456789", n => <span key={n}>{n}</span>)}</span>
+      </span>)}
+  </strong>;
+}
 function BillingExample() {
   const [cadence, setCadence] = useState("monthly");
   const annual = cadence === "yearly";
-  const [reviewed, setReviewed] = useState(false);
+  const [reviewed, setReviewed] = useState<"idle" | "pending" | "success">("idle");
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
   return <div className="motion-context-panel motion-billing">
     <SegmentedControl label="Billing period" options={billingOptions} value={cadence} onValueChange={(value) => {
       setCadence(value);
-      setReviewed(false);
+      clearTimeout(timer.current);
+      setReviewed("idle");
     }} />
     <div className="motion-billing-detail">
       <header><strong>Workspace Plus</strong>{annual && <span className="motion-billing-save">Save 17%</span>}</header>
       <div className="motion-billing-price" role="status">
-        <div><span className="motion-billing-currency">$</span><strong key={cadence}>{annual ? "20" : "24"}</strong><Text variant="help">per month</Text></div>
-        <Text variant="help">{annual ? "$240 billed yearly" : "$24 billed monthly"}</Text>
+        <div><span className="motion-billing-currency">$</span><PriceDigits annual={annual} /><Text variant="help">per month</Text></div>
+        <Text variant="help" className="motion-billing-line" key={cadence}>{annual ? "$240 billed yearly" : "$24 billed monthly"}</Text>
       </div>
       <ul className="motion-plan-benefits">
         <li><Icon name="check" /> Shared projects and reviews</li>
         <li><Icon name="check" /> Extended activity history</li>
       </ul>
+      <div className="motion-billing-extra" data-annual={annual || undefined}>
+        <div inert={!annual}><Icon name="check" /> Two months included</div>
+      </div>
     </div>
-    <Button onClick={() => setReviewed(true)} disabled={reviewed}>{reviewed ? "Plan reviewed" : "Review plan"}</Button>
+    <LoadingSuccessButton label="Review plan" pendingLabel="Reviewing plan" successLabel="Plan reviewed"
+      errorLabel="Try again" presentation="morphing" state={reviewed} onAction={() => {
+        if (reviewed !== "idle") return;
+        setReviewed("pending");
+        timer.current = setTimeout(() => { setReviewed("success"); }, 1200);
+      }} />
   </div>;
 }
 
@@ -184,28 +221,31 @@ function FilesExample() {
 }
 
 const answer = "The brief is ready to review. I found two decisions to confirm before publishing the next revision.";
+const replyWords = answer.match(/\S+\s*/g) ?? [];
 function ConversationExample({ kind }: {kind: "stream" | "prompt" | "thinking"}) {
   const [value, setValue] = useState("");
   const [reply, setReply] = useState("");
   const [active, setActive] = useState(false);
-  const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
-  useEffect(() => () => clearInterval(timer.current), []);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
 
   function stop() {
-    clearInterval(timer.current);
+    clearTimeout(timer.current);
     setActive(false);
   }
   function run() {
-    clearInterval(timer.current);
+    clearTimeout(timer.current);
     if (kind === "prompt") setValue("");
     setReply("");
     setActive(true);
-    let end = 0;
-    timer.current = setInterval(() => {
-      end = Math.min(end + 5, answer.length);
-      setReply(answer.slice(0, end));
-      if (end === answer.length) stop();
-    }, 55);
+    let next = 0;
+    const word = () => {
+      const chunk = replyWords[next++];
+      setReply(previous => previous + chunk);
+      if (next === replyWords.length) stop();
+      else timer.current = setTimeout(word, 70);
+    };
+    timer.current = setTimeout(word, kind === "stream" ? 2100 : 600);
   }
 
   if (kind === "thinking") {
@@ -299,6 +339,7 @@ function TabsExample({ smooth }: {smooth?: boolean}) {
   const [value, setValue] = useState("overview");
   return <div className={smooth ? "motion-smooth-tabs" : "motion-pill-tabs"}>
     <Tabs label={smooth ? "Sections" : "Workspace tabs"} value={value} onValueChange={setValue}
+      presentation={smooth ? undefined : "pill"}
       items={(smooth ? pages : workspaceTabs).map(page => ({
         ...page, panel: smooth ? <Text variant="help">{page.label} is open.</Text> : null,
       }))} />
@@ -314,7 +355,7 @@ const destinations = [
 function BottomBarExample() {
   const [value, setValue] = useState("home");
   return <div className="motion-bottom-bar">
-    <Tabs label="Destination" value={value} onValueChange={setValue}
+    <Tabs label="Destination" value={value} onValueChange={setValue} presentation="dock"
       items={destinations.map(item => ({...item, panel: null}))} />
   </div>;
 }
@@ -355,32 +396,39 @@ const handoffTasks = [
   {id: "compact", label: "Review the compact layout"},
   {id: "handoff", label: "Share the review build"},
 ];
+const recordSeries = [.16,.19,.27,.24,.38,.35,.43,.55,.49,.68,.63,.78];
 
-function FeedbackExample({ kind }: {kind: "otp" | "notifications" | "save" | "hold" | "slide" | "stat" | "checks"}) {
+function FeedbackExample({ kind }: {kind: "otp" | "save" | "hold" | "slide" | "stat" | "checks"}) {
   const [count, setCount] = useState(0);
   const [value, setValue] = useState("");
   const [chosen, setChosen] = useState<string[]>([]);
-  const [notices, setNotices] = useState<{id: string; message: string}[]>([]);
   const [save, setSave] = useState<"idle" | "pending" | "success">("idle");
   const timeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   useEffect(() => () => clearTimeout(timeout.current), []);
   const confirm = () => setCount(value => value + 1);
 
   if (kind === "stat") return <div className="motion-sample-stack">
-    <StatCard label="Records reviewed" detail="This week" value={24 + count} />
+    <StatCard label="Records reviewed" detail="This week" value={24 + count}
+      series={count === 0 ? recordSeries : recordSeries.map((point,index) =>
+        Math.min(.98, point + .025 * (1 + (index + count) % 7)))} />
     <Button emphasis="soft" size="compact" onClick={confirm}>Review a record</Button>
   </div>;
   if (kind === "checks") return <CheckboxList options={handoffTasks} value={chosen} onChange={setChosen} />;
-  if (kind === "otp") return <InputOTP label="Verification code" length={6} value={value} onValueChange={setValue} />;
-  if (kind === "notifications") return <div className="motion-sample-stack">
-    <Button size="compact" emphasis="soft" onClick={() => {
-      setNotices(items => [{id: String(count + 1), message: `Update ${count + 1} received.`}, ...items].slice(0, 3));
-      confirm();
-    }}>Add notification</Button>
-    <ToastStack items={notices} onDismiss={id => setNotices(items => items.filter(item => item.id !== id))} />
-  </div>;
-  if (kind === "save") return <LoadingSuccessButton label="Save changes" pendingLabel="Saving" successLabel="Saved" errorLabel="Try again" state={save}
-    onAction={() => { setSave("pending"); timeout.current = setTimeout(() => setSave("success"), 650); }} />;
+  if (kind === "otp") return <InputOTP label="Verification code" length={6} value={value}
+    verified={value.length === 6} onValueChange={next => {
+      clearTimeout(timeout.current);
+      setValue(next);
+      if (next.length === 6) timeout.current = setTimeout(() => setValue(""), 2750);
+    }} />;
+  if (kind === "save") return <LoadingSuccessButton label="Save changes" pendingLabel="Saving" successLabel="Saved"
+    errorLabel="Try again" state={save} presentation="morphing" onAction={() => {
+      if (save !== "idle") return;
+      setSave("pending");
+      timeout.current = setTimeout(() => {
+        setSave("success");
+        timeout.current = setTimeout(() => setSave("idle"), 2000);
+      }, 1600);
+    }} />;
   return <div className="motion-sample-stack">
     {kind === "hold" ? <HoldButton label="Hold to approve" onConfirm={confirm} /> : <SlideConfirm label="Slide to approve" onConfirm={confirm} />}
     <Text variant="help" role="status">{count ? `Approved ${count} time${count === 1 ? "" : "s"}.` : ""}</Text>
@@ -391,17 +439,22 @@ function RangeExample({ elastic }: {elastic?: boolean}) {
   const [value, setValue] = useState(elastic ? 40 : 190);
   const [end, setEnd] = useState(760);
   if (elastic) return <div className="motion-elastic-range">
-    <RangeSlider label="Intensity" value={value} onChange={setValue} />
+    <RangeSlider label="Intensity" presentation="elastic" step={5} value={value} onChange={setValue} />
   </div>;
   return <RangeSlider label="Price" detail="per night" value={value} onChange={setValue}
     end={end} onEndChange={setEnd} max={1000} step={10} formatValue={price => `$${price}`} />;
 }
 
-function SpringInputExample() {
-  const [value, setValue] = useState("");
-  return <div className="motion-spring-input">
-    <TextField label="Name this workspace" value={value} onChange={event => setValue(event.target.value)} />
-  </div>;
+const tooltipTools = [
+  {id: "storage", label: "Storage details", detail: "Workspace storage", icon: "bookmark"},
+  {id: "review", label: "Review notes", detail: "Open the review notes", icon: "copy"},
+  {id: "history", label: "Activity history", detail: "See recent activity", icon: "clock"},
+  {id: "people", label: "Workspace members", detail: "Show members", icon: "person"},
+  {id: "help", label: "Help", detail: "Read workspace help", icon: "info"},
+] as const;
+function TooltipExample() {
+  const [value, setValue] = useState("storage");
+  return <MorphTooltipBar label="Workspace tools" tools={tooltipTools} value={value} onChange={setValue} />;
 }
 
 type Demo = {id: string; title: string; body: ReactNode; detail?: string; wide?: boolean};
@@ -422,7 +475,7 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "elastic-slider", title: "Elastic slider", body: <RangeExample elastic />},
   ]},
   {title: "Navigation and layers", id: "navigation", items: [
-    {id: "morph-tooltip", title: "Morph tooltip", body: <MorphTooltip label="Storage details" detail="Files in this workspace are visible to its members." />},
+    {id: "morph-tooltip", title: "Morph tooltip", body: <TooltipExample />},
     {id: "spring-dropdown", title: "Spring dropdown", body: <ChoiceExample kind="select" />},
     {id: "command-button", title: "Command button", body: <CommandExample kind="button" />},
     {id: "command-palette", detail: "Search destinations in the workspace. Use the arrow keys and Enter to open one.", title: "Command palette", body: <CommandExample kind="palette" />},
@@ -447,10 +500,10 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "expand-card", title: "Expand card", body: <ExpandCard title="Review the brief"><Text>See the source, changes and next action.</Text></ExpandCard>},
     {id: "fan-cards", title: "Fan cards", body: <FanCards items={steps} />},
     {id: "stat-card", title: "Stat card", body: <FeedbackExample kind="stat" />},
-    {id: "profile-card", title: "Profile card", body: <ProfileCard name="Kai" initials="K" detail="Workspace reviewer"><Text>Reviews new drafts and flags decisions.</Text></ProfileCard>},
+    {id: "profile-card", title: "Profile card", body: <ReviewerProfile />},
     {id: "loading-to-success", title: "Loading to success", body: <FeedbackExample kind="save" />},
     {id: "copy-button", title: "Copy button", body: <div className="motion-sample-stack"><code>review-014</code><CopyButton value="review-014" /></div>},
-    {id: "notifications", title: "Notifications", body: <FeedbackExample kind="notifications" />},
+    {id: "notifications", title: "Notifications", body: <NotificationStackExample />},
     {id: "step-progress", title: "Step progress", body: <StepExample agent={false} />},
     {id: "hold-button", title: "Hold button", body: <FeedbackExample kind="hold" />},
     {id: "slide-confirm", title: "Slide to confirm", body: <FeedbackExample kind="slide" />},

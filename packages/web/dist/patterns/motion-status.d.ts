@@ -18,13 +18,16 @@ export declare function ActivityIsland({ label, summary, children }: {
     children: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
 type ActionState = "idle" | "pending" | "success" | "error";
-export declare function LoadingSuccessButton({ label, pendingLabel, successLabel, errorLabel, state, onAction }: {
+type ResultActionProps = {
     label: string;
     pendingLabel: string;
     successLabel: string;
     errorLabel: string;
     state: ActionState;
     onAction: () => void;
+};
+export declare function LoadingSuccessButton({ presentation, ...props }: ResultActionProps & {
+    presentation?: "fitted" | "morphing";
 }): import("react/jsx-runtime").JSX.Element;
 export declare function CopyButton({ value }: {
     value: string;

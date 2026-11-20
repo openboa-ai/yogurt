@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useState, useRef, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import { Button, Checkbox } from "@openboa/yogurt";
-import { advanceSprings, snap, spring } from "../../../packages/web/src/foundation/spring-motion.js";
+import { ProfileCard } from "@openboa/yogurt/motion-patterns";
+import { advanceSprings, playSprings, snap, spring } from "../../../packages/web/src/foundation/spring-motion.js";
 
 type Example = { id: string; title: string; body: ReactNode };
 const notes = [{ title: "Review kit", value: "12 items", detail: "Workspace collection · 24 pages", tags: ["Planning", "Team"] }, { title: "Handoff", value: "8 items", detail: "Project collection · 12 pages", tags: ["Notes", "Review"] }, { title: "Launch", value: "16 items", detail: "Release collection · 18 pages", tags: ["Planning", "Ready"] }];
@@ -282,3 +283,62 @@ export const extraCards: Example[] = [
   { id: "word-choice", title: "Changing word", body: <WordChoice /> },
   { id: "checklist-card", title: "Checklist card", body: <ChecklistCard /> },
 ];
+
+export function ReviewerProfile() {
+  const [following, setFollowing] = useState(false);
+  const [message, setMessage] = useState(false);
+  const [motion] = useState(() => ({
+    follow: spring(0, 300, 22),
+    pop: spring(1, 520, 14),
+    ones: spring(9, 260, 22),
+    tens: spring(8, 260, 22),
+  }));
+  const area = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const node = area.current;
+    if (!node) return;
+    motion.follow.target = following ? 1 : 0;
+    motion.ones.target = following ? 10 : 9;
+    if (following) motion.pop.velocity = 4;
+    let stop = playSprings(Object.values(motion), paint);
+    const carry = setTimeout(() => {
+      motion.tens.target = following ? 9 : 8;
+      stop();
+      stop = playSprings(Object.values(motion), paint);
+    }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 60);
+    function paint() {
+      const p = Math.max(0, Math.min(1, motion.follow.position));
+      node?.style.setProperty("--profile-open", String(p));
+      node?.style.setProperty("--profile-ones", String(motion.ones.position));
+      node?.style.setProperty("--profile-tens", String(motion.tens.position));
+      const avatar = node?.closest(".yg-profile-card")?.querySelector<HTMLElement>(".yg-profile-avatar");
+      if (avatar) avatar.style.scale = String(motion.pop.position);
+    }
+    return () => {clearTimeout(carry); stop();};
+  }, [following, motion]);
+  const digits = (place: "tens" | "ones") =>
+    <span className="motion-profile-reel" aria-hidden="true">
+      <span style={{translate: `0 calc(var(--profile-${place}) * -1.2em)`}}>
+        {Array.from({length: 11}, (_, digit) => <span key={digit}>{digit % 10}</span>)}
+      </span>
+    </span>;
+  return <ProfileCard name="Kai" initials="K" detail="Workspace reviewer" actions={
+    <div className="motion-profile-content" ref={area}>
+      <p>Reviews new drafts and flags decisions.</p>
+      <div className="motion-profile-count">
+        <strong aria-label={following ? "12,490 followers" : "12,489 followers"}>
+          <span aria-hidden="true">12,4</span>{digits("tens")}{digits("ones")}
+        </strong> Followers
+      </div>
+      <div className="motion-profile-actions">
+        <button type="button" aria-pressed={following} aria-label={following ? "Following Kai" : "Follow Kai"}
+          onClick={() => {setFollowing(value => !value); setMessage(false);}}>
+          <i aria-hidden="true" />
+          <span aria-hidden="true">Follow</span><span aria-hidden="true">Following</span>
+        </button>
+        <button type="button" inert={!following} aria-hidden={!following} onClick={() => setMessage(true)}>Message</button>
+      </div>
+      {message && <small role="status">A message draft is ready for Kai.</small>}
+    </div>
+  } />;
+}

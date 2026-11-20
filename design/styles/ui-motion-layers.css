@@ -176,3 +176,46 @@
   }
   .yg-action-menu-options > [aria-disabled="true"] { opacity: calc(.45 * clamp(0, var(--yg-action-menu-row, 0), 1)); }
 }
+.yg-tooltip-bar {
+  position: relative; isolation: isolate;
+  display: grid; gap: 4px; box-sizing: border-box; inline-size: min(100%, 288px);
+  padding: 6px; border-radius: var(--yg-radius-feature); background: var(--yg-field);
+}
+.yg-tooltip-bar > button {
+  display: grid; place-items: center; min-inline-size: 0; block-size: 44px;
+  padding: 0; border: 0; border-radius: 12px; background: transparent; color: var(--yg-muted);
+}
+.yg-tooltip-bar > button[aria-pressed="true"] { color: var(--yg-inverse); }
+.yg-tooltip-bar > button > svg { inline-size: 20px; block-size: 20px; }
+.yg-tooltip-bar-marker {
+  position: absolute; z-index: -1; inset: 6px auto 6px var(--yg-tooltip-marker, 0px);
+  inline-size: var(--yg-tooltip-marker-width, 0px);
+  border-radius: 12px; background: var(--yg-hover); pointer-events: none;
+  opacity: clamp(0, var(--yg-tooltip-open, 0), 1);
+}
+.yg-tooltip-bar-bubble, .yg-tooltip-bar-tail {
+  position: absolute; pointer-events: none; background: var(--yg-inverse); color: var(--yg-on-inverse);
+  opacity: clamp(0, var(--yg-tooltip-open, 0), 1);
+}
+.yg-tooltip-bar-bubble {
+  inset: auto auto calc(100% + 10px) var(--yg-tooltip-left, 0px);
+  inline-size: var(--yg-tooltip-width, 0px); block-size: 36px; overflow: clip;
+  border-radius: 11px; font: var(--yg-font-label); transform-origin: center bottom;
+  translate: 0 calc((1 - var(--yg-tooltip-open, 0)) * 6px);
+  scale: calc(.72 + .28 * var(--yg-tooltip-open, 0));
+}
+.yg-tooltip-bar-bubble > span {
+  position: absolute; inset: 0 auto 0 50%; display: grid; place-items: center; inline-size: max-content;
+  padding: 0 12px; white-space: nowrap; translate: calc(-50% + var(--yg-tooltip-copy-x, 0px)) 0;
+  opacity: var(--yg-tooltip-copy, 0);
+  filter: blur(calc((1 - var(--yg-tooltip-copy, 0)) * 3px));
+}
+.yg-tooltip-bar-tail {
+  inset: auto auto calc(100% + 7px) var(--yg-tooltip-tail, 0px);
+  inline-size: 10px; block-size: 10px; border-radius: 2px;
+  translate: -50% calc((1 - var(--yg-tooltip-open, 0)) * 8px);
+  rotate: 45deg; scale: var(--yg-tooltip-open, 0);
+}
+@media (forced-colors: active) {
+  .yg-tooltip-bar > button[aria-pressed="true"] { outline: 1px solid Highlight; outline-offset: -1px; }
+}

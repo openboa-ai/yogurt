@@ -1,5 +1,10 @@
 "use client";
 import {
+  advanceSprings,
+  snap,
+  spring
+} from "./chunk-DRQJWO7S.js";
+import {
   dist_exports12 as dist_exports
 } from "./chunk-5SWGMKHQ.js";
 import {
@@ -96,6 +101,126 @@ var Segment = ({ children, ...restProps }) => {
 };
 SegmentedControl.Option = Segment;
 
+// packages/web/src/controls/tab-motion.ts
+function animateTabMarker(marker, group, profile) {
+  const dock = profile === "dock";
+  const left = spring(0, dock ? 340 : 620, dock ? 28 : 40);
+  const edge = spring(0, dock ? 340 : 170, dock ? 28 : 19);
+  const media = matchMedia("(prefers-reduced-motion: reduce)");
+  const tabs = /* @__PURE__ */ new Map();
+  let active = null;
+  let frame = 0, last = 0, y = 0;
+  let motion = [left, edge];
+  function measure() {
+    if (!active) return;
+    left.target = active.offsetLeft;
+    edge.target = (dock ? 0 : active.offsetLeft) + active.offsetWidth;
+    y = active.offsetTop;
+    marker.style.setProperty("--yg-selection-height", `${active.offsetHeight}px`);
+    marker.style.setProperty("--yg-selection-y", `${y}px`);
+  }
+  function paintLabels() {
+    tabs.forEach(({ label, w, scale, full }, button) => {
+      const fraction = Math.min(1, Math.max(0, w.position / Math.max(1, full)));
+      label.style.setProperty("--yg-dock-label-width", `${Math.max(0, w.position)}px`);
+      label.style.setProperty("--yg-dock-label-inset", `${8 * fraction}px`);
+      label.style.setProperty("--yg-dock-label-opacity", String(Math.min(1, Math.max(0, fraction * 1.4 - 0.4))));
+      button.style.setProperty("--yg-dock-icon-scale", String(scale.position));
+    });
+  }
+  function paintMarker() {
+    marker.style.setProperty("--yg-selection-x", `${left.position}px`);
+    const width = dock ? edge.position : edge.position - left.position;
+    marker.style.setProperty("--yg-selection-width", `${Math.max(0, width)}px`);
+  }
+  function tick(now) {
+    const elapsed = (now - last) / 1e3;
+    last = now;
+    let other = false;
+    if (dock) {
+      other = advanceSprings(motion, elapsed);
+      paintLabels();
+      measure();
+    }
+    const moving = advanceSprings([left, edge], elapsed);
+    paintMarker();
+    frame = moving || other ? requestAnimationFrame(tick) : 0;
+  }
+  function refresh() {
+    const next = group.querySelector(':scope > button[aria-selected="true"]');
+    if (!next || !next.offsetWidth) {
+      active = null;
+      marker.removeAttribute("data-ready");
+      return;
+    }
+    const last2 = active;
+    const changed = next !== last2;
+    if (dock) {
+      tabs.forEach((_, button) => {
+        if (!group.contains(button)) tabs.delete(button);
+      });
+      group.querySelectorAll(":scope > button").forEach((button) => {
+        const label = button.querySelector(".yg-tab-label");
+        const copy = label?.firstElementChild;
+        if (!label || !copy) return;
+        const tab = tabs.get(button) ?? { label, w: spring(0, 300, 26), scale: spring(1, 520, 14), full: 0 };
+        tab.full = copy.getBoundingClientRect().width + 8;
+        tab.w.target = button === next ? tab.full : 0;
+        if (!last2 || media.matches) snap(tab.w, tab.w.target);
+        if (changed && button === next && !media.matches) {
+          tab.scale.position = 0.72;
+          tab.scale.velocity = 6;
+        }
+        if (media.matches) snap(tab.scale, 1);
+        tabs.set(button, tab);
+      });
+      motion = [...tabs.values()].flatMap((tab) => [tab.w, tab.scale]);
+      paintLabels();
+    }
+    const previousRow = y;
+    const direction = next.offsetLeft >= left.target;
+    active = next;
+    measure();
+    if (!dock && changed) {
+      const lead = direction ? edge : left, trail = direction ? left : edge;
+      lead.stiffness = 620;
+      lead.damping = 40;
+      trail.stiffness = 170;
+      trail.damping = 19;
+    }
+    if (media.matches || !last2 || previousRow !== y) {
+      snap(left, left.target);
+      snap(edge, edge.target);
+      paintMarker();
+    }
+    marker.setAttribute("data-ready", "");
+    marker.toggleAttribute("data-direct-motion", dock);
+    if (media.matches) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    } else if (!frame) {
+      lastFrame();
+    }
+  }
+  function lastFrame() {
+    last = performance.now();
+    frame = requestAnimationFrame(tick);
+  }
+  const mutations = new MutationObserver(refresh);
+  mutations.observe(group, { childList: true, subtree: true, attributes: true, attributeFilter: ["aria-selected", "dir"] });
+  const size = new ResizeObserver(refresh);
+  size.observe(group);
+  media.addEventListener("change", refresh);
+  refresh();
+  return () => {
+    cancelAnimationFrame(frame);
+    mutations.disconnect();
+    size.disconnect();
+    media.removeEventListener("change", refresh);
+    marker.removeAttribute("data-direct-motion");
+  };
+}
+
 // packages/web/src/controls/navigation.tsx
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 function Link(props) {
@@ -125,12 +250,13 @@ function NavigationList({
     o.id
   )) });
 }
-function SelectionMarker({ selector }) {
+function SelectionMarker({ selector, presentation }) {
   const ref = useRef2(null);
   useLayoutEffect2(() => {
     const marker = ref.current;
     const group = marker?.parentElement;
     if (!marker || !group) return;
+    if (presentation) return animateTabMarker(marker, group, presentation);
     let previous;
     const measure = (allowSlide) => {
       const button = group.querySelector(selector);
@@ -177,7 +303,7 @@ function SelectionMarker({ selector }) {
       sizes?.disconnect();
       changes.disconnect();
     };
-  }, [selector]);
+  }, [presentation, selector]);
   return /* @__PURE__ */ jsx("span", { ref, className: "yg-selection-marker", "aria-hidden": "true" });
 }
 function SegmentedControl2({
@@ -209,15 +335,16 @@ function Tabs({
   label,
   items,
   value,
-  onValueChange
+  onValueChange,
+  presentation
 }) {
   const uid = useId();
   const refs = useRef2(/* @__PURE__ */ new Map());
   const enabled = items.filter((o) => !o.disabled);
   const selected = enabled.some((i) => i.id === value) ? value : enabled[0]?.id;
-  return /* @__PURE__ */ jsxs("div", { className: "yg-tabs", children: [
+  return /* @__PURE__ */ jsxs("div", { className: "yg-tabs", "data-presentation": presentation, children: [
     /* @__PURE__ */ jsxs("div", { role: "tablist", "aria-label": label, children: [
-      /* @__PURE__ */ jsx(SelectionMarker, { selector: ':scope > button[aria-selected="true"]' }),
+      /* @__PURE__ */ jsx(SelectionMarker, { selector: ':scope > button[aria-selected="true"]', presentation }),
       items.map((o) => /* @__PURE__ */ jsx(
         "button",
         {
@@ -249,7 +376,7 @@ function Tabs({
           },
           children: o.icon ? /* @__PURE__ */ jsxs(Fragment, { children: [
             /* @__PURE__ */ jsx(Icon, { name: o.icon }),
-            /* @__PURE__ */ jsx("span", { className: "yg-tab-label", children: o.label })
+            /* @__PURE__ */ jsx("span", { className: "yg-tab-label", children: /* @__PURE__ */ jsx("span", { children: o.label }) })
           ] }) : o.label
         },
         o.id
