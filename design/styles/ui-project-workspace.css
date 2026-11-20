@@ -7,7 +7,7 @@
 }
 
 .yg-workspace-row[data-selected="true"] {
-  background: var(--yg-action-soft);
+  background: var(--yg-field);
 }
 
 .yg-workspace-row-body {
@@ -39,7 +39,7 @@ button.yg-workspace-row-body:hover {
 }
 
 button.yg-workspace-row-body[aria-current="true"]:hover {
-  background: var(--yg-action-soft-hover);
+  background: var(--yg-hover);
 }
 
 .yg-resource-row > .yg-button {
@@ -48,7 +48,7 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
 }
 
 .yg-resource-row > [aria-pressed="true"] {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 
 .yg-resource-kind {
@@ -59,7 +59,7 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
   block-size: var(--boa-space-24);
   border-radius: var(--yg-radius-small);
   background: var(--yg-field);
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 
 .yg-workspace-row-copy {
@@ -90,7 +90,7 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
 }
 
 .yg-thread-meta .yg-thread-unread {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 
 .yg-project-header {
@@ -141,4 +141,4 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
 .yg-project-header { padding-block-end: var(--boa-space-12); }
 .yg-project-identity { flex: 1 1 16rem; }
 .yg-project-description, .yg-project-instructions { max-inline-size: 70ch; }
-button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
+button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }

@@ -21,11 +21,11 @@
 }
 
 .yg-agent-row[aria-current="true"] {
-  background: var(--yg-action-soft);
+  background: var(--yg-field);
 }
 
 .yg-agent-row:focus-visible {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
   outline-offset: calc(-1 * var(--boa-stroke-focus));
 }
 
@@ -70,7 +70,7 @@
 .yg-agent-row-state[data-state="thinking"],
 .yg-agent-row-state[data-state="working"],
 .yg-agent-row-new {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 
 .yg-agent-row-state[data-state="waiting"] { color: var(--yg-warning); }

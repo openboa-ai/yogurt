@@ -18,3 +18,7 @@ The approved palette, material color roles, font family and signature data match
 The Prompt Box measures 380 × 52 px at rest, 380 × 69 px for a two-line entry, and 380 × 82 px while thinking, with a 24 px corner. The status appears above the editor. The command surface grows from 170 × 44 px to 320 × 286 px and its corner changes from 22 to 20 px. The segmented control measures 320 × 46 px, the tab pill is 43 px tall, the bottom bar is 60 px tall, and the four-row switch panel measures 320 × 252 px. Intrinsic tab widths follow the actual labels and font.
 
 The complete web inventory was rendered again in desktop light and mobile dark appearance. All 217 specimens fit their viewports. The guide also provides a two-handle interval fixture with combined value labels as the handles approach. Individual comparison covers the measured specimens and the displayed states. Motion review of the remaining specimens is still open.
+
+## Neutral interaction surfaces
+
+The light and dark guide captures cover bottom bar hover and selection, the working prompt, a selected tab, the open command palette, and switch positions. The bottom bar keeps its moving marker and uses a distinct gray fill for hover. Prompt Send and Stop share an inverse neutral pair. The Native fixture verifies the generated primary and secondary button roles and the switch track against both appearances across neutral, paper, and mist materials. Its three tests and strict markup checks passed.

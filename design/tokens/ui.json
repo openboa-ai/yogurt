@@ -6,8 +6,8 @@
       "neutral.975"
     ],
     "surface": [
-      "gray-green.50",
-      "neutral.950"
+      "neutral.50",
+      "neutral.900"
     ],
     "field": [
       "neutral.100",
@@ -18,12 +18,28 @@
       "neutral.800"
     ],
     "text": [
-      "gray-green.950",
+      "neutral.950",
       "neutral.50"
     ],
     "muted": [
-      "gray-green.700",
+      "neutral.700",
       "neutral.300"
+    ],
+    "inverse": [
+      "neutral.1000",
+      "neutral.50"
+    ],
+    "on-inverse": [
+      "neutral.50",
+      "neutral.1000"
+    ],
+    "inverse-hover": [
+      "neutral.850",
+      "neutral.100"
+    ],
+    "inverse-press": [
+      "neutral.800",
+      "neutral.200"
     ],
     "brand": [
       "slate.750",

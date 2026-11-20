@@ -2989,7 +2989,7 @@ var variants = { filled: "solid", soft: "soft", quiet: "ghost" };
 var sizes = { compact: "sm", regular: "lg", touch: "2xl" };
 function Button2({
   emphasis = "filled",
-  tone = "brand",
+  tone = "neutral",
   size = "regular",
   pending = false,
   pendingLabel,

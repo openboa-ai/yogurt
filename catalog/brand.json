@@ -34,7 +34,7 @@
     {
       "id": "color",
       "title": "Start with one palette",
-      "body": "Bind each UI color to a numbered primitive. Ink blue marks the main action on light surfaces. Use the lighter Slate role on dark surfaces."
+      "body": "Bind each UI color to a numbered primitive. Default to neutral fills and ink for ordinary surfaces, hover, and selection. Use Ink blue when an action needs brand emphasis and lighter Slate on dark surfaces."
     },
     {
       "id": "layout",

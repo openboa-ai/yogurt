@@ -50,8 +50,8 @@
 }
 .yg-asset[data-framed],
 .yg-avatar {
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-inverse);
   border-radius: var(--yg-radius-control);
 }
 .yg-asset > :is(img, video, svg),
@@ -65,6 +65,9 @@
   font: var(--yg-font-action);
 }
 .yg-gradient {
+  background: linear-gradient(115deg, var(--yg-field), var(--yg-surface));
+}
+.yg-gradient[data-tone="brand"] {
   background: linear-gradient(115deg, var(--yg-action-soft), var(--yg-surface));
 }
 .yg-gradient[data-tone="accent"] {
@@ -178,7 +181,7 @@
 .yg-loading {
   display: inline-flex;
   align-items: center;
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 .yg-value-row {
   margin: 0;
@@ -230,7 +233,7 @@
 .yg-bar-track i {
   position: absolute;
   inset-block: 0;
-  background: var(--yg-action);
+  background: var(--yg-inverse);
 }
 .yg-bars small,
 .yg-attachment small,
@@ -252,8 +255,8 @@
   margin-inline-start: auto;
   border-end-start-radius: var(--yg-radius-panel);
   border-end-end-radius: var(--yg-radius-small);
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-inverse);
 }
 .yg-attachment,
 .yg-code,
@@ -359,7 +362,7 @@
   font: var(--yg-font-action);
 }
 .yg-otp:focus-within [data-cursor] {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
   outline-offset: -2px;
 }
 .yg-split-inputs,
@@ -384,7 +387,7 @@
   gap: var(--boa-space-4);
 }
 .yg-range output {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
   font: var(--yg-font-action);
   font-variant-numeric: tabular-nums;
 }
@@ -393,7 +396,7 @@
   width: 100%;
   margin: 0;
   min-height: var(--yg-size-regular);
-  accent-color: var(--yg-action);
+  accent-color: var(--yg-inverse);
 }
 .yg-quantity > div {
   display: inline-flex;
@@ -424,10 +427,10 @@
   cursor: pointer;
 }
 .yg-rating [data-filled] {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 .yg-rating label:has(:focus-visible) {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
   border-radius: var(--yg-radius-small);
 }
 .yg-agreement > div {
@@ -488,8 +491,8 @@
 .yg-sidebar a[aria-current],
 .yg-command-list [aria-selected="true"],
 .yg-menu-bar [data-state="open"] {
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-inverse);
 }
 .yg-accordion h3 {
   margin: 0;
@@ -579,7 +582,7 @@
 }
 .yg-command-search:focus-within {
   background: var(--yg-focus-surface);
-  color: var(--yg-action);
+  color: var(--yg-text);
 }
 @media (forced-colors: active) {
   .yg-command-search:focus-within { outline: var(--boa-stroke-focus) solid Highlight; }
@@ -694,8 +697,8 @@
 }
 .yg-stepper [aria-current] .yg-step-number,
 .yg-stepper [data-complete] .yg-step-number {
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-inverse);
 }
 .yg-stepper[data-variant="progress"] {
   grid-template-columns: repeat(auto-fit, minmax(min(6rem, 100%), 1fr));
@@ -782,12 +785,12 @@
   height: var(--yg-glyph);
 }
 .yg-calendar .rdp-selected button {
-  background: var(--yg-action);
-  color: var(--yg-on-action);
+  background: var(--yg-inverse);
+  color: var(--yg-on-inverse);
 }
 .yg-calendar .rdp-today:not(.rdp-selected) button {
   font-weight: var(--boa-weight-medium);
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 .yg-calendar .rdp-disabled button {
   color: var(--yg-off);
@@ -835,7 +838,7 @@
   width: 100%;
   height: var(--boa-space-4);
   margin-block-end: var(--boa-space-12);
-  accent-color: var(--yg-action);
+  accent-color: var(--yg-inverse);
 }
 .yg-stepper li > div {
   min-width: 0;
@@ -953,7 +956,6 @@
   padding-inline: var(--yg-inset-roomy);
   background: transparent;
 }
-.yg-inline-command .yg-command-search:focus-within { color: var(--yg-action); }
 .yg-inline-command .yg-command-search input { font: var(--yg-font-reading); }
 .yg-inline-command .yg-command-list {
   position: relative;
@@ -968,7 +970,7 @@
   padding-inline: var(--yg-inset-regular);
 }
 .yg-inline-command .yg-command-list [role="option"] { position: relative; }
-.yg-inline-command .yg-command-list [role="option"][aria-selected="true"] { background: transparent; color: var(--yg-action); }
+.yg-inline-command .yg-command-list [role="option"][aria-selected="true"] { background: transparent; color: var(--yg-text); }
 .yg-inline-command-marker {
   position: absolute;
   inset-block-start: 0;
@@ -976,7 +978,7 @@
   block-size: var(--yg-size-row);
   translate: 0 calc(var(--yg-size-row) * var(--yg-command-index, 0));
   border-radius: var(--yg-radius-panel);
-  background: var(--yg-action-soft);
+  background: var(--yg-field);
   pointer-events: none;
 }
 .yg-inline-command .yg-inline-command-panel > .yg-help { padding: var(--yg-inset-compact) var(--yg-inset-roomy); }

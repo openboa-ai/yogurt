@@ -31,7 +31,7 @@
 }
 .yg-slide-confirm[data-dragging] { cursor: grabbing; }
 .yg-hold-confirm:focus-visible, .yg-slide-confirm:focus-visible {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
   outline-offset: 3px;
 }
 .yg-confirm-fill {

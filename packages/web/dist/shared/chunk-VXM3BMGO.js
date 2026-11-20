@@ -1,14 +1,14 @@
 "use client";
 import {
   Toast
-} from "./chunk-FUHQGU5Y.js";
+} from "./chunk-WT75ABWC.js";
 import {
   dist_exports
 } from "./chunk-5SWGMKHQ.js";
 import {
   Button,
   IconButton
-} from "./chunk-4A4FGE4R.js";
+} from "./chunk-P4D5QO3L.js";
 import {
   Heading,
   Icon,
@@ -67,7 +67,7 @@ function Asset({
 }
 function Gradient({
   children,
-  tone = "brand"
+  tone = "neutral"
 }) {
   return /* @__PURE__ */ jsx("div", { className: "yg-gradient", "data-tone": tone, children });
 }

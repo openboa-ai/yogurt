@@ -115,7 +115,8 @@ async function run(browser) {
         const linear = channels.map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
         return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
       };
-      return (luminance(resolved.color) + .05) / (luminance(resolved.backgroundColor) + .05);
+      const colors = [luminance(resolved.color), luminance(resolved.backgroundColor)];
+      return (Math.max(...colors) + .05) / (Math.min(...colors) + .05);
     });
     assert(contrast >= 3, "The send icon is legible against its filled button");
     await promptInput.press("Enter");
@@ -374,10 +375,94 @@ async function run(browser) {
   assert.deepEqual(errors, []);
 }
 
+async function checkNeutralControls(browser, colorScheme) {
+  const page = await browser.newPage({colorScheme, reducedMotion: "reduce"});
+  const show = async id => {
+    await page.goto(gallery("motion-patterns") + "#" + id);
+    return page.locator(".motion-pattern-article#" + id);
+  };
+  const neutral = async (locator, property = "backgroundColor") => {
+    const value = await locator.evaluate((node, key) => getComputedStyle(node)[key], property);
+    const channels = value.match(/[\d.]+/g)?.map(Number);
+    assert(channels?.length === 3 && channels.every(channel => channel === channels[0]),
+      `${colorScheme} ${locator} ${property} must be opaque and neutral, got ${value}`);
+    return value;
+  };
+
+  try {
+    await page.goto(gallery("components") + "#button");
+    const button = page.locator('[data-component="button"] .specimen-inner .yg-button[data-emphasis="filled"]').first();
+    const buttonFill = await neutral(button);
+    await button.hover();
+    await button.evaluate(node => Promise.allSettled(node.getAnimations().map(animation => animation.finished)));
+    assert.notEqual(await neutral(button), buttonFill, "The default button has a neutral hover response");
+
+    const prompt = await show("prompt-box");
+    const editor = prompt.getByRole("textbox", {name: "Prompt"});
+    const box = prompt.locator(".yg-prompt-box");
+    const restingFill = await neutral(box);
+    await editor.fill("Review the draft");
+    assert.equal(await neutral(box), restingFill, "An active prompt keeps its surface");
+    await neutral(editor, "caretColor");
+    await neutral(prompt.getByRole("button", {name: "Send"}), "color");
+    await neutral(prompt.getByRole("button", {name: "Send"}));
+    await editor.press("Enter");
+    await neutral(prompt.getByRole("status"), "color");
+    await neutral(prompt.getByRole("button", {name: "Stop"}));
+
+    const bottom = await show("bottom-bar");
+    const barFill = await neutral(bottom.getByRole("tablist"));
+    const saved = bottom.getByRole("tab", {name: "Saved"});
+    await saved.hover();
+    assert.notEqual(await neutral(saved), barFill);
+    await saved.click();
+    assert.equal(await saved.getAttribute("aria-selected"), "true");
+    await neutral(saved, "color");
+    assert.notEqual(await neutral(bottom.locator(".yg-selection-marker[data-ready]")), barFill);
+
+    const command = await show("command-palette");
+    await command.getByRole("button", {name: "Open command palette"}).click();
+    await neutral(command.locator(".yg-inline-command"));
+    await neutral(command.locator(".yg-inline-command-marker"));
+
+    const dropdown = await show("spring-dropdown");
+    await dropdown.getByRole("combobox", {name: "Workspace view"}).click();
+    await neutral(page.getByRole("listbox"));
+    await neutral(page.locator(".yg-spring-option[data-state=checked]"));
+
+    const files = await show("file-drop");
+    const dropZone = files.locator(".yg-file-drop");
+    const dropFill = await neutral(dropZone);
+    await dropZone.dispatchEvent("dragenter");
+    await files.locator(".yg-file-drop[data-dragging]").waitFor();
+    assert.notEqual(await neutral(dropZone), dropFill, "Drag-over changes the neutral fill");
+    await files.locator('input[type="file"]').setInputFiles({
+      name: "brief.txt", mimeType: "text/plain", buffer: Buffer.from("Draft"),
+    });
+    await files.locator(".yg-file-drop[data-accepted]").waitFor();
+    const successFill = await dropZone.locator(".yg-file-drop-core").evaluate(node => getComputedStyle(node).backgroundColor);
+    const expected = await dropZone.evaluate(node => {
+      const sample = document.createElement("span");
+      sample.style.backgroundColor = "var(--yg-success-soft)";
+      node.append(sample);
+      const color = getComputedStyle(sample).backgroundColor;
+      sample.remove();
+      return color;
+    });
+    assert.equal(successFill, expected, "Accepted files retain the semantic success fill");
+
+    const switches = await show("toggle-switch");
+    await neutral(switches.getByRole("switch", {checked: true}).first());
+  } finally {
+    await page.close();
+  }
+}
+
 (async () => {
   const browser = await chromium.launch({channel: process.env.YOGURT_BROWSER_CHANNEL || "chrome"});
   try {
     await run(browser);
+    for (const colorScheme of ["light", "dark"]) await checkNeutralControls(browser, colorScheme);
   } finally {
     await browser.close();
   }

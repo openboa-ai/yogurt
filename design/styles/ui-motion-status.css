@@ -33,7 +33,7 @@
   border-radius: var(--boa-radius-round);
   background: var(--yg-field);
 }
-.yg-storage-bar > span, .yg-storage-dot { background: var(--yg-storage-tone, var(--yg-action)); }
+.yg-storage-bar > span, .yg-storage-dot { background: var(--yg-storage-tone, var(--yg-inverse)); }
 .yg-storage-bar > span { flex: none; block-size: 100%; border-radius: var(--boa-radius-round); }
 .yg-storage-bar[data-highlight] > span:not([data-selected]) { opacity: .35; }
 .yg-storage-meter [data-tone="1"] { --yg-storage-tone: light-dark(var(--boa-color-violet-700), var(--boa-color-violet-300)); }
@@ -57,7 +57,7 @@
   text-align: start;
   cursor: pointer;
 }
-.yg-storage-categories button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
+.yg-storage-categories button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
 .yg-storage-category-amount { font-variant-numeric: tabular-nums; }
 .yg-storage-dot { inline-size: 10px; block-size: 10px; border-radius: 50%; }
 .yg-storage-reveal { display: grid; grid-template-rows: 0fr; }
@@ -165,7 +165,7 @@
   to { translate: 0 0; scale: 1; }
 }
 
-.yg-activity-island > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
+.yg-activity-island > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
 
 .yg-motion-detail-line { min-block-size: 30px; }
 .yg-activity-island { border-radius: var(--yg-radius-panel); }
@@ -210,7 +210,7 @@
 summary.yg-task-line { cursor: pointer; list-style: none; }
 summary.yg-task-line::-webkit-details-marker { display: none; }
 summary.yg-task-line:focus-visible {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
   outline-offset: 2px;
 }
 .yg-task-copy { min-inline-size: 0; overflow-wrap: anywhere; }
@@ -232,7 +232,7 @@ summary.yg-task-line:focus-visible {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.yg-task-list [data-state="running"] { --yg-task-mark: var(--yg-action); }
+.yg-task-list [data-state="running"] { --yg-task-mark: var(--yg-inverse); }
 .yg-task-list [data-state="done"] { --yg-task-mark: var(--yg-success); }
 .yg-task-list [data-state="failed"] { --yg-task-mark: var(--yg-danger); }
 .yg-task-list [data-state="done"] .yg-task-marker { background: var(--yg-success-soft); }
@@ -257,7 +257,7 @@ summary.yg-task-line:focus-visible {
     inset-inline: 0;
     inset-block-end: 0;
     block-size: 1px;
-    background: linear-gradient(90deg, transparent, var(--yg-action), transparent) 0 0 / 50% 100% no-repeat;
+    background: linear-gradient(90deg, transparent, var(--yg-inverse), transparent) 0 0 / 50% 100% no-repeat;
     opacity: .5;
     animation: yg-task-ruler 1.4s ease-in-out infinite;
     pointer-events: none;

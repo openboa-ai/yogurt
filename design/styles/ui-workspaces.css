@@ -30,7 +30,7 @@
   background: transparent;
   border: 0;
   font: var(--yg-font-editor);
-  caret-color: var(--yg-action);
+  caret-color: var(--yg-text);
 }
 .yg-composer textarea:focus-visible { outline: none; }
 @media (forced-colors: active) {

@@ -23,7 +23,7 @@
   block-size: var(--yg-size-compact);
   border-radius: var(--yg-radius-control);
   background: var(--yg-field);
-  color: var(--yg-action);
+  color: var(--yg-inverse);
   font-size: var(--boa-size-subheading);
 }
 .yg-expand-card[open] .yg-card-disclosure { rotate: 45deg; }
@@ -57,8 +57,8 @@
   cursor: pointer;
 }
 .yg-fan-cards-list button:is(:hover, [aria-pressed="true"]) {
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-inverse);
 }
 .yg-fan-cards-list button > svg { align-self: end; }
 .yg-fan-detail { display: grid; gap: var(--boa-space-4); margin: 0; }
@@ -90,15 +90,15 @@
   inline-size: var(--yg-size-touch);
   block-size: var(--yg-size-touch);
   border-radius: 50%;
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-inverse);
   font: var(--yg-font-action);
 }
 .yg-profile-card details { margin-block-start: var(--yg-gap-stack); padding-block-start: var(--yg-gap-inline); }
 .yg-profile-card summary { cursor: pointer; font: var(--yg-font-action); }
 .yg-profile-extra { padding-block-start: var(--yg-gap-inline); color: var(--yg-muted); }
 :where(.yg-expand-card summary, .yg-fan-cards button, .yg-profile-card summary):focus-visible {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
   outline-offset: -2px;
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -120,7 +120,7 @@
 .yg-fan-index { color: var(--yg-muted); font: var(--yg-font-meta); font-variant-numeric: tabular-nums; }
 .yg-fan-label { flex: 1; display: flex; align-items: end; overflow-wrap: anywhere; }
 .yg-fan-cards-list button > svg { position: absolute; inset-block-start: var(--yg-inset-regular); inset-inline-end: var(--yg-inset-regular); }
-.yg-fan-detail { border-inline-start: 2px solid var(--yg-action); padding: var(--yg-inset-layer) var(--yg-inset-regular); }
+.yg-fan-detail { border-inline-start: 2px solid var(--yg-inverse); padding: var(--yg-inset-layer) var(--yg-inset-regular); }
 .yg-fan-detail strong { font: var(--yg-font-action); }
 .yg-fan-detail span { font: var(--yg-font-help); }
 .yg-stat-card { align-content: start; min-block-size: 9rem; }
@@ -133,7 +133,7 @@
 /* Card geometry and transitions */
 .yg-expand-card { width: min(320px, 100%); overflow: hidden; }
 .yg-expand-card summary { position: relative; min-height: 72px; box-sizing: border-box; padding: 12px; justify-content: start; gap: 12px; }
-.yg-expand-art { flex: none; width: 48px; height: 48px; border-radius: 12px; background: var(--yg-action-soft); }
+.yg-expand-art { flex: none; width: 48px; height: 48px; border-radius: 12px; background: var(--yg-field); }
 .yg-expand-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .yg-expand-card-body { padding: 4px 16px 18px; }
 .yg-stat-card { box-sizing: border-box; width: min(340px, 100%); min-block-size: 0; padding: 18px; border-radius: 24px; }
@@ -141,7 +141,7 @@
 .yg-stat-heading > div { min-inline-size: 0; }
 .yg-stat-label { display: block; font: var(--yg-font-help); }
 .yg-stat-value { font-size: 34px; line-height: 40px; letter-spacing: -.02em; }
-.yg-stat-detail { flex: none; max-inline-size: 45%; padding: 4px 9px; border-radius: 999px; background: var(--yg-action-soft); color: var(--yg-action); text-align: center; overflow-wrap: anywhere; }
+.yg-stat-detail { flex: none; max-inline-size: 45%; padding: 4px 9px; border-radius: 999px; background: var(--yg-field); color: var(--yg-inverse); text-align: center; overflow-wrap: anywhere; }
 .yg-profile-card { box-sizing: border-box; width: min(320px, 100%); padding: 18px; border-radius: 24px; }
 .yg-profile-header { gap: 12px; }.yg-profile-avatar { width: 52px; height: 52px; }
 .yg-profile-card details { margin-top: 14px; }
@@ -150,7 +150,7 @@
 .yg-fan-cards-list:not([data-many]):is(:hover, :focus-within) button { transform: translate(calc(-50% + var(--yg-fan-offset) * clamp(42px, 20vw, 78px)), calc(abs(var(--yg-fan-offset)) * 12px)) rotate(calc(var(--yg-fan-offset) * 12deg)); }
 .yg-fan-cards-list:not([data-many]) button:is(:hover, :focus-visible, [aria-pressed="true"]) { z-index: 3; translate: 0 -22px; }
 .yg-fan-cards-list button > svg { display: none; }
-.yg-fan-art { display: block; align-self: stretch; height: 100px; flex: none; border-radius: 12px; background: var(--yg-action-soft); }
+.yg-fan-art { display: block; align-self: stretch; height: 100px; flex: none; border-radius: 12px; background: var(--yg-field); }
 .yg-fan-index { margin-top: 12px; font-size: .7rem; }.yg-fan-label { display: block; flex: none; margin-top: 2px; }
 .yg-fan-detail { margin-top: 16px; }
 @media (prefers-reduced-motion: no-preference) {

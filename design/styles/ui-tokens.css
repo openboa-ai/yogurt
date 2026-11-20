@@ -1,11 +1,15 @@
 /* Generated from design/tokens/brand.json and design/tokens/ui.json. */
 .yg-root {
   --yg-canvas: light-dark(var(--boa-color-neutral-0), var(--boa-color-neutral-975));
-  --yg-surface: light-dark(var(--boa-color-gray-green-50), var(--boa-color-neutral-950));
+  --yg-surface: light-dark(var(--boa-color-neutral-50), var(--boa-color-neutral-900));
   --yg-field: light-dark(var(--boa-color-neutral-100), var(--boa-color-neutral-850));
   --yg-hover: light-dark(var(--boa-color-neutral-200), var(--boa-color-neutral-800));
-  --yg-text: light-dark(var(--boa-color-gray-green-950), var(--boa-color-neutral-50));
-  --yg-muted: light-dark(var(--boa-color-gray-green-700), var(--boa-color-neutral-300));
+  --yg-text: light-dark(var(--boa-color-neutral-950), var(--boa-color-neutral-50));
+  --yg-muted: light-dark(var(--boa-color-neutral-700), var(--boa-color-neutral-300));
+  --yg-inverse: light-dark(var(--boa-color-neutral-1000), var(--boa-color-neutral-50));
+  --yg-on-inverse: light-dark(var(--boa-color-neutral-50), var(--boa-color-neutral-1000));
+  --yg-inverse-hover: light-dark(var(--boa-color-neutral-850), var(--boa-color-neutral-100));
+  --yg-inverse-press: light-dark(var(--boa-color-neutral-800), var(--boa-color-neutral-200));
   --yg-brand: light-dark(var(--boa-color-slate-750), var(--boa-color-slate-750));
   --yg-action: light-dark(var(--boa-color-slate-750), var(--boa-color-slate-200));
   --yg-action-hover: light-dark(var(--boa-color-slate-800), var(--boa-color-slate-100));

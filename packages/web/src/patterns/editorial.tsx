@@ -70,7 +70,7 @@ export function Asset({
 }
 export function Gradient({
   children,
-  tone = "brand",
+  tone = "neutral",
 }: {
   children?: ReactNode;
   tone?: Tone;

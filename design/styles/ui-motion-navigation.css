@@ -14,7 +14,7 @@
   translate: var(--yg-selection-x) var(--yg-selection-y);
   border-radius: var(--yg-radius-small);
   box-sizing: border-box;
-  background: var(--yg-action-soft);
+  background: var(--yg-field);
   border: 1px solid transparent;
   pointer-events: none;
 }
@@ -24,7 +24,7 @@
 }
 
 .yg-tabs [role="tab"], .yg-segment > button { min-block-size: var(--yg-size-regular); }
-.yg-tabs [role="tab"]:focus-visible, .yg-segment > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
+.yg-tabs [role="tab"]:focus-visible, .yg-segment > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
 
 @media (forced-colors: none) {
   .yg-selection-marker[data-ready] {

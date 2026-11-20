@@ -34,7 +34,7 @@ export function Status({
 export function Notice({
   title,
   children,
-  tone = "brand",
+  tone = "neutral",
   action,
   urgent = false,
 }: {

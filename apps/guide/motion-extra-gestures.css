@@ -1,16 +1,16 @@
 .extra-gesture { display: grid; gap: var(--yg-gap-stack); width: min(100%, 320px); }
 .extra-gesture label { display: flex; justify-content: space-between; gap: var(--yg-gap-stack); font-weight: 600; }
-.extra-gesture input[type="range"] { width: 100%; accent-color: var(--yg-action); }
-.extra-exposure-preview { height: 96px; border-radius: var(--yg-radius-panel); background: linear-gradient(135deg, var(--boa-color-slate-750), var(--boa-color-ochre-300)); transition: filter var(--yg-change) ease; }
+.extra-gesture input[type="range"] { width: 100%; accent-color: var(--yg-inverse); }
+.extra-exposure-preview { height: 96px; border-radius: var(--yg-radius-panel); background: linear-gradient(135deg, var(--boa-color-neutral-800), var(--boa-color-neutral-300)); transition: filter var(--yg-change) ease; }
 .extra-disclosure { border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); padding: var(--yg-inset-regular); }
 .extra-disclosure summary { cursor: pointer; font-weight: 600; }
 .extra-toolbar { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline); margin-top: 10px; }
 .extra-toolbar > button, .extra-counter button { border: 1px solid var(--yg-surface-edge); background: var(--yg-field); color: inherit; border-radius: var(--yg-radius-control); padding: var(--boa-space-8) var(--yg-inset-regular); cursor: pointer; }
-.extra-toolbar > button[aria-pressed="true"] { background: var(--yg-action-soft); }
+.extra-toolbar > button[aria-pressed="true"] { background: var(--yg-field); }
 .extra-rating { border: 0; padding: 0; margin: 0; }
 .extra-rating legend { font-weight: 600; }
 .extra-rating > div { display: flex; gap: var(--yg-gap-tight); margin-top: 8px; }
-.extra-rating label { position: relative; cursor: pointer; font-size: 30px; color: var(--yg-action); }
+.extra-rating label { position: relative; cursor: pointer; font-size: 30px; color: var(--yg-inverse); }
 .extra-rating input { position: absolute; opacity: 0; }
 .extra-rating input:focus-visible + span { outline: 2px solid currentColor; outline-offset: 2px; }
 .extra-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -39,7 +39,7 @@
 .extra-gesture-page p { margin-top: 8px; }
 .extra-card { gap: var(--yg-gap-stack); }
 .extra-card strong { overflow-wrap: anywhere; }
-.extra-gesture :is(button, input, summary):focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
+.extra-gesture :is(button, input, summary):focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 
 .extra-gesture { width: min(100%, 360px); gap: var(--boa-space-12); }
 .extra-gesture > label, .extra-gesture > span, .extra-rating legend { font: var(--yg-font-action); }
@@ -47,13 +47,13 @@
 .extra-gesture input[type="date"] { box-sizing: border-box; min-block-size: var(--yg-size-regular); width: 100%; padding: var(--boa-space-8) var(--boa-space-12); border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: var(--yg-field); color: var(--yg-text); font: inherit; }
 .extra-disclosure { background: var(--yg-raised-surface); }
 .extra-disclosure summary { min-block-size: var(--yg-size-regular); display: flex; align-items: center; gap: var(--boa-space-8); }
-.extra-disclosure summary::before { content: "›"; color: var(--yg-action); transition: rotate var(--yg-change) var(--yg-settle); }
+.extra-disclosure summary::before { content: "›"; color: var(--yg-inverse); transition: rotate var(--yg-change) var(--yg-settle); }
 .extra-disclosure[open] summary::before { rotate: 90deg; }
 .extra-counter { gap: var(--boa-space-12); }
 .extra-counter button { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
 .extra-rating label { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
 .extra-gesture-page { min-block-size: 96px; }
 .extra-gesture-page span, .extra-card small { color: var(--yg-muted); opacity: 1; }
-.extra-card { background: var(--yg-action-soft); }
+.extra-card { background: var(--yg-field); }
 @media (pointer: coarse) { .extra-toolbar > button { min-block-size: var(--yg-size-touch); } }
 @media (prefers-reduced-motion: reduce) { .extra-disclosure summary::before { transition: none; } }

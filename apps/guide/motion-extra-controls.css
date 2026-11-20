@@ -2,16 +2,16 @@
 .motion-extra > .yg-field { inline-size: 100%; }
 .motion-extra small, .motion-extra > span { color: var(--yg-muted); }
 .motion-extra-chips, .motion-extra-toolbar, .motion-extra-rating { display: flex; flex-wrap: wrap; gap: var(--yg-gap-control); }
-.motion-extra-chips button, .motion-extra-toolbar button { border: 0; border-radius: var(--yg-radius-control); padding: var(--yg-inset-layer) var(--yg-inset-compact); min-block-size: var(--yg-size-compact); background: var(--yg-action-soft); color: var(--yg-action); font: inherit; cursor: pointer; transition: transform var(--yg-change) var(--yg-settle); }
-.motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: var(--yg-on-action); }
+.motion-extra-chips button, .motion-extra-toolbar button { border: 0; border-radius: var(--yg-radius-control); padding: var(--yg-inset-layer) var(--yg-inset-compact); min-block-size: var(--yg-size-compact); background: var(--yg-field); color: var(--yg-inverse); font: inherit; cursor: pointer; transition: transform var(--yg-change) var(--yg-settle); }
+.motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-inverse); color: var(--yg-on-inverse); }
 .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: translateY(-2px); }
 .motion-extra-wheel { display: grid; justify-items: center; gap: var(--yg-gap-control); min-width: 140px; }
-.motion-extra-wheel output { display: grid; place-items: center; width: 100%; min-height: 52px; border-radius: var(--yg-radius-panel); background: var(--yg-action-soft); color: var(--yg-action); font-weight: 650; }
-.motion-extra-track { overflow: hidden; width: 100%; height: 8px; border-radius: var(--yg-radius-control); background: var(--yg-action-soft); }
-.motion-extra-track span { display: block; height: 100%; background: var(--yg-action); transition: width var(--yg-change) var(--yg-settle); }
-.motion-extra-refresh { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--yg-action-soft); color: var(--yg-action); font-size: 26px; animation: motion-extra-turn 450ms var(--yg-settle); }
-.motion-extra-rating button { border: 0; padding: var(--boa-space-2); background: none; color: var(--yg-action); font-size: 28px; cursor: pointer; }
-.motion-extra button:focus-visible, .motion-extra input:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
+.motion-extra-wheel output { display: grid; place-items: center; width: 100%; min-height: 52px; border-radius: var(--yg-radius-panel); background: var(--yg-field); color: var(--yg-inverse); font-weight: 650; }
+.motion-extra-track { overflow: hidden; width: 100%; height: 8px; border-radius: var(--yg-radius-control); background: var(--yg-field); }
+.motion-extra-track span { display: block; height: 100%; background: var(--yg-inverse); transition: width var(--yg-change) var(--yg-settle); }
+.motion-extra-refresh { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--yg-field); color: var(--yg-inverse); font-size: 26px; animation: motion-extra-turn 450ms var(--yg-settle); }
+.motion-extra-rating button { border: 0; padding: var(--boa-space-2); background: none; color: var(--yg-inverse); font-size: 28px; cursor: pointer; }
+.motion-extra button:focus-visible, .motion-extra input:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 @keyframes motion-extra-turn { from { transform: rotate(-90deg) scale(.8); opacity: .4; } to { transform: rotate(0) scale(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .motion-extra-refresh { animation: none; } .motion-extra-chips button, .motion-extra-toolbar button, .motion-extra-track span { transition: none; } .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: none; } }
 
@@ -20,7 +20,7 @@
 .motion-extra-chips, .motion-extra-toolbar { gap: var(--yg-gap-inline); }
 .motion-extra-chips button, .motion-extra-toolbar button { min-height: 30px; padding: var(--yg-inset-layer) var(--boa-space-8); border: 1px solid var(--yg-surface-edge); background: var(--yg-canvas); color: inherit; font-size: 13px; line-height: 18px; }
 .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: none; background: var(--yg-field); }
-.motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: var(--yg-on-action); }
+.motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-inverse); color: var(--yg-on-inverse); }
 .motion-extra-wheel output { min-height: 44px; border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: var(--yg-canvas); color: inherit; }
 .motion-extra-refresh { width: 44px; height: 44px; font-size: 22px; }
 .motion-extra-rating button { min-width: 36px; min-height: 36px; font-size: 24px; line-height: 1; }
@@ -30,16 +30,16 @@
 .motion-extra > strong { font: var(--yg-font-action); }
 .motion-extra-chips { align-items: center; }
 .motion-extra-chips button { min-block-size: var(--yg-size-touch); overflow-wrap: anywhere; }
-.motion-extra-toolbar button[aria-pressed="true"] { box-shadow: inset 0 0 0 1px var(--yg-action); }
+.motion-extra-toolbar button[aria-pressed="true"] { box-shadow: inset 0 0 0 1px var(--yg-inverse); }
 .motion-extra-wheel { width: min(100%, 220px); gap: var(--boa-space-8); }
-.motion-extra-wheel output { min-block-size: var(--yg-size-touch); background: var(--yg-action-soft); color: var(--yg-action); }
+.motion-extra-wheel output { min-block-size: var(--yg-size-touch); background: var(--yg-field); color: var(--yg-inverse); }
 .motion-extra-rating button { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
 @media (pointer: coarse) { .motion-extra-toolbar button { min-block-size: var(--yg-size-touch); } }
 
 .motion-tag, .motion-scrubber { width: min(320px, 100%); display: grid; gap: var(--yg-gap-inline); }
 .motion-tag > label, .motion-scrubber > label { font: var(--yg-font-action); }
 .motion-tag-field { box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: var(--yg-gap-control); min-height: 52px; padding: var(--boa-space-8); border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-popover); background: var(--yg-raised-surface); }
-.motion-tag-field:focus-within { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
+.motion-tag-field:focus-within { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 .motion-tag-field input { flex: 1; min-width: 90px; height: 32px; padding: 0 var(--yg-inset-layer); border: 0; outline: 0; color: var(--yg-text); background: transparent; font: inherit; }
 .motion-tag-chip { display: inline-flex; align-items: center; height: 32px; gap: var(--boa-space-2); padding-left: var(--yg-inset-compact); border-radius: 10px; background: var(--yg-field); }
 .motion-tag-chip button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; background: none; color: var(--yg-muted); cursor: pointer; font: inherit; }
@@ -52,12 +52,12 @@
 .motion-stepper-actions output { display: grid; place-items: center; width: 40px; height: 32px; overflow: hidden; font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .motion-stepper-actions output span { display: block; }
 .motion-scrubber-bar { position: relative; height: 36px; overflow: hidden; border-radius: var(--yg-radius-control); background: var(--yg-field); }
-.motion-scrubber-fill { position: absolute; inset: 0 auto 0 0; background: var(--yg-action-soft); }
+.motion-scrubber-fill { position: absolute; inset: 0 auto 0 0; background: var(--yg-field); }
 .motion-scrubber-ticks { position: absolute; inset: 15px 12px; background: repeating-linear-gradient(to right, var(--yg-muted) 0 1px, transparent 1px 12px); opacity: .4; }
 .motion-scrubber-bar input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: .01; cursor: pointer; }
-.motion-scrubber-bar:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
+.motion-scrubber-bar:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 .motion-scrubber-value { position: absolute; right: 10px; top: 8px; font-variant-numeric: tabular-nums; pointer-events: none; }
-.motion-tag button:focus-visible, .motion-stepper button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
+.motion-tag button:focus-visible, .motion-stepper button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) {
   .motion-tag-chip { animation: motion-tag-enter 250ms ease-out both; }
   .motion-stepper-actions output span { animation: motion-step-number 250ms cubic-bezier(.2,.8,.2,1) both; }
@@ -70,25 +70,25 @@
 .motion-invite { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr); min-inline-size: 0; width: min(320px, 100%); padding: 16px; border-radius: 24px; background: var(--yg-raised-surface); }
 .motion-invite-count, .motion-invite small { color: var(--yg-muted); font-size: 13px; }
 .motion-invite-stack { position: relative; height: 44px; margin: 14px 0 16px; overflow: auto hidden; }
-.motion-invite-stack button { position: absolute; top: 2px; width: 40px; height: 40px; border: 3px solid var(--yg-raised-surface); border-radius: 50%; background: var(--yg-action-soft); color: var(--yg-action); font: inherit; cursor: pointer; }
-.motion-invite-stack button span { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 50%; opacity: 0; background: var(--yg-action); color: var(--yg-on-action); }
+.motion-invite-stack button { position: absolute; top: 2px; width: 40px; height: 40px; border: 3px solid var(--yg-raised-surface); border-radius: 50%; background: var(--yg-field); color: var(--yg-inverse); font: inherit; cursor: pointer; }
+.motion-invite-stack button span { position: absolute; inset: 0; display: grid; place-items: center; border-radius: 50%; opacity: 0; background: var(--yg-inverse); color: var(--yg-on-inverse); }
 .motion-invite-stack button:is(:hover, :focus-visible) span { opacity: 1; }
 .motion-invite-entry { display: flex; min-inline-size: 0; gap: var(--yg-gap-inline); }
 .motion-invite-entry input { box-sizing: border-box; flex: 1; inline-size: 0; min-inline-size: 0; height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: var(--yg-field); color: var(--yg-text); font: inherit; }
-.motion-invite-entry > button { flex: none; width: 86px; height: 44px; padding: 0 5px; border: 0; border-radius: 999px; background: var(--yg-action); color: var(--yg-on-action); font: inherit; font-size: 13px; cursor: pointer; }
+.motion-invite-entry > button { flex: none; width: 86px; height: 44px; padding: 0 5px; border: 0; border-radius: 999px; background: var(--yg-inverse); color: var(--yg-on-inverse); font: inherit; font-size: 13px; cursor: pointer; }
 .motion-invite small { margin-top: 8px; }
 .motion-wheel-wrap { display: grid; gap: 8px; width: 160px; }
 .motion-wheel-wrap > output { color: var(--yg-muted); font-size: 13px; }
 .motion-wheel { position: relative; height: 180px; overflow: hidden; border: 1px solid var(--yg-surface-edge); border-radius: 16px; background: var(--yg-raised-surface); touch-action: none; cursor: grab; }
-.motion-wheel-highlight { position: absolute; inset: 72px 8px auto; height: 36px; border-radius: 8px; background: var(--yg-action-soft); }
+.motion-wheel-highlight { position: absolute; inset: 72px 8px auto; height: 36px; border-radius: 8px; background: var(--yg-field); }
 .motion-wheel-items { position: relative; }
 .motion-wheel-items > div { display: grid; place-items: center; height: 36px; color: var(--yg-muted); cursor: pointer; }
 .motion-wheel-items > [aria-selected="true"] { color: var(--yg-text); font-weight: 600; }
 .motion-undo { display: grid; justify-items: start; gap: 12px; }
 .motion-undo > span { min-height: 20px; color: var(--yg-muted); }
 .motion-undo-button { position: relative; overflow: hidden; height: 40px; padding: 0 16px; border: 1px solid var(--yg-surface-edge); border-radius: 999px; background: var(--yg-raised-surface); color: var(--yg-text); font: inherit; cursor: pointer; }
-.motion-undo-button i { position: absolute; inset: auto 0 0; height: 2px; background: var(--yg-action); transform-origin: left; animation: motion-undo-time 5s linear forwards; }
-.motion-invite :is(input, button):focus-visible, .motion-wheel:focus-visible, .motion-undo-button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
+.motion-undo-button i { position: absolute; inset: auto 0 0; height: 2px; background: var(--yg-inverse); transform-origin: left; animation: motion-undo-time 5s linear forwards; }
+.motion-invite :is(input, button):focus-visible, .motion-wheel:focus-visible, .motion-undo-button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) {
   .motion-invite-stack button { animation: motion-invite-enter 250ms ease-out both; }
   .motion-wheel-items { transition: transform 400ms cubic-bezier(.2,.8,.2,1); }

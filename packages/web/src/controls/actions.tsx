@@ -5,7 +5,7 @@ import { cx, Icon, Inline, type IconName, type Size } from "../foundation/founda
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   emphasis?: "filled" | "soft" | "quiet";
-  tone?: "brand" | "danger";
+  tone?: "neutral" | "brand" | "danger";
   size?: Size;
   pending?: boolean;
   pendingLabel?: string;
@@ -15,7 +15,7 @@ const variants = { filled: "solid", soft: "soft", quiet: "ghost" } as const;
 const sizes = { compact: "sm", regular: "lg", touch: "2xl" } as const;
 export function Button({
   emphasis = "filled",
-  tone = "brand",
+  tone = "neutral",
   size = "regular",
   pending = false,
   pendingLabel,

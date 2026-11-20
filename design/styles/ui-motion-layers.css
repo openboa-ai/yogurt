@@ -7,14 +7,14 @@
   transition: background-color var(--yg-travel) var(--yg-settle), transform var(--yg-travel) var(--yg-settle);
 }
 .yg-morph-tooltip-trigger:hover { background: var(--yg-hover); }
-.yg-morph-tooltip-trigger:active { background: var(--yg-action-soft); }
-.yg-morph-tooltip-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
+.yg-morph-tooltip-trigger:active { background: var(--yg-hover); }
+.yg-morph-tooltip-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 .yg-morph-tooltip-trigger span { display: inline-grid; place-items: center; inline-size: 16px; block-size: 16px; color: var(--yg-muted); border: 1px solid currentColor; border-radius: 50%; font-size: 11px; font-weight: 700; line-height: 1; box-sizing: border-box; transition: transform var(--yg-travel) var(--yg-settle); }
-.yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span { color: var(--yg-action); }
+.yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span { color: var(--yg-text); }
 .yg-morph-tooltip-card {
   position: absolute; z-index: 10; inset-block-end: calc(100% + 12px); inset-inline-start: 50%;
   box-sizing: border-box; width: max-content; max-width: min(240px, 80vw); padding: 8px 12px;
-  border: 0; border-radius: 11px; background: var(--yg-action); color: var(--yg-on-action);
+  border: 0; border-radius: 11px; background: var(--yg-inverse); color: var(--yg-on-inverse);
   font: var(--yg-font-label); line-height: 18px; overflow-wrap: anywhere; pointer-events: none;
   opacity: 0; visibility: hidden; transform: translate(-50%, 5px) scale(.92);
   transform-origin: 50% 140%; transition: opacity var(--yg-travel) var(--yg-settle), transform var(--yg-expand) var(--yg-selection), visibility 0s linear var(--yg-expand);
@@ -34,8 +34,8 @@
 }
 .yg-spring-trigger:hover { background: var(--yg-hover); }
 .yg-spring-trigger[data-state="open"] { background: var(--yg-focus-surface); }
-.yg-spring-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
-.yg-spring-symbol, .yg-spring-option-symbol { display: block; flex: none; inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--yg-action); }
+.yg-spring-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
+.yg-spring-symbol, .yg-spring-option-symbol { display: block; flex: none; inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--yg-inverse); }
 .yg-spring-value { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
 .yg-spring-value-roll { display: block; animation: yg-spring-roll var(--yg-expand) var(--yg-selection) both; }
 .yg-spring-chevron { display: grid; place-items: center; flex: none; inline-size: 20px; block-size: 20px; color: var(--yg-muted); font-size: 20px; line-height: 1; transition: transform var(--yg-change) var(--yg-selection); }
@@ -50,9 +50,9 @@
 .yg-spring-viewport { padding: var(--yg-inset-layer); }
 .yg-spring-option { display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-size-touch); padding: 0 var(--yg-inset-compact) 0 var(--yg-inset-regular); border-radius: var(--yg-radius-panel); outline: none; cursor: pointer; box-sizing: border-box; }
 .yg-spring-option[data-highlighted] { background: var(--yg-hover); }
-.yg-spring-option[data-state="checked"] { background: var(--yg-action-soft); color: var(--yg-text); font-weight: 600; }
+.yg-spring-option[data-state="checked"] { background: var(--yg-field); color: var(--yg-text); font-weight: 600; }
 
-.yg-spring-check { display: grid; place-items: center; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-action); font-weight: 700; }
+.yg-spring-check { display: grid; place-items: center; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-text); font-weight: 700; }
 @keyframes yg-spring-row { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes yg-spring-roll { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes yg-spring-enter { from { opacity: 0; transform: translateY(-5px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }

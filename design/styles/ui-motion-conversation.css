@@ -1,11 +1,10 @@
 .yg-streaming-reply { white-space: pre-wrap; overflow-wrap: anywhere; font: var(--yg-font-body); }
-.yg-streaming-cursor { display: inline-block; inline-size: .45em; block-size: 1em; margin-inline-start: .15em; vertical-align: -.12em; border-radius: var(--boa-radius-round); background: var(--yg-action); animation: yg-streaming-pulse 1s ease-in-out infinite alternate; }
+.yg-streaming-cursor { display: inline-block; inline-size: .45em; block-size: 1em; margin-inline-start: .15em; vertical-align: -.12em; border-radius: var(--boa-radius-round); background: currentColor; animation: yg-streaming-pulse 1s ease-in-out infinite alternate; }
 .yg-ghost-field { display: grid; gap: var(--yg-gap-inline); min-inline-size: 0; }
 .yg-ghost-field label { font: var(--yg-font-label); }
 .yg-ghost-input { position: relative; overflow: hidden; border: 0; border-radius: var(--yg-radius-control); background: var(--yg-field); transition: background-color var(--yg-change) var(--yg-settle); }
-.yg-ghost-input:focus-within { background: var(--yg-focus-surface); }
 .yg-ghost-input input, .yg-ghost-mirror { box-sizing: border-box; width: 100%; min-height: var(--yg-size-regular); padding: var(--boa-space-8) var(--yg-inset-regular); font: var(--yg-font-body); white-space: pre; }
-.yg-ghost-input input { position: relative; display: block; border: 0; outline: 0; color: transparent; caret-color: var(--yg-action); background: transparent; }
+.yg-ghost-input input { position: relative; display: block; border: 0; outline: 0; color: transparent; caret-color: var(--yg-text); background: transparent; }
 .yg-ghost-mirror { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .yg-ghost-suffix, .yg-ghost-hint { color: var(--yg-muted); }
 .yg-ghost-hint { font: var(--yg-font-meta); }
@@ -22,7 +21,6 @@
   background: var(--yg-raised-surface);
   transition: background-color var(--yg-change) var(--yg-settle);
 }
-.yg-prompt-box:focus-within { background: var(--yg-focus-surface); }
 .yg-prompt-panel {
   grid-column: 1 / -1;
   display: grid;
@@ -37,7 +35,7 @@
   align-items: center;
   gap: var(--yg-gap-inline);
   min-block-size: var(--boa-control-compact);
-  color: var(--yg-action);
+  color: var(--yg-muted);
   font: var(--yg-font-label);
 }
 .yg-prompt-indicator {
@@ -45,7 +43,7 @@
   inline-size: var(--yg-gap-inline);
   block-size: var(--yg-gap-inline);
   border-radius: 50%;
-  background: currentColor;
+  background: var(--yg-text);
 }
 .yg-prompt-editor {
   position: relative;
@@ -72,7 +70,7 @@
   outline: 0;
   background: transparent;
   color: var(--yg-text);
-  caret-color: var(--yg-action);
+  caret-color: var(--yg-text);
   scrollbar-width: thin;
 }
 .yg-prompt-actions { display: flex; align-items: end; }
@@ -85,8 +83,8 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: var(--yg-action);
-  color: var(--yg-on-action);
+  background: var(--yg-inverse);
+  color: var(--yg-on-inverse);
   cursor: pointer;
 }
 .yg-prompt-action:disabled { background: var(--yg-field); color: var(--yg-muted); cursor: default; }
@@ -98,7 +96,7 @@
     border-radius: 50%;
   }
 }
-.yg-prompt-action:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
+.yg-prompt-action:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 .yg-prompt-arrow, .yg-prompt-stop { grid-area: 1 / 1; }
 .yg-prompt-arrow svg { display: block; inline-size: var(--yg-glyph); block-size: var(--yg-glyph); }
 .yg-prompt-stop {
@@ -118,7 +116,7 @@
 }
 @keyframes yg-prompt-pulse { 50% { scale: .55; opacity: .55; } }
 .yg-thinking { display: inline-flex; align-items: center; gap: var(--yg-gap-inline); color: var(--yg-muted); font: var(--yg-font-label); }
-.yg-thinking-shape { inline-size: 1em; block-size: 1em; flex: none; background: var(--yg-action); border-radius: 40% 60% 55% 45%; animation: yg-thinking-morph 2.4s var(--yg-settle) infinite alternate; }
+.yg-thinking-shape { inline-size: 1em; block-size: 1em; flex: none; background: currentColor; border-radius: 40% 60% 55% 45%; animation: yg-thinking-morph 2.4s var(--yg-settle) infinite alternate; }
 @keyframes yg-thinking-morph { 0% { border-radius: 40% 60% 55% 45%; transform: rotate(0deg) scale(.9); } 50% { border-radius: 65% 35% 40% 60%; transform: rotate(90deg) scale(1); } 100% { border-radius: 35% 65% 60% 40%; transform: rotate(180deg) scale(.9); } }
 @keyframes yg-streaming-pulse { from { opacity: .4; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .yg-thinking-shape, .yg-streaming-cursor { animation: none; } }

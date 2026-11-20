@@ -70,7 +70,7 @@ body {
   font: var(--yg-font-help);
 }
 .catalog-search:focus-within {
-  outline: 2px solid var(--yg-action);
+  outline: 2px solid var(--yg-inverse);
 }
 .catalog-search .yg-icon {
   width: 15px;
@@ -105,8 +105,8 @@ body {
   font: var(--yg-font-help);
 }
 .nav-family a[aria-current] {
-  color: var(--yg-action);
-  background: var(--yg-action-soft);
+  color: var(--yg-inverse);
+  background: var(--yg-field);
   font-weight: 550;
 }
 .nav-family a:hover,
@@ -196,7 +196,7 @@ body {
 }
 .preview-caption button,
 .install-code > button {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
   border: 0;
   background: none;
   padding: var(--boa-space-4) 0;

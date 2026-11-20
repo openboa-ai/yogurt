@@ -35,8 +35,8 @@
 }
 .yg-root {
   --yg-surface-edge: color-mix(in srgb, var(--yg-text) 11%, transparent);
-  --yg-active-edge: color-mix(in srgb, var(--yg-action) 17%, transparent);
-  --yg-focus-surface: var(--yg-action-soft);
+  --yg-active-edge: color-mix(in srgb, var(--yg-text) 17%, transparent);
+  --yg-focus-surface: var(--yg-hover);
   --yg-raised-surface: light-dark(var(--yg-canvas), var(--yg-surface));
   color-scheme: light dark;
   color: var(--yg-text);
@@ -67,7 +67,7 @@
   cursor: default;
 }
 .yg-root :where(:focus-visible) {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline: var(--boa-stroke-focus) solid var(--yg-text);
   outline-offset: 2px;
 }
 .yg-root [hidden] {
@@ -151,6 +151,13 @@
 }
 .yg-button,
 .yg-reading-anchor {
+  --yg-button-fill: var(--yg-inverse);
+  --yg-button-ink: var(--yg-on-inverse);
+  --yg-button-hover: var(--yg-inverse-hover);
+  --yg-button-press: var(--yg-inverse-press);
+  --yg-button-soft: var(--yg-field);
+  --yg-button-soft-hover: var(--yg-hover);
+  --yg-button-text: var(--yg-text);
   border: 0;
   appearance: none;
   display: inline-flex;
@@ -161,8 +168,8 @@
   min-block-size: var(--yg-size-regular);
   padding: var(--boa-space-4) var(--yg-inset-regular);
   border-radius: var(--yg-radius-control);
-  background: var(--yg-action);
-  color: var(--yg-on-action);
+  background: var(--yg-button-fill);
+  color: var(--yg-button-ink);
   font: var(--yg-font-action);
   letter-spacing: var(--boa-tracking-label);
   text-align: center;
@@ -182,13 +189,22 @@
   padding-inline: var(--yg-inset-roomy);
 }
 .yg-button[data-emphasis="soft"] {
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-button-soft);
+  color: var(--yg-button-text);
 }
 .yg-button[data-emphasis="quiet"],
 .yg-reading-anchor {
   background: transparent;
-  color: var(--yg-action);
+  color: var(--yg-button-text);
+}
+.yg-button:is([data-tone="brand"], [data-tone="danger"]) {
+  --yg-button-fill: var(--yg-action);
+  --yg-button-ink: var(--yg-on-action);
+  --yg-button-hover: var(--yg-action-hover);
+  --yg-button-press: var(--yg-action-press);
+  --yg-button-soft: var(--yg-action-soft);
+  --yg-button-soft-hover: var(--yg-action-soft-hover);
+  --yg-button-text: var(--yg-action);
 }
 .yg-button[data-tone="danger"] {
   --yg-action: var(--yg-danger);
@@ -228,7 +244,7 @@
     :disabled,
     [aria-disabled="true"]
   ) {
-  background: var(--yg-action-press);
+  background: var(--yg-button-press);
 }
 .yg-button:is(:disabled, [aria-disabled="true"]):not([aria-busy="true"]) {
   color: var(--yg-muted);
@@ -309,7 +325,7 @@
 .yg-select select {
   font: var(--yg-font-body);
   color: var(--yg-text);
-  caret-color: var(--yg-action);
+  caret-color: var(--yg-text);
   flex: 1;
   min-width: 0;
   width: 100%;
@@ -407,8 +423,8 @@
     cursor: pointer;
   }
   .yg-select[data-dropdown] option:checked {
-    background: var(--yg-action-soft);
-    color: var(--yg-action);
+    background: var(--yg-field);
+    color: var(--yg-text);
     font-weight: var(--boa-role-weight-ui);
   }
   .yg-select[data-dropdown] option::checkmark {
@@ -420,7 +436,7 @@
   }
   .yg-select[data-dropdown] option:not(:disabled):focus-visible {
     background: var(--yg-hover);
-    outline: var(--boa-stroke-focus) solid var(--yg-action);
+    outline: var(--boa-stroke-focus) solid var(--yg-inverse);
     outline-offset: calc(-1 * var(--boa-stroke-focus));
   }
   @media (hover: hover) {
@@ -488,12 +504,12 @@
   transition: transform var(--yg-travel) var(--yg-settle);
 }
 .yg-switch [role="switch"][data-state="checked"] {
-  background: var(--yg-action);
+  background: var(--yg-inverse);
 }
 .yg-switch [role="switch"][data-state="checked"] > span {
   --yg-thumb-travel: calc(var(--yg-switch-width) - var(--yg-thumb-size) - 2 * var(--yg-track-inset));
   transform: translateX(var(--yg-thumb-travel));
-  background: var(--yg-on-action);
+  background: var(--yg-on-inverse);
 }
 .yg-switch [role="switch"][data-state="checked"]:dir(rtl) > span {
   transform: translateX(calc(-1 * var(--yg-thumb-travel)));
@@ -517,26 +533,26 @@
 .yg-checkbox
   [role="checkbox"]:is([data-state="checked"], [data-state="indeterminate"]),
 .yg-radio [role="radio"][data-state="checked"] {
-  background: var(--yg-action);
-  border-color: var(--yg-action);
+  background: var(--yg-inverse);
+  border-color: var(--yg-inverse);
 }
 .yg-checkbox [data-state="checked"] > span {
   width: 9px;
   height: 5px;
-  border-left: 1.7px solid var(--yg-on-action);
-  border-bottom: 1.7px solid var(--yg-on-action);
+  border-left: 1.7px solid var(--yg-on-inverse);
+  border-bottom: 1.7px solid var(--yg-on-inverse);
   transform: translateY(-1px) rotate(-45deg);
 }
 .yg-checkbox [data-state="indeterminate"] > span {
   width: 8px;
   height: 2px;
-  background: var(--yg-on-action);
+  background: var(--yg-on-inverse);
 }
 .yg-radio [role="radio"] > span {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--yg-on-action);
+  background: var(--yg-on-inverse);
 }
 .yg-choice[data-disabled],
 .yg-radio [data-disabled] {
@@ -618,8 +634,8 @@
 .yg-options [data-active],
 .yg-anchored-panel [role="menuitem"]:focus,
 .yg-nav-list [aria-current] {
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-text);
 }
 .yg-options [aria-disabled="true"],
 .yg-anchored-panel [aria-disabled="true"] {
@@ -628,7 +644,7 @@
 }
 .yg-link,
 .yg-chart summary {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
   text-underline-offset: 0.2em;
 }
 .yg-breadcrumb ol,
@@ -689,8 +705,8 @@
   color: var(--yg-text);
 }
 .yg-tabs [aria-selected="true"] {
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-text);
 }
 .yg-tabs [role="tabpanel"] {
   margin-top: var(--boa-space-12);
@@ -828,8 +844,8 @@
   :is(a, button).yg-row { min-height: var(--yg-size-touch); }
 }
 .yg-row[aria-current="true"] {
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
+  background: var(--yg-field);
+  color: var(--yg-text);
 }
 .yg-row-label {
   display: grid;
@@ -923,17 +939,17 @@
   border-radius: var(--boa-radius-round);
   overflow: hidden;
   background: var(--yg-field);
-  accent-color: var(--yg-action);
+  accent-color: var(--yg-inverse);
 }
 .yg-progress progress::-webkit-progress-bar {
   background: var(--yg-field);
 }
 .yg-progress progress::-webkit-progress-value {
-  background: var(--yg-action);
+  background: var(--yg-inverse);
   transition: width var(--yg-travel) var(--yg-settle);
 }
 .yg-progress progress::-moz-progress-bar {
-  background: var(--yg-action);
+  background: var(--yg-inverse);
 }
 .yg-skeleton {
   display: grid;
@@ -1015,7 +1031,7 @@
   width: 100%;
   height: auto;
   max-height: 12rem;
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 .yg-chart-range {
   font: var(--yg-font-meta);
@@ -1026,7 +1042,7 @@
   width: 12px;
   height: 3px;
   border-radius: 2px;
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 .yg-chart details {
   margin-top: var(--boa-space-12);
@@ -1069,11 +1085,13 @@
       [aria-disabled="true"],
       :active
     ) {
-    background: var(--yg-action-hover);
+    background: var(--yg-button-hover);
   }
-  .yg-button[data-emphasis="soft"]:hover:not(:disabled, [aria-disabled="true"]),
+  .yg-button[data-emphasis="soft"]:hover:not(:disabled, [aria-disabled="true"]) {
+    background: var(--yg-button-soft-hover);
+  }
   .yg-options [role="option"]:hover:not([aria-disabled="true"]) {
-    background: var(--yg-action-soft-hover);
+    background: var(--yg-hover);
   }
   .yg-button[data-emphasis="quiet"]:hover:not(
       :disabled,

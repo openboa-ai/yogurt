@@ -15,7 +15,7 @@ Design revision 2. The system should feel clear enough to use at once and human 
 | Space as grouping | Use 4–6 px within a label group, 8–10 px between related controls, and 24 px between sections. Use an 18 px inset in cards and 6 px inside anchored menus. | A person can tell which help, error or action belongs to which item at 320 px and at increased text size. |
 | Movement from a cause | A pressed control responds at its point of contact. An anchored menu emerges from the trigger, an indicator follows a selection, and a busy label holds its space. End the movement when the new relationship is clear. | Watch the first frame, interrupt the movement and read the final state. With reduced motion, the same control and outcome remain apparent. |
 
-OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, `slate.750` (#175174). Use the exact color for a main action on paper and a contrast-tested lighter slate on ink. The shared palette has room for colorful art without requiring colorful chrome. [Token source](../design/tokens/brand.json) · [Signature study](../examples/signature/index.html)
+OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, `slate.750` (#175174). Use neutral fills and ink for surfaces, controls, hover, and selection. When a major action needs brand emphasis, use Ink blue on paper and the contrast-tested lighter Slate role on ink. [Token source](../design/tokens/brand.json) · [Signature study](../examples/signature/index.html)
 
 ## Three surfaces, three first reads
 

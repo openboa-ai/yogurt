@@ -1,10 +1,10 @@
 "use client";
 import {
   Badge
-} from "./chunk-FUHQGU5Y.js";
+} from "./chunk-WT75ABWC.js";
 import {
   Button
-} from "./chunk-4A4FGE4R.js";
+} from "./chunk-P4D5QO3L.js";
 import {
   Icon,
   Text
@@ -22,7 +22,7 @@ var eventKinds = {
   routine: { label: "Routine", icon: "clock" }
 };
 var eventStates = {
-  running: { label: "In progress", tone: "brand" },
+  running: { label: "In progress", tone: "neutral" },
   ready: { label: "Ready", tone: "success" },
   waiting: { label: "Waiting", tone: "warning" },
   failed: { label: "Failed", tone: "danger" },
@@ -63,7 +63,7 @@ function WorkEvent({
 var routineStates = {
   scheduled: { label: "Scheduled", tone: "success" },
   paused: { label: "Paused", tone: "neutral" },
-  running: { label: "Running", tone: "brand" },
+  running: { label: "Running", tone: "neutral" },
   failed: { label: "Needs attention", tone: "danger" }
 };
 function RoutineRow({

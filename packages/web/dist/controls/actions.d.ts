@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
 import { type IconName, type Size } from "../foundation/foundation.js";
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     emphasis?: "filled" | "soft" | "quiet";
-    tone?: "brand" | "danger";
+    tone?: "neutral" | "brand" | "danger";
     size?: Size;
     pending?: boolean;
     pendingLabel?: string;

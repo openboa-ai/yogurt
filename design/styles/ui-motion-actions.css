@@ -63,7 +63,7 @@
 }
 
 .yg-otp:focus-within [data-cursor] {
-  background-color: var(--yg-action-soft);
+  background-color: var(--yg-field);
 }
 
 .yg-rating label > span {
@@ -76,7 +76,7 @@
 }
 
 .yg-range input:not(:disabled):active {
-  accent-color: var(--yg-action-press);
+  accent-color: var(--yg-inverse-press);
 }
 
 .yg-progress {
@@ -102,7 +102,7 @@
   display: block;
   block-size: 100%;
   border-radius: inherit;
-  background: var(--yg-action);
+  background: var(--yg-inverse);
   transform: scaleX(var(--yg-progress-completion, 0));
   transform-origin: left center;
   transition: transform var(--yg-change, var(--yg-travel)) var(--yg-settle);
@@ -336,7 +336,7 @@
   border-radius: 1px;
   background: var(--yg-text);
 }
-.yg-otp[data-complete] .yg-otp-slots > span { background: var(--yg-action-soft); }
+.yg-otp[data-complete] .yg-otp-slots > span { background: var(--yg-field); }
 .yg-otp[data-disabled] { opacity: .55; }
 @media (prefers-reduced-motion: no-preference) {
   .yg-otp-digit { animation: yg-otp-digit-enter 220ms var(--yg-arrive, ease-out) both; }

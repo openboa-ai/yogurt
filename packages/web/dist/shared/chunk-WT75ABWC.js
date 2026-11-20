@@ -3,7 +3,7 @@ import {
   IconButton,
   clsx_default,
   wrapTextNodeSiblings
-} from "./chunk-4A4FGE4R.js";
+} from "./chunk-P4D5QO3L.js";
 import {
   Heading,
   Icon,
@@ -42,7 +42,7 @@ function Status({
 function Notice({
   title,
   children,
-  tone = "brand",
+  tone = "neutral",
   action,
   urgent = false
 }) {
