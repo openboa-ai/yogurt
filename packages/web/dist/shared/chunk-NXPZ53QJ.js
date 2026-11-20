@@ -1,5 +1,10 @@
 "use client";
 import {
+  playSprings,
+  snap,
+  spring
+} from "./chunk-DRQJWO7S.js";
+import {
   Checkbox,
   Field
 } from "./chunk-WWQHEDM4.js";
@@ -19,6 +24,8 @@ import {
 import {
   useEffect,
   useId,
+  useLayoutEffect,
+  useRef,
   useState
 } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
@@ -37,6 +44,22 @@ function InputGroup({
     trailing
   ] }) });
 }
+function OtpDigit({ value }) {
+  const digit = useRef(null);
+  useLayoutEffect(() => {
+    const node = digit.current;
+    if (!node) return;
+    const lift = spring(-14, 520, 16);
+    const opacity = spring(0, 400, 28);
+    lift.target = 0;
+    opacity.target = 1;
+    return playSprings([lift, opacity], () => {
+      node.style.translate = `0 ${lift.position}px`;
+      node.style.opacity = String(Math.max(0, Math.min(1, opacity.position)));
+    });
+  }, [value]);
+  return /* @__PURE__ */ jsx("span", { ref: digit, className: "yg-otp-digit", children: value });
+}
 function InputOTP({
   label,
   length = 6,
@@ -51,9 +74,61 @@ function InputOTP({
   const count = Math.max(1, Math.min(12, Math.trunc(length) || 6));
   const [cursor, setCursor] = useState(0);
   const confirmed = verified && value.length >= count;
+  const surface = useRef(null);
+  const [motion] = useState(() => ({ merge: spring(0, 260, 24), confirm: spring(0, 220, 28) }));
+  useLayoutEffect(() => {
+    const node = surface.current;
+    if (!node) return;
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const axes = [motion.merge, motion.confirm];
+    let stop;
+    let mergeTimer;
+    let revealTimer;
+    function paint() {
+      node?.style.setProperty("--yg-otp-merge", String(Math.max(0, Math.min(1, motion.merge.position))));
+      node?.style.setProperty("--yg-otp-confirm", String(Math.max(0, Math.min(1, motion.confirm.position))));
+    }
+    function play() {
+      stop?.();
+      stop = playSprings(axes, paint);
+    }
+    function settleImmediately() {
+      if (!media.matches) return;
+      clearTimeout(mergeTimer);
+      clearTimeout(revealTimer);
+      stop?.();
+      axes.forEach((axis) => snap(axis, Number(confirmed)));
+      paint();
+    }
+    if (media.matches) {
+      settleImmediately();
+    } else if (confirmed) {
+      mergeTimer = setTimeout(() => {
+        motion.merge.target = 1;
+        play();
+      }, 250);
+      revealTimer = setTimeout(() => {
+        motion.confirm.target = 1;
+        play();
+      }, 550);
+    } else {
+      axes.forEach((axis) => {
+        axis.target = 0;
+      });
+      if (axes.some((axis) => axis.position !== 0)) play();
+    }
+    media.addEventListener("change", settleImmediately);
+    return () => {
+      stop?.();
+      clearTimeout(mergeTimer);
+      clearTimeout(revealTimer);
+      media.removeEventListener("change", settleImmediately);
+    };
+  }, [confirmed, motion]);
   return /* @__PURE__ */ jsx(Field, { ...{ label, help, error }, children: (binding) => /* @__PURE__ */ jsxs(
     "div",
     {
+      ref: surface,
       className: "yg-otp",
       "data-complete": value.length >= count || void 0,
       "data-verified": confirmed || void 0,
@@ -72,7 +147,11 @@ function InputOTP({
             disabled,
             value,
             onSelect: (e) => setCursor(e.currentTarget.selectionStart ?? 0),
-            onChange: (e) => onValueChange(e.target.value.replace(/\D/g, "").slice(0, count))
+            onChange: (event) => {
+              const next = event.currentTarget.value.replace(/\D/g, "").slice(0, count);
+              setCursor(Math.min(event.currentTarget.selectionStart ?? next.length, next.length));
+              onValueChange(next);
+            }
           }
         ),
         /* @__PURE__ */ jsx("span", { className: "yg-otp-slots", "aria-hidden": "true", children: Array.from({ length: count }, (_, i) => /* @__PURE__ */ jsx(
@@ -80,7 +159,7 @@ function InputOTP({
           {
             "data-cursor": i === Math.min(cursor, count - 1) || void 0,
             "data-filled": !!value[i] || void 0,
-            children: value[i] && /* @__PURE__ */ jsx("span", { className: "yg-otp-digit", children: value[i] }, value[i])
+            children: value[i] && /* @__PURE__ */ jsx("span", { className: "yg-otp-ink", children: /* @__PURE__ */ jsx(OtpDigit, { value: value[i] }, value[i]) })
           },
           i
         )) }),

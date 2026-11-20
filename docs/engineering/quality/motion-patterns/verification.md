@@ -52,3 +52,9 @@ The guide exercised all 78 specimens. Browser captures sampled intermediate fram
 The interaction suite also checks a clipboard roll followed by a ready state, a pending action at its narrow width, tooltip travel between triggers, OTP confirmation, rubber overshoot with a clamped value, the wheel under drag and keyboard input, toolbar marker travel, the profile action while its width changes, swipe dismissal of a notification, and a thinking indicator after its second dot lifts.
 
 The hold check releases a partial press and confirms that it has no effect, then holds through confirmation and observes the drawn check.
+
+## Interaction layout and focus
+
+The browser exercised all 78 gallery interactions at 320 px in dark appearance and 1440 px in light appearance. The sampled frames stayed within the viewport and the inspected box surfaces had no perimeter stroke. The notification message remains readable after the top card leaves. The compact fan keeps its controls and selected detail inside the stage.
+
+The six-digit verification field measures 264 px in a 320 px viewport and 320 px at the desktop review width. During confirmation the slot gaps close, the digits fade behind the status, and the wrapper width remains stable. The browser repeated verification after editing the last digit. The selected slot uses a fill and caret. Forced colors retain an explicit focus indicator.

@@ -62,10 +62,6 @@
     color var(--yg-change, var(--yg-travel)) var(--yg-settle);
 }
 
-.yg-otp:focus-within [data-cursor] {
-  background-color: var(--yg-field);
-}
-
 .yg-rating label > span {
   pointer-events: none;
   transition: transform var(--yg-press) var(--yg-settle);
@@ -312,56 +308,80 @@
   }
 }
 
-/* Keep one native input while giving each digit a clear visual position. */
-.yg-otp { inline-size: min(100%, calc(var(--yg-digits) * 48px + (var(--yg-digits) - 1) * 6px)); }
+/* Keep one native input, with stable digit metrics while its slots join. */
+.yg-field:has(> .yg-otp) { min-inline-size: 0; max-inline-size: 100%; grid-template-columns: minmax(0, 1fr); }
+.yg-otp {
+  --yg-otp-size: 48px;
+  --yg-otp-gap: 8px;
+  --yg-otp-merge: 0;
+  --yg-otp-confirm: 0;
+  inline-size: clamp(0px, calc(var(--yg-digits) * var(--yg-otp-size) + (var(--yg-digits) - 1) * var(--yg-otp-gap)), 320px);
+  max-inline-size: 100%;
+  position: relative;
+}
 .yg-otp input { cursor: text; }
-.yg-otp-slots { grid-template-columns: repeat(var(--yg-digits), minmax(0, 1fr)); gap: 6px; }
+.yg-otp-slots {
+  grid-template-columns: repeat(var(--yg-digits), minmax(0, min(var(--yg-otp-size),
+    calc((100% - (var(--yg-digits) - 1) * var(--yg-otp-gap)) / var(--yg-digits)))));
+  gap: calc(var(--yg-otp-gap) * (1 - var(--yg-otp-merge)));
+  justify-content: center;
+}
 .yg-otp-slots > span {
   position: relative;
   min-inline-size: 0;
+  --yg-otp-join: calc(1px + var(--yg-otp-gap) * var(--yg-otp-merge));
   min-block-size: 56px;
-  border: 1px solid transparent;
-  border-radius: 12px;
+  border: 0;
+  border-radius: calc(14px * (1 - var(--yg-otp-merge)));
+  background: transparent;
   font-size: 22px;
   line-height: 1;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
-  transition: background-color var(--yg-change, 180ms) var(--yg-settle, ease), border-color var(--yg-change, 180ms) var(--yg-settle, ease);
+  transition: none;
 }
-.yg-otp-slots > span[data-filled] { background: var(--yg-surface); border-color: var(--yg-surface-edge); }
-.yg-otp:focus-within [data-cursor]:not([data-filled])::after {
+.yg-otp-slots > span::before {
   content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: calc(100% + var(--yg-otp-join));
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--yg-signal-positive-soft) calc(var(--yg-otp-confirm) * 100%), var(--yg-field));
+}
+.yg-otp-slots > span:first-child { border-start-start-radius: 14px; border-end-start-radius: 14px; }
+.yg-otp-slots > span:last-child { --yg-otp-join: 0px; border-start-end-radius: 14px; border-end-end-radius: 14px; }
+.yg-otp:focus-within [data-cursor] { outline: none; }
+.yg-otp:not([data-verified]):focus-within [data-cursor]::before { background: var(--yg-hover); }
+.yg-otp:not([data-verified]):focus-within [data-cursor]:not([data-filled])::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: calc(50% + var(--yg-otp-join) / 2);
+  translate: -50% -50%;
   inline-size: 2px;
   block-size: 22px;
   border-radius: 1px;
   background: var(--yg-text);
 }
-.yg-otp[data-complete] .yg-otp-slots > span { background: var(--yg-field); }
-.yg-otp[data-disabled] { opacity: .55; }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-otp-digit { animation: yg-otp-digit-enter var(--yg-motion-text-pop) both; }
-}
-@keyframes yg-otp-digit-enter {
-  from { opacity: 0; transform: translateY(-14px); }
-  to { opacity: 1; transform: none; }
-}
-@media (prefers-reduced-motion: reduce) { .yg-otp-slots > span { transition: none; } }
-.yg-otp { position: relative; }
-.yg-otp[data-verified] .yg-otp-slots { gap: 0; }
-.yg-otp[data-verified] .yg-otp-slots > span { border-radius: 0; background: var(--yg-signal-positive-soft); }
-.yg-otp[data-verified] .yg-otp-slots > span:first-child { border-start-start-radius: 14px; border-end-start-radius: 14px; }
-.yg-otp[data-verified] .yg-otp-slots > span:last-child { border-start-end-radius: 14px; border-end-end-radius: 14px; }
-.yg-otp[data-verified] .yg-otp-digit, .yg-otp[data-verified] [data-cursor]::after { opacity: 0; }
+.yg-otp:dir(rtl) [data-cursor]::after { translate: 50% -50%; }
+.yg-otp-ink { position: relative; inset-inline-start: calc(var(--yg-otp-join) / 2); opacity: calc(1 - var(--yg-otp-confirm)); }
+.yg-otp-digit { display: block; }
 .yg-otp-confirmation {
-  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 6px;
-  color: var(--yg-signal-positive); font: var(--yg-font-action); pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--yg-signal-positive);
+  font: var(--yg-font-action);
+  opacity: clamp(0, calc(var(--yg-otp-confirm) * 1.6 - .5), 1);
+  white-space: nowrap;
+  translate: 0 calc((1 - var(--yg-otp-confirm)) * 8px);
+  pointer-events: none;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-otp-slots { transition: gap var(--yg-motion-storage-disclose); }
-  .yg-otp-slots > span { transition: border-radius var(--yg-motion-storage-disclose), background-color var(--yg-motion-success-label); }
-  .yg-otp[data-verified] .yg-otp-slots, .yg-otp[data-verified] .yg-otp-slots > span { transition-delay: 250ms; }
-  .yg-otp[data-verified] .yg-otp-slots > span { transition-delay: 250ms, 550ms; }
-  .yg-otp[data-verified] .yg-otp-digit { transition: opacity var(--yg-motion-success-label) 550ms; }
-  .yg-otp-confirmation { animation: yg-otp-confirm var(--yg-motion-success-label) 550ms both; }
+.yg-otp[data-disabled] { opacity: .55; }
+@media (forced-colors: active) {
+  .yg-otp:not([data-verified]):focus-within [data-cursor] { outline: 2px solid Highlight; z-index: 1; }
 }
-@keyframes yg-otp-confirm { from { opacity: 0; translate: 0 8px; } }

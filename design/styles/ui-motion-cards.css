@@ -120,7 +120,7 @@
 .yg-fan-index { color: var(--yg-muted); font: var(--yg-font-meta); font-variant-numeric: tabular-nums; }
 .yg-fan-label { flex: 1; display: flex; align-items: end; overflow-wrap: anywhere; }
 .yg-fan-cards-list button > svg { position: absolute; inset-block-start: var(--yg-inset-regular); inset-inline-end: var(--yg-inset-regular); }
-.yg-fan-detail { border-inline-start: 2px solid var(--yg-inverse); padding: var(--yg-inset-layer) var(--yg-inset-regular); }
+.yg-fan-detail { border-radius: var(--yg-radius-control); background: var(--yg-field); padding: var(--yg-inset-regular); }
 .yg-fan-detail strong { font: var(--yg-font-action); }
 .yg-fan-detail span { font: var(--yg-font-help); }
 .yg-stat-card { align-content: start; min-block-size: 9rem; }
@@ -178,6 +178,11 @@
   transform: var(--yg-fan-transform, translateX(-50%));
 }
 .yg-fan-cards-list:not([data-many]) button:is(:hover, :focus-visible, [aria-pressed="true"]) { translate: none; }
+.yg-fan-cards { inline-size: min(100%, 340px); min-inline-size: 0; container-type: inline-size; }
+@container (max-width: 290px) {
+  .yg-fan-cards-list:not([data-many]) button { width: 134px; height: 180px; }
+  .yg-fan-cards-list:not([data-many]) button:not([data-front]) :is(.yg-fan-index, .yg-fan-label) { opacity: 0; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .yg-fan-cards-list:not([data-many]) button { transition: background-color var(--yg-change); }
   .yg-profile-card details[open] .yg-profile-extra { animation: yg-card-arrive var(--yg-motion-card-detail) both; }

@@ -2,6 +2,8 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
+  useRef,
   useState,
   type ComponentProps,
   type CSSProperties,
@@ -11,6 +13,7 @@ import { ToggleGroup as RadixGroup } from "radix-ui";
 import { Button, IconButton } from "./actions.js";
 import { Checkbox, Field } from "./forms.js";
 import { cx, Icon, type Option } from "../foundation/foundation.js";
+import { playSprings, snap, spring } from "../foundation/spring-motion.js";
 
 type Input = Omit<ComponentProps<"input">, "size" | "prefix">;
 export function InputGroup({
@@ -40,6 +43,23 @@ export function InputGroup({
     </Field>
   );
 }
+function OtpDigit({ value }: { value: string }) {
+  const digit = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const node = digit.current;
+    if (!node) return;
+    const lift = spring(-14, 520, 16);
+    const opacity = spring(0, 400, 28);
+    lift.target = 0;
+    opacity.target = 1;
+    return playSprings([lift, opacity], () => {
+      node.style.translate = `0 ${lift.position}px`;
+      node.style.opacity = String(Math.max(0, Math.min(1, opacity.position)));
+    });
+  }, [value]);
+  return <span ref={digit} className="yg-otp-digit">{value}</span>;
+}
+
 export function InputOTP({
   label,
   length = 6,
@@ -64,10 +84,54 @@ export function InputOTP({
   const count = Math.max(1, Math.min(12, Math.trunc(length) || 6));
   const [cursor, setCursor] = useState(0);
   const confirmed = verified && value.length >= count;
+  const surface = useRef<HTMLDivElement>(null);
+  const [motion] = useState(() => ({merge: spring(0, 260, 24), confirm: spring(0, 220, 28)}));
+  useLayoutEffect(() => {
+    const node = surface.current;
+    if (!node) return;
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    const axes = [motion.merge, motion.confirm];
+    let stop: (() => void) | undefined;
+    let mergeTimer: ReturnType<typeof setTimeout> | undefined;
+    let revealTimer: ReturnType<typeof setTimeout> | undefined;
+    function paint() {
+      node?.style.setProperty("--yg-otp-merge", String(Math.max(0, Math.min(1, motion.merge.position))));
+      node?.style.setProperty("--yg-otp-confirm", String(Math.max(0, Math.min(1, motion.confirm.position))));
+    }
+    function play() {
+      stop?.();
+      stop = playSprings(axes, paint);
+    }
+    function settleImmediately() {
+      if (!media.matches) return;
+      clearTimeout(mergeTimer);
+      clearTimeout(revealTimer);
+      stop?.();
+      axes.forEach(axis => snap(axis, Number(confirmed)));
+      paint();
+    }
+    if (media.matches) {
+      settleImmediately();
+    } else if (confirmed) {
+      mergeTimer = setTimeout(() => {motion.merge.target = 1; play();}, 250);
+      revealTimer = setTimeout(() => {motion.confirm.target = 1; play();}, 550);
+    } else {
+      axes.forEach(axis => {axis.target = 0;});
+      if (axes.some(axis => axis.position !== 0)) play();
+    }
+    media.addEventListener("change", settleImmediately);
+    return () => {
+      stop?.();
+      clearTimeout(mergeTimer);
+      clearTimeout(revealTimer);
+      media.removeEventListener("change", settleImmediately);
+    };
+  }, [confirmed, motion]);
   return (
     <Field {...{ label, help, error }}>
       {(binding) => (
         <div
+          ref={surface}
           className="yg-otp"
           data-complete={value.length >= count || undefined}
           data-verified={confirmed || undefined}
@@ -84,9 +148,11 @@ export function InputOTP({
             disabled={disabled}
             value={value}
             onSelect={(e) => setCursor(e.currentTarget.selectionStart ?? 0)}
-            onChange={(e) =>
-              onValueChange(e.target.value.replace(/\D/g, "").slice(0, count))
-            }
+            onChange={(event) => {
+              const next = event.currentTarget.value.replace(/\D/g, "").slice(0, count);
+              setCursor(Math.min(event.currentTarget.selectionStart ?? next.length, next.length));
+              onValueChange(next);
+            }}
           />
           <span className="yg-otp-slots" aria-hidden="true">
             {Array.from({ length: count }, (_, i) => (
@@ -95,7 +161,9 @@ export function InputOTP({
                 data-cursor={i === Math.min(cursor, count - 1) || undefined}
                 data-filled={!!value[i] || undefined}
               >
-                {value[i] && <span key={value[i]} className="yg-otp-digit">{value[i]}</span>}
+                {value[i] && <span className="yg-otp-ink">
+                  <OtpDigit key={value[i]} value={value[i]} />
+                </span>}
               </span>
             ))}
           </span>

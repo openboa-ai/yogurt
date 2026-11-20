@@ -20,7 +20,6 @@
   border-radius: var(--boa-radius-round);
   background: var(--yg-raised-surface);
   color: var(--yg-text);
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
 }
 .yg-cart-control[data-open="true"] .yg-cart-stepper {
   inline-size: 100%;

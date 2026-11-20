@@ -70,6 +70,20 @@ async function run(browser) {
       assert(check.hasControl && check.overflow <= 1 && check.readingEdge <= 1, JSON.stringify({width, id, ...check}));
     }
     assert.equal(await article.count(), 1, "Only the chosen pattern is mounted");
+    const verification = await demo("otp");
+    await verification.getByRole("textbox").fill("12345");
+    const slots = await verification.locator(".yg-otp").evaluate(node => {
+      const cells = [...node.querySelectorAll(".yg-otp-slots > span")];
+      return {
+        widths: cells.map(cell => cell.offsetWidth),
+        right: cells.at(-1).getBoundingClientRect().right,
+        outline: getComputedStyle(node.querySelector("[data-cursor]")).outlineStyle,
+        pageWidth: document.documentElement.scrollWidth,
+      };
+    });
+    assert(slots.widths.length === 6 && slots.widths.every(size => size >= 34) &&
+      slots.right <= width && slots.outline === "none" && slots.pageWidth <= width + 1,
+      JSON.stringify({width, ...slots}));
     await page.goto(gallery("motion-patterns") + "#task-list");
     const indexToggle = page.getByRole("button", {name: "Browse patterns"});
     if (await indexToggle.isVisible()) await indexToggle.click();

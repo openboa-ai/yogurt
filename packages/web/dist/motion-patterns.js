@@ -1525,22 +1525,27 @@ function FanCards({ items }) {
     const rows = buttons.map((button, index) => {
       const id = button.dataset.card;
       const tracksForCard = tracks.current.get(id) ?? { lift: spring(0, 420, 20), scale: spring(1, 420, 22) };
-      const hot = active && id === highlight;
+      const featured = highlight ?? selectedId ?? items[Math.floor(items.length / 2)]?.id;
+      const hot = active && id === featured;
+      button.toggleAttribute("data-front", id === featured);
       tracksForCard.lift.target = hot ? -22 : 0;
       tracksForCard.scale.target = hot ? 1.06 : 1;
       if (id === kick.current) tracksForCard.lift.velocity = -260;
       states.push(tracksForCard.lift, tracksForCard.scale);
       tracks.current.set(id, tracksForCard);
-      button.style.zIndex = hot ? "5" : index === 1 ? "3" : "2";
+      button.style.zIndex = id === featured ? "5" : index === 1 ? "3" : "2";
       return { button, tracks: tracksForCard, index: index - (items.length - 1) / 2 };
     });
     kick.current = null;
     const render = () => {
-      const room = Math.min(78, Math.max(24, (root.offsetWidth - 166) / 2));
+      const width = root.offsetWidth;
+      const compact = width <= 290;
+      const room = Math.min(78, Math.max(10, (width - (compact ? 184 : 166)) / 2));
+      const angle = compact ? 5 : 9;
       rows.forEach(({ button, tracks: tracks2, index }) => {
         const x = index * (6 + spread.position * (room - 6));
         const y = Math.abs(index) * spread.position * 12 + tracks2.lift.position;
-        button.style.setProperty("--yg-fan-transform", `translate(calc(-50% + ${x}px), ${y}px) rotate(${index * (3 + spread.position * 9)}deg) scale(${tracks2.scale.position})`);
+        button.style.setProperty("--yg-fan-transform", `translate(calc(-50% + ${x}px), ${y}px) rotate(${index * (3 + spread.position * angle)}deg) scale(${tracks2.scale.position})`);
       });
     };
     let stop = playSprings(states, render);

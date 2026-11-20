@@ -169,6 +169,7 @@
   background: light-dark(var(--yg-surface), var(--boa-color-neutral-950));
 }
 .motion-pattern-article[data-wide] .motion-pattern-stage { inline-size: min(100%, 52rem); }
+#otp .motion-pattern-sample > .yg-field { inline-size: min(100%, 320px); }
 #spring-dropdown .motion-pattern-stage { min-block-size: 17.5rem; }
 #spring-dropdown .yg-spring-label {
   position: absolute;
@@ -517,9 +518,55 @@
 .motion-notice-slot { position: absolute; inset: 0 0 auto; transform-origin: center top; transform: translateY(calc(var(--notice-depth) * (10px + var(--notice-height) * .05))) scale(calc(1 - var(--notice-depth) * .05)); z-index: calc(3 - var(--notice-depth)); }
 .motion-notice-stack[data-expanded="true"] .motion-notice-slot { transform: translateY(calc(var(--notice-depth) * (var(--notice-height) + 8px))); }
 .motion-notice-card { touch-action: pan-y; user-select: none; }
-.motion-notice-card .yg-toast { box-sizing: border-box; min-height: var(--notice-height); padding-block: 0; background: var(--yg-raised-surface); }
+.motion-notice-card .yg-toast {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-height: var(--notice-height);
+  padding-block: 0;
+  background: var(--yg-raised-surface);
+  color: var(--yg-text);
+}
+.motion-notice-card .yg-toast > span { min-inline-size: 0; overflow-wrap: anywhere; }
 .motion-notice-slot[inert] .yg-toast { background: var(--yg-field); }
 @media (prefers-reduced-motion: no-preference) {
   .motion-notice-stack { transition: height 300ms cubic-bezier(.23, 1, .32, 1); }
   .motion-notice-slot { transition: transform 300ms cubic-bezier(.23, 1, .32, 1); }
+}
+
+@media (forced-colors: none) {
+  .yg-root .motion-pattern-stage .motion-pattern-sample
+    :is(button, input, textarea, select, summary, [tabindex]):focus-visible {
+    outline: none;
+  }
+  .yg-root .motion-pattern-stage .motion-pattern-sample
+    :is(button, summary, select, [role="combobox"]):focus-visible {
+    background-image: linear-gradient(color-mix(in srgb, currentColor 16%, transparent) 0 0);
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
+  .motion-pattern-search:focus-within,
+  .motion-pattern-stage .motion-tag-field:focus-within,
+  .motion-pattern-stage .yg-motion-password-field:focus-within {
+    outline: none;
+    background-color: var(--yg-hover);
+  }
+  .motion-pattern-stage :is(.motion-invite-entry, .utility-label, .extra-gesture) input:not([type="range"]):focus-visible {
+    background-color: var(--yg-hover);
+  }
+  .yg-root .motion-pattern-stage .motion-pattern-sample .yg-motion-range-area > [data-thumb]:focus-visible {
+    background: radial-gradient(circle, var(--yg-on-inverse) 0 4px, var(--yg-inverse) 4.5px);
+    box-shadow: none;
+  }
+  .motion-pattern-stage .motion-wheel:focus-visible .motion-wheel-highlight {
+    background-color: var(--yg-hover);
+  }
+  .motion-pattern-stage .motion-scrubber-bar:focus-visible .motion-scrubber-handle i { opacity: 1; }
+  .motion-pattern-stage .yg-file-drop:has(input:focus-visible) {
+    outline: none;
+    background-color: var(--yg-hover);
+  }
+  .motion-pattern-stage .yg-file-drop:has(input:focus-visible) strong {
+    text-decoration: underline;
+    text-underline-offset: .2em;
+  }
 }

@@ -204,14 +204,49 @@ const actions = {
     await page.mouse.move(bounds.x + 145, bounds.y + 20, {steps: 8});
     await page.mouse.up();
     await byText(root, "Update 2 received.").waitFor({state: "detached"});
-    await byText(root, "Update 1 received.").waitFor();
+    const remaining = byText(root, "Update 1 received.");
+    await remaining.waitFor();
+    const colors = await remaining.evaluate(node => ({
+      foreground: getComputedStyle(node).color,
+      background: getComputedStyle(node.closest(".yg-toast")).backgroundColor,
+    }));
+    assert.notEqual(colors.foreground, colors.background);
   },
   "number-stepper": async root => {await click(root,"Add guest");await root.locator(".motion-stepper-in").getByText("4").waitFor();},
-  "otp": async root => {
-    const input = root.getByRole("textbox");
-    await input.fill("123456");
-    assert.equal(await input.inputValue(), "123456");
+  "otp": async (root, page) => {
+    const input = root.getByRole("textbox", {name:"Verification code"});
+    await input.fill("12345");
+    const otp = root.locator(".yg-otp");
+    const measure = () => otp.evaluate(node => {
+      const slots = node.querySelector(".yg-otp-slots");
+      return {
+        width: node.getBoundingClientRect().width,
+        slot: slots.firstElementChild.getBoundingClientRect().width,
+        gap: parseFloat(getComputedStyle(slots).columnGap),
+        ring: getComputedStyle(slots.querySelector("[data-cursor]")).outlineStyle,
+      };
+    });
+    const editing = await measure();
+    assert(editing.width >= 230 && editing.slot >= 30 && editing.gap === 8 && editing.ring === "none",
+      JSON.stringify(editing));
+    await input.press("6");
     await root.getByRole("status").getByText("Verified").waitFor();
+    await page.waitForFunction(() => {
+      const node = document.querySelector("#otp .yg-otp");
+      const merge = parseFloat(node.style.getPropertyValue("--yg-otp-merge"));
+      return merge > .05 && merge < .9;
+    });
+    await page.waitForFunction(() => {
+      const node = document.querySelector("#otp .yg-otp");
+      return Array.from(node.querySelectorAll(".yg-otp-ink")).every(digit => Number(getComputedStyle(digit).opacity) < .02)
+        && Number(getComputedStyle(node.querySelector(".yg-otp-confirmation")).opacity) > .95;
+    });
+    const confirmed = await measure();
+    assert(confirmed.gap <= .2 && Math.abs(confirmed.slot - editing.slot) < .5 &&
+      Math.abs(confirmed.width - editing.width) < .5, JSON.stringify(confirmed));
+    await input.press("Backspace");
+    await root.getByRole("status").waitFor({state:"detached"});
+    assert.equal(await input.inputValue(), "12345");
   },
   "page-flip": async root => {await click(root,"Turn page");await root.locator(".extra-page-current").getByText("PAGE 2").waitFor();await root.locator(".extra-page-turning").waitFor();},
   "pagination-dots": root => show(root,"Step 2: Find a direction","Find a direction"),

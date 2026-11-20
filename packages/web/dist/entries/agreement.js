@@ -1,7 +1,8 @@
 "use client";
 import {
   Agreement
-} from "../shared/chunk-EE4GS7Z5.js";
+} from "../shared/chunk-NXPZ53QJ.js";
+import "../shared/chunk-DRQJWO7S.js";
 import "../shared/chunk-WWQHEDM4.js";
 import "../shared/chunk-5GJUJT3P.js";
 import "../shared/chunk-5SWGMKHQ.js";
