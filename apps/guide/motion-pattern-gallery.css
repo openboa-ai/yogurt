@@ -629,3 +629,9 @@
   text-decoration: none;
 }
 .motion-sidebar-content > .yg-button { white-space: nowrap; padding-inline: 8px; }
+
+.motion-elastic-range { inline-size: min(100%, 328px); }
+.motion-elastic-range .yg-elastic-range { box-sizing: border-box; inline-size: 100%; }
+.motion-pill-tabs { inline-size: fit-content; max-inline-size: 100%; }
+.motion-pill-tabs .yg-tabs [role="tablist"] { flex-wrap: nowrap; max-inline-size: 100%; }
+.motion-pill-tabs .yg-tabs [role="tab"] { min-inline-size: 0; padding-inline: clamp(5px, 1.6vi, 12px); white-space: nowrap; }

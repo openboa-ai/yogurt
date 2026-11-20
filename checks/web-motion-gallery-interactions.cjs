@@ -255,9 +255,39 @@ const actions = {
   },
   "page-flip": async root => {await click(root,"Turn page");await root.locator(".extra-page-current").getByText("PAGE 2").waitFor();await root.locator(".extra-page-turning").waitFor();},
   "pagination-dots": root => show(root,"Step 2: Find a direction","Find a direction"),
-  "password-strength": async root => {await root.locator('input[type="password"]').fill("LongCookie7+");await byText(root,"Strong").waitFor();},
+  "password-strength": async root => {
+    const field = root.getByLabel("Create a password");
+    await field.fill("LongCookie7+");
+    await root.getByRole("status").getByText("Strong").waitFor();
+    const inputBefore = await field.boundingBox();
+    await button(root, "Show password").click();
+    assert.equal(await field.getAttribute("type"), "text");
+    assert.equal(await field.inputValue(), "LongCookie7+");
+    assert.deepEqual(await field.boundingBox(), inputBefore);
+    assert(await field.evaluate(node => node === document.activeElement));
+    await button(root, "Hide password").click();
+    assert.equal(await field.getAttribute("type"), "password");
+  },
   "plan-options": async root => { await byText(root,"Studio").click(); await root.locator('[aria-pressed="true"], [aria-checked="true"], [data-selected="true"]').getByText("Studio",{exact:true}).waitFor(); },
-  "plan-switch": async root => {await byText(root,"Yearly").click();await byText(root,"$240 billed yearly").waitFor();},
+  "plan-switch": async (root, page) => {
+    await byText(root, "Yearly").click();
+    await byText(root, "$240 billed yearly").waitFor();
+    const action = root.locator(".yg-result-morph");
+    const width = (await action.boundingBox()).width;
+    await click(root, "Review plan");
+    await page.waitForFunction(() => {
+      const node = document.querySelector("#plan-switch .yg-result-morph");
+      return Math.abs(node.offsetWidth - node.offsetHeight) <= 1;
+    });
+    const offset = await action.evaluate(node => {
+      const spin = node.querySelector(".yg-result-morph-spinner").getBoundingClientRect();
+      const surface = node.getBoundingClientRect();
+      return Math.abs(spin.left + spin.right - surface.left - surface.right) / 2;
+    });
+    assert(offset < 1, `The plan spinner is off center by ${offset}px`);
+    await button(root, "Plan reviewed").waitFor();
+    await page.waitForFunction(ready => Math.abs(document.querySelector("#plan-switch .yg-result-morph").offsetWidth - ready) <= 1, width);
+  },
   "preview-scale": async root => {await press(root.getByRole("slider"),"ArrowRight","110");await byText(root,"110%").waitFor();},
   "profile-card": async (root, page) => {
     const follow = button(root, "Follow Kai");
@@ -327,11 +357,19 @@ const actions = {
   "step-progress": async root => {await click(root,"Next step");assert.equal(await root.getByRole("progressbar").getAttribute("value"),"2");await root.locator('[data-complete]').waitFor();},
   "storage-meter": async root => {
     await click(root,"Add files");await button(root,/Source files/).click();await click(root,"Free up space");
-    await root.locator('[data-outcome="pending"]').waitFor();await button(root,"Space freed").waitFor();
+    await root.locator('[data-outcome="pending"]').waitFor();
+    const confirm = button(root, "Space freed");
+    await confirm.waitFor();
+    const box = await confirm.boundingBox();
+    assert(box.height <= 56, `The storage action expanded to ${box.height}px`);
     assert.equal(await root.getByRole("meter").getAttribute("aria-valuenow"),"64");
   },
   "streaming-reply": async root => {await click(root,"Stream a reply");await root.locator(".yg-streaming-reply[aria-busy='true']").waitFor();await byText(root,/next revision/).waitFor();},
-  "tab-pill": root => select(root,"tab","Projects","aria-selected"),
+  "tab-pill": async root => {
+    await select(root, "tab", "Projects", "aria-selected");
+    const rows = await root.getByRole("tab").evaluateAll(tabs => new Set(tabs.map(tab => Math.round(tab.getBoundingClientRect().top))).size);
+    assert.equal(rows, 1);
+  },
   "tag-input": async root => {await root.getByRole("textbox",{name:"Tags"}).fill("Ready");await click(root,"Add tag");await root.locator(".motion-tag-chip").filter({hasText:"Ready"}).waitFor();},
   "task-list": async root => {await byText(root,"Example controls").click();await show(root,"Complete step","2 of 3 done");},
   "thinking": async (root, page) => {

@@ -66,3 +66,9 @@ Ten live interaction sequences ran at each review width. They covered reopening 
 ## Seven specimen layouts
 
 Resting and active captures at 320, 768 and 1440 CSS pixels cover the wrapping suggestion, compact activity island, plan switch, command palette, expanding menu, smooth tabs and collapsing sidebar. All 21 runs kept the specimen centered and within the viewport. The activity island keeps its vertical origin, billing actions align to the card, and the collapsed sidebar retains three navigable destinations at each width.
+
+## Billing, password and catalog detail
+
+Browser samples exercise monthly and yearly review through loading and completion, including switching period while pending. At 320, 768 and 1440 CSS pixels in both appearances, the fluid action shares a center with its visible content, contracts to a 48 px circle and returns to its original width. Password interaction covers all five scores, revealing and concealing the value, and clearing it without moving the input or eye.
+
+The catalog inspection captures resting and exercised states for all 78 examples across five viewport and appearance combinations. It exposed a storage detail applying its category-row layout to a nested action, a second row in the compact pill tabs, an intrinsically narrow elastic track and clipped cart labels. The review includes the storage completion row, single-line tabs, separated elastic ticks and readable cart labels at 320 px.

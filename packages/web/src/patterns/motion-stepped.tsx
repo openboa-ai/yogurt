@@ -1,7 +1,7 @@
 "use client";
 import { useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { ElasticRange } from "./elastic-range.js";
-import { advanceSprings, snap, spring } from "../foundation/spring-motion.js";
+import { advanceSprings, playSprings, snap, spring } from "../foundation/spring-motion.js";
 
 type Option = { id: string; label: string };
 
@@ -202,11 +202,50 @@ export function PasswordStrength({ value, onChange }: { value: string; onChange:
   const [shown, setShown] = useState(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
+  const meter = useRef<HTMLDivElement>(null);
+  const [bars] = useState(() => Array.from({length: 4}, () => spring(0, 260, 24)));
+  useLayoutEffect(() => {
+    const fill = Array.from(meter.current?.querySelectorAll("i") ?? []);
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let stop: (() => void) | undefined;
+    const paint = () => fill.forEach((bar, index) => {
+      bar.style.scale = `${Math.max(0, Math.min(1, bars[index].position))} 1`;
+    });
+    const timers = bars.map((bar, index) => {
+      const target = Number(index < score);
+      if (reduced) { snap(bar, target); return undefined; }
+      return setTimeout(() => {
+        bar.target = target;
+        stop?.();
+        stop = playSprings(bars, paint);
+      }, index * 60);
+    });
+    paint();
+    return () => {timers.forEach(clearTimeout); stop?.();};
+  }, [bars, score]);
   return <div className="yg-motion-password" data-score={score}>
     <label htmlFor={id}>Create a password</label>
-    <div className="yg-motion-password-field"><input id={id} type={shown ? "text" : "password"} autoComplete="new-password" value={value} onChange={event => onChange(event.currentTarget.value)} aria-describedby={`${id}-checks`} /><button type="button" className="yg-motion-password-eye" aria-label={shown ? "Hide password" : "Show password"} aria-pressed={shown} onClick={() => setShown(!shown)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.8"/><path className="yg-motion-password-slash" d="M4.5 4.5l15 15" /></svg></button></div>
-    <div className="yg-motion-password-meter" aria-hidden="true">{[0, 1, 2, 3].map(index => <span key={index} style={{ "--yg-bar-index": index } as CSSProperties}><i data-active={index < score || undefined} /></span>)}</div>
-    <div id={`${id}-checks`} className="yg-motion-password-checks"><strong key={word}>{word}</strong><span>8+ characters, mixed case, a number and a symbol</span></div>
+    <div className="yg-motion-password-field">
+      <input id={id} type={shown ? "text" : "password"} autoComplete="new-password"
+        value={value} onChange={event => onChange(event.currentTarget.value)} aria-describedby={`${id}-checks`} />
+      <button type="button" className="yg-motion-password-eye" aria-label={shown ? "Hide password" : "Show password"}
+        aria-pressed={shown} onMouseDown={event => {
+          if (event.currentTarget.previousElementSibling === document.activeElement) event.preventDefault();
+        }} onClick={() => setShown(current => !current)}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/>
+          <circle cx="12" cy="12" r="2.8"/>
+          <path className="yg-motion-password-slash" d="M4.5 4.5l15 15" />
+        </svg>
+      </button>
+    </div>
+    <div className="yg-motion-password-meter" ref={meter} aria-hidden="true">
+      {bars.map((_, index) => <span key={index}><i /></span>)}
+    </div>
+    <div className="yg-motion-password-checks">
+      <span role="status"><strong key={word}>{word}</strong></span>
+      <span id={`${id}-checks`}>8+ characters, mixed case, a number and a symbol</span>
+    </div>
   </div>;
 }
 

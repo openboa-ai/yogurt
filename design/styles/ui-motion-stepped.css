@@ -110,15 +110,31 @@
 }
 .yg-motion-password-meter { gap: 6px; margin-top: 12px; }
 .yg-motion-password-meter span { height: 5px; overflow: hidden; border-radius: 3px; background: var(--yg-field); }
-.yg-motion-password-meter i { display: block; height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; border-radius: inherit; background: var(--yg-meter-color, var(--yg-inverse)); transition: transform var(--yg-motion-storage-disclose), background-color var(--yg-change); transition-delay: calc(var(--yg-bar-index) * 60ms); }
-.yg-motion-password-meter i[data-active] { transform: scaleX(1); }
-.yg-motion-password[data-score="1"] { --yg-meter-color: var(--yg-danger); }
-.yg-motion-password[data-score="2"] { --yg-meter-color: var(--yg-warning); }
-.yg-motion-password[data-score="3"] { --yg-meter-color: var(--yg-muted); }
-.yg-motion-password[data-score="4"] { --yg-meter-color: var(--yg-success); }
-.yg-motion-password-checks { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 10px; font-size: 12px; }
-.yg-motion-password-checks strong { color: var(--yg-meter-color, var(--yg-muted)); white-space: nowrap; }
-.yg-motion-password-checks span { text-align: right; }
+.yg-motion-password-meter i {
+  display: block; height: 100%; width: 100%; scale: 0 1;
+  transform-origin: left; border-radius: inherit; background: var(--yg-meter-color, var(--yg-inverse));
+}
+.yg-motion-password-meter:dir(rtl) i { transform-origin: right; }
+.yg-motion-password[data-score="1"] { --yg-meter-color: var(--yg-signal-limit); }
+.yg-motion-password[data-score="2"] { --yg-meter-color: var(--yg-signal-warning); }
+.yg-motion-password[data-score="3"] { --yg-meter-color: var(--yg-signal-rating); }
+.yg-motion-password[data-score="4"] { --yg-meter-color: var(--yg-signal-positive); }
+.yg-motion-password { container-type: inline-size; }
+.yg-motion-password-checks {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  margin-top: 10px; font-size: 12px; min-block-size: 32px;
+}
+.yg-motion-password-checks strong { display: inline-block; color: var(--yg-meter-color, var(--yg-muted)); white-space: nowrap; }
+.yg-motion-password-checks > [id] { min-inline-size: 0; text-align: end; }
+@container (max-width: 280px) {
+  .yg-motion-password-checks { display: grid; gap: 3px; }
+  .yg-motion-password-checks > [id] { text-align: start; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-motion-password-meter i { transition: background-color var(--yg-change); }
+  .yg-motion-password-checks strong { animation: yg-password-score 220ms var(--yg-arrive) both; }
+}
+@keyframes yg-password-score { from { opacity: 0; translate: 0 6px; } }
 .yg-motion-checklist { box-sizing: border-box; width: min(320px, 100%); gap: 0; padding: 14px 16px 8px; border-radius: 24px; background: var(--yg-surface); }
 .yg-motion-checklist legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .yg-motion-checklist-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }

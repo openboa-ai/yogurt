@@ -1124,7 +1124,7 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
     const parent = button.parentElement;
     const setWidth = () => {
       const room = fluid && parent ? parent.clientWidth : 168;
-      motion.width.target = Math.min(room, pending ? 56 : result ? 140 : room);
+      motion.width.target = Math.min(room, pending ? fluid ? button.offsetHeight : 56 : result && !fluid ? 140 : room);
     };
     setWidth();
     if (!button.style.getPropertyValue("--yg-result-width") && state === "idle") snap(motion.width, motion.width.target);
@@ -1136,9 +1136,16 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!success || reduced) motion.check.target = Number(success);
     if (restore && reduced) motion.label.target = 1;
+    const idleLabel = button.querySelector(".yg-result-morph-label");
+    const resultLabel = button.querySelector(".yg-result-morph-feedback");
     const paint = () => {
+      const width2 = Math.min(fluid && parent ? parent.clientWidth : 168, motion.width.position);
+      button.style.setProperty("--yg-result-width", `${width2}px`);
       for (const [name, track] of Object.entries(motion)) {
-        button.style.setProperty(`--yg-result-${name}`, name === "width" ? `${track.position}px` : String(track.position));
+        if (name === "width") continue;
+        const label2 = name === "label" ? idleLabel : name === "result" ? resultLabel : null;
+        const visible = label2 ? Math.max(0, Math.min(1, (width2 - label2.offsetWidth - 8) / 18)) : 1;
+        button.style.setProperty(`--yg-result-${name}`, String(track.position * visible));
       }
     };
     let stop = playSprings(tracked, paint);
@@ -2240,20 +2247,70 @@ function PasswordStrength({ value, onChange }) {
   const [shown, setShown] = useState8(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
+  const meter = useRef9(null);
+  const [bars] = useState8(() => Array.from({ length: 4 }, () => spring(0, 260, 24)));
+  useLayoutEffect8(() => {
+    const fill = Array.from(meter.current?.querySelectorAll("i") ?? []);
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let stop;
+    const paint = () => fill.forEach((bar, index) => {
+      bar.style.scale = `${Math.max(0, Math.min(1, bars[index].position))} 1`;
+    });
+    const timers = bars.map((bar, index) => {
+      const target = Number(index < score);
+      if (reduced) {
+        snap(bar, target);
+        return void 0;
+      }
+      return setTimeout(() => {
+        bar.target = target;
+        stop?.();
+        stop = playSprings(bars, paint);
+      }, index * 60);
+    });
+    paint();
+    return () => {
+      timers.forEach(clearTimeout);
+      stop?.();
+    };
+  }, [bars, score]);
   return /* @__PURE__ */ jsxs9("div", { className: "yg-motion-password", "data-score": score, children: [
     /* @__PURE__ */ jsx9("label", { htmlFor: id, children: "Create a password" }),
     /* @__PURE__ */ jsxs9("div", { className: "yg-motion-password-field", children: [
-      /* @__PURE__ */ jsx9("input", { id, type: shown ? "text" : "password", autoComplete: "new-password", value, onChange: (event) => onChange(event.currentTarget.value), "aria-describedby": `${id}-checks` }),
-      /* @__PURE__ */ jsx9("button", { type: "button", className: "yg-motion-password-eye", "aria-label": shown ? "Hide password" : "Show password", "aria-pressed": shown, onClick: () => setShown(!shown), children: /* @__PURE__ */ jsxs9("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", children: [
-        /* @__PURE__ */ jsx9("path", { d: "M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" }),
-        /* @__PURE__ */ jsx9("circle", { cx: "12", cy: "12", r: "2.8" }),
-        /* @__PURE__ */ jsx9("path", { className: "yg-motion-password-slash", d: "M4.5 4.5l15 15" })
-      ] }) })
+      /* @__PURE__ */ jsx9(
+        "input",
+        {
+          id,
+          type: shown ? "text" : "password",
+          autoComplete: "new-password",
+          value,
+          onChange: (event) => onChange(event.currentTarget.value),
+          "aria-describedby": `${id}-checks`
+        }
+      ),
+      /* @__PURE__ */ jsx9(
+        "button",
+        {
+          type: "button",
+          className: "yg-motion-password-eye",
+          "aria-label": shown ? "Hide password" : "Show password",
+          "aria-pressed": shown,
+          onMouseDown: (event) => {
+            if (event.currentTarget.previousElementSibling === document.activeElement) event.preventDefault();
+          },
+          onClick: () => setShown((current) => !current),
+          children: /* @__PURE__ */ jsxs9("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", children: [
+            /* @__PURE__ */ jsx9("path", { d: "M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" }),
+            /* @__PURE__ */ jsx9("circle", { cx: "12", cy: "12", r: "2.8" }),
+            /* @__PURE__ */ jsx9("path", { className: "yg-motion-password-slash", d: "M4.5 4.5l15 15" })
+          ] })
+        }
+      )
     ] }),
-    /* @__PURE__ */ jsx9("div", { className: "yg-motion-password-meter", "aria-hidden": "true", children: [0, 1, 2, 3].map((index) => /* @__PURE__ */ jsx9("span", { style: { "--yg-bar-index": index }, children: /* @__PURE__ */ jsx9("i", { "data-active": index < score || void 0 }) }, index)) }),
-    /* @__PURE__ */ jsxs9("div", { id: `${id}-checks`, className: "yg-motion-password-checks", children: [
-      /* @__PURE__ */ jsx9("strong", { children: word }, word),
-      /* @__PURE__ */ jsx9("span", { children: "8+ characters, mixed case, a number and a symbol" })
+    /* @__PURE__ */ jsx9("div", { className: "yg-motion-password-meter", ref: meter, "aria-hidden": "true", children: bars.map((_, index) => /* @__PURE__ */ jsx9("span", { children: /* @__PURE__ */ jsx9("i", {}) }, index)) }),
+    /* @__PURE__ */ jsxs9("div", { className: "yg-motion-password-checks", children: [
+      /* @__PURE__ */ jsx9("span", { role: "status", children: /* @__PURE__ */ jsx9("strong", { children: word }, word) }),
+      /* @__PURE__ */ jsx9("span", { id: `${id}-checks`, children: "8+ characters, mixed case, a number and a symbol" })
     ] })
   ] });
 }

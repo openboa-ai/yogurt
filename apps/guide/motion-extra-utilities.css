@@ -146,3 +146,13 @@
 @keyframes utility-lock-draw { from { stroke-dasharray: 1; stroke-dashoffset: 1; } to { stroke-dasharray: 1; stroke-dashoffset: 0; } }
 @keyframes utility-lock-scan { from { translate: 0 1px; opacity: 0; } 16% { opacity: .85; } to { translate: 0 38px; opacity: 0; } }
 @keyframes utility-letter-in { from { opacity: 0; translate: 0 -.65em; rotate: -10deg; scale: 1 .84; } }
+
+.utility-cart { container-type: inline-size; }
+@container (max-width: 330px) {
+  .utility-cart ul { padding-inline: 12px; }
+  .utility-cart li { grid-template-columns: 32px minmax(0, 1fr) auto; gap: 8px; }
+  .utility-cart-tile { inline-size: 32px; block-size: 32px; }
+  .utility-cart-tile svg { inline-size: 16px; block-size: 16px; }
+  .utility-cart-product strong { white-space: normal; overflow-wrap: anywhere; }
+  .utility-cart-product span { white-space: normal; }
+}

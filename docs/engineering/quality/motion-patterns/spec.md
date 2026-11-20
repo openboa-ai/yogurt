@@ -163,3 +163,7 @@ Keep the interval handles reachable as they converge. The motion example request
 Apply mention caret restoration when the corresponding controlled value is committed. New text input cancels any pending caret change. In a series of selections, each choice replaces only the current token.
 
 Review the writing suggestion, activity island, billing card, command palette, expanding menu, smooth tabs and sidebar in both resting and active states. Keep the writing suggestion readable at narrow widths, align billing controls to the card, reserve space for expanding panels, and include the visible rail in narrow sidebar specimens. Verify these arrangements at 320, 768 and 1440 CSS pixels while retaining their existing interactions.
+
+Verify the billing action through its entire review sequence. The fluid action uses the full card width at rest and on completion, and contracts to a circle matching the row height while pending. Hidden content does not determine the center of the spinner or the outcome. Verify both billing periods and a period change during a pending review. For the password specimen, preserve the width, text alignment, focus and eye position through input, reveal, conceal and deletion. The strength label and guidance remain readable at the minimum review width.
+
+Keep the storage result label on one line inside its disclosure. At narrow widths the cart must show the product name beside the quantity stepper, pill tabs remain a single row, and the elastic range keeps enough track width to separate its tick labels.

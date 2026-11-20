@@ -46,7 +46,7 @@
 .yg-storage-categories { margin: 0; padding: 0; list-style: none; }
 .yg-storage-categories li { border-radius: 16px; }
 .yg-storage-categories li[data-open] { background: var(--yg-field); }
-.yg-storage-categories button {
+.yg-storage-categories li > button {
   display: grid;
   grid-template-columns: 10px minmax(0, 1fr) auto;
   align-items: center;
@@ -62,7 +62,7 @@
   text-align: start;
   cursor: pointer;
 }
-.yg-storage-categories button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
+.yg-storage-categories li > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
 .yg-storage-category-amount { font-variant-numeric: tabular-nums; }
 .yg-storage-dot { inline-size: 10px; block-size: 10px; border-radius: 50%; }
 .yg-storage-reveal { display: grid; grid-template-rows: 0fr; }
@@ -214,12 +214,15 @@
   max-inline-size: 100%;
   inline-size: var(--yg-result-width, 168px);
   block-size: 56px;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   overflow: clip;
   padding: 0;
   background: color-mix(in srgb, var(--yg-signal-positive) calc(clamp(0, var(--yg-result-color, 0), 1) * 100%), var(--yg-inverse));
   color: var(--yg-on-inverse);
 }
-.yg-result-morph[data-outcome="success"] { color: var(--yg-on-signal-positive); }
+.yg-result-morph[data-outcome="success"] {
+  color: color-mix(in srgb, var(--yg-on-signal-positive) calc(clamp(0, var(--yg-result-color, 0), 1) * 100%), var(--yg-on-inverse));
+}
 .yg-result-morph[data-outcome="error"] { background: var(--yg-danger-soft); color: var(--yg-danger); }
 .yg-result-morph > span { grid-area: 1 / 1; white-space: nowrap; }
 .yg-result-morph-label { opacity: clamp(0, var(--yg-result-label, 1), 1); translate: 0 calc((1 - var(--yg-result-label, 1)) * 14px); }
@@ -353,3 +356,7 @@ summary.yg-task-line:focus-visible {
 
 .yg-activity-island[data-compact] > button > svg { inline-size: 14px; block-size: 14px; }
 .yg-activity-island[data-compact] > button > span:nth-child(2) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.yg-storage-category-detail { flex-wrap: wrap; }
+.yg-storage-category-detail > .yg-result-action { flex: 0 0 auto; }
+.yg-result-action-label > span { white-space: nowrap; }

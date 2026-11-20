@@ -206,7 +206,7 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
     const parent = button.parentElement;
     const setWidth = () => {
       const room = fluid && parent ? parent.clientWidth : 168;
-      motion.width.target = Math.min(room, pending ? 56 : result ? 140 : room);
+      motion.width.target = Math.min(room, pending ? (fluid ? button.offsetHeight : 56) : result && !fluid ? 140 : room);
     };
     setWidth();
     if (!button.style.getPropertyValue("--yg-result-width") && state === "idle") snap(motion.width, motion.width.target);
@@ -218,9 +218,16 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!success || reduced) motion.check.target = Number(success);
     if (restore && reduced) motion.label.target = 1;
+    const idleLabel = button.querySelector<HTMLElement>(".yg-result-morph-label");
+    const resultLabel = button.querySelector<HTMLElement>(".yg-result-morph-feedback");
     const paint = () => {
+      const width = Math.min(fluid && parent ? parent.clientWidth : 168, motion.width.position);
+      button.style.setProperty("--yg-result-width", `${width}px`);
       for (const [name, track] of Object.entries(motion)) {
-        button.style.setProperty(`--yg-result-${name}`, name === "width" ? `${track.position}px` : String(track.position));
+        if (name === "width") continue;
+        const label = name === "label" ? idleLabel : name === "result" ? resultLabel : null;
+        const visible = label ? Math.max(0, Math.min(1, (width - label.offsetWidth - 8) / 18)) : 1;
+        button.style.setProperty(`--yg-result-${name}`, String(track.position * visible));
       }
     };
     let stop = playSprings(tracked, paint);
