@@ -48,6 +48,13 @@ for (const over of [{}, ...Object.values(ui.materials)]) {
     ["success", "success-soft"],
     ["warning", "warning-soft"],
     ["accent", "accent-soft"],
+    ["on-signal-positive", "signal-positive"],
+    ["signal-positive", "signal-positive-soft"],
+    ["signal-warning", "canvas"],
+    ["signal-warning", "surface"],
+    ["signal-limit", "canvas"],
+    ["signal-limit", "surface"],
+    ["signal-rating", "surface"],
   ]) {
     for (let i = 0; i < 2; i++) {
       assert(

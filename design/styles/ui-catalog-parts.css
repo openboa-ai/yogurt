@@ -427,7 +427,7 @@
   cursor: pointer;
 }
 .yg-rating [data-filled] {
-  color: var(--yg-inverse);
+  color: var(--yg-signal-rating);
 }
 .yg-rating label:has(:focus-visible) {
   outline: var(--boa-stroke-focus) solid var(--yg-inverse);

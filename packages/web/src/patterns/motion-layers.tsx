@@ -29,26 +29,36 @@ export function MorphTooltip({ label, detail }: { label: string; detail: string 
 }
 
 type LayerOption = { id: string; label: string };
+type SpringOption = LayerOption & {
+  marker?: "neutral" | "in-progress" | "review" | "done";
+};
 
 /** A controlled listbox with an anchored panel and explicit selected state. */
 export function SpringDropdown({ label, value, onChange, options }: {
-  label: string; value: string; onChange: (value: string) => void; options: LayerOption[];
+  label: string; value: string; onChange: (value: string) => void; options: readonly SpringOption[];
 }) {
   const id = useId();
   const [portal, setPortal] = useState<HTMLDivElement | null>(null);
+  const selected = options.find(option => option.id === value);
   return <div ref={setPortal} className="yg-spring-dropdown">
     <label id={id} className="yg-spring-label">{label}</label>
     <SelectPrimitive.Root value={value} onValueChange={onChange}>
       <SelectPrimitive.Trigger className="yg-spring-trigger" aria-labelledby={id}>
-        <span className="yg-spring-symbol" aria-hidden="true" />
-        <span className="yg-spring-value"><span key={value} className="yg-spring-value-roll"><SelectPrimitive.Value placeholder="Choose an option" /></span></span>
+        <span className="yg-spring-value">
+          <span key={value} className="yg-spring-value-roll">
+            <span className="yg-spring-symbol" data-marker={selected?.marker} aria-hidden="true" />
+            <span className="yg-spring-value-label">
+              <SelectPrimitive.Value placeholder="Choose an option" />
+            </span>
+          </span>
+        </span>
         <SelectPrimitive.Icon className="yg-spring-chevron" aria-hidden="true">⌄</SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal container={portal}>
         <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={8}>
           <SelectPrimitive.Viewport className="yg-spring-viewport">
             {options.map(option => <SelectPrimitive.Item key={option.id} value={option.id} className="yg-spring-option">
-              <span className="yg-spring-option-symbol" aria-hidden="true" />
+              <span className="yg-spring-symbol" data-marker={option.marker} aria-hidden="true" />
               <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
               <SelectPrimitive.ItemIndicator className="yg-spring-check" aria-hidden="true">✓</SelectPrimitive.ItemIndicator>
             </SelectPrimitive.Item>)}

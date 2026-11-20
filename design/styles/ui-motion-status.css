@@ -27,6 +27,7 @@
 .yg-storage-amount span { margin-inline-start: 4px; }
 .yg-storage-bar {
   display: flex;
+  align-items: center;
   margin: 14px 12px 12px;
   block-size: 14px;
   overflow: clip;
@@ -35,8 +36,9 @@
 }
 .yg-storage-bar > span, .yg-storage-dot { background: var(--yg-storage-tone, var(--yg-inverse)); }
 .yg-storage-bar > span { flex: none; block-size: 100%; border-radius: var(--boa-radius-round); }
-.yg-storage-bar[data-highlight] > span:not([data-selected]) { opacity: .35; }
-.yg-storage-meter [data-tone="1"] { --yg-storage-tone: var(--yg-muted); }
+.yg-storage-bar[data-highlight] > span:not([data-selected]) { opacity: .35; scale: 1 .72; }
+.yg-storage-meter [data-tone="0"] { --yg-storage-tone: var(--yg-action); }
+.yg-storage-meter [data-tone="1"] { --yg-storage-tone: var(--yg-signal-category-secondary); }
 .yg-storage-meter [data-tone="2"] { --yg-storage-tone: var(--boa-color-neutral-500); }
 .yg-storage-categories { margin: 0; padding: 0; list-style: none; }
 .yg-storage-categories li { border-radius: 16px; }
@@ -73,7 +75,10 @@
   font: var(--yg-font-meta);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-storage-bar > span { transition: inline-size var(--yg-reveal) var(--yg-arrive), opacity 240ms ease; }
+  .yg-storage-bar > span {
+    transition: inline-size var(--yg-reveal) var(--yg-arrive),
+      opacity var(--yg-change) var(--yg-settle), scale var(--yg-expand) var(--yg-selection);
+  }
   .yg-storage-reveal { transition: grid-template-rows 280ms var(--yg-arrive); }
   .yg-storage-amount strong { animation: yg-storage-count 260ms var(--yg-arrive) both; }
 }
@@ -136,15 +141,15 @@
   visibility: hidden;
 }
 .yg-root .yg-result-action[data-outcome="success"] {
-  background: var(--yg-success-soft);
-  color: var(--yg-success);
+  background: var(--yg-signal-positive);
+  color: var(--yg-on-signal-positive);
 }
 .yg-root .yg-result-action[data-outcome="error"] {
   background: var(--yg-danger-soft);
   color: var(--yg-danger);
 }
 .yg-root .yg-result-action[data-outcome="success"]:hover {
-  background: var(--yg-success-soft);
+  background: var(--yg-signal-positive);
 }
 .yg-root .yg-result-action[data-outcome="error"]:hover {
   background: var(--yg-danger-soft);

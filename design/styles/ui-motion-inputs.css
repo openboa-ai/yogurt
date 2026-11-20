@@ -93,7 +93,7 @@
 .yg-file-drop-copy span { color: var(--yg-muted); font: var(--yg-font-meta); overflow-wrap: anywhere; }
 .yg-file-drop[data-dragging] { background: var(--yg-field); }
 .yg-file-drop[data-dragging] .yg-file-drop-core { background: var(--yg-hover); }
-.yg-file-drop[data-accepted] .yg-file-drop-core { background: var(--yg-success-soft); color: var(--yg-success); }
+.yg-file-drop[data-accepted] .yg-file-drop-core { background: var(--yg-signal-positive-soft); color: var(--yg-signal-positive); }
 .yg-file-drop input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
 .yg-file-drop:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 .yg-file-drop-status:empty { display: none; }

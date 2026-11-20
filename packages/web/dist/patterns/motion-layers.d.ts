@@ -7,12 +7,15 @@ type LayerOption = {
     id: string;
     label: string;
 };
+type SpringOption = LayerOption & {
+    marker?: "neutral" | "in-progress" | "review" | "done";
+};
 /** A controlled listbox with an anchored panel and explicit selected state. */
 export declare function SpringDropdown({ label, value, onChange, options }: {
     label: string;
     value: string;
     onChange: (value: string) => void;
-    options: LayerOption[];
+    options: readonly SpringOption[];
 }): import("react/jsx-runtime").JSX.Element;
 /** A searchable command surface that returns the selected command ID. */
 export declare function CommandButton({ label, items, onSelect }: {

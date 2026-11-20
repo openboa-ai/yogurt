@@ -11,6 +11,7 @@
 .extra-rating legend { font-weight: 600; }
 .extra-rating > div { display: flex; gap: var(--yg-gap-tight); margin-top: 8px; }
 .extra-rating label { position: relative; cursor: pointer; font-size: 30px; color: var(--yg-inverse); }
+.extra-rating [data-filled] { color: var(--yg-signal-rating); }
 .extra-rating input { position: absolute; opacity: 0; }
 .extra-rating input:focus-visible + span { outline: 2px solid currentColor; outline-offset: 2px; }
 .extra-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }

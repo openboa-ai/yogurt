@@ -14,7 +14,7 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
         .typography = .{ .font_id = font_id, .mono_font_id = font_id, .button_font_id = button_font_id, .body_size = ui.body_type, .label_size = ui.help_type, .button_size = ui.action_type, .heading_size = ui.heading_type, .title_size = ui.heading_type },
         .motion = .{ .fast_ms = ui.press_ms, .normal_ms = ui.travel_ms, .slow_ms = ui.panel_ms },
         .controls = .{
-            .switch_control = .{ .background = r.off, .active_background = r.inverse, .foreground = r.thumb, .active_foreground = r.on_inverse },
+            .switch_control = .{ .background = r.off, .active_background = r.signal_positive, .foreground = r.thumb, .active_foreground = r.on_signal_positive },
             .button_primary = .{ .background = r.inverse, .hover_background = r.inverse_hover, .pressed_background = r.inverse_press, .foreground = r.on_inverse, .radius = ui.radius_control, .disabled_background = r.hover, .disabled_foreground = r.muted },
             .button_secondary = .{ .background = r.field, .foreground = r.text, .hover_background = r.hover, .radius = ui.radius_control, .stroke_width = 0 },
             .input = .{ .background = r.field, .foreground = r.text, .radius = ui.radius_control, .stroke_width = 0 },

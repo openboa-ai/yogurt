@@ -117,3 +117,17 @@ The prompt uses a 380 px measure, a 52 px resting height, a 24 px corner and a 3
 Review matched specimens side by side in their empty, active and completed states. Use shared values only where they resolve to the intended dimensions and motion. Preserve each specimen's content arrangement, nesting, visible action, and state-specific scale in its component or recipe. Initial and interrupted frames must preserve what input was taken and how to proceed. Exercise pointer, keyboard and reduced-motion paths in the running guide. Retain local measurements or captures so the owner can distinguish a shared style change from an individually checked port.
 
 The mention composer uses a 320 px measure, 24 px corner, 16 px inset, and a 16 px editor on a 32 px line. The file drop uses a 296 × 216 px surface with a 28 px corner and a centered 72 px mark beginning 38 px below the surface edge. The checklist example shows four 48 px rows and fits any item count in the SDK. The spring picker keeps a 232 × 52 px trigger with a 16 px corner, and its list aligns to the trigger.
+
+### Color during interaction
+
+Use the shared numbered palette for information that the interaction reveals or changes. Keep surfaces, routine hover, and selection containers neutral. Preserve labels, shapes, and position so the same state reads without hue.
+
+| Interaction | Color and state |
+| --- | --- |
+| Storage | Use blue, pink, and neutral consistently across category segments and dots. Selecting a category draws attention to its segment as the other segments recede. Collapse restores the overview. Keep a meter without category data neutral. |
+| Switch | The track turns green as the thumb moves into the on position. The off track stays neutral. Resolve the same active and thumb roles for Web and Native. |
+| Character limit | The counter and arc start neutral, turn orange near the limit, and turn red at the limit. Deleting text restores the earlier state immediately. |
+| Spring picker | Let callers optionally give each option a neutral, in-progress, review, or done marker. Orange, blue, and green identify the last three states. The selected marker travels with its label. Keep the menu, highlight, and check neutral. |
+| Verified result and rating | Show green on completed action feedback, the accepted file mark, and the savings indicator. Use yellow on filled rating stars. |
+
+Confirm the role and corresponding text or position in light and dark. Check rapid reversals, pointer and keyboard interaction, and immediate state with reduced motion. The behavior and default labels of existing callers remain valid.

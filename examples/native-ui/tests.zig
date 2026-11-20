@@ -12,7 +12,8 @@ test "current state chooses the same ink and metrics used by the web kit" {
             try std.testing.expectEqual(expected.inverse, t.controls.button_primary.background.?);
             try std.testing.expectEqual(expected.inverse_hover, t.controls.button_primary.hover_background.?);
             try std.testing.expectEqual(expected.field, t.controls.button_secondary.background.?);
-            try std.testing.expectEqual(expected.inverse, t.controls.switch_control.active_background.?);
+            try std.testing.expectEqual(expected.signal_positive, t.controls.switch_control.active_background.?);
+            try std.testing.expectEqual(expected.on_signal_positive, t.controls.switch_control.active_foreground.?);
             try std.testing.expectEqual(expected.canvas, t.colors.background);
             try std.testing.expectEqual(ui.size_regular, t.metrics.control_height);
             try std.testing.expectEqual(ui.radius_control, t.controls.button_primary.radius.?);

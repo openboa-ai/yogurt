@@ -26,3 +26,7 @@ The light and dark guide captures cover bottom bar hover and selection, the work
 The desktop mention surface measures 320 × 144 px with a 24 px corner. The file drop measures 296 × 216 px with a 28 px corner and a 72 px mark. Its drag response changes the neutral fill and its accepted state retains the success label and mark. Four 48 px checklist rows fit the example. The spring picker trigger measures 232 × 52 px with a 16 px corner, and the visible list retains its anchored width during keyboard and pointer operation.
 
 The neutral material audit visited each of the 125 component entries, 14 blocks, and 78 motion examples in both appearances. All inspected resting UI fills, text, and carets were achromatic. Interaction checks exercise neutral hover, selection, drag and status in addition to the resting audit. Artwork, alternate materials, and other interaction states require their own visual checks.
+
+## Palette signals
+
+Browser checks in both appearances confirm that storage selection recedes and restores the other segments, a switch returns to its neutral off track, the character counter and arc advance through orange and red, and the spring picker carries the chosen marker into its trigger. Filled rating stars and accepted file feedback use the shared palette. The bottom bar, command palette, and picker containers retain their neutral treatments. The Native fixture verifies the checked switch track and thumb against the generated roles.

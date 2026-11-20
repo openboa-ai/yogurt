@@ -47,6 +47,12 @@ const steps = [
   {id: "draft", label: "Draft the update", detail: "Prepare the next revision."},
   {id: "handoff", label: "Ask for review", detail: "Wait for a person to respond."},
 ];
+const workStatuses = [
+  {id: "queued", label: "Queued", marker: "neutral"},
+  {id: "active", label: "In progress", marker: "in-progress"},
+  {id: "review", label: "In review", marker: "review"},
+  {id: "complete", label: "Complete", marker: "done"},
+] as const;
 
 function StorageExample() {
   const [used, setUsed] = useState(64);
@@ -69,10 +75,10 @@ function MentionExample() {
 }
 
 function ChoiceExample({ kind }: {kind: "plan" | "focus" | "select" | "dial"}) {
-  const [value, setValue] = useState(kind === "plan" ? "team" : kind === "focus" ? "all" : "overview");
+  const [value, setValue] = useState({plan: "team", focus: "all", select: "active", dial: "overview"}[kind]);
   if (kind === "plan") return <PlanSwitch options={plans} value={value} onChange={setValue} />;
   if (kind === "focus") return <FocusPicker options={focusOptions} value={value} onChange={setValue} />;
-  if (kind === "select") return <SpringDropdown label="Workspace view" options={pages} value={value} onChange={setValue} />;
+  if (kind === "select") return <SpringDropdown label="Work status" options={workStatuses} value={value} onChange={setValue} />;
   return <DetentDial options={pages} value={value} onChange={setValue} />;
 }
 

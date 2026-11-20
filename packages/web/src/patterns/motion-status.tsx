@@ -24,12 +24,13 @@ export function StorageMeter({ label, used, capacity, unit, categories = [] }: {
   const ratio = known ? Math.min(1, used / capacity) : 0;
   let available = known ? Math.min(used, capacity) : 0;
   const breakdown = categories.filter(category => Number.isFinite(category.amount) && category.amount > 0);
-  const bars = breakdown.map<{id?: string; fraction: number; tone: number}>((category, index) => {
+  const bars = breakdown.map<{id?: string; fraction: number; tone?: number}>((category, index) => {
     const amount = Math.min(category.amount, available);
     available -= amount;
     return { id: category.id, fraction: known ? amount / capacity : 0, tone: index % 3 };
   });
-  if (available > 0) bars.push({fraction: available / capacity, tone: categories.length === 0 ? 0 : 2});
+  if (available > 0) bars.push({fraction: available / capacity});
+  const highlighted = bars.some(bar => bar.id === expanded && bar.fraction > 0);
 
   return (
     <section className="yg-storage-meter" data-full={ratio === 1 || undefined}>
@@ -42,7 +43,7 @@ export function StorageMeter({ label, used, capacity, unit, categories = [] }: {
           </div>
           <div className="yg-storage-bar" role="meter" aria-labelledby={id}
             aria-valuemin={0} aria-valuemax={capacity} aria-valuenow={Math.min(used, capacity)}
-            aria-valuetext={`${used} of ${capacity} ${unit} used`} data-highlight={breakdown.some(category => category.id === expanded) || undefined}>
+            aria-valuetext={`${used} of ${capacity} ${unit} used`} data-highlight={highlighted || undefined}>
             {bars.map(({id: categoryId, fraction, tone}) => (
               <span key={categoryId ?? id} data-tone={tone} data-selected={categoryId === expanded || undefined}
                 style={{inlineSize: `${fraction * 100}%`}} />

@@ -52,8 +52,8 @@
   color: var(--yg-text);
   --yg-letter-ink: var(--yg-muted);
 }
-.yg-letter-limit[data-limit-state="near"] { --yg-letter-ink: var(--yg-warning); }
-.yg-letter-limit[data-limit-state="full"] { --yg-letter-ink: var(--yg-danger); }
+.yg-letter-limit[data-limit-state="near"] { --yg-letter-ink: var(--yg-signal-warning); }
+.yg-letter-limit[data-limit-state="full"] { --yg-letter-ink: var(--yg-signal-limit); }
 .yg-letter-limit textarea {
   display: block;
   inline-size: 100%;

@@ -284,16 +284,19 @@ function MorphTooltip({ label, detail }) {
 function SpringDropdown({ label, value, onChange, options }) {
   const id = useId3();
   const [portal, setPortal] = useState2(null);
+  const selected = options.find((option) => option.id === value);
   return /* @__PURE__ */ jsxs3("div", { ref: setPortal, className: "yg-spring-dropdown", children: [
     /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
     /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: onChange, children: [
       /* @__PURE__ */ jsxs3(dist_exports.Trigger, { className: "yg-spring-trigger", "aria-labelledby": id, children: [
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "aria-hidden": "true" }),
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-value", children: /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-roll", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) }, value) }),
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-value", children: /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", children: [
+          /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": selected?.marker, "aria-hidden": "true" }),
+          /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) })
+        ] }, value) }),
         /* @__PURE__ */ jsx3(dist_exports.Icon, { className: "yg-spring-chevron", "aria-hidden": "true", children: "\u2304" })
       ] }),
       /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, children: /* @__PURE__ */ jsx3(dist_exports.Viewport, { className: "yg-spring-viewport", children: options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-option-symbol", "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
         /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
         /* @__PURE__ */ jsx3(dist_exports.ItemIndicator, { className: "yg-spring-check", "aria-hidden": "true", children: "\u2713" })
       ] }, option.id)) }) }) })
@@ -319,7 +322,8 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
     available -= amount;
     return { id: category.id, fraction: known ? amount / capacity : 0, tone: index % 3 };
   });
-  if (available > 0) bars.push({ fraction: available / capacity, tone: categories.length === 0 ? 0 : 2 });
+  if (available > 0) bars.push({ fraction: available / capacity });
+  const highlighted = bars.some((bar) => bar.id === expanded && bar.fraction > 0);
   return /* @__PURE__ */ jsxs4("section", { className: "yg-storage-meter", "data-full": ratio === 1 || void 0, children: [
     /* @__PURE__ */ jsx4("strong", { id, className: "yg-storage-heading", children: label }),
     known ? /* @__PURE__ */ jsxs4(Fragment, { children: [
@@ -343,7 +347,7 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
           "aria-valuemax": capacity,
           "aria-valuenow": Math.min(used, capacity),
           "aria-valuetext": `${used} of ${capacity} ${unit} used`,
-          "data-highlight": breakdown.some((category) => category.id === expanded) || void 0,
+          "data-highlight": highlighted || void 0,
           children: bars.map(({ id: categoryId, fraction, tone }) => /* @__PURE__ */ jsx4(
             "span",
             {

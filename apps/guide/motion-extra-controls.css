@@ -11,6 +11,7 @@
 .motion-extra-track span { display: block; height: 100%; background: var(--yg-inverse); transition: width var(--yg-change) var(--yg-settle); }
 .motion-extra-refresh { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--yg-field); color: var(--yg-inverse); font-size: 26px; animation: motion-extra-turn 450ms var(--yg-settle); }
 .motion-extra-rating button { border: 0; padding: var(--boa-space-2); background: none; color: var(--yg-inverse); font-size: 28px; cursor: pointer; }
+.motion-extra-rating [data-filled] { color: var(--yg-signal-rating); }
 .motion-extra button:focus-visible, .motion-extra input:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 @keyframes motion-extra-turn { from { transform: rotate(-90deg) scale(.8); opacity: .4; } to { transform: rotate(0) scale(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .motion-extra-refresh { animation: none; } .motion-extra-chips button, .motion-extra-toolbar button, .motion-extra-track span { transition: none; } .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: none; } }

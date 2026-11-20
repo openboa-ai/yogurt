@@ -471,6 +471,7 @@
   border: 0;
   border-radius: var(--boa-radius-round);
   background: var(--yg-off);
+  transition: background-color var(--yg-travel) var(--yg-settle);
 }
 .yg-switch [role="switch"]::before {
   content: "";
@@ -486,15 +487,16 @@
   height: var(--yg-thumb-size);
   background: var(--yg-thumb);
   border-radius: 50%;
-  transition: transform var(--yg-travel) var(--yg-settle);
+  transition: transform var(--yg-travel) var(--yg-settle),
+    background-color var(--yg-travel) var(--yg-settle);
 }
 .yg-switch [role="switch"][data-state="checked"] {
-  background: var(--yg-inverse);
+  background: var(--yg-signal-positive);
 }
 .yg-switch [role="switch"][data-state="checked"] > span {
   --yg-thumb-travel: calc(var(--yg-switch-width) - var(--yg-thumb-size) - 2 * var(--yg-track-inset));
   transform: translateX(var(--yg-thumb-travel));
-  background: var(--yg-on-inverse);
+  background: var(--yg-on-signal-positive);
 }
 .yg-switch [role="switch"][data-state="checked"]:dir(rtl) > span {
   transform: translateX(calc(-1 * var(--yg-thumb-travel)));

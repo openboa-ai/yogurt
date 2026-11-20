@@ -11,7 +11,7 @@ function Toolbar() {
 }
 function Rating() {
   const [value, setValue] = useState(0);
-  return <fieldset className="extra-rating"><legend>Rate this view</legend><div>{[1,2,3,4,5].map(n => <label key={n}><input type="radio" name="extra-rating" value={n} checked={value === n} onChange={() => setValue(n)} /><span aria-hidden="true">{n <= value ? "★" : "☆"}</span><span className="extra-sr">{n} of 5</span></label>)}</div><p>{value ? `${value} of 5 selected` : "Choose a rating"}</p><Button size="compact" emphasis="quiet" onClick={() => setValue(0)}>Clear</Button></fieldset>;
+  return <fieldset className="extra-rating"><legend>Rate this view</legend><div>{[1,2,3,4,5].map(n => <label key={n}><input type="radio" name="extra-rating" value={n} checked={value === n} onChange={() => setValue(n)} /><span aria-hidden="true" data-filled={n <= value || undefined}>{n <= value ? "★" : "☆"}</span><span className="extra-sr">{n} of 5</span></label>)}</div><p>{value ? `${value} of 5 selected` : "Choose a rating"}</p><Button size="compact" emphasis="quiet" onClick={() => setValue(0)}>Clear</Button></fieldset>;
 }
 function Quantity() {
   const [value, setValue] = useState(1);

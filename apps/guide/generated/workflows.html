@@ -366,6 +366,13 @@
   --yg-action-soft-hover: light-dark(var(--boa-color-slate-100), var(--boa-color-slate-800));
   --yg-off: light-dark(var(--boa-color-neutral-600), var(--boa-color-neutral-500));
   --yg-thumb: light-dark(var(--boa-color-neutral-0), var(--boa-color-neutral-975));
+  --yg-signal-positive: light-dark(var(--boa-color-green-700), var(--boa-color-green-400));
+  --yg-on-signal-positive: light-dark(var(--boa-color-neutral-0), var(--boa-color-green-950));
+  --yg-signal-positive-soft: light-dark(var(--boa-color-green-50), var(--boa-color-green-900));
+  --yg-signal-warning: light-dark(var(--boa-color-orange-700), var(--boa-color-orange-300));
+  --yg-signal-limit: light-dark(var(--boa-color-red-700), var(--boa-color-red-300));
+  --yg-signal-rating: light-dark(var(--boa-color-yellow-700), var(--boa-color-yellow-250));
+  --yg-signal-category-secondary: light-dark(var(--boa-color-magenta-600), var(--boa-color-magenta-300));
   --yg-danger: light-dark(var(--boa-color-neutral-950), var(--boa-color-neutral-25));
   --yg-danger-soft: light-dark(var(--boa-color-neutral-200), var(--boa-color-neutral-800));
   --yg-success: light-dark(var(--boa-color-neutral-700), var(--boa-color-neutral-300));
@@ -890,7 +897,7 @@
   cursor: pointer;
 }
 .yg-rating [data-filled] {
-  color: var(--yg-inverse);
+  color: var(--yg-signal-rating);
 }
 .yg-rating label:has(:focus-visible) {
   outline: var(--boa-stroke-focus) solid var(--yg-inverse);
@@ -3032,7 +3039,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-file-drop-copy span { color: var(--yg-muted); font: var(--yg-font-meta); overflow-wrap: anywhere; }
 .yg-file-drop[data-dragging] { background: var(--yg-field); }
 .yg-file-drop[data-dragging] .yg-file-drop-core { background: var(--yg-hover); }
-.yg-file-drop[data-accepted] .yg-file-drop-core { background: var(--yg-success-soft); color: var(--yg-success); }
+.yg-file-drop[data-accepted] .yg-file-drop-core { background: var(--yg-signal-positive-soft); color: var(--yg-signal-positive); }
 .yg-file-drop input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
 .yg-file-drop:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 .yg-file-drop-status:empty { display: none; }
@@ -3113,8 +3120,8 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   color: var(--yg-text);
   --yg-letter-ink: var(--yg-muted);
 }
-.yg-letter-limit[data-limit-state="near"] { --yg-letter-ink: var(--yg-warning); }
-.yg-letter-limit[data-limit-state="full"] { --yg-letter-ink: var(--yg-danger); }
+.yg-letter-limit[data-limit-state="near"] { --yg-letter-ink: var(--yg-signal-warning); }
+.yg-letter-limit[data-limit-state="full"] { --yg-letter-ink: var(--yg-signal-limit); }
 .yg-letter-limit textarea {
   display: block;
   inline-size: 100%;
@@ -3208,9 +3215,13 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-spring-trigger:hover { background: var(--yg-hover); }
 .yg-spring-trigger[data-state="open"] { background: var(--yg-focus-surface); }
 .yg-spring-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
-.yg-spring-symbol, .yg-spring-option-symbol { display: block; flex: none; inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--yg-inverse); }
+.yg-spring-symbol { display: block; flex: none; inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--yg-muted); }
+.yg-spring-symbol[data-marker="in-progress"] { background: var(--yg-signal-warning); }
+.yg-spring-symbol[data-marker="review"] { background: var(--yg-action); }
+.yg-spring-symbol[data-marker="done"] { background: var(--yg-signal-positive); }
 .yg-spring-value { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
-.yg-spring-value-roll { display: block; animation: yg-spring-roll var(--yg-expand) var(--yg-selection) both; }
+.yg-spring-value-roll { display: flex; align-items: center; gap: var(--yg-gap-row); animation: yg-spring-roll var(--yg-expand) var(--yg-selection) both; }
+.yg-spring-value-label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; }
 .yg-spring-chevron { display: grid; place-items: center; flex: none; inline-size: 20px; block-size: 20px; color: var(--yg-muted); font-size: 20px; line-height: 1; transition: transform var(--yg-change) var(--yg-selection); }
 .yg-spring-trigger[data-state="open"] .yg-spring-chevron { transform: rotate(180deg); }
 .yg-spring-menu { z-index: 100; box-sizing: border-box; inline-size: var(--radix-select-trigger-width); max-block-size: var(--radix-select-content-available-height); overflow: hidden; border: 0; border-radius: var(--yg-radius-popover); background: var(--yg-surface); color: var(--yg-text); box-shadow: var(--yg-float-shadow); transform-origin: var(--radix-select-content-transform-origin); }
@@ -3222,8 +3233,12 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-spring-menu[data-state="closed"] { animation: yg-spring-exit var(--yg-travel) var(--yg-settle) both; }
 .yg-spring-viewport { padding: var(--yg-inset-layer); }
 .yg-spring-option { display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-size-touch); padding: 0 var(--yg-inset-compact) 0 var(--yg-inset-regular); border-radius: var(--yg-radius-panel); outline: none; cursor: pointer; box-sizing: border-box; }
-.yg-spring-option[data-highlighted] { background: var(--yg-hover); }
 .yg-spring-option[data-state="checked"] { background: var(--yg-field); color: var(--yg-text); font-weight: 600; }
+.yg-spring-option[data-highlighted] { background: var(--yg-hover); }
+.yg-spring-option:focus-visible { outline: none; }
+@media (forced-colors: active) {
+  .yg-spring-option:focus-visible { outline: var(--boa-stroke-focus) solid Highlight; outline-offset: -2px; }
+}
 
 .yg-spring-check { display: grid; place-items: center; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-text); font-weight: 700; }
 @keyframes yg-spring-row { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
@@ -3270,6 +3285,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-storage-amount span { margin-inline-start: 4px; }
 .yg-storage-bar {
   display: flex;
+  align-items: center;
   margin: 14px 12px 12px;
   block-size: 14px;
   overflow: clip;
@@ -3278,8 +3294,9 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 }
 .yg-storage-bar > span, .yg-storage-dot { background: var(--yg-storage-tone, var(--yg-inverse)); }
 .yg-storage-bar > span { flex: none; block-size: 100%; border-radius: var(--boa-radius-round); }
-.yg-storage-bar[data-highlight] > span:not([data-selected]) { opacity: .35; }
-.yg-storage-meter [data-tone="1"] { --yg-storage-tone: var(--yg-muted); }
+.yg-storage-bar[data-highlight] > span:not([data-selected]) { opacity: .35; scale: 1 .72; }
+.yg-storage-meter [data-tone="0"] { --yg-storage-tone: var(--yg-action); }
+.yg-storage-meter [data-tone="1"] { --yg-storage-tone: var(--yg-signal-category-secondary); }
 .yg-storage-meter [data-tone="2"] { --yg-storage-tone: var(--boa-color-neutral-500); }
 .yg-storage-categories { margin: 0; padding: 0; list-style: none; }
 .yg-storage-categories li { border-radius: 16px; }
@@ -3316,7 +3333,10 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   font: var(--yg-font-meta);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-storage-bar > span { transition: inline-size var(--yg-reveal) var(--yg-arrive), opacity 240ms ease; }
+  .yg-storage-bar > span {
+    transition: inline-size var(--yg-reveal) var(--yg-arrive),
+      opacity var(--yg-change) var(--yg-settle), scale var(--yg-expand) var(--yg-selection);
+  }
   .yg-storage-reveal { transition: grid-template-rows 280ms var(--yg-arrive); }
   .yg-storage-amount strong { animation: yg-storage-count 260ms var(--yg-arrive) both; }
 }
@@ -3379,15 +3399,15 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   visibility: hidden;
 }
 .yg-root .yg-result-action[data-outcome="success"] {
-  background: var(--yg-success-soft);
-  color: var(--yg-success);
+  background: var(--yg-signal-positive);
+  color: var(--yg-on-signal-positive);
 }
 .yg-root .yg-result-action[data-outcome="error"] {
   background: var(--yg-danger-soft);
   color: var(--yg-danger);
 }
 .yg-root .yg-result-action[data-outcome="success"]:hover {
-  background: var(--yg-success-soft);
+  background: var(--yg-signal-positive);
 }
 .yg-root .yg-result-action[data-outcome="error"]:hover {
   background: var(--yg-danger-soft);
@@ -4740,6 +4760,7 @@ summary.yg-task-line:focus-visible {
   border: 0;
   border-radius: var(--boa-radius-round);
   background: var(--yg-off);
+  transition: background-color var(--yg-travel) var(--yg-settle);
 }
 .yg-switch [role="switch"]::before {
   content: "";
@@ -4755,15 +4776,16 @@ summary.yg-task-line:focus-visible {
   height: var(--yg-thumb-size);
   background: var(--yg-thumb);
   border-radius: 50%;
-  transition: transform var(--yg-travel) var(--yg-settle);
+  transition: transform var(--yg-travel) var(--yg-settle),
+    background-color var(--yg-travel) var(--yg-settle);
 }
 .yg-switch [role="switch"][data-state="checked"] {
-  background: var(--yg-inverse);
+  background: var(--yg-signal-positive);
 }
 .yg-switch [role="switch"][data-state="checked"] > span {
   --yg-thumb-travel: calc(var(--yg-switch-width) - var(--yg-thumb-size) - 2 * var(--yg-track-inset));
   transform: translateX(var(--yg-thumb-travel));
-  background: var(--yg-on-inverse);
+  background: var(--yg-on-signal-positive);
 }
 .yg-switch [role="switch"][data-state="checked"]:dir(rtl) > span {
   transform: translateX(calc(-1 * var(--yg-thumb-travel)));

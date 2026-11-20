@@ -131,7 +131,7 @@ async function run(browser) {
     await thinkingStatus.getByText("Thinking", {exact: true}).waitFor({state: "hidden"});
     assert.equal(await promptBox.getAttribute("aria-busy"), null, "Stop closes the status and settles the control");
     const dropdown = await demo("spring-dropdown");
-    const view = dropdown.getByRole("combobox", {name:"Workspace view"});
+    const view = dropdown.getByRole("combobox", {name:"Work status"});
     await view.press("Space");
     const options = page.getByRole("listbox");
     await options.waitFor();
@@ -139,8 +139,8 @@ async function run(browser) {
     await options.waitFor({state:"hidden"});
     assert(await view.evaluate(node => node === document.activeElement));
     await view.click();
-    await options.getByRole("option", {name:"Files"}).click();
-    assert.match(await view.textContent(), /Files/);
+    await options.getByRole("option", {name:"In review"}).click();
+    assert.match(await view.textContent(), /In review/);
     await options.waitFor({state:"hidden"});
     assert(await view.evaluate(node => node === document.activeElement));
 
@@ -375,7 +375,7 @@ async function run(browser) {
   assert.deepEqual(errors, []);
 }
 
-async function checkNeutralControls(browser, colorScheme) {
+async function checkColorRoles(browser, colorScheme) {
   const page = await browser.newPage({colorScheme, reducedMotion: "reduce"});
   const show = async id => {
     await page.goto(gallery("motion-patterns") + "#" + id);
@@ -387,6 +387,17 @@ async function checkNeutralControls(browser, colorScheme) {
     assert(channels?.length === 3 && channels.every(channel => channel === channels[0]),
       `${colorScheme} ${locator} ${property} must be opaque and neutral, got ${value}`);
     return value;
+  };
+  const expectRole = async (locator, role, property = "backgroundColor") => {
+    const [actual, expected] = await locator.evaluate((node, {role, property}) => {
+      const sample = document.createElement("span");
+      sample.style.color = `var(--yg-${role})`;
+      (node.closest("svg")?.parentElement ?? node.parentElement).append(sample);
+      const colors = [getComputedStyle(node)[property], getComputedStyle(sample).color];
+      sample.remove();
+      return colors;
+    }, {role, property});
+    assert.equal(actual, expected, `${colorScheme} ${locator} uses ${role}`);
   };
 
   try {
@@ -430,9 +441,54 @@ async function checkNeutralControls(browser, colorScheme) {
     await neutral(command.locator(".yg-inline-command-marker"));
 
     const dropdown = await show("spring-dropdown");
-    await dropdown.getByRole("combobox", {name: "Workspace view"}).click();
+    const view = dropdown.getByRole("combobox", {name: "Work status"});
+    await expectRole(view.locator(".yg-spring-symbol"), "signal-warning");
+    await view.click();
     await neutral(page.getByRole("listbox"));
     await neutral(page.locator(".yg-spring-option[data-state=checked]"));
+    const review = page.getByRole("option", {name: "In review"});
+    await expectRole(review.locator(".yg-spring-symbol"), "action");
+    await review.click();
+    await expectRole(view.locator(".yg-spring-symbol"), "action");
+    await view.press("Space");
+    const complete = page.getByRole("option", {name: "Complete"});
+    await expectRole(complete.locator(".yg-spring-symbol"), "signal-positive");
+    await complete.click();
+    await expectRole(view.locator(".yg-spring-symbol"), "signal-positive");
+
+    const storage = await show("storage-meter");
+    const meter = storage.getByRole("meter");
+    const blue = meter.locator('[data-tone="0"]');
+    const pink = meter.locator('[data-tone="1"]');
+    const exports = storage.getByRole("button", {name: /Exports/});
+    await expectRole(blue, "action");
+    await expectRole(pink, "signal-category-secondary");
+    await expectRole(exports.locator(".yg-storage-dot"), "signal-category-secondary");
+    await exports.press("Enter");
+    assert.equal(await pink.getAttribute("data-selected"), "true");
+    assert.equal(await blue.evaluate(node => getComputedStyle(node).opacity), "0.35");
+    await exports.press("Enter");
+    assert.equal(await blue.evaluate(node => getComputedStyle(node).opacity), "1");
+
+    const letters = await show("letter-limit");
+    const input = letters.getByRole("textbox", {name: "Short bio"});
+    const count = letters.locator(".yg-letter-count");
+    const arc = letters.locator(".yg-letter-meter > circle:last-child");
+    await neutral(count, "color");
+    await input.fill("a".repeat(41));
+    await expectRole(count, "signal-warning", "color");
+    await expectRole(arc, "signal-warning", "stroke");
+    await input.fill("a".repeat(48));
+    await expectRole(count, "signal-limit", "color");
+    await expectRole(arc, "signal-limit", "stroke");
+    await input.press("Backspace");
+    await expectRole(count, "signal-warning", "color");
+
+    const rating = await show("rating");
+    const fourStars = rating.getByRole("button", {name: "4 out of 5"});
+    await neutral(fourStars, "color");
+    await fourStars.click();
+    await expectRole(fourStars, "signal-rating", "color");
 
     const files = await show("file-drop");
     const dropZone = files.locator(".yg-file-drop");
@@ -444,19 +500,16 @@ async function checkNeutralControls(browser, colorScheme) {
       name: "brief.txt", mimeType: "text/plain", buffer: Buffer.from("Draft"),
     });
     await files.locator(".yg-file-drop[data-accepted]").waitFor();
-    const successFill = await neutral(dropZone.locator(".yg-file-drop-core"));
-    const expected = await dropZone.evaluate(node => {
-      const sample = document.createElement("span");
-      sample.style.backgroundColor = "var(--yg-success-soft)";
-      node.append(sample);
-      const color = getComputedStyle(sample).backgroundColor;
-      sample.remove();
-      return color;
-    });
-    assert.equal(successFill, expected, "Accepted files retain the semantic success fill");
+    await expectRole(dropZone.locator(".yg-file-drop-core"), "signal-positive-soft");
 
     const switches = await show("toggle-switch");
-    await neutral(switches.getByRole("switch", {checked: true}).first());
+    const wifi = switches.getByRole("switch", {name: /Wi-Fi/});
+    await expectRole(wifi, "signal-positive");
+    await expectRole(wifi.locator("span").first(), "on-signal-positive");
+    await wifi.press("Space");
+    await expectRole(wifi, "off");
+    await wifi.press("Space");
+    await expectRole(wifi, "signal-positive");
   } finally {
     await page.close();
   }
@@ -466,7 +519,7 @@ async function checkNeutralControls(browser, colorScheme) {
   const browser = await chromium.launch({channel: process.env.YOGURT_BROWSER_CHANNEL || "chrome"});
   try {
     await run(browser);
-    for (const colorScheme of ["light", "dark"]) await checkNeutralControls(browser, colorScheme);
+    for (const colorScheme of ["light", "dark"]) await checkColorRoles(browser, colorScheme);
   } finally {
     await browser.close();
   }

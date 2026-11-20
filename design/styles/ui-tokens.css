@@ -19,6 +19,13 @@
   --yg-action-soft-hover: light-dark(var(--boa-color-slate-100), var(--boa-color-slate-800));
   --yg-off: light-dark(var(--boa-color-neutral-600), var(--boa-color-neutral-500));
   --yg-thumb: light-dark(var(--boa-color-neutral-0), var(--boa-color-neutral-975));
+  --yg-signal-positive: light-dark(var(--boa-color-green-700), var(--boa-color-green-400));
+  --yg-on-signal-positive: light-dark(var(--boa-color-neutral-0), var(--boa-color-green-950));
+  --yg-signal-positive-soft: light-dark(var(--boa-color-green-50), var(--boa-color-green-900));
+  --yg-signal-warning: light-dark(var(--boa-color-orange-700), var(--boa-color-orange-300));
+  --yg-signal-limit: light-dark(var(--boa-color-red-700), var(--boa-color-red-300));
+  --yg-signal-rating: light-dark(var(--boa-color-yellow-700), var(--boa-color-yellow-250));
+  --yg-signal-category-secondary: light-dark(var(--boa-color-magenta-600), var(--boa-color-magenta-300));
   --yg-danger: light-dark(var(--boa-color-neutral-950), var(--boa-color-neutral-25));
   --yg-danger-soft: light-dark(var(--boa-color-neutral-200), var(--boa-color-neutral-800));
   --yg-success: light-dark(var(--boa-color-neutral-700), var(--boa-color-neutral-300));

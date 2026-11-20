@@ -77,6 +77,34 @@
       "neutral.0",
       "neutral.975"
     ],
+    "signal-positive": [
+      "green.700",
+      "green.400"
+    ],
+    "on-signal-positive": [
+      "neutral.0",
+      "green.950"
+    ],
+    "signal-positive-soft": [
+      "green.50",
+      "green.900"
+    ],
+    "signal-warning": [
+      "orange.700",
+      "orange.300"
+    ],
+    "signal-limit": [
+      "red.700",
+      "red.300"
+    ],
+    "signal-rating": [
+      "yellow.700",
+      "yellow.250"
+    ],
+    "signal-category-secondary": [
+      "magenta.600",
+      "magenta.300"
+    ],
     "danger": [
       "neutral.950",
       "neutral.25"
