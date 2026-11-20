@@ -30,3 +30,16 @@ On a failed frame preserve the clip and failing input, repair the owning impleme
 | U18A-B | Replay with reduced motion, a narrow layout and the alternate surface. | State, announcement and focus remain correct without travel. Degraded or untested combinations keep an explicit status. | Switching off movement suppresses the state update or an opaque final panel flashes translucent. |
 
 Collect the observations above against the exact candidate and target. Record the reviewer, revision and outstanding results in a review or verification record when they exist. [Current evidence and open decisions](../../../status.md) · [Originating need](../../../intents/quality/I18-review-interaction-quality/intent.md)
+
+## Motion improvement · comparison phase
+
+The owner authorized a first comparison of Button, Select, Segmented control and Carousel, followed by expansion across the component and recipe catalog and a fresh review of all six agent performances. Track the program in [issue #6](https://github.com/openboa-ai/yogurt/issues/6). The outcomes for this phase are a runnable Web comparison, recorded interaction checks and an owner choice of motion treatment.
+
+| Scene | Candidate behavior | Acceptance evidence |
+| --- | --- | --- |
+| Button | Immediate surface press and a modest inset. Keep label bounds steady. Wait for the supplied result before showing success or failure. | Press, release outside, one activation, pending, success and failure with a stable target. |
+| Select | Offset the opaque picker a few pixels along its opening direction on supporting browsers. Keep native picker semantics. | Open at both viewport edges. Escape and reopen while entering. Confirm the selected option, trigger value and restored focus. |
+| Segmented control | Set the selection immediately and let the visual marker settle toward it. | During A → C → B, keep marker continuity and settle under B while its content and accessible value already agree. |
+| Carousel | Follow direct horizontal manipulation. Preserve vertical scroll. Commit on release beyond the threshold, and restore on cancel. Buttons retain focus and keyboard operation. | Observe the dragged position, direction reversal, snap-back and one-step commit. Expose only the current slide to focus and accessibility. |
+
+Use the existing catalog exports and shared tokens. The comparison scopes the candidate treatment to the guide. Deliver the review via a branch preview. Check first, intermediate and settled frames in a browser, reduced motion, light and dark, and a narrow viewport. Record the host and the tested states. Native validation and signed-off component motion enter later slices after the owner selects the comparison. The existing I18 gate applies to a production quality claim.
