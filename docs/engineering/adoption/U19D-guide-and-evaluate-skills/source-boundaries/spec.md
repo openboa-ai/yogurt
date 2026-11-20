@@ -30,3 +30,12 @@ Regenerate Web JavaScript and declarations from the new source hierarchy. Remove
 Serve the existing guide entry pages as a static site from the `openboa` Vercel team. The guide build copies its public pages, assets, runtime scripts and guide documents into `site/`. Vercel serves that directory using the repository's Other framework configuration. Link the `openboa-ai/yogurt` repository and assign `yogurt.openboa.ai` to the new Yogurt project. Use the team's normal authentication and domain checks.
 
 Run the static build on the reviewed revision. Check navigation and assets at the generated root and verify the deployed homepage, component catalog and interactive routes on the intended hostname before recording live delivery.
+
+## Source tree follow-up
+
+Track this follow-up in [issue #1](https://github.com/openboa-ai/yogurt/issues/1).
+
+- Keep authored guide pages and guide-only HTML examples in `apps/guide/pages/`. Build the same public file paths in `site/`, including `patterns/task-states.html`. The built site can open directly from disk. Repository Markdown can link to the live pages, and the offline handbook resolves those links locally.
+- Keep the generated standalone component and agent galleries at their installed paths. Keep the package name, release pin, exports, CLI, registry, native copy paths, asset paths and plugin paths stable.
+- Move the agent evaluation runner, fixtures and graders under `checks/evals/`. Preserve its case IDs, model-call budget, replay behavior and permission model. Keep the release overview in `docs/releases/`.
+- Verify the staged route inventory and browser navigation in the offline guide, the web interaction suite, package contents and installed guidance, and evaluator unit tests and dry run. Keep deployment and merge requirements in effect.
