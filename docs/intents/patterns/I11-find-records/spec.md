@@ -24,4 +24,4 @@ Begin with an authorized result, stage two out-of-order queries, reset, and conf
 
 **End scene.** Search for a known ID, apply a conflicting filter, then clear filters. The correct record, count, empty explanation and focus destination appear in order.
 
-**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Working roster](../../../../system.html#components) · [Working task states](../../../../patterns/task-states.html) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Working roster](https://yogurt-theta.vercel.app/system.html#components) · [Working task states](https://yogurt-theta.vercel.app/patterns/task-states.html) · [Delivery status and owner decisions](../../../status.md)

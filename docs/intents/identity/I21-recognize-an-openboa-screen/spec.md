@@ -24,4 +24,4 @@ Read each surface without its masthead, then resize and remove color. The task, 
 
 **End scene.** Compare a Meatball review, Sourdough detail and agent roster in light and dark examples. Each has a clear first read, a common typographic rhythm and only the emphasis its task needs.
 
-**Current sources and open decisions.** [Visual direction](../../../design-direction.md) · [Type scale](../../../../system.html#type) · [brand.json](../../../../tokens/brand.json) · [Product playbook](../../../../playbook.html) · [Component foundation](../../../component-foundation.md) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [Visual direction](../../../design-direction.md) · [Type scale](https://yogurt-theta.vercel.app/system.html#type) · [brand.json](../../../../tokens/brand.json) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html) · [Component foundation](../../../component-foundation.md) · [Delivery status and owner decisions](../../../status.md)

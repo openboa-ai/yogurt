@@ -7,7 +7,7 @@ import { build } from "esbuild";
 import { chromium } from "playwright-core";
 import ts from "typescript";
 
-const runtime = fileURLToPath(new URL("../node_modules/", import.meta.url));
+const runtime = fileURLToPath(new URL("../../node_modules/", import.meta.url));
 const origin = "http://yogurt-fixture.test";
 const dialogEntries = new Map([
   ["@openboa/yogurt", ["ConfirmDialog", "Dialog"]],

@@ -18,4 +18,4 @@ The [first four component intents](../../../engineering/controls/first-four/READ
 
 Yogurt owns control semantics and callbacks. The client owns validation rules, submission, authorization and idempotency. New control families require a real product case.
 
-[patterns.json](../../../../catalog/patterns.json) · [Controls](../../../../system.html#controls) · [components.css](../../../../styles/components.css)
+[patterns.json](../../../../catalog/patterns.json) · [Controls](https://yogurt-theta.vercel.app/system.html#controls) · [components.css](../../../../styles/components.css)

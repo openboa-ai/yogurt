@@ -24,4 +24,4 @@ Test a long owner name and a three-digit value in the same row. Let them wrap or
 
 **End scene.** Read a long English label at 320 CSS px and with enlarged text. Reach the same action by keyboard and touch, with a visible focus indicator and a stable reading order.
 
-**Current sources and open decisions.** [brand.json](../../../../tokens/brand.json) · [OFL.txt](../../../../assets/fonts/rethink-sans/OFL.txt) · [Type scale](../../../../system.html#type) · [Dimensions](../../../../system.html#dimensions) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [brand.json](../../../../tokens/brand.json) · [OFL.txt](../../../../assets/fonts/rethink-sans/OFL.txt) · [Type scale](https://yogurt-theta.vercel.app/system.html#type) · [Dimensions](https://yogurt-theta.vercel.app/system.html#dimensions) · [Delivery status and owner decisions](../../../status.md)

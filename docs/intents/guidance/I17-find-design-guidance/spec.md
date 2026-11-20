@@ -24,4 +24,4 @@ Repeat lookup offline from an installed kit, then ask for a missing target. Both
 
 **End scene.** A reader beginning in the web guide and an agent beginning at DESIGN.md select the same pattern and revision for a partial record inspection and a decision with confirmation pending.
 
-**Current sources and open decisions.** [DESIGN.md](../../../../DESIGN.md) · [Yogurt plugin](../../../../plugins/yogurt/README.md) · [patterns.json](../../../../catalog/patterns.json) · [Repository blueprint](../../../repository.md) · [Product playbook](../../../../playbook.html) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [DESIGN.md](../../../../DESIGN.md) · [Yogurt plugin](../../../../plugins/yogurt/README.md) · [patterns.json](../../../../catalog/patterns.json) · [Repository blueprint](../../../repository.md) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html) · [Delivery status and owner decisions](../../../status.md)

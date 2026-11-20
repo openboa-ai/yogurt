@@ -16,4 +16,4 @@ A team needs one reproducible yogurt version across tools, a check that catches 
 
 Each OpenBoa product UI is intended to use a pinned Yogurt release. The Yogurt owner owns compatibility. Each product owner operates its own pin, adoption and required UI checks. Future Meatball enrollment is independent of being a consumer.
 
-[Release design](../../../../adoption.html#releases) · [Repository blueprint](../../../repository.md) · [Product fixtures](../../../../examples/project-use/scenarios.json)
+[Release design](https://yogurt-theta.vercel.app/adoption.html#releases) · [Repository blueprint](../../../repository.md) · [Product fixtures](../../../../examples/project-use/scenarios.json)

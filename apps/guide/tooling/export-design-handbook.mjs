@@ -8,6 +8,7 @@ const portfolio = JSON.parse(read("docs/portfolio.json"));
 const renderer = process.argv[2] ? pathToFileURL(resolve(process.argv[2])).href : "marked";
 const { marked } = await import(renderer);
 const documents = new Map();
+const liveGuide = "https://yogurt-theta.vercel.app/";
 const escape = value => value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
 function register(id, file, title) {
@@ -69,6 +70,7 @@ function sectionLinks(domain) {
 function renderArticle(doc) {
   let html = marked.parse(read(doc.file));
   html = html.replace(/href="([^"]+)"/g, (attribute, href) => {
+    if (href.startsWith(liveGuide)) return 'href="../' + href.slice(liveGuide.length) + '"';
     if (/^(?:[a-z][a-z0-9+.-]*:|#)/i.test(href)) return attribute;
     const [file, fragment] = href.split("#");
     const source = posix.normalize(posix.join(posix.dirname(doc.file),file));

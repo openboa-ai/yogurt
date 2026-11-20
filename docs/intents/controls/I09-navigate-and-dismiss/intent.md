@@ -16,4 +16,4 @@ A person needs a secondary command, a different view or a consequential confirma
 
 Yogurt owns choice of control and its interaction. The host identifies the target and its lifetime, permitted commands and fallback focus destination.
 
-[Current web menu](../../../action-menu.md) · [Product playbook](../../../../playbook.html) · [patterns.json](../../../../catalog/patterns.json)
+[Current web menu](../../../action-menu.md) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html) · [patterns.json](../../../../catalog/patterns.json)

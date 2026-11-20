@@ -3,15 +3,15 @@ import { execFileSync } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { installSdk } from "../checks/fixtures/install-sdk.mjs";
+import { installSdk } from "../fixtures/install-sdk.mjs";
 import { decisionCaseId, observeDecision, readDecisionScenario, useDecisionScenario } from "./decision.mjs";
 import { gradeCase } from "./grade.mjs";
 
 const [previous, archive, output, scenarioPath] = process.argv.slice(2).map(value => resolve(value));
-if (!output) throw Error("Usage: node evals/replay-decision.mjs <previous-report> <sdk-archive> <new-output-dir> [original-decision-scenario]");
+if (!output) throw Error("Usage: node checks/evals/replay-decision.mjs <previous-report> <sdk-archive> <new-output-dir> [original-decision-scenario]");
 
 const caseId = decisionCaseId;
-const root = fileURLToPath(new URL("../", import.meta.url));
+const root = fileURLToPath(new URL("../../", import.meta.url));
 const json = async path => JSON.parse(await readFile(path, "utf8"));
 const git = args => execFileSync("git", args, { cwd: root, encoding: "utf8" });
 const run = await json(join(previous, "run.json"));

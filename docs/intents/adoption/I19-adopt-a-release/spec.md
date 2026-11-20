@@ -28,4 +28,4 @@ Report a shared presentation issue from one fixture, reproduce in yogurt, then r
 
 **End scene.** Two independent fixture consumers resolve their own pins. Upgrade one, reject a deliberately broken fixture and roll back to the former version while the other remains reproducible.
 
-**Current sources and open decisions.** [Release design](../../../../adoption.html#releases) · [Repository blueprint](../../../repository.md) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [Release design](https://yogurt-theta.vercel.app/adoption.html#releases) · [Repository blueprint](../../../repository.md) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Delivery status and owner decisions](../../../status.md)

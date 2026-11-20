@@ -16,4 +16,4 @@ A new contributor has a task description and a target. They need one place to fi
 
 Yogurt owns maintained guidance and catalog IDs. The optional skill and any Figma representation read the same contract. The project owns its design brief and chosen pin.
 
-[DESIGN.md](../../../../DESIGN.md) · [Yogurt plugin](../../../../plugins/yogurt/README.md) · [patterns.json](../../../../catalog/patterns.json) · [Repository blueprint](../../../repository.md) · [Product playbook](../../../../playbook.html)
+[DESIGN.md](../../../../DESIGN.md) · [Yogurt plugin](../../../../plugins/yogurt/README.md) · [patterns.json](../../../../catalog/patterns.json) · [Repository blueprint](../../../repository.md) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html)

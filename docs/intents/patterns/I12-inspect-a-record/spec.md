@@ -24,4 +24,4 @@ Switch between two subjects sharing a display name, revoke the first and deliver
 
 **End scene.** A stale, authorized record shows its original as-of time and missing fields. Revocation immediately clears its facts from the detail and accessibility tree.
 
-**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](../../../../playbook.html) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html) · [Delivery status and owner decisions](../../../status.md)

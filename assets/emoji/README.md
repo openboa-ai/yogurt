@@ -1,6 +1,6 @@
 # OpenBoa emoji
 
-The collection contains 3,831 OpenBoa drawings across eight non-food groups. Each entry has an editable SVG and a transparent 128 × 128 PNG. The three food-project identities have their own masters. [Browse the collection](../../emoji.html) · [Machine-readable catalog](catalog.json) · [Project emoji](../projects/emoji.json)
+The collection contains 3,831 OpenBoa drawings across eight non-food groups. Each entry has an editable SVG and a transparent 128 × 128 PNG. The three food-project identities have their own masters. [Browse the collection](https://yogurt-theta.vercel.app/emoji.html) · [Machine-readable catalog](catalog.json) · [Project emoji](../projects/emoji.json)
 
 ## Choose a file
 

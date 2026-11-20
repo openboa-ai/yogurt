@@ -24,4 +24,4 @@ Render the same treatment over paper and ink, compare actual adjacent foreground
 
 **End scene.** Inspect a light and a dark specimen, resolve every role to an existing primitive and read each state without recognizing its hue. One palette supplies all of the assets.
 
-**Current sources and open decisions.** [brand.json](../../../../tokens/brand.json) · [tokens.css](../../../../styles/tokens.css) · [Color in context](../../../../system.html#color) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [brand.json](../../../../tokens/brand.json) · [tokens.css](../../../../styles/tokens.css) · [Color in context](https://yogurt-theta.vercel.app/system.html#color) · [Delivery status and owner decisions](../../../status.md)

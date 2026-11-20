@@ -24,4 +24,4 @@ Run a failure between loading and success. Sample the visible text and spoken st
 
 **End scene.** Display loading, filtered-empty, failed and recovered views from a controlled fixture. A reader can name the current condition and use the appropriate recovery without losing context.
 
-**Current sources and open decisions.** [Working task states](../../../../patterns/task-states.html) · [Component inventory](../../../../system.html#catalog) · [patterns.json](../../../../catalog/patterns.json) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [Working task states](https://yogurt-theta.vercel.app/patterns/task-states.html) · [Component inventory](https://yogurt-theta.vercel.app/system.html#catalog) · [patterns.json](../../../../catalog/patterns.json) · [Delivery status and owner decisions](../../../status.md)

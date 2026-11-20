@@ -1,6 +1,6 @@
 # Checks and review
 
-Run `npm run check:ui` after building. The [native catalog check](native-catalog.mjs) instantiates the same entry inventory with typed Zig inputs.
+Run `npm run check:ui` after building. The [native catalog check](native-catalog.mjs) instantiates the same entry inventory with typed Zig inputs. [Agent evaluations](evals/README.md) cover the plugin workflows with their own fixtures and grading rules.
 
 ## Installed consumer journeys
 
