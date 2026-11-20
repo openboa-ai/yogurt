@@ -547,7 +547,7 @@ export function Example({
     case "notice":
       return (
         <Y.Notice
-          tone={variation ? "warning" : "brand"}
+          tone={variation ? "warning" : "neutral"}
           title={variation ? "Review required" : "View updated"}
         >
           {variation

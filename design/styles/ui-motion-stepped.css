@@ -108,9 +108,9 @@
 .yg-motion-password-meter i { display: block; height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; border-radius: inherit; background: var(--yg-meter-color, var(--yg-inverse)); transition: transform var(--yg-change) var(--yg-settle), background-color var(--yg-change); transition-delay: calc(var(--yg-bar-index) * 60ms); }
 .yg-motion-password-meter i[data-active] { transform: scaleX(1); }
 .yg-motion-password[data-score="1"] { --yg-meter-color: var(--yg-danger); }
-.yg-motion-password[data-score="2"] { --yg-meter-color: var(--boa-color-orange-600, var(--yg-danger)); }
-.yg-motion-password[data-score="3"] { --yg-meter-color: var(--boa-color-yellow-600, var(--yg-inverse)); }
-.yg-motion-password[data-score="4"] { --yg-meter-color: var(--boa-color-green-600, var(--yg-inverse)); }
+.yg-motion-password[data-score="2"] { --yg-meter-color: var(--yg-warning); }
+.yg-motion-password[data-score="3"] { --yg-meter-color: var(--yg-muted); }
+.yg-motion-password[data-score="4"] { --yg-meter-color: var(--yg-success); }
 .yg-motion-password-checks { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 10px; font-size: 12px; }
 .yg-motion-password-checks strong { color: var(--yg-meter-color, var(--yg-muted)); white-space: nowrap; }
 .yg-motion-password-checks span { text-align: right; }

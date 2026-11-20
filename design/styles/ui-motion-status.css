@@ -36,8 +36,8 @@
 .yg-storage-bar > span, .yg-storage-dot { background: var(--yg-storage-tone, var(--yg-inverse)); }
 .yg-storage-bar > span { flex: none; block-size: 100%; border-radius: var(--boa-radius-round); }
 .yg-storage-bar[data-highlight] > span:not([data-selected]) { opacity: .35; }
-.yg-storage-meter [data-tone="1"] { --yg-storage-tone: light-dark(var(--boa-color-violet-700), var(--boa-color-violet-300)); }
-.yg-storage-meter [data-tone="2"] { --yg-storage-tone: var(--yg-muted); }
+.yg-storage-meter [data-tone="1"] { --yg-storage-tone: var(--yg-muted); }
+.yg-storage-meter [data-tone="2"] { --yg-storage-tone: var(--boa-color-neutral-500); }
 .yg-storage-categories { margin: 0; padding: 0; list-style: none; }
 .yg-storage-categories li { border-radius: 16px; }
 .yg-storage-categories li[data-open] { background: var(--yg-field); }

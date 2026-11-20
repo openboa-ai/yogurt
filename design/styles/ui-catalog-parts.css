@@ -74,7 +74,7 @@
   background: linear-gradient(
     115deg,
     var(--yg-accent-soft),
-    var(--yg-action-soft)
+    var(--yg-surface)
   );
 }
 .yg-gradient[data-tone="success"] {

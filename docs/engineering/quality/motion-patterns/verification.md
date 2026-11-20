@@ -22,3 +22,7 @@ The complete web inventory was rendered again in desktop light and mobile dark a
 ## Neutral interaction surfaces
 
 The light and dark guide captures cover bottom bar hover and selection, the working prompt, a selected tab, the open command palette, and switch positions. The bottom bar keeps its moving marker and uses a distinct gray fill for hover. Prompt Send and Stop share an inverse neutral pair. The Native fixture verifies the generated primary and secondary button roles and the switch track against both appearances across neutral, paper, and mist materials. Its three tests and strict markup checks passed.
+
+The desktop mention surface measures 320 × 144 px with a 24 px corner. The file drop measures 296 × 216 px with a 28 px corner and a 72 px mark. Its drag response changes the neutral fill and its accepted state retains the success label and mark. Four 48 px checklist rows fit the example. The spring picker trigger measures 232 × 52 px with a 16 px corner, and the visible list retains its anchored width during keyboard and pointer operation.
+
+The neutral material audit visited each of the 125 component entries, 14 blocks, and 78 motion examples in both appearances. All inspected resting UI fills, text, and carets were achromatic. Interaction checks exercise neutral hover, selection, drag and status in addition to the resting audit. Artwork, alternate materials, and other interaction states require their own visual checks.

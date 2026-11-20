@@ -83,7 +83,7 @@ export function ExtendedExample({
       );
     case "gradient":
       return (
-        <Y.Gradient tone={variation ? "accent" : "brand"}>
+        <Y.Gradient tone={variation ? "accent" : "neutral"}>
           <Y.Inline>
             {mark}
             <Y.Heading>Yogurt</Y.Heading>

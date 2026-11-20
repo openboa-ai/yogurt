@@ -397,6 +397,10 @@ async function checkNeutralControls(browser, colorScheme) {
     await button.evaluate(node => Promise.allSettled(node.getAnimations().map(animation => animation.finished)));
     assert.notEqual(await neutral(button), buttonFill, "The default button has a neutral hover response");
 
+    await page.goto(gallery("components") + "#attention-inbox");
+    const unread = page.locator('[data-component="attention-inbox"] .yg-badge').filter({hasText: /^Unread$/}).first();
+    await neutral(unread);
+
     const prompt = await show("prompt-box");
     const editor = prompt.getByRole("textbox", {name: "Prompt"});
     const box = prompt.locator(".yg-prompt-box");
@@ -440,7 +444,7 @@ async function checkNeutralControls(browser, colorScheme) {
       name: "brief.txt", mimeType: "text/plain", buffer: Buffer.from("Draft"),
     });
     await files.locator(".yg-file-drop[data-accepted]").waitFor();
-    const successFill = await dropZone.locator(".yg-file-drop-core").evaluate(node => getComputedStyle(node).backgroundColor);
+    const successFill = await neutral(dropZone.locator(".yg-file-drop-core"));
     const expected = await dropZone.evaluate(node => {
       const sample = document.createElement("span");
       sample.style.backgroundColor = "var(--yg-success-soft)";

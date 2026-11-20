@@ -78,36 +78,36 @@
       "neutral.975"
     ],
     "danger": [
-      "coral.700",
-      "coral.200"
+      "neutral.950",
+      "neutral.25"
     ],
     "danger-soft": [
-      "coral.50",
-      "coral.900"
+      "neutral.200",
+      "neutral.800"
     ],
     "success": [
-      "sage.800",
-      "sage.200"
+      "neutral.700",
+      "neutral.300"
     ],
     "success-soft": [
-      "sage.50",
-      "sage.900"
+      "neutral.100",
+      "neutral.850"
     ],
     "warning": [
-      "ochre.800",
-      "ochre.200"
+      "neutral.800",
+      "neutral.200"
     ],
     "warning-soft": [
-      "ochre.50",
-      "ochre.900"
+      "neutral.200",
+      "neutral.850"
     ],
     "accent": [
-      "violet.700",
-      "violet.200"
+      "neutral.800",
+      "neutral.200"
     ],
     "accent-soft": [
-      "violet.50",
-      "violet.900"
+      "neutral.100",
+      "neutral.850"
     ]
   },
   "materials": {

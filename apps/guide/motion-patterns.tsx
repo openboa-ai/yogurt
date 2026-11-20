@@ -302,6 +302,13 @@ function SidebarExample() {
   </div>;
 }
 
+const handoffTasks = [
+  {id: "brief", label: "Collect the release notes"},
+  {id: "states", label: "Check the empty states"},
+  {id: "compact", label: "Review the compact layout"},
+  {id: "handoff", label: "Share the review build"},
+];
+
 function FeedbackExample({ kind }: {kind: "otp" | "notifications" | "save" | "hold" | "slide" | "stat" | "checks"}) {
   const [count, setCount] = useState(0);
   const [value, setValue] = useState("");
@@ -316,7 +323,7 @@ function FeedbackExample({ kind }: {kind: "otp" | "notifications" | "save" | "ho
     <StatCard label="Records reviewed" detail="This week" value={24 + count} />
     <Button emphasis="soft" size="compact" onClick={confirm}>Review a record</Button>
   </div>;
-  if (kind === "checks") return <CheckboxList options={pages} value={chosen} onChange={setChosen} />;
+  if (kind === "checks") return <CheckboxList options={handoffTasks} value={chosen} onChange={setChosen} />;
   if (kind === "otp") return <InputOTP label="Verification code" length={6} value={value} onValueChange={setValue} />;
   if (kind === "notifications") return <div className="motion-sample-stack">
     <Button size="compact" emphasis="soft" onClick={() => {

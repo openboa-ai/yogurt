@@ -197,7 +197,7 @@
   background: transparent;
   color: var(--yg-button-text);
 }
-.yg-button:is([data-tone="brand"], [data-tone="danger"]) {
+.yg-button[data-tone="brand"] {
   --yg-button-fill: var(--yg-action);
   --yg-button-ink: var(--yg-on-action);
   --yg-button-hover: var(--yg-action-hover);
@@ -207,24 +207,9 @@
   --yg-button-text: var(--yg-action);
 }
 .yg-button[data-tone="danger"] {
-  --yg-action: var(--yg-danger);
-  --yg-on-action: light-dark(
-    var(--boa-color-coral-50),
-    var(--boa-color-coral-950)
-  );
-  --yg-action-soft: var(--yg-danger-soft);
-  --yg-action-hover: light-dark(
-    var(--boa-color-coral-800),
-    var(--boa-color-coral-100)
-  );
-  --yg-action-press: light-dark(
-    var(--boa-color-coral-900),
-    var(--boa-color-coral-300)
-  );
-  --yg-action-soft-hover: light-dark(
-    var(--boa-color-coral-100),
-    var(--boa-color-coral-850)
-  );
+  --yg-button-soft: var(--yg-danger-soft);
+  --yg-button-soft-hover: color-mix(in srgb, var(--yg-danger-soft), var(--yg-danger) 10%);
+  --yg-button-text: var(--yg-danger);
 }
 .yg-button-label,
 .yg-sdk-Button-ButtonInner {
