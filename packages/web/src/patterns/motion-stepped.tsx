@@ -17,15 +17,17 @@ type RangeSliderProps = {
   detail?: string;
   formatValue?: (value: number) => string;
   presentation?: "standard" | "elastic";
+  minThumbGap?: number;
 };
 
 export function RangeSlider({
   label, value, onChange, min = 0, max = 100, step = 1,
-  end, onEndChange, detail, formatValue = String, presentation = "standard",
+  end, onEndChange, detail, formatValue = String, presentation = "standard", minThumbGap = 0,
 }: RangeSliderProps) {
   const id = useId();
   const interval = useRef<HTMLDivElement>(null);
   const activeDrag = useRef<{ id: number; thumb: "start" | "end" } | null>(null);
+  const [trackWidth, setTrackWidth] = useState(0);
   const percent = (number: number) => max > min
     ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
   const first = percent(value);
@@ -39,9 +41,19 @@ export function RangeSlider({
     if (!rail || !root) return;
     const firstTip = rail.querySelector<HTMLElement>('[data-tip="start"]');
     const lastTip = rail.querySelector<HTMLElement>('[data-tip="end"]');
+    const joinedTip = rail.querySelector<HTMLElement>('[data-tip="joined"]');
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const tracks = Object.values(motion);
     let frame = 0, previous = performance.now(), width = 0, need = 0;
+    let startInset = 0, endInset = 0;
+    let firstWidth = 0, lastWidth = 0, joinedWidth = 0;
+    function contain(position: number, tipWidth: number) {
+      const half = tipWidth / 2 + 6;
+      const start = half - startInset;
+      const end = width + endInset - half;
+      const x = position * width / 100;
+      return end < start ? (start + end) / 2 : Math.max(start, Math.min(end, x));
+    }
     function paint() {
       const a = motion.start.position, b = motion.end.position;
       const middle = (a+b)/2;
@@ -49,8 +61,9 @@ export function RangeSlider({
       const tilt = (velocity: number) => Math.max(-12,Math.min(12,-velocity*width/100*.02));
       const settings = {
         "--yg-range-start": `${a}%`, "--yg-range-end": `${b}%`,
-        "--yg-tip-first": `${a + (middle-a)*amount}%`, "--yg-tip-last": `${b + (middle-b)*amount}%`,
-        "--yg-tip-middle": `${middle}%`, "--yg-tip-first-tilt": `${tilt(motion.start.velocity)}deg`,
+        "--yg-tip-first": `${contain(a + (middle-a)*amount, firstWidth)}px`,
+        "--yg-tip-last": `${contain(b + (middle-b)*amount, lastWidth)}px`,
+        "--yg-tip-middle": `${contain(middle, joinedWidth)}px`, "--yg-tip-first-tilt": `${tilt(motion.start.velocity)}deg`,
         "--yg-tip-last-tilt": `${tilt(motion.end.velocity)}deg`,
         "--yg-tip-middle-tilt": `${tilt((motion.start.velocity+motion.end.velocity)/2)}deg`,
         "--yg-tip-merge": String(amount),
@@ -66,9 +79,18 @@ export function RangeSlider({
       frame = moving ? requestAnimationFrame(tick) : 0;
     }
     function work() {
-      if (!rail) return;
+      if (!rail || !root) return;
+      const bounds = root.getBoundingClientRect(), inner = rail.getBoundingClientRect();
+      const rtl = getComputedStyle(rail).direction === "rtl";
+      startInset = rtl ? bounds.right - inner.right : inner.left - bounds.left;
+      endInset = rtl ? inner.left - bounds.left : bounds.right - inner.right;
       width = rail.clientWidth;
-      need = ((firstTip?.offsetWidth ?? 0)+(lastTip?.offsetWidth ?? 0))/2+8;
+      setTrackWidth(width);
+      root.style.setProperty("--yg-tip-max-width", `${Math.max(0, bounds.width - 12)}px`);
+      firstWidth = firstTip?.offsetWidth ?? 0;
+      lastWidth = lastTip?.offsetWidth ?? 0;
+      joinedWidth = joinedTip?.offsetWidth ?? 0;
+      need = (firstWidth + lastWidth) / 2 + 8;
       motion.start.target=first; motion.end.target=last;
       cancelAnimationFrame(frame);
       if (media.matches) {
@@ -85,6 +107,7 @@ export function RangeSlider({
     size.observe(rail);
     if (firstTip) size.observe(firstTip);
     if (lastTip) size.observe(lastTip);
+    if (joinedTip) size.observe(joinedTip);
     media.addEventListener("change",work);
     return ()=>{size.disconnect();media.removeEventListener("change",work);cancelAnimationFrame(frame);};
   },[first,last,motion]);
@@ -105,10 +128,14 @@ export function RangeSlider({
 
   const joined = last - first < 25;
   const increment = step > 0 && Number.isFinite(step) ? step : 1;
+  const separation = trackWidth > 0 && max > min && Number.isFinite(minThumbGap) && minThumbGap > 0
+    ? Math.min(max - min, Math.ceil(minThumbGap * (max - min) / trackWidth / increment) * increment) : 0;
+  const maxStart = Math.max(min, end - separation);
+  const minEnd = Math.min(max, value + separation);
   const set = (thumb: "start" | "end", next: number) => {
     const snapped = Number((min + Math.round((next - min) / increment) * increment).toFixed(10));
-    if (thumb === "start") onChange(Math.max(min, Math.min(end, snapped)));
-    else onEndChange(Math.max(value, Math.min(max, snapped)));
+    if (thumb === "start") onChange(Math.max(min, Math.min(maxStart, snapped)));
+    else onEndChange(Math.max(minEnd, Math.min(max, snapped)));
   };
   const position = (event: PointerEvent<HTMLDivElement>) => {
     const box = event.currentTarget.getBoundingClientRect();
@@ -117,7 +144,7 @@ export function RangeSlider({
     return min + Math.max(0, Math.min(1, x / Math.max(1, box.width))) * (max - min);
   };
   const onThumbKey = (event: KeyboardEvent<HTMLButtonElement>, side: "start" | "end", at: number) => {
-    const bounds = side === "start" ? [min, end] : [value, max];
+    const bounds = side === "start" ? [min, maxStart] : [minEnd, max];
     const keys: Record<string, number> = {
       ArrowDown: at - increment, ArrowLeft: at - increment,
       ArrowUp: at + increment, ArrowRight: at + increment,
@@ -161,10 +188,10 @@ export function RangeSlider({
       <span className="yg-motion-range-tip" data-tip="end" aria-hidden="true">{formatValue(end)}</span>
       <span className="yg-motion-range-tip" data-tip="joined" aria-hidden="true">{formatValue(value)}–{formatValue(end)}</span>
       <button type="button" role="slider" data-thumb="start" aria-label={`Minimum ${label.toLowerCase()}`}
-        aria-valuemin={min} aria-valuemax={end} aria-valuenow={value} aria-valuetext={formatValue(value)}
+        aria-valuemin={min} aria-valuemax={Math.max(value, maxStart)} aria-valuenow={value} aria-valuetext={formatValue(value)}
         onKeyDown={event => onThumbKey(event, "start", value)} />
       <button type="button" role="slider" data-thumb="end" aria-label={`Maximum ${label.toLowerCase()}`}
-        aria-valuemin={value} aria-valuemax={max} aria-valuenow={end} aria-valuetext={formatValue(end)}
+        aria-valuemin={Math.min(end, minEnd)} aria-valuemax={max} aria-valuenow={end} aria-valuetext={formatValue(end)}
         onKeyDown={event => onThumbKey(event, "end", end)} />
     </div>
   </div>;

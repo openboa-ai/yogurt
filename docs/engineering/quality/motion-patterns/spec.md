@@ -157,3 +157,7 @@ The comparison gallery exercises the handle travel and keyboard value of the scr
 Hold confirmation shows the holding label after 150 ms and a drawn check after completion. An early release drains the remaining fill at 300 ms per full track. A new hold authorizes its action only after a fresh uninterrupted 1.2 seconds. The existing two-step keyboard confirmation remains available.
 
 Maintain usable geometry and contrast while a control is activated, expanded, dragged, or retargeted. Ordinary Web boxes use neutral surface fills and spacing without a perimeter stroke. Keyboard focus uses a distinct internal cue, and forced colors retain a system indicator. Validate representative live interactions at 320 and 1440 CSS px in dark and light appearances, including intermediate frames, visible text, and clipping.
+
+Keep the interval handles reachable as they converge. The motion example requests a 34 px gap where the track permits it, rounded to the allowed step. The shared control preserves the previous value contract by default and accepts the requested gap as an option. Constrain value bubbles to the visible card at the extremes while preserving the merge and directional tilt.
+
+Apply mention caret restoration when the corresponding controlled value is committed. New text input cancels any pending caret change. In a series of selections, each choice replaces only the current token.

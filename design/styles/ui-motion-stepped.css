@@ -195,6 +195,10 @@
 }
 .yg-motion-range[data-interval] .yg-motion-range-tip {
   inset-inline-start: var(--yg-thumb-position);
+  box-sizing: border-box;
+  max-inline-size: var(--yg-tip-max-width, 100%);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .yg-motion-range[data-interval] .yg-motion-range-tip:dir(rtl) { transform: translateX(50%); }
 .yg-motion-range-area[data-joined] > :is([data-tip="start"], [data-tip="end"]) { opacity: 0; scale: .9; }

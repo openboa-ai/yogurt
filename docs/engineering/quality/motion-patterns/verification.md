@@ -58,3 +58,7 @@ The hold check releases a partial press and confirms that it has no effect, then
 The browser exercised all 78 gallery interactions at 320 px in dark appearance and 1440 px in light appearance. The sampled frames stayed within the viewport and the inspected box surfaces had no perimeter stroke. The notification message remains readable after the top card leaves. The compact fan keeps its controls and selected detail inside the stage.
 
 The six-digit verification field measures 264 px in a 320 px viewport and 320 px at the desktop review width. During confirmation the slot gaps close, the digits fade behind the status, and the wrapper width remains stable. The browser repeated verification after editing the last digit. The selected slot uses a fill and caret. Forced colors retain an explicit focus indicator.
+
+## Repeated actions
+
+Ten live interaction sequences ran at each review width. They covered reopening and selecting the spring picker, interrupting the expanding menu, searching and dismissing the command palette, replacing consecutive mentions, converging the range handles at both endpoints, retargeting the bottom bar, reversing focus mode, dismissing a notification stack, restarting a canceled prompt, and reopening an expanded card. The range label stays inside its card and consecutive mention selections replace the current token.

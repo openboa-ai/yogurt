@@ -442,7 +442,7 @@ function RangeExample({ elastic }: {elastic?: boolean}) {
     <RangeSlider label="Intensity" presentation="elastic" step={5} value={value} onChange={setValue} />
   </div>;
   return <RangeSlider label="Price" detail="per night" value={value} onChange={setValue}
-    end={end} onEndChange={setEnd} max={1000} step={10} formatValue={price => `$${price}`} />;
+    end={end} onEndChange={setEnd} max={1000} step={10} minThumbGap={34} formatValue={price => `$${price}`} />;
 }
 
 const tooltipTools = [

@@ -174,6 +174,11 @@ const actions = {
     await page.waitForFunction(() => parseFloat(document.querySelector("#mention-picker .yg-mention-marker").style.getPropertyValue("--yg-mention-top")) > 20);
     await field.press("Enter");
     assert.equal((await field.inputValue()).trim(),"Ask @Sol");
+    for (const person of ["Morgan", "Kai", "Sol"]) {
+      await field.fill("Ask @" + person[0].toLowerCase());
+      await root.getByRole("option", {name:person, exact:true}).click();
+      await page.waitForFunction(name => document.querySelector("#mention-picker textarea").value.trim() === "Ask @" + name, person);
+    }
   },
   "morph-tooltip": async (root, page) => {
     const first = button(root, "Storage details");

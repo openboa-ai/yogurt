@@ -10,6 +10,7 @@ export function MentionPicker({ label, people, value, onChange }: {
 }) {
   const id = useId();
   const input = useRef<HTMLTextAreaElement>(null);
+  const followingSelection = useRef<{value: string; caret: number} | null>(null);
   const marker = useRef<HTMLSpanElement>(null);
   const [edges] = useState(() => [spring(4, 620, 36), spring(44, 190, 19)]);
   const markerOpen = useRef(false);
@@ -17,11 +18,12 @@ export function MentionPicker({ label, people, value, onChange }: {
   const [focused, setFocused] = useState(false);
   const [dismissed, setDismissed] = useState<string | null>(null);
   const [active, setActive] = useState(0);
-  const before = value.slice(0, caret);
+  const selection = Math.min(caret, value.length);
+  const before = value.slice(0, selection);
   const match = /(?:^|\s)@([^\s@]*)$/.exec(before);
-  const start = match ? caret - match[1].length - 1 : -1;
-  const end = start < 0 ? caret : caret + (value.slice(caret).match(/^[^\s@]*/)?.[0].length ?? 0);
-  const tokenKey = `${start}:${caret}:${value}`;
+  const start = match ? selection - match[1].length - 1 : -1;
+  const end = start < 0 ? selection : selection + (value.slice(selection).match(/^[^\s@]*/)?.[0].length ?? 0);
+  const tokenKey = `${start}:${selection}:${value}`;
   const options = match ? people.filter(person => person.label.toLocaleLowerCase().includes(match[1].toLocaleLowerCase())) : [];
   const open = focused && !!match && dismissed !== tokenKey && options.length > 0;
   const index = Math.min(active, options.length - 1);
@@ -73,19 +75,31 @@ export function MentionPicker({ label, people, value, onChange }: {
       preference.removeEventListener("change", changePreference);
     };
   }, [edges, index, open, options.length]);
+  function moveCaret(next: number) {
+    input.current?.focus({preventScroll: true});
+    input.current?.setSelectionRange(next, next);
+    setCaret(next);
+  }
+  useLayoutEffect(() => {
+    const pending = followingSelection.current;
+    if (pending?.value !== value) return;
+    followingSelection.current = null;
+    moveCaret(pending.caret);
+  }, [value]);
   function select(person: { label: string }) {
+    if (start < 0) return;
     const replacement = `@${person.label}`;
     const suffix = value.slice(end);
     const space = suffix && /^\s/.test(suffix) ? "" : " ";
     const nextCaret = start + replacement.length + space.length;
-    onChange(value.slice(0, start) + replacement + space + suffix);
+    const next = value.slice(0, start) + replacement + space + suffix;
     setDismissed(null);
     setActive(0);
-    requestAnimationFrame(() => {
-      input.current?.focus();
-      input.current?.setSelectionRange(nextCaret, nextCaret);
-      setCaret(nextCaret);
-    });
+    if (next === value) moveCaret(nextCaret);
+    else {
+      followingSelection.current = {value: next, caret: nextCaret};
+      onChange(next);
+    }
   }
   return <div className="yg-mention">
     <label className="yg-label" htmlFor={id}>{label}</label>
@@ -94,7 +108,13 @@ export function MentionPicker({ label, people, value, onChange }: {
         onFocus={event => { setFocused(true); setCaret(event.currentTarget.selectionStart); }}
         onBlur={() => setFocused(false)}
         onSelect={event => { setCaret(event.currentTarget.selectionStart); setActive(0); }}
-        onChange={event => { setCaret(event.currentTarget.selectionStart); setActive(0); setDismissed(null); onChange(event.currentTarget.value); }}
+        onChange={event => {
+          followingSelection.current = null;
+          setCaret(event.currentTarget.selectionStart);
+          setActive(0);
+          setDismissed(null);
+          onChange(event.currentTarget.value);
+        }}
         onKeyDown={event => {
           if (!open || event.nativeEvent.isComposing) return;
           if (event.key === "Escape") { event.preventDefault(); setDismissed(tokenKey); }

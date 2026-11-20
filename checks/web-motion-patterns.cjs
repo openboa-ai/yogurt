@@ -84,6 +84,20 @@ async function run(browser) {
     assert(slots.widths.length === 6 && slots.widths.every(size => size >= 34) &&
       slots.right <= width && slots.outline === "none" && slots.pageWidth <= width + 1,
       JSON.stringify({width, ...slots}));
+    const interval = await demo("range-slider");
+    const low = interval.getByRole("slider", {name:"Minimum price"});
+    const high = interval.getByRole("slider", {name:"Maximum price"});
+    await high.press("End");
+    await low.press("End");
+    await page.waitForFunction(() => Number(document.querySelector("#range-slider .yg-motion-range").style.getPropertyValue("--yg-tip-merge")) > .95);
+    const boundary = await interval.locator(".yg-motion-range").evaluate(node => {
+      const tip = node.querySelector('[data-tip="joined"]').getBoundingClientRect();
+      const min = node.querySelector('[data-thumb="start"]').getBoundingClientRect();
+      const max = node.querySelector('[data-thumb="end"]').getBoundingClientRect();
+      const card = node.getBoundingClientRect();
+      return {gap: max.left - min.left, left: tip.left - card.left, right: card.right - tip.right};
+    });
+    assert(boundary.gap >= 31 && boundary.left >= 0 && boundary.right >= 0, JSON.stringify({width, ...boundary}));
     await page.goto(gallery("motion-patterns") + "#task-list");
     const indexToggle = page.getByRole("button", {name: "Browse patterns"});
     if (await indexToggle.isVisible()) await indexToggle.click();
@@ -302,7 +316,8 @@ async function run(browser) {
     await maximum.press("ArrowLeft");
     assert.equal(await maximum.getAttribute("aria-valuenow"), "750");
     await minimum.press("End");
-    assert.equal(await minimum.getAttribute("aria-valuenow"), "750");
+    assert.equal(await minimum.getAttribute("aria-valuenow"), await minimum.getAttribute("aria-valuemax"));
+    assert(Number(await minimum.getAttribute("aria-valuenow")) < 750);
     assert.equal(await maximum.getAttribute("aria-valuemin"), "750");
     assert.equal(await price.locator(".yg-motion-range-area").getAttribute("data-joined"), "true");
     await minimum.press("Home");

@@ -28,6 +28,7 @@ import { jsx, jsxs } from "react/jsx-runtime";
 function MentionPicker({ label, people, value, onChange }) {
   const id = useId();
   const input = useRef(null);
+  const followingSelection = useRef(null);
   const marker = useRef(null);
   const [edges] = useState(() => [spring(4, 620, 36), spring(44, 190, 19)]);
   const markerOpen = useRef(false);
@@ -35,11 +36,12 @@ function MentionPicker({ label, people, value, onChange }) {
   const [focused, setFocused] = useState(false);
   const [dismissed, setDismissed] = useState(null);
   const [active, setActive] = useState(0);
-  const before = value.slice(0, caret);
+  const selection = Math.min(caret, value.length);
+  const before = value.slice(0, selection);
   const match = /(?:^|\s)@([^\s@]*)$/.exec(before);
-  const start = match ? caret - match[1].length - 1 : -1;
-  const end = start < 0 ? caret : caret + (value.slice(caret).match(/^[^\s@]*/)?.[0].length ?? 0);
-  const tokenKey = `${start}:${caret}:${value}`;
+  const start = match ? selection - match[1].length - 1 : -1;
+  const end = start < 0 ? selection : selection + (value.slice(selection).match(/^[^\s@]*/)?.[0].length ?? 0);
+  const tokenKey = `${start}:${selection}:${value}`;
   const options = match ? people.filter((person) => person.label.toLocaleLowerCase().includes(match[1].toLocaleLowerCase())) : [];
   const open = focused && !!match && dismissed !== tokenKey && options.length > 0;
   const index = Math.min(active, options.length - 1);
@@ -97,19 +99,31 @@ function MentionPicker({ label, people, value, onChange }) {
       preference.removeEventListener("change", changePreference);
     };
   }, [edges, index, open, options.length]);
+  function moveCaret(next) {
+    input.current?.focus({ preventScroll: true });
+    input.current?.setSelectionRange(next, next);
+    setCaret(next);
+  }
+  useLayoutEffect(() => {
+    const pending = followingSelection.current;
+    if (pending?.value !== value) return;
+    followingSelection.current = null;
+    moveCaret(pending.caret);
+  }, [value]);
   function select(person) {
+    if (start < 0) return;
     const replacement = `@${person.label}`;
     const suffix = value.slice(end);
     const space = suffix && /^\s/.test(suffix) ? "" : " ";
     const nextCaret = start + replacement.length + space.length;
-    onChange(value.slice(0, start) + replacement + space + suffix);
+    const next = value.slice(0, start) + replacement + space + suffix;
     setDismissed(null);
     setActive(0);
-    requestAnimationFrame(() => {
-      input.current?.focus();
-      input.current?.setSelectionRange(nextCaret, nextCaret);
-      setCaret(nextCaret);
-    });
+    if (next === value) moveCaret(nextCaret);
+    else {
+      followingSelection.current = { value: next, caret: nextCaret };
+      onChange(next);
+    }
   }
   return /* @__PURE__ */ jsxs("div", { className: "yg-mention", children: [
     /* @__PURE__ */ jsx("label", { className: "yg-label", htmlFor: id, children: label }),
@@ -137,6 +151,7 @@ function MentionPicker({ label, people, value, onChange }) {
             setActive(0);
           },
           onChange: (event) => {
+            followingSelection.current = null;
             setCaret(event.currentTarget.selectionStart);
             setActive(0);
             setDismissed(null);
@@ -1957,11 +1972,13 @@ function RangeSlider({
   onEndChange,
   detail,
   formatValue = String,
-  presentation = "standard"
+  presentation = "standard",
+  minThumbGap = 0
 }) {
   const id = useId8();
   const interval = useRef9(null);
   const activeDrag = useRef9(null);
+  const [trackWidth, setTrackWidth] = useState8(0);
   const percent = (number) => max > min ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
   const first = percent(value);
   const last = end === void 0 ? first : percent(end);
@@ -1976,9 +1993,19 @@ function RangeSlider({
     if (!rail || !root) return;
     const firstTip = rail.querySelector('[data-tip="start"]');
     const lastTip = rail.querySelector('[data-tip="end"]');
+    const joinedTip = rail.querySelector('[data-tip="joined"]');
     const media = matchMedia("(prefers-reduced-motion: reduce)");
     const tracks = Object.values(motion);
     let frame = 0, previous = performance.now(), width = 0, need = 0;
+    let startInset = 0, endInset = 0;
+    let firstWidth = 0, lastWidth = 0, joinedWidth = 0;
+    function contain(position2, tipWidth) {
+      const half = tipWidth / 2 + 6;
+      const start = half - startInset;
+      const end2 = width + endInset - half;
+      const x = position2 * width / 100;
+      return end2 < start ? (start + end2) / 2 : Math.max(start, Math.min(end2, x));
+    }
     function paint() {
       const a = motion.start.position, b = motion.end.position;
       const middle = (a + b) / 2;
@@ -1987,9 +2014,9 @@ function RangeSlider({
       const settings = {
         "--yg-range-start": `${a}%`,
         "--yg-range-end": `${b}%`,
-        "--yg-tip-first": `${a + (middle - a) * amount}%`,
-        "--yg-tip-last": `${b + (middle - b) * amount}%`,
-        "--yg-tip-middle": `${middle}%`,
+        "--yg-tip-first": `${contain(a + (middle - a) * amount, firstWidth)}px`,
+        "--yg-tip-last": `${contain(b + (middle - b) * amount, lastWidth)}px`,
+        "--yg-tip-middle": `${contain(middle, joinedWidth)}px`,
         "--yg-tip-first-tilt": `${tilt(motion.start.velocity)}deg`,
         "--yg-tip-last-tilt": `${tilt(motion.end.velocity)}deg`,
         "--yg-tip-middle-tilt": `${tilt((motion.start.velocity + motion.end.velocity) / 2)}deg`,
@@ -2008,9 +2035,18 @@ function RangeSlider({
       frame = moving ? requestAnimationFrame(tick) : 0;
     }
     function work() {
-      if (!rail) return;
+      if (!rail || !root) return;
+      const bounds = root.getBoundingClientRect(), inner = rail.getBoundingClientRect();
+      const rtl = getComputedStyle(rail).direction === "rtl";
+      startInset = rtl ? bounds.right - inner.right : inner.left - bounds.left;
+      endInset = rtl ? inner.left - bounds.left : bounds.right - inner.right;
       width = rail.clientWidth;
-      need = ((firstTip?.offsetWidth ?? 0) + (lastTip?.offsetWidth ?? 0)) / 2 + 8;
+      setTrackWidth(width);
+      root.style.setProperty("--yg-tip-max-width", `${Math.max(0, bounds.width - 12)}px`);
+      firstWidth = firstTip?.offsetWidth ?? 0;
+      lastWidth = lastTip?.offsetWidth ?? 0;
+      joinedWidth = joinedTip?.offsetWidth ?? 0;
+      need = (firstWidth + lastWidth) / 2 + 8;
       motion.start.target = first;
       motion.end.target = last;
       cancelAnimationFrame(frame);
@@ -2031,6 +2067,7 @@ function RangeSlider({
     size.observe(rail);
     if (firstTip) size.observe(firstTip);
     if (lastTip) size.observe(lastTip);
+    if (joinedTip) size.observe(joinedTip);
     media.addEventListener("change", work);
     return () => {
       size.disconnect();
@@ -2063,10 +2100,13 @@ function RangeSlider({
   }
   const joined = last - first < 25;
   const increment = step > 0 && Number.isFinite(step) ? step : 1;
+  const separation = trackWidth > 0 && max > min && Number.isFinite(minThumbGap) && minThumbGap > 0 ? Math.min(max - min, Math.ceil(minThumbGap * (max - min) / trackWidth / increment) * increment) : 0;
+  const maxStart = Math.max(min, end - separation);
+  const minEnd = Math.min(max, value + separation);
   const set = (thumb, next) => {
     const snapped = Number((min + Math.round((next - min) / increment) * increment).toFixed(10));
-    if (thumb === "start") onChange(Math.max(min, Math.min(end, snapped)));
-    else onEndChange(Math.max(value, Math.min(max, snapped)));
+    if (thumb === "start") onChange(Math.max(min, Math.min(maxStart, snapped)));
+    else onEndChange(Math.max(minEnd, Math.min(max, snapped)));
   };
   const position = (event) => {
     const box = event.currentTarget.getBoundingClientRect();
@@ -2075,7 +2115,7 @@ function RangeSlider({
     return min + Math.max(0, Math.min(1, x / Math.max(1, box.width))) * (max - min);
   };
   const onThumbKey = (event, side, at) => {
-    const bounds = side === "start" ? [min, end] : [value, max];
+    const bounds = side === "start" ? [min, maxStart] : [minEnd, max];
     const keys = {
       ArrowDown: at - increment,
       ArrowLeft: at - increment,
@@ -2148,7 +2188,7 @@ function RangeSlider({
                   "data-thumb": "start",
                   "aria-label": `Minimum ${label.toLowerCase()}`,
                   "aria-valuemin": min,
-                  "aria-valuemax": end,
+                  "aria-valuemax": Math.max(value, maxStart),
                   "aria-valuenow": value,
                   "aria-valuetext": formatValue(value),
                   onKeyDown: (event) => onThumbKey(event, "start", value)
@@ -2161,7 +2201,7 @@ function RangeSlider({
                   role: "slider",
                   "data-thumb": "end",
                   "aria-label": `Maximum ${label.toLowerCase()}`,
-                  "aria-valuemin": value,
+                  "aria-valuemin": Math.min(end, minEnd),
                   "aria-valuemax": max,
                   "aria-valuenow": end,
                   "aria-valuetext": formatValue(end),
