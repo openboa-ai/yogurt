@@ -33,3 +33,9 @@ The owner selected an expandable task list for additional refinement. The list s
 The owner asked to improve the visual quality of the components across both catalogs. Refine the static control, field, selection, card and layer geometry before applying motion. Use Yogurt's existing type and palette. Interactive elements use compact boundaries, consistent label and icon placement, and a visible focus treatment. Use soft surfaces to group related information and reserve stronger contrast for the active item and primary action. Keep the size and content footprint stable when motion begins.
 
 Apply the refinement to shared Web styles and to the standalone patterns, with before and after capture of representative controls in light and dark at mobile and desktop widths. Verify single activation, focus, overlay geometry, task state and reduced motion. Deliver it to the existing draft preview for hands-on review.
+
+## Cart quantity control
+
+The owner requested a cart action that opens into a quantity control within the same row. The add button expands from its trailing edge, reveals the current count and exposes decrease and increase controls. Decrease removes the line at one. A held button repeats within the available quantity and a held decrease stops at one. Releasing, moving away, Escape or losing focus stops the repeat. Keyboard activation changes the count once and removing the last item returns focus to Add. Reduced motion keeps the state change and removes the transition.
+
+Expose the controlled Web pattern from the existing motion package. The catalog uses local grocery quantities and a derived subtotal. The example records a preview action only. Verify the opening, increment, decrement, remove, repeat, limit, subtotal and keyboard behavior in the existing draft preview.

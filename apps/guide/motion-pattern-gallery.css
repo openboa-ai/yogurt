@@ -3,7 +3,7 @@
 }
 .motion-patterns-page > main {
   display: grid;
-  gap: clamp(24px, 4vw, 48px);
+  gap: clamp(24px, 4vw, 40px);
   max-inline-size: 82rem;
   margin-inline: auto;
   padding: clamp(16px, 4vw, 56px);
@@ -15,9 +15,14 @@
   gap: var(--boa-space-8);
 }
 .motion-patterns-header h1 {
-  margin: var(--boa-space-12) 0 var(--boa-space-8);
+  margin: var(--boa-space-16) 0 var(--boa-space-8);
   font-size: clamp(2rem, 5vw, 3rem);
-  line-height: 1.1;
+  line-height: 1.05;
+  letter-spacing: -.055em;
+}
+.motion-patterns-header p {
+  color: var(--yg-muted);
+  margin: 0;
 }
 .motion-patterns-header nav,
 .motion-section-nav {
@@ -36,35 +41,41 @@
   text-underline-offset: 2px;
 }
 .motion-section-nav a {
-  padding-inline: var(--boa-space-12);
-  background: var(--yg-field);
+  padding-inline: var(--boa-space-8);
+  color: var(--yg-muted);
   text-decoration: none;
 }
+.motion-section-nav a:hover {
+  background: var(--yg-action-soft);
+  color: var(--yg-action);
+}
 .motion-patterns-page section > h2 {
-  margin-block-end: var(--boa-space-12);
+  margin-block-end: var(--boa-space-16);
 }
 .motion-pattern-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  gap: var(--boa-space-12);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20.75rem), 1fr));
+  gap: var(--boa-space-16);
   align-items: stretch;
 }
 .motion-pattern-grid > article {
   display: grid;
-  grid-template-rows: auto minmax(9rem, auto);
+  grid-template-rows: auto minmax(6.5rem, auto);
   align-content: start;
   gap: var(--boa-space-12);
   min-inline-size: 0;
   border-radius: var(--yg-radius-panel);
-  background: var(--yg-surface);
+  background: color-mix(in srgb, var(--yg-surface) 60%, var(--yg-canvas));
   padding: clamp(12px, 2vw, 20px);
   scroll-margin-top: var(--boa-space-12);
 }
 .motion-pattern-grid > article:target {
-  box-shadow: inset 0 0 0 2px var(--yg-action);
+  box-shadow: inset 0 0 0 1px var(--yg-action);
 }
 .motion-pattern-grid > article > h3 {
-  font: var(--yg-font-action);
+  color: var(--yg-muted);
+  font: var(--yg-font-help);
+  font-weight: var(--boa-weight-medium);
 }
 .motion-pattern-stage,
 .motion-sample-stack {
@@ -126,7 +137,8 @@
 }
 .motion-pattern-search input {
   color: var(--yg-text);
-  background: var(--yg-field);
+  background: var(--yg-raised-surface);
+  box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
   border: 0;
   border-radius: var(--yg-radius-control);
   padding: var(--boa-space-8) var(--boa-space-12);
@@ -151,7 +163,7 @@
   }
 }
 
-@media (min-width: 760px) {
+@media (min-width: 790px) {
   .motion-pattern-grid > #task-list {
     grid-column: span 2;
   }

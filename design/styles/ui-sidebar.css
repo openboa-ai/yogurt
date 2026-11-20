@@ -72,7 +72,7 @@
 }
 .yg-sidebar-group {
   display: grid;
-  gap: var(--boa-space-2);
+  gap: var(--boa-space-4);
   min-inline-size: 0;
 }
 .yg-sidebar-group-header {
@@ -104,7 +104,7 @@
   min-block-size: var(--yg-size-regular);
   padding: var(--boa-space-4) var(--boa-space-8);
   border: 0;
-  border-radius: var(--yg-radius-control);
+  border-radius: var(--yg-radius-small);
   background: transparent;
   color: inherit;
   font: var(--yg-font-action);
@@ -120,6 +120,7 @@
 .yg-sidebar-layout[data-panel="rail"] .yg-sidebar-item[data-contains-current="true"] {
   background: var(--yg-action-soft);
   color: var(--yg-action);
+  box-shadow: inset 0 0 0 1px var(--yg-active-edge);
 }
 @media (hover: hover) {
   .yg-sidebar-item:hover:not(:disabled, [aria-current="page"]) { background: var(--yg-hover); }

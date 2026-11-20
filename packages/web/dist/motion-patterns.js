@@ -770,8 +770,147 @@ function TaskList({ label, tasks }) {
     ] }) : /* @__PURE__ */ jsx9("div", { className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task }) }) }, task.id)) })
   ] });
 }
+
+// packages/web/src/patterns/motion-cart.tsx
+import { useEffect as useEffect2, useRef as useRef4 } from "react";
+import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
+var holdDelay = 380;
+var initialRepeat = 150;
+var minimumRepeat = 55;
+function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "Add" }) {
+  const limit = Number.isFinite(max) ? Math.max(0, Math.floor(max)) : 99;
+  const count = Number.isFinite(quantity) ? Math.max(0, Math.min(limit, Math.floor(quantity))) : 0;
+  const open = count > 0;
+  const reachedLimit = count >= limit;
+  const latest = useRef4({ count, limit, onQuantityChange });
+  latest.current = { count, limit, onQuantityChange };
+  const increase = useRef4(null);
+  const pointer = useRef4(void 0);
+  const timer = useRef4(void 0);
+  const skipClick = useRef4(false);
+  function stop() {
+    clearTimeout(timer.current);
+    pointer.current = void 0;
+  }
+  useEffect2(() => {
+    window.addEventListener("blur", stop);
+    return () => {
+      window.removeEventListener("blur", stop);
+      stop();
+    };
+  }, []);
+  function change(direction, repeat) {
+    const { count: count2, limit: limit2, onQuantityChange: onQuantityChange2 } = latest.current;
+    const next = count2 + direction;
+    if (next < (repeat ? 1 : 0) || next > limit2) return false;
+    if (next === 0) increase.current?.focus();
+    onQuantityChange2(next);
+    return true;
+  }
+  function start(event, direction) {
+    if (!event.isPrimary || event.button !== 0) return;
+    skipClick.current = false;
+    if (!open || pointer.current !== void 0) return;
+    pointer.current = event.pointerId;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    let interval = initialRepeat;
+    function repeat() {
+      skipClick.current = true;
+      if (!change(direction, true)) return;
+      timer.current = setTimeout(repeat, interval);
+      interval = Math.max(minimumRepeat, interval * 0.82);
+    }
+    timer.current = setTimeout(repeat, holdDelay);
+  }
+  function stayInControl(event) {
+    if (pointer.current !== event.pointerId) return;
+    const { top, right, bottom, left } = event.currentTarget.getBoundingClientRect();
+    if (event.clientY < top || event.clientX > right || event.clientY > bottom || event.clientX < left) {
+      skipClick.current = true;
+      stop();
+    }
+  }
+  function end(event) {
+    if (pointer.current === event.pointerId) stop();
+  }
+  const pointerHandlers = {
+    onPointerMove: stayInControl,
+    onPointerUp: end,
+    onPointerCancel: end,
+    onLostPointerCapture: end
+  };
+  function activate(direction, detail) {
+    if (detail === 0 || !skipClick.current) change(direction, false);
+    skipClick.current = false;
+  }
+  return /* @__PURE__ */ jsx10(
+    "div",
+    {
+      className: "yg-cart-control",
+      role: "group",
+      "aria-label": label,
+      "data-open": open,
+      onKeyDown: (event) => {
+        if (event.key === "Escape" && pointer.current !== void 0) {
+          skipClick.current = true;
+          stop();
+        }
+      },
+      onBlur: (event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) stop();
+      },
+      children: /* @__PURE__ */ jsxs10("div", { className: "yg-cart-stepper", children: [
+        /* @__PURE__ */ jsx10(
+          "button",
+          {
+            type: "button",
+            className: "yg-cart-decrease",
+            hidden: !open,
+            "aria-label": count === 1 ? `Remove ${label}` : `Decrease quantity of ${label}`,
+            ...pointerHandlers,
+            onPointerDown: (event) => start(event, -1),
+            onClick: (event) => activate(-1, event.detail),
+            children: /* @__PURE__ */ jsx10(
+              "svg",
+              {
+                className: "yg-icon",
+                "aria-hidden": "true",
+                viewBox: "0 0 24 24",
+                fill: "none",
+                stroke: "currentColor",
+                strokeWidth: 1.7,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                children: /* @__PURE__ */ jsx10("path", { d: count === 1 ? "M4 6h16M9 6V4h6v2m3 0-1 14H7L6 6m4 4v6m4-6v6" : "M5 12h14" })
+              }
+            )
+          }
+        ),
+        /* @__PURE__ */ jsx10("output", { className: "yg-cart-quantity", "aria-label": `Quantity of ${label}`, hidden: !open, children: /* @__PURE__ */ jsx10("span", { children: count }, count) }),
+        /* @__PURE__ */ jsxs10(
+          "button",
+          {
+            ref: increase,
+            type: "button",
+            className: "yg-cart-increase",
+            "aria-disabled": reachedLimit || void 0,
+            "aria-label": open ? `Increase quantity of ${label}` : `${addLabel} ${label}`,
+            ...pointerHandlers,
+            onPointerDown: (event) => start(event, 1),
+            onClick: (event) => activate(1, event.detail),
+            children: [
+              !open && /* @__PURE__ */ jsx10("span", { children: addLabel }),
+              /* @__PURE__ */ jsx10(Icon, { name: "plus" })
+            ]
+          }
+        )
+      ] })
+    }
+  );
+}
 export {
   ActivityIsland,
+  CartButton,
   CheckboxList,
   CommandButton,
   CopyButton,

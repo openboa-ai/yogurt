@@ -44,6 +44,7 @@ const galleryStyles = [
   "design/styles/ui-motion-cards.css",
   "design/styles/ui-motion-stepped.css",
   "design/styles/ui-motion-confirm.css",
+  "design/styles/ui-motion-cart.css",
   "design/styles/ui.css",
   "apps/guide/ui-catalog.css",
   ...(motion ? ["apps/guide/motion-review.css"] : []),

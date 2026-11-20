@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Button } from "@openboa/yogurt";
+import { CartButton } from "@openboa/yogurt/motion-patterns";
 
 function Player() {
   const tracks = ["Quiet morning", "Open windows", "After the rain"];
@@ -10,10 +11,47 @@ function Approval() {
   const [state, setState] = useState<"pending" | "approved" | "declined">("pending");
   return <div className="utility-demo utility-panel"><small>TOOL REQUEST</small><strong>Read project notes</strong><span>Allow this preview to use the selected notes?</span>{state === "pending" ? <div className="utility-row"><Button size="compact" emphasis="soft" onClick={() => setState("declined")}>Decline</Button><Button size="compact" onClick={() => setState("approved")}>Allow once</Button></div> : <><span role="status">{state === "approved" ? "Allowed in preview" : "Declined in preview"}</span><Button size="compact" emphasis="quiet" onClick={() => setState("pending")}>Reset</Button></>}</div>;
 }
+const groceries = [
+  { id: "yogurt", name: "Greek yogurt", detail: "Plain · 500 g", price: 420, tone: "dairy" },
+  { id: "blueberries", name: "Blueberries", detail: "Fresh · 125 g", price: 350, tone: "fruit" },
+  { id: "granola", name: "Maple granola", detail: "Toasted oats · 300 g", price: 560, tone: "grain" },
+];
+const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
+
 function Cart() {
-  const [count, setCount] = useState(0);
-  return <div className="utility-demo"><strong>Everyday notebook</strong><span>One item · $12</span><Button onClick={() => setCount(count + 1)}>Add to cart <span className="utility-badge">{count}</span></Button><span role="status">{count ? `${count} ${count === 1 ? "item" : "items"} in preview cart` : "Your preview cart is empty"}</span>{count > 0 && <Button size="compact" emphasis="quiet" onClick={() => setCount(0)}>Clear cart</Button>}</div>;
+  const [cart, setCart] = useState<Record<string, number>>({ blueberries: 2 });
+  const [confirmed, setConfirmed] = useState(false);
+  const subtotal = groceries.reduce((total, item) => total + item.price * (cart[item.id] ?? 0), 0);
+  const count = Object.values(cart).reduce((total, quantity) => total + quantity, 0);
+  return (
+    <div className="utility-cart">
+      <ul>
+        {groceries.map(item => (
+          <li key={item.id}>
+            <span className="utility-cart-marker" aria-hidden="true" data-tone={item.tone} />
+            <div className="utility-cart-product">
+              <strong>{item.name}</strong>
+              <span>{item.detail} · {currency.format(item.price / 100)}</span>
+            </div>
+            <CartButton label={item.name} quantity={cart[item.id] ?? 0} max={9}
+              onQuantityChange={quantity => {
+                setConfirmed(false);
+                setCart(current => ({ ...current, [item.id]: quantity }));
+              }} />
+          </li>
+        ))}
+      </ul>
+      <div className="utility-cart-total">
+        <div><span>{count} {count === 1 ? "item" : "items"} · Subtotal</span>
+          <strong data-cart-subtotal>{currency.format(subtotal / 100)}</strong></div>
+        <Button disabled={!count || confirmed} onClick={() => setConfirmed(true)}>
+          {confirmed ? "Cart reviewed" : "Review cart"}
+        </Button>
+      </div>
+    </div>
+  );
 }
+
 function Dots() {
   const [page, setPage] = useState(0);
   const notes = ["Gather ideas", "Find a direction", "Make it happen", "Share the result"];

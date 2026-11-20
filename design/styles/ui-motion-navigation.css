@@ -17,7 +17,8 @@
   pointer-events: none;
 }
 .yg-segment > .yg-selection-marker {
-  background: var(--yg-canvas);
+  background: var(--yg-raised-surface);
+  box-shadow: 0 1px 2px var(--yg-surface-edge), inset 0 0 0 1px var(--yg-surface-edge);
 }
 
 @media (forced-colors: none) {

@@ -3,13 +3,13 @@
   gap: var(--boa-space-8);
   min-width: 0;
   padding: var(--boa-space-12);
-  border: 1px solid var(--yg-hover);
+  border: 1px solid var(--yg-surface-edge);
   border-radius: var(--yg-radius-panel);
-  background: var(--yg-canvas);
+  background: var(--yg-raised-surface);
   transition: border-color var(--yg-change) var(--yg-settle);
 }
 .yg-composer:has(textarea:focus-visible) {
-  border-color: var(--yg-muted);
+  border-color: var(--yg-action);
 }
 .yg-conversation-presence {
   display: flex;

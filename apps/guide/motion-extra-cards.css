@@ -1,8 +1,8 @@
 :where(.extra-deck, .extra-pages, .extra-reading, .extra-text, .extra-note, .extra-pass) { display: grid; gap: 16px; width: min(100%, 360px); }
 :where(.extra-deck, .extra-pages, .extra-reading, .extra-text, .extra-note, .extra-pass, .extra-ticket) button, button.extra-ticket { font: inherit; cursor: pointer; }
 .extra-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.extra-deck-sheet, .extra-page, .extra-note, .extra-pass, .extra-check-card, .extra-ticket { border: 1px solid var(--yg-off); border-radius: 14px; background: var(--yg-canvas); padding: 22px; }
-.extra-deck-sheet, .extra-page { min-height: 150px; box-shadow: 5px 5px 0 var(--yg-action-soft); }
+.extra-deck-sheet, .extra-page, .extra-note, .extra-pass, .extra-check-card, .extra-ticket { border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-panel); background: var(--yg-canvas); padding: 22px; }
+.extra-deck-sheet, .extra-page { min-height: 150px; box-shadow: var(--yg-lift-shadow); }
 :where(.extra-deck-sheet, .extra-page, .extra-note) p { font-size: 1.3rem; line-height: 1.3; }
 .extra-ticket { display: grid; gap: 22px; width: min(100%, 320px); text-align: start; transform: rotate(-2deg); }
 .extra-ticket[data-tilt="true"] { transform: rotate(2deg) translateY(-4px); background: var(--yg-action-soft); }

@@ -9,3 +9,4 @@ export { ExpandCard, FanCards, StatCard, ProfileCard } from "./motion-cards.js";
 export { RangeSlider, PasswordStrength, CheckboxList, DetentDial } from "./motion-stepped.js";
 export { HoldButton, SlideConfirm } from "./motion-confirm.js";
 export { TaskList, type TaskListItem } from "./motion-task-list.js";
+export { CartButton } from "./motion-cart.js";

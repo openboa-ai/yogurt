@@ -8,7 +8,7 @@
 .expression-dock small { font-size: 11px; }
 .expression-cord { min-height: 170px; }
 .expression-lamp { width: 70px; height: 35px; border-radius: 50px 50px 12px 12px; background: var(--yg-muted); transition: background 250ms, box-shadow 250ms; }
-.expression-cord[data-lit="true"] .expression-lamp { background: #eab85c; box-shadow: 0 12px 32px #eab85c80; }
+.expression-cord[data-lit="true"] .expression-lamp { background: var(--boa-color-ochre-300); box-shadow: 0 12px 32px color-mix(in srgb, var(--boa-color-ochre-300) 50%, transparent); }
 .expression-cord button { display: grid; justify-items: center; gap: 6px; border: 0; background: transparent; color: inherit; }
 .expression-cord button span { height: 42px; width: 2px; background: currentColor; transform-origin: top; transition: transform 300ms; }
 .expression-cord button:active span { transform: scaleY(1.3); }

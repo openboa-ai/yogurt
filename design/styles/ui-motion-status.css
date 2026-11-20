@@ -239,3 +239,34 @@ summary.yg-task-line::-webkit-details-marker { display: none; }
 @keyframes yg-task-travel { to { background-position-x: 100%; } }
 @keyframes yg-task-check { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes yg-task-disclose { from { translate: 0 -4px; } }
+
+/* Keep status legible while grouping the work into calm, compact surfaces. */
+.yg-storage-meter { gap: var(--boa-space-12); padding: var(--boa-space-16); border-radius: var(--yg-radius-panel); background: var(--yg-surface); }
+.yg-motion-detail-line { align-items: center; gap: var(--boa-space-12); }
+.yg-motion-detail-line > strong { font-weight: 700; }
+.yg-motion-detail-line > span, .yg-island-summary { color: var(--yg-muted); }
+.yg-storage-ticks { gap: 3px; }
+.yg-storage-ticks > span { block-size: 12px; }
+.yg-activity-island { background: var(--yg-surface); }
+.yg-activity-island > button { min-block-size: 56px; gap: var(--boa-space-12); padding: var(--boa-space-12) var(--boa-space-16); cursor: pointer; }
+.yg-activity-island > button:focus-visible, .yg-task-list summary:focus-visible { outline: 2px solid var(--yg-action); outline-offset: 2px; }
+.yg-island-content { padding: 0 var(--boa-space-16) var(--boa-space-16); }
+.yg-task-list { padding: var(--boa-space-16); background: var(--yg-surface); }
+.yg-task-list > header { align-items: center; gap: var(--boa-space-8); padding: 0 0 var(--boa-space-12); }
+.yg-task-list > header > strong { font-size: 1.0625rem; }
+.yg-task-list ol { gap: var(--boa-space-4); }
+.yg-task-list > ol > li { background: var(--yg-canvas); }
+.yg-task-line { gap: var(--boa-space-12); min-block-size: 52px; padding: var(--boa-space-12); }
+summary.yg-task-line { cursor: pointer; list-style: none; }
+.yg-task-copy { gap: 3px; min-inline-size: 0; line-height: 1.35; }
+.yg-task-marker { background: var(--yg-surface); }
+.yg-task-state { color: var(--yg-action); font-weight: 600; white-space: nowrap; }
+.yg-task-list [data-state="done"] > .yg-task-state,
+.yg-task-list [data-state="done"] > div > .yg-task-state,
+.yg-task-list [data-state="done"] > details > summary > .yg-task-state { color: var(--yg-success); }
+.yg-task-list [data-state="failed"] > .yg-task-state,
+.yg-task-list [data-state="failed"] > div > .yg-task-state,
+.yg-task-list [data-state="failed"] > details > summary > .yg-task-state { color: var(--yg-danger); }
+.yg-task-list [data-active] { background: var(--yg-action-soft); }
+.yg-task-list .yg-task-children { padding: 0 var(--boa-space-12) var(--boa-space-12) var(--boa-space-24); }
+.yg-task-list .yg-task-children .yg-task-line { min-block-size: 44px; }

@@ -1,10 +1,10 @@
 .motion-extra { display: grid; justify-items: start; gap: 12px; width: min(100%, 320px); }
 .motion-extra label { display: grid; gap: 6px; width: 100%; font-weight: 600; }
-.motion-extra input:not([type="range"]) { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid var(--yg-off, #ccc); border-radius: var(--yg-radius-control); background: var(--yg-surface); color: inherit; font: inherit; }
-.motion-extra small, .motion-extra > span { color: var(--yg-muted, #666); }
+.motion-extra input:not([type="range"]) { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: var(--yg-raised-surface); color: inherit; font: inherit; }
+.motion-extra small, .motion-extra > span { color: var(--yg-muted); }
 .motion-extra-chips, .motion-extra-toolbar, .motion-extra-rating { display: flex; flex-wrap: wrap; gap: 6px; }
 .motion-extra-chips button, .motion-extra-toolbar button { border: 0; border-radius: var(--yg-radius-control); padding: 7px 11px; background: var(--yg-action-soft); color: var(--yg-action); font: inherit; cursor: pointer; transition: transform 180ms var(--yg-settle); }
-.motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: white; }
+.motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: var(--yg-on-action); }
 .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: translateY(-2px); }
 .motion-extra-wheel { display: grid; justify-items: center; gap: 6px; min-width: 140px; }
 .motion-extra-wheel output { display: grid; place-items: center; width: 100%; min-height: 52px; border-radius: var(--yg-radius-panel); background: var(--yg-action-soft); color: var(--yg-action); font-weight: 650; }

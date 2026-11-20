@@ -46,3 +46,34 @@
   .yg-expand-card[open] .yg-expand-card-body, .yg-fan-detail, .yg-profile-card details[open] .yg-profile-extra, .yg-stat-value { animation: yg-card-arrive var(--yg-change) var(--yg-settle); }
 }
 @keyframes yg-card-arrive { from { opacity: 0; transform: translateY(5px); } }
+
+/* Card surfaces share a quiet edge and a clear reading hierarchy. */
+:where(.yg-expand-card, .yg-stat-card, .yg-profile-card) {
+  border-color: transparent;
+  background: var(--yg-surface);
+}
+.yg-expand-card summary { min-block-size: 64px; padding: 18px 20px; line-height: 1.3; }
+.yg-expand-card-body { color: var(--yg-muted); line-height: 1.55; }
+.yg-card-disclosure { width: 32px; height: 32px; color: var(--yg-action); font-weight: 400; }
+.yg-fan-cards-list { gap: 10px; padding: 10px 6px 14px; }
+.yg-fan-cards-list button {
+  min-width: 132px; min-height: 160px; padding: 18px;
+  border-color: transparent; background: var(--yg-surface);
+  line-height: 1.3; font-weight: 650;
+}
+.yg-fan-cards-list button[aria-pressed="true"] { border-color: transparent; color: var(--yg-action); }
+.yg-fan-number { color: var(--yg-muted); opacity: 1; font-weight: 500; letter-spacing: .04em; }
+.yg-fan-detail { padding: 4px 6px; line-height: 1.45; }
+.yg-fan-detail > span { color: var(--yg-muted); }
+.yg-stat-card { gap: 10px; padding: 24px; }
+.yg-stat-label { color: var(--yg-muted); font-weight: 600; }
+.yg-stat-value { font-size: clamp(2.5rem, 6vw, 3.25rem); letter-spacing: -.04em; }
+.yg-stat-detail { color: var(--yg-muted); line-height: 1.4; }
+.yg-profile-card { padding: 24px; }
+.yg-profile-header { gap: 16px; }
+.yg-profile-header strong { font-size: 1.0625rem; }
+.yg-profile-header p { color: var(--yg-muted); line-height: 1.4; }
+.yg-profile-avatar { width: 52px; height: 52px; color: var(--yg-action); }
+.yg-profile-card details { padding-top: 16px; border-top: 1px solid var(--yg-field); }
+.yg-profile-card summary { font-weight: 600; }
+.yg-profile-extra { color: var(--yg-muted); line-height: 1.5; }

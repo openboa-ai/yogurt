@@ -115,7 +115,46 @@ async function run(browser) {
     await tasks.getByText("Running", {exact: true}).waitFor();
     if (output) await tasks.screenshot({path: join(output, "yogurt-task-list-review.png")});
 
+    const cart = demo("cart-button");
+    const yogurt = cart.getByRole("group", {name: "Greek yogurt"});
+    const subtotal = cart.locator("[data-cart-subtotal]");
+    assert.equal(await subtotal.textContent(), "$7.00");
+    const add = yogurt.getByRole("button", {name: "Add Greek yogurt"});
+    await add.press("Enter");
+    const increase = yogurt.getByRole("button", {name: "Increase quantity of Greek yogurt"});
+    assert(await increase.evaluate(node => node === document.activeElement), "Add retains focus after opening");
+    assert.equal(await subtotal.textContent(), "$11.20");
+    await increase.press("Space");
+    assert.equal(await yogurt.locator("output").textContent(), "2");
+    await yogurt.getByRole("button", {name: "Decrease quantity of Greek yogurt"}).click();
+    assert.equal(await yogurt.locator("output").textContent(), "1");
+    await yogurt.getByRole("button", {name: "Remove Greek yogurt"}).press("Enter");
+    assert(await add.evaluate(node => node === document.activeElement), "Removing the line focuses Add");
+    assert.equal(await subtotal.textContent(), "$7.00");
+
+    const berries = cart.getByRole("group", {name: "Blueberries"});
+    const berryIncrease = berries.getByRole("button", {name: "Increase quantity of Blueberries"});
+    await berryIncrease.scrollIntoViewIfNeeded();
+    const increaseBox = await berryIncrease.boundingBox();
+    await page.mouse.move(increaseBox.x + increaseBox.width / 2, increaseBox.y + increaseBox.height / 2);
+    await page.mouse.down();
+    await page.waitForFunction(() => document.querySelector('#cart-button [aria-label="Quantity of Blueberries"]').textContent === "9");
+    await page.mouse.up();
+    assert.equal(await berryIncrease.getAttribute("aria-disabled"), "true");
+    assert.equal(await berries.locator("output").textContent(), "9");
+    const berryDecrease = berries.getByRole("button", {name: "Decrease quantity of Blueberries"});
+    const decreaseBox = await berryDecrease.boundingBox();
+    await page.mouse.move(decreaseBox.x + decreaseBox.width / 2, decreaseBox.y + decreaseBox.height / 2);
+    await page.mouse.down();
+    await page.waitForFunction(() => document.querySelector('#cart-button [aria-label="Quantity of Blueberries"]').textContent === "1");
+    await page.mouse.up();
+    assert.equal(await berries.locator("output").textContent(), "1", "A held decrease keeps the last item");
+    assert.equal(await subtotal.textContent(), "$3.50");
+    await add.click();
+    if (output) await cart.screenshot({path: join(output, "yogurt-cart-button.png"), animations: "disabled"});
+
     await page.emulateMedia({reducedMotion: "reduce"});
+    assert.equal(await yogurt.locator(".yg-cart-stepper").evaluate(n => getComputedStyle(n).transitionDuration), "0s");
     assert.equal(await tasks.locator("[data-active]").evaluate(n =>
       getComputedStyle(n, "::after").animationName), "none");
     await demo("thinking").getByRole("button", {name: "Start thinking"}).click();

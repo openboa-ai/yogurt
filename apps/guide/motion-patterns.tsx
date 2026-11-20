@@ -303,7 +303,8 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
 ];
 
 function Gallery() {
-  const [appearance, setAppearance] = useState<"light" | "dark" | "auto">("auto");
+  const [appearance, setAppearance] = useState<"light" | "dark">(() =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   const [query, setQuery] = useState("");
   const term = query.trim().toLowerCase();
   const visible = demos.map(section => ({
@@ -327,7 +328,7 @@ function Gallery() {
             <a href="agents.html">Agents</a>
           </nav>
           <Heading level={1}>Motion patterns</Heading>
-          <Text>Explore working states, transitions and gestures.</Text>
+          <Text>Try each component in place. Use Tab to explore with a keyboard.</Text>
         </div>
         <IconButton label={appearance === "dark" ? "Use light appearance" : "Use dark appearance"}
           icon={appearance === "dark" ? "sun" : "moon"}
