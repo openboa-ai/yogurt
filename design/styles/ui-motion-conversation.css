@@ -3,8 +3,8 @@
 .yg-ghost-field { display: grid; gap: var(--yg-gap-inline); min-inline-size: 0; }
 .yg-ghost-field label { font: var(--yg-font-label); }
 .yg-ghost-input { position: relative; overflow: hidden; border: 0; border-radius: var(--yg-radius-control); background: var(--yg-field); transition: background-color var(--yg-change) var(--yg-settle); }
-.yg-ghost-input input, .yg-ghost-mirror { box-sizing: border-box; width: 100%; min-height: var(--yg-size-regular); padding: var(--boa-space-8) var(--yg-inset-regular); font: var(--yg-font-body); white-space: pre; }
-.yg-ghost-input input { position: relative; display: block; border: 0; outline: 0; color: transparent; caret-color: var(--yg-text); background: transparent; }
+.yg-ghost-input textarea, .yg-ghost-mirror { box-sizing: border-box; width: 100%; min-height: var(--yg-size-regular); padding: var(--boa-space-8) var(--yg-inset-regular); font: var(--yg-font-body); white-space: pre; }
+.yg-ghost-input textarea { position: relative; display: block; border: 0; outline: 0; color: transparent; caret-color: var(--yg-text); background: transparent; }
 .yg-ghost-mirror { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .yg-ghost-suffix, .yg-ghost-hint { color: var(--yg-muted); }
 .yg-ghost-hint { font: var(--yg-font-meta); }
@@ -122,7 +122,7 @@
 @keyframes yg-thinking-morph { 0% { border-radius: 40% 60% 55% 45%; transform: rotate(0deg) scale(.9); } 50% { border-radius: 65% 35% 40% 60%; transform: rotate(90deg) scale(1); } 100% { border-radius: 35% 65% 60% 40%; transform: rotate(180deg) scale(.9); } }
 @keyframes yg-streaming-pulse { from { opacity: .4; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .yg-thinking-shape, .yg-streaming-cursor { animation: none; } }
-@media (forced-colors: active) { .yg-ghost-input input { color: FieldText; } .yg-ghost-mirror { display: none; } .yg-thinking-shape, .yg-streaming-cursor { background: CanvasText; } .yg-prompt-box:focus-within, .yg-ghost-input:focus-within { outline: 2px solid Highlight; } }
+@media (forced-colors: active) { .yg-ghost-input textarea { color: FieldText; } .yg-ghost-mirror { display: none; } .yg-thinking-shape, .yg-streaming-cursor { background: CanvasText; } .yg-prompt-box:focus-within, .yg-ghost-input:focus-within { outline: 2px solid Highlight; } }
 
 /* Reply and suggestion surfaces */
 .yg-streaming-shell { inline-size: min(90%, 324px); min-inline-size: 0; }
@@ -144,17 +144,25 @@
 .yg-ghost-key { padding: 3px 9px; border-radius: var(--yg-radius-pill); background: var(--yg-field); font: var(--yg-font-meta); }
 .yg-ghost-input { border: 0; border-radius: 0; background: transparent; }
 .yg-ghost-input:focus-within { box-shadow: none; }
-.yg-ghost-input input, .yg-ghost-mirror { min-height: 3em; padding: 0; font: inherit; font-size: 1.25rem; line-height: 1.5; letter-spacing: -.01em; }
-.yg-ghost-input input { color: var(--yg-text); }
+.yg-ghost-input { display: grid; grid-template-columns: minmax(0, 1fr); }
+.yg-ghost-input textarea, .yg-ghost-mirror {
+  grid-area: 1 / 1; min-height: 3em; padding: 0; font: inherit;
+  font-size: clamp(16px, 2.4vi, 20px); line-height: 1.5; letter-spacing: -.01em;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.yg-ghost-mirror { position: relative; inset: auto; }
+.yg-ghost-input textarea { resize: none; align-self: stretch; overflow: hidden; }
+.yg-ghost-input textarea { color: var(--yg-text); }
 .yg-ghost-mirror > span:first-child { color: transparent; }
-.yg-ghost-suffix > span { display: inline-block; white-space: pre; animation: yg-ghost-appear var(--yg-motion-text-pop) both; }
+.yg-ghost-word { display: inline-block; max-inline-size: 100%; overflow-wrap: anywhere; }
+.yg-ghost-suffix .yg-ghost-word > span { display: inline-block; animation: yg-ghost-appear var(--yg-motion-text-pop) both; }
 @keyframes yg-ghost-appear { from { opacity: 0; transform: translateY(3px); } }
 .yg-ghost-accepted { visibility: hidden; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-ghost-input input[data-accepted] { color: transparent; }
+  .yg-ghost-input textarea[data-accepted] { color: transparent; }
   .yg-ghost-mirror[data-accepted] > span:first-child, .yg-ghost-accepted { color: var(--yg-text); }
   .yg-ghost-accepted { visibility: visible; }
-  .yg-ghost-accepted > span { display: inline-block; white-space: pre; animation: yg-ghost-accept 420ms linear both; }
+  .yg-ghost-accepted .yg-ghost-word > span { display: inline-block; animation: yg-ghost-accept 420ms linear both; }
 }
 @keyframes yg-ghost-accept {
   0% { translate: 0 0; opacity: .55; }
@@ -169,4 +177,6 @@
 .yg-thinking-dots { position: relative; display: flex; gap: 4px; align-items: center; }
 .yg-thinking-dots i { display: block; width: 9px; height: 9px; border-radius: 50%; background: var(--yg-muted); }
 @media (prefers-reduced-motion: reduce) { .yg-streaming-word, .yg-ghost-suffix > span, .yg-thinking-dots i { animation: none; } }
-@media (forced-colors: active) { .yg-ghost-input input, .yg-ghost-input input[data-accepted] { color: FieldText; } .yg-ghost-mirror { display: none; } .yg-thinking { border: 1px solid CanvasText; } .yg-thinking-dots { filter: none !important; } .yg-thinking-dots i { background: CanvasText; } }
+@media (forced-colors: active) { .yg-ghost-input textarea, .yg-ghost-input textarea[data-accepted] { color: FieldText; } .yg-ghost-mirror { display: none; } .yg-thinking { border: 1px solid CanvasText; } .yg-thinking-dots { filter: none !important; } .yg-thinking-dots i { background: CanvasText; } }
+
+.yg-ghost-hint[data-visible="false"] { visibility: hidden; }

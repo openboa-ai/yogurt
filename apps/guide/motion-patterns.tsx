@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type 
 import { createRoot } from "react-dom/client";
 import {
   ActionMenu, Button, Command, Icon, IconButton, InputOTP,
-  ProjectMark, SegmentedControl, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
+  ProjectMark, SegmentedControl, SidebarItem, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
 } from "@openboa/yogurt";
 import {
   ActivityIsland, CheckboxList, CommandButton, CopyButton, DetentDial, ExpandCard, FanCards, FileDrop,
@@ -176,7 +176,7 @@ function BillingExample() {
         <div inert={!annual}><Icon name="check" /> Two months included</div>
       </div>
     </div>
-    <LoadingSuccessButton label="Review plan" pendingLabel="Reviewing plan" successLabel="Plan reviewed"
+    <LoadingSuccessButton fluid label="Review plan" pendingLabel="Reviewing plan" successLabel="Plan reviewed"
       errorLabel="Try again" presentation="morphing" state={reviewed} onAction={() => {
         if (reviewed !== "idle") return;
         setReviewed("pending");
@@ -266,7 +266,7 @@ function ConversationExample({ kind }: {kind: "stream" | "prompt" | "thinking"})
 
 function CommandExample({ kind }: {kind: "button" | "palette" | "menu"}) {
   const [selection, setSelection] = useState("");
-  return <div className="motion-sample-stack">
+  return <div className="motion-sample-stack" data-command-example={kind}>
     {kind === "button" && <CommandButton label="Run command" items={pages} onSelect={setSelection} />}
     {kind === "palette" && <Command label="Open command palette" presentation="inline" triggerText="Search" items={[...commands]} onSelect={setSelection} />}
     {kind === "menu" && <ActionMenu label="View actions" presentation="expanding"
@@ -335,13 +335,21 @@ const workspaceTabs = [
   {id: "overview", label: "Overview"}, {id: "projects", label: "Projects"},
   {id: "team", label: "Team"}, {id: "settings", label: "Settings"},
 ];
+const sectionSummaries: Record<string, {title: string; detail: string}> = {
+  overview: {title: "Workspace overview", detail: "2 updates to review"},
+  notes: {title: "Review notes", detail: "1 draft ready for feedback"},
+  files: {title: "Source files", detail: "3 attachments in this workspace"},
+};
 function TabsExample({ smooth }: {smooth?: boolean}) {
   const [value, setValue] = useState("overview");
   return <div className={smooth ? "motion-smooth-tabs" : "motion-pill-tabs"}>
     <Tabs label={smooth ? "Sections" : "Workspace tabs"} value={value} onValueChange={setValue}
-      presentation={smooth ? undefined : "pill"}
+      presentation="pill"
       items={(smooth ? pages : workspaceTabs).map(page => ({
-        ...page, panel: smooth ? <Text variant="help">{page.label} is open.</Text> : null,
+        ...page, panel: smooth ? <div className="motion-tab-panel-copy">
+          <strong>{sectionSummaries[page.id].title}</strong>
+          <Text variant="help">{sectionSummaries[page.id].detail}</Text>
+        </div> : null,
       }))} />
   </div>;
 }
@@ -375,16 +383,19 @@ function SwitchesExample() {
 
 function SidebarExample() {
   const [collapsed, setCollapsed] = useState(false);
+  const [destination, setDestination] = useState("Overview");
   return <div className="motion-sample-sidebar">
-    <SidebarLayout label="Workspace navigation" width="8.5rem" compactAt={320}
+    <SidebarLayout label="Workspace navigation" width="min(212px, 56%)" compactAt={0}
       collapsed={collapsed} onCollapsedChange={setCollapsed}
       navigation={<div className="motion-sample-nav">
-        <IconButton label="Overview" icon="menu" />
-        <IconButton label="Search" icon="search" />
+        <ProjectMark project="openboa" size={26} />
+        <SidebarItem label="Overview" icon={<Icon name="home" />} active={destination === "Overview"} onSelect={() => setDestination("Overview")} />
+        <SidebarItem label="Search" icon={<Icon name="search" />} active={destination === "Search"} onSelect={() => setDestination("Search")} />
+        <SidebarItem label="Saved" icon={<Icon name="bookmark" />} active={destination === "Saved"} onSelect={() => setDestination("Saved")} />
       </div>}>
-      <div className="motion-sample-stack">
-        <Text>Workspace</Text>
-        <Button size="compact" emphasis="soft" onClick={() => setCollapsed(value => !value)}>{collapsed ? "Expand" : "Collapse"}</Button>
+      <div className="motion-sidebar-content">
+        <Button size="compact" emphasis="soft" aria-expanded={!collapsed} onClick={() => setCollapsed(value => !value)}>{collapsed ? "Expand" : "Collapse"}</Button>
+        <Text variant="help">{destination}</Text>
       </div>
     </SidebarLayout>
   </div>;
@@ -493,7 +504,7 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "streaming-reply", title: "Streaming reply", body: <ConversationExample kind="stream" />},
     {id: "thinking", title: "Thinking indicator", body: <ConversationExample kind="thinking" />},
     {id: "agent-steps", title: "Agent steps", body: <StepExample agent />},
-    {id: "activity-island", title: "Expandable activity", body: <ActivityIsland label="Workspace activity" summary="2 updates"><Text>Draft ready · Review requested</Text></ActivityIsland>},
+    {id: "activity-island", title: "Expandable activity", body: <ActivityIsland compact label="Activity" summary="2 updates"><Text>Draft ready · Review requested</Text></ActivityIsland>},
   ]},
   {title: "Data and feedback", id: "feedback", items: [
     {id: "storage-meter", detail: "Track the storage used by a workspace and see what changes as it fills up.", title: "Storage meter", body: <StorageExample />},

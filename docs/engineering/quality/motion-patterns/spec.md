@@ -161,3 +161,5 @@ Maintain usable geometry and contrast while a control is activated, expanded, dr
 Keep the interval handles reachable as they converge. The motion example requests a 34 px gap where the track permits it, rounded to the allowed step. The shared control preserves the previous value contract by default and accepts the requested gap as an option. Constrain value bubbles to the visible card at the extremes while preserving the merge and directional tilt.
 
 Apply mention caret restoration when the corresponding controlled value is committed. New text input cancels any pending caret change. In a series of selections, each choice replaces only the current token.
+
+Review the writing suggestion, activity island, billing card, command palette, expanding menu, smooth tabs and sidebar in both resting and active states. Keep the writing suggestion readable at narrow widths, align billing controls to the card, reserve space for expanding panels, and include the visible rail in narrow sidebar specimens. Verify these arrangements at 320, 768 and 1440 CSS pixels while retaining their existing interactions.

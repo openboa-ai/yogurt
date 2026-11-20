@@ -92,17 +92,18 @@ export function StorageMeter({ label, used, capacity, unit, categories = [] }: {
   );
 }
 
-export function ActivityIsland({ label, summary, children }: {
+export function ActivityIsland({ label, summary, children, compact = false }: {
   label: string;
   summary: string;
   children: ReactNode;
+  compact?: boolean;
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
   const capsule = useRef<HTMLElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const [tracks] = useState(() => ({
-    width: spring(244,380,24), height: spring(44,300,22),
+    width: spring(compact ? 184 : 244,380,24), height: spring(compact ? 36 : 44,300,22),
     press: spring(1,520,18), copy: spring(0,260,28),
   }));
   useLayoutEffect(() => {
@@ -111,13 +112,14 @@ export function ActivityIsland({ label, summary, children }: {
     let stop: (() => void) | undefined;
     const sync = () => {
       const room = visible.parentElement?.clientWidth ?? 340;
-      tracks.width.target = Math.min(room, open ? 340 : 244);
-      tracks.height.target = 44 + (open ? content.offsetHeight : 0);
+      const header = compact ? 36 : 44;
+      tracks.width.target = Math.min(room, open ? (compact ? 280 : 340) : (compact ? 184 : 244));
+      tracks.height.target = header + (open ? content.offsetHeight : 0);
       tracks.height.stiffness = open ? 300 : 390;
       tracks.copy.target = Number(open);
       stop?.();
       stop = playSprings(Object.values(tracks), () => {
-        const h = Math.max(44, tracks.height.position);
+        const h = Math.max(header, tracks.height.position);
         const give = Math.min(.05, Math.max(-.05, -tracks.height.velocity/7000));
         visible.style.setProperty("--yg-island-w", `${tracks.width.position * (1+give)}px`);
         visible.style.setProperty("--yg-island-h", `${h}px`);
@@ -137,9 +139,9 @@ export function ActivityIsland({ label, summary, children }: {
     changes.observe(content);
     if (visible.parentElement) changes.observe(visible.parentElement);
     return () => { changes.disconnect(); stop?.(); };
-  }, [open, tracks]);
+  }, [compact, open, tracks]);
   return (
-    <section ref={capsule} className="yg-activity-island" data-open={open}>
+    <section ref={capsule} className="yg-activity-island" data-open={open} data-compact={compact || undefined}>
       <button type="button" aria-expanded={open} aria-controls={id} onClick={() => {
         tracks.press.velocity -= open ? 1 : 1.6;
         setOpen(value => !value);
@@ -164,6 +166,7 @@ type ResultActionProps = {
 
 export function LoadingSuccessButton({ presentation, ...props }: ResultActionProps & {
   presentation?: "fitted" | "morphing";
+  fluid?: boolean;
 }) {
   if (presentation === "morphing") return <MorphingResultAction {...props} />;
   const { label, pendingLabel, successLabel, errorLabel, state, onAction } = props;
@@ -189,7 +192,7 @@ export function LoadingSuccessButton({ presentation, ...props }: ResultActionPro
   );
 }
 
-function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, state, onAction }: ResultActionProps) {
+function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, state, onAction, fluid }: ResultActionProps & {fluid?: boolean}) {
   const ref = useRef<HTMLButtonElement>(null);
   const [motion] = useState(() => ({
     width: spring(168, 300, 22), label: spring(1, 400, 30), spinner: spring(0, 300, 28),
@@ -200,7 +203,13 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
     const button = ref.current;
     if (!button) return;
     const tracked = Object.values(motion);
-    motion.width.target = pending ? 56 : result ? 140 : 168;
+    const parent = button.parentElement;
+    const setWidth = () => {
+      const room = fluid && parent ? parent.clientWidth : 168;
+      motion.width.target = Math.min(room, pending ? 56 : result ? 140 : room);
+    };
+    setWidth();
+    if (!button.style.getPropertyValue("--yg-result-width") && state === "idle") snap(motion.width, motion.width.target);
     const restore = state === "idle" && motion.result.position > .05;
     motion.label.target = state === "idle" && !restore ? 1 : 0;
     motion.spinner.target = Number(pending);
@@ -222,8 +231,17 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
       stop();
       stop = playSprings(tracked, paint);
     }, delay) : undefined;
-    return () => { clearTimeout(timed); stop(); };
-  }, [motion, pending, result, state, success]);
+    let width = parent?.clientWidth;
+    const observer = fluid && parent ? new ResizeObserver(() => {
+      if (width === parent.clientWidth) return;
+      width = parent.clientWidth;
+      setWidth();
+      stop();
+      stop = playSprings(tracked, paint);
+    }) : null;
+    if (observer && parent) observer.observe(parent);
+    return () => { clearTimeout(timed); stop(); observer?.disconnect(); };
+  }, [fluid, motion, pending, result, state, success]);
   const accessible = pending ? pendingLabel : success ? successLabel : result ? errorLabel : label;
   return <button className="yg-result-morph" ref={ref} type="button" aria-label={accessible}
     aria-busy={pending || undefined} disabled={pending} data-outcome={state} onClick={onAction}>

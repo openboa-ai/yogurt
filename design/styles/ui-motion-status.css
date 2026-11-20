@@ -343,3 +343,13 @@ summary.yg-task-line:focus-visible {
 @media (pointer: coarse) {
   summary.yg-task-line { min-block-size: 44px; align-items: center; }
 }
+
+.yg-activity-island[data-compact] { place-self: start center; }
+.yg-activity-island[data-compact] > button { block-size: 36px; min-block-size: 36px; padding: 0 12px; gap: 6px; }
+.yg-activity-island[data-compact] .yg-island-content {
+  border-block-start: 0;
+  padding: 0 var(--yg-inset-panel) var(--yg-inset-regular);
+}
+
+.yg-activity-island[data-compact] > button > svg { inline-size: 14px; block-size: 14px; }
+.yg-activity-island[data-compact] > button > span:nth-child(2) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

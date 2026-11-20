@@ -62,3 +62,7 @@ The six-digit verification field measures 264 px in a 320 px viewport and 320 px
 ## Repeated actions
 
 Ten live interaction sequences ran at each review width. They covered reopening and selecting the spring picker, interrupting the expanding menu, searching and dismissing the command palette, replacing consecutive mentions, converging the range handles at both endpoints, retargeting the bottom bar, reversing focus mode, dismissing a notification stack, restarting a canceled prompt, and reopening an expanded card. The range label stays inside its card and consecutive mention selections replace the current token.
+
+## Seven specimen layouts
+
+Resting and active captures at 320, 768 and 1440 CSS pixels cover the wrapping suggestion, compact activity island, plan switch, command palette, expanding menu, smooth tabs and collapsing sidebar. All 21 runs kept the specimen centered and within the viewport. The activity island keeps its vertical origin, billing actions align to the card, and the collapsed sidebar retains three navigable destinations at each width.

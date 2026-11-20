@@ -1013,14 +1013,14 @@ function StorageMeter({ label, used, capacity, unit: unit2, categories = [] }) {
     ] }) : /* @__PURE__ */ jsx5("span", { className: "yg-help", children: "Capacity unavailable" })
   ] });
 }
-function ActivityIsland({ label, summary, children }) {
+function ActivityIsland({ label, summary, children, compact = false }) {
   const id = useId5();
   const [open, setOpen] = useState5(false);
   const capsule = useRef5(null);
   const panel = useRef5(null);
   const [tracks] = useState5(() => ({
-    width: spring(244, 380, 24),
-    height: spring(44, 300, 22),
+    width: spring(compact ? 184 : 244, 380, 24),
+    height: spring(compact ? 36 : 44, 300, 22),
     press: spring(1, 520, 18),
     copy: spring(0, 260, 28)
   }));
@@ -1030,13 +1030,14 @@ function ActivityIsland({ label, summary, children }) {
     let stop;
     const sync = () => {
       const room = visible.parentElement?.clientWidth ?? 340;
-      tracks.width.target = Math.min(room, open ? 340 : 244);
-      tracks.height.target = 44 + (open ? content.offsetHeight : 0);
+      const header = compact ? 36 : 44;
+      tracks.width.target = Math.min(room, open ? compact ? 280 : 340 : compact ? 184 : 244);
+      tracks.height.target = header + (open ? content.offsetHeight : 0);
       tracks.height.stiffness = open ? 300 : 390;
       tracks.copy.target = Number(open);
       stop?.();
       stop = playSprings(Object.values(tracks), () => {
-        const h = Math.max(44, tracks.height.position);
+        const h = Math.max(header, tracks.height.position);
         const give = Math.min(0.05, Math.max(-0.05, -tracks.height.velocity / 7e3));
         visible.style.setProperty("--yg-island-w", `${tracks.width.position * (1 + give)}px`);
         visible.style.setProperty("--yg-island-h", `${h}px`);
@@ -1059,8 +1060,8 @@ function ActivityIsland({ label, summary, children }) {
       changes.disconnect();
       stop?.();
     };
-  }, [open, tracks]);
-  return /* @__PURE__ */ jsxs5("section", { ref: capsule, className: "yg-activity-island", "data-open": open, children: [
+  }, [compact, open, tracks]);
+  return /* @__PURE__ */ jsxs5("section", { ref: capsule, className: "yg-activity-island", "data-open": open, "data-compact": compact || void 0, children: [
     /* @__PURE__ */ jsxs5("button", { type: "button", "aria-expanded": open, "aria-controls": id, onClick: () => {
       tracks.press.velocity -= open ? 1 : 1.6;
       setOpen((value) => !value);
@@ -1105,7 +1106,7 @@ function LoadingSuccessButton({ presentation, ...props }) {
     }
   );
 }
-function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, state, onAction }) {
+function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, state, onAction, fluid }) {
   const ref = useRef5(null);
   const [motion] = useState5(() => ({
     width: spring(168, 300, 22),
@@ -1120,7 +1121,13 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
     const button = ref.current;
     if (!button) return;
     const tracked = Object.values(motion);
-    motion.width.target = pending ? 56 : result ? 140 : 168;
+    const parent = button.parentElement;
+    const setWidth = () => {
+      const room = fluid && parent ? parent.clientWidth : 168;
+      motion.width.target = Math.min(room, pending ? 56 : result ? 140 : room);
+    };
+    setWidth();
+    if (!button.style.getPropertyValue("--yg-result-width") && state === "idle") snap(motion.width, motion.width.target);
     const restore = state === "idle" && motion.result.position > 0.05;
     motion.label.target = state === "idle" && !restore ? 1 : 0;
     motion.spinner.target = Number(pending);
@@ -1142,11 +1149,21 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
       stop();
       stop = playSprings(tracked, paint);
     }, delay) : void 0;
+    let width = parent?.clientWidth;
+    const observer = fluid && parent ? new ResizeObserver(() => {
+      if (width === parent.clientWidth) return;
+      width = parent.clientWidth;
+      setWidth();
+      stop();
+      stop = playSprings(tracked, paint);
+    }) : null;
+    if (observer && parent) observer.observe(parent);
     return () => {
       clearTimeout(timed);
       stop();
+      observer?.disconnect();
     };
-  }, [motion, pending, result, state, success]);
+  }, [fluid, motion, pending, result, state, success]);
   const accessible = pending ? pendingLabel : success ? successLabel : result ? errorLabel : label;
   return /* @__PURE__ */ jsxs5(
     "button",
@@ -1300,11 +1317,16 @@ function StreamingReply({ value, active = false }) {
     /* @__PURE__ */ jsx6("div", { ref: reply, className: "yg-streaming-body", children: value && value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : /* @__PURE__ */ jsx6("span", { className: "yg-streaming-word", children: part }, index)) })
   ] }) });
 }
+function SuggestionLetters({ text, interval, cap }) {
+  return Array.from(text.matchAll(/\s+|\S+/gu), (match) => {
+    const offset = match.index;
+    return /^\s/u.test(match[0]) ? /* @__PURE__ */ jsx6("span", { children: match[0] }, offset) : /* @__PURE__ */ jsx6("span", { className: "yg-ghost-word", children: Array.from(match[0], (letter, i) => /* @__PURE__ */ jsx6("span", { style: { animationDelay: `${Math.min((offset + i) * interval, cap)}ms` }, children: letter }, i)) }, offset);
+  });
+}
 function GhostSuggestion({ value, suggestion, onChange }) {
   const id = useId6();
   const [atEnd, setAtEnd] = useState6(true);
   const [accepted, setAccepted] = useState6(null);
-  const mirror = useRef6(null);
   const suffix = value && suggestion.startsWith(value) ? suggestion.slice(value.length) : "";
   const show = atEnd && !!suffix;
   const rolling = accepted && accepted.prefix + accepted.suffix === value;
@@ -1319,22 +1341,20 @@ function GhostSuggestion({ value, suggestion, onChange }) {
       show && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-key", "aria-hidden": "true", children: "Tab \u21B9" })
     ] }),
     /* @__PURE__ */ jsxs6("div", { className: "yg-ghost-input", children: [
-      /* @__PURE__ */ jsxs6("div", { ref: mirror, className: "yg-ghost-mirror", "aria-hidden": "true", "data-accepted": rolling || void 0, children: [
+      /* @__PURE__ */ jsxs6("div", { className: "yg-ghost-mirror", "aria-hidden": "true", "data-accepted": rolling || void 0, children: [
         /* @__PURE__ */ jsx6("span", { children: rolling ? accepted.prefix : value }),
-        show && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-suffix", children: Array.from(suffix).map((letter, index) => /* @__PURE__ */ jsx6("span", { style: { animationDelay: `${Math.min(index * 8, 200)}ms` }, children: letter }, index)) }),
-        rolling && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-accepted", children: Array.from(accepted.suffix).map((letter, index) => /* @__PURE__ */ jsx6("span", { style: { animationDelay: `${Math.min(index * 16, 400)}ms` }, children: letter }, index)) })
+        show && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-suffix", children: /* @__PURE__ */ jsx6(SuggestionLetters, { text: suffix, interval: 8, cap: 200 }) }),
+        rolling && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-accepted", children: /* @__PURE__ */ jsx6(SuggestionLetters, { text: accepted.suffix, interval: 16, cap: 400 }) })
       ] }),
       /* @__PURE__ */ jsx6(
-        "input",
+        "textarea",
         {
+          rows: 2,
           id,
           value,
           autoComplete: "off",
           "aria-describedby": show ? `${id}-hint` : void 0,
           "data-accepted": rolling || void 0,
-          onScroll: (event) => {
-            if (mirror.current) mirror.current.scrollLeft = event.currentTarget.scrollLeft;
-          },
           onChange: (event) => {
             setAccepted(null);
             onChange(event.currentTarget.value);
@@ -1351,7 +1371,7 @@ function GhostSuggestion({ value, suggestion, onChange }) {
         }
       )
     ] }),
-    show && /* @__PURE__ */ jsx6("span", { className: "yg-ghost-hint", id: `${id}-hint`, children: "Press Tab or right arrow to accept" })
+    /* @__PURE__ */ jsx6("span", { className: "yg-ghost-hint", id: `${id}-hint`, "aria-hidden": !show, "data-visible": show, children: "Press Tab or right arrow to accept" })
   ] });
 }
 function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
