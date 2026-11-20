@@ -1,8 +1,8 @@
 .yg-cart-control {
-  --yg-cart-slot: 36px;
+  --yg-cart-slot: var(--yg-size-regular);
   --yg-cart-open: calc(3 * var(--yg-cart-slot));
   --yg-cart-closed: calc(2 * var(--yg-cart-slot) + var(--boa-space-8));
-  --yg-cart-ease: cubic-bezier(.23, 1, .32, 1);
+  --yg-cart-ease: var(--yg-arrive);
   position: relative;
   display: grid;
   justify-items: end;
@@ -59,7 +59,7 @@
   inset-inline-end: 0;
   inline-size: 100%;
   justify-content: space-between;
-  padding-inline: 14px calc((var(--yg-cart-slot) - var(--yg-glyph)) / 2);
+  padding-inline: var(--yg-inset-row) calc((var(--yg-cart-slot) - var(--yg-glyph)) / 2);
 }
 .yg-cart-control[data-open="true"] .yg-cart-increase {
   inline-size: var(--yg-cart-slot);
@@ -87,7 +87,7 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .yg-cart-stepper {
-    transition: inline-size 320ms var(--yg-cart-ease), color var(--yg-change) var(--yg-cart-ease),
+    transition: inline-size var(--yg-expand) var(--yg-cart-ease), color var(--yg-change) var(--yg-cart-ease),
       background-color var(--yg-change) var(--yg-cart-ease);
   }
   .yg-cart-roll:has(.yg-cart-previous) .yg-cart-current {

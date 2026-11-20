@@ -16,8 +16,8 @@
   gap: var(--boa-space-8);
   flex: 1 1 auto;
   min-inline-size: 0;
-  min-block-size: var(--yg-size-regular);
-  padding: var(--boa-space-6) var(--yg-inset-compact);
+  min-block-size: var(--yg-size-comfort);
+  padding: var(--yg-gap-control) var(--yg-inset-regular);
   border: 0;
   border-radius: inherit;
   background: transparent;

@@ -1,4 +1,4 @@
-import { useState, useRef, type CSSProperties, type ReactNode } from "react";
+import { useState, useRef, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import { Button, Checkbox } from "@openboa/yogurt";
 
 type Example = { id: string; title: string; body: ReactNode };
@@ -41,10 +41,63 @@ function ReadAlong() {
   const [word, setWord] = useState(0);
   return <div className="extra-reading"><p aria-label={words.join(" ")}>{words.map((text, i) => <span key={i}><button type="button" aria-label={`Read from ${text}`} aria-pressed={i === word} data-past={i < word} onClick={() => setWord(i)}>{text}</button>{" "}</span>)}</p><div className="extra-actions"><Button size="compact" emphasis="soft" disabled={word === 0} onClick={() => setWord(word - 1)}>Previous word</Button><Button size="compact" emphasis="soft" disabled={word === words.length - 1} onClick={() => setWord(word + 1)}>Next word</Button></div><small>Word {word + 1} of {words.length}</small></div>;
 }
+const readingPages = ["Read the rollout plan.", "Check the monitoring checklist.", "Confirm the handoff owner."];
+
 function Pages() {
-  const pages = ["Read the rollout plan.", "Check the monitoring checklist.", "Confirm the handoff owner."];
   const [page, setPage] = useState(0);
-  return <div className="extra-pages"><div className="extra-page" key={page}><small>PAGE {page + 1}</small><p>{pages[page]}</p></div><div className="extra-actions"><Button size="compact" emphasis="soft" disabled={page === 0} onClick={() => setPage(page - 1)}>Back</Button><Button size="compact" emphasis="soft" disabled={page === pages.length - 1} onClick={() => setPage(page + 1)}>Turn page</Button></div></div>;
+  const [dragPosition, setDragPosition] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const drag = useRef<{ id: number; start: number; width: number } | null>(null);
+  const last = page === readingPages.length - 1;
+
+  function reset() {
+    drag.current = null;
+    setDragPosition(0);
+    setDragging(false);
+  }
+
+  function turn(direction: number) {
+    reset();
+    setPage(current => Math.max(0, Math.min(readingPages.length - 1, current + direction)));
+  }
+
+  function travel(event: PointerEvent<HTMLDivElement>) {
+    const gesture = drag.current;
+    return gesture?.id === event.pointerId
+      ? Math.min(1, Math.max(0, (gesture.start - event.clientX) / gesture.width))
+      : 0;
+  }
+
+  return <div className="extra-pages">
+    <div className="extra-page-stack" data-dragging={dragging || undefined}
+      style={{ "--page-travel": dragPosition } as CSSProperties}
+      onPointerDown={event => {
+        if (last || !event.isPrimary || event.button !== 0 || drag.current) return;
+        const {right, width} = event.currentTarget.getBoundingClientRect();
+        if (right - event.clientX > width * .27) return;
+        drag.current = { id: event.pointerId, start: event.clientX, width };
+        setDragging(true);
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerMove={event => {
+        if (drag.current?.id === event.pointerId) setDragPosition(travel(event));
+      }}
+      onPointerUp={event => {
+        if (drag.current?.id !== event.pointerId) return;
+        if (travel(event) >= .35) turn(1);
+        else reset();
+      }}
+      onPointerCancel={event => { if (drag.current?.id === event.pointerId) reset(); }}
+      onLostPointerCapture={event => { if (drag.current?.id === event.pointerId) reset(); }}
+      onKeyDown={event => { if (event.key === "Escape") reset(); }}>
+      {!last && <div className="extra-page extra-page-under" aria-hidden="true"><small>PAGE {page + 2}</small><p>{readingPages[page + 1]}</p></div>}
+      <div className="extra-page extra-page-current" key={page} aria-live="polite" data-can-turn={!last || undefined}><small>PAGE {page + 1}</small><p>{readingPages[page]}</p></div>
+    </div>
+    <div className="extra-actions">
+      <Button size="compact" emphasis="soft" disabled={page === 0} onClick={() => turn(-1)}>Back</Button>
+      <Button size="compact" emphasis="soft" disabled={last} onClick={() => turn(1)}>Turn page</Button>
+    </div>
+  </div>;
 }
 function RevealNote() {
   const [open, setOpen] = useState(false);

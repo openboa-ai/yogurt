@@ -28,15 +28,15 @@
 
 @keyframes yg-choice-confirm { from { scale: .72; } to { scale: 1; } }
 
-.yg-focus-picker, .yg-plan-switch { gap: 8px; }
-.yg-focus-choice, .yg-plan-choice { border-radius: 12px; }
-.yg-focus-choice { gap: 12px; padding: 12px; }
+.yg-focus-picker, .yg-plan-switch { gap: var(--yg-gap-inline); }
+.yg-focus-choice, .yg-plan-choice { border-radius: var(--yg-radius-panel); }
+.yg-focus-choice { gap: var(--yg-gap-stack); padding: var(--yg-inset-regular); }
 .yg-focus-orbit { width: 36px; height: 36px; }
-.yg-choice-copy { gap: 2px; }
+.yg-choice-copy { gap: var(--boa-space-2); }
 .yg-choice-copy > strong, .yg-plan-heading strong { font-size: 14px; line-height: 20px; }
 .yg-choice-copy > span, .yg-plan-description { font-size: 12px; line-height: 16px; }
 .yg-choice-check { width: 20px; height: 20px; }
-.yg-plan-choice { gap: 8px; min-height: 0; padding: 12px; }
+.yg-plan-choice { gap: var(--yg-gap-inline); min-height: 0; padding: var(--yg-inset-regular); }
 .yg-plan-price { margin-top: 4px; font-size: 20px; line-height: 24px; }
 
 .yg-focus-choice, .yg-plan-choice { min-block-size: var(--yg-size-touch); box-sizing: border-box; }
@@ -46,8 +46,8 @@
 
 .yg-letter-limit {
   inline-size: min(100%, 320px);
-  padding: 16px;
-  border-radius: 28px;
+  padding: var(--yg-inset-roomy);
+  border-radius: var(--yg-radius-feature);
   background: var(--yg-raised-surface);
   color: var(--yg-text);
   --yg-letter-ink: var(--yg-muted);
@@ -60,11 +60,11 @@
   block-size: 72px;
   padding: 0;
   border: 0;
-  border-radius: 4px;
+  border-radius: var(--yg-radius-inset);
   background: transparent;
   color: inherit;
-  font: 400 16px/24px var(--boa-font-family);
-  letter-spacing: -.01em;
+  font: var(--yg-font-reading);
+  letter-spacing: var(--boa-tracking-body);
   resize: none;
 }
 .yg-letter-limit textarea:focus-visible {
@@ -74,7 +74,7 @@
 .yg-letter-footer {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--yg-gap-inline);
   margin-block-start: 14px;
   min-block-size: 36px;
 }
@@ -92,14 +92,14 @@
 .yg-root .yg-letter-footer .yg-button {
   margin-inline-start: auto;
   min-block-size: 36px;
-  padding-inline: 18px;
+  padding-inline: var(--yg-inset-panel);
   border-radius: var(--boa-radius-round);
   background: var(--yg-text);
   color: var(--yg-canvas);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-letter-meter > circle:last-child { transition: stroke-dashoffset 280ms var(--yg-arrive), stroke 200ms ease; }
-  .yg-letter-count { transition: color 200ms ease; }
+  .yg-letter-meter > circle:last-child { transition: stroke-dashoffset 280ms var(--yg-arrive), stroke var(--yg-change) ease; }
+  .yg-letter-count { transition: color var(--yg-change) ease; }
   .yg-letter-limit[data-limit-state="full"] :is(.yg-letter-meter, .yg-letter-count) {
     animation: yg-letter-limit-stop 310ms ease-out;
   }

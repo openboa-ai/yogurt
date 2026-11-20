@@ -87,3 +87,19 @@ Use the actual resting geometry and interaction of each approved reference when 
 ### Geometry-preserving ports
 
 The owner selected Yogurt implementations with the reference geometry and timing. Preserve the original width, height, proportions, spacing, state arrangement and motion where a matching example exists. Map color and font family to the existing system. Implement these rules in the existing TypeScript and CSS. Keep the SDK's component IDs, inputs, callbacks, focus, keyboard and reduced-motion behavior. Compare the running control against the observed reference at equivalent size and state. Distinguish geometry measurements from visual acceptance and from renderer-specific evidence.
+
+### Shared controls and composition
+
+The owner selected a shared token revision followed by a review of every web component, editable block and motion example in the existing guide. Use one scale for repeated geometry, type hierarchy and movement. Resolve those values from the SDK's token source in CSS and expose the same numeric roles to native clients. Preserve the palette, font family, signature, component IDs, props and user-visible action semantics.
+
+| Role | Design rule |
+| --- | --- |
+| Actions and fields | Keep a compact 30 px action, a 36 px everyday control, a 40 px emphasized field or action, and a 44 px touch target. Center the icon and label on the same line. Preserve a stable footprint during work. |
+| Shape | Use 4–8 px for inset parts and ordinary controls, 12–18 px for compact surfaces and floating menus, and 20–28 px for cards, sheets and featured input. Reserve full rounding for tracks, thumbs and traveling selection. |
+| Space | Use 4 or 6 px within a label group, 8 or 10 px between related controls, 12–18 px within a group, and 24 px between groups. Use a single start edge for the content and actions of a composition. |
+| Type | Use Rethink Sans at 14/20 for actions and interface copy, 15/22 for editors, and 16/24 for reading. Keep compact labels at 13/18 and metadata at 12/16. Give inline labels, headings, and numeric metrics distinct weights and tracking. |
+| Motion | Give a press immediate feedback. Let the active marker follow selection. Bring a floating surface from its trigger. Let larger areas reflow with a slower arrival. Short interruptions resolve to the latest user intent. |
+
+Reuse component styling in guide compositions. Keep separately measured dimensions when a gesture or unusually shaped feature depends on them. Reduced motion, keyboard and touch paths retain the same information and callbacks. All guide data and actions are local fixtures. This revision goes to the existing review preview for hands-on inspection.
+
+Verify resolved CSS against the shared token source and regenerate the Zig constants. Check baseline and active examples in the full Web inventory across light and dark, narrow and wide widths. Exercise focus, reduced motion and interruption on the affected families. Compare a browsing workflow, a composer and a decision with their standalone controls before updating the draft. Report Native visual evidence only from a running Native host.

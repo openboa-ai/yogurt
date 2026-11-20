@@ -831,6 +831,8 @@ function SlideConfirm({ label, onConfirm }) {
     const drag = active.current;
     if (!drag || drag.id !== event.pointerId) return;
     value.current = Math.max(0, Math.min(1, (event.clientX - drag.start) / drag.width));
+    drag.samples = drag.samples.filter((sample) => event.timeStamp - sample.time <= 80);
+    drag.samples.push({ x: event.clientX, time: event.timeStamp });
     setProgress(value.current);
   };
   return /* @__PURE__ */ jsxs8(
@@ -846,17 +848,28 @@ function SlideConfirm({ label, onConfirm }) {
         if (!event.isPrimary || event.button !== 0 || active.current || locked.current) return;
         setArmed(false);
         const handle = event.currentTarget.querySelector(".yg-slide-confirm-handle");
-        const width = event.currentTarget.clientWidth - (handle?.offsetWidth ?? 0) - 8;
+        const bounds = handle?.getBoundingClientRect();
+        if (!bounds || event.clientX < bounds.left || event.clientX > bounds.right) return;
+        const width = event.currentTarget.clientWidth - bounds.width - 8;
         if (width <= 0) return;
-        active.current = { id: event.pointerId, start: event.clientX, width };
+        active.current = {
+          id: event.pointerId,
+          start: event.clientX,
+          width,
+          samples: [{ x: event.clientX, time: event.timeStamp }]
+        };
         setDragging(true);
         event.currentTarget.setPointerCapture(event.pointerId);
       },
       onPointerMove: update,
       onPointerUp: (event) => {
-        if (active.current?.id !== event.pointerId) return;
+        const drag = active.current;
+        if (drag?.id !== event.pointerId) return;
         update(event);
-        const complete = value.current >= 0.9;
+        const first = drag.samples[0];
+        const elapsed = event.timeStamp - first.time;
+        const speed = elapsed > 0 ? (event.clientX - first.x) * 1e3 / elapsed : 0;
+        const complete = value.current >= 0.9 || value.current > 0.45 && speed > 900;
         reset();
         if (complete) confirm();
       },

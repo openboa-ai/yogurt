@@ -96,7 +96,7 @@ function RequestWorkflow() {
           <p>Ask for a review, a summary, or the next step in a handoff.</p>
           <Button size="compact" emphasis="soft" onClick={() => setDraft("Review the release brief for handoff.")}>Review the release brief</Button></div>}
       {request && state !== "stopped" && <TaskList label="Review the release brief" tasks={[
-        { id: "read", label: "Read the brief", detail: "Release brief · revision 7", state: "done" },
+        { id: "read", label: "Read the brief", detail: "Revision 7", state: "done" },
         { id: "review", label: "Check the handoff", state: state === "done" ? "done" : state === "failed" ? "failed" : "running" },
       ]} />}
       {length > 0 && <StreamingReply value={reply.slice(0, length)} active={state === "running"} />}
@@ -165,7 +165,7 @@ function Workflows() {
       <IconButton icon={dark ? "sun" : "moon"} label={dark ? "Use light appearance" : "Use dark appearance"} onClick={() => setDark(!dark)} />
     </header>
     <main className="workflow-body">
-      <SidebarLayout label="Workflows" width="10.75rem" compactAt={760} variant="flat" navigation={
+      <SidebarLayout label="Workflows" width="12rem" compactAt={760} variant="flat" navigation={
         <SidebarContent label="Workflows"><SidebarGroup label="Workflows">
           {flows.map((item) => <SidebarItem key={item.id} href={"#" + item.id}
             active={item.id === flow.id} label={item.label} icon={<Icon name={item.icon} />} />)}

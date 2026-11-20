@@ -11,16 +11,15 @@ body {
   min-height: 68px;
   max-inline-size: 90rem;
   margin-inline: auto;
-  padding: 0 clamp(16px, 3.5vw, 56px);
+  padding: 0 clamp(var(--yg-inset-roomy), 3.5vw, 56px);
   background: var(--yg-canvas);
 }
 .catalog-identity {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 22px;
-  font-weight: 650;
-  letter-spacing: -0.055em;
+  gap: var(--yg-gap-row);
+  font: var(--yg-font-heading);
+  letter-spacing: var(--boa-tracking-heading);
 }
 .catalog-section {
   color: var(--yg-muted);
@@ -28,7 +27,7 @@ body {
 }
 .header-actions {
   display: flex;
-  gap: 4px;
+  gap: var(--yg-gap-tight);
   margin-inline-start: auto;
 }
 .menu-toggle.yg-icon-button {
@@ -37,9 +36,9 @@ body {
 .catalog-body {
   display: grid;
   grid-template-columns: minmax(11rem, 14rem) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 64px);
+  gap: clamp(var(--yg-gap-section), 4vw, var(--boa-space-64));
   max-inline-size: 90rem;
-  padding: 16px clamp(16px, 3.5vw, 56px) 48px;
+  padding: var(--yg-inset-roomy) clamp(var(--yg-inset-roomy), 3.5vw, 56px) var(--boa-space-48);
   margin: auto;
   align-items: start;
 }
@@ -53,11 +52,11 @@ body {
 .catalog-search {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--yg-gap-inline);
   background: var(--yg-field);
   border-radius: var(--yg-radius-control);
-  min-height: 36px;
-  padding: 0 10px;
+  min-height: var(--yg-size-regular);
+  padding: 0 var(--yg-inset-regular);
   margin: 0 0 16px;
   color: var(--yg-muted);
 }
@@ -83,17 +82,17 @@ body {
 .nav-family a {
   width: 100%;
   display: flex;
-  gap: 4px;
+  gap: var(--yg-gap-tight);
   align-items: center;
   justify-content: space-between;
   min-height: 32px;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--yg-radius-small);
   background: transparent;
   text-decoration: none;
   color: var(--yg-text);
   text-align: start;
-  padding: 4px 8px;
+  padding: var(--boa-space-4) var(--boa-space-8);
   font: var(--yg-font-action);
 }
 .nav-family > button svg {
@@ -101,7 +100,7 @@ body {
   color: var(--yg-muted);
 }
 .nav-family a {
-  padding-inline-start: 18px;
+  padding-inline-start: var(--yg-inset-panel);
   color: var(--yg-muted);
   font: var(--yg-font-help);
 }
@@ -117,7 +116,7 @@ body {
 .catalog-body > main {
   width: 100%;
   min-width: 0;
-  padding: 0 0 24px;
+  padding: 0 0 var(--yg-inset-sheet);
   outline: 0;
 }
 .catalog-intro {
@@ -145,22 +144,22 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--yg-gap-inline);
   flex-wrap: wrap;
 }
 .preview-tools {
-  margin-bottom: 8px;
+  margin-bottom: var(--yg-gap-inline);
   font: var(--yg-font-action);
 }
 .preview-tools .yg-segment button {
   font: var(--yg-font-meta);
-  padding-inline: 10px;
+  padding-inline: var(--yg-inset-compact);
 }
 .specimen {
   background: var(--yg-surface);
-  border-radius: var(--yg-radius-panel);
+  border-radius: var(--yg-radius-sheet);
   min-height: 205px;
-  padding: clamp(20px, 3.5vw, 44px);
+  padding: clamp(var(--boa-space-20), 3.5vw, 44px);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
@@ -175,7 +174,7 @@ body {
   max-inline-size: 100%;
 }
 .specimen[data-layout="wide"] {
-  padding: clamp(8px, 2vw, 24px);
+  padding: clamp(var(--boa-space-8), 2vw, var(--yg-inset-sheet));
 }
 .specimen[data-layout="wide"] .specimen-inner {
   inline-size: 100%;
@@ -200,7 +199,7 @@ body {
   color: var(--yg-action);
   border: 0;
   background: none;
-  padding: 4px 0;
+  padding: var(--boa-space-4) 0;
 }
 .variation {
   margin: 24px 0;
@@ -212,18 +211,18 @@ body {
 .surface-comparison {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--yg-gap-inline);
 }
 .surface-comparison > .yg-root {
-  border-radius: 8px;
+  border-radius: var(--yg-radius-control);
   background: var(--yg-surface);
-  padding: 12px;
+  padding: var(--yg-inset-regular);
 }
 .sample-material {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--yg-gap-inline);
   flex-wrap: wrap;
   margin-top: 8px;
 }
@@ -236,7 +235,7 @@ body {
 .install-code > button {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--yg-gap-inline);
   font: var(--yg-font-action);
 }
 .install-code code {
@@ -246,8 +245,8 @@ body {
   color: var(--yg-text);
   font: var(--yg-font-help);
   background: var(--yg-field);
-  padding: 8px;
-  border-radius: 6px;
+  padding: var(--boa-space-8);
+  border-radius: var(--yg-radius-small);
 }
 .skip {
   position: absolute;
@@ -258,22 +257,22 @@ body {
   top: 8px;
   z-index: 3;
   background: var(--yg-canvas);
-  padding: 8px;
+  padding: var(--boa-space-8);
 }
 @media (max-width: 740px) {
   .catalog-header {
     min-height: 54px;
-    gap: 14px;
+    gap: var(--boa-space-14);
   }
   .catalog-body {
     display: block;
-    padding-top: 12px;
+    padding-top: var(--yg-inset-regular);
   }
   .catalog-body > aside {
     display: none;
     position: static;
     max-height: 48vh;
-    padding: 0 4px 8px;
+    padding: 0 var(--boa-space-4) var(--boa-space-8);
   }
   .catalog-body > aside[data-open="true"] {
     display: block;
@@ -282,14 +281,14 @@ body {
     display: inline-flex;
   }
   .catalog-body > main {
-    padding-top: 4px;
+    padding-top: var(--boa-space-4);
   }
   .catalog-intro {
     margin-bottom: 20px;
   }
   .specimen {
     min-height: 155px;
-    padding: 24px 20px;
+    padding: var(--yg-inset-sheet) var(--boa-space-20);
   }
   .catalog-identity {
     font-size: 20px;
@@ -306,10 +305,10 @@ body {
     font-size: 11px;
   }
   .catalog-header {
-    gap: 8px;
+    gap: var(--yg-gap-inline);
   }
   .specimen {
-    padding-inline: 14px;
+    padding-inline: var(--yg-inset-row);
   }
   .preview-tools .yg-segment button {
     padding-inline: 7px;
@@ -317,14 +316,14 @@ body {
 }
 .catalog-top {
   display: flex;
-  gap: 4px;
+  gap: var(--yg-gap-tight);
   align-items: center;
 }
 .catalog-top :is(button, a) {
   border: 0;
   background: transparent;
-  border-radius: 6px;
-  padding: 5px 8px;
+  border-radius: var(--yg-radius-small);
+  padding: 5px var(--boa-space-8);
   font: var(--yg-font-help);
   color: var(--yg-muted);
   text-decoration: none;
@@ -362,17 +361,17 @@ body {
 .brand-role-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
-  gap: 10px 14px;
+  gap: var(--yg-gap-row) var(--boa-space-14);
 }
 .brand-role-grid > div {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--yg-gap-inline);
 }
 .brand-role-grid > div > span {
   width: 24px;
   height: 28px;
-  border-radius: 6px;
+  border-radius: var(--yg-radius-small);
   box-shadow: inset 0 0 0 1px
     color-mix(in srgb, var(--yg-text) 10%, transparent);
 }
@@ -396,14 +395,14 @@ body {
     gap: 0;
   }
   .catalog-top :is(button, a) {
-    padding: 4px;
+    padding: var(--boa-space-4);
     font-size: 12px;
   }
   .catalog-identity {
     gap: 5px;
   }
   .catalog-header {
-    gap: 8px;
+    gap: var(--yg-gap-inline);
   }
   .header-actions {
     gap: 0;

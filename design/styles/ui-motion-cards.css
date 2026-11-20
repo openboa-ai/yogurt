@@ -1,5 +1,5 @@
 :where(.yg-expand-card, .yg-stat-card, .yg-profile-card) {
-  border-radius: var(--yg-radius-panel);
+  border-radius: var(--yg-radius-card);
   background: var(--yg-surface);
   color: var(--yg-text);
 }
@@ -76,10 +76,8 @@
 }
 .yg-stat-value {
   display: block;
-  font: var(--yg-font-display);
-  font-size: clamp(2.25rem, 5vi, 3rem);
-  line-height: 1.05;
-  letter-spacing: var(--boa-tracking-display);
+  font: var(--yg-font-value);
+  letter-spacing: var(--boa-tracking-value);
   font-variant-numeric: tabular-nums;
 }
 .yg-profile-card { padding: var(--yg-inset-panel); }

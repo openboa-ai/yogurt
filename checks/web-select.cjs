@@ -2,7 +2,11 @@ const { chromium } = require("playwright-core");
 const { pathToFileURL } = require("node:url");
 const { resolve } = require("node:path");
 const assert = require("node:assert/strict");
-const { control, radius } = require("../design/tokens/brand.json");
+const brand = require("../design/tokens/brand.json");
+const { control, radius } = brand;
+const { geometry } = require("../design/tokens/ui.json");
+const spacing = name => brand.space[geometry[name].split(".")[1]];
+const rowOffset = spacing("offset-layer") + spacing("inset-layer");
 const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/components.html")).href;
 async function metrics(select) {
   return select.evaluate((el) => {
@@ -73,13 +77,13 @@ async function metrics(select) {
       ).translate === "none");
       const m = await metrics(select);
       assert.equal(m.appearance, "base-select");
-      assert.equal(m.corner, radius.panel + "px");
+      assert.equal(m.corner, radius.popover + "px");
       assert.equal(m.check, "1");
       assert.ok(Math.abs(m.field.width - m.panelWidth) < 1, JSON.stringify(m));
       assert.ok(m.first.height >= (touch ? control.touch : control.height));
       assert.ok(
-        Math.abs(m.field.bottom + 8 - m.first.top) < 1 ||
-          Math.abs(m.field.top - 8 - m.last.bottom) < 1,
+        Math.abs(m.field.bottom + rowOffset - m.first.top) < 1 ||
+          Math.abs(m.field.top - rowOffset - m.last.bottom) < 1,
         JSON.stringify(m),
       );
       const clip = {

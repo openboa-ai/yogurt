@@ -159,40 +159,58 @@
     "size-touch": "control.touch",
     "size-icon": "control.icon",
     "glyph": "control.glyph",
-    "inset-compact": "space.8",
+    "inset-compact": "space.10",
     "inset-regular": "space.12",
     "inset-roomy": "space.16",
-    "inset-layer": "space.4",
-    "inset-panel": "space.16",
-    "inset-sheet": "space.20",
-    "gap-tight": "space.6",
+    "inset-layer": "space.6",
+    "inset-panel": "space.18",
+    "inset-sheet": "space.24",
+    "gap-tight": "space.4",
     "gap-inline": "space.8",
     "gap-stack": "space.12",
     "gap-section": "space.24",
-    "offset-layer": "space.4",
-    "switch-width": 32,
-    "switch-height": 19,
-    "thumb-size": 13,
-    "track-inset": 3
+    "offset-layer": "space.6",
+    "switch-width": 36,
+    "switch-height": 22,
+    "thumb-size": 16,
+    "track-inset": 3,
+    "radius-inset": "radius.inset",
+    "radius-popover": "radius.popover",
+    "radius-feature": "radius.feature",
+    "radius-pill": "radius.round",
+    "size-comfort": "control.comfort",
+    "size-row": "control.row",
+    "size-spacious": "control.spacious",
+    "size-featured": "control.featured",
+    "glyph-small": "space.14",
+    "glyph-large": "space.20",
+    "inset-row": "space.14",
+    "gap-control": "space.6",
+    "gap-row": "space.10",
+    "gap-panel": "space.16",
+    "task-measure": 260,
+    "storage-measure": 300,
+    "drop-measure": 296
   },
   "motion": {
-    "press": 100,
-    "layer": 140,
-    "travel": 190,
-    "change": 200,
-    "panel": 250,
-    "expand": 300,
-    "busy": 750
+    "press": 110,
+    "layer": 160,
+    "travel": 220,
+    "change": 180,
+    "panel": 260,
+    "expand": 320,
+    "busy": 800,
+    "reveal": 420
   },
   "elevation": {
-    "lift": [[1, 4, 10]],
-    "float": [[1, 2, 8], [4, 12, 10]],
-    "panel": [[8, 28, 16]]
+    "lift": [[1, 3, 8]],
+    "float": [[1, 3, 9], [8, 24, 12]],
+    "panel": [[12, 36, 18]]
   },
   "easing": {
     "settle": "cubic-bezier(.2, 0, 0, 1)",
-    "arrive": "cubic-bezier(.18, .78, .3, 1)",
-    "selection": "cubic-bezier(.22, .8, .25, 1.1)"
+    "arrive": "cubic-bezier(.23, 1, .32, 1)",
+    "selection": "cubic-bezier(.2, .76, .26, 1.08)"
   },
   "types": {
     "action": [
@@ -230,6 +248,22 @@
     "touch": [
       "body",
       "regular"
+    ],
+    "editor": [
+      "editor",
+      "body"
+    ],
+    "reading": [
+      "body",
+      "body"
+    ],
+    "section": [
+      "section",
+      "heading"
+    ],
+    "value": [
+      "value",
+      "value"
     ]
   }
 }

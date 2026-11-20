@@ -1,27 +1,27 @@
 .motion-extra { display: grid; justify-items: start; gap: var(--yg-gap-stack); width: min(100%, 320px); }
 .motion-extra > .yg-field { inline-size: 100%; }
 .motion-extra small, .motion-extra > span { color: var(--yg-muted); }
-.motion-extra-chips, .motion-extra-toolbar, .motion-extra-rating { display: flex; flex-wrap: wrap; gap: 6px; }
-.motion-extra-chips button, .motion-extra-toolbar button { border: 0; border-radius: var(--yg-radius-control); padding: var(--yg-inset-layer) var(--yg-inset-compact); min-block-size: var(--yg-size-compact); background: var(--yg-action-soft); color: var(--yg-action); font: inherit; cursor: pointer; transition: transform 180ms var(--yg-settle); }
+.motion-extra-chips, .motion-extra-toolbar, .motion-extra-rating { display: flex; flex-wrap: wrap; gap: var(--yg-gap-control); }
+.motion-extra-chips button, .motion-extra-toolbar button { border: 0; border-radius: var(--yg-radius-control); padding: var(--yg-inset-layer) var(--yg-inset-compact); min-block-size: var(--yg-size-compact); background: var(--yg-action-soft); color: var(--yg-action); font: inherit; cursor: pointer; transition: transform var(--yg-change) var(--yg-settle); }
 .motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: var(--yg-on-action); }
 .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: translateY(-2px); }
-.motion-extra-wheel { display: grid; justify-items: center; gap: 6px; min-width: 140px; }
+.motion-extra-wheel { display: grid; justify-items: center; gap: var(--yg-gap-control); min-width: 140px; }
 .motion-extra-wheel output { display: grid; place-items: center; width: 100%; min-height: 52px; border-radius: var(--yg-radius-panel); background: var(--yg-action-soft); color: var(--yg-action); font-weight: 650; }
 .motion-extra-track { overflow: hidden; width: 100%; height: 8px; border-radius: var(--yg-radius-control); background: var(--yg-action-soft); }
-.motion-extra-track span { display: block; height: 100%; background: var(--yg-action); transition: width 200ms var(--yg-settle); }
+.motion-extra-track span { display: block; height: 100%; background: var(--yg-action); transition: width var(--yg-change) var(--yg-settle); }
 .motion-extra-refresh { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--yg-action-soft); color: var(--yg-action); font-size: 26px; animation: motion-extra-turn 450ms var(--yg-settle); }
-.motion-extra-rating button { border: 0; padding: 2px; background: none; color: var(--yg-action); font-size: 28px; cursor: pointer; }
+.motion-extra-rating button { border: 0; padding: var(--boa-space-2); background: none; color: var(--yg-action); font-size: 28px; cursor: pointer; }
 .motion-extra button:focus-visible, .motion-extra input:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
 @keyframes motion-extra-turn { from { transform: rotate(-90deg) scale(.8); opacity: .4; } to { transform: rotate(0) scale(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .motion-extra-refresh { animation: none; } .motion-extra-chips button, .motion-extra-toolbar button, .motion-extra-track span { transition: none; } .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: none; } }
 
-.motion-extra { gap: 12px; font-size: 14px; line-height: 20px; }
+.motion-extra { gap: var(--yg-gap-stack); font-size: 14px; line-height: 20px; }
 .motion-extra small, .motion-extra > span { font-size: 13px; line-height: 18px; }
-.motion-extra-chips, .motion-extra-toolbar { gap: 8px; }
-.motion-extra-chips button, .motion-extra-toolbar button { min-height: 30px; padding: 6px 8px; border: 1px solid var(--yg-surface-edge); background: var(--yg-canvas); color: inherit; font-size: 13px; line-height: 18px; }
+.motion-extra-chips, .motion-extra-toolbar { gap: var(--yg-gap-inline); }
+.motion-extra-chips button, .motion-extra-toolbar button { min-height: 30px; padding: var(--yg-inset-layer) var(--boa-space-8); border: 1px solid var(--yg-surface-edge); background: var(--yg-canvas); color: inherit; font-size: 13px; line-height: 18px; }
 .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: none; background: var(--yg-field); }
 .motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: var(--yg-on-action); }
-.motion-extra-wheel output { min-height: 44px; border: 1px solid var(--yg-surface-edge); border-radius: 8px; background: var(--yg-canvas); color: inherit; }
+.motion-extra-wheel output { min-height: 44px; border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: var(--yg-canvas); color: inherit; }
 .motion-extra-refresh { width: 44px; height: 44px; font-size: 22px; }
 .motion-extra-rating button { min-width: 36px; min-height: 36px; font-size: 24px; line-height: 1; }
 
@@ -36,22 +36,22 @@
 .motion-extra-rating button { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
 @media (pointer: coarse) { .motion-extra-toolbar button { min-block-size: var(--yg-size-touch); } }
 
-.motion-tag, .motion-scrubber { width: min(320px, 100%); display: grid; gap: 8px; }
+.motion-tag, .motion-scrubber { width: min(320px, 100%); display: grid; gap: var(--yg-gap-inline); }
 .motion-tag > label, .motion-scrubber > label { font: var(--yg-font-action); }
-.motion-tag-field { box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 52px; padding: 8px; border: 1px solid var(--yg-surface-edge); border-radius: 18px; background: var(--yg-raised-surface); }
+.motion-tag-field { box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; gap: var(--yg-gap-control); min-height: 52px; padding: var(--boa-space-8); border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-popover); background: var(--yg-raised-surface); }
 .motion-tag-field:focus-within { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
-.motion-tag-field input { flex: 1; min-width: 90px; height: 32px; padding: 0 6px; border: 0; outline: 0; color: var(--yg-text); background: transparent; font: inherit; }
-.motion-tag-chip { display: inline-flex; align-items: center; height: 32px; gap: 2px; padding-left: 10px; border-radius: 10px; background: var(--yg-field); }
+.motion-tag-field input { flex: 1; min-width: 90px; height: 32px; padding: 0 var(--yg-inset-layer); border: 0; outline: 0; color: var(--yg-text); background: transparent; font: inherit; }
+.motion-tag-chip { display: inline-flex; align-items: center; height: 32px; gap: var(--boa-space-2); padding-left: var(--yg-inset-compact); border-radius: 10px; background: var(--yg-field); }
 .motion-tag-chip button { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; border: 0; background: none; color: var(--yg-muted); cursor: pointer; font: inherit; }
-.motion-stepper { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: min(320px, 100%); padding: 16px 16px 16px 20px; border-radius: 24px; background: var(--yg-raised-surface); }
-.motion-stepper > div:first-child { display: grid; gap: 4px; }
+.motion-stepper { box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: var(--yg-gap-stack); width: min(320px, 100%); padding: var(--yg-inset-roomy) var(--yg-inset-roomy) var(--yg-inset-roomy) var(--boa-space-20); border-radius: var(--yg-radius-sheet); background: var(--yg-raised-surface); }
+.motion-stepper > div:first-child { display: grid; gap: var(--yg-gap-tight); }
 .motion-stepper small { color: var(--yg-muted); }
 .motion-stepper-actions { display: flex; align-items: center; }
 .motion-stepper-actions button { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--yg-field); color: var(--yg-text); font: inherit; font-size: 20px; cursor: pointer; }
 .motion-stepper-actions button:disabled { opacity: .4; cursor: default; }
 .motion-stepper-actions output { display: grid; place-items: center; width: 40px; height: 32px; overflow: hidden; font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .motion-stepper-actions output span { display: block; }
-.motion-scrubber-bar { position: relative; height: 36px; overflow: hidden; border-radius: 8px; background: var(--yg-field); }
+.motion-scrubber-bar { position: relative; height: 36px; overflow: hidden; border-radius: var(--yg-radius-control); background: var(--yg-field); }
 .motion-scrubber-fill { position: absolute; inset: 0 auto 0 0; background: var(--yg-action-soft); }
 .motion-scrubber-ticks { position: absolute; inset: 15px 12px; background: repeating-linear-gradient(to right, var(--yg-muted) 0 1px, transparent 1px 12px); opacity: .4; }
 .motion-scrubber-bar input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: .01; cursor: pointer; }

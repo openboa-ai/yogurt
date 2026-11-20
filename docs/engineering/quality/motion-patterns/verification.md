@@ -6,3 +6,9 @@
 - The executable review is available through the draft preview. The owner's visual judgment is pending. Native evidence covers the fixture and generated tokens. Installed cross-platform visual qualification remains pending.
 
 The interaction follow-up exercised the anchored spring picker with keyboard opening, Escape, pointer selection and restored focus. It also checked quantity repeat, limit feedback and reduced motion. The compact writer kept accessible Send and Stop actions in the request workflow. The task list retained disclosure, retry and static reduced-motion states.
+
+## Shared controls and composition
+
+The shared source now drives the expanded shape scale, control and menu density, type hierarchy, layer elevation and motion. Review captures cover all 125 components, 14 editable blocks and 78 motion examples in desktop light and mobile dark appearance, with no page or specimen overflow. The three workflow captures show record browsing, a working request and decision review. All 21 playbook state links resolved at both review widths.
+
+The approved palette, material color roles, font family and signature data match the previous revision. The Native SDK test fixture installed the current Button and Switch, passed its three model and appearance tests, and passed strict markup validation. These fixture results establish token consumption and typed behavior. Native visual approval remains open.

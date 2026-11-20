@@ -3,8 +3,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: start;
-  column-gap: var(--boa-space-12);
-  row-gap: var(--boa-space-8);
+  column-gap: var(--yg-gap-stack);
+  row-gap: var(--yg-gap-inline);
   min-width: 0;
   padding: var(--boa-space-12);
   border-radius: var(--yg-radius-panel);
@@ -67,9 +67,9 @@
 
 .yg-attention-card {
   display: grid;
-  gap: var(--boa-space-8);
-  padding: var(--boa-space-12);
-  border-radius: var(--yg-radius-panel);
+  gap: var(--yg-gap-row);
+  padding: var(--yg-inset-panel);
+  border-radius: var(--yg-radius-card);
   background: var(--yg-canvas);
 }
 
@@ -82,6 +82,6 @@
   padding-block-start: var(--boa-space-12);
 }
 
-.yg-operations-list > li + li { border-block-start: 1px solid var(--yg-surface-edge); }
+.yg-operations-list > li + li { margin-block-start: var(--yg-gap-tight); }
 .yg-operations-list :is(.yg-work-event, .yg-routine-row) { border-radius: 0; background: transparent; }
 .yg-operations-actions { align-self: center; }

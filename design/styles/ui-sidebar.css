@@ -38,7 +38,7 @@
   gap: var(--yg-gap-stack);
   min-inline-size: 0;
   min-block-size: 0;
-  padding: var(--boa-space-8);
+  padding: var(--yg-inset-compact);
   background: var(--yg-canvas);
   color: var(--yg-text);
 }
@@ -46,7 +46,7 @@
   grid-area: panel;
 }
 .yg-sidebar-layout[data-variant="inset"] > .yg-sidebar-panel {
-  border-radius: var(--yg-radius-panel);
+  border-radius: var(--yg-radius-card);
 }
 .yg-sidebar-layout[data-variant="flat"] > .yg-sidebar-panel {
   background: var(--yg-surface);
@@ -101,10 +101,10 @@
   gap: var(--yg-gap-inline);
   min-inline-size: 0;
   inline-size: 100%;
-  min-block-size: var(--yg-size-regular);
-  padding: var(--boa-space-4) var(--boa-space-8);
+  min-block-size: var(--yg-size-row);
+  padding: var(--boa-space-4) var(--yg-inset-compact);
   border: 0;
-  border-radius: var(--yg-radius-small);
+  border-radius: var(--yg-radius-control);
   background: transparent;
   color: inherit;
   font: var(--yg-font-action);

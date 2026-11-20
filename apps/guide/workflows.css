@@ -14,7 +14,7 @@ body { margin: 0; }
 .workflow-header nav { display: flex; gap: var(--boa-space-16); font: var(--yg-font-label); }
 .workflow-header .yg-icon-button { margin-inline-start: auto; }
 .workflow-body { padding-block: var(--boa-space-24) var(--boa-space-48); }
-.workflow-body h1 { margin: 0; font: var(--yg-font-display); letter-spacing: var(--boa-tracking-heading); }
+.workflow-body h1 { margin: 0; font: var(--yg-font-display); letter-spacing: var(--boa-tracking-display); }
 .workflow-parts { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline); }
 .workflow-parts a {
   display: inline-flex;
@@ -34,18 +34,19 @@ body { margin: 0; }
 .workflow-records, .workflow-decision {
   display: grid;
   grid-template-columns: minmax(16rem, 2fr) minmax(0, 3fr);
-  gap: var(--boa-space-24);
+  gap: var(--yg-gap-section);
   align-items: start;
 }
-.workflow-record-list, .workflow-evidence { min-inline-size: 0; padding: var(--yg-inset-panel); border-radius: var(--yg-radius-panel); background: var(--yg-surface); }
+.workflow-record-list, .workflow-evidence { min-inline-size: 0; padding: var(--yg-inset-panel); border-radius: var(--yg-radius-card); background: var(--yg-surface); }
 .workflow-record-detail { min-inline-size: 0; padding: var(--yg-inset-panel); }
 .workflow-back { display: none; }
 .workflow-conversation { display: grid; gap: var(--boa-space-24); max-inline-size: 41rem; margin-inline: auto; padding: var(--yg-inset-sheet); background: var(--yg-surface); border-radius: var(--yg-radius-card); }
+.workflow-conversation .yg-prompt-box { --yg-prompt-width: 100%; }
 .workflow-thread { min-block-size: clamp(230px, 40dvh, 360px); display: grid; align-content: start; gap: var(--yg-gap-stack); }
 .workflow-empty { align-self: center; padding-block: clamp(var(--boa-space-24), 8vh, var(--boa-space-64)); text-align: center; }
-.workflow-empty h2, .workflow-decision h2 { margin: 0; font: var(--yg-font-heading); letter-spacing: var(--boa-tracking-heading); }
+.workflow-empty h2, .workflow-decision h2 { margin: 0; font: var(--yg-font-section); letter-spacing: var(--boa-tracking-heading); }
 .workflow-empty p, .workflow-decision p { color: var(--yg-muted); margin: var(--boa-space-8) 0 var(--boa-space-16); }
-.workflow-request { justify-self: end; max-inline-size: min(38rem, 92%); padding: var(--yg-inset-compact) var(--yg-inset-regular); margin: 0; background: var(--yg-field); border-radius: var(--yg-radius-panel); overflow-wrap: anywhere; white-space: pre-wrap; }
+.workflow-request { justify-self: end; max-inline-size: min(38rem, 92%); padding: var(--yg-inset-compact) var(--yg-inset-row); margin: 0; background: var(--yg-field); border-radius: var(--yg-radius-card); overflow-wrap: anywhere; white-space: pre-wrap; }
 .workflow-recovery { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline); align-items: center; }
 .workflow-decision { grid-template-columns: minmax(0, 3fr) minmax(13rem, 2fr); }
 .workflow-decision-main { min-inline-size: 0; padding: var(--yg-inset-panel); }

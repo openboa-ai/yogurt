@@ -30,13 +30,10 @@
 .yg-card {
   display: grid;
   border-radius: var(--yg-radius-card);
-  gap: var(--yg-gap-inline);
+  gap: var(--yg-gap-stack);
   align-content: start;
   background: var(--yg-raised-surface);
   box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
-}
-.yg-card .yg-heading {
-  line-height: 1.25;
 }
 .yg-card p,
 .yg-section-line p,
@@ -528,7 +525,7 @@
 .yg-flyout,
 .yg-command-list {
   padding: var(--yg-inset-layer);
-  border-radius: var(--yg-radius-panel);
+  border-radius: var(--yg-radius-popover);
   background: var(--yg-raised-surface);
   color: var(--yg-text);
   max-width: min(22rem, 92vi);
@@ -548,6 +545,8 @@
   white-space: normal;
   text-decoration: none;
   outline-offset: -2px;
+  min-block-size: var(--yg-size-row);
+  border-radius: var(--yg-radius-control);
 }
 .yg-flyout [data-highlighted],
 .yg-flyout a:focus-visible,
@@ -565,15 +564,15 @@
   overflow: auto;
 }
 .yg-dialog:has(.yg-command-search) {
-  width: min(28rem, calc(100% - 32px));
+  width: min(28rem, calc(100% - var(--boa-space-32)));
   gap: var(--yg-gap-inline);
-  padding: var(--yg-inset-regular);
+  padding: var(--yg-inset-roomy);
 }
 .yg-command-search {
   display: flex;
   align-items: center;
-  gap: var(--yg-gap-inline);
-  min-block-size: var(--yg-size-regular);
+  gap: var(--yg-gap-row);
+  min-block-size: var(--yg-size-comfort);
   padding-inline: var(--yg-inset-regular);
   border-radius: var(--yg-radius-control);
   background: var(--yg-field);
@@ -585,13 +584,13 @@
 .yg-command-search input {
   inline-size: 100%;
   min-inline-size: 0;
-  min-block-size: var(--yg-size-regular);
+  min-block-size: var(--yg-size-comfort);
   padding: 0;
   border: 0;
   outline: none;
   color: var(--yg-text);
   background: transparent;
-  font: var(--yg-font-body);
+  font: var(--yg-font-editor);
 }
 .yg-command-search input:focus-visible { outline: none; }
 @media (pointer: coarse) {

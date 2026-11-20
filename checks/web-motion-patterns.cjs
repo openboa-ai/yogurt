@@ -60,7 +60,7 @@ async function run(browser) {
       const example = await demo(id);
       const check = await example.evaluate(node => {
         const heading = document.querySelector(".motion-pattern-intro h1").getBoundingClientRect();
-        const bounds = node.querySelector(".motion-pattern-sample").getBoundingClientRect();
+        const bounds = node.querySelector(".motion-pattern-stage").getBoundingClientRect();
         return {
           hasControl: !!node.querySelector("button, input, select, textarea, summary, [tabindex]"),
           overflow: document.documentElement.scrollWidth - innerWidth,
@@ -89,12 +89,29 @@ async function run(browser) {
       continue;
     }
     await page.getByText("Example controls", {exact: true}).click();
-    const primarySize = await page.locator("#task-list .yg-button").first().evaluate(node => ({
-      height: getComputedStyle(node).minBlockSize,
-      corner: getComputedStyle(node).borderTopLeftRadius,
-      font: getComputedStyle(node).fontSize,
-    }));
-    assert.deepEqual(primarySize, {height:"36px",corner:"8px",font:"14px"});
+    const primarySize = await page.locator("#task-list .yg-button").first().evaluate(node => {
+      const style = getComputedStyle(node);
+      return {height: style.minBlockSize, corner: style.borderTopLeftRadius, font: style.fontSize, weight: style.fontWeight};
+    });
+    assert.deepEqual(primarySize, {height:"36px", corner:"8px", font:"14px", weight:"560"});
+    const promptBox = (await demo("prompt-box")).locator(".yg-prompt-box");
+    assert.deepEqual(await promptBox.evaluate(node => {
+      const style = getComputedStyle(node);
+      const text = getComputedStyle(node.querySelector("textarea"));
+      return [style.height, style.borderTopLeftRadius, text.fontSize, text.lineHeight, text.fontWeight];
+    }), ["52px", "24px", "15px", "22px", "450"]);
+    await promptBox.getByRole("textbox", {name:"Prompt"}).fill("Review the brief");
+    const send = promptBox.getByRole("button", {name:"Send"});
+    const contrast = await send.evaluate(button => {
+      const resolved = getComputedStyle(button);
+      const luminance = rgb => {
+        const channels = rgb.match(/[\d.]+/g).slice(0, 3).map(value => Number(value) / 255);
+        const linear = channels.map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
+        return linear[0] * .2126 + linear[1] * .7152 + linear[2] * .0722;
+      };
+      return (luminance(resolved.color) + .05) / (luminance(resolved.backgroundColor) + .05);
+    });
+    assert(contrast >= 3, "The send icon is legible against its filled button");
     const dropdown = await demo("spring-dropdown");
     const view = dropdown.getByRole("combobox", {name:"Workspace view"});
     await view.press("Space");
@@ -262,6 +279,24 @@ async function run(browser) {
     await page.mouse.move(trackBounds.x + trackBounds.width - 24, startY, {steps: 12});
     await page.mouse.up();
     assert.equal((await slide.getByRole("status").textContent()).trim(), "Approved 1 time.");
+
+    const pageTurn = await demo("page-flip");
+    const currentPage = pageTurn.locator(".extra-page-current");
+    await currentPage.getByText("PAGE 1", {exact: true}).waitFor();
+    const paper = await currentPage.boundingBox();
+    await page.mouse.move(paper.x + paper.width * .9, paper.y + paper.height * .72);
+    await page.mouse.down();
+    await page.mouse.move(paper.x + paper.width * .75, paper.y + paper.height * .72, {steps: 4});
+    await page.mouse.up();
+    await currentPage.getByText("PAGE 1", {exact: true}).waitFor();
+    await currentPage.evaluate(node => Promise.all(node.getAnimations().map(animation => animation.finished)));
+    await page.mouse.move(paper.x + paper.width * .9, paper.y + paper.height * .72);
+    await page.mouse.down();
+    await page.mouse.move(paper.x + paper.width * .42, paper.y + paper.height * .72, {steps: 8});
+    await page.mouse.up();
+    await currentPage.getByText("PAGE 2", {exact: true}).waitFor();
+    await pageTurn.getByRole("button", {name:"Back", exact:true}).press("Enter");
+    await currentPage.getByText("PAGE 1", {exact: true}).waitFor();
 
     await demo("cart-button");
     await page.emulateMedia({reducedMotion: "reduce"});

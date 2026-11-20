@@ -54,7 +54,7 @@
 .yg-root :where(*, ::before, ::after) {
   box-sizing: border-box;
 }
-.yg-root :where(button, input, select, textarea) {
+:where(.yg-root) :where(button, input, select, textarea) {
   font: inherit;
   color: inherit;
 }
@@ -108,7 +108,7 @@
 .yg-grid,
 .yg-field {
   display: grid;
-  gap: var(--yg-gap, var(--boa-space-8));
+  gap: var(--yg-gap, var(--yg-gap-inline));
   min-width: 0;
   align-content: start;
 }
@@ -118,14 +118,14 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--yg-gap, var(--boa-space-8));
+  gap: var(--yg-gap, var(--yg-gap-inline));
   min-width: 0;
 }
 .yg-grid {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
 }
 .yg-surface {
-  padding: var(--boa-space-16);
+  padding: var(--yg-inset-panel);
   border-radius: var(--yg-radius-panel);
   background: var(--yg-surface);
 }
@@ -156,7 +156,7 @@
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  gap: var(--yg-gap-tight);
+  gap: var(--yg-gap-control);
   min-block-size: var(--yg-size-regular);
   padding: var(--boa-space-4) var(--yg-inset-regular);
   border-radius: var(--yg-radius-control);
@@ -166,7 +166,9 @@
   letter-spacing: var(--boa-tracking-label);
   text-align: center;
   overflow-wrap: anywhere;
-  transition: background-color var(--yg-press) var(--yg-settle), box-shadow var(--yg-press) var(--yg-settle);
+  transition: background-color var(--yg-press) var(--yg-settle),
+    color var(--yg-change) var(--yg-settle),
+    box-shadow var(--yg-press) var(--yg-settle);
 }
 .yg-button[data-control-size="compact"] {
   min-block-size: var(--yg-size-compact);
@@ -261,7 +263,7 @@
   }
 }
 .yg-field {
-  gap: var(--boa-space-4);
+  gap: var(--yg-gap-control);
 }
 .yg-field > :is(.yg-help, .yg-error) {
   padding-inline: 0;
@@ -281,11 +283,11 @@
 .yg-standalone {
   display: flex;
   align-items: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-gap-inline);
   width: 100%;
   min-width: 0;
   min-height: var(--yg-size-regular);
-  background: var(--yg-canvas);
+  background: var(--yg-surface);
   box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
   border: 0;
   border-radius: var(--yg-radius-control);
@@ -335,7 +337,8 @@
 .yg-input textarea {
   display: block;
   resize: vertical;
-  padding-block: var(--boa-space-8);
+  padding-block: var(--yg-gap-inline);
+  font: var(--yg-font-editor);
 }
 .yg-select {
   position: relative;
@@ -379,7 +382,7 @@
     margin-block: var(--yg-offset-layer);
     padding: var(--yg-inset-layer);
     border: 0;
-    border-radius: var(--yg-radius-panel);
+    border-radius: var(--yg-radius-popover);
     background: var(--yg-raised-surface);
     color: var(--yg-text);
     box-shadow: inset 0 0 0 1px var(--yg-surface-edge), var(--yg-float-shadow);
@@ -391,10 +394,10 @@
   .yg-select[data-dropdown] option {
     display: flex;
     align-items: center;
-    gap: var(--boa-space-8);
-    min-block-size: var(--yg-size-regular);
+    gap: var(--yg-gap-row);
+    min-block-size: var(--yg-size-row);
     padding: var(--boa-space-4) var(--yg-inset-compact);
-    border-radius: var(--yg-radius-small);
+    border-radius: var(--yg-radius-control);
     background: transparent;
     color: var(--yg-text);
     font: inherit;
@@ -500,7 +503,7 @@
   place-items: center;
 }
 .yg-checkbox [role="checkbox"] {
-  border-radius: 4px;
+  border-radius: var(--yg-radius-inset);
 }
 .yg-radio [role="radio"] {
   border-radius: 50%;
@@ -656,9 +659,9 @@
 }
 .yg-segment {
   isolation: isolate;
-  border-radius: var(--yg-radius-control);
+  border-radius: var(--yg-radius-panel);
   background: var(--yg-field);
-  padding: var(--boa-space-2);
+  padding: var(--boa-space-4);
   box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
   position: relative;
 }
@@ -668,7 +671,7 @@
 .yg-segment button,
 .yg-tabs [role="tab"] {
   border: 0;
-  border-radius: var(--yg-radius-small);
+  border-radius: var(--yg-radius-control);
   padding: var(--boa-space-4) var(--yg-inset-compact);
   min-height: var(--yg-size-compact);
   background: transparent;
@@ -747,8 +750,7 @@
   flex-wrap: nowrap;
 }
 .yg-modal-header > .yg-heading {
-  font-size: var(--boa-size-body);
-  line-height: var(--boa-line-height-body);
+  font: var(--yg-font-heading);
 }
 .yg-sheet[open] {
   --yg-enter-x: var(--boa-space-16);
@@ -1081,6 +1083,8 @@
   .yg-root {
     --yg-size-regular: var(--yg-size-touch);
     --yg-size-compact: var(--yg-size-touch);
+    --yg-size-row: var(--yg-size-touch);
+    --yg-size-comfort: var(--yg-size-touch);
     --yg-size-icon: var(--yg-size-touch);
   }
   .yg-input :is(input, textarea),
@@ -1096,6 +1100,8 @@
     --yg-travel: 0ms;
     --yg-change: 0ms;
     --yg-panel: 0ms;
+    --yg-expand: 0ms;
+    --yg-reveal: 0ms;
   }
   .yg-button:active .yg-button-label {
     transform: none !important;

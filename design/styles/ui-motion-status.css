@@ -1,26 +1,26 @@
 .yg-storage-meter {
-  inline-size: min(300px, 100%);
-  padding: 18px 8px 8px;
-  border-radius: 24px;
+  inline-size: min(var(--yg-storage-measure), 100%);
+  padding: var(--yg-inset-panel) var(--boa-space-8) var(--boa-space-8);
+  border-radius: var(--yg-radius-sheet);
   background: var(--yg-raised-surface);
 }
 .yg-storage-heading {
   display: block;
-  padding-inline: 12px;
+  padding-inline: var(--yg-inset-regular);
   color: var(--yg-muted);
-  font: 500 14px/20px var(--boa-font-family);
+  font: var(--yg-font-action);
 }
 .yg-storage-amount {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: 4px;
-  padding: 4px 12px 0;
+  gap: var(--yg-gap-tight);
+  padding: var(--boa-space-4) var(--yg-inset-regular) 0;
   font-variant-numeric: tabular-nums;
 }
 .yg-storage-amount strong {
-  font: 650 34px/40px var(--boa-font-family);
-  letter-spacing: -.03em;
+  font: var(--yg-font-value);
+  letter-spacing: var(--boa-tracking-value);
 }
 .yg-storage-amount b { font: 650 18px/24px var(--boa-font-family); }
 .yg-storage-amount span, .yg-storage-category-amount { color: var(--yg-muted); font: var(--yg-font-help); }
@@ -45,12 +45,12 @@
   display: grid;
   grid-template-columns: 10px minmax(0, 1fr) auto;
   align-items: center;
-  gap: 10px;
+  gap: var(--yg-gap-row);
   inline-size: 100%;
   min-block-size: 44px;
-  padding: 0 12px;
+  padding: 0 var(--yg-inset-regular);
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--yg-radius-panel);
   background: transparent;
   color: var(--yg-text);
   font: var(--yg-font-help);
@@ -68,12 +68,12 @@
   min-block-size: 50px;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  padding: 0 6px 6px 32px;
+  gap: var(--yg-gap-inline);
+  padding: 0 var(--yg-inset-layer) var(--yg-inset-layer) var(--boa-space-32);
   font: var(--yg-font-meta);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-storage-bar > span { transition: inline-size 420ms var(--yg-arrive), opacity 240ms ease; }
+  .yg-storage-bar > span { transition: inline-size var(--yg-reveal) var(--yg-arrive), opacity 240ms ease; }
   .yg-storage-reveal { transition: grid-template-rows 280ms var(--yg-arrive); }
   .yg-storage-amount strong { animation: yg-storage-count 260ms var(--yg-arrive) both; }
 }
@@ -168,28 +168,28 @@
 .yg-activity-island > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
 
 .yg-motion-detail-line { min-block-size: 30px; }
-.yg-activity-island { border-radius: 12px; }
-.yg-activity-island > button { min-block-size: 44px; padding: 8px 12px; gap: 8px; }
+.yg-activity-island { border-radius: var(--yg-radius-panel); }
+.yg-activity-island > button { min-block-size: 44px; padding: var(--boa-space-8) var(--yg-inset-regular); gap: var(--yg-gap-inline); }
 .yg-activity-island > button > span:nth-child(2) { min-inline-size: 0; overflow-wrap: anywhere; }
 .yg-island-content {
-  padding: var(--yg-inset-regular) 12px 12px;
+  padding: var(--yg-inset-regular) var(--yg-inset-regular) var(--yg-inset-regular);
   border-block-start: 1px solid var(--yg-surface-edge);
 }
 .yg-copy-action [role="status"]:not(:empty) { max-inline-size: 32ch; line-height: 1.4; }
 
 .yg-task-list {
   display: grid;
-  inline-size: min(100%, 260px);
-  gap: 6px;
-  padding: 12px;
-  border-radius: 12px;
+  inline-size: min(100%, var(--yg-task-measure));
+  gap: var(--yg-gap-control);
+  padding: var(--yg-inset-regular);
+  border-radius: var(--yg-radius-panel);
   background: var(--yg-raised-surface);
 }
 .yg-task-list > header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--yg-gap-inline);
   font: var(--yg-font-action);
 }
 .yg-task-list > header [role="status"], .yg-task-note, .yg-task-state {
@@ -203,8 +203,8 @@
   display: grid;
   grid-template-columns: 14px minmax(0, 1fr) auto;
   align-items: start;
-  gap: 8px;
-  padding: 4px 0;
+  gap: var(--yg-gap-inline);
+  padding: var(--boa-space-4) 0;
 }
 summary.yg-task-line { cursor: pointer; list-style: none; }
 summary.yg-task-line::-webkit-details-marker { display: none; }
@@ -239,7 +239,7 @@ summary.yg-task-line:focus-visible {
 .yg-task-list [data-state="done"] > details > .yg-task-line .yg-task-copy { color: var(--yg-muted); }
 .yg-task-meta { text-align: end; }
 .yg-task-state { color: var(--yg-task-mark, var(--yg-muted)); }
-.yg-task-list .yg-task-children { padding-inline-start: 20px; }
+.yg-task-list .yg-task-children { padding-inline-start: var(--boa-space-20); }
 .yg-task-sr {
   position: absolute;
   inline-size: 1px;

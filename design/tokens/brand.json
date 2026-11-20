@@ -327,7 +327,10 @@
       "subheading": 20,
       "title": 32,
       "headline": 40,
-      "help": 13
+      "help": 13,
+      "editor": 15,
+      "section": 24,
+      "value": 34
     },
     "lineHeight": {
       "caption": 16,
@@ -337,20 +340,25 @@
       "subheading": 26,
       "title": 36,
       "headline": 44,
-      "help": 18
+      "help": 18,
+      "editor": 22,
+      "section": 30,
+      "value": 40
     },
     "tracking": {
-      "body": -0.006,
-      "label": -0.006,
-      "heading": -0.031,
-      "display": -0.045,
-      "meta": 0.005
+      "body": -0.01,
+      "label": -0.014,
+      "heading": -0.033,
+      "display": -0.042,
+      "meta": 0.007,
+      "value": -0.035
     },
     "roleWeight": {
-      "heading": 590,
-      "body": 440,
-      "ui": 550,
-      "wordmark": 760
+      "heading": 620,
+      "body": 450,
+      "ui": 560,
+      "wordmark": 760,
+      "value": 650
     }
   },
   "space": {
@@ -372,10 +380,13 @@
   "radius": {
     "control": 8,
     "panel": 12,
-    "sheet": 16,
-    "card": 16,
+    "sheet": 24,
+    "card": 20,
     "round": 999,
-    "small": 6
+    "small": 6,
+    "inset": 4,
+    "popover": 18,
+    "feature": 28
   },
   "stroke": {
     "rule": 1,
@@ -386,7 +397,11 @@
     "touch": 44,
     "compact": 30,
     "icon": 32,
-    "glyph": 16
+    "glyph": 16,
+    "comfort": 40,
+    "row": 38,
+    "spacious": 48,
+    "featured": 52
   },
   "signature": {
     "capHeight": 60,

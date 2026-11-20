@@ -83,10 +83,10 @@
   color: var(--yg-text);
   font: var(--yg-font-meta);
 }
-.yg-file-drop { position: relative; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; inline-size: min(100%, 296px); min-block-size: 216px; padding: 38px 12px 20px; border: 1px dashed var(--yg-surface-edge); border-radius: 28px; background: var(--yg-raised-surface); text-align: center; cursor: pointer; }
+.yg-file-drop { position: relative; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; inline-size: min(100%, var(--yg-drop-measure)); min-block-size: 216px; padding: 38px var(--yg-inset-regular) var(--boa-space-20); border: 1px dashed var(--yg-surface-edge); border-radius: var(--yg-radius-feature); background: var(--yg-raised-surface); text-align: center; cursor: pointer; }
 .yg-file-drop-core { display: grid; place-items: center; box-sizing: border-box; flex: none; inline-size: 72px; block-size: 72px; border: 2px solid var(--yg-surface-edge); border-radius: 50%; background: var(--yg-field); color: var(--yg-action); }
 .yg-file-drop-mark { display: block; inline-size: 26px; block-size: 26px; }
-.yg-file-drop-copy { display: grid; justify-items: center; gap: 4px; margin-top: 16px; min-inline-size: 0; }
+.yg-file-drop-copy { display: grid; justify-items: center; gap: var(--yg-gap-tight); margin-top: 16px; min-inline-size: 0; }
 .yg-file-drop-copy strong { font: var(--yg-font-action); }
 .yg-file-drop-copy span { color: var(--yg-muted); font: var(--yg-font-meta); overflow-wrap: anywhere; }
 .yg-file-drop[data-dragging] { border-color: var(--yg-action); background: var(--yg-action-soft); }
@@ -100,7 +100,7 @@
   .yg-file-drop { transition: background-color var(--yg-travel) var(--yg-settle), border-color var(--yg-travel) var(--yg-settle); }
 }
 @keyframes yg-input-arrive { from { opacity: 0; translate: 0 -4px; } }
-.yg-mention-list-heading { display: flex; justify-content: space-between; gap: 8px; padding: 6px 8px; color: var(--yg-muted); font: var(--yg-font-meta); }
+.yg-mention-list-heading { display: flex; justify-content: space-between; gap: var(--yg-gap-inline); padding: var(--yg-inset-layer) var(--boa-space-8); color: var(--yg-muted); font: var(--yg-font-meta); }
 .yg-mention-list-heading span { font-variant-numeric: tabular-nums; }
 
 @media (prefers-reduced-motion: no-preference) { .yg-file-drop-core { transition: transform var(--yg-change) var(--yg-settle), border-color var(--yg-change) var(--yg-settle); } .yg-file-drop[data-dragging] .yg-file-drop-core { transform: scale(1.06); } }

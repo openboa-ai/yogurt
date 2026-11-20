@@ -1,15 +1,16 @@
 .yg-composer {
   display: grid;
-  gap: var(--boa-space-8);
+  gap: var(--yg-gap-row);
   min-width: 0;
   padding: var(--yg-inset-regular);
-  border: 1px solid var(--yg-surface-edge);
-  border-radius: var(--yg-radius-panel);
+  border: var(--boa-stroke-rule) solid var(--yg-surface-edge);
+  border-radius: var(--yg-radius-sheet);
   background: var(--yg-raised-surface);
   transition: border-color var(--yg-change) var(--yg-settle);
 }
-.yg-composer:has(textarea:focus-visible) {
-  border-color: var(--yg-action);
+.yg-composer:focus-within {
+  border-color: var(--yg-active-edge);
+  box-shadow: 0 0 0 var(--boa-stroke-focus) var(--yg-action-soft);
 }
 .yg-conversation-presence {
   display: flex;
@@ -29,7 +30,7 @@
   color: var(--yg-text);
   background: transparent;
   border: 0;
-  font: var(--yg-font-body);
+  font: var(--yg-font-editor);
 }
 .yg-composer textarea::placeholder { color: var(--yg-muted); }
 .yg-composer-sources {
@@ -81,7 +82,7 @@
   padding: var(--boa-space-6) var(--yg-inset-compact);
   border-radius: var(--yg-radius-control);
 }
-.yg-artifact-layout { display: grid; gap: var(--boa-space-12); }
+.yg-artifact-layout { display: grid; gap: var(--yg-gap-panel); }
 .yg-artifact-library { container: yogurt-artifacts / inline-size; }
 @container yogurt-artifacts (width >= 40rem) {
   .yg-artifact-layout[data-preview] {

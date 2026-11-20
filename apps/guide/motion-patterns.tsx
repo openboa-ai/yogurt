@@ -338,8 +338,8 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "sidebar-collapse", detail: "Keep workspace destinations available in a compact rail.", wide: true, title: "Sidebar collapse", body: <SidebarExample />},
   ]},
   {title: "Conversation and activity", id: "conversation", items: [
-    {id: "task-list", detail: "Follow a review from draft to handoff. Open a completed step to see its checklist, or retry a failed step.", wide: true, title: "Task list", body: <TaskListExample />},
-    {id: "prompt-box", detail: "Write a request for the review assistant and follow its response.", wide: true, title: "Prompt box", body: <ConversationExample kind="prompt" />},
+    {id: "task-list", detail: "Follow a review from draft to handoff. Open a completed step to see its checklist, or retry a failed step.", title: "Task list", body: <TaskListExample />},
+    {id: "prompt-box", detail: "Write a request for the review assistant and follow its response.", title: "Prompt box", body: <ConversationExample kind="prompt" />},
     {id: "ghost-suggestion", title: "Ghost suggestion", body: <WritingExample kind="ghost" />},
     {id: "streaming-reply", title: "Streaming reply", body: <ConversationExample kind="stream" />},
     {id: "thinking", title: "Thinking indicator", body: <ConversationExample kind="thinking" />},
