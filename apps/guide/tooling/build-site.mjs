@@ -1,22 +1,26 @@
-import { cp, mkdir, mkdtemp, rename, rm } from "node:fs/promises";
+import { cp, mkdtemp, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { siteLayout, sitePath } from "./site-layout.mjs";
 
 const root = fileURLToPath(new URL("../../..", import.meta.url));
 const output = join(root, "site");
 const stage = await mkdtemp(join(root, ".site-"));
-const publicFiles = [
-  "components.html", "agents.html", "DESIGN.md", "README.md",
-  "assets", "blocks", "catalog", "content", "docs", "examples", "packages", "styles",
-];
 
 try {
-  await cp(join(root, "apps", "guide", "pages"), stage, { recursive: true });
-  for (const path of publicFiles) {
-    await cp(join(root, path), join(stage, path), { recursive: true });
+  for (const [source, destination] of siteLayout) {
+    await cp(join(root, source), join(stage, destination), { recursive: true });
   }
-  await mkdir(join(stage, "apps", "guide"), { recursive: true });
-  await cp(join(root, "apps", "guide", "runtime"), join(stage, "apps", "guide", "runtime"), { recursive: true });
+  // The on-disk SDK and the public guide share the same brand data.
+  const brandFile = join(stage, "catalog", "brand.json");
+  const brand = JSON.parse(await readFile(brandFile, "utf8"));
+  for (const [key, source] of Object.entries(brand.sources)) {
+    brand.sources[key] = sitePath(source);
+  }
+  for (const key of ["symbol", "lockup", "wordmark"]) {
+    brand.signature[key] = sitePath(brand.signature[key]);
+  }
+  await writeFile(brandFile, JSON.stringify(brand, null, 2) + "\n");
   await rm(output, { recursive: true, force: true });
   await rename(stage, output);
 } finally {

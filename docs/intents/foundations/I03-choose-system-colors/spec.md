@@ -14,7 +14,7 @@ Parent: [originating intent, revision 2](intent.md). Review: NOT ACCEPTED. Desig
 
 | Change and contract | Proposed writer boundary | Consumer | Independent observer |
 | --- | --- | --- | --- |
-| [U03A · Resolve visual roles from one numbered palette](../../../engineering/foundations/U03A-resolve-palette-roles/spec.md) | `tokens/brand.json` | Token exporters, themes, artwork and data series | A foundation reviewer who resolves the token references and samples rendered foregrounds and backgrounds |
+| [U03A · Resolve visual roles from one numbered palette](../../../engineering/foundations/U03A-resolve-palette-roles/spec.md) | `design/tokens/brand.json` | Token exporters, themes, artwork and data series | A foundation reviewer who resolves the token references and samples rendered foregrounds and backgrounds |
 
 The change specifications identify their individual predecessors. The scene below checks their joined behavior.
 
@@ -24,4 +24,4 @@ Render the same treatment over paper and ink, compare actual adjacent foreground
 
 **End scene.** Inspect a light and a dark specimen, resolve every role to an existing primitive and read each state without recognizing its hue. One palette supplies all of the assets.
 
-**Current sources and open decisions.** [brand.json](../../../../tokens/brand.json) · [tokens.css](../../../../styles/tokens.css) · [Color in context](https://yogurt-theta.vercel.app/system.html#color) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [brand.json](../../../../design/tokens/brand.json) · [tokens.css](../../../../design/styles/tokens.css) · [Color in context](https://yogurt-theta.vercel.app/system.html#color) · [Delivery status and owner decisions](../../../status.md)

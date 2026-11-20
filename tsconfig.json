@@ -13,7 +13,7 @@
     "strict": true,
     "skipLibCheck": true,
     "rootDir": "packages/web/src",
-    "outDir": "dist"
+    "outDir": "packages/web/dist"
   },
   "include": [
     "packages/web/src"

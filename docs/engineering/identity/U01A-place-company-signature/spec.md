@@ -8,7 +8,7 @@ Parent: [I01 design r2](../../../intents/identity/I01-sign-a-surface/spec.md) ·
 
 Keep the Upright 9 silhouette, the outlined Rethink Sans wordmark at 760 and the B2 relation: 80 symbol units to 60 cap-height units, an 18-unit gap and a 3-unit optical center adjustment.
 
-**Proposed writer.** Company identity maintainer, `assets/logo`. **Consumer.** Website headers, release credits and company introductions. **Independent verifier.** A brand reviewer comparing the rendered header with the supplied master. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
+**Proposed writer.** Company identity maintainer, `design/assets/logo`. **Consumer.** Website headers, release credits and company introductions. **Independent verifier.** A brand reviewer comparing the rendered header with the supplied master. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
 ## Contract
 

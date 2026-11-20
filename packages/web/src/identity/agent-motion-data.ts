@@ -1,4 +1,4 @@
-// Generated from assets/agents/presence-motion.json.
+// Generated from design/assets/agents/presence-motion.json.
 export const agentPresenceLabels = {
   "ready": "Ready",
   "thinking": "Thinking",

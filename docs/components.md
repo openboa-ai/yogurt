@@ -1,6 +1,6 @@
 # Component inventory
 
-[Browse 125 components](../components.html) · [Install an individual entry](using-yogurt.md) · [Current renderer evidence](engineering/controls/component-library/verification.md)
+[Browse 125 components](../apps/guide/generated/components.html) · [Install an individual entry](using-yogurt.md) · [Current renderer evidence](engineering/controls/component-library/verification.md)
 
 Choose the task pattern first, then the smallest control that carries the intended meaning. Each family below has an owning spec. Its exact implementation and per-target availability are tracked separately for the current kit. A platform may use a native presentation while preserving the same input, outcome and recovery.
 

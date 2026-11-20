@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Stack, Status } from "@openboa/yogurt";
-import { AgentProfile, type AgentProfileDraft } from "../../../blocks/agent-profile/web";
+import { AgentProfile, type AgentProfileDraft } from "../../../packages/recipes/agent-profile/web";
 
 const initialProfile: AgentProfileDraft = {
   name: "Kai",

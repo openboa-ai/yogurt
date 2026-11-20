@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-const directory = new URL("../../assets/projects/", import.meta.url);
+const directory = new URL("../../design/assets/projects/", import.meta.url);
 const source = JSON.parse(await readFile(new URL("emoji.json", directory), "utf8"));
 const { color } = JSON.parse(await readFile(new URL(source.palette, directory), "utf8"));
 

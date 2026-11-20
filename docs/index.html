@@ -1676,7 +1676,7 @@ npx yogurt add project-sidebar --target native
 </thead>
 <tbody><tr>
 <td>Brand and language</td>
-<td><a href="../assets/README.md">Artwork and fonts</a>, <a href="../content/terms.json">approved terms</a>, <a href="../tokens/brand.json">numbered palette</a> and <a href="../tokens/ui.json">UI roles</a></td>
+<td><a href="../design/README.md">Design sources</a>, <a href="../content/terms.json">approved terms</a>, <a href="../tokens/brand.json">numbered palette</a> and <a href="../tokens/ui.json">UI roles</a></td>
 <td>The guide, SDK, brand CSS and Native theme</td>
 </tr>
 <tr>
@@ -1686,7 +1686,7 @@ npx yogurt add project-sidebar --target native
 </tr>
 <tr>
 <td>Public rendering</td>
-<td><a href="../packages/README.md">Web and Native adapters</a>, <a href="../blocks">compositions</a> and <a href="../styles">styles</a></td>
+<td><a href="../packages/README.md">Web and Native adapters</a>, <a href="../blocks/README.md">composition recipes</a> and <a href="../styles">styles</a></td>
 <td>Product apps, the guide and examples</td>
 </tr>
 <tr>
@@ -1715,7 +1715,7 @@ npx yogurt add project-sidebar --target native
 <td>Maintainers and pinned SDK consumers</td>
 </tr>
 </tbody></table></div>
-<p>The SDK build writes <code>dist/</code> and <code>registry/</code> from the renderer sources and component catalog. Update the source and regenerate the output together. The guide owns its HTML sources in <code>apps/guide/pages/</code> and its browser scripts in <code>apps/guide/runtime/</code>. The site build keeps the existing routes. The standalone galleries are generated SDK artifacts. The SDK <a href="#using-yogurt">install guide</a> and <a href="../plugins/yogurt/README.md">plugin instructions</a> describe the pins each product selects.</p>
+<p>The SDK build writes <code>packages/web/dist/</code> and <code>registry/</code> from the renderer sources and component catalog. Update the source and regenerate the output together. The guide owns its HTML sources in <code>apps/guide/pages/</code> and its browser scripts in <code>apps/guide/runtime/</code>. The site build keeps the existing routes. The guide generator writes standalone galleries to <code>apps/guide/generated/</code>, and the SDK includes them for offline use. The SDK <a href="#using-yogurt">install guide</a> and <a href="../plugins/yogurt/README.md">plugin instructions</a> describe the pins each product selects.</p>
 <p>The <a href="../packages/web/README.md#source-layout">Web source layout</a> separates foundations, controls, compositions and identity. Catalog IDs resolve to the implementation during the build. The <a href="../scripts/README.md">maintainer tools</a> divide generation by output owner. The <a href="../apps/guide/README.md#hosting">hosted guide build</a> stages the same site for hosted and offline use from the authored pages, generated pages and shared assets.</p>
 <p>Use <a href="../AGENTS.md">AGENTS.md</a> when working on Yogurt itself. An adopting project can generate a short instruction index from its own binding. <a href="engineering/adoption/U19D-guide-and-evaluate-skills/source-boundaries/spec.md">Scope and verification for the guide move</a></p>
 <p>The original brand assets and copy have one editable owner. Each role color refers back to the common palette. A public token format or native theme can be generated from that source. The Design Tokens Community Group documents typed values and references for exchanging tokens across tools. <a href="https://www.designtokens.org/tr/2025.10/format/">Format specification</a></p>
@@ -1753,7 +1753,7 @@ npx yogurt add project-sidebar --target native
 <p>Keep reference boards, generated alternatives and Stitch or Figma prototypes in exploration until an owner chooses a direction. Translate the chosen direction into tokens, named states and a working example. Where a Figma library is useful, publish matching variables and component variants together with their yogurt IDs. An agent can then resolve a frame or component name against the same version an engineer builds. Store the state fixtures beside each working adapter and render them in the guide. A motion rehearsal exercises that actual control. <a href="https://help.figma.com/hc/en-us/articles/360025508373-Publish-a-library">Figma library publishing</a> · <a href="https://storybook.js.org/docs/writing-stories">Storybook component stories</a></p>
 <h2>Bind once per project</h2>
 <p>The proposed release manifest identifies a compatible version of the rules, tokens, adapter artifacts and notices, with immutable digests and per-target support. Record the accepted release once per consumer. A web-only project may derive that binding from its package lock if the guide, skill and checks can resolve the same manifest. A mixed-target project can declare surface paths in <code>yogurt.config.json</code> and generate a shared <code>yogurt.lock</code> for its builds and agent tools. Never maintain two independent version selections.</p>
-<p>An intent refers to one or more pattern IDs. It keeps the project-owned state mapping, permission source, effect, and test case. The optional agent skill reads the installed version. A developer can use the same catalog and check without installing a plugin. A short design entry that points from an agent to maintained project sources follows the approach Vercel describes for its own systems. <a href="https://vercel.com/blog/how-our-agents-build-on-brand-pages-with-design-md">Vercel’s design.md</a></p>
+<p>An intent refers to one or more pattern IDs. It keeps the project-owned state mapping, permission source, effect, and test case. The optional agent skill reads the installed version. A developer can use the same catalog and check without installing a plugin.</p>
 <p>Build app clients on Vercel Native SDK by default. The <a href="#native-stack">native stack decision</a> describes the markup, typed host messages and first native fixture. Build web clients on the same React DOM/CSS adapter for Next.js and Vite. Support a deliberate WebView as a web surface and test its return to the native host. For native-rendered views, map the common contract to the Native SDK and its supported native-rendered controls. Check keyboard and accessibility on that renderer. One adopting team can upgrade independently of the others. Rehearse the changed screens before switching its pin and retain the preceding working release. <a href="https://github.com/vercel-labs/native">Native SDK</a> · <a href="../adoption.html#releases">Adoption and rollback</a></p>
 <h2>Decide what can be enforced</h2>
 <ul>
@@ -2094,7 +2094,7 @@ npx yogurt add project-sidebar --target native
 </thead>
 <tbody><tr>
 <td><a href="#U01A">U01A · Place the master on a company surface</a></td>
-<td><code>assets/logo</code></td>
+<td><code>design/assets/logo</code></td>
 <td>Website headers, release credits and company introductions</td>
 <td>A brand reviewer comparing the rendered header with the supplied master</td>
 </tr>
@@ -2136,7 +2136,7 @@ npx yogurt add project-sidebar --target native
 </thead>
 <tbody><tr>
 <td><a href="#U02A">U02A · Choose copy from the observed state</a></td>
-<td><code>content/terms.json</code></td>
+<td><code>design/content/terms.json</code></td>
 <td>Brand writers and any client presenting an action or result</td>
 <td>A product editor given the state fixture and the final screen, without the proposed wording</td>
 </tr>
@@ -2178,7 +2178,7 @@ npx yogurt add project-sidebar --target native
 </thead>
 <tbody><tr>
 <td><a href="#U03A">U03A · Resolve visual roles from one numbered palette</a></td>
-<td><code>tokens/brand.json</code></td>
+<td><code>design/tokens/brand.json</code></td>
 <td>Token exporters, themes, artwork and data series</td>
 <td>A foundation reviewer who resolves the token references and samples rendered foregrounds and backgrounds</td>
 </tr>
@@ -2220,7 +2220,7 @@ npx yogurt add project-sidebar --target native
 </thead>
 <tbody><tr>
 <td><a href="#U04A">U04A · Lay out text, spacing and operable controls</a></td>
-<td><code>tokens/brand.json</code></td>
+<td><code>design/tokens/brand.json</code></td>
 <td>Responsive screens, chart labels and native text styles</td>
 <td>A reviewer operating a narrow viewport and enlarged text with keyboard and touch</td>
 </tr>
@@ -2263,13 +2263,13 @@ npx yogurt add project-sidebar --target native
 </thead>
 <tbody><tr>
 <td><a href="#U05A">U05A · Preserve each food mark at small sizes</a></td>
-<td><code>assets/projects</code></td>
+<td><code>design/assets/projects</code></td>
 <td>Project headers, chat messages and release notes</td>
 <td>An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces</td>
 </tr>
 <tr>
 <td><a href="#U05B">U05B · Resolve an icon or emoji to its intended drawing</a></td>
-<td><code>assets/emoji</code></td>
+<td><code>design/assets/emoji</code></td>
 <td>Message galleries, accessible controls and local asset exporters</td>
 <td>A reader finding a drawing by name or sequence and identifying it at actual display size</td>
 </tr>
@@ -2312,13 +2312,13 @@ npx yogurt add project-sidebar --target native
 </thead>
 <tbody><tr>
 <td><a href="#U06A">U06A · Assign a stable, visually fitted agent identity</a></td>
-<td><code>assets/agents/silhouettes.json</code></td>
+<td><code>design/assets/agents/silhouettes.json</code></td>
 <td>Rosters and agent detail surfaces</td>
 <td>An art reviewer using the actual roster and a registry reader resolving saved assignments</td>
 </tr>
 <tr>
 <td><a href="#U06B">U06B · Express activity with the eyes</a></td>
-<td><code>assets/agents/eye-motion.json</code></td>
+<td><code>design/assets/agents/eye-motion.json</code></td>
 <td>Agent rows, detail views and conversation attribution</td>
 <td>A motion reviewer viewing the same named agent at roster and detail sizes</td>
 </tr>
@@ -2360,7 +2360,7 @@ npx yogurt add project-sidebar --target native
 </thead>
 <tbody><tr>
 <td><a href="#U07A">U07A · Present a plot and its textual equivalent</a></td>
-<td><code>assets/charts</code></td>
+<td><code>design/assets/charts</code></td>
 <td>Chart primitives, table alternatives and detail views</td>
 <td>A data reviewer who reads the source fixture and both rendered representations</td>
 </tr>
@@ -3022,7 +3022,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I01-design">I01 design r2</a> · criterion <code>I01-U01A</code>. Parent specification SHA-256 <code>73c90485eb2ce68cad797f52749b48dabbef567b01b68be08a02ae795e5a2306</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Keep the Upright 9 silhouette, the outlined Rethink Sans wordmark at 760 and the B2 relation: 80 symbol units to 60 cap-height units, an 18-unit gap and a 3-unit optical center adjustment.</p>
-<p><strong>Proposed writer.</strong> Company identity maintainer, <code>assets/logo</code>. <strong>Consumer.</strong> Website headers, release credits and company introductions. <strong>Independent verifier.</strong> A brand reviewer comparing the rendered header with the supplied master. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Company identity maintainer, <code>design/assets/logo</code>. <strong>Consumer.</strong> Website headers, release credits and company introductions. <strong>Independent verifier.</strong> A brand reviewer comparing the rendered header with the supplied master. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>Given company attribution, available width and surface, choose the supplied lockup or standalone symbol. Place the master once and give the company an accessible name. Consumer layout supplies the outer inset.</p>
 <p><strong>Predecessors.</strong> No engineering predecessor.</p>
@@ -3059,7 +3059,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I02-design">I02 design r1</a> · criterion <code>I02-U02A</code>. Parent specification SHA-256 <code>02311e93b202e14e71ed124bb42cfac567067d15aa7495f84423aca46e685194</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Keep the company line “Every limit has a shelf life.” and the three maintained repository descriptions in their intended contexts. UI copy names the object, condition and supported next action.</p>
-<p><strong>Proposed writer.</strong> Language and naming maintainer, <code>content/terms.json</code>. <strong>Consumer.</strong> Brand writers and any client presenting an action or result. <strong>Independent verifier.</strong> A product editor given the state fixture and the final screen, without the proposed wording. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Language and naming maintainer, <code>design/content/terms.json</code>. <strong>Consumer.</strong> Brand writers and any client presenting an action or result. <strong>Independent verifier.</strong> A product editor given the state fixture and the final screen, without the proposed wording. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>Accept a context, actor-facing object, host observation and available recovery. Choose the term or phrase for that context. A send acknowledgement may justify “Request sent”; completion needs a verified result.</p>
 <p><strong>Predecessors.</strong> No engineering predecessor.</p>
@@ -3096,7 +3096,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I03-design">I03 design r2</a> · criterion <code>I03-U03A</code>. Parent specification SHA-256 <code>a70bdf6e44531c56df6c3aa58c76c912d0f1ed2fe5362f7edc367a88bf4a4ce3</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Keep hue families at one primitive level. All text, focus, state, series and artwork color roles resolve to one of those values. Preserve gray ramps through near-white and near-black. Keep the existing neutral.0 and neutral.1000 at #FCFCFC and #121212 in this revision.</p>
-<p><strong>Proposed writer.</strong> Design foundations maintainer, <code>tokens/brand.json</code>. <strong>Consumer.</strong> Token exporters, themes, artwork and data series. <strong>Independent verifier.</strong> A foundation reviewer who resolves the token references and samples rendered foregrounds and backgrounds. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Design foundations maintainer, <code>design/tokens/brand.json</code>. <strong>Consumer.</strong> Token exporters, themes, artwork and data series. <strong>Independent verifier.</strong> A foundation reviewer who resolves the token references and samples rendered foregrounds and backgrounds. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>Input is a numbered primitive ID, role, theme and foreground/background use. Resolve both ends from the same token revision. Compare actual pairs, including selected, disabled and outlined controls where meaningful.</p>
 <p><strong>Predecessors.</strong> No engineering predecessor.</p>
@@ -3133,7 +3133,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I04-design">I04 design r1</a> · criterion <code>I04-U04A</code>. Parent specification SHA-256 <code>11003260c4b48180ef71c9c25dfbc416a5fdca71e3c689d8b82628b5f2afa615</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Use Rethink Sans with the existing heading 525, body 425 and UI 550 as the baseline. The wordmark’s 760 stays scoped to its artwork. Use the actual type, line, space, radius, stroke and control tokens.</p>
-<p><strong>Proposed writer.</strong> Design foundations maintainer, <code>tokens/brand.json</code>. <strong>Consumer.</strong> Responsive screens, chart labels and native text styles. <strong>Independent verifier.</strong> A reviewer operating a narrow viewport and enlarged text with keyboard and touch. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Design foundations maintainer, <code>design/tokens/brand.json</code>. <strong>Consumer.</strong> Responsive screens, chart labels and native text styles. <strong>Independent verifier.</strong> A reviewer operating a narrow viewport and enlarged text with keyboard and touch. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>Given a text role, available width, input modality and scale, allow labels to wrap, keep their reading order and expose the control’s true hit area. The current control is 40 units high with a 44-unit touch target.</p>
 <p><strong>Predecessors.</strong> No engineering predecessor.</p>
@@ -3170,7 +3170,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I05-design">I05 design r1</a> · criterion <code>I05-U05A</code>. Parent specification SHA-256 <code>df5c94ee0746fab7b492a9b30aff5ca5b410af59aa0b954f4dc1cebb2d8af0c0</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Use the current yogurt cup, scored sourdough and freestanding peppered meatball. Each has one fitted, transparent cut into its exterior contour. Token names in the editable source are authoritative.</p>
-<p><strong>Proposed writer.</strong> Artwork and agents maintainer, <code>assets/projects</code>. <strong>Consumer.</strong> Project headers, chat messages and release notes. <strong>Independent verifier.</strong> An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Artwork and agents maintainer, <code>design/assets/projects</code>. <strong>Consumer.</strong> Project headers, chat messages and release notes. <strong>Independent verifier.</strong> An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>Resolve the chosen project ID against its master, map each named primitive from the selected token revision and export SVG or transparent PNG for the target. Compare at native display size.</p>
 <p><strong>Predecessors.</strong> <a href="#U03A">U03A</a></p>
@@ -3207,7 +3207,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I05-design">I05 design r1</a> · criterion <code>I05-U05B</code>. Parent specification SHA-256 <code>df5c94ee0746fab7b492a9b30aff5ca5b410af59aa0b954f4dc1cebb2d8af0c0</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Functional icons carry one action and can use the bundled icon family. Emoji identify a drawing by its full sequence. The existing 3,831-entry repertoire has 104 eligible expression faces with bright yellow and soft peach finishes.</p>
-<p><strong>Proposed writer.</strong> Artwork and agents maintainer, <code>assets/emoji</code>. <strong>Consumer.</strong> Message galleries, accessible controls and local asset exporters. <strong>Independent verifier.</strong> A reader finding a drawing by name or sequence and identifying it at actual display size. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Artwork and agents maintainer, <code>design/assets/emoji</code>. <strong>Consumer.</strong> Message galleries, accessible controls and local asset exporters. <strong>Independent verifier.</strong> A reader finding a drawing by name or sequence and identifying it at actual display size. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>Input an intended role, sequence or icon name, finish and size. For emoji return the matching editable drawing and display asset with its label. For a functional control, give the control an accessible name and hide a redundant decorative glyph.</p>
 <p><strong>Predecessors.</strong> <a href="#U03A">U03A</a></p>
@@ -3244,7 +3244,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I06-design">I06 design r1</a> · criterion <code>I06-U06A</code>. Parent specification SHA-256 <code>0970fe984d88d8ec112fb075e840f4384b4d9a832b19fa539fa4e1c8cc55ede8</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Keep the 15 distinct rounded silhouettes, Kai’s pinched upper notch and Sol’s shallow lower notch. Each permitted position has a hand-fitted path. Merge visually redundant options before counting them.</p>
-<p><strong>Proposed writer.</strong> Artwork and agents maintainer, <code>assets/agents/silhouettes.json</code>. <strong>Consumer.</strong> Rosters and agent detail surfaces. <strong>Independent verifier.</strong> An art reviewer using the actual roster and a registry reader resolving saved assignments. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Artwork and agents maintainer, <code>design/assets/agents/silhouettes.json</code>. <strong>Consumer.</strong> Rosters and agent detail surfaces. <strong>Independent verifier.</strong> An art reviewer using the actual roster and a registry reader resolving saved assignments. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>An existing identity resolves to its saved silhouette, fitted position and shared fill token. A new identity may select only a reviewed tuple. Persist a stable tuple or stable asset key with a version and a visible name.</p>
 <p><strong>Predecessors.</strong> <a href="#U03A">U03A</a></p>
@@ -3281,7 +3281,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I06-design">I06 design r1</a> · criterion <code>I06-U06B</code>. Parent specification SHA-256 <code>0970fe984d88d8ec112fb075e840f4384b4d9a832b19fa539fa4e1c8cc55ede8</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Use the two eyes as one subtle gesture tied to an observed state. Keep the outline, notch and resting identity fixed. Reduced motion conveys the same activity through text and a stable face.</p>
-<p><strong>Proposed writer.</strong> Artwork and agents maintainer, <code>assets/agents/eye-motion.json</code>. <strong>Consumer.</strong> Agent rows, detail views and conversation attribution. <strong>Independent verifier.</strong> A motion reviewer viewing the same named agent at roster and detail sizes. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Artwork and agents maintainer, <code>design/assets/agents/eye-motion.json</code>. <strong>Consumer.</strong> Agent rows, detail views and conversation attribution. <strong>Independent verifier.</strong> A motion reviewer viewing the same named agent at roster and detail sizes. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>Given an assigned agent, previous state, new host-reported state and motion preference, move both eyes together and update the adjacent state text. Kai’s ready/working study is a reference for amplitude.</p>
 <p><strong>Predecessors.</strong> <a href="#U06A">U06A</a></p>
@@ -3318,7 +3318,7 @@ npx yogurt add project-sidebar --target native
 <p>Parent: <a href="#I07-design">I07 design r1</a> · criterion <code>I07-U07A</code>. Parent specification SHA-256 <code>5383cd41d47c829f6e4e2c21aa5d070005b50ce30bb63c4b10323f7eb968b1da</code>.</p>
 <h2>Decision and ownership</h2>
 <p>Use the same observation records for the graphic and table. Carry units, precision, as-of time and coverage. Provide non-color distinction for series and a reading order for the accompanying values.</p>
-<p><strong>Proposed writer.</strong> Data visualization maintainer, <code>assets/charts</code>. <strong>Consumer.</strong> Chart primitives, table alternatives and detail views. <strong>Independent verifier.</strong> A data reviewer who reads the source fixture and both rendered representations. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
+<p><strong>Proposed writer.</strong> Data visualization maintainer, <code>design/assets/charts</code>. <strong>Consumer.</strong> Chart primitives, table alternatives and detail views. <strong>Independent verifier.</strong> A data reviewer who reads the source fixture and both rendered representations. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.</p>
 <h2>Contract</h2>
 <p>Map authorized series and domain to a suitable plot or legible table. Draw zero only for an observed numeric zero. Break or explicitly annotate a gap and show the relevant unit at the point of reading.</p>
 <p><strong>Predecessors.</strong> <a href="#U03A">U03A</a> · <a href="#U04A">U04A</a></p>

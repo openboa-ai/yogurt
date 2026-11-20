@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, posix, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { sitePath } from "./site-layout.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const read = name => readFileSync(resolve(root, name), "utf8");
@@ -69,14 +70,14 @@ function sectionLinks(domain) {
 
 function renderArticle(doc) {
   let html = marked.parse(read(doc.file));
-  html = html.replace(/href="([^"]+)"/g, (attribute, href) => {
-    if (href.startsWith(liveGuide)) return 'href="../' + href.slice(liveGuide.length) + '"';
+  html = html.replace(/(href|src)="([^"]+)"/g, (attribute, name, href) => {
+    if (href.startsWith(liveGuide)) return name + '="../' + href.slice(liveGuide.length) + '"';
     if (/^(?:[a-z][a-z0-9+.-]*:|#)/i.test(href)) return attribute;
     const [file, fragment] = href.split("#");
     const source = posix.normalize(posix.join(posix.dirname(doc.file),file));
     const target = documents.get(source);
-    if (target && !fragment) return 'href="#' + target.id + '"';
-    return 'href="' + posix.relative('docs', source) + (fragment ? '#' + fragment : '') + '"';
+    if (name === "href" && target && !fragment) return 'href="#' + target.id + '"';
+    return name + '="' + posix.relative("docs", sitePath(source)) + (fragment ? '#' + fragment : '') + '"';
   });
   html = html.replace(/<table>/g, '<div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>').replace(/<\/table>/g, '</table></div>');
   const source = posix.relative("docs", doc.file);

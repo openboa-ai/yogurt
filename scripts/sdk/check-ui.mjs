@@ -79,9 +79,9 @@ for (const block of blocks) {
   assert.equal(entry.type, "registry:block");
   assert.equal(
     entry.files[0].content,
-    readFileSync("blocks/" + block.id + "/web.tsx", "utf8"),
+    readFileSync("packages/recipes/" + block.id + "/web.tsx", "utf8"),
   );
-  const native = readFileSync("blocks/" + block.id + "/view.native", "utf8");
+  const native = readFileSync("packages/recipes/" + block.id + "/view.native", "utf8");
   assert.deepEqual(
     [...native.matchAll(/<import src="([^"]+)\.native"/g)]
       .map((match) => match[1])
@@ -90,20 +90,20 @@ for (const block of blocks) {
   );
 }
 for (const { id, name, exports = [] } of catalog) {
-  assert(existsSync("dist/entries/" + id + ".js"));
-  assert(existsSync("dist/entries/" + id + ".d.ts"));
+  assert(existsSync("packages/web/dist/entries/" + id + ".js"));
+  assert(existsSync("packages/web/dist/entries/" + id + ".d.ts"));
   assert(existsSync("packages/native/controls/items/" + id + ".native"));
   assert(
     json("registry/" + id + ".json").files[0].content.includes(
       "@openboa/yogurt/" + id,
     ),
   );
-  const entry = await import(new URL("dist/entries/" + id + ".js", root).href);
+  const entry = await import(new URL("packages/web/dist/entries/" + id + ".js", root).href);
   for (const symbol of [name, ...exports])
     assert.equal(typeof entry[symbol], "function", id + " / " + symbol);
 }
 assert(
-  readFileSync("dist/THIRD-PARTY-NOTICES.txt", "utf8").includes(
+  readFileSync("packages/web/dist/THIRD-PARTY-NOTICES.txt", "utf8").includes(
     "Copyright 2025 OpenAI",
   ),
 );

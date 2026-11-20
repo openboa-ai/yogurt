@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Status, Stack, Text } from "@openboa/yogurt";
-import { RunInspector, type RunRecord } from "../../../blocks/run-inspector/web";
+import { RunInspector, type RunRecord } from "../../../packages/recipes/run-inspector/web";
 
 const initialRuns: RunRecord[] = [
   {

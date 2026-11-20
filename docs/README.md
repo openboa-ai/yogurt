@@ -1,6 +1,6 @@
 # Yogurt design records
 
-[Use Yogurt on web and Zig](using-yogurt.md) · [Live components and brand tokens](../components.html)
+[Use Yogurt on web and Zig](using-yogurt.md) · [Live components and brand tokens](../apps/guide/generated/components.html)
 
 Start with the visual direction when composing a screen. Start with a task intent when changing the shared system. Each promise has a paired design and one or more reviewable engineering changes. Product teams can use the current guide while proposed changes move through review.
 

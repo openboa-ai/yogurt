@@ -8,7 +8,7 @@ Parent: [I05 design r1](../../../intents/artwork/I05-choose-recognizable-art/spe
 
 Functional icons carry one action and can use the bundled icon family. Emoji identify a drawing by its full sequence. The existing 3,831-entry repertoire has 104 eligible expression faces with bright yellow and soft peach finishes.
 
-**Proposed writer.** Artwork and agents maintainer, `assets/emoji`. **Consumer.** Message galleries, accessible controls and local asset exporters. **Independent verifier.** A reader finding a drawing by name or sequence and identifying it at actual display size. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
+**Proposed writer.** Artwork and agents maintainer, `design/assets/emoji`. **Consumer.** Message galleries, accessible controls and local asset exporters. **Independent verifier.** A reader finding a drawing by name or sequence and identifying it at actual display size. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
 ## Contract
 

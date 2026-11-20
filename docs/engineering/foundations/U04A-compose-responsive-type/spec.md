@@ -8,7 +8,7 @@ Parent: [I04 design r1](../../../intents/foundations/I04-read-at-any-size/spec.m
 
 Use Rethink Sans with the existing heading 525, body 425 and UI 550 as the baseline. The wordmark’s 760 stays scoped to its artwork. Use the actual type, line, space, radius, stroke and control tokens.
 
-**Proposed writer.** Design foundations maintainer, `tokens/brand.json`. **Consumer.** Responsive screens, chart labels and native text styles. **Independent verifier.** A reviewer operating a narrow viewport and enlarged text with keyboard and touch. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
+**Proposed writer.** Design foundations maintainer, `design/tokens/brand.json`. **Consumer.** Responsive screens, chart labels and native text styles. **Independent verifier.** A reviewer operating a narrow viewport and enlarged text with keyboard and touch. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
 ## Contract
 

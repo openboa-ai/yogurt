@@ -2,7 +2,7 @@
 
 ## 0.1.0-local.15 · The animated agent family
 
-[Performance specification](spec.md#revision-6-follow-up--animate-the-agent-family) · [Interactive family gallery](../../../../agents.html) · [Roster capture](evidence/agent-family-roster.png)
+[Performance specification](spec.md#revision-6-follow-up--animate-the-agent-family) · [Interactive family gallery](../../../../apps/guide/generated/agents.html) · [Roster capture](evidence/agent-family-roster.png)
 
 | Target | Observation |
 | --- | --- |
@@ -85,7 +85,7 @@ The comparison shows a design difference. Human recognition accuracy was not mea
 
 ## 0.1.0-local.8 · eye and body motion
 
-[Specification revision 6](spec.md#eye-and-body-acting--local-follow-up-revision-6) · [Authored avatar clips](../../../../assets/agents/avatar-motion.json)
+[Specification revision 6](spec.md#eye-and-body-acting--local-follow-up-revision-6) · [Authored avatar clips](../../../../design/assets/agents/avatar-motion.json)
 
 | Target | Observation |
 | --- | --- |
@@ -150,7 +150,7 @@ The scenes use local sample data and callback results. Live voice, computer sess
 
 ## 0.1.0-local.2 · 20 November 2026
 
-This recorded revision of the [component library](../../../../components.html) contained 116 components and four editable blocks.
+This recorded revision of the [component library](../../../../apps/guide/generated/components.html) contained 116 components and four editable blocks.
 
 | What was checked | Observed result |
 | --- | --- |

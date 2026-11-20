@@ -59,7 +59,7 @@ const tests = [
 for (const { id, native } of [...catalog, ...blocks]) {
   const source = readFileSync(
     native
-      ? kit + "/blocks/" + id + "/view.native"
+      ? kit + "/packages/recipes/" + id + "/view.native"
       : kit + "/packages/native/controls/items/" + id + ".native",
     "utf8",
   );

@@ -37,7 +37,7 @@ The names below describe the contract a renderer must expose. Every color resolv
 | Inactive action surface | `neutral.100` | `neutral.800` |
 | Validation text and outline | `coral.700` | `coral.200` |
 
-The saved view title, its row text and the actual timestamp provide working examples of the type hierarchy above. Check ordinary text at 4.5:1 or higher. An essential control edge, focus indicator or thumb needs at least 3:1 against its adjacent surface. These color and type roles are specified here for later package implementation. [Numbered primitives](../../../../tokens/brand.json)
+The saved view title, its row text and the actual timestamp provide working examples of the type hierarchy above. Check ordinary text at 4.5:1 or higher. An essential control edge, focus indicator or thumb needs at least 3:1 against its adjacent surface. These color and type roles are specified here for later package implementation. [Numbered primitives](../../../../design/tokens/brand.json)
 
 ## A product can take one control
 

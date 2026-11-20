@@ -8,7 +8,7 @@ Parent: [I05 design r1](../../../intents/artwork/I05-choose-recognizable-art/spe
 
 Use the current yogurt cup, scored sourdough and freestanding peppered meatball. Each has one fitted, transparent cut into its exterior contour. Token names in the editable source are authoritative.
 
-**Proposed writer.** Artwork and agents maintainer, `assets/projects`. **Consumer.** Project headers, chat messages and release notes. **Independent verifier.** An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
+**Proposed writer.** Artwork and agents maintainer, `design/assets/projects`. **Consumer.** Project headers, chat messages and release notes. **Independent verifier.** An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
 ## Contract
 

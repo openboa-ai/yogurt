@@ -8,9 +8,9 @@ import {
   Select,
 } from "@openboa/yogurt";
 import brand from "../../catalog/brand.json";
-import palette from "../../tokens/brand.json";
-import ui from "../../tokens/ui.json";
-import language from "../../content/terms.json";
+import palette from "../../design/tokens/brand.json";
+import ui from "../../design/tokens/ui.json";
+import language from "../../design/content/terms.json";
 export function BrandTokens() {
   const [mode, setMode] = useState<"light" | "dark">("light");
   const index = mode === "light" ? 0 : 1;

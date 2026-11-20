@@ -57,7 +57,7 @@ async function sample(avatars, state, width) {
 (async () => {
   const browser = await chromium.launch({ channel: process.env.YOGURT_BROWSER_CHANNEL || "chrome" });
   try {
-    const filename = process.env.YOGURT_FAMILY_HTML || join(__dirname, "../agents.html");
+    const filename = process.env.YOGURT_FAMILY_HTML || join(__dirname, "../apps/guide/generated/agents.html");
     const capture = process.env.YOGURT_CAPTURE_DIR;
     const wrapped = !!process.env.YOGURT_FAMILY_HTML;
     const tests = [];

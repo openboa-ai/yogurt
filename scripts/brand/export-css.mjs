@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 
-const source = new URL("../../tokens/brand.json", import.meta.url);
-const destination = new URL("../../styles/tokens.css", import.meta.url);
+const source = new URL("../../design/tokens/brand.json", import.meta.url);
+const destination = new URL("../../design/styles/tokens.css", import.meta.url);
 const { color, type, space, radius, stroke, control } = JSON.parse(await readFile(source, "utf8"));
 
 function declarations(group, values, unit = "") {
@@ -11,7 +11,7 @@ function declarations(group, values, unit = "") {
 }
 
 const stylesheet = [
-  "/* Generated from tokens/brand.json by scripts/export-css.mjs. */",
+  "/* Generated from design/tokens/brand.json by scripts/brand/export-css.mjs. */",
   ":root {",
   `  --boa-palette-hues: ${Object.keys(color).join(" ")};`,
   `  --boa-spacing-steps: ${Object.keys(space).join(" ")};`,

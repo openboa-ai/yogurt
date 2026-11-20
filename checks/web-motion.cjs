@@ -3,9 +3,9 @@ const assert = require("node:assert/strict");
 const { join, resolve } = require("node:path");
 const { pathToFileURL } = require("node:url");
 
-const gallery = pathToFileURL(resolve(__dirname, "../components.html")).href;
+const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/components.html")).href;
 const capture = process.env.YOGURT_CAPTURE_DIR;
-const states = require("../assets/agents/presence-motion.json");
+const states = require("../design/assets/agents/presence-motion.json");
 const promiseToSettle = (node) => Promise.all(node.getAnimations().map((motion) => motion.finished));
 const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.abs(a[key] - b[key]) <= 1);
 

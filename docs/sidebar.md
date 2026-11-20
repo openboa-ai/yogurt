@@ -1,6 +1,6 @@
 # Compose a project sidebar
 
-Use [SidebarLayout](../components.html#sidebar-layout) for the shared shell and choose what goes inside it. A team can use the same shell for agent navigation, project views or a right-side inspector.
+Use [SidebarLayout](../apps/guide/generated/components.html#sidebar-layout) for the shared shell and choose what goes inside it. A team can use the same shell for agent navigation, project views or a right-side inspector.
 
 | Part | What the product supplies |
 | --- | --- |
@@ -40,7 +40,7 @@ import {
 
 On a narrow layout, the trigger opens a modal drawer. Escape, the backdrop and the close action return focus to the trigger. A route or view selection closes the overlay. Control the desktop state with `collapsed` and `onCollapsedChange` when a host saves that preference. Set `edge="end"` for an inspector. The shell measures its own width, so it also works inside a split view.
 
-[AgentSidebar](../components.html#agent-sidebar) supplies a searchable roster with identities and unread labels. [ProjectSidebar](../components.html#project-sidebar) supplies nested views, a search field and optional actions. The [ProjectWorkspace](../components.html#project-workspace) uses the same layout with its own project picker.
+[AgentSidebar](../apps/guide/generated/components.html#agent-sidebar) supplies a searchable roster with identities and unread labels. [ProjectSidebar](../apps/guide/generated/components.html#project-sidebar) supplies nested views, a search field and optional actions. The [ProjectWorkspace](../apps/guide/generated/components.html#project-workspace) uses the same layout with its own project picker.
 
 ```sh
 npx yogurt add sidebar-layout --target web

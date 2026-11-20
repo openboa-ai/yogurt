@@ -14,7 +14,7 @@ Parent: [originating intent, revision 1](intent.md). Review: NOT ACCEPTED. Desig
 
 | Change and contract | Proposed writer boundary | Consumer | Independent observer |
 | --- | --- | --- | --- |
-| [U07A · Present a plot and its textual equivalent](../../../engineering/data-visualization/U07A-encode-observed-values/spec.md) | `assets/charts` | Chart primitives, table alternatives and detail views | A data reviewer who reads the source fixture and both rendered representations |
+| [U07A · Present a plot and its textual equivalent](../../../engineering/data-visualization/U07A-encode-observed-values/spec.md) | `design/assets/charts` | Chart primitives, table alternatives and detail views | A data reviewer who reads the source fixture and both rendered representations |
 
 The change specifications identify their individual predecessors. The scene below checks their joined behavior.
 
@@ -24,4 +24,4 @@ Switch surface and narrow the viewport. Compare each plotted observation with th
 
 **End scene.** Given one zero, one missing interval and a stamped observation, the chart and its accessible table agree on the value, unit, gap and observation time.
 
-**Current sources and open decisions.** [notch-positions.csv](../../../../assets/charts/notch-positions.csv) · [notch-positions.svg](../../../../assets/charts/notch-positions.svg) · [Source library](https://yogurt-theta.vercel.app/library.html) · [brand.json](../../../../tokens/brand.json) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [notch-positions.csv](../../../../design/assets/charts/notch-positions.csv) · [notch-positions.svg](../../../../design/assets/charts/notch-positions.svg) · [Source library](https://yogurt-theta.vercel.app/library.html) · [brand.json](../../../../design/tokens/brand.json) · [Delivery status and owner decisions](../../../status.md)

@@ -15,11 +15,11 @@ import {
   AttentionInbox,
   type AttentionItem,
   type AttentionReceipt,
-} from "../../../blocks/attention-inbox/web";
+} from "../../../packages/recipes/attention-inbox/web";
 import {
   OperationsLibrary,
   type CapabilityRecord,
-} from "../../../blocks/operations-library/web";
+} from "../../../packages/recipes/operations-library/web";
 
 const initialRoutines: RoutineRecord[] = [
   {

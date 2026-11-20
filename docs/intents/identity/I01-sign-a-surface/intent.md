@@ -16,4 +16,4 @@ An editor is placing the name of the company beside a project and an agent. A re
 
 Use the selected Upright 9, B2 proportions and outlined 760 nameplate. The brand owner selected the original symbol’s Ink blue, slate.750 (#175174), as OpenBoa’s main color.
 
-[Company signature](https://yogurt-theta.vercel.app/index.html#logo) · [upright-9.svg](../../../../assets/logo/upright-9.svg) · [openboa-lockup.svg](../../../../assets/logo/openboa-lockup.svg) · [Signature study](../../../../examples/signature/index.html)
+[Company signature](https://yogurt-theta.vercel.app/index.html#logo) · [upright-9.svg](../../../../design/assets/logo/upright-9.svg) · [openboa-lockup.svg](../../../../design/assets/logo/openboa-lockup.svg) · [Signature study](../../../../examples/signature/index.html)

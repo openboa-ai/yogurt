@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import avatarMotion from "../../../assets/agents/avatar-motion.json";
+import avatarMotion from "../../../design/assets/agents/avatar-motion.json";
 import {
   AgentAvatar, Button, Inline, Select, Stack, Text, agentPresenceLabels,
   type AgentPresence,

@@ -2,13 +2,13 @@ import { useState } from "react";
 import {
   ProjectSettings,
   type Preferences,
-} from "../../../blocks/project-settings/web";
-import { CollectionBrowser } from "../../../blocks/collection-browser/web";
-import { DecisionReview } from "../../../blocks/decision-review/web";
+} from "../../../packages/recipes/project-settings/web";
+import { CollectionBrowser } from "../../../packages/recipes/collection-browser/web";
+import { DecisionReview } from "../../../packages/recipes/decision-review/web";
 import {
   ConversationPanel,
   type ThreadMessage,
-} from "../../../blocks/conversation-panel/web";
+} from "../../../packages/recipes/conversation-panel/web";
 import { Stack, Status } from "@openboa/yogurt";
 const initial: Preferences = { notify: true, digest: "weekly" };
 const records = [

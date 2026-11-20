@@ -5,8 +5,8 @@ import {
   SidebarLayout, SidebarSubmenu, SidebarTrigger, Stack, Text,
   type AgentSummary,
 } from "@openboa/yogurt";
-import { AgentSidebar } from "../../../blocks/agent-sidebar/web";
-import { ProjectSidebar } from "../../../blocks/project-sidebar/web";
+import { AgentSidebar } from "../../../packages/recipes/agent-sidebar/web";
+import { ProjectSidebar } from "../../../packages/recipes/project-sidebar/web";
 
 const agents: AgentSummary[] = [
   {id: "kai", name: "Kai", role: "Release lead", state: "waiting", art: "Kai", pinned: true, unread: true},

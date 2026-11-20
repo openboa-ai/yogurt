@@ -15,8 +15,8 @@ Parent: [originating intent, revision 1](intent.md). Review: NOT ACCEPTED. Desig
 
 | Change and contract | Proposed writer boundary | Consumer | Independent observer |
 | --- | --- | --- | --- |
-| [U06A · Assign a stable, visually fitted agent identity](../../../engineering/artwork/U06A-fit-agent-identities/spec.md) | `assets/agents/silhouettes.json` | Rosters and agent detail surfaces | An art reviewer using the actual roster and a registry reader resolving saved assignments |
-| [U06B · Express activity with the eyes](../../../engineering/artwork/U06B-express-agent-state/spec.md) | `assets/agents/eye-motion.json` | Agent rows, detail views and conversation attribution | A motion reviewer viewing the same named agent at roster and detail sizes |
+| [U06A · Assign a stable, visually fitted agent identity](../../../engineering/artwork/U06A-fit-agent-identities/spec.md) | `design/assets/agents/silhouettes.json` | Rosters and agent detail surfaces | An art reviewer using the actual roster and a registry reader resolving saved assignments |
+| [U06B · Express activity with the eyes](../../../engineering/artwork/U06B-express-agent-state/spec.md) | `design/assets/agents/eye-motion.json` | Agent rows, detail views and conversation attribution | A motion reviewer viewing the same named agent at roster and detail sizes |
 
 The change specifications identify their individual predecessors. The scene below checks their joined behavior.
 
@@ -26,4 +26,4 @@ Compare the current 45 fitted pairs at actual roster size. The illustrative 45 �
 
 **End scene.** The same assigned identity retains its outline, fitted notch, fill and name across renders. Kai and Sol retain their original gestures. A working state remains legible with motion reduced.
 
-**Current sources and open decisions.** [silhouettes.json](../../../../assets/agents/silhouettes.json) · [kai.svg](../../../../assets/agents/kai.svg) · [sol.svg](../../../../assets/agents/sol.svg) · [eye-motion.json](../../../../assets/agents/eye-motion.json) · [Agent motion](https://yogurt-theta.vercel.app/library.html#motion) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [silhouettes.json](../../../../design/assets/agents/silhouettes.json) · [kai.svg](../../../../design/assets/agents/kai.svg) · [sol.svg](../../../../design/assets/agents/sol.svg) · [eye-motion.json](../../../../design/assets/agents/eye-motion.json) · [Agent motion](https://yogurt-theta.vercel.app/library.html#motion) · [Delivery status and owner decisions](../../../status.md)

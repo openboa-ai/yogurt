@@ -1,4 +1,4 @@
-/* Generated from tokens/brand.json and tokens/ui.json. */
+/* Generated from design/tokens/brand.json and design/tokens/ui.json. */
 .yg-root {
   --yg-canvas: light-dark(var(--boa-color-neutral-0), var(--boa-color-neutral-975));
   --yg-surface: light-dark(var(--boa-color-gray-green-50), var(--boa-color-neutral-950));

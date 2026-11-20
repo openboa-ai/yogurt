@@ -17,7 +17,7 @@ async function renderSet(directory, items) {
 }
 
 async function render() {
-  const directory = path.resolve(__dirname, "../../assets/emoji");
+  const directory = path.resolve(__dirname, "../../design/assets/emoji");
   const { items } = JSON.parse(await fs.readFile(path.join(directory, "catalog.json"), "utf8"));
   await renderSet(directory, items);
   const variants = items.filter(item => item.variants?.includes("peach"));

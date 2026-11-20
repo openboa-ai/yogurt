@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { agentShapes, agentVariants } from "../packages/web/src/identity/agent-family-data.ts";
 import { tracks } from "../packages/web/src/identity/avatar-pose-data.ts";
 
-const read = (name) => JSON.parse(readFileSync(new URL("../assets/agents/" + name, import.meta.url), "utf8"));
+const read = (name) => JSON.parse(readFileSync(new URL("../design/assets/agents/" + name, import.meta.url), "utf8"));
 const { eyeMarks } = read("avatar-motion.json");
 const { shapes, eyes, viewBox } = read("silhouettes.json");
 

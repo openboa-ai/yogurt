@@ -16,4 +16,4 @@ A roster shows many named agents in a small space. A reader should recognize a r
 
 Fifteen rounded silhouettes form the current set. Three or four sides are a design vocabulary, with only the fitted subset allowed on each silhouette. The art owner approves distinguishable fills and the product owns assignment and activity.
 
-[silhouettes.json](../../../../assets/agents/silhouettes.json) · [kai.svg](../../../../assets/agents/kai.svg) · [sol.svg](../../../../assets/agents/sol.svg) · [eye-motion.json](../../../../assets/agents/eye-motion.json) · [Agent motion](https://yogurt-theta.vercel.app/library.html#motion)
+[silhouettes.json](../../../../design/assets/agents/silhouettes.json) · [kai.svg](../../../../design/assets/agents/kai.svg) · [sol.svg](../../../../design/assets/agents/sol.svg) · [eye-motion.json](../../../../design/assets/agents/eye-motion.json) · [Agent motion](https://yogurt-theta.vercel.app/library.html#motion)

@@ -30,4 +30,4 @@ Exercise an enabled action, disabled or pending action, empty field, invalid edi
 
 **End scene.** Type into a named field, correct a validation error, then activate a labeled action with a keyboard. Observe the exact value and one callback. Repeating input while pending cannot submit a second command.
 
-**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Controls](https://yogurt-theta.vercel.app/system.html#controls) · [components.css](../../../../styles/components.css) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Controls](https://yogurt-theta.vercel.app/system.html#controls) · [components.css](../../../../design/styles/components.css) · [Delivery status and owner decisions](../../../status.md)

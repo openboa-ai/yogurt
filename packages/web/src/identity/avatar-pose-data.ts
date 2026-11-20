@@ -1,4 +1,4 @@
-// Generated from assets/agents/avatar-motion.json. See scripts/avatar-motion.mjs.
+// Generated from design/assets/agents/avatar-motion.json. See scripts/agents/avatar-motion.mjs.
 export type Transform = readonly [number, number, number, number, number];
 export type Pose = readonly [Transform, Transform, Transform];
 export const eyeMarks = {

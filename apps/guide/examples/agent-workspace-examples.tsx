@@ -16,7 +16,7 @@ import {
   type AgentPresence,
   type RuntimeState,
 } from "@openboa/yogurt";
-import { AgentWorkspace } from "../../../blocks/agent-workspace/web";
+import { AgentWorkspace } from "../../../packages/recipes/agent-workspace/web";
 
 const roster: AgentSummary[] = [
   {

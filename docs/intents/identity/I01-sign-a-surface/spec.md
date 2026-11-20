@@ -14,7 +14,7 @@ Parent: [originating intent, revision 2](intent.md). Review: NOT ACCEPTED. Desig
 
 | Change and contract | Proposed writer boundary | Consumer | Independent observer |
 | --- | --- | --- | --- |
-| [U01A · Place the master on a company surface](../../../engineering/identity/U01A-place-company-signature/spec.md) | `assets/logo` | Website headers, release credits and company introductions | A brand reviewer comparing the rendered header with the supplied master |
+| [U01A · Place the master on a company surface](../../../engineering/identity/U01A-place-company-signature/spec.md) | `design/assets/logo` | Website headers, release credits and company introductions | A brand reviewer comparing the rendered header with the supplied master |
 
 The change specifications identify their individual predecessors. The scene below checks their joined behavior.
 
@@ -24,4 +24,4 @@ Compare the company header, source master and co-attribution together. On a narr
 
 **End scene.** Open a company header at its 160 px example width and a project detail at message size. A fresh reader can locate the company signature, the project mark and the named agent in their respective roles.
 
-**Current sources and open decisions.** [Company signature](https://yogurt-theta.vercel.app/index.html#logo) · [upright-9.svg](../../../../assets/logo/upright-9.svg) · [openboa-lockup.svg](../../../../assets/logo/openboa-lockup.svg) · [Signature study](../../../../examples/signature/index.html) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [Company signature](https://yogurt-theta.vercel.app/index.html#logo) · [upright-9.svg](../../../../design/assets/logo/upright-9.svg) · [openboa-lockup.svg](../../../../design/assets/logo/openboa-lockup.svg) · [Signature study](../../../../examples/signature/index.html) · [Delivery status and owner decisions](../../../status.md)

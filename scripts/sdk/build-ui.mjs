@@ -49,10 +49,10 @@ for (const [key, file] of Object.entries({
 }))
   art[key] =
     "data:image/svg+xml;base64," +
-    Buffer.from(read("assets/" + file)).toString("base64");
+    Buffer.from(read("design/assets/" + file)).toString("base64");
 const agents = {};
 for (const name of ["Kai", "Sol"]) {
-  const svg = read("assets/agents/" + name.toLowerCase() + ".svg");
+  const svg = read("design/assets/agents/" + name.toLowerCase() + ".svg");
   const [, id, fill] = svg.match(/<use href="#([^"]+)" fill="([^"]+)"/);
   const path = svg.match(new RegExp('<path id="' + id + '" d="([^"]+)"'))[1];
   const [, x, y] = svg.match(/<circle cx="([^"]+)" cy="([^"]+)"/);
@@ -99,7 +99,7 @@ for (const block of blocks) {
   const item = {
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name: block.id, type: "registry:block", title: block.name, description: block.description,
-    files: [{ path: "blocks/" + block.id + ".tsx", target: "@components/blocks/" + block.id + ".tsx", type: "registry:component", content: read("blocks/" + block.id + "/web.tsx") }],
+    files: [{ path: "blocks/" + block.id + ".tsx", target: "@components/blocks/" + block.id + ".tsx", type: "registry:component", content: read("packages/recipes/" + block.id + "/web.tsx") }],
   };
   writeFileSync("registry/" + block.id + ".json", JSON.stringify(item, null, 2) + "\n");
 }
@@ -152,7 +152,7 @@ const entryPoints = Object.fromEntries([
 ]);
 const built = await build({
   entryPoints,
-  outdir: "dist",
+  outdir: "packages/web/dist",
   bundle: true,
   splitting: true,
   format: "esm",
@@ -169,8 +169,8 @@ const built = await build({
   logLevel: "silent",
 });
 const outputs = new Set(Object.keys(built.metafile.outputs));
-for (const file of readdirSync("dist/shared")) {
-  const path = "dist/shared/" + file;
+for (const file of readdirSync("packages/web/dist/shared")) {
+  const path = "packages/web/dist/shared/" + file;
   if (file.endsWith(".js") && !outputs.has(path)) unlinkSync(path);
 }
 const notices = new Map();
@@ -199,14 +199,14 @@ const notice = [...notices]
   .sort(([a], [b]) => a.localeCompare(b))
   .map(([name, body]) => name + "\n" + body)
   .join("\n\n");
-writeFileSync("dist/THIRD-PARTY-NOTICES.txt", notice.trimEnd() + "\n");
+writeFileSync("packages/web/dist/THIRD-PARTY-NOTICES.txt", notice.trimEnd() + "\n");
 const emittedDeclarations = new Set(
   declarations.split(/\r?\n/)
     .filter(line => line.startsWith("TSFILE: "))
     .map(line => resolve(line.slice("TSFILE: ".length))),
 );
-for (const file of readdirSync("dist", { recursive: true })) {
-  const path = resolve("dist", file);
+for (const file of readdirSync("packages/web/dist", { recursive: true })) {
+  const path = resolve("packages/web/dist", file);
   if (file.endsWith(".d.ts") && !emittedDeclarations.has(path)) unlinkSync(path);
 }
 console.log(

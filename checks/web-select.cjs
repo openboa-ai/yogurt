@@ -2,7 +2,7 @@ const { chromium } = require("playwright-core");
 const { pathToFileURL } = require("node:url");
 const { resolve } = require("node:path");
 const assert = require("node:assert/strict");
-const gallery = pathToFileURL(resolve(__dirname, "../components.html")).href;
+const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/components.html")).href;
 async function metrics(select) {
   return select.evaluate((el) => {
     const panel = getComputedStyle(el, "::picker(select)");

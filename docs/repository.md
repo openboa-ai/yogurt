@@ -17,16 +17,16 @@ The [design handbook](index.html) and [canonical portfolio](README.md) connect t
 
 | Responsibility | Edit here | What consumes it |
 | --- | --- | --- |
-| Brand and language | [Artwork and fonts](../assets/README.md), [approved terms](../content/terms.json), [numbered palette](../tokens/brand.json) and [UI roles](../tokens/ui.json) | The guide, SDK, brand CSS and Native theme |
+| Brand and language | [Design sources](../design/README.md), [approved terms](../design/content/terms.json), [numbered palette](../design/tokens/brand.json) and [UI roles](../design/tokens/ui.json) | The guide, SDK, brand CSS and Native theme |
 | Design contracts | [Catalog](../catalog/README.md) and the [paired design records](README.md) | The SDK, pattern lookup, guide and plugin |
-| Public rendering | [Web and Native adapters](../packages/README.md), [compositions](../blocks/) and [styles](../styles/) | Product apps, the guide and examples |
+| Public rendering | [Web and Native adapters](../packages/README.md), [composition recipes](../packages/recipes/README.md) and [styles](../design/styles/) | Product apps, the guide and examples |
 | Guide presentation | [Guide sources](../apps/guide/README.md), its browser runtime and the design records | Hosted and offline guide, including the generated handbook |
 | Product examples | [Examples](../examples/README.md) | The playbook, developers and design review |
 | Installation and agent workflows | [Consumer CLI](../bin/yogurt.mjs), [agent plugin](../plugins/README.md), [installed design entry](../DESIGN.md) | Products and their agents |
 | Verification | [Checks](../checks/README.md), [evals](../checks/evals/README.md) and the maintainers’ [evaluation skill](../.agents/skills/yogurt-evaluate/SKILL.md) | CI and Yogurt maintainers |
 | Build and release | [Maintainer entry points](../scripts/README.md) and [release records](releases/README.md) | Maintainers and pinned SDK consumers |
 
-The SDK build writes `dist/` and `registry/` from the renderer sources and component catalog. Update the source and regenerate the output together. The guide owns its HTML sources in `apps/guide/pages/` and its browser scripts in `apps/guide/runtime/`. The site build keeps the existing routes. The standalone galleries are generated SDK artifacts. The SDK [install guide](using-yogurt.md) and [plugin instructions](../plugins/yogurt/README.md) describe the pins each product selects.
+The SDK build writes `packages/web/dist/` and `registry/` from the renderer sources and component catalog. Update the source and regenerate the output together. The guide owns its HTML sources in `apps/guide/pages/` and its browser scripts in `apps/guide/runtime/`. The site build keeps the existing routes. The guide generator writes standalone galleries to `apps/guide/generated/`, and the SDK includes them for offline use. The SDK [install guide](using-yogurt.md) and [plugin instructions](../plugins/yogurt/README.md) describe the pins each product selects.
 
 The [Web source layout](../packages/web/README.md#source-layout) separates foundations, controls, compositions and identity. Catalog IDs resolve to the implementation during the build. The [maintainer tools](../scripts/README.md) divide generation by output owner. The [hosted guide build](../apps/guide/README.md#hosting) stages the same site for hosted and offline use from the authored pages, generated pages and shared assets.
 
@@ -54,7 +54,7 @@ Keep reference boards, generated alternatives and Stitch or Figma prototypes in 
 
 The proposed release manifest identifies a compatible version of the rules, tokens, adapter artifacts and notices, with immutable digests and per-target support. Record the accepted release once per consumer. A web-only project may derive that binding from its package lock if the guide, skill and checks can resolve the same manifest. A mixed-target project can declare surface paths in `yogurt.config.json` and generate a shared `yogurt.lock` for its builds and agent tools. Never maintain two independent version selections.
 
-An intent refers to one or more pattern IDs. It keeps the project-owned state mapping, permission source, effect, and test case. The optional agent skill reads the installed version. A developer can use the same catalog and check without installing a plugin. A short design entry that points from an agent to maintained project sources follows the approach Vercel describes for its own systems. [Vercel’s design.md](https://vercel.com/blog/how-our-agents-build-on-brand-pages-with-design-md)
+An intent refers to one or more pattern IDs. It keeps the project-owned state mapping, permission source, effect, and test case. The optional agent skill reads the installed version. A developer can use the same catalog and check without installing a plugin.
 
 Build app clients on Vercel Native SDK by default. The [native stack decision](native-stack.md) describes the markup, typed host messages and first native fixture. Build web clients on the same React DOM/CSS adapter for Next.js and Vite. Support a deliberate WebView as a web surface and test its return to the native host. For native-rendered views, map the common contract to the Native SDK and its supported native-rendered controls. Check keyboard and accessibility on that renderer. One adopting team can upgrade independently of the others. Rehearse the changed screens before switching its pin and retain the preceding working release. [Native SDK](https://github.com/vercel-labs/native) · [Adoption and rollback](https://yogurt-theta.vercel.app/adoption.html#releases)
 

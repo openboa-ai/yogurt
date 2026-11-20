@@ -7,16 +7,16 @@ const { default: sharp } = await import(
 const output = "packages/native/controls/art";
 mkdirSync(output, { recursive: true });
 const assets = {
-  openboa: "assets/logo/upright-9.svg",
-  meatball: "assets/projects/meatball.svg",
-  sourdough: "assets/projects/sourdough.svg",
-  yogurt: "assets/projects/yogurt.svg",
-  kai_ready: "assets/agents/kai.svg",
-  sol_ready: "assets/agents/sol.svg",
-  kai_working: "assets/agents/kai.svg",
-  sol_working: "assets/agents/sol.svg",
+  openboa: "design/assets/logo/upright-9.svg",
+  meatball: "design/assets/projects/meatball.svg",
+  sourdough: "design/assets/projects/sourdough.svg",
+  yogurt: "design/assets/projects/yogurt.svg",
+  kai_ready: "design/assets/agents/kai.svg",
+  sol_ready: "design/assets/agents/sol.svg",
+  kai_working: "design/assets/agents/kai.svg",
+  sol_working: "design/assets/agents/sol.svg",
 };
-const motion = JSON.parse(readFileSync("assets/agents/eye-motion.json", "utf8"))
+const motion = JSON.parse(readFileSync("design/assets/agents/eye-motion.json", "utf8"))
   .states.working.eyeTranslation;
 for (const [name, source] of Object.entries(assets)) {
   let svg = readFileSync(source, "utf8");

@@ -1,9 +1,9 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const read = (name) => readFileSync(name, "utf8");
-const { shapes, eyes } = JSON.parse(read("assets/agents/silhouettes.json"));
-const { colors, shapes: fits } = JSON.parse(read("assets/agents/animation-fits.json"));
-const palette = JSON.parse(read("tokens/brand.json")).color;
+const { shapes, eyes } = JSON.parse(read("design/assets/agents/silhouettes.json"));
+const { colors, shapes: fits } = JSON.parse(read("design/assets/agents/animation-fits.json"));
+const palette = JSON.parse(read("design/tokens/brand.json")).color;
 
 function paletteColor(token) {
   const [family, level] = token.split(".");
@@ -50,7 +50,7 @@ for (const shape of shapes) {
 
   const group = { name: shape.name, color: shape.color, center: shape.eyeCenter, motion: id === "sol" ? "sol" : "kai", fit };
   groups[id] = group;
-  const master = read("assets/agents/" + shape.file);
+  const master = read("design/assets/agents/" + shape.file);
   for (const notch of shape.positions) {
     const variant = id + "-" + notch;
     if (!["top", "right", "bottom", "left"].includes(notch) || Object.hasOwn(variants, variant)) {
