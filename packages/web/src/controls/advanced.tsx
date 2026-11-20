@@ -506,13 +506,13 @@ export function Carousel({
           <IconButton
             icon="back"
             label="Previous slide"
-            disabled={!current}
+            aria-disabled={!current || undefined}
             onClick={() => move(-1)}
           />
           <IconButton
             icon="next"
             label="Next slide"
-            disabled={current >= items.length - 1}
+            aria-disabled={current >= items.length - 1 || undefined}
             onClick={() => move(1)}
           />
         </div>

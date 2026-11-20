@@ -6740,7 +6740,7 @@ function Carousel({
               {
                 icon: "back",
                 label: "Previous slide",
-                disabled: !current,
+                "aria-disabled": !current || void 0,
                 onClick: () => move(-1)
               }
             ),
@@ -6749,7 +6749,7 @@ function Carousel({
               {
                 icon: "next",
                 label: "Next slide",
-                disabled: current >= items.length - 1,
+                "aria-disabled": current >= items.length - 1 || void 0,
                 onClick: () => move(1)
               }
             )

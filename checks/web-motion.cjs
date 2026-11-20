@@ -275,9 +275,10 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     }
 
     const progress = await open("progress");
-    await progress.getByRole("button", {name: "Review next record"}).click();
     const value = progress.getByRole("progressbar");
-    assert.equal(await value.getAttribute("value"), "1");
+    const initial = Number(await value.getAttribute("value"));
+    await progress.getByRole("button", {name: "Review next record"}).click();
+    assert.equal(Number(await value.getAttribute("value")), initial + 1);
     assert(await progress.locator(".yg-progress-track > span").evaluate(el =>
       getComputedStyle(el).transitionProperty.includes("transform")));
 

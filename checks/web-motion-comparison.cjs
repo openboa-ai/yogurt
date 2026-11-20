@@ -124,6 +124,11 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     assert.equal(await carousel.locator('[aria-live]').textContent(), "Draft · 2 / 3");
     assert(await next.evaluate(node => node === document.activeElement));
     assert.equal(await carousel.getByRole("heading", {name: "Review the brief"}).count(), 0);
+    await page.keyboard.press("Enter");
+    assert.equal(await next.getAttribute("aria-disabled"), "true");
+    await page.keyboard.press("Enter");
+    assert(await next.evaluate(node => node === document.activeElement));
+    assert.equal(await carousel.locator('[aria-live]').textContent(), "Review · 3 / 3");
 
     const narrow = await browser.newPage({
       viewport: {width: 360, height: 700}, hasTouch: true,

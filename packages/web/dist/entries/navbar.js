@@ -1,7 +1,7 @@
 "use client";
 import {
   Navbar
-} from "../shared/chunk-IYJZZXUD.js";
+} from "../shared/chunk-4G43ASAW.js";
 import "../shared/chunk-UNNWL6Q6.js";
 import "../shared/chunk-7OVEFMFK.js";
 import "../shared/chunk-5GJUJT3P.js";
