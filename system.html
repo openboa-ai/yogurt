@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Design system · yogurt</title>
+  <link rel="icon" href="assets/logo/upright-9.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/components.css">
+  <link rel="stylesheet" href="styles/specimen.css">
+  <link rel="stylesheet" href="styles/system.css">
+  <script defer src="apps/guide/runtime/system.js"></script>
+  <link rel="stylesheet" href="styles/guide.css">
+</head>
+<body>
+  <header><div class="masthead">
+    <div class="imprint"><b>yogurt</b><span>ships with live cultures</span></div>
+    <nav aria-label="Guide"><a href="index.html">Brand</a><a href="system.html" aria-current="page">Design system</a><a href="library.html">Design sources</a><a href="adoption.html">Project use</a><a href="components.html">Components</a></nav>
+  </div></header>
+  <main class="system-guide">
+    <div class="system-title">
+      <h1>Design system</h1>
+      <p class="system-lede">Use these foundations to build a product screen. The agent roster shows how the same type, colors and controls work together when someone searches, filters and starts again.</p>
+      <nav aria-label="On this page"><a href="examples/basic-controls/index.html">First four controls</a><a href="#type">Type</a><a href="#color">Color</a><a href="#dimensions">Dimensions</a><a href="#controls">Controls</a><a href="#catalog">Catalog</a><a href="#components">Roster pattern</a><a href="#handoff">Use in an app</a><a href="docs/index.html">Design handbook</a></nav>
+    </div>
+    <section id="type" class="spread" aria-labelledby="type-title">
+      <div class="margin"><h2 id="type-title">Typography</h2><p>Rethink Sans</p></div>
+      <div>
+        <p class="section-intro">Choose the role first. A title introduces a page, body text carries the explanation, and an interface label names an action or value. The figures give size and line height in pixels, followed by weight.</p>
+        <ul class="type-scale" aria-label="Type size, line height and weight">
+          <li><span style="--size:var(--boa-size-headline);--line:var(--boa-line-height-headline)">Headline</span><small>48 / 52 · 525</small></li>
+          <li><span style="--size:var(--boa-size-title);--line:var(--boa-line-height-title)">Title</span><small>32 / 36 · 525</small></li>
+          <li><span style="--size:var(--boa-size-subheading);--line:var(--boa-line-height-subheading)">Subheading</span><small>20 / 28 · 525</small></li>
+          <li><span style="--size:var(--boa-size-body);--line:var(--boa-line-height-body);--weight:var(--boa-role-weight-body)">Body</span><small>16 / 24 · 425</small></li>
+          <li><span style="--size:var(--boa-size-ui);--line:var(--boa-line-height-ui);--weight:var(--boa-role-weight-ui)">Interface</span><small>14 / 20 · 550</small></li>
+          <li><span style="--size:var(--boa-size-caption);--line:var(--boa-line-height-caption);--weight:var(--boa-role-weight-body)">Caption</span><small>12 / 16 · 425</small></li>
+        </ul>
+        <p class="resource-link">Use <code>.boa-numbers</code> on comparable IDs, times and amounts. The company wordmark uses its own outlined 760 artwork. <a href="index.html#logo">Choose a logo master</a></p>
+      </div>
+    </section>
+    <section id="color" class="spread" aria-labelledby="color-title">
+      <div class="margin"><h2 id="color-title">Color</h2><p>Hue and lightness</p></div>
+      <div class="boa-surface" id="palette">
+        <p class="section-intro">All 267 colors belong to one library. Pick a hue and a lightness step, then use that token wherever the product needs it. Each token keeps its value across themes.</p>
+        <label class="boa-field family">Color family<select class="boa-input" id="hue"></select></label>
+        <div class="swatches" id="swatches" role="group" aria-label="Color steps"></div>
+        <div class="token-choice">
+          <div><output id="color-name" for="hue"></output><span class="quiet" id="color-hex"></span></div>
+          <button type="button" class="boa-button" id="copy-token">Copy CSS token</button>
+        </div>
+        <input class="boa-input copy-fallback" aria-label="CSS token to copy" id="copy-fallback" readonly hidden>
+        <p class="feedback" id="copy-status" role="status"></p>
+        <h3 class="manual-subtitle">Color in context</h3>
+        <div class="contrast-pairs">
+          <figure><div class="pair-light"><span>Ready</span></div><figcaption><strong>7.85∶1</strong><br>sage.750 on gray-green.50</figcaption></figure>
+          <figure><div class="pair-dark"><span>Ready</span></div><figcaption><strong>9.68∶1</strong><br>sage.200 on gray-green.950</figcaption></figure>
+        </div>
+        <p class="aside-note">The same status uses a lighter sage on the dark surface. Both examples keep the text label and exceed the 4.5∶1 threshold for normal text. Check the actual foreground and background together. <a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">W3C text contrast guidance</a></p>
+        <noscript><p><a href="tokens/brand.json">Open the complete color palette</a></p></noscript>
+      </div>
+    </section>
+    <section id="dimensions" class="spread" aria-labelledby="dimensions-title">
+      <div class="margin"><h2 id="dimensions-title">Dimensions</h2><p>Design pixels</p></div>
+      <div>
+        <p class="section-intro">In the roster, 4 px joins a label to its field, 12 px separates the filters, and 24 px frames the panel. On narrow screens the panel inset becomes 16 px. Use the smaller gaps for elements people read together.</p>
+        <h3>Spacing</h3>
+        <ul class="space-scale" id="spaces" aria-label="Spacing scale in pixels"></ul>
+        <dl class="dimensions">
+          <div><dt>Corners</dt><dd>Existing kit: 6 px controls · 12 px panels · fully round indicators. <a href="examples/basic-controls/index.html">Compare proposed control shapes</a></dd></div>
+          <div><dt>Controls</dt><dd>40 px height · 44 px on touch</dd></div>
+          <div><dt>Lines</dt><dd>1 px rules · 2 px focus outlines</dd></div>
+        </dl>
+      </div>
+    </section>
+    <section id="controls" class="spread" aria-labelledby="controls-title">
+      <div class="margin"><h2 id="controls-title">Controls</h2></div>
+      <div class="reading">
+        <dl class="guide-rows">
+          <div><dt>Field and select</dt><dd>Keep <strong>Find an agent</strong> visible above the search input as someone types. The hint “Name or ID” explains acceptable input. Use a select for a short, fixed set such as agent status. Both controls use <code>.boa-field</code> and <code>.boa-input</code>.</dd></div>
+          <div><dt>Button</dt><dd>Name the effect with a verb and an object. <strong>Copy CSS token</strong> uses the filled button. <strong>Clear filters</strong> is a secondary action and becomes available when a filter can be cleared. Use <code>.boa-button</code> and <code>data-kind="secondary"</code> for that variant.</dd></div>
+          <div><dt>Checkbox</dt><dd>Use <code>.boa-check</code> on the label around a native checkbox. In the roster, activating either the box or “Dark surface” changes the preview in place.</dd></div>
+          <div><dt>Row and status</dt><dd>Put a row that reveals details inside a native disclosure. Use <code>.boa-row</code> on its summary and <code>.boa-state</code> for the visible status word. A person can read “Ready” or “Working” without relying on the dot color.</dd></div>
+        </dl>
+      </div>
+    </section>
+    <section id="catalog" class="spread"><div class="margin"><h2>Component catalog</h2><p><a href="components.html">Open the live Yogurt component library</a> for individual web and Zig entries. The original task recipes follow below.</p></div><div class="reading">
+      <p>Begin with a control people already know. Compose controls around the task and document what happens if the data, the space or the person’s input changes.</p>
+      <p><a href="playbook.html">Choose a screen pattern</a> · <a href="docs/action-menu.md">Use the action menu</a> · <a href="catalog/patterns.json">Read component availability</a></p>
+      <dl class="guide-rows">
+        <div><dt>Actions and forms</dt><dd>The current kit includes buttons, a checkbox, search and select fields. For validation, add a comprehensible message beside the affected field and keep its label visible.</dd></div>
+        <div><dt>Lists and status</dt><dd>Rows, disclosure, text status, search and reset work in the <a href="#components">agent roster</a>. A separate <a href="patterns/task-states.html">task list source</a> covers loading, empty, error, retry and recovered focus.</dd></div>
+        <div><dt>Navigation and layout</dt><dd>The guide uses a compact header, chapter links and a two-column layout that stacks on a narrow screen. Future product shells need their own navigation, back behavior and persistent selection.</dd></div>
+        <div><dt>Decisions and overlays</dt><dd>Design the dialog, menu and progress patterns around a real decision. Record the accessible name, initial focus, cancel action, a pending state and the destination of focus after dismissal.</dd></div>
+        <div><dt>Information and identity</dt><dd>Use the <a href="library.html#data">chart and values table</a> for measured quantities, <a href="library.html#icons">icons</a> for actions and <a href="library.html#agents">agent artwork</a> to identify who is involved.</dd></div>
+      </dl></div></section>
+    <section id="components" class="spread" aria-labelledby="components-title">
+      <div class="margin"><h2 id="components-title">Find an agent</h2><p>Roster pattern</p></div>
+      <div>
+        <p class="section-intro">Use this pattern when someone needs to return to a particular agent. Search narrows the list by name or ID. Status narrows the same results. Opening a row reveals the ID in place.</p>
+        <div id="roster" class="boa-surface boa-panel">
+          <div class="roster-head"><h3>Agent roster</h3><label class="boa-check"><input type="checkbox" id="dark-surface">Dark surface</label></div>
+          <div class="roster-controls">
+            <label class="boa-field">Find an agent<input class="boa-input" type="search" id="agent-search" placeholder="Name or ID" autocomplete="off"></label>
+            <label class="boa-field">Status<select class="boa-input" id="agent-status"><option value="all">All</option><option value="ready">Ready</option><option value="working">Working</option></select></label>
+          </div>
+          <ul class="boa-list" id="agent-list">
+            <li data-name="Kai" data-id="014" data-state="ready"><details><summary class="boa-row"><span>Kai</span><span class="boa-state" data-state="ready">Ready</span></summary><p class="boa-row-detail boa-numbers">Agent ID 014</p></details></li>
+            <li data-name="Sol" data-id="021" data-state="working"><details><summary class="boa-row"><span>Sol</span><span class="boa-state">Working</span></summary><p class="boa-row-detail boa-numbers">Agent ID 021</p></details></li>
+          </ul>
+          <p class="empty" id="empty" hidden>No matching agents.</p>
+          <div class="roster-footer"><span class="boa-numbers" id="agent-count" role="status">2 agents</span><button class="boa-button" data-kind="secondary" id="clear" type="button" disabled>Clear filters</button></div>
+        </div>
+        <details class="guide-detail"><summary>Keyboard and recovery</summary>
+          <ol>
+            <li>Search for <strong>014</strong>. Kai is the remaining match and the result count updates.</li>
+            <li>Choose <strong>Working</strong>. The list reads “No matching agents.” The search and status remain visible.</li>
+            <li>Activate <strong>Clear filters</strong>. Both agents return, focus moves to the search field, and the reset button becomes disabled.</li>
+            <li>Tab to a row. Enter or Space opens its details. Press the same key again to close it.</li>
+          </ol>
+        </details>
+        <p class="resource-link"><a href="styles/components.css" download>Component CSS</a> &nbsp; <a href="tokens/brand.json" download>Shared tokens</a></p>
+      </div>
+    </section>
+    <section id="handoff" class="spread files" aria-labelledby="handoff-title">
+      <div class="margin"><h2 id="handoff-title">Use in an app</h2></div>
+      <div class="reading">
+        <h3>Web</h3>
+        <p>From a page beside this guide, load the component stylesheet and put the control inside a <code>boa-surface</code>. This example gives the search input its font, visible label, spacing and focus ring.</p>
+        <pre class="markup"><code>&lt;link rel="stylesheet" href="./styles/components.css"&gt;
+
+&lt;div class="boa-surface"&gt;
+  &lt;label class="boa-field"&gt;
+    Find an agent
+    &lt;input class="boa-input" type="search" name="agent"&gt;
+  &lt;/label&gt;
+&lt;/div&gt;</code></pre>
+        <p>For a root-hosted Next.js or Vite site, copy <code>styles/</code> and <code>assets/fonts/</code> into <code>public/yogurt/</code>, keeping those subdirectory names, and load <code>/yogurt/styles/components.css</code>. Keep the relative asset paths together. The stylesheet imports the font faces and generated tokens. Add <code>data-appearance="dark"</code> to a surface for its dark treatment.</p>
+        <h3>Native</h3>
+        <p>The native handoff consists of the outlined artwork, the token JSON and the upright and italic variable TTFs. The PostScript names are <code>RethinkSans-Regular</code> and <code>RethinkSans-Italic</code>. Set the weight axis from <code>type.roleWeight</code> and apply the dimensions in the platform’s logical units. The roster on this page demonstrates browser behavior.</p>
+        <p class="guide-link"><a href="adoption.html#platforms">How projects would share web and native releases</a></p>
+        <h3>Update a token</h3>
+        <p>Edit <code>tokens/brand.json</code> and run <code>node scripts/export-css.mjs</code> from the kit. Keep the resulting <code>styles/tokens.css</code> with the source JSON. <a href="index.html#files">Files and font license</a></p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

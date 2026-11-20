@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="police officer: dark skin tone"><title>police officer: dark skin tone</title><path d="M7 54C9 46 18 43 24 42H40C48 43 56 47 57 55Q57 59 53 59H11Q6 59 7 54Z" data-fill="blue.850" fill="#0D305F" />
+<path d="M23 40H41V47Q40 52 32 52Q24 52 23 47Z" data-fill="paper.200" fill="#E0DCD3" />
+<path d="M25 39H39V46Q37 49 32 49Q27 49 25 46Z" data-fill="earth.950" fill="#2A231E" />
+<path d="M12 26C10 14 16 7 25 5Q30 4 35 6C42 6 47 10 50 15Q53 21 51 31Q48 37 48 41H17Q11 36 12 26Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="16" cy="30" rx="5" ry="6" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="48" cy="30" rx="5" ry="6" data-fill="earth.950" fill="#2A231E" />
+<path d="M16 23C16 15 23 12 32 12C41 12 48 17 48 24V32C48 40 43 44 37 47Q32 49 27 47C21 45 16 41 16 33Z" data-fill="earth.800" fill="#4F4034" />
+<path d="M13 30Q9 21 14 14Q20 3 36 6Q43 6 48 13Q54 19 49 29L43 21Q37 23 31 19Q25 23 19 21L18 29Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="24" cy="29.5" rx="3" ry="2.2" data-fill="coral.100" fill="#F5E0D7" />
+<circle cx="24" cy="29.5" r="1.7" data-fill="neutral.1000" fill="#121212" />
+<ellipse cx="40" cy="29.5" rx="3" ry="2.2" data-fill="coral.100" fill="#F5E0D7" />
+<circle cx="40" cy="29.5" r="1.7" data-fill="neutral.1000" fill="#121212" />
+<path d="M28 39Q32 42 36 39" fill="none" data-stroke="coral.300" stroke="#D5A59A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M12 19L9 12Q8 8 14 7L32 3L51 8Q55 9 53 14L49 20Z" data-fill="blue.800" fill="#0E3D78" />
+<path d="M13 17Q32 13 48 17L45 21Q32 25 13 20Z" data-fill="blue.950" fill="#07152B" />
+<path d="M28 8L32 7L36 8L35 13L32 15L29 13Z" data-fill="yellow.400" fill="#DEC556" />
+<path d="M42 49L47 47L51 49L50 54L46 57L42 54Z" data-fill="yellow.400" fill="#DEC556" />
+</svg>

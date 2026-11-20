@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="woman with headscarf: dark skin tone"><title>woman with headscarf: dark skin tone</title><path d="M7 56Q10 44 23 41H41Q55 44 57 56Q58 59 53 60H11Q6 60 7 56Z" data-fill="purple.700" fill="#653F91" />
+<path d="M13 16C16 7 25 4 34 4Q49 5 52 19L52 34Q54 45 59 52L55 59H8Q5 57 8 52Q13 41 11 27Z" data-fill="purple.700" fill="#653F91" />
+<path d="M17 23Q23 18 32 17Q41 17 47 24L46 34Q43 45 32 47Q21 45 18 34Z" data-fill="earth.800" fill="#4F4034" />
+<ellipse cx="24" cy="30" rx="3" ry="2.2" data-fill="coral.100" fill="#F5E0D7" />
+<circle cx="24" cy="30" r="1.7" data-fill="neutral.1000" fill="#121212" />
+<ellipse cx="40" cy="30" rx="3" ry="2.2" data-fill="coral.100" fill="#F5E0D7" />
+<circle cx="40" cy="30" r="1.7" data-fill="neutral.1000" fill="#121212" />
+<path d="M28 39Q32 42 36 39" fill="none" data-stroke="coral.300" stroke="#D5A59A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M12 53Q27 51 36 46Q43 42 47 34" fill="none" data-stroke="purple.400" stroke="#B28CE0" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

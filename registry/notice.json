@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "notice",
+  "type": "registry:ui",
+  "title": "Notice",
+  "description": "Keep a consequential message beside the task.",
+  "files": [
+    {
+      "path": "ui/notice.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Notice } from \"@openboa/yogurt/notice\";\n"
+    }
+  ]
+}

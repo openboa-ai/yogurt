@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "text-field",
+  "type": "registry:ui",
+  "title": "TextField",
+  "description": "Edit one line without losing a draft.",
+  "files": [
+    {
+      "path": "ui/text-field.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { TextField } from \"@openboa/yogurt/text-field\";\n"
+    }
+  ]
+}

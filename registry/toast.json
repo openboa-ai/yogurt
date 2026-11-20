@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "toast",
+  "type": "registry:ui",
+  "title": "Toast",
+  "description": "Acknowledge a completed action.",
+  "files": [
+    {
+      "path": "ui/toast.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Toast } from \"@openboa/yogurt/toast\";\n"
+    }
+  ]
+}

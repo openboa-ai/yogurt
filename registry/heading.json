@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "heading",
+  "type": "registry:ui",
+  "title": "Heading",
+  "description": "Name a section on its reading edge.",
+  "files": [
+    {
+      "path": "ui/heading.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Heading } from \"@openboa/yogurt/heading\";\n"
+    }
+  ]
+}

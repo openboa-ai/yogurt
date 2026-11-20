@@ -1,0 +1,554 @@
+{
+  "formatVersion": 1,
+  "components": [
+    {
+      "id": "button",
+      "name": "Button",
+      "web": "web-css",
+      "native": "planned",
+      "source": "system.html#controls",
+      "use": "Give the primary action a verb and an object. Use the secondary variant for a reversible alternative.",
+      "webBinding": {
+        "markup": "button[type=\"button\"]",
+        "selector": ".boa-button",
+        "entry": "styles/components.css",
+        "surface": ".boa-surface"
+      },
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/button",
+          "registry": "registry/button.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/button.native",
+          "install": "yogurt add button --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "search-field",
+      "name": "Search field",
+      "web": "web-css",
+      "native": "planned",
+      "source": "system.html#controls",
+      "use": "Keep a visible label and a clear way back to the complete collection.",
+      "webBinding": {
+        "markup": "label + input[type=\"search\"]",
+        "selector": ".boa-field, .boa-input",
+        "entry": "styles/components.css",
+        "surface": ".boa-surface"
+      },
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/search-field",
+          "registry": "registry/search-field.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/search-field.native",
+          "install": "yogurt add search-field --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "select",
+      "name": "Select",
+      "web": "web-css",
+      "native": "planned",
+      "source": "system.html#controls",
+      "use": "Choose one option from a short, stable list. Keep the selected value visible.",
+      "webBinding": {
+        "markup": "label + select",
+        "selector": ".boa-field, .boa-input",
+        "entry": "styles/components.css",
+        "surface": ".boa-surface"
+      },
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/select",
+          "registry": "registry/select.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/select.native",
+          "install": "yogurt add select --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "disclosure-row",
+      "name": "Disclosure row",
+      "web": "web-css",
+      "native": "planned",
+      "source": "system.html#controls",
+      "use": "Keep the row label visible when it opens. Announce whether the details are expanded and keep focus on the same control.",
+      "webBinding": {
+        "markup": "details > summary",
+        "selector": ".boa-row",
+        "entry": "styles/components.css",
+        "surface": ".boa-surface"
+      },
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/disclosure-row",
+          "registry": "registry/disclosure-row.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/disclosure-row.native",
+          "install": "yogurt add disclosure-row --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "status",
+      "name": "Status text",
+      "web": "web-css",
+      "native": "planned",
+      "source": "system.html#controls",
+      "use": "Name the observed condition in words. Use color as a supporting cue.",
+      "webBinding": {
+        "markup": "span with a visible status word",
+        "selector": ".boa-state",
+        "entry": "styles/components.css",
+        "surface": ".boa-surface"
+      },
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/status",
+          "registry": "registry/status.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/status.native",
+          "install": "yogurt add status --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "result",
+      "name": "Result message",
+      "web": "web-example",
+      "native": "planned",
+      "source": "patterns/task-states.html",
+      "use": "Explain the result of a read, what remains and an available recovery action.",
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/result",
+          "registry": "registry/result.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/result.native",
+          "install": "yogurt add result --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "record-facts",
+      "name": "Record facts",
+      "web": "contract",
+      "native": "planned",
+      "source": "catalog/patterns.json",
+      "use": "Pair a short label with a value and its source revision. Omit restricted fields.",
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/record-facts",
+          "registry": "registry/record-facts.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/record-facts.native",
+          "install": "yogurt add record-facts --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "confirm-dialog",
+      "name": "Confirmation dialog",
+      "web": "contract",
+      "native": "planned",
+      "source": "catalog/patterns.json",
+      "use": "Describe the exact effect before confirmation. Place initial focus on a safe control and restore it on dismissal.",
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/confirm-dialog",
+          "registry": "registry/confirm-dialog.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/confirm-dialog.native",
+          "install": "yogurt add confirm-dialog --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "receipt",
+      "name": "Request receipt",
+      "web": "contract",
+      "native": "planned",
+      "source": "catalog/patterns.json",
+      "use": "Show the original request reference and the recorded outcome. Keep an uncertain outcome visible until reconciled.",
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/receipt",
+          "registry": "registry/receipt.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/receipt.native",
+          "install": "yogurt add receipt --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    },
+    {
+      "id": "action-menu",
+      "name": "Action menu",
+      "web": "web-dom",
+      "native": "planned",
+      "source": "docs/action-menu.md",
+      "use": "Group related secondary commands behind a named trigger. Use a select for a persistent field value.",
+      "states": [
+        "closed",
+        "pressed",
+        "opening",
+        "open",
+        "dismissed"
+      ],
+      "keyboard": "Enter, Space or Arrow Down opens on the first item. Arrow Up can open on the last. Home, End and arrow keys move between items. Escape returns to the trigger. Tab continues in document order.",
+      "sources": {
+        "behavior": "scripts/action-menu.js",
+        "style": "styles/action-menu.css",
+        "example": "playbook.html#usage"
+      },
+      "webBinding": {
+        "markup": "button[aria-haspopup=\"menu\"] + [role=\"menu\"]",
+        "selector": ".yg-menu",
+        "entry": "scripts/action-menu.js",
+        "surface": ".boa-surface"
+      },
+      "sdk": {
+        "web": {
+          "entry": "@openboa/yogurt/action-menu",
+          "registry": "registry/action-menu.json"
+        },
+        "native": {
+          "entry": "packages/native/controls/items/action-menu.native",
+          "install": "yogurt add action-menu --target native",
+          "evidence": "typed Zig widget tree"
+        }
+      }
+    }
+  ],
+  "patterns": [
+    {
+      "id": "pattern.review-decision",
+      "name": "Review a decision",
+      "when": "A person has a specific choice to make and must understand its effect before committing.",
+      "productInputs": [
+        "Decision identity and scope",
+        "Current revision and observed state",
+        "Consequences, allowed options and authority",
+        "Submission and original receipt lookup supplied by the product"
+      ],
+      "components": [
+        "status",
+        "record-facts",
+        "button",
+        "confirm-dialog",
+        "receipt"
+      ],
+      "states": [
+        {
+          "id": "ready",
+          "label": "Awaiting a decision",
+          "when": "The source confirms a current decision and the person may act.",
+          "show": "Identify the subject, the consequence, the owner and the available options.",
+          "action": "Open the named decision. Ask for confirmation when its consequence warrants it.",
+          "acceptance": "Opening, examining and dismissing the decision sends zero commands."
+        },
+        {
+          "id": "changed",
+          "label": "Changed since opening",
+          "when": "The source revision changes during review.",
+          "show": "Explain what changed and return to the current facts.",
+          "action": "Review the latest revision before choosing again.",
+          "acceptance": "The previous confirmation cannot submit against a newer revision."
+        },
+        {
+          "id": "denied",
+          "label": "Action unavailable",
+          "when": "The person may see the record but cannot make this change.",
+          "show": "Explain the available authority or next contact. Show only authorized facts.",
+          "action": "Return to the record.",
+          "acceptance": "No command is available from this state."
+        },
+        {
+          "id": "submitted",
+          "label": "Request sent",
+          "when": "A single explicit action has created a request.",
+          "show": "Hand off to the original request receipt. Keep the outcome open.",
+          "action": "Check the original receipt.",
+          "acceptance": "A repeated click, navigation or reopen cannot create a second request."
+        }
+      ],
+      "copy": "Name the consequence. Keep the button specific, for example “Pause run”. Reserve success language for an observed outcome.",
+      "keyboard": "Support keyboard review and dismissal. Restore focus to the opener or the next logical row when the opener no longer exists.",
+      "support": {
+        "web": {
+          "level": "guide-example",
+          "detail": "Illustrated state and control choices in the local playbook. The shared dialog package is proposed."
+        },
+        "native": {
+          "level": "contract",
+          "detail": "Behavior documented. A renderer and packaged-platform evidence are needed."
+        }
+      },
+      "related": [
+        "pattern.track-request"
+      ]
+    },
+    {
+      "id": "pattern.inspect-record",
+      "name": "Inspect a record",
+      "when": "Someone needs to see what is known about a record and how current that knowledge is.",
+      "productInputs": [
+        "Authorized fields and record identity",
+        "Revision and as-of time from the source",
+        "Coverage, freshness and current access",
+        "A read-only refresh action if supported"
+      ],
+      "components": [
+        "status",
+        "record-facts",
+        "disclosure-row",
+        "result",
+        "button"
+      ],
+      "states": [
+        {
+          "id": "loading",
+          "label": "Loading",
+          "when": "The first authorized read is in flight.",
+          "show": "Give the region a readable loading state and leave unknown values open.",
+          "action": "Wait for the first response.",
+          "acceptance": "Loading never displays a previous principal’s values."
+        },
+        {
+          "id": "ready",
+          "label": "Current",
+          "when": "A complete authorized projection has arrived for this subject.",
+          "show": "Lead with the record, the observed revision and the as-of time.",
+          "action": "Inspect details.",
+          "acceptance": "Opening and expanding the record issue zero operational commands."
+        },
+        {
+          "id": "partial",
+          "label": "Partial coverage",
+          "when": "Only part of the authorized projection is available.",
+          "show": "Keep known fields and label the missing sections.",
+          "action": "Refresh the missing read when available.",
+          "acceptance": "Missing values are never rendered as zero, empty or complete."
+        },
+        {
+          "id": "stale",
+          "label": "Last confirmed",
+          "when": "An earlier projection may still be shown under current access.",
+          "show": "Retain the authorized values with their original revision and time.",
+          "action": "Refresh the read.",
+          "acceptance": "When a refresh fails the old values retain their original timestamp."
+        },
+        {
+          "id": "empty",
+          "label": "No record yet",
+          "when": "An authorized, successful read returned no records in this scope.",
+          "show": "Explain what would create the first record in this context.",
+          "action": "Return to the collection.",
+          "acceptance": "An empty response is distinguishable from a denied or failed read."
+        },
+        {
+          "id": "denied",
+          "label": "Access unavailable",
+          "when": "Current access is denied, unknown after a principal change, or withdrawn.",
+          "show": "Clear previous values, revision details and private labels.",
+          "action": "Return to an authorized view.",
+          "acceptance": "Remove cached details on access loss or account change before the next render. A late response from the old account cannot restore them."
+        },
+        {
+          "id": "failed",
+          "label": "Could not load",
+          "when": "The read failed and no displayable authorized projection remains.",
+          "show": "Explain the failed read and what can be retried.",
+          "action": "Retry the read.",
+          "acceptance": "Retry sends one read and zero operational commands."
+        }
+      ],
+      "copy": "Use “Last confirmed” with the source time. Use “Unavailable” for a missing field. The time the screen opened cannot supply freshness.",
+      "keyboard": "Keep disclosure triggers in reading order. Keep refresh feedback near its trigger. Return focus to a surviving control if access disappears.",
+      "support": {
+        "web": {
+          "level": "guide-example",
+          "detail": "State examples in the local playbook. The record-facts component is proposed."
+        },
+        "native": {
+          "level": "contract",
+          "detail": "Behavior documented. A renderer and packaged-platform evidence are needed."
+        }
+      },
+      "related": []
+    },
+    {
+      "id": "pattern.track-request",
+      "name": "Track a request",
+      "when": "A command has been sent and the reader needs a truthful outcome.",
+      "productInputs": [
+        "Original request identity",
+        "Latest acknowledgement and effective revision",
+        "Permitted read of that same receipt"
+      ],
+      "components": [
+        "status",
+        "receipt",
+        "result",
+        "button"
+      ],
+      "states": [
+        {
+          "id": "pending",
+          "label": "Pending",
+          "when": "The source admits the request and has yet to report a final result.",
+          "show": "Show the original request reference and observed pending time.",
+          "action": "Check the receipt.",
+          "acceptance": "Polling and reopening retain the same request ID."
+        },
+        {
+          "id": "unknown",
+          "label": "Outcome unknown",
+          "when": "The acknowledgement was lost or the result is unavailable.",
+          "show": "Name the uncertainty and show the original reference.",
+          "action": "Look up the original request.",
+          "acceptance": "Recovery performs a lookup and sends zero new commands."
+        },
+        {
+          "id": "applied",
+          "label": "Applied",
+          "when": "The source confirms the change took effect.",
+          "show": "Show the recorded outcome and the effective revision.",
+          "action": "View the updated record.",
+          "acceptance": "Success requires the product’s authoritative observation."
+        },
+        {
+          "id": "denied",
+          "label": "Denied",
+          "when": "The source denied the command.",
+          "show": "Explain the denial in terms the person can act on.",
+          "action": "Return to the record.",
+          "acceptance": "No effective revision is invented."
+        },
+        {
+          "id": "conflict",
+          "label": "Revision changed",
+          "when": "The decision was made using stale facts.",
+          "show": "Return to the latest facts with a clear explanation.",
+          "action": "Review the new revision.",
+          "acceptance": "The previous decision is never replayed automatically."
+        }
+      ],
+      "copy": "“Request sent” and “Applied” describe different times in the operation. Use the wording that corresponds to the receipt.",
+      "keyboard": "Announce changes in a persistent status region. Preserve focus on a receipt lookup that the person can repeat.",
+      "support": {
+        "web": {
+          "level": "guide-example",
+          "detail": "Receipt states can be compared in the Meatball example."
+        },
+        "native": {
+          "level": "contract",
+          "detail": "Behavior documented. A renderer and packaged-platform evidence are needed."
+        }
+      },
+      "related": []
+    },
+    {
+      "id": "pattern.find-records",
+      "name": "Find a record",
+      "when": "Someone needs to locate a known item or narrow a collection.",
+      "productInputs": [
+        "Authorized rows, names and stable IDs",
+        "Filter choices and query result",
+        "Loading, empty and read-failure facts"
+      ],
+      "components": [
+        "search-field",
+        "select",
+        "disclosure-row",
+        "status",
+        "result",
+        "button"
+      ],
+      "states": [
+        {
+          "id": "ready",
+          "label": "Results",
+          "when": "The authorized collection has matching rows.",
+          "show": "Keep search and filters visible above the matching rows.",
+          "action": "Open a row.",
+          "acceptance": "Filtering by ID returns the record even when the name differs."
+        },
+        {
+          "id": "no-match",
+          "label": "No matches",
+          "when": "A successful query has no matches for the current filters.",
+          "show": "Keep the query visible and give the reader a recovery action.",
+          "action": "Clear filters.",
+          "acceptance": "Clearing restores rows and returns focus to the search field."
+        },
+        {
+          "id": "empty",
+          "label": "Empty collection",
+          "when": "The unfiltered collection is confirmed empty.",
+          "show": "Explain where the first item will come from.",
+          "action": "Use a product-supplied first action if available.",
+          "acceptance": "Clearing filters is not offered when there are none."
+        },
+        {
+          "id": "loading",
+          "label": "Loading",
+          "when": "The first read is in flight.",
+          "show": "Show a readable loading state.",
+          "action": "Wait for the response.",
+          "acceptance": "A loading collection does not show an empty result."
+        },
+        {
+          "id": "failed",
+          "label": "Read failed",
+          "when": "The collection could not be loaded.",
+          "show": "Explain the failure near the list.",
+          "action": "Retry the read.",
+          "acceptance": "A successful retry restores the results and an appropriate focus target."
+        }
+      ],
+      "copy": "“No matches” belongs to a filter. An empty collection needs its own next step.",
+      "keyboard": "Keep a visible search label and a logical route back to the query. Enter or Space expands a native disclosure.",
+      "support": {
+        "web": {
+          "level": "web-example",
+          "detail": "The local agent roster and task-list specimens run in an ordinary browser.",
+          "source": "system.html#components"
+        },
+        "native": {
+          "level": "contract",
+          "detail": "Behavior documented. A renderer and packaged-platform evidence are needed."
+        }
+      },
+      "related": []
+    }
+  ],
+  "sdk": {
+    "version": "0.1.0-local.2",
+    "components": "catalog/components.json",
+    "brand": "catalog/brand.json",
+    "guide": "docs/using-yogurt.md",
+    "gallery": "components.html"
+  }
+}

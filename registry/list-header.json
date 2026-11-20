@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "list-header",
+  "type": "registry:ui",
+  "title": "ListHeader",
+  "description": "Name a group and supply its optional action.",
+  "files": [
+    {
+      "path": "ui/list-header.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ListHeader } from \"@openboa/yogurt/list-header\";\n"
+    }
+  ]
+}

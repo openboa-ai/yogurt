@@ -1,0 +1,103 @@
+.yg-composer {
+  display: grid;
+  gap: var(--boa-space-8);
+  min-width: 0;
+  padding: var(--boa-space-12);
+  border: 1px solid var(--yg-hover);
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-canvas);
+  transition: border-color var(--yg-change) var(--yg-settle);
+}
+.yg-composer:has(textarea:focus-visible) {
+  border-color: var(--yg-muted);
+}
+.yg-conversation-presence {
+  display: flex;
+  min-block-size: var(--yg-size-compact);
+  align-items: center;
+  gap: var(--boa-space-8);
+  padding-block: var(--boa-space-4);
+  color: var(--yg-muted);
+  font: var(--yg-font-help);
+}
+.yg-composer textarea {
+  width: 100%;
+  min-width: 0;
+  min-block-size: var(--yg-size-touch);
+  padding: var(--boa-space-4);
+  resize: vertical;
+  color: var(--yg-text);
+  background: transparent;
+  border: 0;
+  font: var(--yg-font-body);
+}
+.yg-composer textarea::placeholder { color: var(--yg-muted); }
+.yg-composer-sources {
+  display: grid;
+  gap: var(--boa-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.yg-composer-tools, .yg-composer-footer, .yg-voice {
+  display: flex;
+  gap: var(--boa-space-8);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.yg-composer-footer { justify-content: space-between; }
+.yg-voice {
+  padding: var(--boa-space-8);
+  border-radius: var(--yg-radius-control);
+  background: var(--yg-surface);
+}
+.yg-voice-state {
+  font: var(--yg-font-action);
+  transition: color var(--yg-change) var(--yg-settle);
+}
+.yg-voice[data-state=recording] .yg-voice-state { color: var(--yg-danger); }
+.yg-workspace-bar { justify-content: space-between; }
+.yg-artifact-filter, .yg-access-invite {
+  display: flex;
+  gap: var(--boa-space-8);
+  align-items: end;
+  flex-wrap: wrap;
+}
+.yg-artifact-filter > :first-child, .yg-access-invite > :first-child { flex: 1 1 12rem; }
+.yg-artifact-list, .yg-access-roster {
+  display: grid;
+  gap: var(--boa-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.yg-access-roster li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--boa-space-8);
+  min-width: 0;
+  padding: var(--boa-space-8);
+  border-radius: var(--yg-radius-control);
+}
+.yg-artifact-layout { display: grid; gap: var(--boa-space-12); }
+.yg-artifact-library { container: yogurt-artifacts / inline-size; }
+@container yogurt-artifacts (width >= 40rem) {
+  .yg-artifact-layout[data-preview] {
+    grid-template-columns: minmax(15rem, 2fr) minmax(0, 3fr);
+    align-items: start;
+  }
+}
+.yg-artifact-preview {
+  padding: var(--boa-space-16);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-canvas);
+}
+.yg-artifact-preview p { margin-bottom: 0; }
+.yg-access-roster li { background: var(--yg-field); overflow-wrap: anywhere; }
+@media (pointer: coarse) {
+  .yg-composer textarea { font: var(--yg-font-touch); }
+}

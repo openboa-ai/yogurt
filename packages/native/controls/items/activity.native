@@ -1,0 +1,3 @@
+<template name="yg-activity" args="label">
+  <status-bar>{label}</status-bar>
+</template>

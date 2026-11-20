@@ -1,0 +1,5 @@
+<template name="yg-bottom-action">
+  <row gap="8" padding="12" cross="center">
+  <slot/>
+  </row>
+</template>

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "field-error",
+  "type": "registry:ui",
+  "title": "FieldError",
+  "description": "Keep a correction beside its field.",
+  "files": [
+    {
+      "path": "ui/field-error.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { FieldError } from \"@openboa/yogurt/field-error\";\n"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+<template name="yg-label" args="label">
+  <text>{label}</text>
+</template>

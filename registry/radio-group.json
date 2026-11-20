@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "radio-group",
+  "type": "registry:ui",
+  "title": "RadioGroup",
+  "description": "Choose one of several alternatives.",
+  "files": [
+    {
+      "path": "ui/radio-group.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { RadioGroup } from \"@openboa/yogurt/radio-group\";\n"
+    }
+  ]
+}

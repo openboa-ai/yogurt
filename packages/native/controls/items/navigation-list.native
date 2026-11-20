@@ -1,0 +1,5 @@
+<template name="yg-navigation-list" args="label">
+  <list label="{label}">
+  <slot/>
+  </list>
+</template>

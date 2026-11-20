@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "navigation-menu",
+  "type": "registry:ui",
+  "title": "NavigationMenu",
+  "description": "Browse groups of related destinations.",
+  "files": [
+    {
+      "path": "ui/navigation-menu.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { NavigationMenu } from \"@openboa/yogurt/navigation-menu\";\n"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "disclosure-row",
+  "type": "registry:ui",
+  "title": "DisclosureRow",
+  "description": "Reveal related details on demand.",
+  "files": [
+    {
+      "path": "ui/disclosure-row.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { DisclosureRow } from \"@openboa/yogurt/disclosure-row\";\n"
+    }
+  ]
+}

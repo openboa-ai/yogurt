@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bottom-action",
+  "type": "registry:ui",
+  "title": "BottomAction",
+  "description": "Keep the next step reachable on a small screen.",
+  "files": [
+    {
+      "path": "ui/bottom-action.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { BottomAction } from \"@openboa/yogurt/bottom-action\";\n"
+    }
+  ]
+}

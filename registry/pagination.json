@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pagination",
+  "type": "registry:ui",
+  "title": "Pagination",
+  "description": "Read one page of a collection.",
+  "files": [
+    {
+      "path": "ui/pagination.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Pagination } from \"@openboa/yogurt/pagination\";\n"
+    }
+  ]
+}

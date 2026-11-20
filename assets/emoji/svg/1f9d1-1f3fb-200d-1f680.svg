@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="astronaut: light skin tone"><title>astronaut: light skin tone</title><path d="M7 56Q10 44 23 41H41Q55 44 57 56Q58 59 53 60H11Q6 60 7 56Z" data-fill="slate.300" fill="#A1B5C5" />
+<circle cx="32" cy="28" r="25" data-fill="slate.500" fill="#718496" />
+<circle cx="32" cy="27" r="21" data-fill="slate.50" fill="#EFF3F6" />
+<circle cx="32" cy="28" r="17.2" data-fill="blue.900" fill="#0A244A" />
+<g transform="translate(8.4 5) scale(.74)">
+<path d="M12 26C10 14 16 7 25 5Q30 4 35 6C42 6 47 10 50 15Q53 21 51 31Q48 37 48 41H17Q11 36 12 26Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="32" cy="30" rx="15.9" ry="16.7" data-fill="coral.100" fill="#F5E0D7" />
+<path d="M13 30Q9 21 14 14Q20 3 36 6Q43 6 48 13Q54 19 49 29L43 21Q37 23 31 19Q25 23 19 21L18 29Z" data-fill="earth.950" fill="#2A231E" />
+<circle cx="25" cy="32" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<circle cx="39" cy="32" r="2.15" data-fill="earth.950" fill="#2A231E" />
+</g>
+<path d="M42 18L45 23" fill="none" data-stroke="blue.200" stroke="#AED6FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M16 47H48L46 55H18Z" data-fill="slate.800" fill="#2D4456" />
+<rect x="26" y="53" width="12" height="6" rx="1" data-fill="blue.500" fill="#398CE6" />
+</svg>

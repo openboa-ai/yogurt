@@ -1,0 +1,112 @@
+name: Repository checks
+
+on:
+  pull_request:
+    branches: ["main"]  # starter-default-branch
+    types: [opened, reopened, synchronize, edited, ready_for_review]
+  push:
+    branches: ["main"]  # starter-default-branch
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  naming:
+    name: Contribution names
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Run required repository tests
+        run: python3 -I .github/scripts/run_required_tests.py .github/scripts
+      - name: Test repository initialization and settings
+        run: python3 -I .github/scripts/run_required_tests.py tools
+      - name: Check branch and PR title or final commit subject
+        run: python3 -I .github/scripts/check_conventions.py
+
+  hygiene:
+    name: Repository hygiene
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+    steps:
+      - name: Get verified tool installers
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: openboa-ai/.github
+          ref: 0d6bb15e85183386857bbee873826e85893b7cd6
+          persist-credentials: false
+          path: controls
+      - name: Get candidate history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.HEAD_SHA }}
+          fetch-depth: 0
+          persist-credentials: false
+          path: candidate
+      - name: Check changed lines
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C candidate rev-parse HEAD)" = "$HEAD_SHA"
+          if [[ "$BASE_SHA" == 0000000000000000000000000000000000000000 ]]; then
+            base=$(git -C candidate hash-object -t tree /dev/null)
+          else
+            base=$(git -C candidate merge-base "$BASE_SHA" "$HEAD_SHA")
+          fi
+          # Ignore repository diff attributes and let Git classify text and binary files.
+          printf '%s\n' '* !diff whitespace=blank-at-eol,blank-at-eof,space-before-tab' > candidate/.git/info/attributes
+          git -C candidate diff --check --no-ext-diff --no-textconv "$base" "$HEAD_SHA" --
+      - name: Install pinned tools
+        run: |
+          bash controls/.github/scripts/install-actionlint.sh
+          bash controls/.github/scripts/install-gitleaks.sh
+      - name: Lint GitHub Actions workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          for dir in candidate/.github candidate/.github/workflows; do
+            [[ -d "$dir" && ! -L "$dir" ]]
+          done
+          shopt -s nullglob dotglob
+          workflows=(candidate/.github/workflows/*.yml candidate/.github/workflows/*.yaml)
+          (( ${#workflows[@]} > 0 ))
+          config=$(mktemp "$RUNNER_TEMP/actionlint.XXXXXX")
+          printf '{}\n' > "$config"
+          for file in "${workflows[@]}"; do
+            [[ -f "$file" && ! -L "$file" ]]
+            actionlint -config-file "$config" -shellcheck= -pyflakes= - < "$file"
+          done
+      - name: Scan reachable history and the working directory
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Preserve forced text diffs for historical secret scanning.
+          printf '%s\n' '* diff whitespace=blank-at-eol,blank-at-eof,space-before-tab' > candidate/.git/info/attributes
+          options=(--config "$GITLEAKS_TRUSTED_CONFIG" --gitleaks-ignore-path /dev/null --ignore-gitleaks-allow --redact --no-banner)
+          gitleaks git "${options[@]}" --log-opts="--full-history HEAD" candidate
+          gitleaks dir "${options[@]}" candidate
+
+  required:
+    name: Required CI
+    needs: [naming, hygiene]
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Require every prerequisite to succeed
+        env:
+          NAMING: ${{ needs.naming.result }}
+          HYGIENE: ${{ needs.hygiene.result }}
+        shell: bash
+        run: |
+          printf 'Contribution names=%s, Repository hygiene=%s\n' "$NAMING" "$HYGIENE"
+          [[ "$NAMING" == success && "$HYGIENE" == success ]]

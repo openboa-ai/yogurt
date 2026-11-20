@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="net with handle"><title>net with handle</title><path fill="none" data-stroke="earth.600" stroke-width="4.8" stroke-linecap="round" stroke-linejoin="round" d="M28 36 L9 56" stroke="#85705E" />
+<path data-fill="slate.200" d="M24 14 L50.3 27.4 C46.4 43.1 37.7 48.8 29.6 43.8 C23.5 40 20 27.4 24 14Z" fill="#B8C9D3" />
+<path fill="none" data-stroke="slate.500" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" d="M26.5 22 L44.8 34 M24.4 28 L40.2 39.3 M25.8 35 L35.7 42.1 M32 21 L26.6 33 M38.6 24.2 L30.7 39.8 M44.4 26.2 L35.8 41" stroke="#718496" />
+<g transform="rotate(24 37 21)"><ellipse data-fill="earth.600" cx="37" cy="21" rx="18.2" ry="7.3" fill="#85705E" /><ellipse data-fill="mist.100" cx="37" cy="21" rx="14.3" ry="3.9" fill="#EBEEF2" /></g>
+</svg>

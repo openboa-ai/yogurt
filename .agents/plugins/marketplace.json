@@ -1,0 +1,19 @@
+{
+  "name": "openboa-yogurt",
+  "interface": {
+    "displayName": "OpenBoa Yogurt"
+  },
+  "plugins": [
+    {
+      "name": "yogurt",
+      "source": {
+        "source": "local",
+        "path": "./plugins/yogurt"
+      },
+      "policy": {
+        "installation": "AVAILABLE"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="hairy creature"><title>hairy creature</title><path d="M7 57L11 47L7 47L11 34L7 32L12 24L10 19L16 16L14 11L23 10L27 5L33 8L39 4L42 10L49 8L49 15L55 18L53 23L59 30L54 33L58 44L54 44L58 57Q49 60 43 56Q32 61 22 56Q15 60 7 57Z" data-fill="earth.700" fill="#6D5745" />
+<path d="M16 30Q18 22 24 22Q30 22 32 27Q37 20 43 23Q48 25 48 33Q48 45 38 47H26Q16 44 16 34Z" data-fill="earth.500" fill="#9D8A78" />
+<circle cx="25" cy="31" r="2.9" data-fill="earth.950" fill="#2A231E" />
+<circle cx="40" cy="31" r="2.9" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="32" cy="36" rx="5.5" ry="3" data-fill="earth.800" fill="#4F4034" />
+<path d="M26 41Q32 44 38 41" fill="none" data-stroke="earth.950" stroke="#2A231E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M11 48L15 44M52 44L55 49M21 15L23 19M42 14L40 18" fill="none" data-stroke="earth.850" stroke="#40352C" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

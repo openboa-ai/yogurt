@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "avatar",
+  "type": "registry:ui",
+  "title": "Avatar",
+  "description": "Identify a person by portrait or initials.",
+  "files": [
+    {
+      "path": "ui/avatar.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Avatar } from \"@openboa/yogurt/avatar\";\n"
+    }
+  ]
+}

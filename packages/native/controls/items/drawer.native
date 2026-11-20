@@ -1,0 +1,9 @@
+<template name="yg-drawer" args="title">
+  <drawer text="{title}" label="{title}" on-dismiss="dismiss" padding="16">
+    <column gap="12">
+      <spacer height="32"/>
+      <slot/>
+      <button variant="ghost" on-press="dismiss">Close</button>
+    </column>
+  </drawer>
+</template>

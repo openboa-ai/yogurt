@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "slider",
+  "type": "registry:ui",
+  "title": "Slider",
+  "description": "Choose a numeric value within a range.",
+  "files": [
+    {
+      "path": "ui/slider.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Slider } from \"@openboa/yogurt/slider\";\n"
+    }
+  ]
+}

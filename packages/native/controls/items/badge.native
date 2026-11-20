@@ -1,0 +1,3 @@
+<template name="yg-badge" args="label">
+  <badge>{label}</badge>
+</template>

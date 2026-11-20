@@ -1,0 +1,5 @@
+<template name="yg-radio-group" args="label">
+  <radio-group label="{label}">
+  <slot/>
+  </radio-group>
+</template>

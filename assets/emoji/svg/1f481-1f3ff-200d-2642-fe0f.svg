@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="man tipping hand: dark skin tone"><title>man tipping hand: dark skin tone</title><g transform="translate(-1 2) scale(.90)">
+<path d="M7 54C9 46 18 43 24 42H40C48 43 56 47 57 55Q57 59 53 59H11Q6 59 7 54Z" data-fill="magenta.700" fill="#89356E" />
+<path d="M23 40H41V47Q40 52 32 52Q24 52 23 47Z" data-fill="paper.200" fill="#E0DCD3" />
+<path d="M25 39H39V46Q37 49 32 49Q27 49 25 46Z" data-fill="earth.950" fill="#2A231E" />
+<path d="M13 26Q11 17 15 12Q22 4 34 5Q46 4 50 14Q53 19 49 28L45 37H18Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="16" cy="30" rx="5" ry="6" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="48" cy="30" rx="5" ry="6" data-fill="earth.950" fill="#2A231E" />
+<path d="M16 23C16 15 23 12 32 12C41 12 48 17 48 24V32C48 40 43 44 37 47Q32 49 27 47C21 45 16 41 16 33Z" data-fill="earth.800" fill="#4F4034" />
+<path d="M14 31Q10 22 15 14Q22 4 34 6Q45 5 49 12Q53 17 48 28L44 20Q37 19 33 14Q27 21 19 21L18 30Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="24" cy="29.5" rx="3" ry="2.2" data-fill="coral.100" fill="#F5E0D7" />
+<circle cx="24" cy="29.5" r="1.7" data-fill="neutral.1000" fill="#121212" />
+<ellipse cx="40" cy="29.5" rx="3" ry="2.2" data-fill="coral.100" fill="#F5E0D7" />
+<circle cx="40" cy="29.5" r="1.7" data-fill="neutral.1000" fill="#121212" />
+<path d="M28 39Q32 42 36 39" fill="none" data-stroke="coral.300" stroke="#D5A59A" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+<path d="M39 51L52 52L51 36" fill="none" data-stroke="magenta.700" stroke="#89356E" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M48 36Q44 35 43 31Q42 28 45 28Q48 29 50 31L58 27Q63 26 61 30L55 36Q51 39 48 36Z" data-fill="earth.800" fill="#4F4034" />
+</svg>

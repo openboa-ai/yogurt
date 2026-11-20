@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "toast-stack",
+  "type": "registry:ui",
+  "title": "ToastStack",
+  "description": "Present and dismiss independent notifications.",
+  "files": [
+    {
+      "path": "ui/toast-stack.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ToastStack } from \"@openboa/yogurt/toast-stack\";\n"
+    }
+  ]
+}

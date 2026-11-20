@@ -1,0 +1,105 @@
+{
+  "name": "@openboa/yogurt",
+  "version": "0.1.0-local.16",
+  "private": true,
+  "description": "OpenBoa interface components, design tokens and original artwork.",
+  "type": "module",
+  "files": [
+    "dist",
+    "tokens",
+    "packages/native/controls",
+    "assets/fonts/rethink-sans/*.woff2",
+    "assets/fonts/rethink-sans/OFL.txt",
+    "assets/logo/upright-9.svg",
+    "assets/projects/*.svg",
+    "assets/agents/*.svg",
+    "assets/agents/animation-fits.json",
+    "agents.html",
+    "styles/ui*.css",
+    "styles/tokens.css",
+    "packages/web/README.md",
+    "bin",
+    "catalog/components.json",
+    "catalog/patterns.json",
+    "catalog/blocks.json",
+    "catalog/motion.json",
+    "blocks",
+    "catalog/brand.json",
+    "content/terms.json",
+    "registry",
+    "examples/native-ui",
+    "assets/fonts/rethink-sans/rethink-sans.ttf",
+    "assets/logo/openboa-lockup.svg",
+    "assets/logo/openboa-wordmark.svg",
+    "assets/projects/emoji.json",
+    "assets/agents/silhouettes.json",
+    "assets/agents/eye-motion.json",
+    "assets/agents/presence-motion.json",
+    "assets/agents/avatar-motion.json",
+    "DESIGN.md",
+    "scripts/describe-pattern.mjs",
+    "docs/native-stack.md",
+    "docs/using-yogurt.md",
+    "docs/motion.md",
+    "components.html",
+    "packages/native/README.md",
+    "docs/engineering/controls/component-library",
+    "checks/native-catalog*.mjs",
+    "docs/workspace-patterns.md",
+    "docs/sidebar.md",
+    "docs/design-system-rules.md"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./web": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/entries/*.d.ts",
+      "import": "./dist/entries/*.js"
+    },
+    "./styles.css": "./styles/ui.css",
+    "./tokens": "./tokens/ui.json",
+    "./palette": "./tokens/brand.json",
+    "./art/*": "./assets/*",
+    "./native/*": "./packages/native/controls/*",
+    "./brand": "./catalog/brand.json",
+    "./terms": "./content/terms.json",
+    "./blocks": "./catalog/blocks.json"
+  },
+  "scripts": {
+    "build": "node scripts/build-ui.mjs",
+    "gallery": "node scripts/build-ui-gallery.mjs",
+    "gallery:agents": "node scripts/build-ui-gallery.mjs --agents",
+    "check:agents": "node checks/agent-family.mjs && node checks/web-agent-family.cjs",
+    "check:ui": "node scripts/check-ui.mjs",
+    "check:web": "node checks/web-library.cjs && node checks/web-select.cjs && node checks/web-workspaces.cjs && node checks/web-sidebars.cjs && node checks/web-motion.cjs"
+  },
+  "peerDependencies": {
+    "react": ">=19.2.0 <20",
+    "react-dom": ">=19.2.0 <20"
+  },
+  "devDependencies": {
+    "@openai/apps-sdk-ui": "0.2.2",
+    "@types/react": "19.2.10",
+    "@types/react-dom": "19.2.2",
+    "esbuild": "0.25.12",
+    "playwright-core": "1.62.1",
+    "radix-ui": "1.8.1",
+    "react": "19.2.0",
+    "react-day-picker": "9.11.1",
+    "react-dom": "19.2.0",
+    "react-resizable-panels": "3.0.6",
+    "typescript": "5.9.3"
+  },
+  "bin": {
+    "yogurt": "./bin/yogurt.mjs"
+  }
+}

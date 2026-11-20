@@ -1,0 +1,6 @@
+<template name="yg-combobox" args="label value">
+  <column gap="4">
+  <combobox label="{label}" text="{value}" on-input="edit"/>
+  <slot/>
+  </column>
+</template>

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "progress",
+  "type": "registry:ui",
+  "title": "Progress",
+  "description": "Report actual progress against a maximum.",
+  "files": [
+    {
+      "path": "ui/progress.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Progress } from \"@openboa/yogurt/progress\";\n"
+    }
+  ]
+}

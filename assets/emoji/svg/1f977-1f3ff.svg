@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ninja: dark skin tone"><title>ninja: dark skin tone</title><path d="M7 56Q10 44 23 41H41Q55 44 57 56Q58 59 53 60H11Q6 60 7 56Z" data-fill="neutral.950" fill="#1C1C1C" />
+<ellipse cx="32" cy="28" rx="23" ry="23" data-fill="slate.950" fill="#15232D" />
+<rect x="13" y="22" width="38" height="14" rx="6" data-fill="earth.800" fill="#4F4034" />
+<path d="M19 26L26 28M38 28L45 26" fill="none" data-stroke="earth.950" stroke="#2A231E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+<ellipse cx="24" cy="30" rx="3" ry="2.2" data-fill="coral.100" fill="#F5E0D7" />
+<circle cx="24" cy="30" r="1.7" data-fill="neutral.1000" fill="#121212" />
+<ellipse cx="40" cy="30" rx="3" ry="2.2" data-fill="coral.100" fill="#F5E0D7" />
+<circle cx="40" cy="30" r="1.7" data-fill="neutral.1000" fill="#121212" />
+<path d="M46 30Q53 25 61 28L57 33L61 37Q52 39 46 34Z" data-fill="red.700" fill="#A7232D" />
+</svg>

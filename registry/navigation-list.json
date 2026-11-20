@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "navigation-list",
+  "type": "registry:ui",
+  "title": "NavigationList",
+  "description": "Move between product destinations.",
+  "files": [
+    {
+      "path": "ui/navigation-list.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { NavigationList } from \"@openboa/yogurt/navigation-list\";\n"
+    }
+  ]
+}

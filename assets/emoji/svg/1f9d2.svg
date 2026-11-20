@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="child"><title>child</title><path d="M7 54C9 46 18 43 24 42H40C48 43 56 47 57 55Q57 59 53 59H11Q6 59 7 54Z" data-fill="violet.700" fill="#634F7F" />
+<path d="M23 40H41V47Q40 52 32 52Q24 52 23 47Z" data-fill="violet.200" fill="#D0C4DC" />
+<path d="M25 39H39V46Q37 49 32 49Q27 49 25 46Z" data-fill="orange.500" fill="#E67A25" />
+<ellipse cx="14" cy="31" rx="5.5" ry="6.5" data-fill="orange.500" fill="#E67A25" />
+<ellipse cx="50" cy="31" rx="5.5" ry="6.5" data-fill="orange.500" fill="#E67A25" />
+<path d="M12 29C12 17 21 10 32 10S52 17 52 29V33C52 44 43 50 32 50S12 44 12 33Z" data-fill="yellow.250" fill="#FFDC63" />
+<path d="M12 30Q9 21 15 16Q14 10 23 10Q26 5 33 9Q40 6 44 12Q53 13 53 23L50 30Q45 23 44 21Q40 25 35 20Q29 26 24 21Q21 26 16 24L15 30Z" data-fill="earth.950" fill="#2A231E" />
+<circle cx="23" cy="32" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<circle cx="41" cy="32" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<path d="M27 40Q32 45 37 40" fill="none" data-stroke="earth.950" stroke="#2A231E" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

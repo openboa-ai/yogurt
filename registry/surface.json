@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "surface",
+  "type": "registry:ui",
+  "title": "Surface",
+  "description": "Keep one task on a quiet plane.",
+  "files": [
+    {
+      "path": "ui/surface.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Surface } from \"@openboa/yogurt/surface\";\n"
+    }
+  ]
+}

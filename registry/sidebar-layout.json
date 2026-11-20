@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sidebar-layout",
+  "type": "registry:ui",
+  "title": "SidebarLayout",
+  "description": "Compose a shared navigation shell with an inset, rail or narrow drawer.",
+  "files": [
+    {
+      "path": "ui/sidebar-layout.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { SidebarLayout, SidebarTrigger, SidebarHeader, SidebarContent, SidebarFooter, SidebarGroup, SidebarSubmenu, SidebarItem } from \"@openboa/yogurt/sidebar-layout\";\n"
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+<template name="yg-sidebar-layout" args="label">
+  <row gap="16" label="{label}">
+    <slot/>
+  </row>
+</template>
+<template name="yg-sidebar-panel" args="label">
+  <panel label="{label}" padding="8">
+    <column gap="12">
+      <slot/>
+    </column>
+  </panel>
+</template>
+<template name="yg-sidebar-drawer" args="label">
+  <sheet label="{label}" on-dismiss="close_sidebar">
+    <column gap="12" padding="16">
+      <row gap="8">
+        <text size="heading">{label}</text>
+        <button variant="ghost" on-press="close_sidebar">Close navigation</button>
+      </row>
+      <slot/>
+    </column>
+  </sheet>
+</template>
+<template name="yg-sidebar-group" args="label">
+  <column gap="4">
+    <text size="sm" foreground="text_muted">{label}</text>
+    <slot/>
+  </column>
+</template>
+<template name="yg-sidebar-items">
+  <list>
+    <slot/>
+  </list>
+</template>
+<template name="yg-sidebar-destination" args="label item_id selected">
+  <list-item label="{label}" selected="{selected}" on-press="select_sidebar_item:{item_id}" padding="8">
+    <slot/>
+  </list-item>
+</template>

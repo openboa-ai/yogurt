@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "trace",
+  "type": "registry:ui",
+  "title": "Trace",
+  "description": "Inspect the observed steps in a run.",
+  "files": [
+    {
+      "path": "ui/trace.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Trace } from \"@openboa/yogurt/trace\";\n"
+    }
+  ]
+}

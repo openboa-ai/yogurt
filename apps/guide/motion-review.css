@@ -1,0 +1,67 @@
+#yogurt-motion-review .motion-review > section {
+  display: grid;
+  padding: var(--boa-space-24);
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-surface);
+}
+#yogurt-motion-review .agent-motion-stage {
+  min-height: 120px;
+  justify-content: center;
+  gap: var(--boa-space-24);
+}
+#yogurt-motion-review .agent-motion-roster {
+  justify-content: center;
+}
+#yogurt-motion-review .agent-motion-status {
+  text-align: center;
+}
+#yogurt-motion-review .agent-motion-tools {
+  align-items: end;
+}
+#yogurt-motion-review .agent-motion-tools > :first-child {
+  flex: 1 1 120px;
+  min-width: 0;
+}
+#yogurt-motion-review .agent-motion-comparison {
+  display: grid;
+  gap: var(--boa-space-12);
+  padding-block-start: var(--boa-space-8);
+}
+#yogurt-motion-review .agent-motion-comparison-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--boa-space-8);
+}
+#yogurt-motion-review .agent-motion-comparison-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--boa-space-8);
+}
+#yogurt-motion-review .agent-motion-comparison-sample {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  text-align: center;
+  gap: var(--boa-space-4);
+}
+@media (max-width: 35rem) {
+  #yogurt-motion-review .motion-review > section {
+    padding: var(--boa-space-16);
+  }
+  #yogurt-motion-review .agent-motion-tools {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #yogurt-motion-review .agent-motion-tools > :first-child {
+    flex: auto;
+  }
+  #yogurt-motion-review .agent-motion-tools > .yg-button {
+    align-self: flex-start;
+  }
+  #yogurt-motion-review .agent-motion-stage {
+    min-height: 106px;
+    gap: var(--boa-space-12);
+  }
+}

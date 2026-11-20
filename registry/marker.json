@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "marker",
+  "type": "registry:ui",
+  "title": "Marker",
+  "description": "Place a named event between messages.",
+  "files": [
+    {
+      "path": "ui/marker.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Marker } from \"@openboa/yogurt/marker\";\n"
+    }
+  ]
+}

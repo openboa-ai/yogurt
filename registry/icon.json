@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "icon",
+  "type": "registry:ui",
+  "title": "Icon",
+  "description": "A small glyph with an optional accessible name.",
+  "files": [
+    {
+      "path": "ui/icon.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Icon } from \"@openboa/yogurt/icon\";\n"
+    }
+  ]
+}

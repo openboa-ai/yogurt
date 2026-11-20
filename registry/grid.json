@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "grid",
+  "type": "registry:ui",
+  "title": "Grid",
+  "description": "Let related items wrap as space changes.",
+  "files": [
+    {
+      "path": "ui/grid.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Grid } from \"@openboa/yogurt/grid\";\n"
+    }
+  ]
+}

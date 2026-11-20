@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title description">
+  <title id="title">sourdough</title>
+  <desc id="description">An ochre sourdough loaf with one sweeping score.</desc>
+  <defs><clipPath id="contour"><path clip-rule="evenodd" d="M0 0H64V64H0Z M24.9 5.9 L31.7 5.9 L33.9 11.3 C32.7 11.5 32.3 12.1 32.1 13.5 C31.9 14.7 31.6 15.6 30.9 15.8 C30 16 29.4 15.1 29.2 14.1 C28.9 13.1 28.6 12.8 27.6 13.3 L24.9 5.9 Z"/></clipPath></defs>
+  <g clip-path="url(#contour)">
+  <path id="heel" data-token="ochre.700" fill="#75551E" d="M4.2 40.9 C4.1 32.7 13.7 22.4 24.9 16.6 C36.8 10.4 47.4 11.1 54.5 17.3 C61.1 23.1 62 31.6 57.6 39.3 C52.9 47.4 42.8 51.9 28.8 55 C15 58 5.2 52.6 4.2 43.8 Z"/>
+  <path id="crust" data-token="ochre.400" fill="#C4A569" d="M4.2 40.9 C4.1 32.7 13 21.4 24.4 15.1 C36.4 8.5 48.1 9 54.5 15.4 C58.8 19.7 58.4 24.3 54.3 27.7 C50.3 31 47 31.3 42.9 36.7 C39.1 41.7 33.4 42.5 26.8 44.4 C19.7 46.6 16.8 49.3 11.1 48.6 C6.6 48.1 4.3 45.5 4.2 40.9 Z"/>
+  <path id="score" data-token="ochre.100" fill="#F1E7CC" d="M11 40.5 C16 34.4 21.4 33.1 27.4 26.9 C35 19.2 41.6 15.5 49.6 16.9 C42.2 19.5 39.7 22.5 33.1 29.1 C26.3 36 19.1 35.8 11 40.5 Z"/>
+  </g>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "spinner",
+  "type": "registry:ui",
+  "title": "Spinner",
+  "description": "Announce an operation of unknown duration.",
+  "files": [
+    {
+      "path": "ui/spinner.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Spinner } from \"@openboa/yogurt/spinner\";\n"
+    }
+  ]
+}

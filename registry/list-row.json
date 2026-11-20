@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "list-row",
+  "type": "registry:ui",
+  "title": "ListRow",
+  "description": "Give one record an aligned leading and trailing area.",
+  "files": [
+    {
+      "path": "ui/list-row.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ListRow } from \"@openboa/yogurt/list-row\";\n"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+<template name="yg-action-menu" args="label">
+  <stack>
+  <button variant="secondary" on-press="open_choices">{label}</button>
+  <if test="{is_open}">
+  <dropdown-menu anchor="below" on-dismiss="dismiss">
+  <slot/>
+  </dropdown-menu>
+  </if>
+  </stack>
+</template>

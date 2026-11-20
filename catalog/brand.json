@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "language": "en",
+  "company": "OpenBoa",
+  "typeface": "Rethink Sans",
+  "signature": {
+    "symbol": "assets/logo/upright-9.svg",
+    "lockup": "assets/logo/openboa-lockup.svg",
+    "wordmark": "assets/logo/openboa-wordmark.svg",
+    "layout": "B2",
+    "wordmarkWeight": 760,
+    "color": "slate.750"
+  },
+  "sources": {
+    "primitives": "tokens/brand.json",
+    "roles": "tokens/ui.json",
+    "words": "content/terms.json",
+    "components": "catalog/components.json",
+    "projectArtwork": "assets/projects/emoji.json",
+    "agentShapes": "assets/agents/silhouettes.json",
+    "eyeMotion": "assets/agents/eye-motion.json"
+  },
+  "rules": [
+    {
+      "id": "identity",
+      "title": "Sign the right surface",
+      "body": "Upright 9 signs the company. Use the food marks for projects and Kai or Sol for agents."
+    },
+    {
+      "id": "type",
+      "title": "Keep one type family",
+      "body": "Use Rethink Sans across product text. The B2 wordmark uses its outlined 760 master."
+    },
+    {
+      "id": "color",
+      "title": "Start with one palette",
+      "body": "Bind each UI color to a numbered primitive. Ink blue marks the main action on light surfaces. Use the lighter Slate role on dark surfaces."
+    },
+    {
+      "id": "layout",
+      "title": "Group with space",
+      "body": "Align the first reading edge. Use 4 px within a field, 8 px between companion actions and 16–24 px between tasks."
+    },
+    {
+      "id": "voice",
+      "title": "Name the action",
+      "body": "Use a short verb and its object. Say what happened in the past tense. Give a recovery the reader can perform."
+    },
+    {
+      "id": "motion",
+      "title": "Move with the action",
+      "body": "Use a short press, settle the control at its current value, and respect the person’s reduced-motion preference."
+    }
+  ],
+  "companyLine": "Every limit has a shelf life."
+}

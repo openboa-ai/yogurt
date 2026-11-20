@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hover-card",
+  "type": "registry:ui",
+  "title": "HoverCard",
+  "description": "Inspect related detail on hover, focus or touch.",
+  "files": [
+    {
+      "path": "ui/hover-card.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { HoverCard } from \"@openboa/yogurt/hover-card\";\n"
+    }
+  ]
+}

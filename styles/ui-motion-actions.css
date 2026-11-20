@@ -1,0 +1,191 @@
+.yg-button .yg-button-label {
+  position: relative;
+  display: inline-grid;
+  justify-items: center;
+  min-inline-size: 0;
+}
+
+.yg-button-content,
+.yg-button-pending {
+  display: inline-flex;
+  grid-area: 1 / 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--boa-space-8);
+  min-inline-size: 0;
+}
+
+.yg-button-pending .yg-spinner {
+  flex: none;
+}
+
+.yg-button-pending:not([data-has-label]) {
+  position: absolute;
+  inset: 0;
+}
+
+.yg-button:not([aria-busy="true"]) .yg-button-pending {
+  visibility: hidden;
+}
+
+.yg-button:not([aria-busy="true"]) .yg-button-pending .yg-spinner {
+  animation: none;
+}
+
+.yg-button[aria-busy="true"] .yg-button-content {
+  opacity: 0;
+}
+
+.yg-input,
+.yg-select,
+.yg-standalone {
+  transition: background-color var(--yg-change, var(--yg-travel)) var(--yg-settle);
+}
+
+.yg-input:has(:is(input, textarea):focus-visible),
+.yg-select:has(select:focus-visible),
+.yg-standalone:focus-visible {
+  background-color: var(--yg-hover);
+}
+
+.yg-switch [role="switch"] {
+  transition: background-color var(--yg-travel) var(--yg-settle);
+}
+
+.yg-switch [role="switch"] > span {
+  transition:
+    transform var(--yg-travel) var(--yg-settle),
+    background-color var(--yg-travel) var(--yg-settle);
+}
+
+.yg-checkbox [role="checkbox"],
+.yg-radio [role="radio"],
+.yg-toggle-item,
+.yg-rating label,
+.yg-otp-slots > span {
+  transition:
+    background-color var(--yg-change, var(--yg-travel)) var(--yg-settle),
+    color var(--yg-change, var(--yg-travel)) var(--yg-settle);
+}
+
+.yg-otp:focus-within [data-cursor] {
+  background-color: var(--yg-action-soft);
+}
+
+.yg-rating label > span {
+  pointer-events: none;
+  transition: transform var(--yg-press) var(--yg-settle);
+}
+
+.yg-rating label:has(input:active) > span {
+  transform: translateY(1px);
+}
+
+.yg-range input:not(:disabled):active {
+  accent-color: var(--yg-action-press);
+}
+
+.yg-progress {
+  position: relative;
+}
+
+.yg-progress progress {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  clip-path: inset(50%);
+}
+
+.yg-progress > .yg-progress-track {
+  display: block;
+  block-size: 6px;
+  overflow: hidden;
+  border-radius: var(--boa-radius-round);
+  background: var(--yg-field);
+}
+
+.yg-progress-track > span {
+  display: block;
+  block-size: 100%;
+  border-radius: inherit;
+  background: var(--yg-action);
+  transform: scaleX(var(--yg-progress-completion, 0));
+  transform-origin: left center;
+  transition: transform var(--yg-change, var(--yg-travel)) var(--yg-settle);
+}
+
+.yg-progress-track:dir(rtl) > span {
+  transform-origin: right center;
+}
+
+.yg-progress progress:not([value]) + .yg-progress-track > span {
+  inline-size: 33.333%;
+  transform: none;
+  animation: yg-progress-sweep calc(2 * var(--yg-busy, 750ms)) var(--yg-settle) infinite alternate;
+}
+
+.yg-progress progress:not([value]) + .yg-progress-track:dir(rtl) > span {
+  animation-name: yg-progress-sweep-rtl;
+}
+
+@keyframes yg-progress-sweep {
+  to { transform: translateX(200%); }
+}
+
+@keyframes yg-progress-sweep-rtl {
+  to { transform: translateX(-200%); }
+}
+
+.yg-toast {
+  animation: yg-toast-arrive var(--yg-change, var(--yg-travel)) var(--yg-settle);
+}
+
+@keyframes yg-toast-arrive {
+  from {
+    opacity: 0.75;
+    transform: translateY(var(--boa-space-4));
+  }
+}
+
+@media (forced-colors: active) {
+  .yg-progress progress {
+    position: static;
+    inline-size: 100%;
+    block-size: 6px;
+    clip-path: none;
+    appearance: auto;
+  }
+
+  .yg-progress > .yg-progress-track {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .yg-input,
+  .yg-select,
+  .yg-standalone,
+  .yg-switch [role="switch"],
+  .yg-switch [role="switch"] > span,
+  .yg-checkbox [role="checkbox"],
+  .yg-radio [role="radio"],
+  .yg-toggle-item,
+  .yg-rating label,
+  .yg-otp-slots > span,
+  .yg-progress-track > span {
+    transition: none;
+  }
+
+  .yg-rating label:has(input:active) > span {
+    transform: none;
+  }
+
+  .yg-progress progress:not([value]) + .yg-progress-track > span {
+    margin-inline: auto;
+  }
+
+  .yg-progress progress:not([value]) + .yg-progress-track > span,
+  .yg-toast {
+    animation: none;
+  }
+}

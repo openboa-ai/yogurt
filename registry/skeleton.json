@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "skeleton",
+  "type": "registry:ui",
+  "title": "Skeleton",
+  "description": "Reserve the shape of incoming content.",
+  "files": [
+    {
+      "path": "ui/skeleton.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Skeleton } from \"@openboa/yogurt/skeleton\";\n"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "drawer",
+  "type": "registry:ui",
+  "title": "Drawer",
+  "description": "Pull up a task and dismiss it from its lower-edge surface.",
+  "files": [
+    {
+      "path": "ui/drawer.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Drawer } from \"@openboa/yogurt/drawer\";\n"
+    }
+  ]
+}

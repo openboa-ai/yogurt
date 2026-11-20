@@ -1,0 +1,12 @@
+.yg-menu { position: relative; display: inline-block; }
+.yg-menu [role="menu"] { position: absolute; inset-block-start: calc(100% + var(--boa-space-4)); inset-inline-end: 0; min-inline-size: 12rem; z-index: 3; padding: var(--boa-space-4); background: var(--boa-paper); color: var(--boa-ink); border: var(--boa-stroke-rule) solid var(--boa-edge); border-radius: var(--boa-radius-control); }
+.yg-menu [role="menu"][hidden] { display: none; }
+.yg-menu [role="menuitem"] { display: block; width: 100%; min-height: var(--boa-control-height); text-align: start; padding: var(--boa-space-8) var(--boa-space-12); border: 0; border-radius: var(--boa-space-2); color: inherit; background: transparent; font: inherit; cursor: pointer; }
+.yg-menu [role="menuitem"]:is(:hover, :focus) { color: var(--boa-paper); background: var(--boa-ink); }
+.yg-menu [role="menuitem"]:focus-visible { outline-offset: 0; }
+.yg-menu .boa-button[data-menu-trigger]:active:enabled { color: var(--boa-paper); background: var(--boa-ink); }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-menu [role="menu"]:not([hidden]) { animation: yg-menu-enter 140ms ease-out both; }
+  @keyframes yg-menu-enter { from { transform: translateY(-4px); } to { transform: none; } }
+}
+@media (pointer: coarse) { .yg-menu [role="menuitem"] { min-height: var(--boa-control-touch); } }

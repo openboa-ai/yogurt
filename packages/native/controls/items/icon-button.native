@@ -1,0 +1,3 @@
+<template name="yg-icon-button" args="label">
+  <button variant="ghost" icon="plus" label="{label}" on-press="activate"/>
+</template>

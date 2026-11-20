@@ -1,0 +1,11 @@
+<template name="yg-carousel" args="label value">
+  <column gap="8">
+    <text size="heading">{label}</text>
+    <slot/>
+    <row gap="8" cross="center">
+      <button variant="ghost" on-press="previous_page" disabled="{at_first}">Previous</button>
+      <text>{value}</text>
+      <button variant="ghost" on-press="next_page" disabled="{at_last}">Next</button>
+    </row>
+  </column>
+</template>

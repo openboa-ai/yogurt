@@ -1,0 +1,6 @@
+<template name="yg-field" args="label">
+  <column gap="4">
+  <text>{label}</text>
+  <slot/>
+  </column>
+</template>

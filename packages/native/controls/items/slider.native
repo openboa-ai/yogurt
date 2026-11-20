@@ -1,0 +1,6 @@
+<template name="yg-slider" args="label amount">
+  <column gap="8">
+    <text>{label}</text>
+    <slider label="{label}" value="{amount}" on-change="adjust"/>
+  </column>
+</template>

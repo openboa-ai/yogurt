@@ -1,0 +1,7 @@
+<template name="yg-transcript" args="label">
+  <scroll label="{label}">
+  <column gap="12">
+  <slot/>
+  </column>
+  </scroll>
+</template>

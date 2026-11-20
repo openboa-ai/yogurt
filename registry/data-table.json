@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "data-table",
+  "type": "registry:ui",
+  "title": "DataTable",
+  "description": "Compare and sort records by a named column.",
+  "files": [
+    {
+      "path": "ui/data-table.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { DataTable } from \"@openboa/yogurt/data-table\";\n"
+    }
+  ]
+}

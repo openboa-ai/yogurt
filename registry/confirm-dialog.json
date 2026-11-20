@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "confirm-dialog",
+  "type": "registry:ui",
+  "title": "ConfirmDialog",
+  "description": "Confirm the current revision exactly once.",
+  "files": [
+    {
+      "path": "ui/confirm-dialog.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ConfirmDialog } from \"@openboa/yogurt/confirm-dialog\";\n"
+    }
+  ]
+}

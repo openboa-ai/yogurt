@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "breadcrumb",
+  "type": "registry:ui",
+  "title": "Breadcrumb",
+  "description": "Find a parent in the current path.",
+  "files": [
+    {
+      "path": "ui/breadcrumb.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Breadcrumb } from \"@openboa/yogurt/breadcrumb\";\n"
+    }
+  ]
+}

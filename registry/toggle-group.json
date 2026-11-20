@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "toggle-group",
+  "type": "registry:ui",
+  "title": "ToggleGroup",
+  "description": "Select one or more named toolbar options.",
+  "files": [
+    {
+      "path": "ui/toggle-group.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ToggleGroup } from \"@openboa/yogurt/toggle-group\";\n"
+    }
+  ]
+}

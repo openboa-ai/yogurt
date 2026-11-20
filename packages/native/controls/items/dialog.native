@@ -1,0 +1,9 @@
+<template name="yg-dialog" args="title">
+  <dialog label="{title}" on-dismiss="dismiss">
+  <column gap="12" padding="16">
+  <text size="heading">{title}</text>
+  <slot/>
+  <button variant="ghost" on-press="dismiss">Close</button>
+  </column>
+  </dialog>
+</template>

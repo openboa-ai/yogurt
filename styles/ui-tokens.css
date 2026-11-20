@@ -1,0 +1,73 @@
+/* Generated from tokens/brand.json and tokens/ui.json. */
+.yg-root {
+  --yg-canvas: light-dark(var(--boa-color-neutral-0), var(--boa-color-neutral-975));
+  --yg-surface: light-dark(var(--boa-color-gray-green-50), var(--boa-color-neutral-950));
+  --yg-field: light-dark(var(--boa-color-neutral-100), var(--boa-color-neutral-850));
+  --yg-hover: light-dark(var(--boa-color-neutral-200), var(--boa-color-neutral-800));
+  --yg-text: light-dark(var(--boa-color-gray-green-950), var(--boa-color-neutral-50));
+  --yg-muted: light-dark(var(--boa-color-gray-green-700), var(--boa-color-neutral-300));
+  --yg-brand: light-dark(var(--boa-color-slate-750), var(--boa-color-slate-750));
+  --yg-action: light-dark(var(--boa-color-slate-750), var(--boa-color-slate-200));
+  --yg-action-hover: light-dark(var(--boa-color-slate-800), var(--boa-color-slate-100));
+  --yg-action-press: light-dark(var(--boa-color-slate-900), var(--boa-color-slate-300));
+  --yg-on-action: light-dark(var(--boa-color-gray-green-50), var(--boa-color-slate-950));
+  --yg-action-soft: light-dark(var(--boa-color-slate-50), var(--boa-color-slate-850));
+  --yg-action-soft-hover: light-dark(var(--boa-color-slate-100), var(--boa-color-slate-800));
+  --yg-off: light-dark(var(--boa-color-neutral-600), var(--boa-color-neutral-500));
+  --yg-thumb: light-dark(var(--boa-color-neutral-0), var(--boa-color-neutral-975));
+  --yg-danger: light-dark(var(--boa-color-coral-700), var(--boa-color-coral-200));
+  --yg-danger-soft: light-dark(var(--boa-color-coral-50), var(--boa-color-coral-900));
+  --yg-success: light-dark(var(--boa-color-sage-800), var(--boa-color-sage-200));
+  --yg-success-soft: light-dark(var(--boa-color-sage-50), var(--boa-color-sage-900));
+  --yg-warning: light-dark(var(--boa-color-ochre-800), var(--boa-color-ochre-200));
+  --yg-warning-soft: light-dark(var(--boa-color-ochre-50), var(--boa-color-ochre-900));
+  --yg-accent: light-dark(var(--boa-color-violet-700), var(--boa-color-violet-200));
+  --yg-accent-soft: light-dark(var(--boa-color-violet-50), var(--boa-color-violet-900));
+  --yg-radius-small: var(--boa-radius-small);
+  --yg-radius-control: var(--boa-radius-control);
+  --yg-radius-panel: var(--boa-radius-panel);
+  --yg-size-compact: var(--boa-control-compact);
+  --yg-size-regular: var(--boa-control-height);
+  --yg-size-touch: var(--boa-control-touch);
+  --yg-size-icon: var(--boa-control-icon);
+  --yg-glyph: var(--boa-control-glyph);
+  --yg-inset-compact: var(--boa-space-8);
+  --yg-inset-regular: var(--boa-space-12);
+  --yg-inset-roomy: var(--boa-space-16);
+  --yg-switch-width: 32px;
+  --yg-switch-height: 19px;
+  --yg-thumb-size: 13px;
+  --yg-track-inset: 3px;
+  --yg-press: 80ms;
+  --yg-layer: 120ms;
+  --yg-travel: 160ms;
+  --yg-change: 180ms;
+  --yg-panel: 200ms;
+  --yg-busy: 750ms;
+  --yg-settle: cubic-bezier(.2, 0, 0, 1);
+  --yg-lift-shadow: 0 2px 8px color-mix(in srgb, var(--boa-color-neutral-1000) 10%, transparent);
+  --yg-float-shadow: 0 1px 3px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent), 0 6px 20px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent);
+  --yg-panel-shadow: 0 12px 48px color-mix(in srgb, var(--boa-color-neutral-1000) 18%, transparent);
+  --yg-font-action: var(--boa-weight-medium) 0.875rem/1.25rem var(--boa-font-family);
+  --yg-font-body: var(--boa-weight-regular) 0.875rem/1.25rem var(--boa-font-family);
+  --yg-font-help: var(--boa-weight-regular) 0.8125rem/1.125rem var(--boa-font-family);
+  --yg-font-meta: var(--boa-weight-regular) 0.75rem/1rem var(--boa-font-family);
+  --yg-font-heading: var(--boa-role-weight-heading) 1.25rem/1.75rem var(--boa-font-family);
+  --yg-font-touch: var(--boa-weight-regular) 1rem/1.5rem var(--boa-font-family);
+}
+.yg-root[data-material="paper"] {
+  --yg-canvas: light-dark(var(--boa-color-paper-25), var(--boa-color-paper-975));
+  --yg-surface: light-dark(var(--boa-color-paper-50), var(--boa-color-paper-950));
+  --yg-field: light-dark(var(--boa-color-paper-100), var(--boa-color-paper-850));
+  --yg-hover: light-dark(var(--boa-color-paper-200), var(--boa-color-paper-800));
+  --yg-text: light-dark(var(--boa-color-paper-950), var(--boa-color-paper-50));
+  --yg-muted: light-dark(var(--boa-color-paper-700), var(--boa-color-paper-300));
+}
+.yg-root[data-material="mist"] {
+  --yg-canvas: light-dark(var(--boa-color-mist-25), var(--boa-color-mist-975));
+  --yg-surface: light-dark(var(--boa-color-mist-50), var(--boa-color-mist-950));
+  --yg-field: light-dark(var(--boa-color-mist-100), var(--boa-color-mist-850));
+  --yg-hover: light-dark(var(--boa-color-mist-200), var(--boa-color-mist-800));
+  --yg-text: light-dark(var(--boa-color-mist-950), var(--boa-color-mist-50));
+  --yg-muted: light-dark(var(--boa-color-mist-700), var(--boa-color-mist-300));
+}

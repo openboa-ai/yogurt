@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "runtime-panel",
+  "type": "registry:ui",
+  "title": "RuntimePanel",
+  "description": "Check computer availability and open an authorized preview or control action.",
+  "files": [
+    {
+      "path": "ui/runtime-panel.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { RuntimePanel } from \"@openboa/yogurt/runtime-panel\";\n"
+    }
+  ]
+}

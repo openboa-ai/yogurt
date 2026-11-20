@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "work-event",
+  "type": "registry:ui",
+  "title": "WorkEvent",
+  "description": "Read a task, handoff, routine or result in the conversation timeline.",
+  "files": [
+    {
+      "path": "ui/work-event.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { WorkEvent } from \"@openboa/yogurt/work-event\";\n"
+    }
+  ]
+}

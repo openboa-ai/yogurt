@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "select",
+  "type": "registry:ui",
+  "title": "Select",
+  "description": "Pick a value from a short list.",
+  "files": [
+    {
+      "path": "ui/select.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Select } from \"@openboa/yogurt/select\";\n"
+    }
+  ]
+}

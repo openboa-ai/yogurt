@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="prohibited"><title>prohibited</title><circle cx="32" cy="32" r="27" data-fill="red.600" fill="#D1373E" />
+      <circle cx="32" cy="32" r="18" data-fill="neutral.0" fill="#FCFCFC" />
+      <path d="m16 16 32 32" fill="none" data-stroke="red.600" stroke="#D1373E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>

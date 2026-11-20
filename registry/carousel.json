@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "carousel",
+  "type": "registry:ui",
+  "title": "Carousel",
+  "description": "Move between ordered items at your own pace.",
+  "files": [
+    {
+      "path": "ui/carousel.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Carousel } from \"@openboa/yogurt/carousel\";\n"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+# Local SDK verification
+
+## 0.1.0-local.15 · The animated agent family
+
+[Performance specification](spec.md#revision-6-follow-up--animate-the-agent-family) · [Interactive family gallery](../../../../agents.html) · [Roster capture](evidence/agent-family-roster.png)
+
+| Target | Observation |
+| --- | --- |
+| Geometry | The 45 registered paths match the source SVG notches across all 15 silhouettes. The bounds check sampled 102,870 poses across all six states and both size profiles, including intermediate frames. Every sampled body stayed within its view box and each visible eye outline stayed within its body. |
+| Browser | Chrome played the six states on every variant at actual 24 and 96 CSS px. The 320 px dark view exercised all 24 px variants. Shape selection, color changes, replay, sequence start and stop and reduced motion passed. |
+| Zig | The pinned reference host passed 154 tests. The variant test checked 540 combinations of size, geometry and state, verified current-pose interruption and drew the Finished expression for every variant at both sizes. |
+| Existing avatars | The generated Kai and Sol tracks and eye outlines matched local.14. The 556 component gallery renders and existing playback checks passed. |
+| Palette | Twenty-six shared palette options passed the 4.5:1 eye contrast check. The 1,170 combinations are candidates for review in the roster. |
+
+## 0.1.0-local.14 · Longer performances and a drawn smile
+
+[Performance specification](spec.md#revision-6-follow-up--distinct-focus-searching-and-celebration) · [Kai and Sol at 24 and 96 px](evidence/avatar-expression-comparison.png)
+
+| Target | Observation |
+| --- | --- |
+| Ready and Working | Ready returned to center after a later glance in its 11.16-second loop. Working added a low reading pass and returned to the same starting transform in 6.16 seconds. |
+| Thinking | The 5.64-second timeline showed a high study glance, a centered turn with narrower side profiles, a hidden eye pair facing away, and eyes returning from the left. A short squint eased into the final high gaze. |
+| Waiting for you | Local eye poses and transition lengths match local.13. The 6.42-second loop holds longer on both sides. On full-size Kai the body travels 14.83 view-box units between side holds, with a 10.5-degree left tilt and a 10.8-degree right tilt. |
+| Blocked and Finished | Blocked retained its first drop and X eyes, then sank again and held the low pose. Finished switched to its curved eyelids at full closure and opened them gradually. The eye transform kept the same width and height at both peaks, the landing, and the final hold. |
+| Browser and Zig | Chrome passed all 556 gallery renders, playback checks and both comparison layouts. The pinned Native SDK host passed 153 tests, including current-pose transitions and reduced motion. The comparison contains 64 unscaled captures at 24 and 96 px. |
+
+## 0.1.0-local.13 · distinguish thinking, working and searching
+
+[Performance specification](spec.md#revision-6-follow-up--distinguish-thinking-working-and-searching) · [Kai and Sol at 24 px](evidence/avatar-state-contrast-24px.png)
+
+| Target | Observation |
+| --- | --- |
+| Browser playback | Thinking held an asymmetric upward gaze after its orbit. Working moved laterally in short reading passes with a low, nearly level body and a continuous loop seam. Waiting held the left and right turns, then faced forward before repeating. Ready, Blocked and Finished kept their authored clips and expressions. |
+| Roster and detail | The review replayed the three states together at 24 px, with the original 96 px and 24 px Kai and Sol views still available. Eighteen captures recorded three poses per state and identity at device scale one. The 736 px light and 320 px dark reviews rendered without horizontal overflow. |
+| Zig | The pinned Native SDK host passed 153 tests for sampled gaze and body poses, loop seams, held poses, reduced motion, and the existing reference canvas. The clip and expression data are shared with the web renderer. |
+
+## 0.1.0-local.12 · contrasting expressions and gestures
+
+[Performance specification](spec.md#revision-6-follow-up--separate-eye-shapes-and-contrasting-gestures)
+
+| Target | Observation |
+| --- | --- |
+| Browser playback | Thinking looked up through a small body orbit. Working followed short steps and lower-line resets with rounded eyes. Waiting looked left and right before returning to the forward pose and repeated seamlessly. Finished reached two different peaks with a landing between them and showed two smiling eyelids. |
+| Blocked | The authored body keys exactly matched local.11. The shape changed from round to two separate X eyes after the flinch. Web kept the prior visible eye shape at the start of an interrupted state and held the current shape with reduced motion. |
+| Roster and detail | Both avatars ran all six states at 24 and 96 px in the narrow and desktop views. The 24 px sheet uses 36 unscaled browser captures at device scale one. Every sampled body outline fit the original view box. |
+| Zig | The pinned Native SDK reference host passed 153 tests, including shape timing, cross rendering, two spring peaks, interruption and reduced-motion stills. The authored drawing entry continues to use the body and two eye paths. |
+
+[24 px frame comparison](evidence/avatar-gestures-24px.png) · [Blocked X eyes](evidence/avatar-blocked-x-eyes.png) · [First jump](evidence/avatar-finished-first-jump.png) · [Second jump](evidence/avatar-finished-rebound.png)
+
+## 0.1.0-local.11 · state rhythm and held poses
+
+[Performance specification](spec.md#revision-6-follow-up--readable-state-rhythm-and-held-posture) · [Label-free before and after](evidence/avatar-presence-comparison.png)
+
+| Target | Observation |
+| --- | --- |
+| Browser | The Working track reached both sides, returned through the same loop pose, and retained a reading posture near the seam. Waiting returned to identical gaze and position after its blink. Blocked reached a compressed posture within 450 ms. Finished held the raised pose after the nod. The active avatar preserved the current pose on retargeting. Reduced motion showed a selected visible pose without active tracks. |
+| Visual comparison | Both releases were captured with the state names hidden, including the first 450 ms and held poses at 96 and 24 px. The new Thinking and Blocked poses separated vertically. Working, Waiting and Blocked used a scan, a fixed gaze and a downward stop. All six states fit the 736 px light and 320 px dark reviews. |
+| Native | The pinned Native SDK reference host passed 152 tests. Tests covered the working loop seam, fixed waiting pose, blocked stop, selected still pose, and the original drawing entry at both avatar sizes. |
+
+The comparison shows a design difference. Human recognition accuracy was not measured.
+
+## 0.1.0-local.10 · eye shapes and body accents
+
+[Performance specification](spec.md#revision-6-follow-up--expressions-formed-by-the-eyes)
+
+| Target | Observation |
+| --- | --- |
+| Browser | The existing two eyes changed shape and position. The Working turn reached approximately −9.45 and +10.55 degrees at detail size. Thinking lifted after alternating its gaze, Waiting held upright eyes, Blocked recoiled and settled into an uneven squint, and Finished narrowed both lids in the nod before reopening. Interruptions began from the current pose. Reduced motion held the current expression. |
+| Geometry and visual review | Both original silhouettes stayed inside the viewport across the sampled poses. The two eyes remained separate at every authored frame. All six states rendered with no horizontal overflow at both 736 and 320 px. Kai and Sol were inspected at 96 and 24 px. |
+| Zig | The Native SDK 0.11.1 host passed all 152 tests, including eye and body poses at both sizes, interruption, the still expression and reference rendering. The caller continues to pass the body and two eye transforms to the same canvas entry. |
+
+[Working left turn](evidence/avatar-turn-left.png) · [Working right turn](evidence/avatar-turn-right.png) · [Waiting](evidence/avatar-attentive-eyes.png) · [Finished nod](evidence/avatar-completion-nod.png)
+
+## 0.1.0-local.9 · distinct and longer state gestures
+
+[Performance specification](spec.md#revision-6-follow-up--longer-state-performances) · [Timings and gestures](../../../motion.md#eye-and-body-motion)
+
+| Target | Observation |
+| --- | --- |
+| Chrome | The six states had distinct gestures and late poses. Working showed three successive lower gaze targets and a final check. Waiting and blocked settled at opposite body heights and eye openings. Finished held both eyes closed during its nod. A change during the late working gesture started from the displayed pose. The state labels, reduced-motion behavior and stable bounds passed. |
+| Interactive review | Kai and Sol displayed the sampled gestures at 96 and 24 px in the 736 px light and 320 px dark views. The sequence held Thinking for its full performance before Working. Direct selection reached all six states. |
+| Zig | All 151 tests passed with Native SDK 0.11.1. Representative poses matched the authored beats, and the scheduling test requested no next frame during the final holds of Thinking, Waiting and Blocked. The reference renderer still drew the two original bodies at detail and roster sizes. |
+
+[Thinking](evidence/avatar-state-thinking.png) · [Waiting](evidence/avatar-state-waiting.png) · [Blocked on narrow dark](evidence/avatar-state-blocked.png) · [Finished](evidence/avatar-state-finished.png)
+
+## 0.1.0-local.8 · eye and body motion
+
+[Specification revision 6](spec.md#eye-and-body-acting--local-follow-up-revision-6) · [Authored avatar clips](../../../../assets/agents/avatar-motion.json)
+
+| Target | Observation |
+| --- | --- |
+| Browser | All six state labels stayed in sync with the host. Working showed an early glance followed by the body turn, opposite eye widths on the two sides, and a full blink. Finished held both eyes closed before reopening. When interrupted, the new animation took its first pose from the pose on screen. The original path and outside bounds stayed stable. |
+| Browser scheduling | A visible 450 ms Working sample made zero SVG attribute writes after starting. The browser paused the three tracks out of view and resumed on return. Reduced motion and archived messages showed still artwork. All 556 gallery renders and the existing interaction checks passed. |
+| Sandbox review | Chrome rendered both agents and checked the 96 px and 24 px poses, fully closed eyes and zero horizontal overflow at 1024 px light and 320 px dark. |
+| Zig | The pinned 0.11.1 Native SDK reference canvas drew Kai and Sol at 24 and 96 points. Pixel comparisons showed each open pose drawing the eyes and each closed pose matching its body-only rendering. The 150-test host suite covered the early gaze, reduced motion, repeated interruption, held-pose scheduling and repaint bounds for a moved avatar. |
+
+[Working looks left](evidence/avatar-working-left.png) · [Working looks right](evidence/avatar-working-right.png) · [Dark roster](evidence/avatar-roster-dark.png) · [Working blink](evidence/avatar-working-blink.png)
+
+The Native evidence covers the reference canvas and typed host. Measure GPU frame timing and power consumption in an integrated app before making device performance claims.
+
+## 0.1.0-local.7 · expressive eyes
+
+
+| Target | Observation |
+| --- | --- |
+| Browser | The ready gesture glances, closes one lid slightly ahead of the other and fully closes both eyes. The active scan moves 21 horizontal units between holds and blinks before reopening. Completion holds both eyes closed before returning to neutral. The archive portrait and reduced-motion scene retain static eyes. |
+| Installed gallery | The compositor kept the small original silhouettes fixed in all six states. The 556 gallery cases passed. The review exercised both faces with full closure on narrow and desktop layouts. |
+| Zig | The source generated 179 poses for each identity. All 358 pose masks matched the original silhouette. Ready, working and finished closed poses matched the silhouette without eyes. Frame tests covered looping, reduced motion, registration retry and scheduling the next change after a held pose. |
+
+[Both faces closed](evidence/motion-eyes-closed.png) · [Light motion review](evidence/motion-preview-light-v6.png) · [Narrow dark motion review](evidence/motion-preview-dark-v6.png)
+
+## 0.1.0-local.5 · agent presence and control motion
+
+The [motion inventory](../../../motion.md) records treatments for 125 components and 14 editable blocks. The state clips share one authored sequence for the web and Zig. The rest of the component library uses common press, choice, progress and layer timings.
+
+| Target | Observation |
+| --- | --- |
+| Web gallery | Chrome rendered all 556 light, dark, desktop and narrow gallery combinations. A browser changed all six agent states, sampled two stages of the working gaze and verified that the outline, transparent surround and bounds stayed constant. Offscreen work paused. Reduced motion preserved the label and showed a steady face. |
+| Real inputs | The workspace preview acknowledged a sent message, advanced to working and stopped on cancellation. Reversing selection quickly moved the visual indicator to the actual selected option. The Select geometry, sidebar focus and prior workspace interactions passed. |
+| Inline review | The sandboxed preview exercised both identities, state selection, a save that held the control's dimensions, actual progress, a keyboard switch and the selected segment at desktop and narrow widths. |
+| Native | Native 0.11.1 with Zig 0.16.0 passed the 146-test typed widget suite and two dedicated frame-selection tests. In a separate typed fixture, the image registration binding was exercised with a fixture registry. The artwork pipeline decoded 184 frames and confirmed both silhouettes' alpha channels stayed exact. Native playback on a physical device remains unverified. |
+
+[Active conversation](evidence/motion-conversation-working.png) · [Desktop motion review](evidence/motion-preview-light.png) · [Narrow dark motion review](evidence/motion-preview-dark.png)
+
+## 0.1.0-local.4 · composable sidebars
+
+The local gallery contains 125 component entries and 14 editable blocks. The SidebarLayout entry exports the layout and its independent parts. The two new presets exercise the same layout with distinct navigation, searches and actions. ProjectWorkspace now uses the shared web shell.
+
+| Target | Observation |
+| --- | --- |
+| Web | Chrome 157 rendered the full gallery at 1120 px in light and dark, 320 px in light and 390 px in dark. All 556 renders passed. The sidebar test exercised controlled collapse, labelled icons, nested destinations, a right-side drawer, viewport changes, project search and the original Sidebar call. |
+| Narrow drawer | Pointer and keyboard opened a modal drawer. Escape and backdrop clicks dismissed it. Focus returned to its trigger. Selecting an agent updated the active view and closed the drawer. |
+| Native | All 125 individual markup files passed strict checking. The fresh macOS build with Native 0.11.1 and Zig 0.16.0 instantiated the panel, drawer and two recipes within a 146-test suite. The host owns mobile and desktop state for the Native templates. |
+
+[Project preset on desktop](evidence/project-sidebar-light.png) · [Agent drawer on a narrow viewport](evidence/agent-sidebar-dark.png) · [Composition guide](../../../sidebar.md)
+
+## 0.1.0-local.3 · workspace patterns
+
+The local gallery and package contain 124 components and 12 editable blocks. Eight components and eight blocks cover [agent and project workspaces](../../../workspace-patterns.md).
+
+| Target | Observation |
+| --- | --- |
+| Web | Chrome 157 rendered all 136 entries at 1120 px in light and dark, at 320 px in light and at 390 px in dark. The 544 renders passed without a page exception or horizontal overflow. |
+| Workspace behavior | The wide light and narrow dark views exercised roster search recovery, isolated drafts, computer request and return, project-scoped sources, attachments and send, approval and cancellation, schedule editing, membership removal, profile save and discard, and run retry and cancel. The rendered named agent's SVG uses one silhouette path with a transparent surround. |
+| Native adapter | The 124 components passed strict native markup validation. The macOS target using Zig 0.16.0 and Vercel Native 0.11.1 built typed widget trees for the components and all 12 blocks. The host suite passed 143 tests. |
+
+[Agent workspace](evidence/agent-workspace-light.png) · [Narrow agent workspace](evidence/agent-workspace-dark.png) · [Project workspace](evidence/project-workspace-light.png) · [Narrow project workspace](evidence/project-workspace-dark.png)
+
+The scenes use local sample data and callback results. Live voice, computer sessions, third-party authorization, touch interaction on physical devices and production rollout have separate target evidence.
+
+## 0.1.0-local.2 · 20 November 2026
+
+This recorded revision of the [component library](../../../../components.html) contained 116 components and four editable blocks.
+
+| What was checked | Observed result |
+| --- | --- |
+| Brand and layout | All 72 foreground/background checks passed across light and dark Neutral, Paper and Mist. Chrome 157 rendered every component and block at 1120 px in both appearances, at 320 px in light and at 390 px in dark. All 480 renders fit their viewport without page errors. |
+| Open Select | The picker matched the trigger width, left a 4 px gap and aligned the selected label with the field value. Desktop options measured 36 px high and touch options 44 px. In macOS WKWebView 27, a pointer opened a 320 px picker, chose Yogurt and closed it with the new value committed. |
+| Forms in consuming apps | Vite 7.2.2 and Next.js 16.0.10 built production hosts from the installed SDK. Both submitted named fields and multiple values, omitted the disabled field, and restored the required field on reset. Escape preserved the controlled value and emitted no change. Keyboard selection skipped a disabled option and emitted one change. A 70-option list opened above the trigger and accepted the last option. |
+| Component and block behavior | Chrome exercised numeric table sorting with missing readings last, short and full drawer drags, focus return, calendar bounds, command selection, menu navigation, consent, keypad input and resizable panes. The four blocks saved or discarded settings, recovered an empty search and opened a record, canceled or confirmed a revision-bound decision, and sent a draft. shadcn CLI 4.23.0 created the editable ProjectSettings source in a consumer. |
+| Native adapter | All 116 component templates passed strict markup checking. Zig 0.16.0 and Vercel Native SDK 0.11.1 constructed the component and block widget trees on arm64 macOS. The host suite passed all 127 tests. Separate Zig tests covered civil date bounds and private keypad layouts. Native gestures and accessibility on physical iOS and Android devices remain unverified. |
+
+[Select in light](evidence/select-light.png) · [Select in dark](evidence/select-dark.png) · [Touch-sized Select](evidence/select-touch.png) · [Calendar](evidence/calendar.png)
+
+From the kit root, run `npm ci`, `npm run build`, `npm run gallery`, `npm run check:ui` and `npm run check:web`. The browser checks use installed Chrome by default. The [installation guide](../../../using-yogurt.md) documents the public entry points and the [Zig example](../../../../examples/native-ui/README.md) describes the native test host.
+
+## 0.1.0-local.1 · initial SDK
+
+Candidate `@openboa/yogurt@0.1.0-local.1`, 20 November 2026. The [implementation spec](spec.md) records the owner-approved starting point. This record describes local consumption and the named runtimes.
+
+| Requirement | Target and observed result |
+| --- | --- |
+| 1. Brand and tokens | Every UI color role resolved to a numbered primitive. 72 text/background contrast checks passed across light and dark Neutral, Paper and Mist. The default filled button resolved to #175174 on light and #B8C9D3 on dark. Rethink Sans and the original company and project art use the kit’s assets. |
+| 2. Complete inventory | 64 entries across ten families rendered in the browser gallery. Each individual export loaded from the package. All 64 Native templates passed strict markup checking and compiled with a typed model into an actual SDK widget tree. The macOS native suite passed 68 tests including the individual templates. |
+| 3. Interaction | Chrome 157 exercised save, clear/no matches, combobox keyboard selection and Escape, menu selection and return focus, decision cancellation and confirmation, switch and chart readings. The interrupted switch returned to the last input without overshooting. Reduced motion used a zero-second transition. Touch used a 44 px action target and 16 px editable text. Checked widths of 320, 390, 736 and 1280 px and a 200% text setting. |
+| 4. Consumer distribution | A clean consumer installed the local tarball and used shadcn CLI 4.23.0 to add Button. Vite 7.2.2 and Next.js 16.0.10 built production hosts. A real browser activated the installed button before and after reload in each. Both targets installed each ID individually. Repeat installation preserved identical files and refused to replace an edited wrapper. A read-only consumer check accepted a mixed web/native fixture and identified three deliberately incorrect color or font declarations by file and line. |
+| 5. Native runtime | On arm64 macOS 27.0.1, Zig 0.16.0 and Vercel Native SDK 0.11.1 built a ReleaseFast executable. Its Metal surface reported a nonblank frame. The runtime exposed an 8 px radius token, a 36 px primary button and a 32×19 px switch in its 44 px row. Native automation operated Save, Undo, the record-date switch, appearance and all three neutral materials. The saved view imports the installed Button and Switch templates. |
+| 6. Remote review | The offline catalog contains its font, implementation, examples and brand data. The sandboxed preview ran a save and navigated to Brand & tokens. A macOS WKWebView loaded the gallery and returned the changed switch state. |
+
+### Initial SDK captures
+
+[Browser gallery](evidence/web-light.png) · [Narrow gallery](evidence/web-mobile.png) · [Zig saved view on light](evidence/native-light.png) · [Zig saved view on dark](evidence/native-dark.png)
+
+The native PNGs use the SDK’s reference rendering of the running Metal window’s canvas. The named widget actions and values came from the running app. A typed construction check covers the rest of the Native catalog. Device accessibility, full interaction parity for individual complex controls, iOS, Android, Windows, Linux and comparative performance require their own target observations. A product owns live receipts, permissions, image registration and business effects. The receipts and records in the gallery are local examples.
+
+Run `npm ci && npm run build && npm run check:ui && npm run gallery`. The [Zig example](../../../../examples/native-ui/README.md) includes the native host and the command for the full template check. The [installation guide](../../../using-yogurt.md) describes the local tarball, registry and project CI check.

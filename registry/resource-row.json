@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "resource-row",
+  "type": "registry:ui",
+  "title": "ResourceRow",
+  "description": "Open or pin a source while keeping its kind and origin visible.",
+  "files": [
+    {
+      "path": "ui/resource-row.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ResourceRow } from \"@openboa/yogurt/resource-row\";\n"
+    }
+  ]
+}

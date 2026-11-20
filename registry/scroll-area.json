@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "scroll-area",
+  "type": "registry:ui",
+  "title": "ScrollArea",
+  "description": "Give an overflowing region its own reading position.",
+  "files": [
+    {
+      "path": "ui/scroll-area.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ScrollArea } from \"@openboa/yogurt/scroll-area\";\n"
+    }
+  ]
+}

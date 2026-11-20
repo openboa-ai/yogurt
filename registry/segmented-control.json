@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "segmented-control",
+  "type": "registry:ui",
+  "title": "SegmentedControl",
+  "description": "Change the presentation of one value.",
+  "files": [
+    {
+      "path": "ui/segmented-control.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { SegmentedControl } from \"@openboa/yogurt/segmented-control\";\n"
+    }
+  ]
+}

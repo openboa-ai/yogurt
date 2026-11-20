@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design handbook · yogurt</title>
+<link rel="icon" href="../assets/logo/upright-9.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../styles/components.css">
+<style>
+:root{background:var(--boa-color-gray-green-50);color:var(--boa-color-gray-green-950)}
+body{margin:0;font-family:var(--boa-font-family)}
+main{max-width:1120px;margin:auto;padding:0 clamp(16px,5vw,64px) 64px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:64px;border-bottom:1px solid var(--boa-rule)}
+.top img{width:110px;height:auto;display:block}
+a{color:var(--boa-color-slate-750);text-underline-offset:.18em}
+.top a:last-child,.return{font-size:var(--boa-size-ui);font-weight:var(--boa-role-weight-ui)}
+.intro{padding:clamp(32px,6vw,72px) 0 24px;max-width:720px}
+h1,h2,h3,p{margin:0}
+h1{font-size:clamp(38px,6vw,68px);font-weight:var(--boa-role-weight-heading);line-height:1.04;letter-spacing:-.045em}
+.intro p{font-size:clamp(16px,2vw,20px);margin-top:16px;line-height:1.44;max-width:55ch}
+.proofs{display:grid;grid-template-columns:1fr 1fr;gap:1px;border-radius:var(--boa-radius-panel);overflow:hidden;border:1px solid var(--boa-rule);background:var(--boa-rule);margin:4px 0 32px}
+.proof{background:var(--boa-paper);color:var(--boa-ink);padding:clamp(16px,3vw,32px);min-width:0}
+.proof .org{display:flex;gap:8px;align-items:center;font-size:var(--boa-size-ui);font-weight:var(--boa-role-weight-ui);margin:0 0 20px}
+.org img{width:28px;height:28px;object-fit:contain}
+.proof h2{font-size:clamp(20px,2.6vw,32px);line-height:1.12;letter-spacing:-.03em;font-weight:var(--boa-role-weight-heading)}
+.proof p{color:var(--boa-muted);margin:6px 0 16px;line-height:1.5}
+.proof a{font-weight:var(--boa-role-weight-ui);font-size:var(--boa-size-ui);color:var(--boa-ink)}
+.proof[data-appearance=dark]{color:var(--boa-ink);background:var(--boa-paper)}
+.foundations,.records{display:grid;grid-template-columns:minmax(140px,.8fr) minmax(0,2fr);column-gap:32px;border-top:1px solid var(--boa-rule);padding:24px 0}
+.foundations h2,.records h2{font-weight:var(--boa-role-weight-heading);font-size:var(--boa-size-subheading);letter-spacing:-.025em}
+.entries{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;align-content:start}
+.entries>a{display:flex;align-items:center;min-height:40px}
+details{border-bottom:1px solid var(--boa-rule)}
+summary{cursor:pointer;padding:12px 0;font-weight:var(--boa-role-weight-ui)}
+.group ul{list-style:none;padding:0 0 16px;margin:0}.group li{padding:8px 0}
+.group li b{display:block;font-weight:var(--boa-role-weight-ui)}
+.refs{font-size:var(--boa-size-ui);display:flex;gap:4px 14px;flex-wrap:wrap;padding-top:2px}
+.refs a{padding-block:3px}
+.read{padding-top:24px;max-width:870px}
+.read>.return{display:inline-block;margin-bottom:24px}
+.read h1{font-size:clamp(28px,4vw,46px);line-height:1.1;margin:0 0 20px}
+.read h2{font-size:var(--boa-size-subheading);font-weight:var(--boa-role-weight-heading);margin:32px 0 12px}
+.read h3{font-size:var(--boa-size-body);margin:16px 0 8px}
+.read p,.read li{max-width:78ch;line-height:1.55;margin:0 0 12px;overflow-wrap:anywhere}
+.read strong{font-weight:650}.read code{font-family:inherit;font-weight:var(--boa-role-weight-ui);overflow-wrap:anywhere}
+.read pre{white-space:pre-wrap;background:var(--boa-color-neutral-100);padding:16px;border-radius:var(--boa-radius-control)}
+.read pre code{font-weight:var(--boa-role-weight-body)}
+.wrap{overflow:auto;margin:12px 0 16px}
+table{border-collapse:collapse;width:100%;font-size:var(--boa-size-ui);text-align:left;line-height:1.5}
+th,td{padding:12px 14px 12px 0;border-bottom:1px solid var(--boa-rule);vertical-align:top;overflow-wrap:break-word}
+th{font-weight:var(--boa-role-weight-ui)}td p{margin:0}
+.read footer{border-top:1px solid var(--boa-rule);margin:24px 0;padding:16px 0;font-size:var(--boa-size-ui)}
+.read{display:none}.read:target{display:block}main:has(.read:target) #overview{display:none}
+:target{scroll-margin-top:12px}
+@media(max-width:660px){.proofs{grid-template-columns:1fr}.proof .org{margin-bottom:10px}.foundations,.records{grid-template-columns:1fr;row-gap:12px}.entries{gap:0 12px}.top{min-height:52px}.read th,.read td{min-width:8rem}.read .wrap:focus-visible{outline-offset:-2px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{#overview{display:none!important}.top{min-height:32px}.read:target{display:block}.return,.read footer{display:none}.wrap{overflow:visible}}
+</style></head>
+<body class="boa-surface"><main>
+<header class="top"><a href="../index.html"><img src="../assets/logo/openboa-lockup.svg" alt="OpenBoa"></a><a href="../playbook.html">Product playbook</a></header>
+<section id="overview" tabindex="-1">
+<div class="intro"><h1>Design handbook</h1><p>How OpenBoa looks, speaks and responds. Start with <a href="../examples/basic-controls/index.html">four basic controls at product size</a> and their <a href="#first-four">intent and specs</a>.</p></div>
+<div class="proofs" aria-label="Example product surfaces">
+<section class="proof"><p class="org"><img src="../assets/projects/meatball.svg" alt="">Meatball</p><h2>Review a decision</h2><p>Check the revision and its consequence before sending an answer.</p><a href="#I13-design">Read the decision pattern</a></section>
+<section class="proof boa-surface" data-appearance="dark"><p class="org"><img src="../assets/projects/sourdough.svg" alt="">Sourdough</p><h2>Last observed at 09:42</h2><p>Partial coverage. The original observation time stays with the record.</p><a href="#I12-design">Read the record pattern</a></section>
+</div>
+<section class="foundations"><h2>Design and platform</h2><div class="entries">{{START}}</div></section>
+<section class="records"><h2>Design records</h2><div class="group">{{GROUPS}}</div></section>
+<section class="records"><h2>Product journeys</h2><div class="entries">{{JOURNEYS}}</div></section>
+</section>
+{{ARTICLES}}
+</main></body></html>

@@ -1,0 +1,105 @@
+{
+  "language": "en",
+  "terms": [
+    {
+      "id": "company.openboa",
+      "term": "OpenBoa",
+      "context": "The company in reader-facing copy",
+      "example": "OpenBoa builds products and businesses around what people can now do with AI."
+    },
+    {
+      "id": "repository.meatball",
+      "term": "meatball",
+      "context": "Repository name",
+      "description": "keep the ball rolling"
+    },
+    {
+      "id": "repository.sourdough",
+      "term": "sourdough",
+      "context": "Repository name",
+      "description": "put the dough to work"
+    },
+    {
+      "id": "repository.yogurt",
+      "term": "yogurt",
+      "context": "Repository and brand kit name",
+      "description": "ships with live cultures"
+    },
+    {
+      "id": "roster.agent",
+      "term": "agent",
+      "context": "An individual in the agent roster",
+      "example": "Find an agent"
+    },
+    {
+      "id": "agent.kai",
+      "term": "Kai",
+      "context": "The named agent with the sage body and top notch"
+    },
+    {
+      "id": "agent.sol",
+      "term": "Sol",
+      "context": "The named agent with the coral oval and bottom notch"
+    },
+    {
+      "id": "action.save-view",
+      "term": "Save view",
+      "context": "Commit this saved view."
+    },
+    {
+      "id": "action.cancel",
+      "term": "Cancel",
+      "context": "Leave a decision without submitting it."
+    },
+    {
+      "id": "action.close",
+      "term": "Close",
+      "context": "Dismiss an overlay."
+    },
+    {
+      "id": "action.done",
+      "term": "Done",
+      "context": "Finish editing the current view."
+    },
+    {
+      "id": "action.retry",
+      "term": "Try again",
+      "context": "Retry a recoverable operation."
+    },
+    {
+      "id": "action.clear-search",
+      "term": "Clear search",
+      "context": "Remove the query and restore the collection."
+    },
+    {
+      "id": "action.lookup-original",
+      "term": "Check original request",
+      "context": "Read an existing receipt by its original ID."
+    },
+    {
+      "id": "action.jump-latest",
+      "term": "Jump to latest",
+      "context": "Move a reading position to the newest message."
+    },
+    {
+      "id": "state.no-matches",
+      "term": "No matches",
+      "context": "A query returned no records."
+    },
+    {
+      "id": "state.saved",
+      "term": "View saved.",
+      "context": "The host has acknowledged a save."
+    },
+    {
+      "id": "state.empty",
+      "term": "No records yet",
+      "context": "The source is available and contains zero records."
+    },
+    {
+      "id": "state.unknown",
+      "term": "Confirmation unavailable",
+      "context": "The original outcome has not been observed."
+    }
+  ]
+}

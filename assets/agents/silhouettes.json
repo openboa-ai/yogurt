@@ -1,0 +1,270 @@
+{
+  "viewBox": [
+    -8,
+    -5,
+    116,
+    116
+  ],
+  "eyes": {
+    "offsetX": 13,
+    "radius": 2.45,
+    "color": "gray-green.950"
+  },
+  "shapes": [
+    {
+      "name": "Kai",
+      "file": "kai.svg",
+      "basePath": "M50 11 C73 11 85 11 92 20 C98 28 98 38 98 52 C98 72 98 82 91 89 C84 96 75 96 51 96 C28 96 18 96 11 89 C4 82 4 72 4 53 C4 33 4 25 11 18 C18 11 29 11 50 11 Z",
+      "notch": "pin",
+      "positions": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ],
+      "defaultPosition": "top",
+      "color": "sage.300",
+      "eyeCenter": [
+        51,
+        50
+      ]
+    },
+    {
+      "name": "Sol",
+      "file": "sol.svg",
+      "basePath": "M50 3 C73 3 90 27 90 55 C90 77 75 102 50 102 C25 102 10 79 10 55 C10 28 27 3 50 3 Z",
+      "notch": "cup",
+      "positions": [
+        "bottom",
+        "right",
+        "left"
+      ],
+      "defaultPosition": "bottom",
+      "color": "coral.300",
+      "eyeCenter": [
+        50,
+        49
+      ]
+    },
+    {
+      "name": "Wide oval",
+      "file": "wide-oval.svg",
+      "basePath": "M36.5 22 Q50 21 65 21.5 Q80 22 89.5 28.5 Q99 35 101 44.5 Q103 54 100 63 Q97 72 87.5 78 Q78 84 63.5 85 Q49 86 35 84.5 Q21 83 12 77 Q3 71 0.5 62.5 Q-2 54 1 45 Q4 36 13.5 29.5 Q23 23 36.5 22 Z",
+      "notch": "pin",
+      "positions": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ],
+      "defaultPosition": "right",
+      "color": "slate.400",
+      "eyeCenter": [
+        50,
+        53
+      ]
+    },
+    {
+      "name": "Low dome",
+      "file": "low-dome.svg",
+      "basePath": "M41 21 Q50 19 60 20 Q70 21 78.5 28 Q87 35 93 45.5 Q99 56 100 63.5 Q101 71 99.5 75.5 Q98 80 92 82.5 Q86 85 71 85.5 Q56 86 38.5 85.5 Q21 85 13.5 83 Q6 81 4 77 Q2 73 3 64.5 Q4 56 10 45.5 Q16 35 24 29 Q32 23 41 21 Z",
+      "notch": "cup",
+      "positions": [
+        "bottom",
+        "left",
+        "right"
+      ],
+      "defaultPosition": "bottom",
+      "color": "violet.300",
+      "eyeCenter": [
+        50,
+        60
+      ]
+    },
+    {
+      "name": "Round triangle",
+      "file": "round-triangle.svg",
+      "basePath": "M44.5 13.5 Q50 11 56 13.5 Q62 16 70.5 25.5 Q79 35 86.5 48 Q94 61 95.5 68 Q97 75 94 80 Q91 85 83 88 Q75 91 60 91.5 Q45 92 33 90.5 Q21 89 14.5 86 Q8 83 6 78 Q4 73 6.5 65 Q9 57 17 44 Q25 31 32 23.5 Q39 16 44.5 13.5 Z",
+      "notch": "cup",
+      "positions": [
+        "bottom",
+        "right",
+        "left"
+      ],
+      "defaultPosition": "bottom",
+      "color": "ochre.300",
+      "eyeCenter": [
+        50,
+        59
+      ]
+    },
+    {
+      "name": "Tall capsule",
+      "file": "tall-capsule.svg",
+      "basePath": "M44.5 3.5 Q50 3 57 3.5 Q64 4 69.5 8 Q75 12 77 18 Q79 24 79.5 35 Q80 46 80 60 Q80 74 78.5 81 Q77 88 73 93 Q69 98 62 100 Q55 102 48.5 102 Q42 102 35.5 99.5 Q29 97 25.5 91 Q22 85 21 78 Q20 71 20 53 Q20 35 21 28 Q22 21 25.5 15 Q29 9 34 6.5 Q39 4 44.5 3.5 Z",
+      "notch": "pin",
+      "positions": [
+        "top",
+        "bottom",
+        "right",
+        "left"
+      ],
+      "defaultPosition": "left",
+      "color": "teal.300",
+      "eyeCenter": [
+        50,
+        52
+      ]
+    },
+    {
+      "name": "Round diamond",
+      "file": "round-diamond.svg",
+      "basePath": "M45 8.5 Q50 7 55.5 9 Q61 11 71 18 Q81 25 89 33.5 Q97 42 98.5 47 Q100 52 97.5 57.5 Q95 63 83 73.5 Q71 84 65 89 Q59 94 53.5 96 Q48 98 42.5 96 Q37 94 27 85.5 Q17 77 10 68 Q3 59 2 54.5 Q1 50 3.5 45 Q6 40 16.5 30 Q27 20 33.5 15 Q40 10 45 8.5 Z",
+      "notch": "cup",
+      "positions": [
+        "left",
+        "right"
+      ],
+      "defaultPosition": "left",
+      "color": "rose.300",
+      "eyeCenter": [
+        50,
+        54
+      ]
+    },
+    {
+      "name": "Wide base",
+      "file": "wide-base.svg",
+      "basePath": "M42 18 Q51 17 60 17.5 Q69 18 73 21 Q77 24 81.5 33 Q86 42 91 55 Q96 68 96.5 74 Q97 80 93.5 84 Q90 88 79.5 89.5 Q69 91 50.5 91 Q32 91 22 90 Q12 89 8.5 85.5 Q5 82 5 77.5 Q5 73 10 59.5 Q15 46 19.5 36.5 Q24 27 28.5 23 Q33 19 42 18 Z",
+      "notch": "pin",
+      "positions": [
+        "top",
+        "bottom",
+        "right"
+      ],
+      "defaultPosition": "top",
+      "color": "earth.300",
+      "eyeCenter": [
+        50,
+        56
+      ]
+    },
+    {
+      "name": "Wide crown",
+      "file": "wide-crown.svg",
+      "basePath": "M37 15 Q49 14 60.5 14.5 Q72 15 80 18 Q88 21 91.5 26.5 Q95 32 94.5 39.5 Q94 47 89 57 Q84 67 75 76.5 Q66 86 60.5 89.5 Q55 93 50.5 93 Q46 93 40.5 90 Q35 87 25.5 77.5 Q16 68 10.5 58 Q5 48 4.5 40.5 Q4 33 7.5 27.5 Q11 22 18 19 Q25 16 37 15 Z",
+      "notch": "pin",
+      "positions": [
+        "top",
+        "left",
+        "right"
+      ],
+      "defaultPosition": "right",
+      "color": "sage.400",
+      "eyeCenter": [
+        50,
+        48
+      ]
+    },
+    {
+      "name": "Tilted oval",
+      "file": "tilted-oval.svg",
+      "basePath": "M56.5 17 Q69 13 76.5 13.5 Q84 14 88 18.5 Q92 23 93 30 Q94 37 91 46.5 Q88 56 81.5 64.5 Q75 73 65 80 Q55 87 45.5 90 Q36 93 27.5 92 Q19 91 14 87 Q9 83 7.5 77 Q6 71 7.5 62.5 Q9 54 16 45 Q23 36 33.5 28.5 Q44 21 56.5 17 Z",
+      "notch": "cup",
+      "positions": [
+        "top",
+        "bottom",
+        "left"
+      ],
+      "defaultPosition": "top",
+      "color": "coral.200",
+      "eyeCenter": [
+        50,
+        55
+      ]
+    },
+    {
+      "name": "Drop",
+      "file": "drop.svg",
+      "basePath": "M58 5 C64 3 67 8 68 17 C70 33 81 44 87 58 C96 79 83 97 61 101 C35 106 13 91 11 70 C9 51 20 39 35 26 C47 16 51 7 58 5 Z",
+      "notch": "cup",
+      "positions": [
+        "bottom",
+        "right",
+        "left"
+      ],
+      "defaultPosition": "bottom",
+      "color": "teal.200",
+      "eyeCenter": [
+        51,
+        61
+      ]
+    },
+    {
+      "name": "Round star",
+      "file": "round-star.svg",
+      "basePath": "M43.229 9.480 Q50.000 -1.000 56.771 9.480 L62.038 17.631 Q68.809 28.111 80.869 31.313 L90.248 33.803 Q102.308 37.004 94.433 46.682 L88.309 54.210 Q80.434 63.889 81.116 76.347 L81.646 86.037 Q82.328 98.496 70.690 93.997 L61.638 90.499 Q50.000 86.000 38.362 90.499 L29.310 93.997 Q17.672 98.496 18.354 86.037 L18.884 76.347 Q19.566 63.889 11.691 54.210 L5.567 46.682 Q-2.308 37.004 9.752 33.803 L19.131 31.313 Q31.191 28.111 37.962 17.631 Z",
+      "notch": "pin",
+      "positions": [
+        "right",
+        "left"
+      ],
+      "defaultPosition": "right",
+      "color": "ochre.200",
+      "eyeCenter": [
+        50,
+        54
+      ]
+    },
+    {
+      "name": "Bean",
+      "file": "bean.svg",
+      "basePath": "M51 12 C71 7 88 14 90 29 C92 41 81 46 77 54 C73 64 84 68 80 80 C76 94 58 100 43 96 C21 90 11 71 13 51 C15 31 30 17 51 12 Z",
+      "notch": "cup",
+      "positions": [
+        "top",
+        "bottom",
+        "left"
+      ],
+      "defaultPosition": "top",
+      "color": "rose.400",
+      "eyeCenter": [
+        47,
+        55
+      ]
+    },
+    {
+      "name": "Round pentagon",
+      "file": "round-pentagon.svg",
+      "basePath": "M34.935 16.945 Q50.000 6.000 65.065 16.945 L80.586 28.222 Q95.651 39.167 89.896 56.877 L83.968 75.123 Q78.214 92.833 59.593 92.833 L40.407 92.833 Q21.786 92.833 16.032 75.123 L10.104 56.877 Q4.349 39.167 19.414 28.222 Z",
+      "notch": "pin",
+      "positions": [
+        "bottom",
+        "right",
+        "left"
+      ],
+      "defaultPosition": "bottom",
+      "color": "slate.300",
+      "eyeCenter": [
+        50,
+        55
+      ]
+    },
+    {
+      "name": "Round heart",
+      "file": "round-heart.svg",
+      "basePath": "M50 23 C57 23 62 12 76 13 C92 14 99 28 97 44 C95 65 74 84 58 94 C52 98 48 99 42 95 C23 83 5 64 3 46 C0 28 11 13 27 13 C40 13 44 23 50 23 Z",
+      "notch": "cup",
+      "positions": [
+        "right",
+        "left"
+      ],
+      "defaultPosition": "left",
+      "color": "violet.200",
+      "eyeCenter": [
+        50,
+        50
+      ]
+    }
+  ]
+}

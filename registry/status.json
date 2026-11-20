@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "status",
+  "type": "registry:ui",
+  "title": "Status",
+  "description": "Announce a meaningful change once.",
+  "files": [
+    {
+      "path": "ui/status.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Status } from \"@openboa/yogurt/status\";\n"
+    }
+  ]
+}

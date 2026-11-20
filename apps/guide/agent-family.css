@@ -1,0 +1,66 @@
+#yogurt-agent-family {
+  color-scheme: light dark;
+  color: light-dark(var(--boa-color-gray-green-950), var(--boa-color-neutral-100));
+  font: 400 14px/1.4 "Rethink Sans", system-ui;
+}
+#yogurt-agent-family main {
+  box-sizing: border-box;
+  background: light-dark(var(--boa-color-gray-green-50), var(--boa-color-neutral-950));
+  border-radius: 16px;
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+}
+#yogurt-agent-family :is(h1, h2) { margin: 0; font-weight: 550; }
+#yogurt-agent-family h1 { font-size: 20px; }
+#yogurt-agent-family h2 { font-size: 14px; }
+#yogurt-agent-family h2 span {
+  margin-inline-start: 6px;
+  font-weight: 400;
+  color: light-dark(var(--boa-color-gray-green-700), var(--boa-color-neutral-400));
+}
+.family-controls { display: flex; align-items: end; flex-wrap: wrap; gap: 8px; }
+.family-controls label { display: grid; gap: 4px; }
+#yogurt-agent-family :is(button, select) {
+  font: inherit;
+  color: inherit;
+  padding: 6px 10px;
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: light-dark(var(--boa-color-neutral-100), var(--boa-color-neutral-900));
+}
+#yogurt-agent-family button { cursor: pointer; }
+#yogurt-agent-family .family-sequence,
+#yogurt-agent-family button[aria-pressed="true"] {
+  color: light-dark(var(--boa-color-slate-750), var(--boa-color-slate-100));
+  background: light-dark(var(--boa-color-slate-100), var(--boa-color-slate-800));
+}
+.family-detail-pair {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px clamp(4px, 2.2vw, 14px);
+}
+.family-detail-pair > div { display: grid; justify-items: center; }
+.family-detail-pair > div > span { text-transform: capitalize; }
+.family-roster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(124px, 1fr));
+  gap: 6px;
+  margin-block-start: 8px;
+}
+#yogurt-agent-family .family-roster button {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+}
+.family-notch-row { display: flex; flex-wrap: wrap; gap: 1px; }
+@media (max-width: 400px) {
+  #yogurt-agent-family main { padding: 12px; }
+  .family-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #yogurt-agent-family .family-controls select { min-width: 0; width: 100%; padding-inline: 6px; }
+}
+@media (pointer: coarse) {
+  #yogurt-agent-family :is(button, select) { min-height: 44px; }
+}

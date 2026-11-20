@@ -1,0 +1,8 @@
+# The initializer sets the designated maintainer for each generated repository.
+# starter:owners
+/.github/ @SonSangjoon
+/.gitattributes @SonSangjoon
+/.gitleaks* @SonSangjoon
+/SECURITY.md @SonSangjoon
+/tools/ @SonSangjoon
+# /starter:owners

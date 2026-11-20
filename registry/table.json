@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "table",
+  "type": "registry:ui",
+  "title": "Table",
+  "description": "Present aligned columns with a caption and semantic row headings.",
+  "files": [
+    {
+      "path": "ui/table.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Table } from \"@openboa/yogurt/table\";\n"
+    }
+  ]
+}

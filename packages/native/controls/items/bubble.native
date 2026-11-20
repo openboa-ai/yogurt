@@ -1,0 +1,5 @@
+<template name="yg-bubble">
+  <bubble>
+    <slot/>
+  </bubble>
+</template>

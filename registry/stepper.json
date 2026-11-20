@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stepper",
+  "type": "registry:ui",
+  "title": "Stepper",
+  "description": "Read the current stage of a multi-step task.",
+  "files": [
+    {
+      "path": "ui/stepper.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Stepper } from \"@openboa/yogurt/stepper\";\n"
+    }
+  ]
+}

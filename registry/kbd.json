@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "kbd",
+  "type": "registry:ui",
+  "title": "KeyboardShortcut",
+  "description": "Show the keys for an available command.",
+  "files": [
+    {
+      "path": "ui/kbd.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { KeyboardShortcut } from \"@openboa/yogurt/kbd\";\n"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "legend",
+  "type": "registry:ui",
+  "title": "Legend",
+  "description": "Name the series and its unit.",
+  "files": [
+    {
+      "path": "ui/legend.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Legend } from \"@openboa/yogurt/legend\";\n"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+<template name="yg-post" args="title">
+  <column gap="8">
+    <text size="heading">{title}</text>
+    <slot/>
+  </column>
+</template>

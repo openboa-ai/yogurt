@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "switch",
+  "type": "registry:ui",
+  "title": "Switch",
+  "description": "Apply a setting immediately.",
+  "files": [
+    {
+      "path": "ui/switch.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Switch } from \"@openboa/yogurt/switch\";\n"
+    }
+  ]
+}

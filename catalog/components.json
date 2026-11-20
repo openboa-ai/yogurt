@@ -1,0 +1,887 @@
+[
+  {
+    "id": "yogurt",
+    "name": "Yogurt",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "A scoped appearance and surface for a product."
+  },
+  {
+    "id": "text",
+    "name": "Text",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "Body, help and metadata in one typeface."
+  },
+  {
+    "id": "heading",
+    "name": "Heading",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "Name a section on its reading edge."
+  },
+  {
+    "id": "icon",
+    "name": "Icon",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "A small glyph with an optional accessible name."
+  },
+  {
+    "id": "stack",
+    "name": "Stack",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "Group content on a vertical rhythm."
+  },
+  {
+    "id": "inline",
+    "name": "Inline",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "Place related actions on one baseline."
+  },
+  {
+    "id": "grid",
+    "name": "Grid",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "Let related items wrap as space changes."
+  },
+  {
+    "id": "surface",
+    "name": "Surface",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "Keep one task on a quiet plane."
+  },
+  {
+    "id": "divider",
+    "name": "Divider",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "Mark an explicit change of subject."
+  },
+  {
+    "id": "scroll-area",
+    "name": "ScrollArea",
+    "family": "Foundations",
+    "module": "foundation",
+    "description": "Give an overflowing region its own reading position."
+  },
+  {
+    "id": "button",
+    "name": "Button",
+    "family": "Actions",
+    "module": "actions",
+    "description": "Commit one named action."
+  },
+  {
+    "id": "icon-button",
+    "name": "IconButton",
+    "family": "Actions",
+    "module": "actions",
+    "description": "Keep a familiar action within reach."
+  },
+  {
+    "id": "button-group",
+    "name": "ButtonGroup",
+    "family": "Actions",
+    "module": "actions",
+    "description": "Place actions for one decision together."
+  },
+  {
+    "id": "bottom-action",
+    "name": "BottomAction",
+    "family": "Actions",
+    "module": "actions",
+    "description": "Keep the next step reachable on a small screen."
+  },
+  {
+    "id": "field",
+    "name": "Field",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Connect a label, value and correction."
+  },
+  {
+    "id": "label",
+    "name": "Label",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Give a control a stable visible name."
+  },
+  {
+    "id": "help-text",
+    "name": "HelpText",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Explain what the field accepts."
+  },
+  {
+    "id": "field-error",
+    "name": "FieldError",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Keep a correction beside its field."
+  },
+  {
+    "id": "text-field",
+    "name": "TextField",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Edit one line without losing a draft."
+  },
+  {
+    "id": "search-field",
+    "name": "SearchField",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Filter records and clear the query in place."
+  },
+  {
+    "id": "textarea",
+    "name": "Textarea",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Write a note across several lines."
+  },
+  {
+    "id": "select",
+    "name": "Select",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Pick a value from a short list."
+  },
+  {
+    "id": "combobox",
+    "name": "Combobox",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Find one stable value in a longer list."
+  },
+  {
+    "id": "checkbox",
+    "name": "Checkbox",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Choose an independent option."
+  },
+  {
+    "id": "radio-group",
+    "name": "RadioGroup",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Choose one of several alternatives."
+  },
+  {
+    "id": "switch",
+    "name": "Switch",
+    "family": "Forms",
+    "module": "forms",
+    "description": "Apply a setting immediately."
+  },
+  {
+    "id": "link",
+    "name": "Link",
+    "family": "Navigation",
+    "module": "navigation",
+    "description": "Open a named destination."
+  },
+  {
+    "id": "breadcrumb",
+    "name": "Breadcrumb",
+    "family": "Navigation",
+    "module": "navigation",
+    "description": "Find a parent in the current path."
+  },
+  {
+    "id": "navigation-list",
+    "name": "NavigationList",
+    "family": "Navigation",
+    "module": "navigation",
+    "description": "Move between product destinations."
+  },
+  {
+    "id": "tabs",
+    "name": "Tabs",
+    "family": "Navigation",
+    "module": "navigation",
+    "description": "Switch panels within one context."
+  },
+  {
+    "id": "segmented-control",
+    "name": "SegmentedControl",
+    "family": "Navigation",
+    "module": "navigation",
+    "description": "Change the presentation of one value."
+  },
+  {
+    "id": "pagination",
+    "name": "Pagination",
+    "family": "Navigation",
+    "module": "navigation",
+    "description": "Read one page of a collection."
+  },
+  {
+    "id": "disclosure-row",
+    "name": "DisclosureRow",
+    "family": "Layers",
+    "module": "layers",
+    "description": "Reveal related details on demand."
+  },
+  {
+    "id": "action-menu",
+    "name": "ActionMenu",
+    "family": "Layers",
+    "module": "layers",
+    "description": "Choose a secondary command."
+  },
+  {
+    "id": "popover",
+    "name": "Popover",
+    "family": "Layers",
+    "module": "layers",
+    "description": "Read a little more without leaving the task."
+  },
+  {
+    "id": "dialog",
+    "name": "Dialog",
+    "family": "Layers",
+    "module": "layers",
+    "description": "Finish one focused task."
+  },
+  {
+    "id": "drawer",
+    "name": "Drawer",
+    "family": "Layers",
+    "module": "layers",
+    "description": "Pull up a task and dismiss it from its lower-edge surface."
+  },
+  {
+    "id": "sheet",
+    "name": "Sheet",
+    "family": "Layers",
+    "module": "layers",
+    "description": "Open more space for a task on a small screen."
+  },
+  {
+    "id": "tooltip",
+    "name": "Tooltip",
+    "family": "Layers",
+    "module": "layers",
+    "description": "Explain a compact action on hover or focus."
+  },
+  {
+    "id": "filter-bar",
+    "name": "FilterBar",
+    "family": "Collections",
+    "module": "collections",
+    "description": "Narrow a collection in place."
+  },
+  {
+    "id": "count",
+    "name": "Count",
+    "family": "Collections",
+    "module": "collections",
+    "description": "Report the size of a named set."
+  },
+  {
+    "id": "list",
+    "name": "List",
+    "family": "Collections",
+    "module": "collections",
+    "description": "Read related records in order."
+  },
+  {
+    "id": "list-row",
+    "name": "ListRow",
+    "family": "Collections",
+    "module": "collections",
+    "description": "Give one record an aligned leading and trailing area."
+  },
+  {
+    "id": "selection-list",
+    "name": "SelectionList",
+    "family": "Collections",
+    "module": "collections",
+    "description": "Keep a set of choices by their IDs."
+  },
+  {
+    "id": "empty-result",
+    "name": "EmptyResult",
+    "family": "Collections",
+    "module": "collections",
+    "description": "Distinguish an empty collection from no matches."
+  },
+  {
+    "id": "badge",
+    "name": "Badge",
+    "family": "Feedback",
+    "module": "feedback",
+    "description": "Name a category or condition in a few words."
+  },
+  {
+    "id": "status",
+    "name": "Status",
+    "family": "Feedback",
+    "module": "feedback",
+    "description": "Announce a meaningful change once."
+  },
+  {
+    "id": "notice",
+    "name": "Notice",
+    "family": "Feedback",
+    "module": "feedback",
+    "description": "Keep a consequential message beside the task."
+  },
+  {
+    "id": "skeleton",
+    "name": "Skeleton",
+    "family": "Feedback",
+    "module": "feedback",
+    "description": "Reserve the shape of incoming content."
+  },
+  {
+    "id": "progress",
+    "name": "Progress",
+    "family": "Feedback",
+    "module": "feedback",
+    "description": "Report actual progress against a maximum."
+  },
+  {
+    "id": "toast",
+    "name": "Toast",
+    "family": "Feedback",
+    "module": "feedback",
+    "description": "Acknowledge a completed action."
+  },
+  {
+    "id": "result",
+    "name": "Result",
+    "family": "Feedback",
+    "module": "feedback",
+    "description": "Explain what happened and what is available next."
+  },
+  {
+    "id": "record-facts",
+    "name": "RecordFacts",
+    "family": "Data",
+    "module": "data",
+    "description": "Keep an observed value with its units and source."
+  },
+  {
+    "id": "table",
+    "name": "Table",
+    "family": "Data",
+    "module": "data",
+    "description": "Present aligned columns with a caption and semantic row headings."
+  },
+  {
+    "id": "data-table",
+    "name": "DataTable",
+    "family": "Data",
+    "module": "data",
+    "description": "Compare and sort records by a named column."
+  },
+  {
+    "id": "chart",
+    "name": "Chart",
+    "family": "Data",
+    "module": "data",
+    "description": "Show change while preserving gaps in the observations."
+  },
+  {
+    "id": "legend",
+    "name": "Legend",
+    "family": "Data",
+    "module": "data",
+    "description": "Name the series and its unit."
+  },
+  {
+    "id": "confirm-dialog",
+    "name": "ConfirmDialog",
+    "family": "Decisions",
+    "module": "decisions",
+    "description": "Confirm the current revision exactly once."
+  },
+  {
+    "id": "receipt",
+    "name": "Receipt",
+    "family": "Decisions",
+    "module": "decisions",
+    "description": "Look up the original request."
+  },
+  {
+    "id": "project-mark",
+    "name": "ProjectMark",
+    "family": "Identity & conversation",
+    "module": "identity",
+    "description": "Identify a project with its original artwork."
+  },
+  {
+    "id": "agent-avatar",
+    "name": "AgentAvatar",
+    "exports": ["getAgentFamily"],
+    "family": "Identity & conversation",
+    "module": "identity",
+    "description": "Show the identity of an agent."
+  },
+  {
+    "id": "gaze",
+    "name": "Gaze",
+    "family": "Identity & conversation",
+    "module": "identity",
+    "description": "Express an observed state with the eyes."
+  },
+  {
+    "id": "message",
+    "name": "Message",
+    "family": "Identity & conversation",
+    "module": "identity",
+    "description": "Keep an utterance and its speaker together."
+  },
+  {
+    "id": "activity",
+    "name": "Activity",
+    "family": "Identity & conversation",
+    "module": "identity",
+    "description": "Describe the actual state of a reply."
+  },
+  {
+    "id": "transcript",
+    "name": "Transcript",
+    "family": "Identity & conversation",
+    "module": "identity",
+    "description": "Read a thread while new replies arrive."
+  },
+  {
+    "id": "reading-anchor",
+    "name": "ReadingAnchor",
+    "family": "Identity & conversation",
+    "module": "identity",
+    "description": "Return to the newest message when ready."
+  },
+  {
+    "id": "aspect-ratio",
+    "name": "AspectRatio",
+    "family": "Foundations",
+    "module": "editorial",
+    "description": "Reserve the media frame while content loads."
+  },
+  {
+    "id": "direction",
+    "name": "Direction",
+    "family": "Foundations",
+    "module": "editorial",
+    "description": "Set the reading and interaction direction of a region."
+  },
+  {
+    "id": "card",
+    "name": "Card",
+    "family": "Foundations",
+    "module": "editorial",
+    "description": "Group related content with a title and optional actions."
+  },
+  {
+    "id": "asset",
+    "name": "Asset",
+    "family": "Foundations",
+    "module": "editorial",
+    "description": "Frame an image, glyph, video or moving asset."
+  },
+  {
+    "id": "gradient",
+    "name": "Gradient",
+    "family": "Foundations",
+    "module": "editorial",
+    "description": "Blend two palette roles on a decorative surface."
+  },
+  {
+    "id": "elevation",
+    "name": "Elevation",
+    "family": "Foundations",
+    "module": "editorial",
+    "description": "Lift a surface above its surroundings."
+  },
+  {
+    "id": "kbd",
+    "name": "KeyboardShortcut",
+    "family": "Foundations",
+    "module": "editorial",
+    "description": "Show the keys for an available command."
+  },
+  {
+    "id": "post",
+    "name": "Post",
+    "family": "Foundations",
+    "module": "editorial",
+    "description": "Set the reading width and rhythm of longer copy."
+  },
+  {
+    "id": "grid-list",
+    "name": "GridList",
+    "family": "Collections",
+    "module": "editorial",
+    "description": "Browse a responsive collection of items."
+  },
+  {
+    "id": "list-header",
+    "name": "ListHeader",
+    "family": "Collections",
+    "module": "editorial",
+    "description": "Name a group and supply its optional action."
+  },
+  {
+    "id": "list-footer",
+    "name": "ListFooter",
+    "family": "Collections",
+    "module": "editorial",
+    "description": "Show a collection total or its next action."
+  },
+  {
+    "id": "top",
+    "name": "PageHeader",
+    "family": "Collections",
+    "module": "editorial",
+    "description": "Introduce a page with a title, detail and actions."
+  },
+  {
+    "id": "bottom-info",
+    "name": "BottomInfo",
+    "family": "Feedback",
+    "module": "editorial",
+    "description": "Keep supporting information with the decision it explains."
+  },
+  {
+    "id": "highlight",
+    "name": "Highlight",
+    "family": "Feedback",
+    "module": "editorial",
+    "description": "Draw attention to a word or part of a surface."
+  },
+  {
+    "id": "spinner",
+    "name": "Spinner",
+    "family": "Feedback",
+    "module": "editorial",
+    "description": "Announce an operation of unknown duration."
+  },
+  {
+    "id": "toast-stack",
+    "name": "ToastStack",
+    "family": "Feedback",
+    "module": "editorial",
+    "description": "Present and dismiss independent notifications."
+  },
+  {
+    "id": "table-row",
+    "name": "TableRow",
+    "family": "Data",
+    "module": "editorial",
+    "description": "Pair a row heading with its value."
+  },
+  {
+    "id": "amount-top",
+    "name": "AmountTop",
+    "family": "Data",
+    "module": "editorial",
+    "description": "Lead with a quantity and its unit."
+  },
+  {
+    "id": "bar-chart",
+    "name": "BarChart",
+    "family": "Data",
+    "module": "editorial",
+    "description": "Compare signed or missing readings against a common zero."
+  },
+  {
+    "id": "avatar",
+    "name": "Avatar",
+    "family": "Identity & conversation",
+    "module": "editorial",
+    "description": "Identify a person by portrait or initials."
+  },
+  {
+    "id": "bubble",
+    "name": "Bubble",
+    "family": "Identity & conversation",
+    "module": "editorial",
+    "description": "Group a speaker’s content by its direction."
+  },
+  {
+    "id": "attachment",
+    "name": "Attachment",
+    "family": "Identity & conversation",
+    "module": "editorial",
+    "description": "Show a file, its state and available actions."
+  },
+  {
+    "id": "marker",
+    "name": "Marker",
+    "family": "Identity & conversation",
+    "module": "editorial",
+    "description": "Place a named event between messages."
+  },
+  {
+    "id": "code-block",
+    "name": "CodeBlock",
+    "family": "Identity & conversation",
+    "module": "editorial",
+    "description": "Read and copy a labeled code sample."
+  },
+  {
+    "id": "trace",
+    "name": "Trace",
+    "family": "Identity & conversation",
+    "module": "editorial",
+    "description": "Inspect the observed steps in a run."
+  },
+  {
+    "id": "input-group",
+    "name": "InputGroup",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Keep an input and its prefix or action together."
+  },
+  {
+    "id": "input-otp",
+    "name": "InputOTP",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Enter or paste a one-time code into a single labeled field."
+  },
+  {
+    "id": "split-text-field",
+    "name": "SplitTextField",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Edit related segments with individual labels."
+  },
+  {
+    "id": "slider",
+    "name": "Slider",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Choose a numeric value within a range."
+  },
+  {
+    "id": "numeric-spinner",
+    "name": "NumericSpinner",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Change a bounded integer one step at a time."
+  },
+  {
+    "id": "rating",
+    "name": "Rating",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Read or set a score on a labeled scale."
+  },
+  {
+    "id": "agreement",
+    "name": "Agreement",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Review individual terms and change their collective selection."
+  },
+  {
+    "id": "keypad",
+    "name": "Keypad",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Enter a number or letters with a touch keypad."
+  },
+  {
+    "id": "form",
+    "name": "Form",
+    "family": "Forms",
+    "module": "inputs",
+    "description": "Submit and reset a labeled group of native fields."
+  },
+  {
+    "id": "toggle",
+    "name": "Toggle",
+    "family": "Actions",
+    "module": "inputs",
+    "description": "Turn a persistent action on or off."
+  },
+  {
+    "id": "toggle-group",
+    "name": "ToggleGroup",
+    "family": "Actions",
+    "module": "inputs",
+    "description": "Select one or more named toolbar options."
+  },
+  {
+    "id": "accordion",
+    "name": "Accordion",
+    "family": "Layers",
+    "module": "advanced",
+    "description": "Open related sections in a single or multiple disclosure group."
+  },
+  {
+    "id": "context-menu",
+    "name": "ContextMenu",
+    "family": "Layers",
+    "module": "advanced",
+    "description": "Act on a specific item using its contextual commands."
+  },
+  {
+    "id": "hover-card",
+    "name": "HoverCard",
+    "family": "Layers",
+    "module": "advanced",
+    "description": "Inspect related detail on hover, focus or touch."
+  },
+  {
+    "id": "command",
+    "name": "Command",
+    "family": "Layers",
+    "module": "advanced",
+    "description": "Find and invoke an enabled command by name."
+  },
+  {
+    "id": "menubar",
+    "name": "Menubar",
+    "family": "Navigation",
+    "module": "advanced",
+    "description": "Move between keyboard-accessible command menus."
+  },
+  {
+    "id": "navigation-menu",
+    "name": "NavigationMenu",
+    "family": "Navigation",
+    "module": "advanced",
+    "description": "Browse groups of related destinations."
+  },
+  {
+    "id": "sidebar",
+    "name": "Sidebar",
+    "family": "Navigation",
+    "module": "advanced",
+    "description": "Navigate between sections in a persistent or collapsible rail."
+  },
+  {
+    "id": "navbar",
+    "name": "Navbar",
+    "family": "Navigation",
+    "module": "advanced",
+    "description": "Move back or act from a compact page header."
+  },
+  {
+    "id": "carousel",
+    "name": "Carousel",
+    "family": "Navigation",
+    "module": "advanced",
+    "description": "Move between ordered items at your own pace."
+  },
+  {
+    "id": "stepper",
+    "name": "Stepper",
+    "family": "Navigation",
+    "module": "advanced",
+    "description": "Read the current stage of a multi-step task."
+  },
+  {
+    "id": "resizable",
+    "name": "Resizable",
+    "family": "Foundations",
+    "module": "advanced",
+    "description": "Change the relative size of two panes by pointer or keyboard."
+  },
+  {
+    "id": "calendar",
+    "name": "Calendar",
+    "family": "Forms",
+    "module": "advanced",
+    "description": "Choose a civil date in a keyboard-accessible month grid."
+  },
+  {
+    "id": "date-picker",
+    "name": "DatePicker",
+    "family": "Forms",
+    "module": "advanced",
+    "description": "Open a calendar to change a date."
+  },
+  {
+    "id": "questionnaire",
+    "name": "Questionnaire",
+    "family": "Forms",
+    "module": "advanced",
+    "description": "Answer one or more questions and review the resulting answers."
+  },
+  {
+    "id": "agent-row",
+    "name": "AgentRow",
+    "family": "Workspaces",
+    "module": "agent-workspace",
+    "description": "Recognize a named agent and read its present state, unread activity and recent context."
+  },
+  {
+    "id": "runtime-panel",
+    "name": "RuntimePanel",
+    "family": "Workspaces",
+    "module": "agent-workspace",
+    "description": "Check computer availability and open an authorized preview or control action."
+  },
+  {
+    "id": "resource-row",
+    "name": "ResourceRow",
+    "family": "Workspaces",
+    "module": "project-workspace",
+    "description": "Open or pin a source while keeping its kind and origin visible."
+  },
+  {
+    "id": "thread-row",
+    "name": "ThreadRow",
+    "family": "Workspaces",
+    "module": "project-workspace",
+    "description": "Open a conversation within its project."
+  },
+  {
+    "id": "work-event",
+    "name": "WorkEvent",
+    "family": "Workspaces",
+    "module": "operations",
+    "description": "Read a task, handoff, routine or result in the conversation timeline."
+  },
+  {
+    "id": "routine-row",
+    "name": "RoutineRow",
+    "family": "Workspaces",
+    "module": "operations",
+    "description": "Read cadence, the next occurrence and available routine actions."
+  },
+  {
+    "id": "composer",
+    "name": "Composer",
+    "family": "Workspaces",
+    "module": "composer",
+    "description": "Review draft sources and tools, send a message or stop a pending reply."
+  },
+  {
+    "id": "voice-control",
+    "name": "VoiceControl",
+    "family": "Workspaces",
+    "module": "composer",
+    "description": "Present the current voice-note state and the actions the host supports."
+  },
+  {
+    "id": "sidebar-layout",
+    "name": "SidebarLayout",
+    "family": "Navigation",
+    "module": "sidebar",
+    "description": "Compose a shared navigation shell with an inset, rail or narrow drawer.",
+    "exports": [
+      "SidebarTrigger",
+      "SidebarHeader",
+      "SidebarContent",
+      "SidebarFooter",
+      "SidebarGroup",
+      "SidebarSubmenu",
+      "SidebarItem"
+    ]
+  }
+]

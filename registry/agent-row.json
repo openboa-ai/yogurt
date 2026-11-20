@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-row",
+  "type": "registry:ui",
+  "title": "AgentRow",
+  "description": "Recognize a named agent and read its present state, unread activity and recent context.",
+  "files": [
+    {
+      "path": "ui/agent-row.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { AgentRow } from \"@openboa/yogurt/agent-row\";\n"
+    }
+  ]
+}

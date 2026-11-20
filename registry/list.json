@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "list",
+  "type": "registry:ui",
+  "title": "List",
+  "description": "Read related records in order.",
+  "files": [
+    {
+      "path": "ui/list.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { List } from \"@openboa/yogurt/list\";\n"
+    }
+  ]
+}

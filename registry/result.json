@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "result",
+  "type": "registry:ui",
+  "title": "Result",
+  "description": "Explain what happened and what is available next.",
+  "files": [
+    {
+      "path": "ui/result.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Result } from \"@openboa/yogurt/result\";\n"
+    }
+  ]
+}

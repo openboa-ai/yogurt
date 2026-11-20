@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-avatar",
+  "type": "registry:ui",
+  "title": "AgentAvatar",
+  "description": "Show the identity of an agent.",
+  "files": [
+    {
+      "path": "ui/agent-avatar.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { AgentAvatar, getAgentFamily } from \"@openboa/yogurt/agent-avatar\";\n"
+    }
+  ]
+}

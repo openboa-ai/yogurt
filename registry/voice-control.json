@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "voice-control",
+  "type": "registry:ui",
+  "title": "VoiceControl",
+  "description": "Present the current voice-note state and the actions the host supports.",
+  "files": [
+    {
+      "path": "ui/voice-control.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { VoiceControl } from \"@openboa/yogurt/voice-control\";\n"
+    }
+  ]
+}

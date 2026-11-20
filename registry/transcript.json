@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "transcript",
+  "type": "registry:ui",
+  "title": "Transcript",
+  "description": "Read a thread while new replies arrive.",
+  "files": [
+    {
+      "path": "ui/transcript.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Transcript } from \"@openboa/yogurt/transcript\";\n"
+    }
+  ]
+}

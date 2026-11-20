@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "empty-result",
+  "type": "registry:ui",
+  "title": "EmptyResult",
+  "description": "Distinguish an empty collection from no matches.",
+  "files": [
+    {
+      "path": "ui/empty-result.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { EmptyResult } from \"@openboa/yogurt/empty-result\";\n"
+    }
+  ]
+}

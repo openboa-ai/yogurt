@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "highlight",
+  "type": "registry:ui",
+  "title": "Highlight",
+  "description": "Draw attention to a word or part of a surface.",
+  "files": [
+    {
+      "path": "ui/highlight.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Highlight } from \"@openboa/yogurt/highlight\";\n"
+    }
+  ]
+}

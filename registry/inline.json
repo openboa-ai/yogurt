@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "inline",
+  "type": "registry:ui",
+  "title": "Inline",
+  "description": "Place related actions on one baseline.",
+  "files": [
+    {
+      "path": "ui/inline.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Inline } from \"@openboa/yogurt/inline\";\n"
+    }
+  ]
+}

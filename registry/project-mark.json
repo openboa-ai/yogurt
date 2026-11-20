@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "project-mark",
+  "type": "registry:ui",
+  "title": "ProjectMark",
+  "description": "Identify a project with its original artwork.",
+  "files": [
+    {
+      "path": "ui/project-mark.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ProjectMark } from \"@openboa/yogurt/project-mark\";\n"
+    }
+  ]
+}

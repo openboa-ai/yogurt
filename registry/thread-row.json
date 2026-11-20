@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "thread-row",
+  "type": "registry:ui",
+  "title": "ThreadRow",
+  "description": "Open a conversation within its project.",
+  "files": [
+    {
+      "path": "ui/thread-row.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ThreadRow } from \"@openboa/yogurt/thread-row\";\n"
+    }
+  ]
+}

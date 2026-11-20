@@ -1,0 +1,3 @@
+<template name="yg-field-error" args="label">
+  <text size="sm" foreground="destructive">{label}</text>
+</template>

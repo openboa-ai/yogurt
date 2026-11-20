@@ -1,0 +1,42 @@
+{
+  "status": "study",
+  "subject": "Kai",
+  "viewBox": [
+    -8,
+    -5,
+    116,
+    116
+  ],
+  "eyeCenter": [
+    51,
+    50
+  ],
+  "eyeOffsetX": 13,
+  "eyeRadius": 2.45,
+  "durationMs": 160,
+  "easing": "ease-out",
+  "states": {
+    "ready": {
+      "eyeTranslation": [
+        0,
+        0
+      ],
+      "text": "Kai is ready."
+    },
+    "working": {
+      "eyeTranslation": [
+        1.5,
+        2.5
+      ],
+      "text": "Kai is working."
+    }
+  },
+  "reducedMotion": {
+    "eyeTranslation": [
+      0,
+      0
+    ],
+    "durationMs": 0,
+    "text": "state text"
+  }
+}

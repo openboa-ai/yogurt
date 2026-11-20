@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="baby angel: light skin tone"><title>baby angel: light skin tone</title><path d="M29 52Q15 56 7 45Q2 36 6 24Q15 25 23 34L30 43ZM35 52Q49 56 57 45Q62 36 58 24Q49 25 41 34L34 43Z" data-fill="slate.200" fill="#B8C9D3" />
+<path d="M8 37Q15 41 22 42M56 37Q49 41 42 42" fill="none" data-stroke="slate.50" stroke="#EFF3F6" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+<g transform="translate(10 11) scale(.7)">
+<path d="M25 45H39Q48 47 52 54Q54 59 49 59H15Q10 59 12 54Q16 47 25 45Z" data-fill="cyan.700" fill="#00657A" />
+<path d="M23 47H41V50Q40 56 32 56Q24 56 23 50Z" data-fill="cyan.100" fill="#D6F0F4" />
+<ellipse cx="14" cy="31" rx="5.5" ry="6.5" data-fill="coral.300" fill="#D5A59A" />
+<ellipse cx="50" cy="31" rx="5.5" ry="6.5" data-fill="coral.300" fill="#D5A59A" />
+<path d="M12 29C12 17 21 10 32 10S52 17 52 29V33C52 44 43 50 32 50S12 44 12 33Z" data-fill="coral.100" fill="#F5E0D7" />
+<path d="M32 19Q42 18 37 11Q34 6 27 8" fill="none" data-stroke="earth.950" stroke="#2A231E" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+<circle cx="23" cy="33" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<circle cx="41" cy="33" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="32" cy="41" rx="4" ry="3.5" data-fill="earth.950" fill="#2A231E" />
+</g>
+<ellipse cx="32" cy="9" rx="11" ry="5.5" data-fill="yellow.400" fill="#DEC556" />
+<ellipse cx="32" cy="9" rx="6.8" ry="2.2" data-fill="ochre.100" fill="#F1E7CC" />
+</svg>

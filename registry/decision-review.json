@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "decision-review",
+  "type": "registry:block",
+  "title": "DecisionReview",
+  "description": "Review the observed facts and confirm a revision-bound decision.",
+  "files": [
+    {
+      "path": "blocks/decision-review.tsx",
+      "target": "@components/blocks/decision-review.tsx",
+      "type": "registry:component",
+      "content": "\"use client\";\nimport { useState } from \"react\";\nimport {\n  Button,\n  ConfirmDialog,\n  RecordFacts,\n  Stack,\n  Status,\n  type Decision,\n  type DecisionRef,\n  type Fact,\n  type Observation,\n} from \"@openboa/yogurt\";\nexport function DecisionReview({\n  title,\n  facts,\n  observation,\n  decision,\n  onConfirm,\n  pending = false,\n  result,\n}: {\n  title: string;\n  facts: Fact[];\n  observation: Observation;\n  decision: Decision;\n  onConfirm: (original: DecisionRef) => void;\n  pending?: boolean;\n  result?: string;\n}) {\n  const [open, setOpen] = useState(false);\n  return (\n    <Stack gap={16}>\n      <RecordFacts title={title} facts={facts} {...observation} />\n      {result && <Status>{result}</Status>}\n      <Button\n        emphasis=\"soft\"\n        tone=\"danger\"\n        disabled={!decision.available}\n        pending={pending}\n        onClick={() => setOpen(true)}\n      >\n        {decision.confirmLabel}\n      </Button>\n      <ConfirmDialog\n        decision={decision}\n        open={open}\n        onOpenChange={setOpen}\n        onConfirm={onConfirm}\n        pending={pending}\n      />\n    </Stack>\n  );\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,624 @@
+{
+  "status": "draft",
+  "domains": [
+    {
+      "id": "brand",
+      "title": "Brand expression",
+      "areas": [
+        "identity",
+        "language",
+        "artwork"
+      ]
+    },
+    {
+      "id": "system-foundations",
+      "title": "System foundations",
+      "areas": [
+        "foundations",
+        "data-visualization"
+      ]
+    },
+    {
+      "id": "product-interface",
+      "title": "Product interface",
+      "areas": [
+        "controls",
+        "patterns"
+      ]
+    },
+    {
+      "id": "system-delivery",
+      "title": "System delivery",
+      "areas": [
+        "renderers",
+        "guidance",
+        "quality",
+        "adoption"
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "id": "identity",
+      "title": "Company identity",
+      "responsibility": "Company signature, editorial attribution and the relationship to project and agent identities."
+    },
+    {
+      "id": "language",
+      "title": "Language and naming",
+      "responsibility": "English voice, terms and truthful interface wording."
+    },
+    {
+      "id": "artwork",
+      "title": "Artwork and agents",
+      "responsibility": "Individual assets, repertoire, agent silhouettes and eye expression."
+    },
+    {
+      "id": "foundations",
+      "title": "Design foundations",
+      "responsibility": "Shared values, accessible roles, type and layout."
+    },
+    {
+      "id": "data-visualization",
+      "title": "Data visualization",
+      "responsibility": "Presentation of authorized series, values and missing coverage."
+    },
+    {
+      "id": "controls",
+      "title": "Components",
+      "responsibility": "Accessible behavior of individual controls and their immediate compositions."
+    },
+    {
+      "id": "patterns",
+      "title": "Product patterns",
+      "responsibility": "Joined screen states that answer a complete task, including product-owned recovery."
+    },
+    {
+      "id": "renderers",
+      "title": "Platform adapters",
+      "responsibility": "Packages for the web and native platform, including compatibility evidence."
+    },
+    {
+      "id": "guidance",
+      "title": "Guide and authoring",
+      "responsibility": "Discovery, examples and versioned guidance for designers, developers and agents."
+    },
+    {
+      "id": "quality",
+      "title": "Interaction quality",
+      "responsibility": "Independent observations of appearance, motion and accessibility."
+    },
+    {
+      "id": "adoption",
+      "title": "Consumer adoption",
+      "responsibility": "Distribution, pinning, checks, upgrades and recipient feedback."
+    }
+  ],
+  "journeys": [
+    {
+      "id": "J1",
+      "page": "docs/journeys/J1/README.md",
+      "intents": [
+        "I21",
+        "I01",
+        "I02",
+        "I03",
+        "I04",
+        "I05",
+        "I06"
+      ]
+    },
+    {
+      "id": "J2",
+      "page": "docs/journeys/J2/README.md",
+      "intents": [
+        "I11",
+        "I08",
+        "I09",
+        "I10",
+        "I13",
+        "I14",
+        "I02",
+        "I18"
+      ]
+    },
+    {
+      "id": "J3",
+      "page": "docs/journeys/J3/README.md",
+      "intents": [
+        "I12",
+        "I07",
+        "I10",
+        "I03",
+        "I04"
+      ]
+    },
+    {
+      "id": "J4",
+      "page": "docs/journeys/J4/README.md",
+      "intents": [
+        "I17",
+        "I15",
+        "I16",
+        "I18",
+        "I19"
+      ]
+    },
+    {
+      "id": "J5",
+      "page": "docs/journeys/J5/README.md",
+      "intents": [
+        "I20",
+        "I06",
+        "I10",
+        "I18"
+      ]
+    }
+  ],
+  "intents": [
+    {
+      "id": "I01",
+      "title": "Recognize who is signing a surface",
+      "category": "identity",
+      "journey": "J1",
+      "path": "docs/intents/identity/I01-sign-a-surface"
+    },
+    {
+      "id": "I02",
+      "title": "Know what happened and what to do next",
+      "category": "language",
+      "journey": "J1",
+      "path": "docs/intents/language/I02-write-in-context"
+    },
+    {
+      "id": "I03",
+      "title": "Use one palette across the product",
+      "category": "foundations",
+      "journey": "J1",
+      "path": "docs/intents/foundations/I03-choose-system-colors"
+    },
+    {
+      "id": "I04",
+      "title": "Read and operate the same layout at different sizes",
+      "category": "foundations",
+      "journey": "J1",
+      "path": "docs/intents/foundations/I04-read-at-any-size"
+    },
+    {
+      "id": "I05",
+      "title": "Recognize the right artwork at message size",
+      "category": "artwork",
+      "journey": "J1",
+      "path": "docs/intents/artwork/I05-choose-recognizable-art"
+    },
+    {
+      "id": "I06",
+      "title": "Recognize an agent before it moves",
+      "category": "artwork",
+      "journey": "J1",
+      "path": "docs/intents/artwork/I06-recognize-an-agent"
+    },
+    {
+      "id": "I07",
+      "title": "Read a value and understand its coverage",
+      "category": "data-visualization",
+      "journey": "J3",
+      "path": "docs/intents/data-visualization/I07-read-a-series"
+    },
+    {
+      "id": "I08",
+      "title": "Submit only the value or action I intended",
+      "category": "controls",
+      "journey": "J2",
+      "path": "docs/intents/controls/I08-act-and-enter-values"
+    },
+    {
+      "id": "I09",
+      "title": "Move through choices and return to the right place",
+      "category": "controls",
+      "journey": "J2",
+      "path": "docs/intents/controls/I09-navigate-and-dismiss"
+    },
+    {
+      "id": "I10",
+      "title": "Recognize progress and recover from a failed task",
+      "category": "controls",
+      "journey": "J2",
+      "path": "docs/intents/controls/I10-understand-feedback"
+    },
+    {
+      "id": "I11",
+      "title": "Find an item and recover from no matches",
+      "category": "patterns",
+      "journey": "J2",
+      "path": "docs/intents/patterns/I11-find-records"
+    },
+    {
+      "id": "I12",
+      "title": "Inspect only what is available about this record",
+      "category": "patterns",
+      "journey": "J3",
+      "path": "docs/intents/patterns/I12-inspect-a-record"
+    },
+    {
+      "id": "I13",
+      "title": "Review the consequence before committing",
+      "category": "patterns",
+      "journey": "J2",
+      "path": "docs/intents/patterns/I13-review-a-decision"
+    },
+    {
+      "id": "I14",
+      "title": "Learn what happened to the original request",
+      "category": "patterns",
+      "journey": "J2",
+      "path": "docs/intents/patterns/I14-track-a-request"
+    },
+    {
+      "id": "I15",
+      "title": "Use the same web component in each web host",
+      "category": "renderers",
+      "journey": "J4",
+      "path": "docs/intents/renderers/I15-use-the-web-adapter"
+    },
+    {
+      "id": "I16",
+      "title": "Operate the same task through native controls",
+      "category": "renderers",
+      "journey": "J4",
+      "path": "docs/intents/renderers/I16-use-native-controls"
+    },
+    {
+      "id": "I17",
+      "title": "Find the same answer as a designer, engineer or agent",
+      "category": "guidance",
+      "journey": "J4",
+      "path": "docs/intents/guidance/I17-find-design-guidance"
+    },
+    {
+      "id": "I18",
+      "title": "Judge a component while it is moving",
+      "category": "quality",
+      "journey": "J4",
+      "path": "docs/intents/quality/I18-review-interaction-quality"
+    },
+    {
+      "id": "I19",
+      "title": "Adopt and roll back the shared system per project",
+      "category": "adoption",
+      "journey": "J4",
+      "path": "docs/intents/adoption/I19-adopt-a-release"
+    },
+    {
+      "id": "I20",
+      "title": "Follow an agent response as it arrives",
+      "category": "patterns",
+      "journey": "J5",
+      "path": "docs/intents/patterns/I20-follow-an-agent-response"
+    },
+    {
+      "id": "I21",
+      "title": "Recognize an OpenBoa screen in everyday use",
+      "category": "identity",
+      "journey": "J1",
+      "path": "docs/intents/identity/I21-recognize-an-openboa-screen"
+    }
+  ],
+  "leaves": [
+    {
+      "id": "U01A",
+      "intent": "I01",
+      "criterion": "I01-U01A",
+      "spec": "docs/engineering/identity/U01A-place-company-signature/spec.md",
+      "requires": [],
+      "seam": "assets/logo"
+    },
+    {
+      "id": "U02A",
+      "intent": "I02",
+      "criterion": "I02-U02A",
+      "spec": "docs/engineering/language/U02A-resolve-english-copy/spec.md",
+      "requires": [],
+      "seam": "content/terms.json"
+    },
+    {
+      "id": "U03A",
+      "intent": "I03",
+      "criterion": "I03-U03A",
+      "spec": "docs/engineering/foundations/U03A-resolve-palette-roles/spec.md",
+      "requires": [],
+      "seam": "tokens/brand.json"
+    },
+    {
+      "id": "U04A",
+      "intent": "I04",
+      "criterion": "I04-U04A",
+      "spec": "docs/engineering/foundations/U04A-compose-responsive-type/spec.md",
+      "requires": [],
+      "seam": "tokens/brand.json"
+    },
+    {
+      "id": "U05A",
+      "intent": "I05",
+      "criterion": "I05-U05A",
+      "spec": "docs/engineering/artwork/U05A-export-project-marks/spec.md",
+      "requires": [
+        "U03A"
+      ],
+      "seam": "assets/projects"
+    },
+    {
+      "id": "U05B",
+      "intent": "I05",
+      "criterion": "I05-U05B",
+      "spec": "docs/engineering/artwork/U05B-select-original-glyphs/spec.md",
+      "requires": [
+        "U03A"
+      ],
+      "seam": "assets/emoji"
+    },
+    {
+      "id": "U06A",
+      "intent": "I06",
+      "criterion": "I06-U06A",
+      "spec": "docs/engineering/artwork/U06A-fit-agent-identities/spec.md",
+      "requires": [
+        "U03A"
+      ],
+      "seam": "assets/agents/silhouettes.json"
+    },
+    {
+      "id": "U06B",
+      "intent": "I06",
+      "criterion": "I06-U06B",
+      "spec": "docs/engineering/artwork/U06B-express-agent-state/spec.md",
+      "requires": [
+        "U06A"
+      ],
+      "seam": "assets/agents/eye-motion.json"
+    },
+    {
+      "id": "U07A",
+      "intent": "I07",
+      "criterion": "I07-U07A",
+      "spec": "docs/engineering/data-visualization/U07A-encode-observed-values/spec.md",
+      "requires": [
+        "U03A",
+        "U04A"
+      ],
+      "seam": "assets/charts"
+    },
+    {
+      "id": "U08A",
+      "intent": "I08",
+      "criterion": "I08-U08A",
+      "spec": "docs/engineering/controls/U08A-activate-an-action/spec.md",
+      "requires": [
+        "U03A",
+        "U04A"
+      ],
+      "seam": "catalog/components/actions"
+    },
+    {
+      "id": "U08B",
+      "intent": "I08",
+      "criterion": "I08-U08B",
+      "spec": "docs/engineering/controls/U08B-edit-labeled-values/spec.md",
+      "requires": [
+        "U03A",
+        "U04A"
+      ],
+      "seam": "catalog/components/fields"
+    },
+    {
+      "id": "U08C",
+      "intent": "I08",
+      "criterion": "I08-U08C",
+      "spec": "docs/engineering/controls/U08C-choose-a-search-result/spec.md",
+      "requires": [
+        "U08B"
+      ],
+      "seam": "catalog/components/combobox"
+    },
+    {
+      "id": "U09A",
+      "intent": "I09",
+      "criterion": "I09-U09A",
+      "spec": "docs/engineering/controls/U09A-operate-an-action-menu/spec.md",
+      "requires": [
+        "U03A",
+        "U04A"
+      ],
+      "seam": "catalog/components/action-menu"
+    },
+    {
+      "id": "U09B",
+      "intent": "I09",
+      "criterion": "I09-U09B",
+      "spec": "docs/engineering/controls/U09B-dismiss-a-dialog/spec.md",
+      "requires": [
+        "U04A",
+        "U08A"
+      ],
+      "seam": "catalog/components/dialog"
+    },
+    {
+      "id": "U09C",
+      "intent": "I09",
+      "criterion": "I09-U09C",
+      "spec": "docs/engineering/controls/U09C-change-a-view/spec.md",
+      "requires": [
+        "U04A"
+      ],
+      "seam": "catalog/components/navigation"
+    },
+    {
+      "id": "U09D",
+      "intent": "I09",
+      "criterion": "I09-U09D",
+      "spec": "docs/engineering/controls/U09D-reveal-related-detail/spec.md",
+      "requires": [
+        "U04A"
+      ],
+      "seam": "catalog/components/disclosure"
+    },
+    {
+      "id": "U10A",
+      "intent": "I10",
+      "criterion": "I10-U10A",
+      "spec": "docs/engineering/controls/U10A-show-task-feedback/spec.md",
+      "requires": [
+        "U02A",
+        "U03A"
+      ],
+      "seam": "catalog/components/feedback"
+    },
+    {
+      "id": "U11A",
+      "intent": "I11",
+      "criterion": "I11-U11A",
+      "spec": "docs/engineering/patterns/U11A-restore-collection-context/spec.md",
+      "requires": [
+        "U08B",
+        "U10A"
+      ],
+      "seam": "catalog/patterns/find-records"
+    },
+    {
+      "id": "U12A",
+      "intent": "I12",
+      "criterion": "I12-U12A",
+      "spec": "docs/engineering/patterns/U12A-show-authorized-facts/spec.md",
+      "requires": [
+        "U10A"
+      ],
+      "seam": "catalog/patterns/inspect-record"
+    },
+    {
+      "id": "U13A",
+      "intent": "I13",
+      "criterion": "I13-U13A",
+      "spec": "docs/engineering/patterns/U13A-confirm-current-decision/spec.md",
+      "requires": [
+        "U09B",
+        "U10A"
+      ],
+      "seam": "catalog/patterns/review-decision"
+    },
+    {
+      "id": "U14A",
+      "intent": "I14",
+      "criterion": "I14-U14A",
+      "spec": "docs/engineering/patterns/U14A-reconcile-original-receipt/spec.md",
+      "requires": [
+        "U02A",
+        "U10A"
+      ],
+      "seam": "catalog/patterns/track-request"
+    },
+    {
+      "id": "U15A",
+      "intent": "I15",
+      "criterion": "I15-U15A",
+      "spec": "docs/engineering/renderers/U15A-qualify-web-behavior/spec.md",
+      "requires": [
+        "U09A"
+      ],
+      "seam": "packages/web/qualification"
+    },
+    {
+      "id": "U15B",
+      "intent": "I15",
+      "criterion": "I15-U15B",
+      "spec": "docs/engineering/renderers/U15B-export-web-controls/spec.md",
+      "requires": [
+        "U15A"
+      ],
+      "seam": "packages/web"
+    },
+    {
+      "id": "U16A",
+      "intent": "I16",
+      "criterion": "I16-U16A",
+      "spec": "docs/engineering/renderers/U16A-map-native-controls/spec.md",
+      "requires": [
+        "U03A",
+        "U04A",
+        "U09A"
+      ],
+      "seam": "packages/native"
+    },
+    {
+      "id": "U17A",
+      "intent": "I17",
+      "criterion": "I17-U17A",
+      "spec": "docs/engineering/guidance/U17A-index-design-guidance/spec.md",
+      "requires": [],
+      "seam": "catalog"
+    },
+    {
+      "id": "U18A",
+      "intent": "I18",
+      "criterion": "I18-U18A",
+      "spec": "docs/engineering/quality/U18A-rehearse-a-transition/spec.md",
+      "requires": [],
+      "seam": "checks/interaction"
+    },
+    {
+      "id": "U19A",
+      "intent": "I19",
+      "criterion": "I19-U19A",
+      "spec": "docs/engineering/adoption/U19A-pin-a-release/spec.md",
+      "requires": [
+        "U17A"
+      ],
+      "seam": "releases"
+    },
+    {
+      "id": "U19B",
+      "intent": "I19",
+      "criterion": "I19-U19B",
+      "spec": "docs/engineering/adoption/U19B-check-consumer-use/spec.md",
+      "requires": [
+        "U17A",
+        "U18A",
+        "U19A"
+      ],
+      "seam": "checks/consumer"
+    },
+    {
+      "id": "U19C",
+      "intent": "I19",
+      "criterion": "I19-U19C",
+      "spec": "docs/engineering/adoption/U19C-distribute-pattern-recipes/spec.md",
+      "requires": [
+        "U15B",
+        "U19A"
+      ],
+      "seam": "releases/registry"
+    },
+    {
+      "id": "U20A",
+      "intent": "I20",
+      "criterion": "I20-U20A",
+      "spec": "docs/engineering/patterns/U20A-present-streamed-replies/spec.md",
+      "requires": [
+        "U10A"
+      ],
+      "seam": "catalog/patterns/agent-response"
+    },
+    {
+      "id": "U21A",
+      "intent": "I21",
+      "criterion": "I21-U21A",
+      "spec": "docs/engineering/identity/U21A-compose-a-product-surface/spec.md",
+      "requires": [
+        "U01A",
+        "U03A",
+        "U04A"
+      ],
+      "seam": "docs/design-direction.md"
+    }
+  ],
+  "legacy": []
+}

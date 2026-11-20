@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "chart",
+  "type": "registry:ui",
+  "title": "Chart",
+  "description": "Show change while preserving gaps in the observations.",
+  "files": [
+    {
+      "path": "ui/chart.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Chart } from \"@openboa/yogurt/chart\";\n"
+    }
+  ]
+}

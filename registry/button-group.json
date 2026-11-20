@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button-group",
+  "type": "registry:ui",
+  "title": "ButtonGroup",
+  "description": "Place actions for one decision together.",
+  "files": [
+    {
+      "path": "ui/button-group.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ButtonGroup } from \"@openboa/yogurt/button-group\";\n"
+    }
+  ]
+}

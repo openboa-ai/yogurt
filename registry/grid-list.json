@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "grid-list",
+  "type": "registry:ui",
+  "title": "GridList",
+  "description": "Browse a responsive collection of items.",
+  "files": [
+    {
+      "path": "ui/grid-list.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { GridList } from \"@openboa/yogurt/grid-list\";\n"
+    }
+  ]
+}

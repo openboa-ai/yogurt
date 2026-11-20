@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="construction worker"><title>construction worker</title><path d="M7 54C9 46 18 43 24 42H40C48 43 56 47 57 55Q57 59 53 59H11Q6 59 7 54Z" data-fill="slate.700" fill="#435F74" />
+<path d="M23 40H41V47Q40 52 32 52Q24 52 23 47Z" data-fill="paper.200" fill="#E0DCD3" />
+<path d="M25 39H39V46Q37 49 32 49Q27 49 25 46Z" data-fill="ochre.600" fill="#907039" />
+<path d="M12 26C10 14 16 7 25 5Q30 4 35 6C42 6 47 10 50 15Q53 21 51 31Q48 37 48 41H17Q11 36 12 26Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="16" cy="30" rx="5" ry="6" data-fill="ochre.600" fill="#907039" />
+<ellipse cx="48" cy="30" rx="5" ry="6" data-fill="ochre.600" fill="#907039" />
+<path d="M16 23C16 15 23 12 32 12C41 12 48 17 48 24V32C48 40 43 44 37 47Q32 49 27 47C21 45 16 41 16 33Z" data-fill="ochre.300" fill="#D6BB84" />
+<path d="M13 30Q9 21 14 14Q20 3 36 6Q43 6 48 13Q54 19 49 29L43 21Q37 23 31 19Q25 23 19 21L18 29Z" data-fill="earth.950" fill="#2A231E" />
+<circle cx="24" cy="29.5" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<circle cx="40" cy="29.5" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<path d="M28 39Q32 42 36 39" fill="none" data-stroke="earth.950" stroke="#2A231E" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+<path d="M9 21L14 18Q13 8 27 5L28 3H36L37 5Q49 8 50 18L55 21L53 25H11Z" data-fill="yellow.500" fill="#CEAB00" />
+<path d="M29 5H35V18H29Z" data-fill="yellow.300" fill="#E9D985" />
+<rect x="10" y="20" width="44" height="4.5" rx="2" data-fill="yellow.400" fill="#DEC556" />
+<path d="M17 44L25 46L22 59H12ZM47 44L39 46L42 59H52Z" data-fill="orange.500" fill="#E67A25" />
+<path d="M16 53H22M43 53H49" fill="none" data-stroke="yellow.400" stroke="#DEC556" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

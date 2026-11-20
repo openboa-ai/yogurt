@@ -1,0 +1,7 @@
+<template name="yg-amount-top" args="label value detail">
+  <column gap="8">
+    <text size="sm">{label}</text>
+    <text size="heading">{value}</text>
+    <text size="sm">{detail}</text>
+  </column>
+</template>

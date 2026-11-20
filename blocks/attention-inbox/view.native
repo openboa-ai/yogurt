@@ -1,0 +1,28 @@
+<import src="work-event.native"/>
+<template name="yg-attention-inbox">
+  <column gap="12">
+    <text size="heading">Activity inbox</text>
+    <tabs label="Activity filters">
+      <toggle-button selected="{attention_all_active}" on-toggle="show_attention_all">All</toggle-button>
+      <toggle-button selected="{attention_unread_active}" on-toggle="show_attention_unread">Unread</toggle-button>
+      <toggle-button selected="{attention_required_active}" on-toggle="show_attention_required">Needs review</toggle-button>
+    </tabs>
+    <if test="{attention_has_results}">
+      <for each="attention_events" key="id" as="item">
+        <use template="yg-work-event" title="{item.title}" detail="{item.detail}" summary="{item.summary}" item_id="{item.id}" can_review="{item.can_review}"/>
+      </for>
+    </if>
+    <else><text foreground="text_muted">No updates match this view.</text></else>
+    <if test="{attention_review_open}">
+      <dialog label="Review activity" on-dismiss="close_attention_review">
+        <column gap="12" padding="16">
+          <text size="heading">{attention_review_title}</text>
+          <text>{attention_review_detail}</text>
+          <if test="{can_confirm_attention}"><button disabled="{attention_pending}" on-press="confirm_attention:{attention_review_id}">{attention_action_label}</button></if>
+          <button variant="ghost" on-press="close_attention_review">Close review</button>
+        </column>
+      </dialog>
+    </if>
+    <if test="{attention_outcome_visible}"><status-bar>{attention_outcome}</status-bar></if>
+  </column>
+</template>

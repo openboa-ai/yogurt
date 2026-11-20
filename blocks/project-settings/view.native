@@ -1,0 +1,12 @@
+<import src="switch.native"/>
+<import src="select.native"/>
+<template name="yg-project-settings">
+  <column gap="16">
+    <text size="heading">Project settings</text>
+    <use template="yg-switch" label="Send a digest" checked="{enabled}"/>
+    <if test="{enabled}"><use template="yg-select-picker" label="Frequency" value="{value}" expanded="{is_open}">
+      <for each="choices" key="id" as="item"><menu-item selected="{item.selected}" disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</menu-item></for>
+    </use></if>
+    <row gap="8"><button disabled="{unavailable}" on-press="activate">Save changes</button><button variant="ghost" disabled="{unavailable}" on-press="discard">Discard</button></row>
+  </column>
+</template>

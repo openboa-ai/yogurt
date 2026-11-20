@@ -1,0 +1,13 @@
+<template name="yg-select" args="label value">
+  <select label="{label}" text="{value}" on-press="open_choices"/>
+</template>
+<template name="yg-select-picker" args="label value expanded">
+  <stack>
+    <select label="{label}" text="{value}" on-press="open_choices"/>
+    <if test="{expanded}">
+      <dropdown-menu anchor="below" anchor-alignment="stretch" label="{label}" on-dismiss="dismiss">
+        <slot/>
+      </dropdown-menu>
+    </if>
+  </stack>
+</template>

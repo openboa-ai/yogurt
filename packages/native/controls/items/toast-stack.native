@@ -1,0 +1,10 @@
+<template name="yg-toast-stack" args="label">
+  <column label="{label}" gap="8">
+    <for each="notifications" key="id" as="item">
+      <row cross="center">
+        <text>{item.title}</text>
+        <button variant="ghost" on-press="dismiss_item:{item.id}">Dismiss</button>
+      </row>
+    </for>
+  </column>
+</template>

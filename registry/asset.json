@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "asset",
+  "type": "registry:ui",
+  "title": "Asset",
+  "description": "Frame an image, glyph, video or moving asset.",
+  "files": [
+    {
+      "path": "ui/asset.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Asset } from \"@openboa/yogurt/asset\";\n"
+    }
+  ]
+}

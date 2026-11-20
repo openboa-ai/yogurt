@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Use yogurt in a project · OpenBoa</title>
+  <link rel="icon" href="assets/logo/upright-9.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/brand.css">
+  <link rel="stylesheet" href="styles/specimen.css">
+  <link rel="stylesheet" href="styles/guide.css">
+</head>
+<body>
+  <header><div class="masthead">
+    <div class="imprint"><b>yogurt</b><span>ships with live cultures</span></div>
+    <nav aria-label="Guide"><a href="index.html">Brand</a><a href="system.html">Design system</a><a href="library.html">Design sources</a><a href="adoption.html" aria-current="page">Project use</a><a href="components.html">Components</a></nav>
+  </div></header>
+  <main class="project-guide">
+    <header class="guide-opening">
+      <h1>Use yogurt in a project</h1>
+      <p>OpenBoa projects share a vocabulary, a visual identity and familiar ways to interact. Each project owns what its product does and the words that describe its work.</p>
+      <p class="guide-status"><strong>Available today</strong> &nbsp; <a href="content/terms.json">English terms</a>, <a href="index.html#files">artwork and fonts</a>, <a href="system.html#handoff">tokens and web controls</a>. The <a href="playbook.html">product playbook</a> and <a href="catalog/patterns.json">pattern lookup</a> work from this kit. The versioned distribution, project configuration and consumer CI below are proposed.</p>
+    </header>
+    <nav class="chapter-nav" aria-label="Project use sections"><a href="#brief">Bring a task</a><a href="#ownership">Ownership</a><a href="#setup">Project setup</a><a href="#intent">Intent</a><a href="#platforms">Platforms</a><a href="#checks">Quality</a><a href="#releases">Releases</a><a href="#improve">Improvement</a></nav>
+
+    <section id="brief" class="spread"><div class="margin"><h2>Bring a product task</h2></div><div class="reading">
+      <p>Start with the person, the task and the facts the product owns. In the playbook, Meatball reviews a scoped decision and Sourdough inspects an authorized company record. Change a condition and see the wording, next step and acceptance case change with it.</p>
+      <p><a href="playbook.html?project=meatball">Review a Meatball decision</a> · <a href="playbook.html?project=sourdough">Inspect Sourdough company work</a> · <a href="docs/repository.md">Repository blueprint</a> · <a href="DESIGN.md">Agent entry</a></p>
+    </div></section>
+    <section id="ownership" class="spread" aria-labelledby="ownership-title">
+      <div class="margin"><h2 id="ownership-title">What travels together</h2></div>
+      <div class="reading">
+        <p>Publish yogurt from its own repository under one version. Meatball’s app, an OpenBoa website and an independent client would each consume that release directly. A project can use yogurt with any planning tool.</p>
+        <dl class="guide-rows">
+          <div><dt>Identity and words</dt><dd>Ship the logo masters, project emoji, approved company copy, contextual English terms and examples for names, product actions and recovery. Keep the company symbol distinct from the named agents. <a href="index.html#family">Names and voice</a></dd></div>
+          <div><dt>Design and behavior</dt><dd>Ship one hue-and-lightness palette, type, dimensions and the expected states and interactions of each component or pattern. Web and native renderers would draw from that source. Motion guidance for agents belongs here as it is approved. <a href="system.html#components">Working roster</a></dd></div>
+          <div><dt>Authoring and checks</dt><dd>Include readable rule IDs, examples and a checker in the release. An editor, design tool or agent plugin can surface them while someone works. The same checker runs in project CI without a plugin or a running agent.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="setup" class="spread" aria-labelledby="setup-title">
+      <div class="margin"><h2 id="setup-title">Bind a project once</h2></div>
+      <div class="reading">
+        <p>For a mixed-target client, <code>yogurt.config.json</code> lives at the project root. Name the surfaces to check and where people keep the English copy and intents. Run <code>yogurt check</code> in the consumer to verify its declared surfaces, palette references and imports. These paths belong to the consumer. This illustrative project has both a website and a desktop app.</p>
+        <pre class="markup"><code>{
+  "surfaces": {
+    "site": { "target": "web", "root": "apps/site" },
+    "desktop": { "target": "native", "root": "apps/desktop" }
+  },
+  "englishCopy": ["content/en"],
+  "intents": ["docs/intents"]
+}</code></pre>
+        <p>Resolve the release once into a committed <code>yogurt.lock</code> with its version, artifact source and digest. Web package locks and native build inputs must match that release. A web-only project can use its existing package lock when it resolves that same design manifest for the build, guide and checks.</p>
+        <h3>With or without Meatball</h3>
+        <p>Meatball’s own app would have the same root binding as any other client. A project already using Meatball could expose its yogurt references to the intent editor through an optional integration. A project using Markdown and a build script could read the same references directly. Both build with the pinned yogurt files.</p>
+      </div>
+    </section>
+
+    <section id="intent" class="spread" aria-labelledby="intent-title">
+      <div class="margin"><h2 id="intent-title">Reference it in an intent</h2></div>
+      <div class="reading">
+        <p>Start with the person, the task and what success looks like. Refer to the few yogurt entries that affect that experience. The project pin resolves those references, so an intent can survive a release upgrade.</p>
+        <div class="intent-example">
+          <h3>Find an agent again</h3>
+          <p>Someone returning to the roster can find Kai by name or ID, then recover if their filters hide every match.</p>
+          <dl class="guide-rows">
+            <div><dt>Shared references</dt><dd><code>roster.agent</code> in <a href="content/terms.json">English terms</a>, <a href="index.html#voice">voice in recovery</a> and the <a href="system.html#components">roster pattern</a>.</dd></div>
+            <div><dt>Product decision</dt><dd>The project defines which agents the person can see and when an agent counts as working.</dd></div>
+            <div><dt>Acceptance</dt><dd>Find ID 014, combine it with a status that hides Kai, then clear the filters. Both agents return and the search field receives keyboard focus.</dd></div>
+          </dl>
+        </div>
+        <p>For a Meatball workflow, its intent defines exactly when work is <em>Stopping</em> and when it is <em>Stopped</em>. Yogurt supplies how to present a readable status and how a control returns focus. The product’s own test proves the transition.</p>
+      </div>
+    </section>
+
+    <section id="platforms" class="spread" aria-labelledby="platforms-title">
+      <div class="margin"><h2 id="platforms-title">Build the client</h2></div>
+      <div class="reading">
+        <dl class="guide-rows">
+          <div><dt>Next.js and Vite</dt><dd>Publish a web entry for CSS, local font files and accessible controls. Both web clients can share React DOM implementations. Keep interactive entry points small so a static website can render on the server. Serve fonts and artwork with the app at its pinned version. <a href="system.html#handoff">Use the current CSS</a></dd></div>
+          <div><dt>Vercel Native SDK</dt><dd>OpenBoa uses this stack by default for app clients. <a href="docs/native-stack.md">Native stack and first fixture</a>. At build time, translate the same token values into native theme values. Bundle the TTFs and implement the interaction contract with the SDK’s native views. Check the intended OS and SDK version before marking a component supported. Measure the packaged app on that OS. <a href="https://native-sdk.dev/docs/building-components">Native SDK component model</a></dd></div>
+          <div><dt>Embedded web content</dt><dd>A screen deliberately rendered in a WebView can use the web entry. Its host still owns native navigation, focus handoff and performance.</dd></div>
+        </dl>
+        <p class="aside-note">Keep the catalog, rule checker and authoring plugin in development. Package each client with only the runtime assets and controls it uses. The brand website can serve a readable guide for each released version.</p>
+      </div>
+    </section>
+
+    <section id="checks" class="spread" aria-labelledby="checks-title">
+      <div class="margin"><h2 id="checks-title">What a release must prove</h2></div>
+      <div class="reading">
+        <p>Run the same checks locally and in the consumer’s pull request. Required CI can enforce repeatable rules once the consumer has adopted them. Give a failure a rule, file or screen, and a repair someone can act on.</p>
+        <dl class="guide-rows">
+          <div><dt>Build inputs</dt><dd>Verify the pinned release, digest, supported target and notices. Flag unknown token IDs, raw color values in first-party UI styles, copied or altered master artwork and undeclared fonts. Check assets before bundling or transforming them.</dd></div>
+          <div><dt>Words</dt><dd>Read localized strings and user-visible literals from declared web and native source roots. Check spellings against the vocabulary for that context. For example, credit the company as <strong>OpenBoa</strong>. Repository identifiers, code, URLs, quoted text and customer content have their own spelling. Flag a questionable joke for a writer to read in context.</dd></div>
+          <div><dt>Behavior and appearance</dt><dd>Exercise the default, empty and recovered states. Check accessible names, keyboard access, visible focus and foreground/background contrast. Review light and dark screenshots on each renderer. Compare images made on the same OS, renderer and font version.</dd></div>
+          <div><dt>Shipping performance</dt><dd>On the web, compare shipped JS and font bytes, layout shift and input responsiveness. On desktop, compare cold launch to first usable input, idle memory and p95 input-to-paint on the same machine and fixture. Set budgets from that product’s measured baseline.</dd></div>
+          <div><dt>Human judgment</dt><dd>Review the tone of a difficult message and the optical balance of a signature in the actual screen. Let the product owner verify that the UI tells the truth about the underlying state.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="releases" class="spread" aria-labelledby="release-title">
+      <div class="margin"><h2 id="release-title">Adopt and upgrade</h2></div>
+      <div class="reading">
+        <ol class="manual-steps">
+          <li><strong>Publish one compatible set.</strong> A release manifest would list the supported targets, artifacts with digests, notices, rule IDs and versioned guide. Include a changelog and replacements for renamed tokens, terms or components.</li>
+          <li><strong>Pilot one real task.</strong> Render the same small roster journey in a packaged Vercel Native app and the Next.js and Vite web hosts. Record results by target. Use a project-owned screen as a second test, such as a decision being closed in Meatball.</li>
+          <li><strong>Turn on checks per project.</strong> Report existing drift first. Verify clean and intentionally broken examples before making checks required for new or changed UI. An intent-writing plugin can explain a finding using the very same release.</li>
+          <li><strong>Upgrade through a reviewed change.</strong> Update the project lock, compare before and after on the affected screens, and serve the assets in the same build as the client. An incompatible target, unknown required reference or mismatched digest stops the candidate build. The last working release stays available for rollback.</li>
+        </ol>
+      </div>
+    </section>
+    <section id="improve" class="spread"><div class="margin"><h2>Improve yogurt itself</h2></div><div class="reading">
+      <p>A product designer who finds a recurring problem brings the screen, the task and a reproducible example to yogurt. For example, if a closed decision leaves keyboard focus behind, the product owns the decision’s meaning and yogurt can improve the shared focus behavior.</p>
+      <ol class="manual-steps"><li>Record the user need as a yogurt-owned intent. Preserve a before example from the affected product.</li><li>Define the expected behavior and a counterexample, update the shared source and test it on the affected renderers.</li><li>Review the change in the catalog, release it with an upgrade note, and confirm the result in the reporting product after it upgrades.</li></ol>
+      <p>When Meatball’s target format settles, the yogurt repository can add its own <code>.meatball/</code> project descriptor to manage that work. In the other direction, Meatball’s client can consume a published yogurt version alongside every other OpenBoa project. Either repository can build using its last compatible inputs.</p>
+    </div></section>
+  </main>
+</body>
+</html>

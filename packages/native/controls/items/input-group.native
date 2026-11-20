@@ -1,0 +1,8 @@
+<template name="yg-input-group" args="label value">
+  <input-group label="{label}">
+    <textarea label="{label}" text="{value}" on-input="edit"/>
+    <input-group-actions>
+      <slot/>
+    </input-group-actions>
+  </input-group>
+</template>

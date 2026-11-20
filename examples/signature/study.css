@@ -1,0 +1,40 @@
+.study-page { max-width: 51rem; padding-block: clamp(2.5rem, 7vw, 5rem); }
+.study-page h1 { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: var(--boa-weight-medium); line-height: 1.08; letter-spacing: -.055em; margin: 0 0 var(--boa-space-24); }
+.study-note { margin: 0 0 var(--boa-space-24); }
+#openboa-signature-choice { min-width: 0; }
+#openboa-signature-choice .s-board { padding: .6rem .4rem; background: var(--proof-paper); color: var(--proof-ink); font-family: var(--proof-type); }
+#openboa-signature-choice .s-legend, #openboa-signature-choice .s-pick { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr) 160px; gap: .75rem; align-items: center; }
+#openboa-signature-choice .s-legend { padding: 0 .65rem .55rem; color: var(--proof-muted); font-size: 13px; }
+#openboa-signature-choice .s-options { display: grid; gap: .3rem; }
+#openboa-signature-choice .s-pick { width: 100%; min-height: 62px; padding: .6rem .65rem; text-align: left; background: var(--proof-paper); color: var(--proof-ink); border: 1px solid var(--proof-line); border-radius: var(--boa-radius-control); font: 550 14px/20px var(--proof-type); cursor: pointer; }
+#openboa-signature-choice .s-pick[aria-pressed="true"] { border-color: var(--boa-color-slate-750); box-shadow: inset 0 0 0 1px var(--boa-color-slate-750); }
+#openboa-signature-choice .s-pick:hover { border-color: var(--proof-muted); }
+#openboa-signature-choice .s-pick:focus-visible { outline: 2px solid var(--boa-color-slate-750); outline-offset: 2px; }
+#openboa-signature-choice .s-thumb, #openboa-signature-choice .s-thumb img, #openboa-signature-choice .s-small { display: block; height: auto; }
+#openboa-signature-choice .s-thumb { width: min(100%, 20rem); }
+.study-local [data-confirm] { min-height: 44px; padding: .55rem .75rem; border: 1px solid var(--proof-ink); border-radius: var(--boa-radius-control); color: var(--proof-paper); background: var(--proof-ink); font: 550 14px/20px var(--proof-type); cursor: pointer; }
+#openboa-signature-choice .s-proof, #openboa-signature-choice .s-baseline { box-sizing: border-box; background: var(--proof-paper); color: var(--proof-ink); padding: clamp(1rem, 4%, 2rem); font-family: var(--proof-type); }
+#openboa-signature-choice { --proof-paper: var(--boa-color-gray-green-50); --proof-ink: var(--boa-color-gray-green-950); --proof-muted: var(--boa-color-gray-green-700); --proof-line: var(--boa-color-gray-green-200); --proof-ready: var(--boa-color-sage-750); --proof-type: var(--boa-font-family); }
+#openboa-signature-choice .s-proof { border-top: 1px solid var(--proof-line); }
+#openboa-signature-choice .s-caption, #openboa-signature-choice .s-header, #openboa-signature-choice .s-row { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: .35rem .9rem; }
+#openboa-signature-choice .s-caption, #openboa-signature-choice .s-header span, #openboa-signature-choice .s-weights { font: 400 13px/18px var(--proof-type); color: var(--proof-muted); font-variant-numeric: tabular-nums; }
+#openboa-signature-choice .s-caption strong { color: var(--proof-ink); font-weight: 600; }
+#openboa-signature-choice .s-stage, #openboa-signature-choice .s-baseline { height: clamp(5.75rem, 17vw, 8rem); display: flex; align-items: center; }
+#openboa-signature-choice .s-stage img, #openboa-signature-choice .s-baseline img { display: block; max-width: 100%; height: auto; }
+#openboa-signature-choice .s-header { padding-block: .7rem; min-height: 49px; border-block: 1px solid var(--proof-line); }
+#openboa-signature-choice .s-header img { display: block; width: 160px; height: auto; max-width: 100%; }
+#openboa-signature-choice .s-editorial { padding-top: 1rem; }
+#openboa-signature-choice .s-editorial p { margin: 0; }
+#openboa-signature-choice .s-headline { font: var(--study-head) clamp(1.8rem, 4.8vw, 2.6rem)/1.1 var(--proof-type); letter-spacing: -.045em; }
+#openboa-signature-choice .s-body { font: var(--study-body) 16px/24px var(--proof-type); max-width: 54ch; }
+#openboa-signature-choice .s-headline + .s-body { margin-top: .6rem; }
+#openboa-signature-choice .s-row { margin-block: .85rem .4rem; border-top: 1px solid var(--proof-line); padding-top: .5rem; font: var(--study-ui) 14px/20px var(--proof-type); font-variant-numeric: tabular-nums; }
+#openboa-signature-choice .s-row span:last-child { color: var(--proof-ready); }
+#openboa-signature-choice .s-current { margin-block: .7rem; }
+#openboa-signature-choice .s-current summary { cursor: pointer; }
+#openboa-signature-choice .s-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem 1rem; }
+.s-message { font-size: .9em; }
+@media (max-width: 35rem) {
+  #openboa-signature-choice .s-legend, #openboa-signature-choice .s-pick { grid-template-columns: 3rem minmax(0, 1fr); }
+  #openboa-signature-choice .s-small, #openboa-signature-choice .s-legend span:last-child { display: none; }
+}

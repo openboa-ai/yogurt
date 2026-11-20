@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "record-facts",
+  "type": "registry:ui",
+  "title": "RecordFacts",
+  "description": "Keep an observed value with its units and source.",
+  "files": [
+    {
+      "path": "ui/record-facts.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { RecordFacts } from \"@openboa/yogurt/record-facts\";\n"
+    }
+  ]
+}

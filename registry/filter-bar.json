@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "filter-bar",
+  "type": "registry:ui",
+  "title": "FilterBar",
+  "description": "Narrow a collection in place.",
+  "files": [
+    {
+      "path": "ui/filter-bar.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { FilterBar } from \"@openboa/yogurt/filter-bar\";\n"
+    }
+  ]
+}

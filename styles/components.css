@@ -1,0 +1,73 @@
+@import url("brand.css");
+
+.boa-surface {
+  color-scheme: light;
+  --boa-paper: var(--boa-color-gray-green-50);
+  --boa-ink: var(--boa-color-gray-green-950);
+  --boa-muted: var(--boa-color-gray-green-700);
+  --boa-rule: var(--boa-color-gray-green-200);
+  --boa-edge: var(--boa-color-neutral-600);
+  --boa-ring: var(--boa-color-slate-750);
+  --boa-ready: var(--boa-color-sage-750);
+  color: var(--boa-ink);
+  background: var(--boa-paper);
+  font: var(--boa-role-weight-body) var(--boa-size-body)/var(--boa-line-height-body) var(--boa-font-family);
+  font-synthesis: none;
+}
+.boa-surface[data-appearance="dark"] {
+  color-scheme: dark;
+  --boa-paper: var(--boa-color-gray-green-950);
+  --boa-ink: var(--boa-color-gray-green-50);
+  --boa-muted: var(--boa-color-slate-200);
+  --boa-rule: var(--boa-color-neutral-700);
+  --boa-edge: var(--boa-color-neutral-400);
+  --boa-ring: var(--boa-color-slate-200);
+  --boa-ready: var(--boa-color-sage-200);
+}
+.boa-surface *, .boa-surface *::before, .boa-surface *::after { box-sizing: border-box; }
+.boa-surface :where(button, input, select, textarea, code, pre, kbd, samp) { font-family: var(--boa-font-family); }
+.boa-surface :focus-visible { outline: var(--boa-stroke-focus) solid var(--boa-ring); outline-offset: var(--boa-space-2); }
+.boa-panel { border: var(--boa-stroke-rule) solid var(--boa-rule); border-radius: var(--boa-radius-panel); padding: var(--boa-space-24); }
+.boa-button, .boa-input, .boa-field, .boa-check, .boa-state, .boa-row {
+  font: var(--boa-role-weight-ui) var(--boa-size-ui)/var(--boa-line-height-ui) var(--boa-font-family);
+}
+.boa-button, .boa-input {
+  min-height: var(--boa-control-height);
+  padding: var(--boa-space-8) var(--boa-space-12);
+  border: var(--boa-stroke-rule) solid var(--boa-edge);
+  border-radius: var(--boa-radius-control);
+}
+.boa-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--boa-paper);
+  background: var(--boa-ink);
+  border-color: var(--boa-ink);
+  text-decoration: none;
+  cursor: pointer;
+}
+.boa-button:hover:enabled { background: var(--boa-muted); }
+.boa-button[data-kind="secondary"] { color: var(--boa-ink); background: var(--boa-paper); border-color: var(--boa-edge); }
+.boa-button[data-kind="secondary"]:hover:enabled { background: var(--boa-rule); }
+.boa-button:disabled { color: var(--boa-muted); background: var(--boa-paper); border-color: var(--boa-rule); cursor: default; }
+.boa-field { display: grid; align-content: start; min-width: 0; gap: var(--boa-space-4); }
+.boa-input { width: 100%; min-width: 0; color: var(--boa-ink); background: var(--boa-paper); font-weight: var(--boa-role-weight-body); }
+.boa-input:disabled { color: var(--boa-muted); border-color: var(--boa-rule); }
+.boa-check { display: inline-flex; gap: var(--boa-space-8); align-items: center; min-height: var(--boa-control-height); cursor: pointer; }
+.boa-check input { width: var(--boa-space-16); height: var(--boa-space-16); margin: 0; accent-color: var(--boa-ring); }
+.boa-list { padding: 0; margin: 0; list-style: none; border-top: var(--boa-stroke-rule) solid var(--boa-rule); }
+.boa-list li { border-bottom: var(--boa-stroke-rule) solid var(--boa-rule); }
+.boa-row { display: flex; align-items: center; gap: var(--boa-space-12); min-height: var(--boa-control-touch); padding-block: var(--boa-space-8); cursor: pointer; }
+.boa-row::-webkit-details-marker { display: none; }
+.boa-row::after { content: "+"; color: var(--boa-muted); min-width: 1ch; text-align: center; }
+details[open] > .boa-row::after { content: "−"; }
+.boa-state { margin-inline-start: auto; color: var(--boa-muted); }
+.boa-state::before { content: ""; display: inline-block; width: var(--boa-space-4); height: var(--boa-space-4); margin-inline-end: var(--boa-space-8); border-radius: var(--boa-radius-round); vertical-align: .18em; background: currentColor; }
+.boa-state[data-state="ready"] { color: var(--boa-ready); }
+.boa-row-detail { margin: 0; padding-bottom: var(--boa-space-12); color: var(--boa-muted); }
+.boa-numbers { font-variant-numeric: tabular-nums; }
+@media (pointer: coarse) {
+  .boa-button, .boa-input, .boa-check { min-height: var(--boa-control-touch); }
+  .boa-input { font-size: var(--boa-size-body); }
+}

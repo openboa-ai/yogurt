@@ -1,0 +1,6 @@
+<template name="yg-input-otp" args="label value">
+  <column gap="8">
+    <text>{label}</text>
+    <text-field label="{label}" text="{value}" on-input="edit" on-submit="activate"/>
+  </column>
+</template>

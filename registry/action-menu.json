@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "action-menu",
+  "type": "registry:ui",
+  "title": "ActionMenu",
+  "description": "Choose a secondary command.",
+  "files": [
+    {
+      "path": "ui/action-menu.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ActionMenu } from \"@openboa/yogurt/action-menu\";\n"
+    }
+  ]
+}

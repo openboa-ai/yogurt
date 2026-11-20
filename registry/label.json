@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "label",
+  "type": "registry:ui",
+  "title": "Label",
+  "description": "Give a control a stable visible name.",
+  "files": [
+    {
+      "path": "ui/label.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Label } from \"@openboa/yogurt/label\";\n"
+    }
+  ]
+}

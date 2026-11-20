@@ -1,0 +1,217 @@
+{
+  "version": "0.1.0-draft.2",
+  "usage": {
+    "routing": "Give a fresh agent the complete installed skill catalog, prompt and inputs. Record the first scoped skill actually loaded. A result of none means no Yogurt skill. A named skill in the instructions would invalidate the trial.",
+    "outcome": "Give the agent the prompt and inputs in an isolated fixture. Compare observable artifacts, actions and receipts with assertions. File paths in inputs are relative to the Yogurt root. Expose only designated resources. For the installation case, mount only the stated consumer package files.",
+    "splits": "Use development for iteration and validation for choosing among revisions. Reserve holdout for the final comparison. Give solvers only prompt and inputs, keep graders separate, and replace any holdout shown to an optimizer. The cases are shareable fixtures, not a secret benchmark.",
+    "measurement": "Record skill and model revision, tool calls, retries, input, cached input, output, latency and observed or rate-derived cost per trial. Preserve unknown values. Report both cost per attempted task and total cost across attempts divided by accepted tasks. A critical case must pass every assertion before comparing efficiency.",
+    "external_effects": "All GitHub cases run against an in-memory issue service. Its call log and issue list are grader artifacts. Network writes are disabled."
+  },
+  "cases": [
+    {
+      "id": "route-choose-sidebar",
+      "split": "development",
+      "kind": "routing",
+      "prompt": "Two apps need very different navigation groups. Should we add two new sidebars or use one? Give me the design decision before code.",
+      "inputs": {"context": "One app groups agents by team and the other groups company records by desk. Both use a compact drawer."},
+      "expected_skill": "yogurt-ui",
+      "assertions": ["The skill-load trace first selects yogurt-ui."]
+    },
+    {
+      "id": "route-implement-field",
+      "split": "development",
+      "kind": "routing",
+      "prompt": "The approved Vite screen needs a labeled filter field and a clear button. Wire them to the existing local state.",
+      "inputs": {"host": "OpenBoa product, Vite and the pinned Yogurt web kit.", "approved_behavior": "Clearing the search restores all records."},
+      "expected_skill": "yogurt-build",
+      "assertions": ["The first scoped skill load is yogurt-build."]
+    },
+    {
+      "id": "route-rehearse-menu",
+      "split": "development",
+      "kind": "routing",
+      "prompt": "The screen is built. Check what happens to keyboard focus when I dismiss the menu and tell me what you observed.",
+      "inputs": {"artifact": "A running Yogurt web consumer and a menu trigger."},
+      "expected_skill": "yogurt-review",
+      "assertions": ["The first scoped skill load is yogurt-review."]
+    },
+    {
+      "id": "route-suggest-kit-fix",
+      "split": "validation",
+      "kind": "routing",
+      "prompt": "Two teams both had to patch the same shared control. Work out who should own the fix and prepare an upstream report.",
+      "inputs": {"observation": "Both products use the same adapter revision.", "issue_authority": "Draft only."},
+      "expected_skill": "yogurt-feedback",
+      "assertions": ["The first scoped skill load is yogurt-feedback."]
+    },
+    {
+      "id": "route-maintainer-eval",
+      "context": "maintainer",
+      "split": "development",
+      "kind": "routing",
+      "prompt": "Two versions of our build skill choose different components. Compare them on the same prompts and tell me whether the extra tokens paid off.",
+      "inputs": {"scope": "Yogurt plugin maintenance"},
+      "expected_skill": "yogurt-evaluate",
+      "assertions": ["The first scoped skill load is yogurt-evaluate."]
+    },
+    {
+      "id": "route-irrelevant-backend",
+      "split": "development",
+      "kind": "routing",
+      "prompt": "The progress screen reads jobs through this database view. Add an index for the jobs query.",
+      "inputs": {"scope": "Database migration only. The client and its contract stay as they are."},
+      "expected_skill": "none",
+      "assertions": ["No Yogurt skill is loaded."]
+    },
+    {
+      "id": "route-unrelated-issue",
+      "split": "validation",
+      "kind": "routing",
+      "prompt": "Draft an issue about our nightly archive job timing out.",
+      "inputs": {"repository": "test-org/archives", "evidence": "The job times out while compressing old service logs."},
+      "expected_skill": "none",
+      "assertions": ["No Yogurt skill is loaded even though the request mentions an issue."]
+    },
+    {
+      "id": "route-caption-edit",
+      "split": "holdout",
+      "kind": "routing",
+      "prompt": "Our museum exhibit label names the wrong donor. Correct the sentence for the printer.",
+      "inputs": {"plain_text": "The film was donated by Yogurt Studio.", "correction": "The donor was Yogurt Theatre."},
+      "expected_skill": "none",
+      "assertions": ["No Yogurt skill is loaded for an unrelated proper name."]
+    },
+    {
+      "id": "decide-sidebar-composition",
+      "split": "development",
+      "kind": "outcome",
+      "prompt": "Using the installed Yogurt SDK, recommend how our web project should implement a department directory while another app uses an agent roster. Write a brief an implementer can use.",
+      "inputs": {"installed_guides": ["docs/design-system-rules.md", "docs/sidebar.md"], "facts": "Both screens collapse and support keyboard dismissal. The directory groups departments and the roster groups agent activity. Only the directory allows renaming a department."},
+      "expected_skill": "yogurt-ui",
+      "assertions": ["The brief selects the shared sidebar behavior and maps the two groupings to product-owned composition.", "Renaming and route permissions remain product-owned.", "A concrete test closes a narrow drawer and checks that focus returns to the original trigger."]
+    },
+    {
+      "id": "decide-installed-only",
+      "split": "validation",
+      "kind": "outcome",
+      "prompt": "On this clean consumer, find the installed pattern guide for reviewing a decision and tell me what can be verified for native.",
+      "fixture": {"sdkSha256": "520b8a60ac18941e816ab46bafbff5f94e2e4ff84688650c9229fef4e3ea36a1"},
+      "inputs": {"consumer_evidence": "The local package has been installed from its locked archive. The consumer has no source checkout or native runtime evidence."},
+      "expected_skill": "yogurt-ui",
+      "assertions": ["The handoff identifies the inspected pin, available design entry and missing pattern or lookup resource.", "Native interaction support is recorded as unverified from these inputs.", "The file-access log stays within the consumer fixture and the handoff identifies how the distribution gap can be reproduced."],
+      "critical": true
+    },
+    {
+      "id": "build-series-rows",
+      "split": "development",
+      "kind": "outcome",
+      "prompt": "Return only a JavaScript function seriesRows(observations, canRead). Input {time, value}[] with value finite or null. When canRead is false return []. Otherwise return one {time, label} row per input in order, using String(value) for observations and the English word Unavailable for missing. Never mutate input.",
+      "inputs": {"scope": "A bounded consumer implementation task. The function supplies rows to an approved readings view in a synthetic fixture."},
+      "expected_skill": "yogurt-build",
+      "assertions": ["A JavaScript runtime loads the function without dependencies or surrounding prose.", "Given [{time:'b',value:0},{time:'a',value:null},{time:'a',value:-1.25}] and permission, the returned array is [{time:'b',label:'0'},{time:'a',label:'Unavailable'},{time:'a',label:'-1.25'}].", "Denied access returns [] for populated input, and an authorized empty input returns [].", "The same results hold for frozen inputs and the input records are unchanged after either path."],
+      "critical": true
+    },
+    {
+      "id": "build-review-decision",
+      "split": "development",
+      "kind": "outcome",
+      "prompt": "Build the web review flow in the blank consumer fixture. Let me cancel or explicitly return a brief. A connection interruption after confirmation must leave a usable way to check what happened.",
+      "inputs": {"files": ["DESIGN.md"], "host": "Blank Vite/React app with the pinned @openboa/yogurt SDK and an in-memory command ledger. Both records allow Return for revision. Cancel closes the dialog. Confirmation sends the record ID, revision and Return for revision action. The host can look up a receipt without submitting a command.", "records": [{"id":"A","shortName":"Brief","revision":7},{"id":"B","shortName":"Brief","revision":9}], "events": "Open A and cancel. Open B and confirm at revision 9. The host records R-14 and the acknowledgement is lost. Close and reopen the view. Checking R-14 returns applied for B at revision 10."},
+      "expected_skill": "yogurt-build",
+      "assertions": ["The source imports a supported SDK review or dialog control and the fixture mounts successfully.", "Cancellation leaves the ledger empty. Confirmation produces exactly one command for B at revision 9.", "After reconnecting, checking the original R-14 updates B and never sends a second business command.", "Visible text and accessible names preserve the unknown stage until the matching effective result arrives."],
+      "critical": true
+    },
+    {
+      "id": "review-coverage",
+      "split": "development",
+      "kind": "outcome",
+      "prompt": "Review this board before shipping. Identify each user-visible error, its consequence and how we can verify a fix.",
+      "inputs": {"source": "09:00 observed 0; 10:00 unavailable; 11:00 observed 0.16. Last observed 13:00 UTC. Permission is withdrawn at 14:35.", "captured_ui": "At 14:30 the accessible readings show 0, 0, 0.16. The page says 'Updated 14:30 UTC'. After withdrawal the overview hides the chart but the open readings dialog still exposes all three values."},
+      "expected_skill": "yogurt-review",
+      "assertions": ["Findings distinguish the observed 0 from missing data and specify checking the visual and accessible readings.", "A finding compares the displayed refresh time to the source observation time.", "A finding identifies the stale open dialog after access withdrawal, with a test that removes the exposed values.", "The evidence is attributed to the supplied captures and source."],
+      "critical": true
+    },
+    {
+      "id": "review-roster-motion",
+      "split": "validation",
+      "kind": "outcome",
+      "prompt": "Can you sign off the difference between Waiting for you and Working at roster size? Tell me exactly what the current review establishes.",
+      "inputs": {"artifact": "Two 24px still captures with the same agent silhouette and different adjacent state labels. No timeline, motion recording or live renderer is provided.", "reported_checks": "The source passes the token and import checker. A reduced-motion screenshot still shows the correct state label."},
+      "expected_skill": "yogurt-review",
+      "assertions": ["The review credits actual still-image and label evidence, including reduced-motion text.", "Motion recognizability remains unverified. The reviewer asks for a normal-speed 24px capture of both states or a live replay.", "The proposed test compares unlabeled clips to the ground-truth states and checks the reduced-motion view separately."],
+      "critical": false
+    },
+    {
+      "id": "feedback-draft-product",
+      "split": "development",
+      "kind": "outcome",
+      "prompt": "Our department rename action is hidden for editors. Work out who should fix it and prepare an issue draft I can review.",
+      "inputs": {"observation": "Yogurt's shared menu displays each item the product supplies. The directory app passes only a View action even when the host grants rename. The unchanged menu renders Rename when supplied by the fixture.", "destinations": {"consumer":"test-org/directory","kit":"test-org/yogurt"}, "issue_authority": "Draft only."},
+      "expected_skill": "yogurt-feedback",
+      "assertions": ["The draft targets test-org/directory and explains the observed menu input and fixture comparison.", "It includes reproduction, expected behavior, product ownership and a test for an editor with rename granted.", "The mock service receives zero create, update or comment calls."],
+      "critical": true
+    },
+    {
+      "id": "feedback-create-uncertain",
+      "split": "development",
+      "kind": "outcome",
+      "prompt": "File the reproducible shared dialog focus defect in test-org/yogurt. Use the issue service available in this fixture.",
+      "inputs": {"authorized_actor":"fixture-maintainer","allowed_effect":"Search and create an issue only in test-org/yogurt.","pin":"fixture-r17","renderer":"web","repro":"In two clean web consumers, focus a dialog trigger, open, dismiss with Escape. After dismissal activeElement is body in both. Expected focus on the original trigger.","issue_service":"Initially empty. Search returns matches scoped to the requested repository. The first create commits #41 and then drops its acknowledgement. The committed issue is visible to a subsequent search. Every call is logged."},
+      "expected_skill": "yogurt-feedback",
+      "assertions": ["The mock log records an initial duplicate search in the authorized repository.", "Exactly one issue exists, in test-org/yogurt, with the pin, adapter, steps and expected focus.", "After the lost acknowledgement the log records reconciliation against the issue service before any retry, with no duplicate create.", "The handoff identifies confirmed fixture issue #41 from the matching service record."],
+      "critical": true
+    },
+    {
+      "id": "feedback-existing-issue",
+      "split": "validation",
+      "kind": "outcome",
+      "prompt": "If the shared select bug isn't tracked, open an issue in test-org/yogurt. Tell me where it is tracked.",
+      "inputs": {"allowed_effect":"Search and create only when no matching issue exists. Existing issues are read-only.","repro":"Web fixture-r21. The select trigger loses keyboard focus after Escape whenever the filtered list is empty.","issue_service":"Search lists test-org/yogurt#8 titled 'Focus disappears after closing an empty picker'; its body confirms the same renderer, steps, version and symptom. test-org/search#8 concerns scrolling a search page."},
+      "expected_skill": "yogurt-feedback",
+      "assertions": ["A search or read checks the matching issue body and target repository.", "The result points to test-org/yogurt#8 despite its different title.", "There are zero create, edit or comment calls in either repository."],
+      "critical": true
+    },
+    {
+      "id": "evaluate-efficient-profile",
+      "context": "maintainer",
+      "split": "development",
+      "kind": "outcome",
+      "prompt": "Which execution profile should we trial next? Compare the supplied measurements and explain what to measure before widening its use.",
+      "inputs": {"same_fixture":"Three first attempts per profile in the same task family. Each reaches a final result. Totals below include one retry for C. Currency is a synthetic fixture dollar. All tasks carry a hard zero-disclosure requirement.","profiles":[{"id":"A","accepted":3,"disclosures":0,"totalCost":0.30,"totalTokens":9000,"elapsedSeconds":[8,10,12]},{"id":"B","accepted":2,"disclosures":1,"totalCost":0.06,"totalTokens":2200,"elapsedSeconds":[2,3,3]},{"id":"C","accepted":3,"disclosures":0,"totalCost":0.12,"totalTokens":4200,"elapsedSeconds":[5,6,12]}]},
+      "expected_skill": "yogurt-evaluate",
+      "assertions": ["A and C satisfy the supplied hard requirement. B's disclosure rules it out.", "A costs 0.10 and C costs 0.04 fixture dollars per accepted task. Their median end-to-end latencies are 10 and 6 seconds respectively.", "The next trial considers C, holds task and evaluation conditions fixed and records its retry cost once.", "The sample size and synthetic pricing are stated. Wider performance requires fresh cases and repeated runs."],
+      "critical": true
+    },
+    {
+      "id": "decide-uncertain-print-receipt",
+      "split": "holdout",
+      "kind": "outcome",
+      "prompt": "Design the status view for a shared print room when a receipt arrives late. The operator walks between stations and some queue labels repeat.",
+      "inputs": {"product":"Independent exhibit-printing fixture. Only the host can submit jobs or look up a receipt.","facts":"The station Copper submitted job x-1, receipt k-83, label Poster. Delivery is unknown. A separate station Tin reports that its own job x-9, also labeled Poster, completed. Copper can look up k-83 but cannot submit again in this view.","available_contracts":["pattern.track-request","pattern.inspect-record"]},
+      "expected_skill": "yogurt-ui",
+      "assertions": ["The design binds status and the lookup operation to station Copper, job x-1 and receipt k-83.", "Tin's result leaves Copper's outcome unknown.", "Only lookup is available, and the proposed recovery checks the original receipt without submitting a job.", "The brief identifies how a later matching host result changes the visible state."],
+      "critical": true
+    },
+    {
+      "id": "review-brand-voice",
+      "split": "holdout",
+      "kind": "outcome",
+      "prompt": "Review the empty and unavailable states in this new app against Yogurt's language and product facts. Supply replacement English copy.",
+      "inputs": {"product":"An independent seed-library fixture; the visitor reads public accession records.","capture":"Successful response with zero records: 'Awww, sad little seed!'. Failed first read with no records returned: 'There are no seeds here.'","actions":"Visitors can refresh a failed read. Officials add accessions in a separate app. The page already names the collection."},
+      "expected_skill": "yogurt-review",
+      "assertions": ["Replacement copy for the confirmed empty response plainly identifies the empty collection.", "Failure copy conveys that the records could not be loaded and gives the available retry action.", "The copy is English, omits the childish aside, and gives visitors no unsupported add action.", "Human review compares the proposed wording against both facts and Yogurt voice."],
+      "critical": false
+    },
+    {
+      "id": "evaluate-new-regression",
+      "context": "maintainer",
+      "split": "holdout",
+      "kind": "outcome",
+      "prompt": "Can we adopt a new skill revision for every consumer? Give the release decision supported by this experiment.",
+      "inputs": {"experiment":"On a new kiosk workflow, reviewers preferred candidate K in 5 of 6 blind comparisons. The current version preserves the focused record in all 6 cases. After an account switch, K showed the previous account's record once. Both arms took 6 runs. K has lower median latency. The execution log contains token counts but no price schedule, invoice or credit allocation."},
+      "expected_skill": "yogurt-evaluate",
+      "assertions": ["The recommendation holds adoption because the cross-account leak is a critical regression.", "The response records 5 of 6 visual preferences without treating them as proof of safety.", "Dollar cost remains unknown. The improvement plan targets the failed account-switch case and retests against an independent case before promotion."],
+      "critical": true
+    }
+  ]
+}

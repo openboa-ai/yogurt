@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "receipt",
+  "type": "registry:ui",
+  "title": "Receipt",
+  "description": "Look up the original request.",
+  "files": [
+    {
+      "path": "ui/receipt.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Receipt } from \"@openboa/yogurt/receipt\";\n"
+    }
+  ]
+}

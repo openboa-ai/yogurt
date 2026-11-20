@@ -1,0 +1,9 @@
+<template name="yg-card" args="title detail">
+  <card>
+    <column gap="8">
+      <text size="heading">{title}</text>
+      <text size="sm">{detail}</text>
+      <slot/>
+    </column>
+  </card>
+</template>

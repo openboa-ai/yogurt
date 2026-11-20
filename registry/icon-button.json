@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "icon-button",
+  "type": "registry:ui",
+  "title": "IconButton",
+  "description": "Keep a familiar action within reach.",
+  "files": [
+    {
+      "path": "ui/icon-button.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { IconButton } from \"@openboa/yogurt/icon-button\";\n"
+    }
+  ]
+}

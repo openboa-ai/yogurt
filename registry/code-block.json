@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "code-block",
+  "type": "registry:ui",
+  "title": "CodeBlock",
+  "description": "Read and copy a labeled code sample.",
+  "files": [
+    {
+      "path": "ui/code-block.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { CodeBlock } from \"@openboa/yogurt/code-block\";\n"
+    }
+  ]
+}

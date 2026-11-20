@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "amount-top",
+  "type": "registry:ui",
+  "title": "AmountTop",
+  "description": "Lead with a quantity and its unit.",
+  "files": [
+    {
+      "path": "ui/amount-top.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { AmountTop } from \"@openboa/yogurt/amount-top\";\n"
+    }
+  ]
+}

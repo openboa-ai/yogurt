@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "text",
+  "type": "registry:ui",
+  "title": "Text",
+  "description": "Body, help and metadata in one typeface.",
+  "files": [
+    {
+      "path": "ui/text.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Text } from \"@openboa/yogurt/text\";\n"
+    }
+  ]
+}

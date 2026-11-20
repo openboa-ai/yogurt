@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "yogurt",
+  "type": "registry:ui",
+  "title": "Yogurt",
+  "description": "A scoped appearance and surface for a product.",
+  "files": [
+    {
+      "path": "ui/yogurt.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Yogurt } from \"@openboa/yogurt/yogurt\";\n"
+    }
+  ]
+}

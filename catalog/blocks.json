@@ -1,0 +1,279 @@
+[
+  {
+    "id": "project-settings",
+    "name": "ProjectSettings",
+    "description": "Edit notification preferences, then save or discard the draft.",
+    "components": [
+      "heading",
+      "switch",
+      "select",
+      "button",
+      "button-group",
+      "field-error",
+      "stack"
+    ],
+    "native": [
+      "switch",
+      "select"
+    ]
+  },
+  {
+    "id": "collection-browser",
+    "name": "CollectionBrowser",
+    "description": "Search project records, include archived items and open a matching view.",
+    "components": [
+      "count",
+      "empty-result",
+      "filter-bar",
+      "list",
+      "list-header",
+      "list-row",
+      "stack",
+      "toggle"
+    ],
+    "native": [
+      "empty-result",
+      "filter-bar",
+      "list"
+    ]
+  },
+  {
+    "id": "decision-review",
+    "name": "DecisionReview",
+    "description": "Review the observed facts and confirm a revision-bound decision.",
+    "components": [
+      "button",
+      "confirm-dialog",
+      "record-facts",
+      "stack",
+      "status",
+      "table-row"
+    ],
+    "native": [
+      "record-facts",
+      "table-row",
+      "confirm-dialog"
+    ]
+  },
+  {
+    "id": "conversation-panel",
+    "name": "ConversationPanel",
+    "description": "Read a thread and send a draft or stop an in-progress reply.",
+    "components": [
+      "button",
+      "button-group",
+      "message",
+      "stack",
+      "textarea",
+      "transcript"
+    ],
+    "native": [
+      "message",
+      "textarea",
+      "transcript"
+    ]
+  },
+  {
+    "id": "agent-workspace",
+    "name": "AgentWorkspace",
+    "description": "Switch between agents without mixing their conversations, then open the computer inspector as needed.",
+    "components": [
+      "agent-avatar",
+      "agent-row",
+      "button",
+      "empty-result",
+      "heading",
+      "search-field",
+      "runtime-panel",
+      "stack"
+    ],
+    "native": [
+      "agent-row",
+      "composer",
+      "message",
+      "runtime-panel",
+      "work-event"
+    ]
+  },
+  {
+    "id": "project-workspace",
+    "name": "ProjectWorkspace",
+    "description": "Open a project with its own conversations, sources and instructions.",
+    "components": [
+      "button",
+      "empty-result",
+      "filter-bar",
+      "heading",
+      "list",
+      "project-mark",
+      "resource-row",
+      "result",
+      "search-field",
+      "stack",
+      "tabs",
+      "thread-row",
+      "sidebar-layout"
+    ],
+    "native": [
+      "resource-row",
+      "thread-row",
+      "composer"
+    ]
+  },
+  {
+    "id": "operations-library",
+    "name": "OperationsLibrary",
+    "description": "Browse routines, skills and connections. Inspect and edit an available routine.",
+    "components": [
+      "badge",
+      "button",
+      "count",
+      "empty-result",
+      "filter-bar",
+      "list-header",
+      "result",
+      "routine-row",
+      "skeleton",
+      "stack",
+      "tabs",
+      "text"
+    ],
+    "native": [
+      "routine-row"
+    ]
+  },
+  {
+    "id": "attention-inbox",
+    "name": "AttentionInbox",
+    "description": "Filter unread work, review an explicit action and read its receipt.",
+    "components": [
+      "badge",
+      "button",
+      "confirm-dialog",
+      "count",
+      "list-header",
+      "receipt",
+      "result",
+      "segmented-control",
+      "skeleton",
+      "stack",
+      "text",
+      "work-event"
+    ],
+    "native": [
+      "work-event"
+    ]
+  },
+  {
+    "id": "artifact-library",
+    "name": "ArtifactLibrary",
+    "description": "Search artifacts by type, open a preview and pin useful results.",
+    "components": [
+      "button",
+      "empty-result",
+      "heading",
+      "inline",
+      "resource-row",
+      "search-field",
+      "select",
+      "stack"
+    ],
+    "native": [
+      "resource-row"
+    ]
+  },
+  {
+    "id": "project-access",
+    "name": "ProjectAccess",
+    "description": "Inspect membership, invite someone and review access changes for the selected project.",
+    "components": [
+      "button",
+      "confirm-dialog",
+      "field-error",
+      "heading",
+      "inline",
+      "select",
+      "stack",
+      "text-field"
+    ],
+    "native": []
+  },
+  {
+    "id": "agent-profile",
+    "name": "AgentProfile",
+    "description": "Edit an agent’s name, silhouette, scope and working instructions.",
+    "components": [
+      "agent-avatar",
+      "button",
+      "heading",
+      "inline",
+      "select",
+      "stack",
+      "text",
+      "textarea",
+      "text-field"
+    ],
+    "native": []
+  },
+  {
+    "id": "run-inspector",
+    "name": "RunInspector",
+    "description": "Inspect a routine run, read its result and explicitly request retry or cancel.",
+    "components": [
+      "button",
+      "button-group",
+      "heading",
+      "list",
+      "list-row",
+      "result",
+      "skeleton",
+      "stack",
+      "status",
+      "text",
+      "trace"
+    ],
+    "native": [
+      "list",
+      "status",
+      "trace"
+    ]
+  },
+  {
+    "id": "agent-sidebar",
+    "name": "AgentSidebar",
+    "description": "Compose a searchable sidebar with agent identities and teams.",
+    "components": [
+      "agent-avatar",
+      "badge",
+      "button",
+      "heading",
+      "inline",
+      "project-mark",
+      "search-field",
+      "sidebar-layout",
+      "text"
+    ],
+    "native": [
+      "sidebar-layout"
+    ]
+  },
+  {
+    "id": "project-sidebar",
+    "name": "ProjectSidebar",
+    "description": "Compose nested project views, search and workspace actions.",
+    "components": [
+      "badge",
+      "heading",
+      "icon",
+      "icon-button",
+      "inline",
+      "project-mark",
+      "search-field",
+      "sidebar-layout",
+      "text"
+    ],
+    "native": [
+      "sidebar-layout"
+    ]
+  }
+]

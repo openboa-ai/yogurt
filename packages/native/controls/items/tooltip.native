@@ -1,0 +1,3 @@
+<template name="yg-tooltip" args="label">
+  <tooltip>{label}</tooltip>
+</template>

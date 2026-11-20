@@ -1,0 +1,25 @@
+<import src="sidebar-layout.native"/>
+<template name="yg-agent-sidebar">
+  <column>
+    <use template="yg-sidebar-panel" label="Agents">
+      <text size="heading">Agents</text>
+      <search-field label="Find an agent" text="{sidebar_query}" on-input="search_sidebar"/>
+      <scroll>
+        <use template="yg-sidebar-group" label="Team">
+          <use template="yg-sidebar-items">
+            <for each="sidebar_destinations" key="id" as="item">
+              <use template="yg-sidebar-destination" label="{item.title}" item_id="{item.id}" selected="{item.selected}">
+                <row gap="8" cross="center">
+                  <image label="Agent silhouette" image="{item.image_id}" width="24" height="24"/>
+                  <text>{item.title}</text>
+                  <if test="{item.unread}"><text size="sm">Unread</text></if>
+                </row>
+              </use>
+            </for>
+          </use>
+        </use>
+      </scroll>
+      <if test="{sidebar_can_add}"><button variant="secondary" on-press="add_sidebar_item">New conversation</button></if>
+    </use>
+  </column>
+</template>

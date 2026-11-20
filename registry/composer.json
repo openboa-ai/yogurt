@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "composer",
+  "type": "registry:ui",
+  "title": "Composer",
+  "description": "Review draft sources and tools, send a message or stop a pending reply.",
+  "files": [
+    {
+      "path": "ui/composer.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Composer } from \"@openboa/yogurt/composer\";\n"
+    }
+  ]
+}

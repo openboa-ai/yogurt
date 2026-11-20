@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "roles": {
+    "canvas": [
+      "neutral.0",
+      "neutral.975"
+    ],
+    "surface": [
+      "gray-green.50",
+      "neutral.950"
+    ],
+    "field": [
+      "neutral.100",
+      "neutral.850"
+    ],
+    "hover": [
+      "neutral.200",
+      "neutral.800"
+    ],
+    "text": [
+      "gray-green.950",
+      "neutral.50"
+    ],
+    "muted": [
+      "gray-green.700",
+      "neutral.300"
+    ],
+    "brand": [
+      "slate.750",
+      "slate.750"
+    ],
+    "action": [
+      "slate.750",
+      "slate.200"
+    ],
+    "action-hover": [
+      "slate.800",
+      "slate.100"
+    ],
+    "action-press": [
+      "slate.900",
+      "slate.300"
+    ],
+    "on-action": [
+      "gray-green.50",
+      "slate.950"
+    ],
+    "action-soft": [
+      "slate.50",
+      "slate.850"
+    ],
+    "action-soft-hover": [
+      "slate.100",
+      "slate.800"
+    ],
+    "off": [
+      "neutral.600",
+      "neutral.500"
+    ],
+    "thumb": [
+      "neutral.0",
+      "neutral.975"
+    ],
+    "danger": [
+      "coral.700",
+      "coral.200"
+    ],
+    "danger-soft": [
+      "coral.50",
+      "coral.900"
+    ],
+    "success": [
+      "sage.800",
+      "sage.200"
+    ],
+    "success-soft": [
+      "sage.50",
+      "sage.900"
+    ],
+    "warning": [
+      "ochre.800",
+      "ochre.200"
+    ],
+    "warning-soft": [
+      "ochre.50",
+      "ochre.900"
+    ],
+    "accent": [
+      "violet.700",
+      "violet.200"
+    ],
+    "accent-soft": [
+      "violet.50",
+      "violet.900"
+    ]
+  },
+  "materials": {
+    "paper": {
+      "canvas": [
+        "paper.25",
+        "paper.975"
+      ],
+      "surface": [
+        "paper.50",
+        "paper.950"
+      ],
+      "field": [
+        "paper.100",
+        "paper.850"
+      ],
+      "hover": [
+        "paper.200",
+        "paper.800"
+      ],
+      "text": [
+        "paper.950",
+        "paper.50"
+      ],
+      "muted": [
+        "paper.700",
+        "paper.300"
+      ]
+    },
+    "mist": {
+      "canvas": [
+        "mist.25",
+        "mist.975"
+      ],
+      "surface": [
+        "mist.50",
+        "mist.950"
+      ],
+      "field": [
+        "mist.100",
+        "mist.850"
+      ],
+      "hover": [
+        "mist.200",
+        "mist.800"
+      ],
+      "text": [
+        "mist.950",
+        "mist.50"
+      ],
+      "muted": [
+        "mist.700",
+        "mist.300"
+      ]
+    }
+  },
+  "geometry": {
+    "radius-small": "radius.small",
+    "radius-control": "radius.control",
+    "radius-panel": "radius.panel",
+    "size-compact": "control.compact",
+    "size-regular": "control.height",
+    "size-touch": "control.touch",
+    "size-icon": "control.icon",
+    "glyph": "control.glyph",
+    "inset-compact": "space.8",
+    "inset-regular": "space.12",
+    "inset-roomy": "space.16",
+    "switch-width": 32,
+    "switch-height": 19,
+    "thumb-size": 13,
+    "track-inset": 3
+  },
+  "motion": {
+    "press": 80,
+    "layer": 120,
+    "travel": 160,
+    "change": 180,
+    "panel": 200,
+    "busy": 750
+  },
+  "elevation": {
+    "lift": [[2, 8, 10]],
+    "float": [[1, 3, 12], [6, 20, 12]],
+    "panel": [[12, 48, 18]]
+  },
+  "easing": {
+    "settle": "cubic-bezier(.2, 0, 0, 1)"
+  },
+  "types": {
+    "action": [
+      "ui",
+      "medium"
+    ],
+    "body": [
+      "ui",
+      "regular"
+    ],
+    "help": [
+      "help",
+      "regular"
+    ],
+    "meta": [
+      "caption",
+      "regular"
+    ],
+    "heading": [
+      "subheading",
+      "heading"
+    ],
+    "touch": [
+      "body",
+      "regular"
+    ]
+  }
+}

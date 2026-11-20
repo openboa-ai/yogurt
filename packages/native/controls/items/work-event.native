@@ -1,0 +1,11 @@
+<template name="yg-work-event" args="title detail summary item_id can_review">
+  <card>
+    <column gap="8">
+      <text>{title}</text>
+      <text size="sm" foreground="text_muted">{summary}</text>
+      <text>{detail}</text>
+      <slot/>
+      <if test="{can_review}"><button variant="secondary" on-press="review_event:{item_id}">Review details</button></if>
+    </column>
+  </card>
+</template>

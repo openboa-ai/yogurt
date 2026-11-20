@@ -1,0 +1,6 @@
+<template name="yg-form" args="label">
+  <column gap="8">
+    <text size="heading">{label}</text>
+    <slot/>
+  </column>
+</template>

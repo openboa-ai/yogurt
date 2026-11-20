@@ -1,0 +1,3 @@
+<template name="yg-agent-avatar" args="label image_id">
+  <image label="{label}" image="{image_id}" width="48" height="48"/>
+</template>

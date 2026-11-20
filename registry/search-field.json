@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "search-field",
+  "type": "registry:ui",
+  "title": "SearchField",
+  "description": "Filter records and clear the query in place.",
+  "files": [
+    {
+      "path": "ui/search-field.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { SearchField } from \"@openboa/yogurt/search-field\";\n"
+    }
+  ]
+}

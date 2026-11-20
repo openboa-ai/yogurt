@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button",
+  "type": "registry:ui",
+  "title": "Button",
+  "description": "Commit one named action.",
+  "files": [
+    {
+      "path": "ui/button.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Button } from \"@openboa/yogurt/button\";\n"
+    }
+  ]
+}

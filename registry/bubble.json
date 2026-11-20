@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bubble",
+  "type": "registry:ui",
+  "title": "Bubble",
+  "description": "Group a speaker’s content by its direction.",
+  "files": [
+    {
+      "path": "ui/bubble.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Bubble } from \"@openboa/yogurt/bubble\";\n"
+    }
+  ]
+}

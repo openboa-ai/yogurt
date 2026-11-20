@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "calendar",
+  "type": "registry:ui",
+  "title": "Calendar",
+  "description": "Choose a civil date in a keyboard-accessible month grid.",
+  "files": [
+    {
+      "path": "ui/calendar.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Calendar } from \"@openboa/yogurt/calendar\";\n"
+    }
+  ]
+}

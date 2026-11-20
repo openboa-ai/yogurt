@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "date-picker",
+  "type": "registry:ui",
+  "title": "DatePicker",
+  "description": "Open a calendar to change a date.",
+  "files": [
+    {
+      "path": "ui/date-picker.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { DatePicker } from \"@openboa/yogurt/date-picker\";\n"
+    }
+  ]
+}

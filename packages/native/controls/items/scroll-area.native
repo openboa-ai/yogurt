@@ -1,0 +1,5 @@
+<template name="yg-scroll-area" args="label">
+  <scroll label="{label}">
+  <slot/>
+  </scroll>
+</template>

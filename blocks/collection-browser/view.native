@@ -1,0 +1,11 @@
+<import src="empty-result.native"/>
+<import src="filter-bar.native"/>
+<import src="list.native"/>
+<template name="yg-collection-browser">
+  <column gap="12">
+    <text size="heading">Project views</text>
+    <use template="yg-filter-bar" label="Find a view" value="{value}"><toggle checked="{enabled}" on-toggle="toggle">Include archived</toggle></use>
+    <if test="{has_results}"><use template="yg-list" label="Project views"><for each="choices" key="id" as="item"><list-item on-press="choose:{item.id}">{item.title}</list-item></for></use></if>
+    <else><use template="yg-empty-result" title="No matching views"><button variant="ghost" on-press="clear">Clear search</button></use></else>
+  </column>
+</template>

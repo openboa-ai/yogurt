@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "bottom-info",
+  "type": "registry:ui",
+  "title": "BottomInfo",
+  "description": "Keep supporting information with the decision it explains.",
+  "files": [
+    {
+      "path": "ui/bottom-info.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { BottomInfo } from \"@openboa/yogurt/bottom-info\";\n"
+    }
+  ]
+}

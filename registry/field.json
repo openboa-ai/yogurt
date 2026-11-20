@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "field",
+  "type": "registry:ui",
+  "title": "Field",
+  "description": "Connect a label, value and correction.",
+  "files": [
+    {
+      "path": "ui/field.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Field } from \"@openboa/yogurt/field\";\n"
+    }
+  ]
+}

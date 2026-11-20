@@ -1,0 +1,7 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a vulnerability privately
+    # starter:report
+    url: https://github.com/openboa-ai/yogurt/security/advisories/new
+    # /starter:report
+    about: Open the Security tab in this repository to send a private report.

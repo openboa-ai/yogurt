@@ -1,0 +1,29 @@
+<template name="yg-project-access">
+  <column gap="12">
+    <text size="heading">Project access</text>
+    <text foreground="text_muted">{access_scope}</text>
+    <if test="{access_can_invite}"><button variant="secondary" on-press="start_project_invite">Invite a person</button></if>
+    <column label="People with access" gap="8">
+      <for each="access_members" key="id" as="item">
+        <row gap="8" cross="center">
+          <column grow="1" gap="4">
+            <text>{item.title}</text>
+            <text size="sm" foreground="text_muted">{item.detail}</text>
+          </column>
+          <if test="{item.can_edit}"><button variant="ghost" label="Review access for {item.title}" on-press="review_member_access:{item.id}">Review access</button></if>
+        </row>
+      </for>
+    </column>
+    <if test="{access_review_open}">
+      <dialog label="Confirm access change" on-dismiss="close_access_review">
+        <column gap="12" padding="16">
+          <text size="heading">{access_review_title}</text>
+          <text>{access_review_detail}</text>
+          <if test="{access_can_confirm}"><button disabled="{access_pending}" on-press="confirm_member_access:{access_review_id}">{access_confirm_label}</button></if>
+          <button variant="ghost" on-press="close_access_review">Cancel</button>
+        </column>
+      </dialog>
+    </if>
+    <if test="{access_outcome_visible}"><status-bar>{access_outcome}</status-bar></if>
+  </column>
+</template>

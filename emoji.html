@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light">
+  <title>Emoji · yogurt</title><link rel="icon" href="assets/logo/upright-9.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles/components.css"><link rel="stylesheet" href="styles/specimen.css"><link rel="stylesheet" href="styles/guide.css"><link rel="stylesheet" href="styles/emoji.css">
+  <script defer src="assets/emoji/catalog-data.js"></script><script defer src="apps/guide/runtime/emoji-gallery.js"></script>
+</head>
+<body><header><div class="masthead"><div class="imprint"><b>yogurt</b><span>ships with live cultures</span></div><nav aria-label="Guide"><a href="index.html">Brand</a><a href="system.html">Design system</a><a href="library.html">Design sources</a><a href="adoption.html">Project use</a><a href="components.html">Components</a></nav></div></header>
+<main class="emoji-page boa-surface" id="emoji-gallery">
+  <header class="guide-opening"><h1>Emoji</h1><p>Find a reaction, a gesture or an object. Original OpenBoa artwork in editable SVG and transparent PNG.</p></header>
+  <div class="emoji-filters">
+    <label class="boa-field">Find an emoji<input class="boa-input" type="search" id="emoji-search" placeholder="Name, emoji or code point" autocomplete="off"></label>
+    <label class="boa-field">Group<select class="boa-input" id="emoji-group"><option value="">All groups</option></select></label>
+  </div>
+  <div class="emoji-workspace">
+    <section aria-label="Search results"><div class="emoji-result-head"><p id="emoji-count" role="status"></p><button type="button" class="text-action" id="emoji-reset" hidden>Clear filters</button></div>
+      <div class="emoji-grid" id="emoji-grid" role="group" aria-label="Choose an emoji"></div>
+      <p id="emoji-empty" hidden>No matching emoji.</p>
+      <nav class="emoji-pages" aria-label="Result pages" hidden><button type="button" class="text-action" id="emoji-prev">Previous</button><span id="emoji-page"></span><button type="button" class="text-action" id="emoji-next">Next</button></nav>
+    </section>
+    <section class="emoji-detail" id="emoji-detail" aria-label="Selected emoji">
+      <div class="emoji-proofs" id="emoji-proofs"><img data-proof="large" width="100" height="100" alt=""><div class="small-proofs" aria-label="Small-size proofs"><img data-proof="small" width="16" height="16" alt="16 pixels"><img data-proof="small" width="24" height="24" alt="24 pixels"><img data-proof="small" width="32" height="32" alt="32 pixels"></div></div>
+      <h2 id="emoji-name"></h2><p id="emoji-meta"></p><p id="emoji-code" class="boa-numbers"></p><label class="boa-check"><input id="emoji-dark" type="checkbox">Ink surface</label>
+      <label class="boa-field emoji-face-color" id="emoji-color-field" hidden>Face color
+        <select class="boa-input" id="emoji-color"><option value="yellow">Bright yellow</option><option value="peach">Soft peach</option></select>
+      </label>
+      <div class="emoji-actions"><a id="emoji-svg" download>SVG</a><a id="emoji-png" download>128 px PNG</a><button class="text-action" id="emoji-copy" type="button">Copy character</button></div>
+      <input class="boa-input" id="emoji-fallback" readonly hidden aria-label="Unicode character to copy"><p id="emoji-feedback" role="status"></p>
+    </section>
+  </div>
+  <footer class="emoji-notes"><p>The collection covers 3,813 fully qualified Unicode 17 sequences across eight non-food groups, including skin tones and flags. A further 18 drawings follow the Unicode 18 draft data. The character you copy uses the recipient’s emoji font. Choose SVG or PNG to carry this artwork into a client.</p>
+  <p><a href="assets/emoji/README.md">Artwork and file guide</a> · <a href="assets/emoji/catalog.json" download>Catalog JSON</a> · <a href="library.html#emoji">Three project emoji</a></p></footer>
+  <noscript><p><a href="assets/emoji/catalog.json">Read the emoji index</a></p></noscript>
+</main></body></html>

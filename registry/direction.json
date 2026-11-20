@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "direction",
+  "type": "registry:ui",
+  "title": "Direction",
+  "description": "Set the reading and interaction direction of a region.",
+  "files": [
+    {
+      "path": "ui/direction.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Direction } from \"@openboa/yogurt/direction\";\n"
+    }
+  ]
+}

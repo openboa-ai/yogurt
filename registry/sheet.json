@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sheet",
+  "type": "registry:ui",
+  "title": "Sheet",
+  "description": "Open more space for a task on a small screen.",
+  "files": [
+    {
+      "path": "ui/sheet.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Sheet } from \"@openboa/yogurt/sheet\";\n"
+    }
+  ]
+}

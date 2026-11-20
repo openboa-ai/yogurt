@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Basic controls · Yogurt</title>
+  <link rel="icon" href="../../assets/logo/upright-9.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../styles/brand.css">
+  <link rel="stylesheet" href="study.css">
+  <script defer src="study.js"></script>
+  <style>
+    :root { color-scheme: light dark; background: light-dark(var(--boa-color-neutral-0),var(--boa-color-neutral-975)); color: light-dark(var(--boa-color-gray-green-950),var(--boa-color-neutral-50)); }
+    body { margin:0; font:425 16px/1.5 var(--boa-font-family); }
+    .guide { width:min(32rem,calc(100% - 24px)); margin:auto; padding-block:0 3rem; }
+    .guide-nav { min-height:52px; display:flex; align-items:center; justify-content:space-between; gap:16px;  }
+    .guide-nav .publisher { display:flex; align-items:center; gap:8px; font-size:17px; font-weight:600; letter-spacing:-.04em; }
+    .publisher img { width:30px; height:30px; border-radius:50%; background:light-dark(transparent,var(--boa-color-slate-100)); }
+    .guide a { color:inherit; text-decoration:none; }
+    .guide-nav a,.guide-footer a { font-size:13px; font-weight:500; }
+    .study-heading { margin:24px 0 20px; }
+    .study-heading h1 { font-size:clamp(24px,3vw,30px); line-height:1.12; letter-spacing:-.03em; font-weight:525; margin:0; }
+    .study-heading p { max-width:48ch; font-size:14px; line-height:20px; margin:4px 0 0; color:light-dark(var(--boa-color-gray-green-700),var(--boa-color-neutral-300)); }
+    .guide-footer { display:flex; flex-wrap:wrap; gap:8px 24px; margin:18px 0; align-items:center; }
+    .guide-footer a { min-height:36px; display:inline-flex; align-items:center; }
+    @media(pointer:coarse) { .guide a { min-height:44px; display:inline-flex; align-items:center; } }
+  </style>
+</head>
+<body>
+<main class="guide">
+  <header class="guide-nav"><span class="publisher"><img src="../../assets/logo/upright-9.svg" alt="OpenBoa">Yogurt</span><a href="../../docs/index.html">Design handbook</a></header>
+  <div class="study-heading"><h1>Basic controls</h1><p>Choose a corner radius, then try it on the save action.</p></div>
+  <div id="yg-saved-view">
+    <fieldset class="yg-comparison">
+      <legend>Button corners</legend>
+      <div class="yg-choices">
+        <label class="yg-choice cursor-interaction"><input type="radio" name="yg-radius" value="6" aria-label="6 px corners"><span class="yg-sample" style="--yg-sample-radius:6px" aria-hidden="true">Save name</span><span class="yg-measure">6 px</span></label>
+        <label class="yg-choice cursor-interaction"><input type="radio" name="yg-radius" value="8" aria-label="8 px corners" checked><span class="yg-sample" style="--yg-sample-radius:8px" aria-hidden="true">Save name</span><span class="yg-measure">8 px</span></label>
+        <label class="yg-choice cursor-interaction"><input type="radio" name="yg-radius" value="10" aria-label="10 px corners"><span class="yg-sample" style="--yg-sample-radius:10px" aria-hidden="true">Save name</span><span class="yg-measure">10 px</span></label>
+      </div>
+    </fieldset>
+    <section class="yg-workspace yg-saved" aria-label="Saved view editor">
+      <div class="yg-project">
+        <img width="32" height="32" src="../../assets/projects/sourdough.svg" alt="">
+        <div><p class="yg-project-name">Sourdough</p><h2 class="yg-name" id="yg-saved-title">Weekly notes</h2></div>
+      </div>
+      <form class="yg-form" novalidate>
+        <label class="yg-label" for="yg-name">View name</label>
+        <div class="yg-edit-row">
+          <div class="yg-entry">
+            <input id="yg-name" name="viewName" type="text" value="Weekly review" placeholder="Enter a name" autocomplete="off" spellcheck="false">
+            <button class="yg-clear cursor-interaction" type="button" aria-label="Clear view name"><span aria-hidden="true"></span></button>
+          </div>
+          <button class="yg-save cursor-interaction" type="submit"><span class="yg-save-label">Save name</span><span aria-hidden="true" class="yg-reserve">Save name</span><span aria-hidden="true" class="yg-reserve">Saving…</span></button>
+        </div>
+        <p id="yg-error" class="yg-error" hidden>Enter a view name.</p>
+        <p class="yg-note" role="status" aria-live="polite">Unsaved name</p>
+      </form>
+      <label class="yg-setting cursor-interaction">
+        <span><span class="yg-label" id="yg-date-label">Record dates</span><span class="yg-help" id="yg-date-desc">Show dates beside records.</span></span>
+        <input type="checkbox" role="switch" aria-labelledby="yg-date-label" aria-describedby="yg-date-desc" checked>
+        <span class="yg-track" aria-hidden="true"><span class="yg-thumb"></span></span>
+      </label>
+      <ul class="yg-records" aria-label="Records in this view">
+        <li><span>Release notes</span><time datetime="2026-11-20">Nov 20</time></li>
+        <li><span>Design decisions</span><time datetime="2026-11-19">Nov 19</time></li>
+      </ul>
+    </section>
+  </div>
+  <nav class="guide-footer" aria-label="Study details"><a href="../../docs/index.html#first-four">Intent and specifications</a><a id="yg-fixture-link" href="?save=fails-once">Try a failed save</a></nav>
+</main>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<template name="yg-direction" args="value">
+  <column gap="8">
+    <if test="{rtl}">
+      <row main="end">
+        <text>{value}</text>
+      </row>
+    </if>
+    <else>
+      <row main="start">
+        <text>{value}</text>
+      </row>
+    </else>
+    <slot/>
+  </column>
+</template>

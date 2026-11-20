@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "message",
+  "type": "registry:ui",
+  "title": "Message",
+  "description": "Keep an utterance and its speaker together.",
+  "files": [
+    {
+      "path": "ui/message.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Message } from \"@openboa/yogurt/message\";\n"
+    }
+  ]
+}

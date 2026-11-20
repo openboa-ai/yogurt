@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Task list states · yogurt</title>
+<link rel="icon" href="../assets/logo/upright-9.svg" type="image/svg+xml"><link rel="stylesheet" href="../styles/components.css"><link rel="stylesheet" href="../styles/specimen.css"><link rel="stylesheet" href="../styles/guide.css"><style>#tasks-specimen [hidden] { display: none; }</style></head>
+<body>
+<header><div class="masthead"><div class="imprint"><b>yogurt</b><span>ships with live cultures</span></div><nav aria-label="Guide"><a href="../index.html">Brand</a><a href="../system.html">Design system</a><a href="../library.html">Design sources</a><a href="../adoption.html">Project use</a></nav></div></header>
+<main><header class="guide-opening"><h1>Task list states</h1><p>Use this local specimen to compare what a task list says before data arrives, when it has nothing to show, and when the request fails. Select a state or try the recovery.</p></header>
+<section class="spread"><div class="margin"><h2>State specimen</h2><p>Web pattern study</p></div><div class="reading">
+<label class="boa-field">Preview state<select id="preview" class="boa-input"><option value="empty">Empty</option><option value="loading">Loading</option><option value="error">Error</option><option value="ready">Ready</option></select></label>
+<section id="tasks-specimen" class="boa-surface boa-panel" aria-labelledby="tasks-title" style="margin-block:var(--boa-space-16)"><h3 id="tasks-title">Tasks</h3><p id="task-message" role="status">No tasks yet.</p>
+<ul class="boa-list" id="tasks" hidden><li><details><summary class="boa-row" id="task-row">Review the roster labels</summary><p class="boa-row-detail">Check that the action says what happens to the filters.</p></details></li></ul>
+<button class="boa-button" id="again" type="button" hidden>Try again</button>
+</section>
+<p>“No tasks yet.” tells someone their list is empty. “Couldn’t load tasks.” tells them the list is unavailable. Only the second state offers a retry. A successful retry puts keyboard focus on the first returned row.</p><p class="guide-link"><a href="../system.html#components">Compare a filtered empty list</a></p>
+</div></section></main>
+<script>
+  const picker = document.getElementById("preview");
+  const retry = document.getElementById("again");
+  const row = document.getElementById("task-row");
+  const messages = { empty: "No tasks yet.", loading: "Loading tasks…", error: "Couldn’t load tasks.", ready: "1 task" };
+  let pending;
+  function show(state) {
+    picker.value = state;
+    document.getElementById("task-message").textContent = messages[state];
+    document.getElementById("tasks").hidden = state !== "ready";
+    retry.hidden = state !== "error";
+    row.parentElement.open = false;
+  }
+  picker.addEventListener("change", () => { clearTimeout(pending); show(picker.value); });
+  retry.addEventListener("click", () => {
+    show("loading");
+    picker.focus();
+    pending = setTimeout(() => {
+      const returnFocus = document.activeElement === picker;
+      show("ready");
+      if (returnFocus) row.focus();
+    }, 300);
+  });
+</script></body></html>

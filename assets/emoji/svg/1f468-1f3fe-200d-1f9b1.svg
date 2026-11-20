@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="man: medium-dark skin tone, curly hair"><title>man: medium-dark skin tone, curly hair</title><path d="M7 54C9 46 18 43 24 42H40C48 43 56 47 57 55Q57 59 53 59H11Q6 59 7 54Z" data-fill="cyan.700" fill="#00657A" />
+<path d="M23 40H41V47Q40 52 32 52Q24 52 23 47Z" data-fill="cyan.200" fill="#A8DEE8" />
+<path d="M25 39H39V46Q37 49 32 49Q27 49 25 46Z" data-fill="earth.800" fill="#4F4034" />
+<path d="M12 24C9 19 10 12 16 10Q16 4 24 5Q29 1 35 4Q41 2 45 7Q49 6 51 10C53 13 52 20 48 25H16C11 22 10 16 13 13Q11 23 12 24Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="16" cy="30" rx="5" ry="6" data-fill="earth.800" fill="#4F4034" />
+<ellipse cx="48" cy="30" rx="5" ry="6" data-fill="earth.800" fill="#4F4034" />
+<path d="M16 23C16 15 23 12 32 12C41 12 48 17 48 24V32C48 40 43 44 37 47Q32 49 27 47C21 45 16 41 16 33Z" data-fill="earth.600" fill="#85705E" />
+<path d="M13 26Q9 20 14 16Q13 10 21 10Q25 4 31 8Q36 4 40 10Q46 7 50 14Q54 17 50 25Q46 26 45 21Q40 24 37 18Q33 24 29 19Q25 24 21 20Q20 27 13 26Z" data-fill="earth.950" fill="#2A231E" />
+<circle cx="24" cy="29.5" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<circle cx="40" cy="29.5" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<path d="M28 39Q32 42 36 39" fill="none" data-stroke="earth.950" stroke="#2A231E" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

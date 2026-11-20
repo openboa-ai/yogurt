@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input-otp",
+  "type": "registry:ui",
+  "title": "InputOTP",
+  "description": "Enter or paste a one-time code into a single labeled field.",
+  "files": [
+    {
+      "path": "ui/input-otp.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { InputOTP } from \"@openboa/yogurt/input-otp\";\n"
+    }
+  ]
+}

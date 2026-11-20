@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "attachment",
+  "type": "registry:ui",
+  "title": "Attachment",
+  "description": "Show a file, its state and available actions.",
+  "files": [
+    {
+      "path": "ui/attachment.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Attachment } from \"@openboa/yogurt/attachment\";\n"
+    }
+  ]
+}

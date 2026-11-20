@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "help-text",
+  "type": "registry:ui",
+  "title": "HelpText",
+  "description": "Explain what the field accepts.",
+  "files": [
+    {
+      "path": "ui/help-text.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { HelpText } from \"@openboa/yogurt/help-text\";\n"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+<template name="yg-icon">
+  <icon name="search"/>
+</template>

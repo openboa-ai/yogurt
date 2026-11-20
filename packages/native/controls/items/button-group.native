@@ -1,0 +1,5 @@
+<template name="yg-button-group" args="label">
+  <row gap="8" role="group" label="{label}">
+  <slot/>
+  </row>
+</template>

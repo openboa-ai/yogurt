@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "card",
+  "type": "registry:ui",
+  "title": "Card",
+  "description": "Group related content with a title and optional actions.",
+  "files": [
+    {
+      "path": "ui/card.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Card } from \"@openboa/yogurt/card\";\n"
+    }
+  ]
+}

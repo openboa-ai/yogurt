@@ -1,0 +1,10 @@
+{
+  "name": "@openboa/yogurt-guide",
+  "private": true,
+  "scripts": {
+    "build:handbook": "node export-design-handbook.mjs"
+  },
+  "devDependencies": {
+    "marked": "17.0.5"
+  }
+}

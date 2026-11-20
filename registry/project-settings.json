@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "project-settings",
+  "type": "registry:block",
+  "title": "ProjectSettings",
+  "description": "Edit notification preferences, then save or discard the draft.",
+  "files": [
+    {
+      "path": "blocks/project-settings.tsx",
+      "target": "@components/blocks/project-settings.tsx",
+      "type": "registry:component",
+      "content": "\"use client\";\nimport {\n  Button,\n  ButtonGroup,\n  Heading,\n  Select,\n  Stack,\n  Switch,\n  FieldError,\n} from \"@openboa/yogurt\";\nexport type Preferences = { digest: \"daily\" | \"weekly\"; notify: boolean };\nexport function ProjectSettings({\n  draft,\n  saved,\n  pending = false,\n  error,\n  onChange,\n  onSave,\n}: {\n  draft: Preferences;\n  saved: Preferences;\n  pending?: boolean;\n  error?: string;\n  onChange: (draft: Preferences) => void;\n  onSave: (draft: Preferences) => void;\n}) {\n  const dirty = draft.digest !== saved.digest || draft.notify !== saved.notify;\n  return (\n    <form\n      aria-label=\"Project settings\"\n      onSubmit={(e) => {\n        e.preventDefault();\n        if (dirty && !pending) onSave(draft);\n      }}\n    >\n      <Stack gap={16}>\n        <Heading>Project settings</Heading>\n        <Switch\n          label=\"Send a digest\"\n          checked={draft.notify}\n          disabled={pending}\n          onCheckedChange={(notify) => onChange({ ...draft, notify })}\n        />\n        <Select\n          label=\"Frequency\"\n          value={draft.digest}\n          disabled={pending || !draft.notify}\n          options={[\n            { id: \"daily\", label: \"Daily\" },\n            { id: \"weekly\", label: \"Weekly\" },\n          ]}\n          onChange={(e) =>\n            onChange({\n              ...draft,\n              digest: e.target.value as Preferences[\"digest\"],\n            })\n          }\n        />\n        {error && <FieldError role=\"alert\">{error}</FieldError>}\n        <ButtonGroup label=\"Settings actions\">\n          <Button\n            type=\"submit\"\n            disabled={!dirty}\n            pending={pending}\n            pendingLabel=\"Saving\"\n          >\n            Save changes\n          </Button>\n          <Button\n            emphasis=\"quiet\"\n            disabled={!dirty || pending}\n            onClick={() => onChange(saved)}\n          >\n            Discard\n          </Button>\n        </ButtonGroup>\n      </Stack>\n    </form>\n  );\n}\n"
+    }
+  ]
+}

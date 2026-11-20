@@ -1,0 +1,24 @@
+# Local environments and credentials
+.env
+.env.*
+!.env.example
+.secrets/
+*.key
+*.p12
+*.pfx
+
+# Machine and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+__pycache__/
+
+# Yogurt build and package output
+/site/
+/.site-*/
+node_modules/
+*.tgz
+.native/
+.zig-cache/
+zig-out/

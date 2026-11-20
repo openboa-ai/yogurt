@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "popover",
+  "type": "registry:ui",
+  "title": "Popover",
+  "description": "Read a little more without leaving the task.",
+  "files": [
+    {
+      "path": "ui/popover.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Popover } from \"@openboa/yogurt/popover\";\n"
+    }
+  ]
+}

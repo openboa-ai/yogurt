@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="merperson: medium-light skin tone"><title>merperson: medium-light skin tone</title><g transform="translate(3 -2) scale(.68)">
+<path d="M7 54C9 46 18 43 24 42H40C48 43 56 47 57 55Q57 59 53 59H11Q6 59 7 54Z" data-fill="teal.700" fill="#39696A" />
+<path d="M23 40H41V47Q40 52 32 52Q24 52 23 47Z" data-fill="paper.200" fill="#E0DCD3" />
+<path d="M25 39H39V46Q37 49 32 49Q27 49 25 46Z" data-fill="earth.400" fill="#B3A08B" />
+<path d="M12 26C10 14 16 7 25 5Q30 4 35 6C42 6 47 10 50 15Q53 21 51 31Q48 37 48 41H17Q11 36 12 26Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="16" cy="30" rx="5" ry="6" data-fill="earth.400" fill="#B3A08B" />
+<ellipse cx="48" cy="30" rx="5" ry="6" data-fill="earth.400" fill="#B3A08B" />
+<path d="M16 23C16 15 23 12 32 12C41 12 48 17 48 24V32C48 40 43 44 37 47Q32 49 27 47C21 45 16 41 16 33Z" data-fill="ochre.200" fill="#E0CE9D" />
+<path d="M13 30Q9 21 14 14Q20 3 36 6Q43 6 48 13Q54 19 49 29L43 21Q37 23 31 19Q25 23 19 21L18 29Z" data-fill="earth.950" fill="#2A231E" />
+<circle cx="24" cy="29.5" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<circle cx="40" cy="29.5" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<path d="M28 39Q32 42 36 39" fill="none" data-stroke="earth.950" stroke="#2A231E" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" />
+</g>
+<path d="M13 32Q20 38 37 33Q35 47 46 48Q50 38 60 40Q63 46 55 51Q61 56 59 60Q53 62 46 56Q26 60 16 49Q11 43 13 32Z" data-fill="teal.600" fill="#4F7B7D" />
+<path d="M47 47Q52 40 59 40Q60 46 55 51Q60 56 58 59Q52 59 47 54Z" data-fill="cyan.400" fill="#4DB8CD" />
+<path d="M20 43Q25 50 32 49" fill="none" data-stroke="teal.200" stroke="#A9C8C3" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

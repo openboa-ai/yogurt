@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "navbar",
+  "type": "registry:ui",
+  "title": "Navbar",
+  "description": "Move back or act from a compact page header.",
+  "files": [
+    {
+      "path": "ui/navbar.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Navbar } from \"@openboa/yogurt/navbar\";\n"
+    }
+  ]
+}

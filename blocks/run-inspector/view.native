@@ -1,0 +1,41 @@
+<import src="list.native"/>
+<import src="status.native"/>
+<import src="trace.native"/>
+<template name="yg-run-inspector">
+  <column gap="16">
+    <text size="heading">Run history</text>
+    <if test="{run_loading}"><use template="yg-status" label="Loading runs"/></if>
+    <else>
+      <use template="yg-list" label="Runs">
+        <for each="runs" key="id" as="item">
+          <list-item label="{item.title}" selected="{item.selected}" on-press="open_run:{item.id}" padding="8">
+            <column gap="4">
+              <text>{item.title}</text>
+              <text size="sm" foreground="text_muted">{item.detail}</text>
+            </column>
+          </list-item>
+        </for>
+      </use>
+      <if test="{run_has_details}">
+        <column gap="12">
+          <text size="heading">{run_title}</text>
+          <use template="yg-status" label="{run_status}"/>
+          <text foreground="text_muted">{run_summary}</text>
+          <if test="{run_has_steps}"><use template="yg-trace" label="Steps"/></if>
+          <if test="{run_has_result}">
+            <column gap="8">
+              <text size="heading">Result</text>
+              <text>{run_result}</text>
+              <slot/>
+            </column>
+          </if>
+          <row gap="8">
+            <if test="{run_can_retry}"><button variant="secondary" disabled="{run_pending}" on-press="retry_run:{current_run_id}">Retry run</button></if>
+            <if test="{run_can_cancel}"><button variant="ghost" disabled="{run_pending}" on-press="cancel_run:{current_run_id}">Cancel run</button></if>
+          </row>
+        </column>
+      </if>
+      <else><text foreground="text_muted">Select a run to see its details.</text></else>
+    </else>
+  </column>
+</template>

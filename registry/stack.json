@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stack",
+  "type": "registry:ui",
+  "title": "Stack",
+  "description": "Group content on a vertical rhythm.",
+  "files": [
+    {
+      "path": "ui/stack.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Stack } from \"@openboa/yogurt/stack\";\n"
+    }
+  ]
+}

@@ -1,0 +1,558 @@
+[
+  {
+    "id": "yogurt",
+    "treatment": "Switch appearance at the root in one update so theme colors and focus indicators agree."
+  },
+  {
+    "id": "text",
+    "treatment": "Keep glyphs, line breaks and reading order steady when surrounding state changes."
+  },
+  {
+    "id": "heading",
+    "treatment": "Keep the section name at its reading edge when controls or detail panels move."
+  },
+  {
+    "id": "icon",
+    "treatment": "Keep the glyph crisp at rest. The owning control supplies any state transition."
+  },
+  {
+    "id": "stack",
+    "treatment": "Let vertical layout follow content and reflow without tweening its child positions."
+  },
+  {
+    "id": "inline",
+    "treatment": "Wrap at the available width while preserving visual and keyboard order."
+  },
+  {
+    "id": "grid",
+    "treatment": "Reflow to fit the viewport and keep the focused item visible by identity."
+  },
+  {
+    "id": "surface",
+    "treatment": "Hold plane and contrast steady. A surface entering as a layer follows that layer's behavior."
+  },
+  {
+    "id": "divider",
+    "treatment": "Keep the division steady so it continues to mark a change of subject."
+  },
+  {
+    "id": "scroll-area",
+    "treatment": "Let the pointer and keyboard control position directly. Preserve the user's anchor as content updates."
+  },
+  {
+    "id": "button",
+    "treatment": "Show press at the input and preserve the label footprint. Show pending and success from the actual host outcome."
+  },
+  {
+    "id": "icon-button",
+    "treatment": "Give immediate press feedback. Keep the glyph's bounds and return a distinct confirmation only if the action completes."
+  },
+  {
+    "id": "button-group",
+    "treatment": "Keep neighboring hit areas steady and give press feedback on the selected child only."
+  },
+  {
+    "id": "bottom-action",
+    "treatment": "Keep the action reachable in the inset and preserve its position while its own state changes."
+  },
+  {
+    "id": "field",
+    "treatment": "Keep label, value and correction in their reading order across validation and reflow."
+  },
+  {
+    "id": "label",
+    "treatment": "Keep a visible name stable through focus, error and input."
+  },
+  {
+    "id": "help-text",
+    "treatment": "Leave instructions readable while the input changes. Announce changed meaning through the field description."
+  },
+  {
+    "id": "field-error",
+    "treatment": "Show the correction beside its field as soon as validation resolves. Preserve the editing focus."
+  },
+  {
+    "id": "text-field",
+    "treatment": "Update focus and editing immediately while holding field bounds, caret and text stable."
+  },
+  {
+    "id": "search-field",
+    "treatment": "Keep the caret while suggestions filter and return focus predictably after clearing a query."
+  },
+  {
+    "id": "textarea",
+    "treatment": "Grow for real text input with a continuous caret and steady reading edge."
+  },
+  {
+    "id": "select",
+    "treatment": "Enter near the trigger and commit the value, trigger label and selected option together. Recover focus immediately on dismiss."
+  },
+  {
+    "id": "combobox",
+    "treatment": "Update the active suggestion under the keyboard while keeping focus and identity consistent with the input."
+  },
+  {
+    "id": "checkbox",
+    "treatment": "Set checked state immediately and settle a short mark transition within fixed bounds."
+  },
+  {
+    "id": "radio-group",
+    "treatment": "Update the true selection on the input and settle the indicator in place without shifting option labels."
+  },
+  {
+    "id": "switch",
+    "treatment": "Move the thumb toward its actual checked position. Rapid reversal follows the newest value."
+  },
+  {
+    "id": "link",
+    "treatment": "Respond to focus or hover within the existing underline or color treatment while the label remains readable."
+  },
+  {
+    "id": "breadcrumb",
+    "treatment": "Keep path links and current location stable through navigation. Wrap or collapse according to available space."
+  },
+  {
+    "id": "navigation-list",
+    "treatment": "Keep the current highlight attached to the active destination during section changes."
+  },
+  {
+    "id": "tabs",
+    "treatment": "Activate the tab and panel together. Move only the selected marker and preserve valid keyboard focus."
+  },
+  {
+    "id": "segmented-control",
+    "treatment": "Retarget the marker to the latest choice. Keep selected state and resulting content synchronized."
+  },
+  {
+    "id": "pagination",
+    "treatment": "Update and announce the real page immediately. Limit motion to a small current-page indicator when present."
+  },
+  {
+    "id": "disclosure-row",
+    "treatment": "Reveal content from the triggering row and retain focus. Update expansion state at input."
+  },
+  {
+    "id": "action-menu",
+    "treatment": "Open close to the trigger with a short edge-origin entrance. Escape and selection close with immediate focus recovery."
+  },
+  {
+    "id": "popover",
+    "treatment": "Make the relationship to its anchor visible with a restrained entrance and an opaque, readable surface."
+  },
+  {
+    "id": "dialog",
+    "treatment": "Introduce the focused layer briefly, put focus in immediately and restore a valid return target on close."
+  },
+  {
+    "id": "drawer",
+    "treatment": "Use its anchored edge to explain entrance. Let any supported drag track the pointer and leave keyboard dismissal available."
+  },
+  {
+    "id": "sheet",
+    "treatment": "Reveal the sheet from its real opening edge and respect the same focus and dismissal contract at narrow sizes."
+  },
+  {
+    "id": "tooltip",
+    "treatment": "Appear near the trigger on focus or hover while keeping text and target steady. Dismiss when the relationship ends."
+  },
+  {
+    "id": "filter-bar",
+    "treatment": "Confirm each applied or removed filter at its control and preserve focus while the results change."
+  },
+  {
+    "id": "count",
+    "treatment": "Replace the reported total directly and retain its unit. Keep digits and current results consistent."
+  },
+  {
+    "id": "list",
+    "treatment": "Keep source order, readable text and scroll anchor when rows are inserted or removed."
+  },
+  {
+    "id": "list-row",
+    "treatment": "Keep the row label and actions aligned. A row action provides its own feedback."
+  },
+  {
+    "id": "selection-list",
+    "treatment": "Update selected rows by their IDs and preserve the last active item through filtering and repeated input."
+  },
+  {
+    "id": "empty-result",
+    "treatment": "Show the true empty or no-match explanation with its available action. Keep the search context available."
+  },
+  {
+    "id": "badge",
+    "treatment": "Hold the label and bounds steady while its related UI changes."
+  },
+  {
+    "id": "status",
+    "treatment": "Announce each meaningful change once and keep text until a real state supersedes it."
+  },
+  {
+    "id": "notice",
+    "treatment": "Present the actual consequence beside its task. Keep the text available for reading and correction."
+  },
+  {
+    "id": "skeleton",
+    "treatment": "Reserve the final content footprint with a steady placeholder."
+  },
+  {
+    "id": "progress",
+    "treatment": "Show the actual value immediately and settle toward that value without implying progress during a pause."
+  },
+  {
+    "id": "toast",
+    "treatment": "Acknowledge the actual result once. Keep the message readable through the brief entrance and allow timely dismissal."
+  },
+  {
+    "id": "result",
+    "treatment": "Reveal the actual outcome with its next action and preserve text through the settled state."
+  },
+  {
+    "id": "record-facts",
+    "treatment": "Keep facts, units and source readable without count-up or staged reveal."
+  },
+  {
+    "id": "table",
+    "treatment": "Keep headings and cells aligned and stable while the user traverses their semantic order."
+  },
+  {
+    "id": "data-table",
+    "treatment": "Apply the selected sort and update its label together. Preserve row identity and keyboard context."
+  },
+  {
+    "id": "chart",
+    "treatment": "Keep points, scales, missing observations and series readable. Active queries use stable highlights."
+  },
+  {
+    "id": "legend",
+    "treatment": "Keep series labels, units and keys in place so readers can compare values across charts."
+  },
+  {
+    "id": "confirm-dialog",
+    "treatment": "Use focused layer entrance and immediate dismissal. Keep the current revision and action name readable while pending."
+  },
+  {
+    "id": "receipt",
+    "treatment": "Keep the original request and outcome as stable evidence with an available return action."
+  },
+  {
+    "id": "project-mark",
+    "treatment": "Keep the original mark's silhouette and color steady. The containing action provides any feedback."
+  },
+  {
+    "id": "agent-avatar",
+    "treatment": "Keep the original open silhouette and notch. Let gaze lead each 2D turn, with quieter movement at roster size and a still pose for reduced motion."
+  },
+  {
+    "id": "gaze",
+    "treatment": "Use a distinct eye pose for each reported state and a readable still pose with reduced motion."
+  },
+  {
+    "id": "message",
+    "treatment": "Reveal newly arriving content without moving the speaker marker or replaying already read text."
+  },
+  {
+    "id": "activity",
+    "treatment": "Reflect the current host state with a quiet cue during real work and a durable text label for each settled state."
+  },
+  {
+    "id": "transcript",
+    "treatment": "Keep the reader's position when they are away from the newest reply. Follow new content only when anchored there."
+  },
+  {
+    "id": "reading-anchor",
+    "treatment": "Show the return action while the reader is away. Align to the newest message only when requested or already following."
+  },
+  {
+    "id": "aspect-ratio",
+    "treatment": "Reserve the actual frame so loading and viewport reflow leave surrounding reading positions stable."
+  },
+  {
+    "id": "direction",
+    "treatment": "Apply reading and interaction direction to the region as one change and keep existing focus valid."
+  },
+  {
+    "id": "card",
+    "treatment": "Limit movement to an explicit disclosure and keep the resting card's reading and action areas stable."
+  },
+  {
+    "id": "asset",
+    "treatment": "Reserve the asset frame. Playback belongs to its media controls or explicitly supplied authored state."
+  },
+  {
+    "id": "gradient",
+    "treatment": "Keep palette roles steady and use the blend as a static surface."
+  },
+  {
+    "id": "elevation",
+    "treatment": "Hold depth cues stable. A moving layer can introduce them within its approved entrance."
+  },
+  {
+    "id": "kbd",
+    "treatment": "Keep the key hint still and update its content only when the available command changes."
+  },
+  {
+    "id": "post",
+    "treatment": "Keep reading width and the reader's position steady while adjacent interfaces change."
+  },
+  {
+    "id": "grid-list",
+    "treatment": "Reflow using the available width while preserving focus by item identity."
+  },
+  {
+    "id": "list-header",
+    "treatment": "Keep list headings and their actions steady as records load or filter."
+  },
+  {
+    "id": "list-footer",
+    "treatment": "Keep totals and next actions readable without moving the reader unexpectedly."
+  },
+  {
+    "id": "top",
+    "treatment": "Keep the page title, detail and actions aligned as content loads or updates."
+  },
+  {
+    "id": "bottom-info",
+    "treatment": "Keep supporting copy with the action it explains when the surrounding surface changes."
+  },
+  {
+    "id": "highlight",
+    "treatment": "Use a stable emphasis on resolved content and allow a brief change only when it marks a new, meaningful target."
+  },
+  {
+    "id": "spinner",
+    "treatment": "Repeat only while the host reports an active indeterminate operation. Retain its text in the quiet state."
+  },
+  {
+    "id": "toast-stack",
+    "treatment": "Add and remove from a consistent edge while preserving each item's reading time, identity and dismissal."
+  },
+  {
+    "id": "table-row",
+    "treatment": "Keep the row heading aligned to current values and preserve the row by identity on update."
+  },
+  {
+    "id": "amount-top",
+    "treatment": "Hold digits, scale and units steady. Show the reported amount directly."
+  },
+  {
+    "id": "bar-chart",
+    "treatment": "Retain the signed scale and zero baseline. Move only a directly operated selection or viewport."
+  },
+  {
+    "id": "avatar",
+    "treatment": "Keep the person's portrait or initials stable through selection and status changes."
+  },
+  {
+    "id": "bubble",
+    "treatment": "Hold reading edges and speaker alignment steady as the content grows."
+  },
+  {
+    "id": "attachment",
+    "treatment": "Reflect the active drop target immediately. Present the attached file or correction only after the recognized input."
+  },
+  {
+    "id": "marker",
+    "treatment": "Keep the event at its position in the timeline and let the user continue reading."
+  },
+  {
+    "id": "code-block",
+    "treatment": "Keep code, selection and horizontal scroll stable. Confirm the host's copy result on its control."
+  },
+  {
+    "id": "trace",
+    "treatment": "Reveal a detail only on request. Keep completed steps stable and mark only actual active work."
+  },
+  {
+    "id": "input-group",
+    "treatment": "Keep prefix, value and action aligned. Contain feedback to the focused or activated part."
+  },
+  {
+    "id": "input-otp",
+    "treatment": "Track the actual caret and filled slots from a single input. Commit typing, paste and deletion immediately."
+  },
+  {
+    "id": "split-text-field",
+    "treatment": "Keep each labeled segment and cursor stable. Move focus only in response to supported input."
+  },
+  {
+    "id": "slider",
+    "treatment": "Track the pointer directly and update the value with each accepted input. Accept keyboard changes without a trailing thumb animation."
+  },
+  {
+    "id": "numeric-spinner",
+    "treatment": "Update the bounded numeric value from each accepted action. Hold the number and stepper hit areas steady."
+  },
+  {
+    "id": "rating",
+    "treatment": "Distinguish a pointer preview from the committed value. Set the actual rating immediately on activation."
+  },
+  {
+    "id": "agreement",
+    "treatment": "Update individual and collective selection together. Keep the terms available through the change."
+  },
+  {
+    "id": "keypad",
+    "treatment": "Give the pressed key immediate feedback while the character appears in the real target."
+  },
+  {
+    "id": "form",
+    "treatment": "Keep draft geometry and submission feedback steady. Focus the correction or expose the real result as appropriate."
+  },
+  {
+    "id": "toggle",
+    "treatment": "Reflect pressed state immediately and settle the indicator within the existing hit area."
+  },
+  {
+    "id": "toggle-group",
+    "treatment": "Set named options from the actual key state with each input. Keep several active options legible where supported."
+  },
+  {
+    "id": "accordion",
+    "treatment": "Reveal content from the heading and preserve valid focus. Rapid reversal follows the latest expanded set."
+  },
+  {
+    "id": "context-menu",
+    "treatment": "Anchor to the clicked item or keyboard target and dismiss with immediate focus recovery."
+  },
+  {
+    "id": "hover-card",
+    "treatment": "Keep the card anchored and readable during a brief reveal. Make the relationship available through focus and touch."
+  },
+  {
+    "id": "command",
+    "treatment": "Show search and focus at entry. Preserve the active command by identity as matches change."
+  },
+  {
+    "id": "menubar",
+    "treatment": "Maintain real keyboard focus and active menu through lateral movement. Keep one open surface anchored."
+  },
+  {
+    "id": "navigation-menu",
+    "treatment": "Reveal the current group from its trigger. Retarget promptly when the user moves to a different group."
+  },
+  {
+    "id": "sidebar",
+    "treatment": "Use the anchored edge to explain collapse and expansion. Keep active navigation, scroll and recoverable focus."
+  },
+  {
+    "id": "navbar",
+    "treatment": "Keep the page label and actions steady. Locate the press or selection feedback at the actual action."
+  },
+  {
+    "id": "carousel",
+    "treatment": "Track supported drags directly and settle to an actual selected item. Keep buttons and keyboard navigation available."
+  },
+  {
+    "id": "stepper",
+    "treatment": "Show completed, current and available steps from real state. Move only the progress indicator."
+  },
+  {
+    "id": "resizable",
+    "treatment": "Track the grip immediately under pointer or keyboard, clamp to the actual limits and retain focus."
+  },
+  {
+    "id": "calendar",
+    "treatment": "Update dates and month content immediately so grid focus, selected civil date and visible labels agree."
+  },
+  {
+    "id": "date-picker",
+    "treatment": "Anchor the picker to its trigger and commit the chosen civil date together with its accessible value."
+  },
+  {
+    "id": "questionnaire",
+    "treatment": "Expose the actual current question and keep entered answers available when a user moves between steps."
+  },
+  {
+    "id": "agent-row",
+    "treatment": "Keep row geometry steady and scope state animation to the displayed agent's eyes. Show unread and state in text."
+  },
+  {
+    "id": "runtime-panel",
+    "treatment": "Open the authorized preview from its edge. Report availability and focus according to the actual panel state."
+  },
+  {
+    "id": "resource-row",
+    "treatment": "Keep kind and origin visible. Provide immediate action feedback and show pin or open result from the host."
+  },
+  {
+    "id": "thread-row",
+    "treatment": "Keep project and conversation identity consistent with the actual active thread. Preserve the keyboard and scroll context."
+  },
+  {
+    "id": "work-event",
+    "treatment": "Add observed events in order and preserve the reading anchor. Cue only the currently running step."
+  },
+  {
+    "id": "routine-row",
+    "treatment": "Keep cadence and next occurrence stable and use feedback on the child action that actually changes."
+  },
+  {
+    "id": "composer",
+    "treatment": "Let the draft grow as needed, preserve the caret and attach pending or stop feedback to its initiating control."
+  },
+  {
+    "id": "voice-control",
+    "treatment": "Render the real recording or processing state. Keep a calm fallback and provide duration and available controls in text."
+  },
+  {
+    "id": "sidebar-layout",
+    "treatment": "Coordinate drawer or rail movement from its anchor while keeping the reading inset, scroll and focus valid."
+  },
+  {
+    "id": "project-settings",
+    "treatment": "Keep settings stable during save, preserve draft after errors and show host-confirmed success."
+  },
+  {
+    "id": "collection-browser",
+    "treatment": "Scope layer motion to the sort or filter trigger. Preserve query, result identity and the current reading position."
+  },
+  {
+    "id": "decision-review",
+    "treatment": "Keep facts and revision readable while the confirmation layer opens. Match outcome and return focus to the real decision."
+  },
+  {
+    "id": "conversation-panel",
+    "treatment": "Reuse composer, transcript and reading-anchor behavior so new output never pulls a reader away from older messages."
+  },
+  {
+    "id": "agent-workspace",
+    "treatment": "Use each active agent's current eye state and compose the workspace with the anchored inspector and its own thread context."
+  },
+  {
+    "id": "project-workspace",
+    "treatment": "Retain the chosen project, conversations and focus across navigation. Scope travel to the preview or navigation layer."
+  },
+  {
+    "id": "operations-library",
+    "treatment": "Reveal the selected operation's detail from its control. Keep routines, skills and connections in their current context."
+  },
+  {
+    "id": "attention-inbox",
+    "treatment": "Keep unread filters and selected identity while feedback for the explicit action stays with its actual result or receipt."
+  },
+  {
+    "id": "artifact-library",
+    "treatment": "Open the selected artifact into a readable preview. Preserve list scroll, filter and return focus."
+  },
+  {
+    "id": "project-access",
+    "treatment": "Show changes in access only when resolved and keep project membership readable through the invitation action."
+  },
+  {
+    "id": "agent-profile",
+    "treatment": "Preview the selected silhouette at fixed bounds and keep name, scope, instructions and state tied to the actual agent."
+  },
+  {
+    "id": "run-inspector",
+    "treatment": "Distinguish observed results from pending retry or cancel. Preserve trace reading position as steps arrive."
+  },
+  {
+    "id": "agent-sidebar",
+    "treatment": "Keep the active agent, search and scroll when the rail changes. Confine state motion to each relevant avatar."
+  },
+  {
+    "id": "project-sidebar",
+    "treatment": "Reveal related project items from their own section. Preserve the active project, drawer return focus and stable navigation."
+  }
+]

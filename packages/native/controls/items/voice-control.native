@@ -1,0 +1,13 @@
+<template name="yg-voice-control" args="label summary">
+  <column gap="8">
+    <text>{label}</text>
+    <status-bar>{summary}</status-bar>
+    <if test="{voice_active}">
+      <if test="{voice_can_mute}"><toggle-button selected="{voice_muted}" disabled="{voice_pending}" on-toggle="toggle_voice_mute">Mute</toggle-button></if>
+      <button variant="secondary" disabled="{voice_pending}" on-press="end_voice">End call</button>
+    </if>
+    <else>
+      <if test="{voice_can_start}"><button variant="secondary" disabled="{voice_pending}" on-press="start_voice">Start call</button></if>
+    </else>
+  </column>
+</template>

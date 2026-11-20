@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "accordion",
+  "type": "registry:ui",
+  "title": "Accordion",
+  "description": "Open related sections in a single or multiple disclosure group.",
+  "files": [
+    {
+      "path": "ui/accordion.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Accordion } from \"@openboa/yogurt/accordion\";\n"
+    }
+  ]
+}

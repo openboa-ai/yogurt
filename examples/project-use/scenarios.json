@@ -1,0 +1,206 @@
+[
+  {
+    "id": "meatball",
+    "project": "Meatball",
+    "task": "Review a work decision",
+    "inputs": "Decision scope, permission, available options, revision and original request receipt.",
+    "scenes": [
+      {
+        "label": "Waiting for a decision",
+        "pattern": "pattern.review-decision",
+        "state": "ready",
+        "headline": "Return the brief for revision?",
+        "body": "The proposed scope includes two deliverables. Returning it asks the work owner to revise the brief before work resumes.",
+        "facts": [
+          [
+            "Decision",
+            "D-014"
+          ],
+          [
+            "Scope revision",
+            "7"
+          ],
+          [
+            "Observed state",
+            "Awaiting a decision"
+          ]
+        ],
+        "action": "Return for revision"
+      },
+      {
+        "label": "Scope changed",
+        "pattern": "pattern.review-decision",
+        "state": "changed",
+        "headline": "The brief changed during review.",
+        "body": "The work owner added a deliverable after revision 7. Read revision 8 before recording a decision.",
+        "facts": [
+          [
+            "Decision",
+            "D-014"
+          ],
+          [
+            "Current scope revision",
+            "8"
+          ]
+        ],
+        "action": "Review revision 8"
+      },
+      {
+        "label": "Request recorded",
+        "pattern": "pattern.track-request",
+        "state": "pending",
+        "headline": "Your decision was sent.",
+        "body": "Meatball has recorded the request and is waiting for the outcome.",
+        "facts": [
+          [
+            "Request",
+            "R-014"
+          ],
+          [
+            "Submitted",
+            "09:42 UTC"
+          ]
+        ],
+        "action": "Check request R-014"
+      },
+      {
+        "label": "Acknowledgement lost",
+        "pattern": "pattern.track-request",
+        "state": "unknown",
+        "headline": "The outcome is still unknown.",
+        "body": "The connection closed before the result arrived. The original request can be looked up.",
+        "facts": [
+          [
+            "Original request",
+            "R-014"
+          ],
+          [
+            "Last observed",
+            "09:42 UTC"
+          ]
+        ],
+        "action": "Check request R-014"
+      },
+      {
+        "label": "Change confirmed",
+        "pattern": "pattern.track-request",
+        "state": "applied",
+        "headline": "The brief was returned for revision.",
+        "body": "The work owner can now revise the brief.",
+        "facts": [
+          [
+            "Request",
+            "R-014"
+          ],
+          [
+            "Effective revision",
+            "8"
+          ]
+        ],
+        "action": "View the brief"
+      }
+    ]
+  },
+  {
+    "id": "sourdough",
+    "project": "Sourdough",
+    "task": "Inspect company work",
+    "inputs": "Authorized record, as-of time, source revision, coverage and current access.",
+    "scenes": [
+      {
+        "label": "Current record",
+        "pattern": "pattern.inspect-record",
+        "state": "ready",
+        "headline": "Company work",
+        "body": "The reporting desk owns the weekly review. The service confirmed this revision at 09:40 UTC.",
+        "facts": [
+          [
+            "Owner",
+            "Reporting desk"
+          ],
+          [
+            "Next duty",
+            "Weekly review"
+          ],
+          [
+            "Source revision",
+            "42 · 09:40 UTC"
+          ]
+        ],
+        "action": "Inspect work details"
+      },
+      {
+        "label": "Partial coverage",
+        "pattern": "pattern.inspect-record",
+        "state": "partial",
+        "headline": "Some work details are unavailable.",
+        "body": "The service confirmed the owner. The next duty is outside this response’s coverage.",
+        "facts": [
+          [
+            "Owner",
+            "Reporting desk"
+          ],
+          [
+            "Next duty",
+            "Unavailable"
+          ],
+          [
+            "Source revision",
+            "42 · 09:40 UTC"
+          ]
+        ],
+        "action": "Refresh the record"
+      },
+      {
+        "label": "Last confirmed record",
+        "pattern": "pattern.inspect-record",
+        "state": "stale",
+        "headline": "Last confirmed at 09:40 UTC",
+        "body": "The displayed facts still belong to revision 42. The service has not confirmed a newer revision.",
+        "facts": [
+          [
+            "Owner",
+            "Reporting desk"
+          ],
+          [
+            "Source revision",
+            "42 · 09:40 UTC"
+          ]
+        ],
+        "action": "Refresh the record"
+      },
+      {
+        "label": "Access withdrawn",
+        "pattern": "pattern.inspect-record",
+        "state": "denied",
+        "headline": "This record is unavailable.",
+        "body": "Access to the record could not be confirmed.",
+        "facts": [],
+        "action": "Return to available records"
+      },
+      {
+        "label": "Empty result",
+        "pattern": "pattern.inspect-record",
+        "state": "empty",
+        "headline": "No work has been recorded yet.",
+        "body": "The service returned an empty work history for the current scope.",
+        "facts": [
+          [
+            "Source revision",
+            "43 · 09:45 UTC"
+          ]
+        ],
+        "action": "Return to the company"
+      },
+      {
+        "label": "Initial read failed",
+        "pattern": "pattern.inspect-record",
+        "state": "failed",
+        "headline": "The work record could not be loaded.",
+        "body": "The first read failed before any authorized record arrived.",
+        "facts": [],
+        "action": "Retry the read"
+      }
+    ]
+  }
+]

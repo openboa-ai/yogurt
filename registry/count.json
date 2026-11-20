@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "count",
+  "type": "registry:ui",
+  "title": "Count",
+  "description": "Report the size of a named set.",
+  "files": [
+    {
+      "path": "ui/count.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Count } from \"@openboa/yogurt/count\";\n"
+    }
+  ]
+}

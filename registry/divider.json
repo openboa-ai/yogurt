@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "divider",
+  "type": "registry:ui",
+  "title": "Divider",
+  "description": "Mark an explicit change of subject.",
+  "files": [
+    {
+      "path": "ui/divider.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Divider } from \"@openboa/yogurt/divider\";\n"
+    }
+  ]
+}

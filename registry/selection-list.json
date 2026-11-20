@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "selection-list",
+  "type": "registry:ui",
+  "title": "SelectionList",
+  "description": "Keep a set of choices by their IDs.",
+  "files": [
+    {
+      "path": "ui/selection-list.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { SelectionList } from \"@openboa/yogurt/selection-list\";\n"
+    }
+  ]
+}

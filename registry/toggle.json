@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "toggle",
+  "type": "registry:ui",
+  "title": "Toggle",
+  "description": "Turn a persistent action on or off.",
+  "files": [
+    {
+      "path": "ui/toggle.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Toggle } from \"@openboa/yogurt/toggle\";\n"
+    }
+  ]
+}

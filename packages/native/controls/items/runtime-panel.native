@@ -1,0 +1,20 @@
+<template name="yg-runtime-panel" args="title summary">
+  <panel padding="12">
+    <column gap="12">
+      <text size="heading">{title}</text>
+      <status-bar>{summary}</status-bar>
+      <if test="{runtime_preview_visible}"><slot/></if>
+      <if test="{runtime_can_watch}">
+        <if test="{runtime_preview_visible}"><button variant="ghost" on-press="close_runtime_preview">Hide preview</button></if>
+        <else><button variant="secondary" on-press="open_runtime_preview">Watch</button></else>
+      </if>
+      <if test="{runtime_has_control}">
+        <button variant="secondary" disabled="{runtime_pending}" on-press="return_runtime_control">Return control</button>
+      </if>
+      <else>
+        <if test="{runtime_can_take_control}"><button variant="secondary" disabled="{runtime_pending}" on-press="request_runtime_control">Request control</button></if>
+      </else>
+      <if test="{runtime_can_retry}"><button variant="ghost" disabled="{runtime_pending}" on-press="retry_runtime_preview">Retry connection</button></if>
+    </column>
+  </panel>
+</template>

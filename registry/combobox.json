@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "combobox",
+  "type": "registry:ui",
+  "title": "Combobox",
+  "description": "Find one stable value in a longer list.",
+  "files": [
+    {
+      "path": "ui/combobox.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Combobox } from \"@openboa/yogurt/combobox\";\n"
+    }
+  ]
+}

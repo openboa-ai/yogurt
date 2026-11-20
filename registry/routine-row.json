@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "routine-row",
+  "type": "registry:ui",
+  "title": "RoutineRow",
+  "description": "Read cadence, the next occurrence and available routine actions.",
+  "files": [
+    {
+      "path": "ui/routine-row.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { RoutineRow } from \"@openboa/yogurt/routine-row\";\n"
+    }
+  ]
+}

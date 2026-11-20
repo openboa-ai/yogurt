@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "top",
+  "type": "registry:ui",
+  "title": "PageHeader",
+  "description": "Introduce a page with a title, detail and actions.",
+  "files": [
+    {
+      "path": "ui/top.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { PageHeader } from \"@openboa/yogurt/top\";\n"
+    }
+  ]
+}

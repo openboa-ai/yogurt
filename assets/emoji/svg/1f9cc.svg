@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="troll"><title>troll</title><path d="M10 51Q16 43 23 45H42Q49 45 54 51L56 58H8Z" data-fill="sage.800" fill="#334A33" />
+<path d="M13 24L4 21Q3 34 16 38L17 32ZM50 23L60 20Q62 33 49 39L46 32Z" data-fill="green.700" fill="#006F36" />
+<path d="M14 17Q17 8 26 10L32 3L37 10L44 7Q53 10 53 23L47 31H16Z" data-fill="sage.900" fill="#223323" />
+<path d="M17 23L29 18L39 16L50 24L51 38Q48 48 35 51H28Q19 48 14 38Z" data-fill="sage.500" fill="#849779" />
+<path d="M19 28L27 31M38 31L46 27" fill="none" data-stroke="sage.900" stroke="#223323" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+<circle cx="24" cy="32" r="2.2" data-fill="earth.950" fill="#2A231E" />
+<circle cx="41" cy="32" r="2.2" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="32" cy="36" rx="7" ry="4" data-fill="green.700" fill="#006F36" />
+<path d="M22 40Q32 48 43 39L40 46Q34 52 24 47Z" data-fill="sage.950" fill="#1B291D" />
+<path d="M24 45L25 39L29 45ZM36 45L40 39L41 44Z" data-fill="paper.50" fill="#F7F4EF" />
+</svg>

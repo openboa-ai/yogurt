@@ -1,0 +1,3 @@
+<template name="yg-marker" args="label">
+  <status-bar>{label}</status-bar>
+</template>

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tooltip",
+  "type": "registry:ui",
+  "title": "Tooltip",
+  "description": "Explain a compact action on hover or focus.",
+  "files": [
+    {
+      "path": "ui/tooltip.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Tooltip } from \"@openboa/yogurt/tooltip\";\n"
+    }
+  ]
+}

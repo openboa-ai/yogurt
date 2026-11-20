@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "post",
+  "type": "registry:ui",
+  "title": "Post",
+  "description": "Set the reading width and rhythm of longer copy.",
+  "files": [
+    {
+      "path": "ui/post.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Post } from \"@openboa/yogurt/post\";\n"
+    }
+  ]
+}

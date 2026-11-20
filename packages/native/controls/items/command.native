@@ -1,0 +1,11 @@
+<template name="yg-command" args="label value">
+  <column gap="8">
+    <text size="heading">{label}</text>
+    <search-field label="Find a command" text="{value}" on-input="edit"/>
+    <list>
+      <for each="choices" key="id" as="item">
+        <list-item disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</list-item>
+      </for>
+    </list>
+  </column>
+</template>

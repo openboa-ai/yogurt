@@ -1,0 +1,3 @@
+<template name="yg-avatar" args="label value">
+  <avatar label="{label}">{value}</avatar>
+</template>

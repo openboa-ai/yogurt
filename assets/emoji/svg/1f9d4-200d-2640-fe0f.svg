@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="woman: beard"><title>woman: beard</title><path d="M7 54C9 46 18 43 24 42H40C48 43 56 47 57 55Q57 59 53 59H11Q6 59 7 54Z" data-fill="cyan.700" fill="#00657A" />
+<path d="M23 40H41V47Q40 52 32 52Q24 52 23 47Z" data-fill="cyan.200" fill="#A8DEE8" />
+<path d="M25 39H39V46Q37 49 32 49Q27 49 25 46Z" data-fill="orange.500" fill="#E67A25" />
+<path d="M12 23C12 10 19 5 31 5C45 4 53 13 52 27Q51 40 56 47Q50 52 42 48L24 46Q16 49 9 46Q13 38 12 23Z" data-fill="earth.950" fill="#2A231E" />
+<ellipse cx="16" cy="30" rx="5" ry="6" data-fill="orange.500" fill="#E67A25" />
+<ellipse cx="48" cy="30" rx="5" ry="6" data-fill="orange.500" fill="#E67A25" />
+<path d="M16 23C16 15 23 12 32 12C41 12 48 17 48 24V32C48 40 43 44 37 47Q32 49 27 47C21 45 16 41 16 33Z" data-fill="yellow.250" fill="#FFDC63" />
+<path d="M13 31C10 22 14 12 19 9C26 3 37 4 43 8Q52 13 51 27Q44 23 41 13C36 21 27 24 19 23Q18 28 17 35Z" data-fill="earth.950" fill="#2A231E" />
+<circle cx="24" cy="29.5" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<circle cx="40" cy="29.5" r="2.15" data-fill="earth.950" fill="#2A231E" />
+<path d="M16 33L22 39L25 35Q32 32 39 35L42 39L48 33Q48 46 38 49Q31 52 24 48Q17 44 16 33Z" data-fill="earth.950" fill="#2A231E" />
+<path d="M28 41Q32 44 36 41" fill="none" data-stroke="yellow.250" stroke="#FFDC63" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

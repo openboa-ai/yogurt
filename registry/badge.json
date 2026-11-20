@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "badge",
+  "type": "registry:ui",
+  "title": "Badge",
+  "description": "Name a category or condition in a few words.",
+  "files": [
+    {
+      "path": "ui/badge.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { Badge } from \"@openboa/yogurt/badge\";\n"
+    }
+  ]
+}
