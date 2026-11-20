@@ -13,3 +13,7 @@ Publish the named Web patterns from `@openboa/yogurt/motion-patterns`. The guide
 ## Evidence
 
 Check focus retention, real input, cancel, repeat and reduced motion. Confirm that native templates and existing package exports still pass their previous checks. Report Web visual evidence for these examples and preserve the declared renderer availability for the existing library.
+
+## Additional patterns
+
+The owner added streaming replies, inline suggestions, a prompt box, a thinking indicator, expanding and fanned cards, statistic and profile cards, loading and success feedback, clipboard feedback, tabs, a dynamic menu, a bottom bar, a segmented control, sidebar collapse, a command palette, step progress, OTP and a switch. Provide working Web cases using the common controls and task-owned state. The sample streaming sequence uses local data. Clipboard feedback follows the real browser result. Every sample includes a way to cancel or change a reversible choice when the interaction calls for it.
