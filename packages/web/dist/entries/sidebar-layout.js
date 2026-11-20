@@ -8,8 +8,8 @@ import {
   SidebarLayout,
   SidebarSubmenu,
   SidebarTrigger
-} from "../shared/chunk-B2RNLIAH.js";
-import "../shared/chunk-P4D5QO3L.js";
+} from "../shared/chunk-IOMAJV2C.js";
+import "../shared/chunk-XHKWNKXE.js";
 import "../shared/chunk-3EP3O3HY.js";
 export {
   SidebarContent,

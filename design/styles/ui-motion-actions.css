@@ -311,8 +311,8 @@
 /* Keep one native input, with stable digit metrics while its slots join. */
 .yg-field:has(> .yg-otp) { min-inline-size: 0; max-inline-size: 100%; grid-template-columns: minmax(0, 1fr); }
 .yg-otp {
-  --yg-otp-size: 48px;
-  --yg-otp-gap: 8px;
+  --yg-otp-size: var(--yg-otp-slot-width);
+  --yg-otp-gap: var(--yg-otp-slot-gap);
   --yg-otp-merge: 0;
   --yg-otp-confirm: 0;
   inline-size: clamp(0px, calc(var(--yg-digits) * var(--yg-otp-size) + (var(--yg-digits) - 1) * var(--yg-otp-gap)), 320px);
@@ -330,9 +330,9 @@
   position: relative;
   min-inline-size: 0;
   --yg-otp-join: calc(1px + var(--yg-otp-gap) * var(--yg-otp-merge));
-  min-block-size: 56px;
+  min-block-size: var(--yg-otp-slot-height);
   border: 0;
-  border-radius: calc(14px * (1 - var(--yg-otp-merge)));
+  border-radius: calc(var(--yg-otp-slot-radius) * (1 - var(--yg-otp-merge)));
   background: transparent;
   font-size: 22px;
   line-height: 1;
@@ -349,8 +349,8 @@
   border-radius: inherit;
   background: color-mix(in srgb, var(--yg-signal-positive-soft) calc(var(--yg-otp-confirm) * 100%), var(--yg-field));
 }
-.yg-otp-slots > span:first-child { border-start-start-radius: 14px; border-end-start-radius: 14px; }
-.yg-otp-slots > span:last-child { --yg-otp-join: 0px; border-start-end-radius: 14px; border-end-end-radius: 14px; }
+.yg-otp-slots > span:first-child { border-start-start-radius: var(--yg-otp-slot-radius); border-end-start-radius: var(--yg-otp-slot-radius); }
+.yg-otp-slots > span:last-child { --yg-otp-join: 0px; border-start-end-radius: var(--yg-otp-slot-radius); border-end-end-radius: var(--yg-otp-slot-radius); }
 .yg-otp:focus-within [data-cursor] { outline: none; }
 .yg-otp:not([data-verified]):focus-within [data-cursor]::before { background: var(--yg-hover); }
 .yg-otp:not([data-verified]):focus-within [data-cursor]:not([data-filled])::after {
@@ -384,4 +384,18 @@
 .yg-otp[data-disabled] { opacity: .55; }
 @media (forced-colors: active) {
   .yg-otp:not([data-verified]):focus-within [data-cursor] { outline: 2px solid Highlight; z-index: 1; }
+}
+
+@media (forced-colors: none) {
+  .yg-switch [role="switch"]:focus-visible { outline: none; }
+  .yg-switch [role="switch"]:focus-visible > span::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    inline-size: 5px;
+    block-size: 5px;
+    border-radius: 50%;
+    background: var(--yg-text);
+    translate: -50% -50%;
+  }
 }

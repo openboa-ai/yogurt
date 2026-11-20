@@ -3,6 +3,7 @@ export type Appearance = "auto" | "light" | "dark";
 export type Material = "neutral" | "paper" | "mist";
 export type Tone = "neutral" | "brand" | "success" | "warning" | "danger" | "accent";
 export type Size = "compact" | "regular" | "touch";
+export type ControlSize = Size | "comfortable" | "spacious";
 export interface Option {
     id: string;
     label: string;

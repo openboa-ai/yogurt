@@ -2986,11 +2986,18 @@ import React3, { Children as Children4, useCallback as useCallback5, useEffect a
 // packages/web/src/controls/actions.tsx
 import { jsx, jsxs } from "react/jsx-runtime";
 var variants = { filled: "solid", soft: "soft", quiet: "ghost" };
-var sizes = { compact: "sm", regular: "lg", touch: "2xl" };
+var sizes = {
+  compact: "sm",
+  regular: "lg",
+  comfortable: "lg",
+  spacious: "2xl",
+  touch: "2xl"
+};
 function Button2({
   emphasis = "filled",
   tone = "neutral",
   size = "regular",
+  shape = "rounded",
   pending = false,
   pendingLabel,
   children,
@@ -3014,6 +3021,7 @@ function Button2({
       "data-emphasis": emphasis,
       "data-tone": tone,
       "data-control-size": size,
+      "data-shape": shape,
       "aria-disabled": blocked || props.disabled || void 0,
       "aria-busy": pending || void 0,
       onClick: (event) => {

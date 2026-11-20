@@ -12,7 +12,7 @@ import { Textarea as SDKTextarea } from "@openai/apps-sdk-ui/components/Textarea
 import { Switch as SDKSwitch } from "@openai/apps-sdk-ui/components/Switch";
 import { Checkbox as SDKCheckbox } from "@openai/apps-sdk-ui/components/Checkbox";
 import { RadioGroup as SDKRadio } from "@openai/apps-sdk-ui/components/RadioGroup";
-import { Icon, type Option, cx } from "../foundation/foundation.js";
+import { Icon, type ControlSize, type Option, cx } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
 
 export function Label(props: ComponentProps<"label">) {
@@ -61,13 +61,14 @@ export function Field({
     </div>
   );
 }
-type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo;
+type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & { size?: ControlSize };
 export function TextField({
   id,
   label,
   help,
   error,
   className,
+  size = "regular",
   ...props
 }: InputProps) {
   return (
@@ -78,7 +79,7 @@ export function TextField({
           {...binding}
           variant="soft"
           invalid={!!error}
-          className={cx("yg-input", className)}
+          className={cx("yg-input", `yg-input-size-${size}`, className)}
         />
       )}
     </Field>

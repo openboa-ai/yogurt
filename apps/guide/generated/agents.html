@@ -513,9 +513,9 @@
   justify-content: center;
   vertical-align: middle;
   gap: var(--yg-gap-control);
-  min-block-size: var(--yg-size-regular);
-  padding: var(--boa-space-4) var(--yg-inset-regular);
-  border-radius: var(--yg-radius-control);
+  min-block-size: var(--yg-button-size-regular);
+  padding: var(--boa-space-4) var(--yg-button-inline-inset);
+  border-radius: var(--yg-button-radius);
   background: var(--yg-button-fill);
   color: var(--yg-button-ink);
   font: var(--yg-font-action);
@@ -527,15 +527,24 @@
     box-shadow var(--yg-press) var(--yg-settle);
 }
 .yg-button[data-control-size="compact"] {
-  min-block-size: var(--yg-size-compact);
-  padding-inline: var(--yg-inset-compact);
-  border-radius: var(--yg-radius-small);
+  min-block-size: var(--yg-button-size-compact);
+  padding-inline: var(--yg-button-compact-inset);
+  border-radius: var(--yg-button-compact-radius);
   font: var(--yg-font-compact);
 }
-.yg-button[data-control-size="touch"] {
-  min-block-size: var(--yg-size-touch);
-  padding-inline: var(--yg-inset-roomy);
+.yg-button[data-control-size="comfortable"] {
+  min-block-size: var(--yg-button-size-comfort);
+  padding-inline: var(--yg-button-touch-inset);
 }
+.yg-button[data-control-size="spacious"] {
+  min-block-size: var(--yg-button-size-spacious);
+  padding-inline: var(--yg-button-touch-inset);
+}
+.yg-button[data-control-size="touch"] {
+  min-block-size: var(--yg-button-size-touch);
+  padding-inline: var(--yg-button-touch-inset);
+}
+.yg-button[data-shape="pill"] { border-radius: var(--yg-button-pill-radius); }
 .yg-button[data-emphasis="soft"] {
   background: var(--yg-button-soft);
   color: var(--yg-button-text);
@@ -669,6 +678,12 @@
   margin: 0;
   padding: 0;
 }
+.yg-input[class*="yg-input-size-"] { --yg-input-height: var(--yg-size-regular); min-height: var(--yg-input-height); }
+.yg-input[class*="yg-input-size-"] input { min-height: var(--yg-input-height); }
+.yg-input.yg-input-size-compact { --yg-input-height: var(--yg-size-compact); }
+.yg-input.yg-input-size-comfortable { --yg-input-height: var(--yg-size-comfort); }
+.yg-input.yg-input-size-spacious { --yg-input-height: var(--yg-size-spacious); }
+.yg-input.yg-input-size-touch { --yg-input-height: var(--yg-size-touch); }
 .yg-input:has(.yg-icon-button) {
   padding-inline-end: var(--boa-space-2);
 }
@@ -1028,10 +1043,11 @@
 }
 .yg-segment {
   isolation: isolate;
-  border-radius: var(--yg-radius-panel);
-  background: var(--yg-field);
-  padding: var(--boa-space-4);
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
+  flex-wrap: nowrap;
+  gap: 0;
+  border-radius: var(--yg-segment-track-radius);
+  background: var(--yg-raised-surface);
+  padding: var(--yg-segment-track-padding);
   position: relative;
 }
 .yg-sdk-SegmentedControl-SegmentedControlThumb {
@@ -1048,8 +1064,14 @@
   font: var(--yg-font-compact);
 }
 .yg-segment button[data-state="on"] {
-  background: var(--yg-canvas);
-  color: var(--yg-text);
+  background: var(--yg-inverse);
+  color: var(--yg-on-inverse);
+}
+.yg-segment > button {
+  min-block-size: var(--yg-segment-option-height);
+  padding-inline: var(--boa-space-4);
+  border-radius: var(--yg-segment-option-radius);
+  font: var(--yg-font-action);
 }
 .yg-tabs [aria-selected="true"] {
   background: var(--yg-field);

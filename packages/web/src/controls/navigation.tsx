@@ -167,7 +167,7 @@ export function Tabs({
   items,
   value,
   onValueChange,
-  presentation,
+  presentation = "pill",
 }: {
   label: string;
   items: { id: string; label: string; panel: ReactNode; icon?: IconName; disabled?: boolean }[];

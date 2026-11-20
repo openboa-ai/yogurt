@@ -1,5 +1,5 @@
 import { type ComponentProps, type ReactNode } from "react";
-import { type Option } from "../foundation/foundation.js";
+import { type ControlSize, type Option } from "../foundation/foundation.js";
 export declare function Label(props: ComponentProps<"label">): import("react/jsx-runtime").JSX.Element;
 export declare function HelpText(props: ComponentProps<"p">): import("react/jsx-runtime").JSX.Element;
 export declare function FieldError(props: ComponentProps<"p">): import("react/jsx-runtime").JSX.Element;
@@ -17,8 +17,10 @@ interface FieldAttributes {
 export declare function Field({ id, label, help, error, children, }: FieldInfo & {
     children: (props: FieldAttributes) => ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo;
-export declare function TextField({ id, label, help, error, className, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
+type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & {
+    size?: ControlSize;
+};
+export declare function TextField({ id, label, help, error, className, size, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
 export declare function SearchField({ id, label, help, error, value, onValueChange, placeholder, disabled, name, }: FieldInfo & {
     value: string;
     onValueChange: (value: string) => void;

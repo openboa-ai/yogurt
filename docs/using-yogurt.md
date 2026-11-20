@@ -34,6 +34,12 @@ export function SaveView({ onSave }: { onSave: () => void }) {
 
 For shadcn CLI, supply the local file `registry/button.json` to `shadcn add` after installing the pinned package. The resulting editable entry imports the same library component. `npx yogurt add` is the dependency-light alternative and refuses to replace edited files. Install and pin a new version through the consuming project’s own review.
 
+### Control sizes and action shapes
+
+Web `Button` and `TextField` accept the same size names: `compact`, `regular`, `comfortable`, `spacious` and `touch`, corresponding to 30, 36, 40, 48 and 44 px. Regular is the default. Choose the size for the context and provide at least a 44 px target for touch. Buttons support `shape="rounded"` and `shape="pill"`; filled, soft and quiet describe emphasis rather than size. The component guide demonstrates each option.
+
+Copy, quantity adjustment, hold confirmation, slide confirmation and loading results have dedicated web controls exported from the package root. They keep their own state and event contracts. Their individual registry entries and corresponding native implementations are not yet available. Generated Zig dimensions do not establish native visual or behavioral parity.
+
 An `AgentAvatar` uses the host’s `ready`, `thinking`, `working`, `waiting`, `blocked` or `done` state. Pass the state to roster and conversation components through `AgentSummary`. Keep a readable status label next to active work, and use `animated={false}` for archived portraits outside the Message component. Message keeps its portraits still by default. AgentAvatar follows the system motion preference and uses a still version of the current expression when motion is reduced. [Motion and component behavior](motion.md)
 
 ## Zig and Vercel Native SDK
@@ -64,7 +70,7 @@ Include `@import("yogurt/button.zig").file` in `UiApp.Options.markup.sources`. T
 | Paired light/dark surface and action roles, dimensions and motion | [UI bindings](../design/tokens/ui.json) | `@openboa/yogurt/tokens`, generated CSS and Zig |
 | Names, purpose and recipes | [Component inventory](../catalog/components.json) and [task patterns](../catalog/patterns.json) | Single-component import or local source installation |
 
-Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. The four approved controls provide the proportions for larger compositions. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. [Accepted basis](engineering/controls/component-library/spec.md)
+Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. Shared dimensions are generated from the UI bindings; use the component's documented roles rather than local copies of measurements. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. [Foundation replacement](engineering/quality/motion-foundation-replacement/spec.md)
 
 The web adapter uses the actual Button, Input, Textarea, Switch, Checkbox, RadioGroup, SegmentedControl and Badge implementations from OpenAI Apps SDK UI 0.2.2. It binds their anatomy to Yogurt’s own styles. Other entries use platform elements or Yogurt compositions. The built package retains third-party notices.
 

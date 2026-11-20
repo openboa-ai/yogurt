@@ -1,22 +1,32 @@
 "use client";
 import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
 import { Button as SDKButton } from "@openai/apps-sdk-ui/components/Button";
-import { cx, Icon, Inline, type IconName, type Size } from "../foundation/foundation.js";
+import { cx, Icon, Inline, type ControlSize, type IconName, type Size } from "../foundation/foundation.js";
+
+export type ButtonSize = ControlSize;
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   emphasis?: "filled" | "soft" | "quiet";
   tone?: "neutral" | "brand" | "danger";
-  size?: Size;
+  size?: ButtonSize;
+  shape?: "rounded" | "pill";
   pending?: boolean;
   pendingLabel?: string;
   ref?: Ref<HTMLButtonElement>;
 }
 const variants = { filled: "solid", soft: "soft", quiet: "ghost" } as const;
-const sizes = { compact: "sm", regular: "lg", touch: "2xl" } as const;
+const sizes = {
+  compact: "sm",
+  regular: "lg",
+  comfortable: "lg",
+  spacious: "2xl",
+  touch: "2xl",
+} as const;
 export function Button({
   emphasis = "filled",
   tone = "neutral",
   size = "regular",
+  shape = "rounded",
   pending = false,
   pendingLabel,
   children,
@@ -42,6 +52,7 @@ export function Button({
       data-emphasis={emphasis}
       data-tone={tone}
       data-control-size={size}
+      data-shape={shape}
       aria-disabled={blocked || props.disabled || undefined}
       aria-busy={pending || undefined}
       onClick={(event) => {

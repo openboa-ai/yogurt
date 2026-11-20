@@ -12,7 +12,7 @@ import {
   clsx_default,
   o,
   toCssVariables
-} from "./chunk-P4D5QO3L.js";
+} from "./chunk-XHKWNKXE.js";
 import {
   Icon,
   cx
@@ -304,6 +304,7 @@ function TextField({
   help,
   error,
   className,
+  size = "regular",
   ...props
 }) {
   return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsx(
@@ -313,7 +314,7 @@ function TextField({
       ...binding,
       variant: "soft",
       invalid: !!error,
-      className: cx("yg-input", className)
+      className: cx("yg-input", `yg-input-size-${size}`, className)
     }
   ) });
 }

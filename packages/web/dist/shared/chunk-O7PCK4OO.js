@@ -13,7 +13,7 @@ import {
   handlePressableMouseEnter,
   useResizeObserver,
   waitForAnimationFrame
-} from "./chunk-P4D5QO3L.js";
+} from "./chunk-XHKWNKXE.js";
 import {
   Icon,
   cx
@@ -336,7 +336,7 @@ function Tabs({
   items,
   value,
   onValueChange,
-  presentation
+  presentation = "pill"
 }) {
   const uid = useId();
   const refs = useRef2(/* @__PURE__ */ new Map());

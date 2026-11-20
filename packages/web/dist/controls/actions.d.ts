@@ -1,14 +1,16 @@
 import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
-import { type IconName, type Size } from "../foundation/foundation.js";
+import { type ControlSize, type IconName } from "../foundation/foundation.js";
+export type ButtonSize = ControlSize;
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     emphasis?: "filled" | "soft" | "quiet";
     tone?: "neutral" | "brand" | "danger";
-    size?: Size;
+    size?: ButtonSize;
+    shape?: "rounded" | "pill";
     pending?: boolean;
     pendingLabel?: string;
     ref?: Ref<HTMLButtonElement>;
 }
-export declare function Button({ emphasis, tone, size, pending, pendingLabel, children, type, className, onClick, ...props }: ButtonProps): import("react/jsx-runtime").JSX.Element;
+export declare function Button({ emphasis, tone, size, shape, pending, pendingLabel, children, type, className, onClick, ...props }: ButtonProps): import("react/jsx-runtime").JSX.Element;
 export declare function IconButton({ label, icon, ...props }: Omit<ButtonProps, "children"> & {
     label: string;
     icon: IconName;

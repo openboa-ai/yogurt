@@ -1,8 +1,8 @@
 "use client";
 import {
   Notice
-} from "../shared/chunk-WT75ABWC.js";
-import "../shared/chunk-P4D5QO3L.js";
+} from "../shared/chunk-42GF67JU.js";
+import "../shared/chunk-XHKWNKXE.js";
 import "../shared/chunk-3EP3O3HY.js";
 export {
   Notice

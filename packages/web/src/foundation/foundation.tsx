@@ -15,6 +15,7 @@ export type Tone =
   | "danger"
   | "accent";
 export type Size = "compact" | "regular" | "touch";
+export type ControlSize = Size | "comfortable" | "spacious";
 export interface Option {
   id: string;
   label: string;

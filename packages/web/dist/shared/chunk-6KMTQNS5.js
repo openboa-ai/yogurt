@@ -1,13 +1,13 @@
 "use client";
 import {
   Attachment
-} from "./chunk-VXM3BMGO.js";
+} from "./chunk-XP2XCIQ3.js";
 import {
   ActionMenu
-} from "./chunk-BDDLB7ZW.js";
+} from "./chunk-YAAPSXDJ.js";
 import {
   Button
-} from "./chunk-P4D5QO3L.js";
+} from "./chunk-XHKWNKXE.js";
 
 // packages/web/src/patterns/composer.tsx
 import { useId } from "react";

@@ -1,8 +1,8 @@
 "use client";
 import {
   ResourceRow
-} from "../shared/chunk-L6L3A67E.js";
-import "../shared/chunk-P4D5QO3L.js";
+} from "../shared/chunk-52TDUZWI.js";
+import "../shared/chunk-XHKWNKXE.js";
 import "../shared/chunk-3EP3O3HY.js";
 export {
   ResourceRow

@@ -30,20 +30,35 @@
   pointer-events: none;
 }
 .yg-segment > .yg-selection-marker {
-  background: var(--yg-raised-surface);
-  border-color: var(--yg-surface-edge);
+  background: var(--yg-inverse);
+  border: 0;
+  border-radius: var(--yg-segment-option-radius);
 }
 
 .yg-tabs [role="tab"], .yg-segment > button { min-block-size: var(--yg-size-regular); }
-.yg-tabs [role="tab"]:focus-visible, .yg-segment > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
+.yg-tabs [role="tab"]:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
+.yg-segment > button:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: var(--boa-space-2);
+}
 
 @media (forced-colors: none) {
+  .yg-segment > button:focus-visible { outline: none; }
   .yg-selection-marker[data-ready] {
     display: block;
   }
   .yg-tabs [role="tablist"]:has(> .yg-selection-marker[data-ready]) > [aria-selected="true"],
   .yg-segment:has(> .yg-selection-marker[data-ready]) > button[data-state="on"] {
     background: transparent;
+  }
+}
+
+@supports (mix-blend-mode: difference) {
+  @media (forced-colors: none) {
+    .yg-segment:has(> .yg-selection-marker[data-ready]) > button {
+      color: var(--boa-color-neutral-0);
+      mix-blend-mode: difference;
+    }
   }
 }
 
@@ -100,4 +115,48 @@
 
 @keyframes yg-section-arrive {
   from { translate: 0 var(--boa-space-4); }
+}
+
+/* The pill is the shared resting and selected presentation. */
+.yg-tabs[data-presentation="pill"] [role="tablist"] {
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 0;
+  padding: var(--yg-tab-pill-padding);
+  border-radius: var(--yg-radius-pill);
+  background: var(--yg-raised-surface);
+}
+.yg-tabs[data-presentation="pill"] [role="tablist"]::-webkit-scrollbar { display: none; }
+.yg-tabs[data-presentation="pill"] [role="tab"] {
+  flex: none;
+  min-block-size: var(--yg-tab-pill-height);
+  padding: 7px clamp(8px, 2vi, var(--yg-inset-roomy));
+  border-radius: var(--yg-radius-pill);
+  white-space: nowrap;
+  font: var(--yg-font-action);
+}
+.yg-tabs[data-presentation="pill"] [role="tab"][aria-selected="true"] {
+  background: var(--yg-inverse);
+  color: var(--yg-on-inverse);
+}
+.yg-tabs[data-presentation="pill"] .yg-selection-marker {
+  border: 0;
+  border-radius: var(--yg-radius-pill);
+  background: var(--yg-inverse);
+}
+@media (forced-colors: none) {
+  .yg-tabs[data-presentation="pill"] [role="tablist"]:has(> .yg-selection-marker[data-ready]) > [aria-selected="true"] {
+    background: transparent;
+  }
+}
+
+@media (forced-colors: none) {
+  .yg-tabs[data-presentation="pill"] [role="tab"]:focus-visible {
+    outline: none;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }

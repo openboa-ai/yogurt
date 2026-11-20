@@ -39,7 +39,10 @@ mkdirSync("registry", { recursive: true });
 writeFileSync(
   src + "/index.ts",
   modules.map((m) => 'export * from "./' + m + '";').join("\n") +
-    '\nexport { words } from "./foundation/words.js";\n',
+    '\nexport { words } from "./foundation/words.js";\n' +
+    'export { CopyButton, LoadingSuccessButton } from "./patterns/motion-status.js";\n' +
+    'export { HoldButton, SlideConfirm } from "./patterns/motion-confirm.js";\n' +
+    'export { CartButton } from "./patterns/motion-cart.js";\n',
 );
 const art = {};
 for (const [key, file] of Object.entries({

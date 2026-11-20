@@ -214,9 +214,9 @@
     "gap-stack": "space.12",
     "gap-section": "space.24",
     "offset-layer": "space.6",
-    "switch-width": 36,
-    "switch-height": 22,
-    "thumb-size": 16,
+    "switch-width": 52,
+    "switch-height": 32,
+    "thumb-size": 26,
     "track-inset": 3,
     "radius-inset": "radius.inset",
     "radius-popover": "radius.popover",
@@ -234,7 +234,28 @@
     "gap-panel": "space.16",
     "task-measure": 260,
     "storage-measure": 300,
-    "drop-measure": 296
+    "drop-measure": 296,
+    "otp-slot-width": 48,
+    "otp-slot-height": 56,
+    "otp-slot-gap": 8,
+    "otp-slot-radius": 14,
+    "tab-pill-padding": 4,
+    "tab-pill-height": 35,
+    "segment-track-padding": 4,
+    "segment-option-height": "control.row",
+    "segment-track-radius": "space.16",
+    "segment-option-radius": "radius.panel",
+    "button-radius": "radius.control",
+    "button-pill-radius": "radius.round",
+    "button-compact-radius": "radius.small",
+    "button-inline-inset": "space.12",
+    "button-compact-inset": "space.10",
+    "button-touch-inset": "space.16",
+    "button-size-compact": "control.compact",
+    "button-size-regular": "control.height",
+    "button-size-comfort": "control.comfort",
+    "button-size-spacious": "control.spacious",
+    "button-size-touch": "control.touch"
   },
   "motion": {
     "press": 110,
@@ -247,9 +268,32 @@
     "reveal": 420
   },
   "elevation": {
-    "lift": [[1, 3, 8]],
-    "float": [[1, 3, 9], [8, 24, 12]],
-    "panel": [[12, 36, 18]]
+    "lift": [
+      [
+        1,
+        3,
+        8
+      ]
+    ],
+    "float": [
+      [
+        1,
+        3,
+        9
+      ],
+      [
+        8,
+        24,
+        12
+      ]
+    ],
+    "panel": [
+      [
+        12,
+        36,
+        18
+      ]
+    ]
   },
   "easing": {
     "settle": "cubic-bezier(.2, 0, 0, 1)",

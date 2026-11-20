@@ -386,33 +386,17 @@
 }
 .motion-segmented .yg-segment {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 0;
-  padding: var(--boa-space-4);
-  border-radius: var(--yg-inset-roomy);
-  background: var(--yg-raised-surface);
-  box-shadow: none;
+  inline-size: 100%;
 }
 .motion-segmented .yg-segment > button {
   flex: 1 1 0;
   min-inline-size: 0;
-  min-block-size: var(--yg-size-row);
-  padding-inline: var(--boa-space-4);
-  border-radius: var(--yg-radius-panel);
-  font: var(--yg-font-action);
 }
-.motion-segmented .yg-segment > button[data-state="on"],
 .motion-pill-tabs .yg-tabs [role="tab"][aria-selected="true"] {
   background: var(--yg-inverse);
   color: var(--yg-on-inverse);
 }
-.motion-segmented .yg-segment > .yg-selection-marker {
-  background: var(--yg-inverse);
-  border: 0;
-  border-radius: var(--yg-radius-panel);
-}
 @media (forced-colors: none) {
-  .motion-segmented .yg-segment:has(> .yg-selection-marker[data-ready]) > button[data-state="on"],
   .motion-pill-tabs .yg-tabs [role="tablist"]:has(> .yg-selection-marker[data-ready]) > [aria-selected="true"] {
     background: transparent;
   }
@@ -490,9 +474,6 @@
   padding: var(--yg-inset-layer) var(--yg-inset-roomy);
   border-radius: var(--yg-radius-sheet);
   background: var(--yg-raised-surface);
-  --yg-switch-width: 52px;
-  --yg-switch-height: 32px;
-  --yg-thumb-size: 26px;
 }
 .motion-switches .yg-switch {
   justify-content: space-between;
