@@ -7,7 +7,7 @@ type LayerOption = {
     id: string;
     label: string;
 };
-/** A controlled select with the browser's native selection and recovery behavior. */
+/** A controlled listbox with an anchored panel and explicit selected state. */
 export declare function SpringDropdown({ label, value, onChange, options }: {
     label: string;
     value: string;

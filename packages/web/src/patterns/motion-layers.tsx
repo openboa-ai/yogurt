@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Select } from "../controls/forms.js";
+import { Select as SelectPrimitive } from "radix-ui";
 import { Command } from "../controls/advanced.js";
 
 /** A contextual note that can be revealed with a pointer or keyboard focus. */
@@ -30,11 +30,33 @@ export function MorphTooltip({ label, detail }: { label: string; detail: string 
 
 type LayerOption = { id: string; label: string };
 
-/** A controlled select with the browser's native selection and recovery behavior. */
+/** A controlled listbox with an anchored panel and explicit selected state. */
 export function SpringDropdown({ label, value, onChange, options }: {
   label: string; value: string; onChange: (value: string) => void; options: LayerOption[];
 }) {
-  return <div className="yg-spring-dropdown"><Select label={label} value={value} options={options} onChange={(event) => onChange(event.currentTarget.value)} /></div>;
+  const id = useId();
+  const [portal, setPortal] = useState<HTMLDivElement | null>(null);
+  return <div ref={setPortal} className="yg-spring-dropdown">
+    <label id={id} className="yg-spring-label">{label}</label>
+    <SelectPrimitive.Root value={value} onValueChange={onChange}>
+      <SelectPrimitive.Trigger className="yg-spring-trigger" aria-labelledby={id}>
+        <span className="yg-spring-symbol" aria-hidden="true">◆</span>
+        <span className="yg-spring-value"><SelectPrimitive.Value placeholder="Choose an option" /></span>
+        <SelectPrimitive.Icon className="yg-spring-chevron" aria-hidden="true">⌄</SelectPrimitive.Icon>
+      </SelectPrimitive.Trigger>
+      <SelectPrimitive.Portal container={portal}>
+        <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={6}>
+          <SelectPrimitive.Viewport className="yg-spring-viewport">
+            {options.map(option => <SelectPrimitive.Item key={option.id} value={option.id} className="yg-spring-option">
+              <span className="yg-spring-option-symbol" aria-hidden="true">◆</span>
+              <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
+              <SelectPrimitive.ItemIndicator className="yg-spring-check" aria-hidden="true">✓</SelectPrimitive.ItemIndicator>
+            </SelectPrimitive.Item>)}
+          </SelectPrimitive.Viewport>
+        </SelectPrimitive.Content>
+      </SelectPrimitive.Portal>
+    </SelectPrimitive.Root>
+  </div>;
 }
 
 /** A searchable command surface that returns the selected command ID. */

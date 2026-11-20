@@ -9,14 +9,24 @@
 .yg-ghost-mirror { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .yg-ghost-suffix, .yg-ghost-hint { color: var(--yg-muted); }
 .yg-ghost-hint { font: var(--yg-font-meta); }
-.yg-prompt-box { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px; min-inline-size: 0; padding: 6px; border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-panel); background: var(--yg-raised-surface); }
+.yg-prompt-box { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 6px; min-inline-size: 0; padding: 4px; border: 1px solid var(--yg-surface-edge); border-radius: 20px; background: var(--yg-raised-surface); }
 .yg-prompt-box:focus-within { border-color: var(--yg-action); box-shadow: 0 0 0 2px var(--yg-action-soft); }
 .yg-prompt-editor { display: grid; min-inline-size: 0; max-block-size: 160px; overflow-y: auto; }
-.yg-prompt-editor::after, .yg-prompt-editor textarea { grid-area: 1 / 1; box-sizing: border-box; min-inline-size: 0; width: 100%; padding: 8px 6px; border: 0; font: var(--yg-font-body); white-space: pre-wrap; overflow-wrap: anywhere; }
+.yg-prompt-editor::after, .yg-prompt-editor textarea { grid-area: 1 / 1; box-sizing: border-box; min-inline-size: 0; width: 100%; padding: 6px 10px; border: 0; font: var(--yg-font-body); white-space: pre-wrap; overflow-wrap: anywhere; }
 .yg-prompt-editor::after { content: attr(data-value) ' '; visibility: hidden; }
 .yg-prompt-editor textarea { display: block; resize: none; overflow: hidden; outline: 0; background: transparent; color: var(--yg-text); }
 .yg-prompt-actions { display: flex; align-items: end; }
-.yg-prompt-actions .yg-button { min-inline-size: 64px; }
+.yg-prompt-action { display: grid; place-items: center; box-sizing: border-box; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: var(--yg-action); color: var(--yg-surface); cursor: pointer; }
+.yg-prompt-action:disabled { opacity: .35; cursor: default; }
+.yg-prompt-action:focus-visible { outline: 2px solid var(--yg-action); outline-offset: 3px; }
+.yg-prompt-action-mark, .yg-prompt-action svg { display: block; width: 16px; height: 16px; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-prompt-action { transition: transform 140ms var(--yg-settle), opacity 140ms var(--yg-settle), background-color 140ms var(--yg-settle); }
+  .yg-prompt-action:not(:disabled):active { transform: scale(.88); }
+  .yg-prompt-action[data-busy] .yg-prompt-action-mark { animation: yg-prompt-stop-arrive 180ms var(--yg-settle); }
+  @keyframes yg-prompt-stop-arrive { from { opacity: .3; transform: rotate(-35deg) scale(.6); } }
+}
+@media (pointer: coarse) { .yg-prompt-action { width: 44px; height: 44px; } }
 .yg-thinking { display: inline-flex; align-items: center; gap: 8px; color: var(--yg-muted); font: var(--yg-font-label); }
 .yg-thinking-shape { inline-size: 1em; block-size: 1em; flex: none; background: var(--yg-action); border-radius: 40% 60% 55% 45%; animation: yg-thinking-morph 2.4s var(--yg-settle) infinite alternate; }
 @keyframes yg-thinking-morph { 0% { border-radius: 40% 60% 55% 45%; transform: rotate(0deg) scale(.9); } 50% { border-radius: 65% 35% 40% 60%; transform: rotate(90deg) scale(1); } 100% { border-radius: 35% 65% 60% 40%; transform: rotate(180deg) scale(.9); } }

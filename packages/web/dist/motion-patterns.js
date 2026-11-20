@@ -2,13 +2,13 @@
 "use client";
 import {
   Command
-} from "./shared/chunk-VW3NWIEF.js";
+} from "./shared/chunk-KYXPXNTR.js";
 import "./shared/chunk-UNNWL6Q6.js";
-import {
-  Select
-} from "./shared/chunk-7OVEFMFK.js";
+import "./shared/chunk-FXLGRFQX.js";
 import "./shared/chunk-5GJUJT3P.js";
-import "./shared/chunk-74ISCFKG.js";
+import {
+  dist_exports10 as dist_exports
+} from "./shared/chunk-PLMP3L2O.js";
 import {
   Button
 } from "./shared/chunk-A323HUK4.js";
@@ -274,7 +274,23 @@ function MorphTooltip({ label, detail }) {
   );
 }
 function SpringDropdown({ label, value, onChange, options }) {
-  return /* @__PURE__ */ jsx3("div", { className: "yg-spring-dropdown", children: /* @__PURE__ */ jsx3(Select, { label, value, options, onChange: (event) => onChange(event.currentTarget.value) }) });
+  const id = useId3();
+  const [portal, setPortal] = useState2(null);
+  return /* @__PURE__ */ jsxs3("div", { ref: setPortal, className: "yg-spring-dropdown", children: [
+    /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
+    /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: onChange, children: [
+      /* @__PURE__ */ jsxs3(dist_exports.Trigger, { className: "yg-spring-trigger", "aria-labelledby": id, children: [
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "aria-hidden": "true", children: "\u25C6" }),
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-value", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) }),
+        /* @__PURE__ */ jsx3(dist_exports.Icon, { className: "yg-spring-chevron", "aria-hidden": "true", children: "\u2304" })
+      ] }),
+      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 6, children: /* @__PURE__ */ jsx3(dist_exports.Viewport, { className: "yg-spring-viewport", children: options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-option-symbol", "aria-hidden": "true", children: "\u25C6" }),
+        /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
+        /* @__PURE__ */ jsx3(dist_exports.ItemIndicator, { className: "yg-spring-check", "aria-hidden": "true", children: "\u2713" })
+      ] }, option.id)) }) }) })
+    ] })
+  ] });
 }
 function CommandButton({ label, items, onSelect }) {
   return /* @__PURE__ */ jsx3("div", { className: "yg-command-button", children: /* @__PURE__ */ jsx3(Command, { label, items, onSelect }) });
@@ -459,7 +475,18 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
             onChange: (event) => onChange(event.currentTarget.value)
           }
         ) }),
-        /* @__PURE__ */ jsx5("div", { className: "yg-prompt-actions", children: busy && onCancel ? /* @__PURE__ */ jsx5(Button, { type: "button", emphasis: "soft", onClick: onCancel, children: "Stop" }) : /* @__PURE__ */ jsx5(Button, { type: "submit", disabled: busy || !value.trim(), children: "Send" }) })
+        /* @__PURE__ */ jsx5("div", { className: "yg-prompt-actions", children: /* @__PURE__ */ jsx5(
+          "button",
+          {
+            className: "yg-prompt-action",
+            type: busy && onCancel ? "button" : "submit",
+            "aria-label": busy && onCancel ? "Stop" : "Send",
+            "data-busy": busy || void 0,
+            disabled: busy ? !onCancel : !value.trim(),
+            onClick: busy && onCancel ? onCancel : void 0,
+            children: /* @__PURE__ */ jsx5("span", { className: "yg-prompt-action-mark", "aria-hidden": "true", children: busy && onCancel ? /* @__PURE__ */ jsx5("svg", { viewBox: "0 0 16 16", children: /* @__PURE__ */ jsx5("rect", { x: "4", y: "4", width: "8", height: "8", rx: "1.5", fill: "currentColor" }) }) : /* @__PURE__ */ jsx5("svg", { viewBox: "0 0 16 16", fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx5("path", { d: "M8 12V4M4.5 7.5 8 4l3.5 3.5" }) }) })
+          }
+        ) })
       ]
     }
   );
@@ -801,14 +828,22 @@ function TaskList({ label, tasks }) {
 }
 
 // packages/web/src/patterns/motion-cart.tsx
-import { useEffect as useEffect2, useRef as useRef4 } from "react";
+import { useEffect as useEffect2, useLayoutEffect, useRef as useRef4, useState as useState7 } from "react";
 import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
 var holdDelay = 380;
 var initialRepeat = 150;
 var minimumRepeat = 55;
+var limitNoticeDuration = 1600;
 function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "Add" }) {
   const limit = Number.isFinite(max) ? Math.max(0, Math.floor(max)) : 99;
   const count = Number.isFinite(quantity) ? Math.max(0, Math.min(limit, Math.floor(quantity))) : 0;
+  const previous = useRef4(count);
+  const goingDown = count < previous.current;
+  useLayoutEffect(() => {
+    previous.current = count;
+  }, [count]);
+  const [showLimit, setShowLimit] = useState7(false);
+  const notice = useRef4(void 0);
   const open = count > 0;
   const reachedLimit = count >= limit;
   const latest = useRef4({ count, limit, onQuantityChange });
@@ -825,13 +860,22 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
     window.addEventListener("blur", stop);
     return () => {
       window.removeEventListener("blur", stop);
+      clearTimeout(notice.current);
       stop();
     };
   }, []);
   function change(direction, repeat) {
     const { count: count2, limit: limit2, onQuantityChange: onQuantityChange2 } = latest.current;
     const next = count2 + direction;
-    if (next < (repeat ? 1 : 0) || next > limit2) return false;
+    if (next > limit2) {
+      clearTimeout(notice.current);
+      setShowLimit(true);
+      notice.current = setTimeout(() => setShowLimit(false), limitNoticeDuration);
+      return false;
+    }
+    if (next < (repeat ? 1 : 0)) return false;
+    clearTimeout(notice.current);
+    setShowLimit(false);
     if (next === 0) increase.current?.focus();
     onQuantityChange2(next);
     return true;
@@ -872,7 +916,7 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
     if (detail === 0 || !skipClick.current) change(direction, false);
     skipClick.current = false;
   }
-  return /* @__PURE__ */ jsx10(
+  return /* @__PURE__ */ jsxs10(
     "div",
     {
       className: "yg-cart-control",
@@ -888,52 +932,55 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
       onBlur: (event) => {
         if (!event.currentTarget.contains(event.relatedTarget)) stop();
       },
-      children: /* @__PURE__ */ jsxs10("div", { className: "yg-cart-stepper", children: [
-        /* @__PURE__ */ jsx10(
-          "button",
-          {
-            type: "button",
-            className: "yg-cart-decrease",
-            hidden: !open,
-            "aria-label": count === 1 ? `Remove ${label}` : `Decrease quantity of ${label}`,
-            ...pointerHandlers,
-            onPointerDown: (event) => start(event, -1),
-            onClick: (event) => activate(-1, event.detail),
-            children: /* @__PURE__ */ jsx10(
-              "svg",
-              {
-                className: "yg-icon",
-                "aria-hidden": "true",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: 1.7,
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                children: /* @__PURE__ */ jsx10("path", { d: count === 1 ? "M4 6h16M9 6V4h6v2m3 0-1 14H7L6 6m4 4v6m4-6v6" : "M5 12h14" })
-              }
-            )
-          }
-        ),
-        /* @__PURE__ */ jsx10("output", { className: "yg-cart-quantity", "aria-label": `Quantity of ${label}`, hidden: !open, children: /* @__PURE__ */ jsx10("span", { children: count }, count) }),
-        /* @__PURE__ */ jsxs10(
-          "button",
-          {
-            ref: increase,
-            type: "button",
-            className: "yg-cart-increase",
-            "aria-disabled": reachedLimit || void 0,
-            "aria-label": open ? `Increase quantity of ${label}` : `${addLabel} ${label}`,
-            ...pointerHandlers,
-            onPointerDown: (event) => start(event, 1),
-            onClick: (event) => activate(1, event.detail),
-            children: [
-              !open && /* @__PURE__ */ jsx10("span", { children: addLabel }),
-              /* @__PURE__ */ jsx10(Icon, { name: "plus" })
-            ]
-          }
-        )
-      ] })
+      children: [
+        /* @__PURE__ */ jsx10("span", { className: "yg-cart-limit", role: "status", children: showLimit && reachedLimit ? `Limit ${limit} per order` : null }),
+        /* @__PURE__ */ jsxs10("div", { className: "yg-cart-stepper", children: [
+          /* @__PURE__ */ jsx10(
+            "button",
+            {
+              type: "button",
+              className: "yg-cart-decrease",
+              hidden: !open,
+              "aria-label": count === 1 ? `Remove ${label}` : `Decrease quantity of ${label}`,
+              ...pointerHandlers,
+              onPointerDown: (event) => start(event, -1),
+              onClick: (event) => activate(-1, event.detail),
+              children: /* @__PURE__ */ jsx10(
+                "svg",
+                {
+                  className: "yg-icon",
+                  "aria-hidden": "true",
+                  viewBox: "0 0 24 24",
+                  fill: "none",
+                  stroke: "currentColor",
+                  strokeWidth: 1.7,
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  children: /* @__PURE__ */ jsx10("path", { d: count === 1 ? "M4 6h16M9 6V4h6v2m3 0-1 14H7L6 6m4 4v6m4-6v6" : "M5 12h14" })
+                }
+              )
+            }
+          ),
+          /* @__PURE__ */ jsx10("output", { className: "yg-cart-quantity", "aria-label": `Quantity of ${label}`, hidden: !open, children: /* @__PURE__ */ jsx10("span", { "data-direction": goingDown ? "down" : "up", children: count }, count) }),
+          /* @__PURE__ */ jsxs10(
+            "button",
+            {
+              ref: increase,
+              type: "button",
+              className: "yg-cart-increase",
+              "aria-disabled": reachedLimit || void 0,
+              "aria-label": open ? `Increase quantity of ${label}` : `${addLabel} ${label}`,
+              ...pointerHandlers,
+              onPointerDown: (event) => start(event, 1),
+              onClick: (event) => activate(1, event.detail),
+              children: [
+                !open && /* @__PURE__ */ jsx10("span", { children: addLabel }),
+                /* @__PURE__ */ jsx10(Icon, { name: "plus" })
+              ]
+            }
+          )
+        ] })
+      ]
     }
   );
 }

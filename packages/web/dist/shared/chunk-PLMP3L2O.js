@@ -354,7 +354,7 @@ var __name5 = (target, value) => __defProp5(target, "name", { value, configurabl
 // @__NO_SIDE_EFFECTS__
 function createCollection(name) {
   const PROVIDER_NAME = name + "CollectionProvider";
-  const [createCollectionContext, createCollectionScope6] = createContextScope(PROVIDER_NAME);
+  const [createCollectionContext, createCollectionScope7] = createContextScope(PROVIDER_NAME);
   const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(
     PROVIDER_NAME,
     { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
@@ -394,7 +394,7 @@ function createCollection(name) {
     }
   );
   CollectionItemSlot.displayName = ITEM_SLOT_NAME;
-  function useCollection5(scope) {
+  function useCollection6(scope) {
     const context = useCollectionContext(name + "CollectionConsumer", scope);
     const getItems = React6.useCallback(() => {
       const collectionNode = context.collectionRef.current;
@@ -408,11 +408,11 @@ function createCollection(name) {
     }, [context.collectionRef, context.itemMap]);
     return getItems;
   }
-  __name5(useCollection5, "useCollection");
+  __name5(useCollection6, "useCollection");
   return [
     { Provider: CollectionProvider, Slot: CollectionSlot, ItemSlot: CollectionItemSlot },
-    useCollection5,
-    createCollectionScope6
+    useCollection6,
+    createCollectionScope7
   ];
 }
 __name5(createCollection, "createCollection");
@@ -740,7 +740,7 @@ __name5(toSafeInteger, "toSafeInteger");
 // @__NO_SIDE_EFFECTS__
 function createCollection2(name) {
   const PROVIDER_NAME = name + "CollectionProvider";
-  const [createCollectionContext, createCollectionScope6] = createContextScope(PROVIDER_NAME);
+  const [createCollectionContext, createCollectionScope7] = createContextScope(PROVIDER_NAME);
   const [CollectionStableContextProvider, useStableCollectionContext] = createCollectionContext(PROVIDER_NAME);
   CollectionStableContextProvider.displayName = name + "CollectionStableContextProvider";
   const [CollectionStatefulContextProvider, useStatefulCollectionContext] = createCollectionContext(PROVIDER_NAME);
@@ -904,19 +904,19 @@ function createCollection2(name) {
     return React22.useState(new OrderedDict());
   }
   __name5(useInitCollection, "useInitCollection");
-  function useCollection5(scope) {
+  function useCollection6(scope) {
     const { collection } = useStatefulCollectionContext(name + "CollectionConsumer", scope);
     return collection;
   }
-  __name5(useCollection5, "useCollection");
+  __name5(useCollection6, "useCollection");
   function useGetCollection2(scope) {
     const { getCollection } = useStableCollectionContext(name + "CollectionConsumer", scope);
     return getCollection;
   }
   __name5(useGetCollection2, "useGetCollection");
   const functions = {
-    createCollectionScope: createCollectionScope6,
-    useCollection: useCollection5,
+    createCollectionScope: createCollectionScope7,
+    useCollection: useCollection6,
     useGetCollection: useGetCollection2,
     useInitCollection
   };
@@ -1220,10 +1220,10 @@ var NODES = [
   "ul"
 ];
 var Primitive = NODES.reduce((primitive, node) => {
-  const Slot3 = createSlot(`Primitive.${node}`);
+  const Slot4 = createSlot(`Primitive.${node}`);
   const Node2 = React9.forwardRef((props, forwardedRef) => {
     const { asChild, ...primitiveProps } = props;
-    const Comp = asChild ? Slot3 : node;
+    const Comp = asChild ? Slot4 : node;
     if (typeof window !== "undefined") {
       window[Symbol.for("radix-ui")] = true;
     }
@@ -9085,25 +9085,1306 @@ function concatAriaDescribedby2(...values) {
 }
 __name31(concatAriaDescribedby2, "concatAriaDescribedby");
 
-// node_modules/@radix-ui/react-toggle-group/dist/index.mjs
+// node_modules/@radix-ui/react-select/dist/index.mjs
 var dist_exports14 = {};
 __export(dist_exports14, {
+  Arrow: () => SelectArrow,
+  Content: () => SelectContent,
+  Group: () => SelectGroup,
+  Icon: () => SelectIcon,
+  Item: () => SelectItem,
+  ItemIndicator: () => SelectItemIndicator,
+  ItemText: () => SelectItemText,
+  Label: () => SelectLabel,
+  Portal: () => SelectPortal,
+  Root: () => Select,
+  ScrollDownButton: () => SelectScrollDownButton,
+  ScrollUpButton: () => SelectScrollUpButton,
+  Select: () => Select,
+  SelectArrow: () => SelectArrow,
+  SelectContent: () => SelectContent,
+  SelectGroup: () => SelectGroup,
+  SelectIcon: () => SelectIcon,
+  SelectItem: () => SelectItem,
+  SelectItemIndicator: () => SelectItemIndicator,
+  SelectItemText: () => SelectItemText,
+  SelectLabel: () => SelectLabel,
+  SelectPortal: () => SelectPortal,
+  SelectScrollDownButton: () => SelectScrollDownButton,
+  SelectScrollUpButton: () => SelectScrollUpButton,
+  SelectSeparator: () => SelectSeparator,
+  SelectTrigger: () => SelectTrigger,
+  SelectValue: () => SelectValue,
+  SelectViewport: () => SelectViewport,
+  Separator: () => SelectSeparator,
+  Trigger: () => SelectTrigger,
+  Value: () => SelectValue,
+  Viewport: () => SelectViewport,
+  createSelectScope: () => createSelectScope,
+  unstable_BubbleInput: () => SelectBubbleInput,
+  unstable_Provider: () => SelectProvider,
+  unstable_SelectBubbleInput: () => SelectBubbleInput,
+  unstable_SelectProvider: () => SelectProvider
+});
+import * as React44 from "react";
+import * as ReactDOM5 from "react-dom";
+
+// node_modules/@radix-ui/number/dist/index.mjs
+var __defProp32 = Object.defineProperty;
+var __name32 = (target, value) => __defProp32(target, "name", { value, configurable: true });
+function clamp2(value, [min2, max2]) {
+  return Math.min(max2, Math.max(min2, value));
+}
+__name32(clamp2, "clamp");
+
+// node_modules/@radix-ui/react-select/dist/index.mjs
+import { Fragment as Fragment22, jsx as jsx20, jsxs as jsxs3 } from "react/jsx-runtime";
+var __defProp33 = Object.defineProperty;
+var __name33 = (target, value) => __defProp33(target, "name", { value, configurable: true });
+var Position = {
+  ItemAligned: "item-aligned",
+  Popper: "popper"
+};
+var Direction7 = {
+  LTR: "ltr",
+  RTL: "rtl"
+};
+var OPEN_KEYS = [" ", "Enter", "ArrowUp", "ArrowDown"];
+var SELECTION_KEYS2 = [" ", "Enter"];
+var SELECT_NAME = "Select";
+var [Collection6, useCollection5, createCollectionScope6] = createCollection(SELECT_NAME);
+var [createSelectContext, createSelectScope] = createContextScope(SELECT_NAME, [
+  createCollectionScope6,
+  createPopperScope
+]);
+var usePopperScope4 = createPopperScope();
+var [SelectProviderImpl, useSelectContext] = createSelectContext(SELECT_NAME);
+var [SelectNativeOptionsProvider, useSelectNativeOptionsContext] = createSelectContext(SELECT_NAME);
+function SelectProvider(props) {
+  const {
+    __scopeSelect,
+    children,
+    open: openProp,
+    defaultOpen,
+    onOpenChange,
+    value: valueProp,
+    defaultValue,
+    onValueChange,
+    dir,
+    name,
+    autoComplete,
+    disabled,
+    required,
+    form,
+    // @ts-expect-error internal render prop used by `Select` to compose its default parts
+    internal_do_not_use_render
+  } = props;
+  const popperScope = usePopperScope4(__scopeSelect);
+  const [trigger, setTrigger] = React44.useState(null);
+  const [valueNode, setValueNode] = React44.useState(null);
+  const [valueNodeHasChildren, setValueNodeHasChildren] = React44.useState(false);
+  const direction = useDirection(dir);
+  const [open, setOpen] = useControllableState({
+    prop: openProp,
+    defaultProp: defaultOpen ?? false,
+    onChange: onOpenChange,
+    caller: SELECT_NAME
+  });
+  const [value, setValue] = useControllableState({
+    prop: valueProp,
+    defaultProp: defaultValue,
+    onChange: onValueChange,
+    caller: SELECT_NAME
+  });
+  const triggerPointerDownPosRef = React44.useRef(null);
+  const hasConsumerStoppedPropagationRef = React44.useRef(false);
+  const [userSelection, setUserSelection] = React44.useState(null);
+  const handleUserSelect = /* @__PURE__ */ __name33((nextValue) => {
+    setUserSelection({
+      value: nextValue,
+      hasConsumerStoppedPropagation: hasConsumerStoppedPropagationRef.current
+    });
+    setValue(nextValue);
+  }, "handleUserSelect");
+  const initialValueRef = React44.useRef(value);
+  React44.useEffect(() => {
+    const associatedForm = form ? trigger?.ownerDocument.getElementById(form) : trigger?.form;
+    if (associatedForm instanceof HTMLFormElement) {
+      const reset = /* @__PURE__ */ __name33(() => setValue(initialValueRef.current), "reset");
+      associatedForm.addEventListener("reset", reset);
+      return () => associatedForm.removeEventListener("reset", reset);
+    }
+  }, [form, trigger, setValue]);
+  const isFormControl = trigger ? !!form || !!trigger.closest("form") : true;
+  const [nativeOptionsSet, setNativeOptionsSet] = React44.useState(/* @__PURE__ */ new Set());
+  const contentId = useId();
+  const nativeSelectKey = Array.from(nativeOptionsSet).map((option) => option.props.value).join(";");
+  const handleNativeOptionAdd = React44.useCallback((option) => {
+    setNativeOptionsSet((prev) => new Set(prev).add(option));
+  }, []);
+  const handleNativeOptionRemove = React44.useCallback((option) => {
+    setNativeOptionsSet((prev) => {
+      const optionsSet = new Set(prev);
+      optionsSet.delete(option);
+      return optionsSet;
+    });
+  }, []);
+  const context = {
+    required,
+    trigger,
+    onTriggerChange: setTrigger,
+    valueNode,
+    onValueNodeChange: setValueNode,
+    valueNodeHasChildren,
+    onValueNodeHasChildrenChange: setValueNodeHasChildren,
+    contentId,
+    value,
+    onValueChange: setValue,
+    hasConsumerStoppedPropagationRef,
+    userSelection,
+    onUserSelect: handleUserSelect,
+    open,
+    onOpenChange: setOpen,
+    dir: direction,
+    triggerPointerDownPosRef,
+    disabled,
+    name,
+    autoComplete,
+    form,
+    nativeOptions: nativeOptionsSet,
+    nativeSelectKey,
+    isFormControl
+  };
+  return /* @__PURE__ */ jsx20(Popper, { ...popperScope, children: /* @__PURE__ */ jsx20(SelectProviderImpl, { scope: __scopeSelect, ...context, children: /* @__PURE__ */ jsx20(Collection6.Provider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx20(
+    SelectNativeOptionsProvider,
+    {
+      scope: __scopeSelect,
+      onNativeOptionAdd: handleNativeOptionAdd,
+      onNativeOptionRemove: handleNativeOptionRemove,
+      children: isFunction2(internal_do_not_use_render) ? internal_do_not_use_render(context) : children
+    }
+  ) }) }) });
+}
+__name33(SelectProvider, "SelectProvider");
+var Select = /* @__PURE__ */ __name33((props) => {
+  const { __scopeSelect, children, ...providerProps } = props;
+  return /* @__PURE__ */ jsx20(
+    SelectProvider,
+    {
+      __scopeSelect,
+      ...providerProps,
+      internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxs3(Fragment22, { children: [
+        children,
+        isFormControl ? /* @__PURE__ */ jsx20(
+          SelectBubbleInput,
+          {
+            __scopeSelect
+          }
+        ) : null
+      ] })
+    }
+  );
+}, "Select");
+var TRIGGER_NAME8 = "SelectTrigger";
+var SelectTrigger = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectTrigger2(props, forwardedRef) {
+    const { __scopeSelect, disabled = false, ...triggerProps } = props;
+    const popperScope = usePopperScope4(__scopeSelect);
+    const context = useSelectContext(TRIGGER_NAME8, __scopeSelect);
+    const isDisabled = context.disabled || disabled;
+    const composedRefs = useComposedRefs(forwardedRef, context.onTriggerChange);
+    const getItems = useCollection5(__scopeSelect);
+    const pointerTypeRef = React44.useRef("touch");
+    const [searchRef, handleTypeaheadSearch, resetTypeahead] = useTypeaheadSearch((search) => {
+      const enabledItems = getItems().filter((item) => !item.disabled);
+      const currentItem = enabledItems.find((item) => item.value === context.value);
+      const nextItem = findNextItem(enabledItems, search, currentItem);
+      if (nextItem !== void 0) {
+        context.onUserSelect(nextItem.value);
+      }
+    });
+    const handleOpen = /* @__PURE__ */ __name33((pointerEvent) => {
+      if (!isDisabled) {
+        context.onOpenChange(true);
+        resetTypeahead();
+      }
+      if (pointerEvent) {
+        context.triggerPointerDownPosRef.current = {
+          x: Math.round(pointerEvent.pageX),
+          y: Math.round(pointerEvent.pageY)
+        };
+      }
+    }, "handleOpen");
+    return /* @__PURE__ */ jsx20(PopperAnchor, { asChild: true, ...popperScope, children: /* @__PURE__ */ jsx20(
+      Primitive.button,
+      {
+        type: "button",
+        role: "combobox",
+        "aria-controls": context.open ? context.contentId : void 0,
+        "aria-expanded": context.open,
+        "aria-required": context.required,
+        "aria-autocomplete": "none",
+        dir: context.dir,
+        "data-state": context.open ? "open" : "closed",
+        disabled: isDisabled,
+        "data-disabled": isDisabled ? "" : void 0,
+        "data-placeholder": shouldShowPlaceholder(context.value) ? "" : void 0,
+        ...triggerProps,
+        ref: composedRefs,
+        onClick: composeEventHandlers(triggerProps.onClick, (event) => {
+          event.currentTarget.focus();
+          if (pointerTypeRef.current !== "mouse") {
+            handleOpen(event);
+          }
+        }),
+        onPointerDown: composeEventHandlers(triggerProps.onPointerDown, (event) => {
+          pointerTypeRef.current = event.pointerType;
+          const target = event.target;
+          if (target.hasPointerCapture(event.pointerId)) {
+            target.releasePointerCapture(event.pointerId);
+          }
+          if (event.button === 0 && event.ctrlKey === false && event.pointerType === "mouse") {
+            handleOpen(event);
+            event.preventDefault();
+          }
+        }),
+        onKeyDown: composeEventHandlers(triggerProps.onKeyDown, (event) => {
+          const isTypingAhead = searchRef.current !== "";
+          const isModifierKey = event.ctrlKey || event.altKey || event.metaKey;
+          if (!isModifierKey && event.key.length === 1) {
+            context.hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
+            handleTypeaheadSearch(event.key);
+          }
+          if (isTypingAhead && event.key === " ") return;
+          if (OPEN_KEYS.includes(event.key)) {
+            handleOpen();
+            event.preventDefault();
+          }
+        })
+      }
+    ) });
+  }, "SelectTrigger")
+);
+var VALUE_NAME = "SelectValue";
+var SelectValue = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectValue2(props, forwardedRef) {
+    const { __scopeSelect, className, style, children, placeholder = "", ...valueProps } = props;
+    const context = useSelectContext(VALUE_NAME, __scopeSelect);
+    const { onValueNodeHasChildrenChange } = context;
+    const hasChildren = children !== void 0;
+    const composedRefs = useComposedRefs(forwardedRef, context.onValueNodeChange);
+    useLayoutEffect2(() => {
+      onValueNodeHasChildrenChange(hasChildren);
+    }, [onValueNodeHasChildrenChange, hasChildren]);
+    const showPlaceholder = shouldShowPlaceholder(context.value);
+    return /* @__PURE__ */ jsx20(
+      Primitive.span,
+      {
+        ...valueProps,
+        asChild: showPlaceholder ? false : valueProps.asChild,
+        ref: composedRefs,
+        style: { pointerEvents: "none" },
+        children: /* @__PURE__ */ jsx20(React44.Fragment, { children: showPlaceholder ? placeholder : children }, showPlaceholder ? "placeholder" : "value")
+      }
+    );
+  }, "SelectValue")
+);
+var SelectIcon = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectIcon2(props, forwardedRef) {
+    const { __scopeSelect, children, ...iconProps } = props;
+    return /* @__PURE__ */ jsx20(Primitive.span, { "aria-hidden": true, ...iconProps, ref: forwardedRef, children: children || "\u25BC" });
+  }, "SelectIcon")
+);
+var PORTAL_NAME4 = "SelectPortal";
+var [PortalProvider4, usePortalContext4] = createSelectContext(PORTAL_NAME4, {
+  forceMount: void 0
+});
+var SelectPortal = /* @__PURE__ */ __name33((props) => {
+  const { __scopeSelect, forceMount, ...portalProps } = props;
+  return /* @__PURE__ */ jsx20(PortalProvider4, { scope: props.__scopeSelect, forceMount, children: /* @__PURE__ */ jsx20(Portal, { asChild: true, ...portalProps }) });
+}, "SelectPortal");
+var CONTENT_NAME10 = "SelectContent";
+var SelectContent = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectContent2(props, forwardedRef) {
+    const portalContext = usePortalContext4(CONTENT_NAME10, props.__scopeSelect);
+    const { forceMount = portalContext.forceMount, ...contentProps } = props;
+    const context = useSelectContext(CONTENT_NAME10, props.__scopeSelect);
+    const [fragment, setFragment] = React44.useState();
+    useLayoutEffect2(() => {
+      setFragment(new DocumentFragment());
+    }, []);
+    return /* @__PURE__ */ jsx20(Presence, { present: forceMount || context.open, children: ({ present }) => present ? /* @__PURE__ */ jsx20(SelectContentImpl, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx20(SelectContentFragment, { ...contentProps, fragment }) });
+  }, "SelectContent")
+);
+var SelectContentFragment = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectContentFragment2(props, forwardedRef) {
+  const { __scopeSelect, children, fragment } = props;
+  if (!fragment) return null;
+  return ReactDOM5.createPortal(
+    /* @__PURE__ */ jsx20(SelectContentProvider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx20(Collection6.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx20("div", { ref: forwardedRef, children }) }) }),
+    fragment
+  );
+}, "SelectContentFragment"));
+var CONTENT_MARGIN = 10;
+var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME10);
+var Slot3 = createSlot("SelectContent.RemoveScroll");
+var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
+  // blank line to reduce diff noise
+  /* @__PURE__ */ __name33(function SelectContentImpl2(props, forwardedRef) {
+    const { __scopeSelect } = props;
+    const {
+      position = Position.ItemAligned,
+      onCloseAutoFocus,
+      onEscapeKeyDown,
+      onPointerDownOutside,
+      //
+      // PopperContent props
+      side,
+      sideOffset,
+      align,
+      alignOffset,
+      arrowPadding,
+      collisionBoundary,
+      collisionPadding,
+      sticky,
+      hideWhenDetached,
+      avoidCollisions,
+      //
+      ...contentProps
+    } = props;
+    const context = useSelectContext(CONTENT_NAME10, __scopeSelect);
+    const [content, setContent] = React44.useState(null);
+    const [viewport, setViewport] = React44.useState(null);
+    const composedRefs = useComposedRefs(forwardedRef, setContent);
+    const [selectedItem, setSelectedItem] = React44.useState(null);
+    const [selectedItemText, setSelectedItemText] = React44.useState(
+      null
+    );
+    const getItems = useCollection5(__scopeSelect);
+    const [isPositioned, setIsPositioned] = React44.useState(false);
+    const firstValidItemFoundRef = React44.useRef(false);
+    const firstItemFoundRef = React44.useRef(false);
+    const firstItemTextFoundRef = React44.useRef(false);
+    React44.useEffect(() => {
+      if (content) return hideOthers(content);
+    }, [content]);
+    useFocusGuards();
+    const focusFirst5 = React44.useCallback(
+      (candidates) => {
+        const [firstItem, ...restItems] = getItems().map((item) => item.ref.current);
+        const [lastItem] = restItems.slice(-1);
+        const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement;
+        for (const candidate of candidates) {
+          if (candidate === PREVIOUSLY_FOCUSED_ELEMENT) return;
+          candidate?.scrollIntoView({ block: "nearest" });
+          if (candidate === firstItem && viewport) viewport.scrollTop = 0;
+          if (candidate === lastItem && viewport) viewport.scrollTop = viewport.scrollHeight;
+          candidate?.focus();
+          if (document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
+        }
+      },
+      [getItems, viewport]
+    );
+    const focusSelectedItem = React44.useCallback(
+      () => focusFirst5([selectedItem, content]),
+      [focusFirst5, selectedItem, content]
+    );
+    React44.useEffect(() => {
+      if (isPositioned) {
+        focusSelectedItem();
+      }
+    }, [isPositioned, focusSelectedItem]);
+    const { onOpenChange, triggerPointerDownPosRef } = context;
+    React44.useEffect(() => {
+      if (content) {
+        let pointerMoveDelta = { x: 0, y: 0 };
+        const handlePointerMove = /* @__PURE__ */ __name33((event) => {
+          pointerMoveDelta = {
+            x: Math.abs(Math.round(event.pageX) - (triggerPointerDownPosRef.current?.x ?? 0)),
+            y: Math.abs(Math.round(event.pageY) - (triggerPointerDownPosRef.current?.y ?? 0))
+          };
+        }, "handlePointerMove");
+        const handlePointerUp = /* @__PURE__ */ __name33((event) => {
+          if (pointerMoveDelta.x <= 10 && pointerMoveDelta.y <= 10) {
+            event.preventDefault();
+          } else {
+            if (!event.composedPath().includes(content)) {
+              onOpenChange(false);
+            }
+          }
+          document.removeEventListener("pointermove", handlePointerMove);
+          triggerPointerDownPosRef.current = null;
+        }, "handlePointerUp");
+        if (triggerPointerDownPosRef.current !== null) {
+          document.addEventListener("pointermove", handlePointerMove);
+          document.addEventListener("pointerup", handlePointerUp, { capture: true, once: true });
+        }
+        return () => {
+          document.removeEventListener("pointermove", handlePointerMove);
+          document.removeEventListener("pointerup", handlePointerUp, { capture: true });
+        };
+      }
+    }, [content, onOpenChange, triggerPointerDownPosRef]);
+    React44.useEffect(() => {
+      const close = /* @__PURE__ */ __name33(() => onOpenChange(false), "close");
+      window.addEventListener("blur", close);
+      window.addEventListener("resize", close);
+      return () => {
+        window.removeEventListener("blur", close);
+        window.removeEventListener("resize", close);
+      };
+    }, [onOpenChange]);
+    const [searchRef, handleTypeaheadSearch] = useTypeaheadSearch((search) => {
+      const enabledItems = getItems().filter((item) => !item.disabled);
+      const currentItem = enabledItems.find((item) => item.ref.current === document.activeElement);
+      const nextItem = findNextItem(enabledItems, search, currentItem);
+      if (nextItem) {
+        setTimeout(() => nextItem.ref.current?.focus());
+      }
+    });
+    const itemRefCallback = React44.useCallback(
+      (node, value, disabled) => {
+        const isFirstItem = !firstItemFoundRef.current;
+        if (isFirstItem) firstItemFoundRef.current = true;
+        const isFirstValidItem = !firstValidItemFoundRef.current && !disabled;
+        const isSelectedItem = context.value !== void 0 && context.value === value;
+        if (isSelectedItem || isFirstValidItem) {
+          setSelectedItem(node);
+          if (isFirstValidItem) firstValidItemFoundRef.current = true;
+        } else if (isFirstItem) {
+          setSelectedItem(node);
+        }
+      },
+      [context.value]
+    );
+    const handleItemLeave = React44.useCallback(() => content?.focus(), [content]);
+    const itemTextRefCallback = React44.useCallback(
+      (node, value, disabled) => {
+        if (!node) return;
+        const isFirstItem = !firstItemTextFoundRef.current;
+        if (isFirstItem) firstItemTextFoundRef.current = true;
+        const isFirstValidItem = !firstValidItemFoundRef.current && !disabled;
+        const isSelectedItem = context.value !== void 0 && context.value === value;
+        if (isSelectedItem || isFirstValidItem) {
+          setSelectedItemText(node);
+        } else if (isFirstItem) {
+          setSelectedItemText(node);
+        }
+      },
+      [context.value]
+    );
+    const SelectPosition = position === Position.Popper ? SelectPopperPosition : SelectItemAlignedPosition;
+    const popperContentProps = SelectPosition === SelectPopperPosition ? {
+      side,
+      sideOffset,
+      align,
+      alignOffset,
+      arrowPadding,
+      collisionBoundary,
+      collisionPadding,
+      sticky,
+      hideWhenDetached,
+      avoidCollisions
+    } : {};
+    return /* @__PURE__ */ jsx20(
+      SelectContentProvider,
+      {
+        scope: __scopeSelect,
+        content,
+        viewport,
+        onViewportChange: setViewport,
+        itemRefCallback,
+        selectedItem,
+        onItemLeave: handleItemLeave,
+        itemTextRefCallback,
+        focusSelectedItem,
+        selectedItemText,
+        position,
+        isPositioned,
+        searchRef,
+        children: /* @__PURE__ */ jsx20(Combination_default, { as: Slot3, allowPinchZoom: true, children: /* @__PURE__ */ jsx20(
+          FocusScope,
+          {
+            asChild: true,
+            trapped: context.open,
+            onMountAutoFocus: (event) => {
+              event.preventDefault();
+            },
+            onUnmountAutoFocus: composeEventHandlers(onCloseAutoFocus, (event) => {
+              context.trigger?.focus({ preventScroll: true });
+              event.preventDefault();
+            }),
+            children: /* @__PURE__ */ jsx20(
+              DismissableLayer,
+              {
+                asChild: true,
+                disableOutsidePointerEvents: true,
+                onEscapeKeyDown,
+                onPointerDownOutside,
+                onFocusOutside: (event) => event.preventDefault(),
+                onDismiss: () => context.onOpenChange(false),
+                children: /* @__PURE__ */ jsx20(
+                  SelectPosition,
+                  {
+                    role: "listbox",
+                    id: context.contentId,
+                    "data-state": context.open ? "open" : "closed",
+                    dir: context.dir,
+                    onContextMenu: (event) => event.preventDefault(),
+                    ...contentProps,
+                    ...popperContentProps,
+                    onPlaced: () => setIsPositioned(true),
+                    ref: composedRefs,
+                    style: {
+                      // flex layout so we can place the scroll buttons properly
+                      display: "flex",
+                      flexDirection: "column",
+                      // reset the outline by default as the content MAY get focused
+                      outline: "none",
+                      ...contentProps.style
+                    },
+                    onKeyDown: composeEventHandlers(contentProps.onKeyDown, (event) => {
+                      const isModifierKey = event.ctrlKey || event.altKey || event.metaKey;
+                      if (event.key === "Tab") event.preventDefault();
+                      if (!isModifierKey && event.key.length === 1) handleTypeaheadSearch(event.key);
+                      if (["ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) {
+                        const items = getItems().filter((item) => !item.disabled);
+                        let candidateNodes = items.map((item) => item.ref.current);
+                        if (["ArrowUp", "End"].includes(event.key)) {
+                          candidateNodes = candidateNodes.slice().reverse();
+                        }
+                        if (["ArrowUp", "ArrowDown"].includes(event.key)) {
+                          const currentElement = event.target;
+                          const currentIndex = candidateNodes.indexOf(currentElement);
+                          candidateNodes = candidateNodes.slice(currentIndex + 1);
+                        }
+                        setTimeout(() => focusFirst5(candidateNodes));
+                        event.preventDefault();
+                      }
+                    })
+                  }
+                )
+              }
+            )
+          }
+        ) })
+      }
+    );
+  }, "SelectContentImpl")
+);
+var SelectItemAlignedPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectItemAlignedPosition2(props, forwardedRef) {
+  const { __scopeSelect, onPlaced, ...popperProps } = props;
+  const context = useSelectContext(CONTENT_NAME10, __scopeSelect);
+  const contentContext = useSelectContentContext(CONTENT_NAME10, __scopeSelect);
+  const [contentWrapper, setContentWrapper] = React44.useState(null);
+  const [content, setContent] = React44.useState(null);
+  const composedRefs = useComposedRefs(forwardedRef, setContent);
+  const getItems = useCollection5(__scopeSelect);
+  const shouldExpandOnScrollRef = React44.useRef(false);
+  const shouldRepositionRef = React44.useRef(true);
+  const { viewport, selectedItem, selectedItemText, focusSelectedItem } = contentContext;
+  const position = React44.useCallback(() => {
+    if (context.trigger && context.valueNode && contentWrapper && content && viewport && selectedItem && selectedItemText) {
+      const triggerRect = context.trigger.getBoundingClientRect();
+      const contentRect = content.getBoundingClientRect();
+      const valueNodeRect = context.valueNode.getBoundingClientRect();
+      const itemTextRect = selectedItemText.getBoundingClientRect();
+      if (context.dir !== Direction7.RTL) {
+        const itemTextOffset = itemTextRect.left - contentRect.left;
+        const left = valueNodeRect.left - itemTextOffset;
+        const leftDelta = triggerRect.left - left;
+        const minContentWidth = triggerRect.width + leftDelta;
+        const contentWidth = Math.max(minContentWidth, contentRect.width);
+        const rightEdge = window.innerWidth - CONTENT_MARGIN;
+        const clampedLeft = clamp2(left, [
+          CONTENT_MARGIN,
+          // Prevents the content from going off the starting edge of the
+          // viewport. It may still go off the ending edge, but this can be
+          // controlled by the user since they may want to manage overflow in a
+          // specific way.
+          // https://github.com/radix-ui/primitives/issues/2049
+          Math.max(CONTENT_MARGIN, rightEdge - contentWidth)
+        ]);
+        contentWrapper.style.minWidth = minContentWidth + "px";
+        contentWrapper.style.left = clampedLeft + "px";
+      } else {
+        const itemTextOffset = contentRect.right - itemTextRect.right;
+        const right = window.innerWidth - valueNodeRect.right - itemTextOffset;
+        const rightDelta = window.innerWidth - triggerRect.right - right;
+        const minContentWidth = triggerRect.width + rightDelta;
+        const contentWidth = Math.max(minContentWidth, contentRect.width);
+        const leftEdge = window.innerWidth - CONTENT_MARGIN;
+        const clampedRight = clamp2(right, [
+          CONTENT_MARGIN,
+          Math.max(CONTENT_MARGIN, leftEdge - contentWidth)
+        ]);
+        contentWrapper.style.minWidth = minContentWidth + "px";
+        contentWrapper.style.right = clampedRight + "px";
+      }
+      const items = getItems();
+      const availableHeight = window.innerHeight - CONTENT_MARGIN * 2;
+      const itemsHeight = viewport.scrollHeight;
+      const contentStyles = window.getComputedStyle(content);
+      const contentBorderTopWidth = parseInt(contentStyles.borderTopWidth, 10);
+      const contentPaddingTop = parseInt(contentStyles.paddingTop, 10);
+      const contentBorderBottomWidth = parseInt(contentStyles.borderBottomWidth, 10);
+      const contentPaddingBottom = parseInt(contentStyles.paddingBottom, 10);
+      const fullContentHeight = contentBorderTopWidth + contentPaddingTop + itemsHeight + contentPaddingBottom + contentBorderBottomWidth;
+      const minContentHeight = Math.min(selectedItem.offsetHeight * 5, fullContentHeight);
+      const viewportStyles = window.getComputedStyle(viewport);
+      const viewportPaddingTop = parseInt(viewportStyles.paddingTop, 10);
+      const viewportPaddingBottom = parseInt(viewportStyles.paddingBottom, 10);
+      const topEdgeToTriggerMiddle = triggerRect.top + triggerRect.height / 2 - CONTENT_MARGIN;
+      const triggerMiddleToBottomEdge = availableHeight - topEdgeToTriggerMiddle;
+      const selectedItemHalfHeight = selectedItem.offsetHeight / 2;
+      const itemOffsetMiddle = selectedItem.offsetTop + selectedItemHalfHeight;
+      const contentTopToItemMiddle = contentBorderTopWidth + contentPaddingTop + itemOffsetMiddle;
+      const itemMiddleToContentBottom = fullContentHeight - contentTopToItemMiddle;
+      const willAlignWithoutTopOverflow = contentTopToItemMiddle <= topEdgeToTriggerMiddle;
+      if (willAlignWithoutTopOverflow) {
+        const isLastItem = items.length > 0 && selectedItem === items[items.length - 1].ref.current;
+        contentWrapper.style.bottom = "0px";
+        const viewportOffsetBottom = content.clientHeight - viewport.offsetTop - viewport.offsetHeight;
+        const clampedTriggerMiddleToBottomEdge = Math.max(
+          triggerMiddleToBottomEdge,
+          selectedItemHalfHeight + // viewport might have padding bottom, include it to avoid a scrollable viewport
+          (isLastItem ? viewportPaddingBottom : 0) + viewportOffsetBottom + contentBorderBottomWidth
+        );
+        const height = contentTopToItemMiddle + clampedTriggerMiddleToBottomEdge;
+        contentWrapper.style.height = height + "px";
+      } else {
+        const isFirstItem = items.length > 0 && selectedItem === items[0].ref.current;
+        contentWrapper.style.top = "0px";
+        const clampedTopEdgeToTriggerMiddle = Math.max(
+          topEdgeToTriggerMiddle,
+          contentBorderTopWidth + viewport.offsetTop + // viewport might have padding top, include it to avoid a scrollable viewport
+          (isFirstItem ? viewportPaddingTop : 0) + selectedItemHalfHeight
+        );
+        const height = clampedTopEdgeToTriggerMiddle + itemMiddleToContentBottom;
+        contentWrapper.style.height = height + "px";
+        viewport.scrollTop = contentTopToItemMiddle - topEdgeToTriggerMiddle + viewport.offsetTop;
+      }
+      contentWrapper.style.margin = `${CONTENT_MARGIN}px 0`;
+      contentWrapper.style.minHeight = minContentHeight + "px";
+      contentWrapper.style.maxHeight = availableHeight + "px";
+      onPlaced?.();
+      requestAnimationFrame(() => shouldExpandOnScrollRef.current = true);
+    }
+  }, [
+    getItems,
+    context.trigger,
+    context.valueNode,
+    contentWrapper,
+    content,
+    viewport,
+    selectedItem,
+    selectedItemText,
+    context.dir,
+    onPlaced
+  ]);
+  useLayoutEffect2(() => position(), [position]);
+  const [contentZIndex, setContentZIndex] = React44.useState();
+  useLayoutEffect2(() => {
+    if (content) setContentZIndex(window.getComputedStyle(content).zIndex);
+  }, [content]);
+  const handleScrollButtonChange = React44.useCallback(
+    (node) => {
+      if (node && shouldRepositionRef.current === true) {
+        position();
+        focusSelectedItem?.();
+        shouldRepositionRef.current = false;
+      }
+    },
+    [position, focusSelectedItem]
+  );
+  return /* @__PURE__ */ jsx20(
+    SelectViewportProvider,
+    {
+      scope: __scopeSelect,
+      contentWrapper,
+      shouldExpandOnScrollRef,
+      onScrollButtonChange: handleScrollButtonChange,
+      children: /* @__PURE__ */ jsx20(
+        "div",
+        {
+          ref: setContentWrapper,
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            position: "fixed",
+            zIndex: contentZIndex
+          },
+          children: /* @__PURE__ */ jsx20(
+            Primitive.div,
+            {
+              ...popperProps,
+              ref: composedRefs,
+              style: {
+                // When we get the height of the content, it includes borders. If we were to set
+                // the height without having `boxSizing: 'border-box'` it would be too big.
+                boxSizing: "border-box",
+                // We need to ensure the content doesn't get taller than the wrapper
+                maxHeight: "100%",
+                ...popperProps.style
+              }
+            }
+          )
+        }
+      )
+    }
+  );
+}, "SelectItemAlignedPosition"));
+var SelectPopperPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectPopperPosition2(props, forwardedRef) {
+  const {
+    __scopeSelect,
+    align = "start",
+    collisionPadding = CONTENT_MARGIN,
+    ...popperProps
+  } = props;
+  const popperScope = usePopperScope4(__scopeSelect);
+  return /* @__PURE__ */ jsx20(
+    PopperContent,
+    {
+      ...popperScope,
+      ...popperProps,
+      ref: forwardedRef,
+      align,
+      collisionPadding,
+      style: {
+        // Ensure border-box for floating-ui calculations
+        boxSizing: "border-box",
+        ...popperProps.style,
+        // re-namespace exposed content custom properties
+        ...{
+          "--radix-select-content-transform-origin": "var(--radix-popper-transform-origin)",
+          "--radix-select-content-available-width": "var(--radix-popper-available-width)",
+          "--radix-select-content-available-height": "var(--radix-popper-available-height)",
+          "--radix-select-trigger-width": "var(--radix-popper-anchor-width)",
+          "--radix-select-trigger-height": "var(--radix-popper-anchor-height)"
+        }
+      }
+    }
+  );
+}, "SelectPopperPosition"));
+var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME10, {});
+var VIEWPORT_NAME2 = "SelectViewport";
+var SelectViewport = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectViewport2(props, forwardedRef) {
+    const { __scopeSelect, nonce, ...viewportProps } = props;
+    const contentContext = useSelectContentContext(VIEWPORT_NAME2, __scopeSelect);
+    const viewportContext = useSelectViewportContext(VIEWPORT_NAME2, __scopeSelect);
+    const composedRefs = useComposedRefs(forwardedRef, contentContext.onViewportChange);
+    const prevScrollTopRef = React44.useRef(0);
+    return /* @__PURE__ */ jsxs3(Fragment22, { children: [
+      /* @__PURE__ */ jsx20(
+        "style",
+        {
+          dangerouslySetInnerHTML: {
+            __html: `[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}`
+          },
+          nonce
+        }
+      ),
+      /* @__PURE__ */ jsx20(Collection6.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx20(
+        Primitive.div,
+        {
+          "data-radix-select-viewport": "",
+          role: "presentation",
+          ...viewportProps,
+          ref: composedRefs,
+          style: {
+            // we use position: 'relative' here on the `viewport` so that when we call
+            // `selectedItem.offsetTop` in calculations, the offset is relative to the viewport
+            // (independent of the scrollUpButton).
+            position: "relative",
+            flex: 1,
+            // Viewport should only be scrollable in the vertical direction.
+            // This won't work in vertical writing modes, so we'll need to
+            // revisit this if/when that is supported
+            // https://developer.chrome.com/blog/vertical-form-controls
+            overflow: "hidden auto",
+            ...viewportProps.style
+          },
+          onScroll: composeEventHandlers(viewportProps.onScroll, (event) => {
+            const viewport = event.currentTarget;
+            const { contentWrapper, shouldExpandOnScrollRef } = viewportContext;
+            if (shouldExpandOnScrollRef?.current && contentWrapper) {
+              const scrolledBy = Math.abs(prevScrollTopRef.current - viewport.scrollTop);
+              if (scrolledBy > 0) {
+                const availableHeight = window.innerHeight - CONTENT_MARGIN * 2;
+                const cssMinHeight = parseFloat(contentWrapper.style.minHeight);
+                const cssHeight = parseFloat(contentWrapper.style.height);
+                const prevHeight = Math.max(cssMinHeight, cssHeight);
+                if (prevHeight < availableHeight) {
+                  const nextHeight = prevHeight + scrolledBy;
+                  const clampedNextHeight = Math.min(availableHeight, nextHeight);
+                  const heightDiff = nextHeight - clampedNextHeight;
+                  contentWrapper.style.height = clampedNextHeight + "px";
+                  if (contentWrapper.style.bottom === "0px") {
+                    viewport.scrollTop = heightDiff > 0 ? heightDiff : 0;
+                    contentWrapper.style.justifyContent = "flex-end";
+                  }
+                }
+              }
+            }
+            prevScrollTopRef.current = viewport.scrollTop;
+          })
+        }
+      ) })
+    ] });
+  }, "SelectViewport")
+);
+var GROUP_NAME2 = "SelectGroup";
+var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME2);
+var SelectGroup = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectGroup2(props, forwardedRef) {
+    const { __scopeSelect, ...groupProps } = props;
+    const groupId = useId();
+    return /* @__PURE__ */ jsx20(SelectGroupContextProvider, { scope: __scopeSelect, id: groupId, children: /* @__PURE__ */ jsx20(Primitive.div, { role: "group", "aria-labelledby": groupId, ...groupProps, ref: forwardedRef }) });
+  }, "SelectGroup")
+);
+var LABEL_NAME = "SelectLabel";
+var SelectLabel = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectLabel2(props, forwardedRef) {
+    const { __scopeSelect, ...labelProps } = props;
+    const groupContext = useSelectGroupContext(LABEL_NAME, __scopeSelect);
+    return /* @__PURE__ */ jsx20(Primitive.div, { id: groupContext.id, ...labelProps, ref: forwardedRef });
+  }, "SelectLabel")
+);
+var ITEM_NAME5 = "SelectItem";
+var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME5);
+var SelectItem = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectItem2(props, forwardedRef) {
+    const {
+      __scopeSelect,
+      value,
+      disabled = false,
+      textValue: textValueProp,
+      ...itemProps
+    } = props;
+    const context = useSelectContext(ITEM_NAME5, __scopeSelect);
+    const contentContext = useSelectContentContext(ITEM_NAME5, __scopeSelect);
+    const isSelected = context.value === value;
+    const [textValue, setTextValue] = React44.useState(textValueProp ?? "");
+    const [isFocused, setIsFocused] = React44.useState(false);
+    const handleItemRefCallback = useCallbackRef(
+      (node) => contentContext.itemRefCallback?.(node, value, disabled)
+    );
+    const composedRefs = useComposedRefs(forwardedRef, handleItemRefCallback);
+    const textId = useId();
+    const pointerTypeRef = React44.useRef("touch");
+    function handleSelect(event) {
+      context.hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
+      context.onUserSelect(value);
+      context.onOpenChange(false);
+    }
+    __name33(handleSelect, "handleSelect");
+    return /* @__PURE__ */ jsx20(
+      SelectItemContextProvider,
+      {
+        scope: __scopeSelect,
+        value,
+        disabled,
+        textId,
+        isSelected,
+        onItemTextChange: React44.useCallback((node) => {
+          setTextValue((prevTextValue) => prevTextValue || (node?.textContent ?? "").trim());
+        }, []),
+        children: /* @__PURE__ */ jsx20(
+          Collection6.ItemSlot,
+          {
+            scope: __scopeSelect,
+            value,
+            disabled,
+            textValue,
+            children: /* @__PURE__ */ jsx20(
+              Primitive.div,
+              {
+                role: "option",
+                "aria-labelledby": textId,
+                "data-highlighted": isFocused ? "" : void 0,
+                "aria-selected": isSelected && isFocused,
+                "data-state": isSelected ? "checked" : "unchecked",
+                "aria-disabled": disabled || void 0,
+                "data-disabled": disabled ? "" : void 0,
+                tabIndex: disabled ? void 0 : -1,
+                ...itemProps,
+                ref: composedRefs,
+                onFocus: composeEventHandlers(itemProps.onFocus, () => setIsFocused(true)),
+                onBlur: composeEventHandlers(itemProps.onBlur, () => setIsFocused(false)),
+                onClick: composeEventHandlers(itemProps.onClick, (event) => {
+                  if (disabled) {
+                    return;
+                  }
+                  if (pointerTypeRef.current !== "mouse") {
+                    handleSelect(event);
+                  }
+                }),
+                onPointerUp: composeEventHandlers(itemProps.onPointerUp, (event) => {
+                  if (disabled) {
+                    return;
+                  }
+                  if (pointerTypeRef.current === "mouse") {
+                    handleSelect(event);
+                  }
+                }),
+                onPointerDown: composeEventHandlers(itemProps.onPointerDown, (event) => {
+                  pointerTypeRef.current = event.pointerType;
+                }),
+                onPointerMove: composeEventHandlers(itemProps.onPointerMove, (event) => {
+                  pointerTypeRef.current = event.pointerType;
+                  if (disabled) {
+                    contentContext.onItemLeave?.();
+                  } else if (pointerTypeRef.current === "mouse") {
+                    event.currentTarget.focus({ preventScroll: true });
+                  }
+                }),
+                onPointerLeave: composeEventHandlers(itemProps.onPointerLeave, (event) => {
+                  if (event.currentTarget === document.activeElement) {
+                    contentContext.onItemLeave?.();
+                  }
+                }),
+                onKeyDown: composeEventHandlers(itemProps.onKeyDown, (event) => {
+                  if (disabled || event.target !== event.currentTarget) {
+                    return;
+                  }
+                  const isTypingAhead = contentContext.searchRef?.current !== "";
+                  if (isTypingAhead && event.key === " ") {
+                    return;
+                  }
+                  if (SELECTION_KEYS2.includes(event.key)) {
+                    handleSelect(event);
+                  }
+                  if (event.key === " ") {
+                    event.preventDefault();
+                  }
+                })
+              }
+            )
+          }
+        )
+      }
+    );
+  }, "SelectItem")
+);
+var ITEM_TEXT_NAME = "SelectItemText";
+var SelectItemText = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectItemText2(props, forwardedRef) {
+    const { __scopeSelect, className, style, ...itemTextProps } = props;
+    const context = useSelectContext(ITEM_TEXT_NAME, __scopeSelect);
+    const contentContext = useSelectContentContext(ITEM_TEXT_NAME, __scopeSelect);
+    const itemContext = useSelectItemContext(ITEM_TEXT_NAME, __scopeSelect);
+    const nativeOptionsContext = useSelectNativeOptionsContext(ITEM_TEXT_NAME, __scopeSelect);
+    const [itemTextNode, setItemTextNode] = React44.useState(null);
+    const handleItemTextRefCallback = useCallbackRef(
+      (node) => contentContext.itemTextRefCallback?.(node, itemContext.value, itemContext.disabled)
+    );
+    const composedRefs = useComposedRefs(
+      forwardedRef,
+      setItemTextNode,
+      itemContext.onItemTextChange,
+      handleItemTextRefCallback
+    );
+    const textContent = itemTextNode?.textContent;
+    const nativeOption = React44.useMemo(
+      () => /* @__PURE__ */ jsx20("option", { value: itemContext.value, disabled: itemContext.disabled, children: textContent }, itemContext.value),
+      [itemContext.disabled, itemContext.value, textContent]
+    );
+    const { onNativeOptionAdd, onNativeOptionRemove } = nativeOptionsContext;
+    useLayoutEffect2(() => {
+      onNativeOptionAdd(nativeOption);
+      return () => onNativeOptionRemove(nativeOption);
+    }, [onNativeOptionAdd, onNativeOptionRemove, nativeOption]);
+    return /* @__PURE__ */ jsxs3(Fragment22, { children: [
+      /* @__PURE__ */ jsx20(Primitive.span, { id: itemContext.textId, ...itemTextProps, ref: composedRefs }),
+      itemContext.isSelected && context.valueNode && !context.valueNodeHasChildren && !shouldShowPlaceholder(context.value) ? ReactDOM5.createPortal(itemTextProps.children, context.valueNode) : null
+    ] });
+  }, "SelectItemText")
+);
+var ITEM_INDICATOR_NAME2 = "SelectItemIndicator";
+var SelectItemIndicator = /* @__PURE__ */ React44.forwardRef(
+  // blank line to reduce diff noise
+  /* @__PURE__ */ __name33(function SelectItemIndicator2(props, forwardedRef) {
+    const { __scopeSelect, ...itemIndicatorProps } = props;
+    const itemContext = useSelectItemContext(ITEM_INDICATOR_NAME2, __scopeSelect);
+    return itemContext.isSelected ? /* @__PURE__ */ jsx20(Primitive.span, { "aria-hidden": true, ...itemIndicatorProps, ref: forwardedRef }) : null;
+  }, "SelectItemIndicator")
+);
+var SCROLL_UP_BUTTON_NAME = "SelectScrollUpButton";
+var SelectScrollUpButton = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectScrollUpButton2(props, forwardedRef) {
+  const contentContext = useSelectContentContext(SCROLL_UP_BUTTON_NAME, props.__scopeSelect);
+  const viewportContext = useSelectViewportContext(SCROLL_UP_BUTTON_NAME, props.__scopeSelect);
+  const [canScrollUp, setCanScrollUp] = React44.useState(false);
+  const composedRefs = useComposedRefs(forwardedRef, viewportContext.onScrollButtonChange);
+  useLayoutEffect2(() => {
+    if (contentContext.viewport && contentContext.isPositioned) {
+      let handleScroll22 = function() {
+        const canScrollUp2 = viewport.scrollTop > 0;
+        setCanScrollUp(canScrollUp2);
+      };
+      var handleScroll2 = handleScroll22;
+      __name33(handleScroll22, "handleScroll");
+      const viewport = contentContext.viewport;
+      handleScroll22();
+      viewport.addEventListener("scroll", handleScroll22);
+      return () => viewport.removeEventListener("scroll", handleScroll22);
+    }
+  }, [contentContext.viewport, contentContext.isPositioned]);
+  return canScrollUp ? /* @__PURE__ */ jsx20(
+    SelectScrollButtonImpl,
+    {
+      ...props,
+      ref: composedRefs,
+      onAutoScroll: () => {
+        const { viewport, selectedItem } = contentContext;
+        if (viewport && selectedItem) {
+          viewport.scrollTop = viewport.scrollTop - selectedItem.offsetHeight;
+        }
+      }
+    }
+  ) : null;
+}, "SelectScrollUpButton"));
+var SCROLL_DOWN_BUTTON_NAME = "SelectScrollDownButton";
+var SelectScrollDownButton = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectScrollDownButton2(props, forwardedRef) {
+  const contentContext = useSelectContentContext(SCROLL_DOWN_BUTTON_NAME, props.__scopeSelect);
+  const viewportContext = useSelectViewportContext(SCROLL_DOWN_BUTTON_NAME, props.__scopeSelect);
+  const [canScrollDown, setCanScrollDown] = React44.useState(false);
+  const composedRefs = useComposedRefs(forwardedRef, viewportContext.onScrollButtonChange);
+  useLayoutEffect2(() => {
+    if (contentContext.viewport && contentContext.isPositioned) {
+      let handleScroll22 = function() {
+        const maxScroll = viewport.scrollHeight - viewport.clientHeight;
+        const canScrollDown2 = Math.ceil(viewport.scrollTop) < maxScroll;
+        setCanScrollDown(canScrollDown2);
+      };
+      var handleScroll2 = handleScroll22;
+      __name33(handleScroll22, "handleScroll");
+      const viewport = contentContext.viewport;
+      handleScroll22();
+      viewport.addEventListener("scroll", handleScroll22);
+      return () => viewport.removeEventListener("scroll", handleScroll22);
+    }
+  }, [contentContext.viewport, contentContext.isPositioned]);
+  return canScrollDown ? /* @__PURE__ */ jsx20(
+    SelectScrollButtonImpl,
+    {
+      ...props,
+      ref: composedRefs,
+      onAutoScroll: () => {
+        const { viewport, selectedItem } = contentContext;
+        if (viewport && selectedItem) {
+          viewport.scrollTop = viewport.scrollTop + selectedItem.offsetHeight;
+        }
+      }
+    }
+  ) : null;
+}, "SelectScrollDownButton"));
+var SelectScrollButtonImpl = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectScrollButtonImpl2(props, forwardedRef) {
+  const { __scopeSelect, onAutoScroll, ...scrollIndicatorProps } = props;
+  const contentContext = useSelectContentContext("SelectScrollButton", __scopeSelect);
+  const autoScrollTimerRef = React44.useRef(null);
+  const getItems = useCollection5(__scopeSelect);
+  const clearAutoScrollTimer = React44.useCallback(() => {
+    if (autoScrollTimerRef.current !== null) {
+      window.clearInterval(autoScrollTimerRef.current);
+      autoScrollTimerRef.current = null;
+    }
+  }, []);
+  React44.useEffect(() => {
+    return () => clearAutoScrollTimer();
+  }, [clearAutoScrollTimer]);
+  useLayoutEffect2(() => {
+    const activeItem = getItems().find((item) => item.ref.current === document.activeElement);
+    activeItem?.ref.current?.scrollIntoView({ block: "nearest" });
+  }, [getItems]);
+  return /* @__PURE__ */ jsx20(
+    Primitive.div,
+    {
+      "aria-hidden": true,
+      ...scrollIndicatorProps,
+      ref: forwardedRef,
+      style: { flexShrink: 0, ...scrollIndicatorProps.style },
+      onPointerDown: composeEventHandlers(scrollIndicatorProps.onPointerDown, () => {
+        if (autoScrollTimerRef.current === null) {
+          autoScrollTimerRef.current = window.setInterval(onAutoScroll, 50);
+        }
+      }),
+      onPointerMove: composeEventHandlers(scrollIndicatorProps.onPointerMove, () => {
+        contentContext.onItemLeave?.();
+        if (autoScrollTimerRef.current === null) {
+          autoScrollTimerRef.current = window.setInterval(onAutoScroll, 50);
+        }
+      }),
+      onPointerLeave: composeEventHandlers(scrollIndicatorProps.onPointerLeave, () => {
+        clearAutoScrollTimer();
+      })
+    }
+  );
+}, "SelectScrollButtonImpl"));
+var SelectSeparator = /* @__PURE__ */ React44.forwardRef(
+  // blank line to reduce diff noise
+  /* @__PURE__ */ __name33(function SelectSeparator2(props, forwardedRef) {
+    const { __scopeSelect, ...separatorProps } = props;
+    return /* @__PURE__ */ jsx20(Primitive.div, { "aria-hidden": true, ...separatorProps, ref: forwardedRef });
+  }, "SelectSeparator")
+);
+var ARROW_NAME2 = "SelectArrow";
+var SelectArrow = /* @__PURE__ */ React44.forwardRef(
+  /* @__PURE__ */ __name33(function SelectArrow2(props, forwardedRef) {
+    const { __scopeSelect, ...arrowProps } = props;
+    const popperScope = usePopperScope4(__scopeSelect);
+    const contentContext = useSelectContentContext(ARROW_NAME2, __scopeSelect);
+    return contentContext.position === Position.Popper ? /* @__PURE__ */ jsx20(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef }) : null;
+  }, "SelectArrow")
+);
+var BUBBLE_INPUT_NAME = "SelectBubbleInput";
+var SelectBubbleInput = /* @__PURE__ */ React44.forwardRef(
+  // blank line to reduce diff noise
+  /* @__PURE__ */ __name33(function SelectBubbleInput2({ __scopeSelect, ...props }, forwardedRef) {
+    const context = useSelectContext(BUBBLE_INPUT_NAME, __scopeSelect);
+    const { value, onValueChange, required, disabled, name, autoComplete, form, userSelection } = context;
+    const { nativeOptions, nativeSelectKey } = context;
+    const ref = React44.useRef(null);
+    const composedRefs = useComposedRefs(forwardedRef, ref);
+    const selectValue = value ?? "";
+    const prevValueRef = React44.useRef(selectValue);
+    const handledUserSelectionRef = React44.useRef(userSelection);
+    const isDispatchingUserSelectionRef = React44.useRef(false);
+    const hasEmptyValueOption = Array.from(nativeOptions).some(
+      (option) => (option.props.value ?? "") === ""
+    );
+    React44.useEffect(() => {
+      const select = ref.current;
+      if (!select) return;
+      const selectProto = window.HTMLSelectElement.prototype;
+      const descriptor = Object.getOwnPropertyDescriptor(
+        selectProto,
+        "value"
+      );
+      const setValue = descriptor.set;
+      const isNewUserSelection = userSelection !== null && userSelection !== handledUserSelectionRef.current;
+      handledUserSelectionRef.current = userSelection;
+      const valueChanged = prevValueRef.current !== selectValue;
+      prevValueRef.current = selectValue;
+      const isUserInteraction = isNewUserSelection && valueChanged;
+      if (isNewUserSelection && !valueChanged && userSelection.value !== selectValue && !userSelection.hasConsumerStoppedPropagation && setValue) {
+        isDispatchingUserSelectionRef.current = true;
+        try {
+          setValue.call(select, userSelection.value);
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+        } finally {
+          isDispatchingUserSelectionRef.current = false;
+          setValue.call(select, selectValue);
+        }
+        return;
+      }
+      const bubbles = isUserInteraction && !userSelection.hasConsumerStoppedPropagation;
+      if (valueChanged && setValue) {
+        const event = new Event("change", { bubbles });
+        setValue.call(select, selectValue);
+        select.dispatchEvent(event);
+      }
+    }, [selectValue, userSelection]);
+    return /* @__PURE__ */ jsxs3(
+      Primitive.select,
+      {
+        "aria-hidden": true,
+        required,
+        tabIndex: -1,
+        name,
+        autoComplete,
+        disabled,
+        form,
+        onChange: (event) => {
+          if (!isDispatchingUserSelectionRef.current) {
+            onValueChange(event.target.value);
+          }
+        },
+        ...props,
+        style: { ...VISUALLY_HIDDEN_STYLES, ...props.style },
+        ref: composedRefs,
+        defaultValue: selectValue,
+        children: [
+          shouldShowPlaceholder(value) && !hasEmptyValueOption ? /* @__PURE__ */ jsx20("option", { value: "" }) : null,
+          Array.from(nativeOptions)
+        ]
+      },
+      nativeSelectKey
+    );
+  }, "SelectBubbleInput")
+);
+function isFunction2(value) {
+  return typeof value === "function";
+}
+__name33(isFunction2, "isFunction");
+function shouldShowPlaceholder(value) {
+  return value === "" || value === void 0;
+}
+__name33(shouldShowPlaceholder, "shouldShowPlaceholder");
+function useTypeaheadSearch(onSearchChange) {
+  const handleSearchChange = useCallbackRef(onSearchChange);
+  const searchRef = React44.useRef("");
+  const timerRef = React44.useRef(0);
+  const handleTypeaheadSearch = React44.useCallback(
+    (key) => {
+      const search = searchRef.current + key;
+      handleSearchChange(search);
+      function updateSearch(value) {
+        searchRef.current = value;
+        window.clearTimeout(timerRef.current);
+        if (value !== "") timerRef.current = window.setTimeout(() => updateSearch(""), 1e3);
+      }
+      __name33(updateSearch, "updateSearch");
+      updateSearch(search);
+    },
+    [handleSearchChange]
+  );
+  const resetTypeahead = React44.useCallback(() => {
+    searchRef.current = "";
+    window.clearTimeout(timerRef.current);
+  }, []);
+  React44.useEffect(() => {
+    return () => window.clearTimeout(timerRef.current);
+  }, []);
+  return [searchRef, handleTypeaheadSearch, resetTypeahead];
+}
+__name33(useTypeaheadSearch, "useTypeaheadSearch");
+function findNextItem(items, search, currentItem) {
+  const isRepeated = search.length > 1 && Array.from(search).every((char) => char === search[0]);
+  const normalizedSearch = isRepeated ? search[0] : search;
+  const currentItemIndex = currentItem ? items.indexOf(currentItem) : -1;
+  let wrappedItems = wrapArray4(items, Math.max(currentItemIndex, 0));
+  const excludeCurrentItem = normalizedSearch.length === 1;
+  if (excludeCurrentItem) wrappedItems = wrappedItems.filter((v) => v !== currentItem);
+  const nextItem = wrappedItems.find(
+    (item) => item.textValue.toLowerCase().startsWith(normalizedSearch.toLowerCase())
+  );
+  return nextItem !== currentItem ? nextItem : void 0;
+}
+__name33(findNextItem, "findNextItem");
+function wrapArray4(array, startIndex) {
+  return array.map((_, index2) => array[(startIndex + index2) % array.length]);
+}
+__name33(wrapArray4, "wrapArray");
+
+// node_modules/@radix-ui/react-toggle-group/dist/index.mjs
+var dist_exports15 = {};
+__export(dist_exports15, {
   Item: () => ToggleGroupItem,
   Root: () => ToggleGroup,
   ToggleGroup: () => ToggleGroup,
   ToggleGroupItem: () => ToggleGroupItem,
   createToggleGroupScope: () => createToggleGroupScope
 });
-import * as React45 from "react";
+import * as React46 from "react";
 
 // node_modules/@radix-ui/react-toggle/dist/index.mjs
-import * as React44 from "react";
-import { jsx as jsx20 } from "react/jsx-runtime";
-var __defProp32 = Object.defineProperty;
-var __name32 = (target, value) => __defProp32(target, "name", { value, configurable: true });
+import * as React45 from "react";
+import { jsx as jsx21 } from "react/jsx-runtime";
+var __defProp34 = Object.defineProperty;
+var __name34 = (target, value) => __defProp34(target, "name", { value, configurable: true });
 var NAME = "Toggle";
-var Toggle = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name32(function Toggle2(props, forwardedRef) {
+var Toggle = /* @__PURE__ */ React45.forwardRef(
+  /* @__PURE__ */ __name34(function Toggle2(props, forwardedRef) {
     const { pressed: pressedProp, defaultPressed, onPressedChange, ...buttonProps } = props;
     const [pressed, setPressed] = useControllableState({
       prop: pressedProp,
@@ -9111,7 +10392,7 @@ var Toggle = /* @__PURE__ */ React44.forwardRef(
       defaultProp: defaultPressed ?? false,
       caller: NAME
     });
-    return /* @__PURE__ */ jsx20(
+    return /* @__PURE__ */ jsx21(
       Primitive.button,
       {
         type: "button",
@@ -9131,9 +10412,9 @@ var Toggle = /* @__PURE__ */ React44.forwardRef(
 );
 
 // node_modules/@radix-ui/react-toggle-group/dist/index.mjs
-import { jsx as jsx21 } from "react/jsx-runtime";
-var __defProp33 = Object.defineProperty;
-var __name33 = (target, value) => __defProp33(target, "name", { value, configurable: true });
+import { jsx as jsx23 } from "react/jsx-runtime";
+var __defProp35 = Object.defineProperty;
+var __name35 = (target, value) => __defProp35(target, "name", { value, configurable: true });
 var TOGGLE_GROUP_NAME = "ToggleGroup";
 var ToggleGroupType = {
   Single: "single",
@@ -9143,24 +10424,24 @@ var [createToggleGroupContext, createToggleGroupScope] = createContextScope(TOGG
   createRovingFocusGroupScope
 ]);
 var useRovingFocusGroupScope3 = createRovingFocusGroupScope();
-var ToggleGroup = /* @__PURE__ */ React45.forwardRef(/* @__PURE__ */ __name33(function ToggleGroup2(props, forwardedRef) {
+var ToggleGroup = /* @__PURE__ */ React46.forwardRef(/* @__PURE__ */ __name35(function ToggleGroup2(props, forwardedRef) {
   const { type, ...toggleGroupProps } = props;
   if (type === ToggleGroupType.Single) {
     const singleProps = toggleGroupProps;
-    return /* @__PURE__ */ jsx21(ToggleGroupImplSingle, { role: "radiogroup", ...singleProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx23(ToggleGroupImplSingle, { role: "radiogroup", ...singleProps, ref: forwardedRef });
   }
   if (type === ToggleGroupType.Multiple) {
     const multipleProps = toggleGroupProps;
-    return /* @__PURE__ */ jsx21(ToggleGroupImplMultiple, { role: "toolbar", ...multipleProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx23(ToggleGroupImplMultiple, { role: "toolbar", ...multipleProps, ref: forwardedRef });
   }
   throw new Error(`Missing prop \`type\` expected on \`${TOGGLE_GROUP_NAME}\``);
 }, "ToggleGroup"));
 var [ToggleGroupValueProvider, useToggleGroupValueContext] = createToggleGroupContext(TOGGLE_GROUP_NAME);
-var ToggleGroupImplSingle = /* @__PURE__ */ React45.forwardRef(/* @__PURE__ */ __name33(function ToggleGroupImplSingle2(props, forwardedRef) {
+var ToggleGroupImplSingle = /* @__PURE__ */ React46.forwardRef(/* @__PURE__ */ __name35(function ToggleGroupImplSingle2(props, forwardedRef) {
   const {
     value: valueProp,
     defaultValue,
-    onValueChange = /* @__PURE__ */ __name33(() => {
+    onValueChange = /* @__PURE__ */ __name35(() => {
     }, "onValueChange"),
     ...toggleGroupSingleProps
   } = props;
@@ -9170,23 +10451,23 @@ var ToggleGroupImplSingle = /* @__PURE__ */ React45.forwardRef(/* @__PURE__ */ _
     onChange: onValueChange,
     caller: TOGGLE_GROUP_NAME
   });
-  return /* @__PURE__ */ jsx21(
+  return /* @__PURE__ */ jsx23(
     ToggleGroupValueProvider,
     {
       scope: props.__scopeToggleGroup,
       type: ToggleGroupType.Single,
-      value: React45.useMemo(() => value ? [value] : [], [value]),
+      value: React46.useMemo(() => value ? [value] : [], [value]),
       onItemActivate: setValue,
-      onItemDeactivate: React45.useCallback(() => setValue(""), [setValue]),
-      children: /* @__PURE__ */ jsx21(ToggleGroupImpl, { ...toggleGroupSingleProps, ref: forwardedRef })
+      onItemDeactivate: React46.useCallback(() => setValue(""), [setValue]),
+      children: /* @__PURE__ */ jsx23(ToggleGroupImpl, { ...toggleGroupSingleProps, ref: forwardedRef })
     }
   );
 }, "ToggleGroupImplSingle"));
-var ToggleGroupImplMultiple = /* @__PURE__ */ React45.forwardRef(/* @__PURE__ */ __name33(function ToggleGroupImplMultiple2(props, forwardedRef) {
+var ToggleGroupImplMultiple = /* @__PURE__ */ React46.forwardRef(/* @__PURE__ */ __name35(function ToggleGroupImplMultiple2(props, forwardedRef) {
   const {
     value: valueProp,
     defaultValue,
-    onValueChange = /* @__PURE__ */ __name33(() => {
+    onValueChange = /* @__PURE__ */ __name35(() => {
     }, "onValueChange"),
     ...toggleGroupMultipleProps
   } = props;
@@ -9196,15 +10477,15 @@ var ToggleGroupImplMultiple = /* @__PURE__ */ React45.forwardRef(/* @__PURE__ */
     onChange: onValueChange,
     caller: TOGGLE_GROUP_NAME
   });
-  const handleButtonActivate = React45.useCallback(
+  const handleButtonActivate = React46.useCallback(
     (itemValue) => setValue((prevValue = []) => [...prevValue, itemValue]),
     [setValue]
   );
-  const handleButtonDeactivate = React45.useCallback(
+  const handleButtonDeactivate = React46.useCallback(
     (itemValue) => setValue((prevValue = []) => prevValue.filter((value2) => value2 !== itemValue)),
     [setValue]
   );
-  return /* @__PURE__ */ jsx21(
+  return /* @__PURE__ */ jsx23(
     ToggleGroupValueProvider,
     {
       scope: props.__scopeToggleGroup,
@@ -9212,14 +10493,14 @@ var ToggleGroupImplMultiple = /* @__PURE__ */ React45.forwardRef(/* @__PURE__ */
       value,
       onItemActivate: handleButtonActivate,
       onItemDeactivate: handleButtonDeactivate,
-      children: /* @__PURE__ */ jsx21(ToggleGroupImpl, { ...toggleGroupMultipleProps, ref: forwardedRef })
+      children: /* @__PURE__ */ jsx23(ToggleGroupImpl, { ...toggleGroupMultipleProps, ref: forwardedRef })
     }
   );
 }, "ToggleGroupImplMultiple"));
 var [ToggleGroupContext, useToggleGroupContext] = createToggleGroupContext(TOGGLE_GROUP_NAME);
-var ToggleGroupImpl = /* @__PURE__ */ React45.forwardRef(
+var ToggleGroupImpl = /* @__PURE__ */ React46.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name33(function ToggleGroupImpl2(props, forwardedRef) {
+  /* @__PURE__ */ __name35(function ToggleGroupImpl2(props, forwardedRef) {
     const {
       __scopeToggleGroup,
       disabled = false,
@@ -9232,7 +10513,7 @@ var ToggleGroupImpl = /* @__PURE__ */ React45.forwardRef(
     const rovingFocusGroupScope = useRovingFocusGroupScope3(__scopeToggleGroup);
     const direction = useDirection(dir);
     const commonProps = { dir: direction, ...toggleGroupProps };
-    return /* @__PURE__ */ jsx21(ToggleGroupContext, { scope: __scopeToggleGroup, rovingFocus, disabled, children: rovingFocus ? /* @__PURE__ */ jsx21(
+    return /* @__PURE__ */ jsx23(ToggleGroupContext, { scope: __scopeToggleGroup, rovingFocus, disabled, children: rovingFocus ? /* @__PURE__ */ jsx23(
       RovingFocusGroup,
       {
         asChild: true,
@@ -9240,23 +10521,23 @@ var ToggleGroupImpl = /* @__PURE__ */ React45.forwardRef(
         orientation,
         dir: direction,
         loop,
-        children: /* @__PURE__ */ jsx21(Primitive.div, { ...commonProps, ref: forwardedRef })
+        children: /* @__PURE__ */ jsx23(Primitive.div, { ...commonProps, ref: forwardedRef })
       }
-    ) : /* @__PURE__ */ jsx21(Primitive.div, { ...commonProps, ref: forwardedRef }) });
+    ) : /* @__PURE__ */ jsx23(Primitive.div, { ...commonProps, ref: forwardedRef }) });
   }, "ToggleGroupImpl")
 );
-var ITEM_NAME5 = "ToggleGroupItem";
-var ToggleGroupItem = /* @__PURE__ */ React45.forwardRef(
+var ITEM_NAME6 = "ToggleGroupItem";
+var ToggleGroupItem = /* @__PURE__ */ React46.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name33(function ToggleGroupItem2(props, forwardedRef) {
-    const valueContext = useToggleGroupValueContext(ITEM_NAME5, props.__scopeToggleGroup);
-    const context = useToggleGroupContext(ITEM_NAME5, props.__scopeToggleGroup);
+  /* @__PURE__ */ __name35(function ToggleGroupItem2(props, forwardedRef) {
+    const valueContext = useToggleGroupValueContext(ITEM_NAME6, props.__scopeToggleGroup);
+    const context = useToggleGroupContext(ITEM_NAME6, props.__scopeToggleGroup);
     const rovingFocusGroupScope = useRovingFocusGroupScope3(props.__scopeToggleGroup);
     const pressed = valueContext.value.includes(props.value);
     const disabled = context.disabled || props.disabled;
     const commonProps = { ...props, pressed, disabled };
-    const ref = React45.useRef(null);
-    return context.rovingFocus ? /* @__PURE__ */ jsx21(
+    const ref = React46.useRef(null);
+    return context.rovingFocus ? /* @__PURE__ */ jsx23(
       RovingFocusGroupItem,
       {
         asChild: true,
@@ -9264,19 +10545,19 @@ var ToggleGroupItem = /* @__PURE__ */ React45.forwardRef(
         focusable: !disabled,
         active: pressed,
         ref,
-        children: /* @__PURE__ */ jsx21(ToggleGroupItemImpl, { ...commonProps, ref: forwardedRef })
+        children: /* @__PURE__ */ jsx23(ToggleGroupItemImpl, { ...commonProps, ref: forwardedRef })
       }
-    ) : /* @__PURE__ */ jsx21(ToggleGroupItemImpl, { ...commonProps, ref: forwardedRef });
+    ) : /* @__PURE__ */ jsx23(ToggleGroupItemImpl, { ...commonProps, ref: forwardedRef });
   }, "ToggleGroupItem")
 );
-var ToggleGroupItemImpl = /* @__PURE__ */ React45.forwardRef(
+var ToggleGroupItemImpl = /* @__PURE__ */ React46.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name33(function ToggleGroupItemImpl2(props, forwardedRef) {
+  /* @__PURE__ */ __name35(function ToggleGroupItemImpl2(props, forwardedRef) {
     const { __scopeToggleGroup, value, ...itemProps } = props;
-    const valueContext = useToggleGroupValueContext(ITEM_NAME5, __scopeToggleGroup);
+    const valueContext = useToggleGroupValueContext(ITEM_NAME6, __scopeToggleGroup);
     const singleProps = { role: "radio", "aria-checked": props.pressed, "aria-pressed": void 0 };
     const typeProps = valueContext.type === ToggleGroupType.Single ? singleProps : void 0;
-    return /* @__PURE__ */ jsx21(
+    return /* @__PURE__ */ jsx23(
       Toggle,
       {
         ...typeProps,
@@ -9295,8 +10576,8 @@ var ToggleGroupItemImpl = /* @__PURE__ */ React45.forwardRef(
 );
 
 // node_modules/@radix-ui/react-checkbox/dist/index.mjs
-var dist_exports15 = {};
-__export(dist_exports15, {
+var dist_exports16 = {};
+__export(dist_exports16, {
   Checkbox: () => Checkbox,
   CheckboxIndicator: () => CheckboxIndicator,
   Indicator: () => CheckboxIndicator,
@@ -9309,10 +10590,10 @@ __export(dist_exports15, {
   unstable_Provider: () => CheckboxProvider,
   unstable_Trigger: () => CheckboxTrigger
 });
-import * as React46 from "react";
-import { Fragment as Fragment7, jsx as jsx23, jsxs as jsxs3 } from "react/jsx-runtime";
-var __defProp34 = Object.defineProperty;
-var __name34 = (target, value) => __defProp34(target, "name", { value, configurable: true });
+import * as React47 from "react";
+import { Fragment as Fragment8, jsx as jsx24, jsxs as jsxs4 } from "react/jsx-runtime";
+var __defProp36 = Object.defineProperty;
+var __name36 = (target, value) => __defProp36(target, "name", { value, configurable: true });
 var CHECKBOX_NAME = "Checkbox";
 var [createCheckboxContext, createCheckboxScope] = createContextScope(CHECKBOX_NAME);
 var [CheckboxProviderImpl, useCheckboxContext] = createCheckboxContext(CHECKBOX_NAME);
@@ -9337,9 +10618,9 @@ function CheckboxProvider(props) {
     onChange: onCheckedChange,
     caller: CHECKBOX_NAME
   });
-  const [control, setControl] = React46.useState(null);
-  const [bubbleInput, setBubbleInput] = React46.useState(null);
-  const [userClick, setUserClick] = React46.useState(null);
+  const [control, setControl] = React47.useState(null);
+  const [bubbleInput, setBubbleInput] = React47.useState(null);
+  const [userClick, setUserClick] = React47.useState(null);
   const isFormControl = control ? !!form || !!control.closest("form") : (
     // We set this to true by default so that events bubble to forms without JS (SSR)
     true
@@ -9361,19 +10642,19 @@ function CheckboxProvider(props) {
     bubbleInput,
     setBubbleInput
   };
-  return /* @__PURE__ */ jsx23(
+  return /* @__PURE__ */ jsx24(
     CheckboxProviderImpl,
     {
       scope: __scopeCheckbox,
       ...context,
-      children: isFunction2(internal_do_not_use_render) ? internal_do_not_use_render(context) : children
+      children: isFunction3(internal_do_not_use_render) ? internal_do_not_use_render(context) : children
     }
   );
 }
-__name34(CheckboxProvider, "CheckboxProvider");
-var TRIGGER_NAME8 = "CheckboxTrigger";
-var CheckboxTrigger = /* @__PURE__ */ React46.forwardRef(
-  /* @__PURE__ */ __name34(function CheckboxTrigger2({ __scopeCheckbox, onKeyDown, onClick, ...checkboxProps }, forwardedRef) {
+__name36(CheckboxProvider, "CheckboxProvider");
+var TRIGGER_NAME9 = "CheckboxTrigger";
+var CheckboxTrigger = /* @__PURE__ */ React47.forwardRef(
+  /* @__PURE__ */ __name36(function CheckboxTrigger2({ __scopeCheckbox, onKeyDown, onClick, ...checkboxProps }, forwardedRef) {
     const {
       control,
       value,
@@ -9385,18 +10666,18 @@ var CheckboxTrigger = /* @__PURE__ */ React46.forwardRef(
       onUserClick,
       isFormControl,
       bubbleInput
-    } = useCheckboxContext(TRIGGER_NAME8, __scopeCheckbox);
+    } = useCheckboxContext(TRIGGER_NAME9, __scopeCheckbox);
     const composedRefs = useComposedRefs(forwardedRef, setControl);
-    const initialCheckedStateRef = React46.useRef(checked);
-    React46.useEffect(() => {
+    const initialCheckedStateRef = React47.useRef(checked);
+    React47.useEffect(() => {
       const form = control?.form;
       if (form) {
-        const reset = /* @__PURE__ */ __name34(() => setChecked(initialCheckedStateRef.current), "reset");
+        const reset = /* @__PURE__ */ __name36(() => setChecked(initialCheckedStateRef.current), "reset");
         form.addEventListener("reset", reset);
         return () => form.removeEventListener("reset", reset);
       }
     }, [control, setChecked]);
-    return /* @__PURE__ */ jsx23(
+    return /* @__PURE__ */ jsx24(
       Primitive.button,
       {
         type: "button",
@@ -9427,9 +10708,9 @@ var CheckboxTrigger = /* @__PURE__ */ React46.forwardRef(
     );
   }, "CheckboxTrigger")
 );
-var Checkbox = /* @__PURE__ */ React46.forwardRef(
+var Checkbox = /* @__PURE__ */ React47.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name34(function Checkbox2(props, forwardedRef) {
+  /* @__PURE__ */ __name36(function Checkbox2(props, forwardedRef) {
     const {
       __scopeCheckbox,
       name,
@@ -9442,7 +10723,7 @@ var Checkbox = /* @__PURE__ */ React46.forwardRef(
       form,
       ...checkboxProps
     } = props;
-    return /* @__PURE__ */ jsx23(
+    return /* @__PURE__ */ jsx24(
       CheckboxProvider,
       {
         __scopeCheckbox,
@@ -9454,8 +10735,8 @@ var Checkbox = /* @__PURE__ */ React46.forwardRef(
         name,
         form,
         value,
-        internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxs3(Fragment7, { children: [
-          /* @__PURE__ */ jsx23(
+        internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxs4(Fragment8, { children: [
+          /* @__PURE__ */ jsx24(
             CheckboxTrigger,
             {
               ...checkboxProps,
@@ -9463,7 +10744,7 @@ var Checkbox = /* @__PURE__ */ React46.forwardRef(
               __scopeCheckbox
             }
           ),
-          isFormControl && /* @__PURE__ */ jsx23(
+          isFormControl && /* @__PURE__ */ jsx24(
             CheckboxBubbleInput,
             {
               __scopeCheckbox
@@ -9475,16 +10756,16 @@ var Checkbox = /* @__PURE__ */ React46.forwardRef(
   }, "Checkbox")
 );
 var INDICATOR_NAME2 = "CheckboxIndicator";
-var CheckboxIndicator = /* @__PURE__ */ React46.forwardRef(
+var CheckboxIndicator = /* @__PURE__ */ React47.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name34(function CheckboxIndicator2(props, forwardedRef) {
+  /* @__PURE__ */ __name36(function CheckboxIndicator2(props, forwardedRef) {
     const { __scopeCheckbox, forceMount, ...indicatorProps } = props;
     const context = useCheckboxContext(INDICATOR_NAME2, __scopeCheckbox);
-    return /* @__PURE__ */ jsx23(
+    return /* @__PURE__ */ jsx24(
       Presence,
       {
         present: forceMount || isIndeterminate2(context.checked) || context.checked === true,
-        children: /* @__PURE__ */ jsx23(
+        children: /* @__PURE__ */ jsx24(
           Primitive.span,
           {
             "data-state": getState4(context.checked),
@@ -9498,10 +10779,10 @@ var CheckboxIndicator = /* @__PURE__ */ React46.forwardRef(
     );
   }, "CheckboxIndicator")
 );
-var BUBBLE_INPUT_NAME = "CheckboxBubbleInput";
-var CheckboxBubbleInput = /* @__PURE__ */ React46.forwardRef(
+var BUBBLE_INPUT_NAME2 = "CheckboxBubbleInput";
+var CheckboxBubbleInput = /* @__PURE__ */ React47.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name34(function CheckboxBubbleInput2({ __scopeCheckbox, onClick, ...props }, forwardedRef) {
+  /* @__PURE__ */ __name36(function CheckboxBubbleInput2({ __scopeCheckbox, onClick, ...props }, forwardedRef) {
     const {
       control,
       userClick,
@@ -9514,14 +10795,14 @@ var CheckboxBubbleInput = /* @__PURE__ */ React46.forwardRef(
       form,
       bubbleInput,
       setBubbleInput
-    } = useCheckboxContext(BUBBLE_INPUT_NAME, __scopeCheckbox);
+    } = useCheckboxContext(BUBBLE_INPUT_NAME2, __scopeCheckbox);
     const composedRefs = useComposedRefs(forwardedRef, setBubbleInput);
     const controlSize = useSize(control);
-    const shouldStopClickPropagationRef = React46.useRef(false);
-    const prevCheckedRef = React46.useRef(checked);
-    const handledUserClickRef = React46.useRef(userClick);
-    const pendingUserClickRef = React46.useRef(null);
-    React46.useEffect(() => {
+    const shouldStopClickPropagationRef = React47.useRef(false);
+    const prevCheckedRef = React47.useRef(checked);
+    const handledUserClickRef = React47.useRef(userClick);
+    const pendingUserClickRef = React47.useRef(null);
+    React47.useEffect(() => {
       const input = bubbleInput;
       if (!input) return;
       const inputProto = window.HTMLInputElement.prototype;
@@ -9559,8 +10840,8 @@ var CheckboxBubbleInput = /* @__PURE__ */ React46.forwardRef(
         shouldStopClickPropagationRef.current = false;
       }
     }, [bubbleInput, checked, userClick]);
-    const defaultCheckedRef = React46.useRef(isIndeterminate2(checked) ? false : checked);
-    return /* @__PURE__ */ jsx23(
+    const defaultCheckedRef = React47.useRef(isIndeterminate2(checked) ? false : checked);
+    return /* @__PURE__ */ jsx24(
       Primitive.input,
       {
         type: "checkbox",
@@ -9595,22 +10876,22 @@ var CheckboxBubbleInput = /* @__PURE__ */ React46.forwardRef(
     );
   }, "CheckboxBubbleInput")
 );
-function isFunction2(value) {
+function isFunction3(value) {
   return typeof value === "function";
 }
-__name34(isFunction2, "isFunction");
+__name36(isFunction3, "isFunction");
 function isIndeterminate2(checked) {
   return checked === "indeterminate";
 }
-__name34(isIndeterminate2, "isIndeterminate");
+__name36(isIndeterminate2, "isIndeterminate");
 function getState4(checked) {
   return isIndeterminate2(checked) ? "indeterminate" : checked ? "checked" : "unchecked";
 }
-__name34(getState4, "getState");
+__name36(getState4, "getState");
 
 // node_modules/@radix-ui/react-radio-group/dist/index.mjs
-var dist_exports16 = {};
-__export(dist_exports16, {
+var dist_exports17 = {};
+__export(dist_exports17, {
   Indicator: () => RadioGroupIndicator,
   Item: () => RadioGroupItem,
   RadioGroup: () => RadioGroup,
@@ -9626,11 +10907,11 @@ __export(dist_exports16, {
   unstable_RadioGroupItemTrigger: () => RadioGroupItemTrigger
 });
 import * as React210 from "react";
-import * as React47 from "react";
-import { Fragment as Fragment8, jsx as jsx24, jsxs as jsxs4 } from "react/jsx-runtime";
-import { Fragment as Fragment22, jsx as jsx25, jsxs as jsxs22 } from "react/jsx-runtime";
-var __defProp35 = Object.defineProperty;
-var __name35 = (target, value) => __defProp35(target, "name", { value, configurable: true });
+import * as React48 from "react";
+import { Fragment as Fragment9, jsx as jsx25, jsxs as jsxs5 } from "react/jsx-runtime";
+import { Fragment as Fragment23, jsx as jsx26, jsxs as jsxs22 } from "react/jsx-runtime";
+var __defProp37 = Object.defineProperty;
+var __name37 = (target, value) => __defProp37(target, "name", { value, configurable: true });
 var RADIO_NAME = "Radio";
 var [createRadioContext, createRadioScope] = createContextScope(RADIO_NAME);
 var [RadioProviderImpl, useRadioContext] = createRadioContext(RADIO_NAME);
@@ -9648,9 +10929,9 @@ function RadioProvider(props) {
     // @ts-expect-error
     internal_do_not_use_render
   } = props;
-  const [control, setControl] = React47.useState(null);
-  const [bubbleInput, setBubbleInput] = React47.useState(null);
-  const [userClick, setUserClick] = React47.useState(null);
+  const [control, setControl] = React48.useState(null);
+  const [bubbleInput, setBubbleInput] = React48.useState(null);
+  const [userClick, setUserClick] = React48.useState(null);
   const isFormControl = control ? !!form || !!control.closest("form") : (
     // We set this to true by default so that events bubble to forms without JS (SSR)
     true
@@ -9669,14 +10950,14 @@ function RadioProvider(props) {
     isFormControl,
     bubbleInput,
     setBubbleInput,
-    onCheck: /* @__PURE__ */ __name35(() => onCheck?.(), "onCheck")
+    onCheck: /* @__PURE__ */ __name37(() => onCheck?.(), "onCheck")
   };
-  return /* @__PURE__ */ jsx24(RadioProviderImpl, { scope: __scopeRadio, ...context, children: isFunction3(internal_do_not_use_render) ? internal_do_not_use_render(context) : children });
+  return /* @__PURE__ */ jsx25(RadioProviderImpl, { scope: __scopeRadio, ...context, children: isFunction4(internal_do_not_use_render) ? internal_do_not_use_render(context) : children });
 }
-__name35(RadioProvider, "RadioProvider");
-var TRIGGER_NAME9 = "RadioTrigger";
-var RadioTrigger = /* @__PURE__ */ React47.forwardRef(
-  /* @__PURE__ */ __name35(function RadioTrigger2({ __scopeRadio, onClick, ...radioProps }, forwardedRef) {
+__name37(RadioProvider, "RadioProvider");
+var TRIGGER_NAME10 = "RadioTrigger";
+var RadioTrigger = /* @__PURE__ */ React48.forwardRef(
+  /* @__PURE__ */ __name37(function RadioTrigger2({ __scopeRadio, onClick, ...radioProps }, forwardedRef) {
     const {
       checked,
       disabled,
@@ -9686,9 +10967,9 @@ var RadioTrigger = /* @__PURE__ */ React47.forwardRef(
       onUserClick,
       isFormControl,
       bubbleInput
-    } = useRadioContext(TRIGGER_NAME9, __scopeRadio);
+    } = useRadioContext(TRIGGER_NAME10, __scopeRadio);
     const composedRefs = useComposedRefs(forwardedRef, setControl);
-    return /* @__PURE__ */ jsx24(
+    return /* @__PURE__ */ jsx25(
       Primitive.button,
       {
         type: "button",
@@ -9717,11 +10998,11 @@ var RadioTrigger = /* @__PURE__ */ React47.forwardRef(
   }, "RadioTrigger")
 );
 var INDICATOR_NAME3 = "RadioIndicator";
-var RadioIndicator = /* @__PURE__ */ React47.forwardRef(
-  /* @__PURE__ */ __name35(function RadioIndicator2(props, forwardedRef) {
+var RadioIndicator = /* @__PURE__ */ React48.forwardRef(
+  /* @__PURE__ */ __name37(function RadioIndicator2(props, forwardedRef) {
     const { __scopeRadio, forceMount, ...indicatorProps } = props;
     const context = useRadioContext(INDICATOR_NAME3, __scopeRadio);
-    return /* @__PURE__ */ jsx24(Presence, { present: forceMount || context.checked, children: /* @__PURE__ */ jsx24(
+    return /* @__PURE__ */ jsx25(Presence, { present: forceMount || context.checked, children: /* @__PURE__ */ jsx25(
       Primitive.span,
       {
         "data-state": getState5(context.checked),
@@ -9732,9 +11013,9 @@ var RadioIndicator = /* @__PURE__ */ React47.forwardRef(
     ) });
   }, "RadioIndicator")
 );
-var BUBBLE_INPUT_NAME2 = "RadioBubbleInput";
-var RadioBubbleInput = /* @__PURE__ */ React47.forwardRef(
-  /* @__PURE__ */ __name35(function RadioBubbleInput2({ __scopeRadio, onClick, ...props }, forwardedRef) {
+var BUBBLE_INPUT_NAME3 = "RadioBubbleInput";
+var RadioBubbleInput = /* @__PURE__ */ React48.forwardRef(
+  /* @__PURE__ */ __name37(function RadioBubbleInput2({ __scopeRadio, onClick, ...props }, forwardedRef) {
     const {
       control,
       checked,
@@ -9746,14 +11027,14 @@ var RadioBubbleInput = /* @__PURE__ */ React47.forwardRef(
       bubbleInput,
       setBubbleInput,
       userClick
-    } = useRadioContext(BUBBLE_INPUT_NAME2, __scopeRadio);
+    } = useRadioContext(BUBBLE_INPUT_NAME3, __scopeRadio);
     const composedRefs = useComposedRefs(forwardedRef, setBubbleInput);
     const controlSize = useSize(control);
-    const shouldStopClickPropagationRef = React47.useRef(false);
-    const prevCheckedRef = React47.useRef(checked);
-    const handledUserClickRef = React47.useRef(userClick);
-    const pendingUserClickRef = React47.useRef(null);
-    React47.useEffect(() => {
+    const shouldStopClickPropagationRef = React48.useRef(false);
+    const prevCheckedRef = React48.useRef(checked);
+    const handledUserClickRef = React48.useRef(userClick);
+    const pendingUserClickRef = React48.useRef(null);
+    React48.useEffect(() => {
       const input = bubbleInput;
       if (!input) return;
       const inputProto = window.HTMLInputElement.prototype;
@@ -9789,8 +11070,8 @@ var RadioBubbleInput = /* @__PURE__ */ React47.forwardRef(
         shouldStopClickPropagationRef.current = false;
       }
     }, [bubbleInput, checked, userClick]);
-    const defaultCheckedRef = React47.useRef(checked);
-    return /* @__PURE__ */ jsx24(
+    const defaultCheckedRef = React48.useRef(checked);
+    return /* @__PURE__ */ jsx25(
       Primitive.input,
       {
         type: "radio",
@@ -9825,14 +11106,14 @@ var RadioBubbleInput = /* @__PURE__ */ React47.forwardRef(
     );
   }, "RadioBubbleInput")
 );
-function isFunction3(value) {
+function isFunction4(value) {
   return typeof value === "function";
 }
-__name35(isFunction3, "isFunction");
+__name37(isFunction4, "isFunction");
 function getState5(checked) {
   return checked ? "checked" : "unchecked";
 }
-__name35(getState5, "getState");
+__name37(getState5, "getState");
 var ARROW_KEYS2 = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
 var RADIO_GROUP_NAME2 = "RadioGroup";
 var [createRadioGroupContext, createRadioGroupScope] = createContextScope(RADIO_GROUP_NAME2, [
@@ -9843,7 +11124,7 @@ var useRovingFocusGroupScope4 = createRovingFocusGroupScope();
 var useRadioScope = createRadioScope();
 var [RadioGroupProvider2, useRadioGroupContext2] = createRadioGroupContext(RADIO_GROUP_NAME2);
 var RadioGroup = /* @__PURE__ */ React210.forwardRef(
-  /* @__PURE__ */ __name35(function RadioGroup2(props, forwardedRef) {
+  /* @__PURE__ */ __name37(function RadioGroup2(props, forwardedRef) {
     const {
       __scopeRadioGroup,
       name,
@@ -9872,12 +11153,12 @@ var RadioGroup = /* @__PURE__ */ React210.forwardRef(
     React210.useEffect(() => {
       const associatedForm = form ? control?.ownerDocument.getElementById(form) : control?.closest("form");
       if (associatedForm instanceof HTMLFormElement) {
-        const reset = /* @__PURE__ */ __name35(() => setValue(initialValueRef.current), "reset");
+        const reset = /* @__PURE__ */ __name37(() => setValue(initialValueRef.current), "reset");
         associatedForm.addEventListener("reset", reset);
         return () => associatedForm.removeEventListener("reset", reset);
       }
     }, [control, form, setValue]);
-    return /* @__PURE__ */ jsx25(
+    return /* @__PURE__ */ jsx26(
       RadioGroupProvider2,
       {
         scope: __scopeRadioGroup,
@@ -9887,7 +11168,7 @@ var RadioGroup = /* @__PURE__ */ React210.forwardRef(
         disabled,
         value,
         onValueChange: setValue,
-        children: /* @__PURE__ */ jsx25(
+        children: /* @__PURE__ */ jsx26(
           RovingFocusGroup,
           {
             asChild: true,
@@ -9895,7 +11176,7 @@ var RadioGroup = /* @__PURE__ */ React210.forwardRef(
             orientation,
             dir: direction,
             loop,
-            children: /* @__PURE__ */ jsx25(
+            children: /* @__PURE__ */ jsx26(
               Primitive.div,
               {
                 role: "radiogroup",
@@ -9927,7 +11208,7 @@ function RadioGroupItemProvider(props) {
   const context = useRadioGroupContext2(ITEM_PROVIDER_NAME, __scopeRadioGroup);
   const radioScope = useRadioScope(__scopeRadioGroup);
   const isDisabled = context.disabled || disabled;
-  return /* @__PURE__ */ jsx25(
+  return /* @__PURE__ */ jsx26(
     RadioProvider,
     {
       ...radioScope,
@@ -9943,8 +11224,8 @@ function RadioGroupItemProvider(props) {
     }
   );
 }
-__name35(RadioGroupItemProvider, "RadioGroupItemProvider");
-var RadioGroupItemTrigger = /* @__PURE__ */ React210.forwardRef(/* @__PURE__ */ __name35(function RadioGroupItemTrigger2(props, forwardedRef) {
+__name37(RadioGroupItemProvider, "RadioGroupItemProvider");
+var RadioGroupItemTrigger = /* @__PURE__ */ React210.forwardRef(/* @__PURE__ */ __name37(function RadioGroupItemTrigger2(props, forwardedRef) {
   const { __scopeRadioGroup, ...triggerProps } = props;
   const rovingFocusGroupScope = useRovingFocusGroupScope4(__scopeRadioGroup);
   const radioScope = useRadioScope(__scopeRadioGroup);
@@ -9953,12 +11234,12 @@ var RadioGroupItemTrigger = /* @__PURE__ */ React210.forwardRef(/* @__PURE__ */ 
   const composedRefs = useComposedRefs(forwardedRef, ref);
   const isArrowKeyPressedRef = React210.useRef(false);
   React210.useEffect(() => {
-    const handleKeyDown = /* @__PURE__ */ __name35((event) => {
+    const handleKeyDown = /* @__PURE__ */ __name37((event) => {
       if (ARROW_KEYS2.includes(event.key)) {
         isArrowKeyPressedRef.current = true;
       }
     }, "handleKeyDown");
-    const handleKeyUp = /* @__PURE__ */ __name35(() => isArrowKeyPressedRef.current = false, "handleKeyUp");
+    const handleKeyUp = /* @__PURE__ */ __name37(() => isArrowKeyPressedRef.current = false, "handleKeyUp");
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
     return () => {
@@ -9966,14 +11247,14 @@ var RadioGroupItemTrigger = /* @__PURE__ */ React210.forwardRef(/* @__PURE__ */ 
       document.removeEventListener("keyup", handleKeyUp);
     };
   }, []);
-  return /* @__PURE__ */ jsx25(
+  return /* @__PURE__ */ jsx26(
     RovingFocusGroupItem,
     {
       asChild: true,
       ...rovingFocusGroupScope,
       focusable: !disabled,
       active: checked,
-      children: /* @__PURE__ */ jsx25(
+      children: /* @__PURE__ */ jsx26(
         RadioTrigger,
         {
           ...radioScope,
@@ -9993,16 +11274,16 @@ var RadioGroupItemTrigger = /* @__PURE__ */ React210.forwardRef(/* @__PURE__ */ 
   );
 }, "RadioGroupItemTrigger"));
 var RadioGroupItem = /* @__PURE__ */ React210.forwardRef(
-  /* @__PURE__ */ __name35(function RadioGroupItem2(props, forwardedRef) {
+  /* @__PURE__ */ __name37(function RadioGroupItem2(props, forwardedRef) {
     const { __scopeRadioGroup, value, disabled, ...itemProps } = props;
-    return /* @__PURE__ */ jsx25(
+    return /* @__PURE__ */ jsx26(
       RadioGroupItemProvider,
       {
         __scopeRadioGroup,
         value,
         disabled,
-        internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxs22(Fragment22, { children: [
-          /* @__PURE__ */ jsx25(
+        internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxs22(Fragment23, { children: [
+          /* @__PURE__ */ jsx26(
             RadioGroupItemTrigger,
             {
               ...itemProps,
@@ -10010,7 +11291,7 @@ var RadioGroupItem = /* @__PURE__ */ React210.forwardRef(
               __scopeRadioGroup
             }
           ),
-          isFormControl && /* @__PURE__ */ jsx25(
+          isFormControl && /* @__PURE__ */ jsx26(
             RadioGroupItemBubbleInput,
             {
               __scopeRadioGroup
@@ -10021,23 +11302,23 @@ var RadioGroupItem = /* @__PURE__ */ React210.forwardRef(
     );
   }, "RadioGroupItem")
 );
-var RadioGroupItemBubbleInput = /* @__PURE__ */ React210.forwardRef(/* @__PURE__ */ __name35(function RadioGroupItemBubbleInput2(props, forwardedRef) {
+var RadioGroupItemBubbleInput = /* @__PURE__ */ React210.forwardRef(/* @__PURE__ */ __name37(function RadioGroupItemBubbleInput2(props, forwardedRef) {
   const { __scopeRadioGroup, ...bubbleProps } = props;
   const radioScope = useRadioScope(__scopeRadioGroup);
-  return /* @__PURE__ */ jsx25(RadioBubbleInput, { ...radioScope, ...bubbleProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx26(RadioBubbleInput, { ...radioScope, ...bubbleProps, ref: forwardedRef });
 }, "RadioGroupItemBubbleInput"));
 var RadioGroupIndicator = /* @__PURE__ */ React210.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name35(function RadioGroupIndicator2(props, forwardedRef) {
+  /* @__PURE__ */ __name37(function RadioGroupIndicator2(props, forwardedRef) {
     const { __scopeRadioGroup, ...indicatorProps } = props;
     const radioScope = useRadioScope(__scopeRadioGroup);
-    return /* @__PURE__ */ jsx25(RadioIndicator, { ...radioScope, ...indicatorProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx26(RadioIndicator, { ...radioScope, ...indicatorProps, ref: forwardedRef });
   }, "RadioGroupIndicator")
 );
 
 // node_modules/@radix-ui/react-switch/dist/index.mjs
-var dist_exports17 = {};
-__export(dist_exports17, {
+var dist_exports18 = {};
+__export(dist_exports18, {
   Root: () => Switch,
   Switch: () => Switch,
   SwitchThumb: () => SwitchThumb,
@@ -10050,10 +11331,10 @@ __export(dist_exports17, {
   unstable_SwitchTrigger: () => SwitchTrigger,
   unstable_Trigger: () => SwitchTrigger
 });
-import * as React48 from "react";
-import { Fragment as Fragment9, jsx as jsx26, jsxs as jsxs5 } from "react/jsx-runtime";
-var __defProp36 = Object.defineProperty;
-var __name36 = (target, value) => __defProp36(target, "name", { value, configurable: true });
+import * as React49 from "react";
+import { Fragment as Fragment10, jsx as jsx27, jsxs as jsxs6 } from "react/jsx-runtime";
+var __defProp38 = Object.defineProperty;
+var __name38 = (target, value) => __defProp38(target, "name", { value, configurable: true });
 var SWITCH_NAME = "Switch";
 var [createSwitchContext, createSwitchScope] = createContextScope(SWITCH_NAME);
 var [SwitchProviderImpl, useSwitchContext] = createSwitchContext(SWITCH_NAME);
@@ -10078,9 +11359,9 @@ function SwitchProvider(props) {
     onChange: onCheckedChange,
     caller: SWITCH_NAME
   });
-  const [control, setControl] = React48.useState(null);
-  const [bubbleInput, setBubbleInput] = React48.useState(null);
-  const [userClick, setUserClick] = React48.useState(null);
+  const [control, setControl] = React49.useState(null);
+  const [bubbleInput, setBubbleInput] = React49.useState(null);
+  const [userClick, setUserClick] = React49.useState(null);
   const isFormControl = control ? !!form || !!control.closest("form") : (
     // We set this to true by default so that events bubble to forms without JS (SSR)
     true
@@ -10102,12 +11383,12 @@ function SwitchProvider(props) {
     bubbleInput,
     setBubbleInput
   };
-  return /* @__PURE__ */ jsx26(SwitchProviderImpl, { scope: __scopeSwitch, ...context, children: isFunction4(internal_do_not_use_render) ? internal_do_not_use_render(context) : children });
+  return /* @__PURE__ */ jsx27(SwitchProviderImpl, { scope: __scopeSwitch, ...context, children: isFunction5(internal_do_not_use_render) ? internal_do_not_use_render(context) : children });
 }
-__name36(SwitchProvider, "SwitchProvider");
-var TRIGGER_NAME10 = "SwitchTrigger";
-var SwitchTrigger = /* @__PURE__ */ React48.forwardRef(
-  /* @__PURE__ */ __name36(function SwitchTrigger2({ __scopeSwitch, onClick, ...switchProps }, forwardedRef) {
+__name38(SwitchProvider, "SwitchProvider");
+var TRIGGER_NAME11 = "SwitchTrigger";
+var SwitchTrigger = /* @__PURE__ */ React49.forwardRef(
+  /* @__PURE__ */ __name38(function SwitchTrigger2({ __scopeSwitch, onClick, ...switchProps }, forwardedRef) {
     const {
       control,
       form,
@@ -10120,18 +11401,18 @@ var SwitchTrigger = /* @__PURE__ */ React48.forwardRef(
       onUserClick,
       isFormControl,
       bubbleInput
-    } = useSwitchContext(TRIGGER_NAME10, __scopeSwitch);
+    } = useSwitchContext(TRIGGER_NAME11, __scopeSwitch);
     const composedRefs = useComposedRefs(forwardedRef, setControl);
-    const initialCheckedStateRef = React48.useRef(checked);
-    React48.useEffect(() => {
+    const initialCheckedStateRef = React49.useRef(checked);
+    React49.useEffect(() => {
       const associatedForm = form ? control?.ownerDocument.getElementById(form) : control?.form;
       if (associatedForm instanceof HTMLFormElement) {
-        const reset = /* @__PURE__ */ __name36(() => setChecked(initialCheckedStateRef.current), "reset");
+        const reset = /* @__PURE__ */ __name38(() => setChecked(initialCheckedStateRef.current), "reset");
         associatedForm.addEventListener("reset", reset);
         return () => associatedForm.removeEventListener("reset", reset);
       }
     }, [control, form, setChecked]);
-    return /* @__PURE__ */ jsx26(
+    return /* @__PURE__ */ jsx27(
       Primitive.button,
       {
         type: "button",
@@ -10158,9 +11439,9 @@ var SwitchTrigger = /* @__PURE__ */ React48.forwardRef(
     );
   }, "SwitchTrigger")
 );
-var Switch = /* @__PURE__ */ React48.forwardRef(
+var Switch = /* @__PURE__ */ React49.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name36(function Switch2(props, forwardedRef) {
+  /* @__PURE__ */ __name38(function Switch2(props, forwardedRef) {
     const {
       __scopeSwitch,
       name,
@@ -10173,7 +11454,7 @@ var Switch = /* @__PURE__ */ React48.forwardRef(
       form,
       ...switchProps
     } = props;
-    return /* @__PURE__ */ jsx26(
+    return /* @__PURE__ */ jsx27(
       SwitchProvider,
       {
         __scopeSwitch,
@@ -10185,8 +11466,8 @@ var Switch = /* @__PURE__ */ React48.forwardRef(
         name,
         form,
         value,
-        internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxs5(Fragment9, { children: [
-          /* @__PURE__ */ jsx26(
+        internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxs6(Fragment10, { children: [
+          /* @__PURE__ */ jsx27(
             SwitchTrigger,
             {
               ...switchProps,
@@ -10194,7 +11475,7 @@ var Switch = /* @__PURE__ */ React48.forwardRef(
               __scopeSwitch
             }
           ),
-          isFormControl && /* @__PURE__ */ jsx26(
+          isFormControl && /* @__PURE__ */ jsx27(
             SwitchBubbleInput,
             {
               __scopeSwitch
@@ -10206,11 +11487,11 @@ var Switch = /* @__PURE__ */ React48.forwardRef(
   }, "Switch")
 );
 var THUMB_NAME = "SwitchThumb";
-var SwitchThumb = /* @__PURE__ */ React48.forwardRef(
-  /* @__PURE__ */ __name36(function SwitchThumb2(props, forwardedRef) {
+var SwitchThumb = /* @__PURE__ */ React49.forwardRef(
+  /* @__PURE__ */ __name38(function SwitchThumb2(props, forwardedRef) {
     const { __scopeSwitch, ...thumbProps } = props;
     const context = useSwitchContext(THUMB_NAME, __scopeSwitch);
-    return /* @__PURE__ */ jsx26(
+    return /* @__PURE__ */ jsx27(
       Primitive.span,
       {
         "data-state": getState6(context.checked),
@@ -10221,10 +11502,10 @@ var SwitchThumb = /* @__PURE__ */ React48.forwardRef(
     );
   }, "SwitchThumb")
 );
-var BUBBLE_INPUT_NAME3 = "SwitchBubbleInput";
-var SwitchBubbleInput = /* @__PURE__ */ React48.forwardRef(
+var BUBBLE_INPUT_NAME4 = "SwitchBubbleInput";
+var SwitchBubbleInput = /* @__PURE__ */ React49.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name36(function SwitchBubbleInput2({ __scopeSwitch, onClick, ...props }, forwardedRef) {
+  /* @__PURE__ */ __name38(function SwitchBubbleInput2({ __scopeSwitch, onClick, ...props }, forwardedRef) {
     const {
       control,
       userClick,
@@ -10237,14 +11518,14 @@ var SwitchBubbleInput = /* @__PURE__ */ React48.forwardRef(
       form,
       bubbleInput,
       setBubbleInput
-    } = useSwitchContext(BUBBLE_INPUT_NAME3, __scopeSwitch);
+    } = useSwitchContext(BUBBLE_INPUT_NAME4, __scopeSwitch);
     const composedRefs = useComposedRefs(forwardedRef, setBubbleInput);
     const controlSize = useSize(control);
-    const shouldStopClickPropagationRef = React48.useRef(false);
-    const prevCheckedRef = React48.useRef(checked);
-    const handledUserClickRef = React48.useRef(userClick);
-    const pendingUserClickRef = React48.useRef(null);
-    React48.useEffect(() => {
+    const shouldStopClickPropagationRef = React49.useRef(false);
+    const prevCheckedRef = React49.useRef(checked);
+    const handledUserClickRef = React49.useRef(userClick);
+    const pendingUserClickRef = React49.useRef(null);
+    React49.useEffect(() => {
       const input = bubbleInput;
       if (!input) return;
       const inputProto = window.HTMLInputElement.prototype;
@@ -10282,8 +11563,8 @@ var SwitchBubbleInput = /* @__PURE__ */ React48.forwardRef(
         shouldStopClickPropagationRef.current = false;
       }
     }, [bubbleInput, checked, userClick]);
-    const defaultCheckedRef = React48.useRef(checked);
-    return /* @__PURE__ */ jsx26(
+    const defaultCheckedRef = React49.useRef(checked);
+    return /* @__PURE__ */ jsx27(
       Primitive.input,
       {
         type: "checkbox",
@@ -10318,25 +11599,26 @@ var SwitchBubbleInput = /* @__PURE__ */ React48.forwardRef(
     );
   }, "SwitchBubbleInput")
 );
-function isFunction4(value) {
+function isFunction5(value) {
   return typeof value === "function";
 }
-__name36(isFunction4, "isFunction");
+__name38(isFunction5, "isFunction");
 function getState6(checked) {
   return checked ? "checked" : "unchecked";
 }
-__name36(getState6, "getState");
+__name38(getState6, "getState");
 
 export {
   dist_exports,
   dist_exports2,
-  dist_exports15 as dist_exports3,
+  dist_exports16 as dist_exports3,
   dist_exports7 as dist_exports4,
   dist_exports9 as dist_exports5,
   dist_exports10 as dist_exports6,
   dist_exports11 as dist_exports7,
   dist_exports13 as dist_exports8,
-  dist_exports16 as dist_exports9,
-  dist_exports17 as dist_exports10,
-  dist_exports14 as dist_exports11
+  dist_exports17 as dist_exports9,
+  dist_exports14 as dist_exports10,
+  dist_exports18 as dist_exports11,
+  dist_exports15 as dist_exports12
 };

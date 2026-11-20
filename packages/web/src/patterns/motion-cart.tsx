@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type PointerEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 import { Icon } from "../foundation/foundation.js";
 
 type CartButtonProps = {
@@ -14,10 +14,16 @@ type CartButtonProps = {
 const holdDelay = 380;
 const initialRepeat = 150;
 const minimumRepeat = 55;
+const limitNoticeDuration = 1600;
 
 export function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "Add" }: CartButtonProps) {
   const limit = Number.isFinite(max) ? Math.max(0, Math.floor(max)) : 99;
   const count = Number.isFinite(quantity) ? Math.max(0, Math.min(limit, Math.floor(quantity))) : 0;
+  const previous = useRef(count);
+  const goingDown = count < previous.current;
+  useLayoutEffect(() => { previous.current = count; }, [count]);
+  const [showLimit, setShowLimit] = useState(false);
+  const notice = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const open = count > 0;
   const reachedLimit = count >= limit;
   const latest = useRef({ count, limit, onQuantityChange });
@@ -34,13 +40,25 @@ export function CartButton({ label, quantity, onQuantityChange, max = 99, addLab
 
   useEffect(() => {
     window.addEventListener("blur", stop);
-    return () => { window.removeEventListener("blur", stop); stop(); };
+    return () => {
+      window.removeEventListener("blur", stop);
+      clearTimeout(notice.current);
+      stop();
+    };
   }, []);
 
   function change(direction: 1 | -1, repeat: boolean) {
     const { count, limit, onQuantityChange } = latest.current;
     const next = count + direction;
-    if (next < (repeat ? 1 : 0) || next > limit) return false;
+    if (next > limit) {
+      clearTimeout(notice.current);
+      setShowLimit(true);
+      notice.current = setTimeout(() => setShowLimit(false), limitNoticeDuration);
+      return false;
+    }
+    if (next < (repeat ? 1 : 0)) return false;
+    clearTimeout(notice.current);
+    setShowLimit(false);
     if (next === 0) increase.current?.focus();
     onQuantityChange(next);
     return true;
@@ -98,6 +116,7 @@ export function CartButton({ label, quantity, onQuantityChange, max = 99, addLab
       onBlur={event => {
         if (!event.currentTarget.contains(event.relatedTarget)) stop();
       }}>
+      <span className="yg-cart-limit" role="status">{showLimit && reachedLimit ? `Limit ${limit} per order` : null}</span>
       <div className="yg-cart-stepper">
         <button type="button" className="yg-cart-decrease" hidden={!open}
           aria-label={count === 1 ? `Remove ${label}` : `Decrease quantity of ${label}`}
@@ -109,7 +128,7 @@ export function CartButton({ label, quantity, onQuantityChange, max = 99, addLab
           </svg>
         </button>
         <output className="yg-cart-quantity" aria-label={`Quantity of ${label}`} hidden={!open}>
-          <span key={count}>{count}</span>
+          <span key={count} data-direction={goingDown ? "down" : "up"}>{count}</span>
         </output>
         <button ref={increase} type="button" className="yg-cart-increase" aria-disabled={reachedLimit || undefined}
           aria-label={open ? `Increase quantity of ${label}` : `${addLabel} ${label}`}

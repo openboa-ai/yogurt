@@ -172,6 +172,8 @@ for (const input of Object.keys(built.metafile.inputs)) {
     }
   }
 }
+notices.set("Cart button", read("design/notices/cart-button.txt"));
+notices.set("Task list", read("design/notices/task-list.txt"));
 const notice = [...notices]
   .sort(([a], [b]) => a.localeCompare(b))
   .map(([name, body]) => name + "\n" + body)

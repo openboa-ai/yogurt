@@ -95,6 +95,20 @@ async function run(browser) {
       font: getComputedStyle(node).fontSize,
     }));
     assert.deepEqual(primarySize, {height:"36px",corner:"8px",font:"14px"});
+    const dropdown = await demo("spring-dropdown");
+    const view = dropdown.getByRole("combobox", {name:"Workspace view"});
+    await view.press("Space");
+    const options = page.getByRole("listbox");
+    await options.waitFor();
+    await page.keyboard.press("Escape");
+    await options.waitFor({state:"hidden"});
+    assert(await view.evaluate(node => node === document.activeElement));
+    await view.click();
+    await options.getByRole("option", {name:"Files"}).click();
+    assert.match(await view.textContent(), /Files/);
+    await options.waitFor({state:"hidden"});
+    assert(await view.evaluate(node => node === document.activeElement));
+
     const command = await demo("command-palette");
     const open = command.getByRole("button", {name:"Open command palette"});
     await open.click();
@@ -201,6 +215,8 @@ async function run(browser) {
     await page.mouse.up();
     assert.equal(await berryIncrease.getAttribute("aria-disabled"), "true");
     assert.equal(await berries.locator("output").textContent(), "9");
+    await berryIncrease.press("Enter");
+    await berries.getByText("Limit 9 per order", {exact:true}).waitFor();
     const berryDecrease = berries.getByRole("button", {name: "Decrease quantity of Blueberries"});
     const decreaseBox = await berryDecrease.boundingBox();
     await page.mouse.move(decreaseBox.x + decreaseBox.width / 2, decreaseBox.y + decreaseBox.height / 2);

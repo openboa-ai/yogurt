@@ -291,3 +291,44 @@ summary.yg-task-line { grid-template-columns: 20px minmax(0, 1fr) auto 16px; }
 .yg-activity-island > button > span:nth-child(2) { min-inline-size: 0; overflow-wrap: anywhere; }
 .yg-island-content { border-block-start: 1px solid var(--yg-surface-edge); padding-block-start: var(--yg-inset-regular); }
 .yg-copy-action [role="status"]:not(:empty) { max-inline-size: 32ch; line-height: 1.4; }
+
+/* A compact square marks each step; the active row carries one travelling rule. */
+.yg-task-list { gap: 6px; padding: 12px; }
+.yg-task-list > header { min-block-size: 0; padding: 0; align-items: baseline; }
+.yg-task-list > ol { gap: 0; }
+.yg-task-line, .yg-task-list .yg-task-children .yg-task-line {
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  min-block-size: 0;
+  align-items: start;
+  gap: 8px;
+  padding: 4px 0;
+}
+summary.yg-task-line { grid-template-columns: 14px minmax(0, 1fr) auto 16px; }
+.yg-task-marker {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin-block-start: 2px;
+  border: 1.4px solid currentColor;
+  border-radius: 3.5px;
+  box-sizing: border-box;
+}
+.yg-task-marker > span { width: 0; height: 0; border: 0; }
+.yg-task-marker svg { width: 12px; height: 12px; }
+.yg-task-list [data-state="done"] .yg-task-marker { background: var(--yg-success-soft); }
+.yg-task-list [data-state="running"] > .yg-task-line .yg-task-marker > span,
+.yg-task-list [data-state="running"] > details > .yg-task-line .yg-task-marker > span { background: none; }
+.yg-task-list > ol > li[data-active], .yg-task-list > ol > li[data-state="failed"] { box-shadow: none; background: transparent; }
+.yg-task-list .yg-task-children { margin: 0; padding: 0 0 0 20px; border: 0; }
+.yg-task-list [data-active]::after { inset-inline: 0; block-size: 1px; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-task-list [data-active]::after {
+    background-size: 50% 100%;
+    opacity: .5;
+    animation: yg-task-ruler 1.4s ease-in-out infinite;
+  }
+}
+@keyframes yg-task-ruler { from { background-position-x: 0%; } to { background-position-x: 200%; } }
+@media (pointer: coarse) {
+  summary.yg-task-line { min-block-size: 44px; align-items: center; }
+}

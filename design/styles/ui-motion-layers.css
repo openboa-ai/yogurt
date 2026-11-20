@@ -26,14 +26,37 @@
   70% { opacity: 1; transform: translateY(-1px) scale(1); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-.yg-spring-dropdown { inline-size: min(100%, 320px); min-inline-size: 0; }
-.yg-spring-dropdown .yg-select { transition: transform var(--yg-change) var(--yg-selection), background-color var(--yg-travel) var(--yg-settle); }
-.yg-spring-dropdown .yg-select:focus-within { background: var(--yg-hover); outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
+.yg-spring-dropdown { display: grid; gap: 6px; inline-size: min(100%, 320px); min-inline-size: 0; }
+.yg-spring-label { color: var(--yg-muted); font-size: 13px; line-height: 18px; font-weight: 600; }
+.yg-spring-trigger {
+  box-sizing: border-box; display: flex; align-items: center; gap: 12px; inline-size: 100%; min-block-size: 52px;
+  padding: 8px 12px; border: 1px solid var(--yg-off); border-radius: var(--yg-radius-control);
+  background: var(--yg-field); color: var(--yg-text); font: inherit; text-align: start; cursor: pointer;
+  transition: border-color var(--yg-change) var(--yg-settle), background-color var(--yg-change) var(--yg-settle);
+}
+.yg-spring-trigger:hover, .yg-spring-trigger[data-state="open"] { background: var(--yg-hover); border-color: var(--yg-muted); }
+.yg-spring-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
+.yg-spring-symbol, .yg-spring-option-symbol { display: grid; place-items: center; flex: none; inline-size: 28px; block-size: 28px; border-radius: var(--yg-radius-small); background: var(--yg-action-soft); color: var(--yg-action); font-size: 10px; }
+.yg-spring-value { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.yg-spring-chevron { display: grid; place-items: center; flex: none; inline-size: 24px; block-size: 24px; color: var(--yg-muted); font-size: 20px; line-height: 1; transition: transform var(--yg-change) var(--yg-selection); }
+.yg-spring-trigger[data-state="open"] .yg-spring-chevron { transform: rotate(180deg); }
+.yg-spring-menu { z-index: 100; box-sizing: border-box; inline-size: var(--radix-select-trigger-width); max-block-size: var(--radix-select-content-available-height); overflow: hidden; border: 1px solid var(--yg-off); border-radius: var(--yg-radius-panel); background: var(--yg-surface); color: var(--yg-text); box-shadow: 0 6px 20px rgb(0 0 0 / .14); transform-origin: var(--radix-select-content-transform-origin); }
+.yg-spring-menu[data-state="open"] { animation: yg-spring-enter var(--yg-expand) var(--yg-selection) both; }
+.yg-spring-menu[data-state="closed"] { animation: yg-spring-exit var(--yg-travel) var(--yg-settle) both; }
+.yg-spring-viewport { padding: 4px; }
+.yg-spring-option { display: flex; align-items: center; gap: 10px; min-block-size: 44px; padding: 4px 8px; border-radius: var(--yg-radius-small); outline: none; cursor: pointer; box-sizing: border-box; }
+.yg-spring-option[data-highlighted] { background: var(--yg-hover); }
+.yg-spring-option[data-state="checked"] { background: var(--yg-action-soft); color: var(--yg-text); font-weight: 600; }
+.yg-spring-option-symbol { inline-size: 24px; block-size: 24px; font-size: 8px; }
+.yg-spring-check { display: grid; place-items: center; margin-inline-start: auto; inline-size: 24px; block-size: 24px; color: var(--yg-action); font-weight: 700; }
+@keyframes yg-spring-enter { from { opacity: 0; transform: translateY(-5px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes yg-spring-exit { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: translateY(-3px) scale(.98); } }
 .yg-command-button .yg-button { transition: transform var(--yg-change) var(--yg-selection), background-color var(--yg-travel) var(--yg-settle); }
 .yg-command-button .yg-button:hover { background: var(--yg-hover); }
 .yg-command-button .yg-button:active { transform: scale(.98); }
 @media (prefers-reduced-motion: reduce) {
-  .yg-morph-tooltip-card { animation: none; }
+  .yg-morph-tooltip-card, .yg-spring-menu[data-state] { animation: none; }
+  .yg-spring-trigger, .yg-spring-chevron { transition: none; }
   .yg-morph-tooltip-trigger, .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select, .yg-command-button .yg-button { transition: none; }
   .yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select:focus-within, .yg-command-button .yg-button:hover, .yg-command-button .yg-button:active { transform: none; }
 }
