@@ -2261,13 +2261,27 @@ function HoldButton({ label, onConfirm }) {
   const [progress, setProgress] = useState9(0);
   const [armed, setArmed] = useState9(false);
   const [holding, setHolding] = useState9(false);
+  const [showHolding, setShowHolding] = useState9(false);
+  const amount = useRef10(0);
+  const fill = useRef10(null);
+  const drain = useRef10(void 0);
   const active = useRef10(null);
   const frame = useRef10(null);
   const callback = useRef10(onConfirm);
   callback.current = onConfirm;
   const { done, locked, confirm } = useConfirmation(() => callback.current());
   const cancel = () => {
+    if (active.current === null) return;
+    const releasedAt = amount.current;
+    if (releasedAt > 0 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      drain.current = fill.current?.animate([
+        { transform: `scaleX(${releasedAt})` },
+        { transform: "scaleX(0)" }
+      ], { duration: releasedAt * 300, easing: "cubic-bezier(.23, 1, .32, 1)" });
+    }
     active.current = null;
+    amount.current = 0;
+    setShowHolding(false);
     if (frame.current !== null) cancelAnimationFrame(frame.current);
     frame.current = null;
     setHolding(false);
@@ -2275,9 +2289,11 @@ function HoldButton({ label, onConfirm }) {
   };
   useEffect5(() => () => {
     if (frame.current !== null) cancelAnimationFrame(frame.current);
+    drain.current?.cancel();
   }, []);
   const start = (event) => {
     if (!event.isPrimary || event.button !== 0 || active.current !== null || locked.current) return;
+    drain.current?.cancel();
     setArmed(false);
     setHolding(true);
     active.current = event.pointerId;
@@ -2285,12 +2301,18 @@ function HoldButton({ label, onConfirm }) {
     const started = performance.now();
     const tick = (now) => {
       if (active.current === null) return;
-      const next = Math.min(1, (now - started) / 1200);
+      const elapsed = now - started;
+      const next = Math.min(1, elapsed / 1200);
+      amount.current = next;
       setProgress(next);
+      if (elapsed >= 150) setShowHolding(true);
       if (next === 1) {
         active.current = null;
         frame.current = null;
         setHolding(false);
+        setShowHolding(false);
+        setProgress(0);
+        amount.current = 0;
         confirm();
       } else frame.current = requestAnimationFrame(tick);
     };
@@ -2332,8 +2354,19 @@ function HoldButton({ label, onConfirm }) {
         } else setArmed(true);
       },
       children: [
-        /* @__PURE__ */ jsx10("span", { className: "yg-confirm-fill", "aria-hidden": "true" }),
-        /* @__PURE__ */ jsx10("span", { className: "yg-confirm-label", children: done ? /* @__PURE__ */ jsx10(Icon, { name: "check" }) : armed ? `Confirm ${label}` : label })
+        /* @__PURE__ */ jsx10("span", { ref: fill, className: "yg-confirm-fill", "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx10("span", { className: "yg-confirm-label", children: done ? /* @__PURE__ */ jsx10("svg", { className: "yg-hold-check", width: "16", height: "16", viewBox: "0 0 16 16", "aria-hidden": "true", children: /* @__PURE__ */ jsx10(
+          "path",
+          {
+            d: "m3.5 8.5 3 3 6-7",
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: "2",
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            pathLength: "1"
+          }
+        ) }) : armed ? `Confirm ${label}` : showHolding ? "Keep holding" : label }, done ? "complete" : showHolding ? "holding" : armed ? "armed" : "ready")
       ]
     }
   );

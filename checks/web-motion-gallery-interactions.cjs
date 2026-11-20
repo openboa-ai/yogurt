@@ -133,11 +133,23 @@ const actions = {
     await root.locator(".yg-hold-confirm").hover();
     await page.mouse.down();
     try {
+      await byText(root, "Keep holding").waitFor();
       await page.waitForFunction(() => {
         const value = Number(document.querySelector(".yg-hold-confirm").style.getPropertyValue("--yg-confirm-progress"));
         return value > .15 && value < .9;
       });
+    } finally {
+      await page.mouse.up();
+    }
+    assert.equal(await byText(root, "Approved 1 time.").count(), 0);
+    await page.waitForFunction(() => {
+      const animation = document.querySelector(".yg-hold-confirm .yg-confirm-fill").getAnimations()[0];
+      return !animation || animation.playState === "finished";
+    });
+    await page.mouse.down();
+    try {
       await byText(root, "Approved 1 time.").waitFor();
+      await root.locator(".yg-hold-check").waitFor();
     } finally {
       await page.mouse.up();
     }

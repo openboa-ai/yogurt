@@ -50,3 +50,5 @@ The spring picker frame samples show height overshoot at all three widths, separ
 The guide exercised all 78 specimens. Browser captures sampled intermediate frames in every specimen. The review used paired runs for 63 examples and exercised the 15 original guide interactions directly. Paired runs observe travel and state changes through a representative interaction. They do not establish that every frame or alternate state has identical timing.
 
 The interaction suite also checks a clipboard roll followed by a ready state, a pending action at its narrow width, tooltip travel between triggers, OTP confirmation, rubber overshoot with a clamped value, the wheel under drag and keyboard input, toolbar marker travel, the profile action while its width changes, swipe dismissal of a notification, and a thinking indicator after its second dot lifts.
+
+The hold check releases a partial press and confirms that it has no effect, then holds through confirmation and observes the drawn check.
