@@ -25,3 +25,5 @@ Include agent steps, hold to confirm, smooth tabs, slide to confirm and notifica
 ## Review delivery
 
 Publish a temporary branch preview for hands-on review. Keep the comparison and existing library reachable from the preview. Leave the pull request unmerged until the owner finishes reviewing. Include additional reusable patterns identified during the catalog review and expose them as interactive examples.
+
+The owner selected an expandable task list for additional refinement. The list shows supplied queued, running, done and failed states, a count derived from the dataset and expandable child steps. A quiet travel indicator marks the first active row. A check draws when a task completes. Motion reduction leaves status text, counts and disclosure available. The fixture can advance, fail and restart without starting an external task.
