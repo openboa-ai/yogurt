@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, type ReactNode } from "react";
+import { useId, useState, type CSSProperties, type ReactNode } from "react";
 import { Button } from "../controls/actions.js";
 import { Icon } from "../foundation/foundation.js";
 
@@ -10,6 +10,25 @@ type StorageCategory = {
   amount: number;
   detail?: ReactNode;
 };
+
+function StorageAmount({ value }: { value: number }) {
+  const [whole, fraction] = String(value).split(".");
+  const groups = [{digits: whole, decimal: false}, {digits: fraction, decimal: true}];
+  return <strong className="yg-storage-count" aria-hidden="true">
+    {groups.map(({digits, decimal}) => digits && <span key={String(decimal)}>
+      {decimal && "."}
+      {Array.from(digits, (digit, index) => {
+        const column = digits.length - index - 1;
+        if (!/^[0-9]$/.test(digit)) return <span key={column}>{digit}</span>;
+        return <span className="yg-storage-reel" key={column} style={{
+          "--yg-reel-digit": Number(digit), "--yg-reel-delay": column + (decimal ? 0 : fraction?.length ?? 0),
+        } as CSSProperties}>
+          <span>{Array.from("0123456789", number => <span key={number}>{number}</span>)}</span>
+        </span>;
+      })}
+    </span>)}
+  </strong>;
+}
 
 export function StorageMeter({ label, used, capacity, unit, categories = [] }: {
   label: string;
@@ -21,8 +40,6 @@ export function StorageMeter({ label, used, capacity, unit, categories = [] }: {
   const id = useId();
   const [expanded, setExpanded] = useState<string | null>(null);
   const known = Number.isFinite(used) && Number.isFinite(capacity) && capacity > 0 && used >= 0;
-  const [roll, setRoll] = useState({value: used, previous: used});
-  if (!Object.is(roll.value, used)) setRoll({value: used, previous: roll.value});
   const ratio = known ? Math.min(1, used / capacity) : 0;
   let available = known ? Math.min(used, capacity) : 0;
   const breakdown = categories.filter(category => Number.isFinite(category.amount) && category.amount > 0);
@@ -40,11 +57,7 @@ export function StorageMeter({ label, used, capacity, unit, categories = [] }: {
       {known ? (
         <>
           <div className="yg-storage-amount">
-            <strong className="yg-storage-count" key={used} data-decreased={used < roll.previous || undefined}>
-              {Number.isFinite(roll.previous) && roll.previous !== used &&
-                <span className="yg-storage-count-before" aria-hidden="true">{roll.previous}</span>}
-              <span className="yg-storage-count-now" data-roll={roll.previous !== used || undefined}>{used}</span>
-            </strong><b>{unit}</b>
+            <StorageAmount value={used} /><b aria-hidden="true">{unit}</b>
             <span>of {capacity} {unit}</span>
           </div>
           <div className="yg-storage-bar" role="meter" aria-labelledby={id}

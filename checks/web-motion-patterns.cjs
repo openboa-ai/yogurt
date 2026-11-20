@@ -135,6 +135,7 @@ async function run(browser) {
     const trigger = dropdown.locator(".yg-spring-trigger");
     const reveal = dropdown.evaluate(node => new Promise(resolve => {
       let observed = false;
+      let overshot = false;
       const deadline = performance.now() + 1200;
       const sample = () => {
         const menu = node.querySelector(".yg-spring-menu[data-state='open']");
@@ -145,8 +146,9 @@ async function run(browser) {
           const rows = menu.querySelectorAll("[role='option']");
           const staggered = Number(getComputedStyle(rows[0]).opacity) > Number(getComputedStyle(rows[3]).opacity);
           observed ||= height > 0 && height < 1 && opacity > 0 && opacity < 1 && staggered;
+          overshot ||= height > 1.015;
         }
-        if (observed || performance.now() > deadline) resolve(observed);
+        if ((observed && overshot) || performance.now() > deadline) resolve({observed, overshot});
         else requestAnimationFrame(sample);
       };
       requestAnimationFrame(sample);
@@ -154,12 +156,14 @@ async function run(browser) {
     await view.press("Space");
     const options = page.getByRole("listbox");
     await options.waitFor();
-    assert(await reveal, "The standalone gallery animates menu height, opacity and row stagger");
+    assert.deepEqual(await reveal, {observed: true, overshot: true},
+      "The gallery animates opacity and row stagger independently of the menu height overshoot");
     await page.keyboard.press("ArrowDown");
     await page.waitForFunction(() => {
       const row = document.querySelector(".yg-spring-option[data-highlighted]");
       const highlight = document.querySelector(".yg-spring-highlight[data-ready]");
-      return row && highlight?.style.getPropertyValue("--yg-spring-active-y") === `${row.offsetTop}px`;
+      return row && highlight &&
+        Math.abs(parseFloat(highlight.style.getPropertyValue("--yg-spring-active-y")) - row.offsetTop) < .25;
     });
     await page.waitForFunction(() => document.activeElement?.textContent.includes("In review"));
     await page.keyboard.press("Escape");
@@ -170,10 +174,10 @@ async function run(browser) {
     await review.click();
     assert.match(await trigger.textContent(), /In review/);
     assert.equal(await trigger.getAttribute("aria-expanded"), "true", "Selection draws its check before folding the menu");
-    await review.locator(".yg-spring-check path").evaluate(path => {
-      if (!path.getAnimations().some(animation => animation.transitionProperty === "stroke-dashoffset")) {
-        throw Error("The selected check must draw in the menu");
-      }
+    await page.waitForFunction(() => {
+      const check = document.querySelector('.yg-spring-option[data-state="checked"] .yg-spring-check path');
+      const offset = check ? parseFloat(getComputedStyle(check).strokeDashoffset) : 0;
+      return offset > 0 && offset < 22;
     });
     await options.waitFor({state:"hidden"});
     await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
@@ -234,6 +238,8 @@ async function run(browser) {
     await category.press("Enter");
     assert.equal(await category.getAttribute("aria-expanded"), "true");
     await storage.getByRole("button", {name: "Free up space"}).click();
+    await storage.locator('[data-outcome="pending"]').waitFor();
+    await storage.getByRole("button", {name: "Space freed"}).waitFor();
     assert.equal(await meter.getAttribute("aria-valuenow"), "64");
 
     const letterLimit = await demo("letter-limit");
@@ -263,7 +269,14 @@ async function run(browser) {
     const files = await demo("file-drop");
     const input = files.locator('input[type="file"]');
     await input.setInputFiles({name: "brief.txt", mimeType: "text/plain", buffer: Buffer.from("Draft")});
+    const preparation = files.getByRole("progressbar", {name: "Preparing selected files"});
+    await preparation.waitFor();
+    await page.waitForFunction(() => {
+      const value = Number(document.querySelector(".yg-file-drop-progress")?.getAttribute("aria-valuenow"));
+      return value > 0 && value < 100;
+    });
     await files.getByText("brief.txt", {exact: true}).waitFor();
+    await files.locator(".yg-file-drop[data-accepted]").waitFor();
     await input.setInputFiles({name: "not-allowed.csv", mimeType: "text/csv", buffer: Buffer.from("Draft")});
     await files.getByText(/1 file was not added/).waitFor();
 

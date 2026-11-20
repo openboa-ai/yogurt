@@ -67,21 +67,62 @@ button.extra-ticket[data-flipped="true"] { --flip: 180deg; background: transpare
 .extra-ticket-seat { display: flex; gap: 22px; text-align: center; font-size: 10px; color: var(--yg-muted); }
 .extra-ticket-seat b { display: block; margin-top: 2px; color: var(--yg-text); font-size: 18px; }
 .extra-reading { width: min(420px, 100%); }
-.extra-reading p { margin: 0; color: var(--yg-muted); font-size: clamp(20px, 5vw, 30px); font-weight: 700; letter-spacing: -.03em; line-height: 1.45; }
-.extra-reading p button { display: inline; border: 0; padding: .05em .16em; margin: 0 -.16em; border-radius: .34em; background: transparent; color: inherit; font: inherit; }
+.extra-reading p { position: relative; isolation: isolate; margin: 0; color: var(--yg-muted); font-size: clamp(20px, 5vw, 30px); font-weight: 700; letter-spacing: -.03em; line-height: 1.45; }
+.extra-reading p button { position: relative; display: inline; border: 0; padding: .05em .16em; margin: 0 -.16em; border-radius: .34em; background: transparent; color: inherit; font: inherit; }
 .extra-reading p button[data-past="true"] { color: var(--yg-text); }
-.extra-reading p button[aria-pressed="true"] { background: var(--yg-inverse); color: var(--yg-canvas); }
+.extra-reading p button[aria-pressed="true"] { background: var(--yg-hover); color: var(--yg-text); }
+.extra-reading p:has(.extra-reading-marker[data-ready]) button[aria-pressed="true"] { background: transparent; }
 .extra-reading p button:focus-visible { outline: 2px solid var(--yg-inverse); outline-offset: 2px; }
+@property --reading-left { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --reading-right { syntax: "<length>"; inherits: false; initial-value: 0px; }
+.extra-reading-marker {
+  position: absolute;
+  top: var(--reading-top, 0px);
+  left: var(--reading-left);
+  inline-size: max(0px, calc(var(--reading-right) - var(--reading-left)));
+  border-radius: .34em;
+  background: var(--yg-hover);
+  pointer-events: none;
+}
+.extra-deck-stage { overflow: clip; overflow-clip-margin: 32px; }
+.extra-deck-sheet[data-depth] {
+  transform: translate(var(--drag-x), calc(var(--drag-y) + 16px * var(--deck-depth))) rotate(var(--drag-rotate)) scale(calc(1 - .055 * var(--deck-depth)));
+  filter: brightness(calc(1 - .22 * var(--deck-depth)));
+  border: 0;
+  box-shadow: none;
+}
+.extra-deck-sheet[data-flight] { z-index: 4; pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .extra-deck-sheet { transition: transform 280ms cubic-bezier(.2,.8,.2,1); }
-  .extra-deck-sheet:active { transition: none; cursor: grabbing; }
-  button.extra-ticket, .extra-ticket-art, .extra-ticket-copy { transition: transform 450ms cubic-bezier(.2,.8,.2,1); }
+  .extra-deck-sheet { transition: transform var(--yg-motion-deck-depth), filter var(--yg-motion-deck-depth); }
+  .extra-deck-sheet[data-dragging] { transition: transform var(--yg-motion-drag-position); cursor: grabbing; }
+  .extra-deck-sheet[data-depth="0"]:not([data-dragging]) { transition: transform var(--yg-motion-deck-release); }
+  .extra-deck-sheet[data-flight] {
+    transition: none; filter: brightness(1);
+    transform: translate(var(--flight-x, var(--drag-x)), var(--flight-y, var(--drag-y))) rotate(var(--flight-spin, var(--drag-rotate)));
+  }
+  button.extra-ticket, .extra-ticket-art, .extra-ticket-copy { transition: transform var(--yg-motion-ticket-turn); }
   .extra-reading p button { transition: color var(--yg-motion-reading-marker), background-color var(--yg-motion-reading-marker); }
   .extra-page-current { transition: transform var(--yg-expand) var(--yg-arrive); }
   .extra-page-stack[data-dragging] .extra-page-current { transition: none; }
   .extra-page-current { animation: extra-page-turn var(--yg-reveal) var(--yg-arrive); }
 }
 @keyframes extra-page-turn { from { opacity: .6; translate: 4px 0; } }
+.extra-page-turning { display: none; }
+.extra-note-fold { display: grid; grid-template-rows: 0fr; }
+.extra-note-fold > div { min-block-size: 0; overflow: clip; }
+.extra-note-fold p { margin: 0; }
+.extra-note[data-open="true"] .extra-note-fold { grid-template-rows: 1fr; }
+@media (prefers-reduced-motion: no-preference) {
+  .extra-page-turning {
+    display: block; position: relative; z-index: 1; transform-origin: left center;
+    backface-visibility: hidden; pointer-events: none;
+    animation: extra-turn-over 600ms cubic-bezier(.32,.72,0,1) both;
+  }
+  .extra-note-fold { transition: grid-template-rows var(--yg-motion-card-open); }
+  .extra-note-fold p { transform-origin: top center; transform: perspective(500px) rotateX(-48deg); opacity: 0; transition: transform var(--yg-motion-card-open), opacity var(--yg-motion-picker-opacity); }
+  .extra-note[data-open="true"] .extra-note-fold p { transform: perspective(500px) rotateX(0); opacity: 1; }
+}
+@keyframes extra-turn-over { from { transform: rotateY(var(--turn-from)); } to { transform: rotateY(var(--turn-to)); } }
 .extra-page-stack { display: grid; min-inline-size: 0; perspective: 800px; }
 .extra-page-stack > div { grid-area: 1 / 1; }
 .extra-page-current {
@@ -110,6 +151,7 @@ button.extra-ticket[data-flipped="true"] { --flip: 180deg; background: transpare
   button.extra-ticket[data-flipped="true"] .extra-ticket-back { transform: none; }
   .extra-ticket-art, .extra-ticket-copy { transform: none; }
   .extra-deck-sheet[data-depth="0"] { transform: none; }
+  .extra-deck-sheet[data-flight] { visibility: hidden; }
 }
 .extra-pass { width: min(100%, 384px); padding: 0; gap: 0; border-radius: var(--yg-radius-sheet); overflow: hidden; }
 .extra-pass-main { display: grid; gap: var(--boa-space-20); padding: var(--boa-space-20); }

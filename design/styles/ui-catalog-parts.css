@@ -833,13 +833,6 @@
   }
 }
 
-.yg-stage-list > progress {
-  display: block;
-  width: 100%;
-  height: var(--boa-space-4);
-  margin-block-end: var(--boa-space-12);
-  accent-color: var(--yg-inverse);
-}
 .yg-stepper li > div {
   min-width: 0;
   overflow-wrap: anywhere;

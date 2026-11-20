@@ -1,7 +1,7 @@
 "use client";
 import {
   Dialog
-} from "./chunk-OQUAFXG7.js";
+} from "./chunk-56BSJQX7.js";
 import {
   Checkbox,
   RadioGroup,
@@ -6837,39 +6837,61 @@ function Stepper({
   variant = "list"
 }) {
   const at = steps.findIndex((s) => s.id === current);
-  return /* @__PURE__ */ jsxs("div", { className: "yg-stage-list", children: [
-    variant === "progress" && /* @__PURE__ */ jsx(
-      "progress",
-      {
-        "aria-label": label,
-        value: at + 1,
-        max: Math.max(1, steps.length)
-      }
-    ),
-    /* @__PURE__ */ jsx("ol", { className: "yg-stepper", "aria-label": label, "data-variant": variant, children: steps.map((s, i) => /* @__PURE__ */ jsxs(
-      "li",
-      {
-        "aria-current": i === at ? "step" : void 0,
-        "data-complete": i < at || void 0,
-        children: [
-          /* @__PURE__ */ jsx(
-            "span",
-            {
-              className: "yg-step-number",
-              "aria-label": i < at ? "Completed" : void 0,
-              children: i < at ? /* @__PURE__ */ jsx(Icon, { name: "check" }) : i + 1
-            }
-          ),
-          /* @__PURE__ */ jsxs("div", { children: [
-            /* @__PURE__ */ jsx("strong", { children: s.label }),
-            s.detail && /* @__PURE__ */ jsx("p", { className: "yg-help", children: s.detail })
-          ] }),
-          s.action
-        ]
-      },
-      s.id
-    )) })
-  ] });
+  const connected = variant === "progress" && steps.length > 1 && steps.length <= 5;
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      className: "yg-stage-list",
+      "data-connected": connected || void 0,
+      style: connected ? { "--yg-step-count": steps.length } : void 0,
+      children: [
+        variant === "progress" && /* @__PURE__ */ jsxs("div", { className: "yg-step-track", children: [
+          /* @__PURE__ */ jsx("progress", { "aria-label": label, value: at + 1, max: Math.max(1, steps.length) }),
+          /* @__PURE__ */ jsx("span", { "aria-hidden": "true", style: {
+            "--yg-step-progress": connected ? Math.max(0, at) / (steps.length - 1) : (at + 1) / Math.max(1, steps.length)
+          } })
+        ] }),
+        /* @__PURE__ */ jsx("ol", { className: "yg-stepper", "aria-label": label, "data-variant": variant, children: steps.map((s, i) => /* @__PURE__ */ jsxs(
+          "li",
+          {
+            "aria-current": i === at ? "step" : void 0,
+            "data-complete": i < at || void 0,
+            children: [
+              /* @__PURE__ */ jsxs(
+                "span",
+                {
+                  className: "yg-step-number",
+                  "aria-label": i < at ? "Completed" : void 0,
+                  children: [
+                    /* @__PURE__ */ jsx("span", { "aria-hidden": i < at || void 0, children: i + 1 }),
+                    /* @__PURE__ */ jsx(
+                      "svg",
+                      {
+                        "aria-hidden": "true",
+                        viewBox: "0 0 24 24",
+                        fill: "none",
+                        stroke: "currentColor",
+                        strokeWidth: "2.2",
+                        strokeLinecap: "round",
+                        strokeLinejoin: "round",
+                        children: /* @__PURE__ */ jsx("path", { d: "m5 12.5 4.5 4.5L19 7.5", pathLength: "22" })
+                      }
+                    )
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxs("div", { children: [
+                /* @__PURE__ */ jsx("strong", { children: s.label }),
+                s.detail && /* @__PURE__ */ jsx("p", { className: "yg-help", children: s.detail })
+              ] }),
+              s.action
+            ]
+          },
+          s.id
+        )) })
+      ]
+    }
+  );
 }
 function Resizable({
   label,

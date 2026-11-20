@@ -1,8 +1,9 @@
 "use client";
 
-import { useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 import { Command } from "../controls/advanced.js";
+import { animateSpringPicker } from "./spring-picker-motion.js";
 
 /** A contextual note that can be revealed with a pointer or keyboard focus. */
 export function MorphTooltip({ label, detail }: { label: string; detail: string }) {
@@ -33,74 +34,27 @@ type SpringOption = LayerOption & {
   marker?: "neutral" | "in-progress" | "review" | "done";
 };
 
-function SpringHighlight() {
-  const ref = useRef<HTMLSpanElement>(null);
-  useLayoutEffect(() => {
-    const highlight = ref.current;
-    const viewport = highlight?.parentElement;
-    if (!highlight || !viewport) return;
-    let lastTop: number | undefined;
-    let lastRow: HTMLElement | null = null;
-    const update = () => {
-      const row = viewport.querySelector<HTMLElement>("[data-highlighted]")
-        ?? (viewport.contains(lastRow) ? lastRow : null)
-        ?? viewport.querySelector<HTMLElement>('[role="option"][data-state="checked"]');
-      if (!row) {
-        highlight.removeAttribute("data-ready");
-        lastTop = undefined;
-        return;
-      }
-      lastRow = row;
-      const top = row.offsetTop;
-      if (lastTop !== undefined && lastTop !== top) {
-        highlight.toggleAttribute("data-forward", top > lastTop);
-      }
-      lastTop = top;
-      highlight.style.setProperty("--yg-spring-active-y", `${top}px`);
-      highlight.style.setProperty("--yg-spring-active-height", `${row.offsetHeight}px`);
-      highlight.style.setProperty("--yg-spring-active-end", `${top + row.offsetHeight}px`);
-      highlight.setAttribute("data-ready", "");
-    };
-    const changes = new MutationObserver(update);
-    changes.observe(viewport, {subtree: true, childList: true, attributes: true,
-      attributeFilter: ["data-highlighted", "data-state"]});
-    const sizes = new ResizeObserver(update);
-    sizes.observe(viewport);
-    update();
-    return () => { changes.disconnect(); sizes.disconnect(); };
-  }, []);
-  return <span ref={ref} className="yg-spring-highlight" aria-hidden="true" />;
-}
-
 /** A controlled listbox with an anchored panel and explicit selected state. */
 export function SpringDropdown({ label, value, onChange, options }: {
   label: string; value: string; onChange: (value: string) => void; options: readonly SpringOption[];
 }) {
   const id = useId();
   const [portal, setPortal] = useState<HTMLDivElement | null>(null);
-  const trigger = useRef<HTMLButtonElement>(null);
   const dismissTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const keepSelectionVisible = useRef(false);
-  const press = useRef<Animation | undefined>(undefined);
-  const [menu, setMenu] = useState({open: false, lift: 0});
+  const motion = useRef<ReturnType<typeof animateSpringPicker> | null>(null);
+  const [open, setOpen] = useState(false);
   const selected = options.find(option => option.id === value);
   const [roll, setRoll] = useState({value, previous: undefined as string | undefined});
   if (roll.value !== value) setRoll({value, previous: roll.value});
   const previous = options.find(option => option.id === roll.previous);
-  useLayoutEffect(() => () => {
-    clearTimeout(dismissTimer.current);
-    press.current?.cancel();
-  }, []);
-
-  function bounceTrigger(scale: number) {
-    const button = trigger.current;
-    if (!button || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    press.current?.cancel();
-    press.current = button.animate([{scale}, {scale: 1}], {
-      duration: 545,
-      easing: getComputedStyle(button).getPropertyValue("--yg-motion-picker-press").trim() || "ease-out",
-    });
-  }
+  useLayoutEffect(() => {
+    if (!portal) return;
+    const controller = animateSpringPicker(portal);
+    motion.current = controller;
+    return () => { controller.dispose(); motion.current = null; };
+  }, [portal]);
+  useLayoutEffect(() => () => clearTimeout(dismissTimer.current), []);
 
   function changeOpen(open: boolean) {
     if (!open && keepSelectionVisible.current) {
@@ -108,32 +62,24 @@ export function SpringDropdown({ label, value, onChange, options }: {
       return;
     }
     clearTimeout(dismissTimer.current);
-    if (!open) {
-      setMenu(current => ({...current, open: false}));
-      return;
-    }
-    const top = portal?.getBoundingClientRect().top ?? 0;
-    const room = Math.max(0, top - 16);
-    const lift = Math.min(room, (8 + 12 + options.length * 44) / 2);
-    setMenu({open: true, lift});
-    bounceTrigger(.965);
+    setOpen(open);
+    if (open) motion.current?.press(.965);
   }
 
   function select(next: string) {
-    if (menu.open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      bounceTrigger(.955);
+    if (open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      motion.current?.press(.955);
       keepSelectionVisible.current = true;
       clearTimeout(dismissTimer.current);
-      dismissTimer.current = setTimeout(() => setMenu(current => ({...current, open: false})), 240);
+      dismissTimer.current = setTimeout(() => setOpen(false), 240);
     }
     onChange(next);
   }
 
-  return <div ref={setPortal} className="yg-spring-dropdown" data-open={menu.open}
-    style={{"--yg-picker-lift": `${menu.lift}px`} as CSSProperties}>
+  return <div ref={setPortal} className="yg-spring-dropdown" data-open={open} data-value={value}>
     <label id={id} className="yg-spring-label">{label}</label>
-    <SelectPrimitive.Root value={value} onValueChange={select} open={menu.open} onOpenChange={changeOpen}>
-      <SelectPrimitive.Trigger ref={trigger} className="yg-spring-trigger" aria-labelledby={id}>
+    <SelectPrimitive.Root value={value} onValueChange={select} open={open} onOpenChange={changeOpen}>
+      <SelectPrimitive.Trigger className="yg-spring-trigger" aria-labelledby={id}>
         <span className="yg-spring-value">
           {previous && <span key={`previous-${value}`} className="yg-spring-value-roll" data-outgoing aria-hidden="true">
             <span className="yg-spring-symbol" data-marker={previous.marker} />
@@ -156,9 +102,8 @@ export function SpringDropdown({ label, value, onChange, options }: {
       <SelectPrimitive.Portal container={portal}>
         <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={8} collisionPadding={16}>
           <SelectPrimitive.Viewport className="yg-spring-viewport">
-            <SpringHighlight />
-            {options.map((option, index) => <SelectPrimitive.Item key={option.id} value={option.id}
-              className="yg-spring-option" style={{"--yg-spring-row-index": index, "--yg-spring-row-reverse": options.length - index - 1} as CSSProperties}>
+            <span className="yg-spring-highlight" aria-hidden="true" />
+            {options.map(option => <SelectPrimitive.Item key={option.id} value={option.id} className="yg-spring-option">
               <span className="yg-spring-symbol" data-marker={option.marker} aria-hidden="true" />
               <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
               <svg className="yg-spring-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"

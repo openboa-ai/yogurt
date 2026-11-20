@@ -25,9 +25,9 @@
 .yg-storage-amount b { font: 650 18px/24px var(--boa-font-family); margin-block-end: 4px; }
 .yg-storage-amount > span, .yg-storage-category-amount { color: var(--yg-muted); font: var(--yg-font-help); }
 .yg-storage-amount > span { margin-inline-start: 4px; }
-.yg-storage-count { position: relative; display: inline-grid; overflow: clip; }
-.yg-storage-count > span { grid-area: 1 / 1; }
-.yg-storage-count-before { position: absolute; inset: 0 auto 0 0; visibility: hidden; }
+.yg-storage-count, .yg-storage-count > span { display: inline-flex; }
+.yg-storage-reel { display: inline-grid; overflow: clip; block-size: 40px; }
+.yg-storage-reel > span { display: grid; grid-auto-rows: 40px; translate: 0 calc(-40px * var(--yg-reel-digit)); }
 .yg-storage-bar {
   display: flex;
   align-items: center;
@@ -83,15 +83,9 @@
       opacity var(--yg-motion-storage-lift), scale var(--yg-motion-storage-lift);
   }
   .yg-storage-reveal { transition: grid-template-rows var(--yg-motion-storage-disclose); }
-  .yg-storage-count { --yg-storage-roll-edge: 1.1em; }
-  .yg-storage-count[data-decreased] { --yg-storage-roll-edge: -1.1em; }
-  .yg-storage-count-now[data-roll] { animation: yg-storage-count-in var(--yg-motion-storage-disclose) both; }
-  .yg-storage-count-before { animation: yg-storage-count-out var(--yg-motion-storage-disclose) both; }
-}
-@keyframes yg-storage-count-in { from { translate: 0 var(--yg-storage-roll-edge); } }
-@keyframes yg-storage-count-out {
-  from { visibility: visible; translate: 0 0; }
-  to { visibility: hidden; translate: 0 calc(-1 * var(--yg-storage-roll-edge)); }
+  .yg-storage-reel > span { transition: translate var(--yg-motion-storage-reel-fast); transition-delay: calc(min(var(--yg-reel-delay), 4) * 50ms); }
+  .yg-storage-reel:nth-last-child(2) > span { transition: translate var(--yg-motion-storage-reel-medium) 50ms; }
+  .yg-storage-reel:nth-last-child(n+3) > span { transition: translate var(--yg-motion-storage-reel-slow) calc(min(var(--yg-reel-delay), 4) * 50ms); }
 }
 
 .yg-activity-island {

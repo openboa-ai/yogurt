@@ -584,15 +584,16 @@ export function Stepper({
   variant?: "list" | "progress";
 }) {
   const at = steps.findIndex((s) => s.id === current);
+  const connected = variant === "progress" && steps.length > 1 && steps.length <= 5;
   return (
-    <div className="yg-stage-list">
-      {variant === "progress" && (
-        <progress
-          aria-label={label}
-          value={at + 1}
-          max={Math.max(1, steps.length)}
-        />
-      )}
+    <div className="yg-stage-list" data-connected={connected || undefined}
+      style={connected ? {"--yg-step-count": steps.length} as CSSProperties : undefined}>
+      {variant === "progress" && <div className="yg-step-track">
+        <progress aria-label={label} value={at + 1} max={Math.max(1, steps.length)} />
+        <span aria-hidden="true" style={{
+          "--yg-step-progress": connected ? Math.max(0, at) / (steps.length - 1) : (at + 1) / Math.max(1, steps.length),
+        } as CSSProperties} />
+      </div>}
       <ol className="yg-stepper" aria-label={label} data-variant={variant}>
         {steps.map((s, i) => (
           <li
@@ -604,7 +605,11 @@ export function Stepper({
               className="yg-step-number"
               aria-label={i < at ? "Completed" : undefined}
             >
-              {i < at ? <Icon name="check" /> : i + 1}
+              <span aria-hidden={i < at || undefined}>{i + 1}</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m5 12.5 4.5 4.5L19 7.5" pathLength="22" />
+              </svg>
             </span>
             <div>
               <strong>{s.label}</strong>

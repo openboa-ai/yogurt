@@ -11,7 +11,121 @@ import {
 } from "./chunk-3EP3O3HY.js";
 
 // packages/web/src/controls/layers.tsx
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+
+// packages/web/src/foundation/spring-motion.ts
+function spring(position, stiffness, damping) {
+  return { position, velocity: 0, target: position, stiffness, damping };
+}
+function snap(s, position) {
+  s.position = s.target = position;
+  s.velocity = 0;
+}
+function advanceSprings(springs, elapsed) {
+  const delta = Math.min(Math.max(0, elapsed), 1 / 30) / 4;
+  let moving = false;
+  for (const s of springs) {
+    if (Math.abs(s.position - s.target) < 1e-3 && Math.abs(s.velocity) < 1e-3) {
+      snap(s, s.target);
+      continue;
+    }
+    for (let sample = 0; sample < 4; sample++) {
+      const acceleration = s.stiffness * (s.target - s.position) - s.damping * s.velocity;
+      s.velocity += acceleration * delta;
+      s.position += s.velocity * delta;
+    }
+    moving = true;
+  }
+  return moving;
+}
+
+// packages/web/src/controls/action-menu-motion.ts
+function animateActionMenu(root) {
+  const options = root.querySelector(".yg-action-menu-options");
+  if (!options) return () => {
+  };
+  const width = spring(150, 320, 26);
+  const height = spring(0, 240, 22);
+  const toggle = spring(0, 380, 24);
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  const rowByNode = /* @__PURE__ */ new Map();
+  let open = false, frame = 0, previous = 0;
+  let available = 0;
+  let springs = [width, height, toggle];
+  function paint() {
+    root.style.setProperty("--yg-action-menu-width", `${width.position}px`);
+    root.style.setProperty("--yg-action-menu-height", `${Math.max(0, height.position)}px`);
+    root.style.setProperty("--yg-action-menu-toggle", String(Math.max(-0.1, Math.min(1.1, toggle.position))));
+    rowByNode.forEach(({ amount }, row) => row.style.setProperty("--yg-action-menu-row", String(amount.position)));
+  }
+  function tick(now) {
+    let waiting = false;
+    rowByNode.forEach((row) => {
+      if (row.due === Infinity) return;
+      if (now < row.due) waiting = true;
+      else {
+        row.due = Infinity;
+        row.amount.target = Number(open);
+      }
+    });
+    const moving = advanceSprings(springs, (now - previous) / 1e3);
+    previous = now;
+    paint();
+    frame = moving || waiting ? requestAnimationFrame(tick) : 0;
+  }
+  function sync() {
+    if (!options) return;
+    const next = root.dataset.open === "true";
+    const buttons = Array.from(options.querySelectorAll("button"));
+    const time = performance.now();
+    rowByNode.forEach((_, node) => {
+      if (!options.contains(node)) rowByNode.delete(node);
+    });
+    buttons.forEach((node, index) => {
+      const existing = rowByNode.get(node);
+      const row = existing ?? { amount: spring(0, 260, 22), due: Infinity };
+      if (next !== open || next && !existing) {
+        row.due = time + (next ? 80 + index * 50 : (buttons.length - 1 - index) * 30);
+      }
+      rowByNode.set(node, row);
+    });
+    open = next;
+    available = root.parentElement?.clientWidth ?? 300;
+    width.target = Math.min(available, open ? 300 : 150);
+    height.target = open && buttons.length ? 4 + buttons.length * 48 + 10 : 0;
+    toggle.target = Number(open);
+    springs = [width, height, toggle, ...Array.from(rowByNode.values(), (row) => row.amount)];
+    if (preference.matches) {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      rowByNode.forEach((row) => {
+        row.due = Infinity;
+        snap(row.amount, Number(open));
+      });
+      springs.forEach((state) => snap(state, state.target));
+      paint();
+    } else if (!frame) {
+      previous = time;
+      frame = requestAnimationFrame(tick);
+    }
+  }
+  const changes = new MutationObserver(sync);
+  const size = new ResizeObserver(() => {
+    if (root.parentElement?.clientWidth !== available) sync();
+  });
+  changes.observe(root, { attributes: true, attributeFilter: ["data-open"], childList: true, subtree: true });
+  if (root.parentElement) size.observe(root.parentElement);
+  preference.addEventListener("change", sync);
+  sync();
+  return () => {
+    changes.disconnect();
+    size.disconnect();
+    preference.removeEventListener("change", sync);
+    cancelAnimationFrame(frame);
+  };
+}
+
+// packages/web/src/controls/layers.tsx
 import { jsx, jsxs } from "react/jsx-runtime";
 function Disclosure({
   label,
@@ -48,13 +162,15 @@ function useOutside(ref, close, open) {
 function ActionMenu({
   label,
   items,
-  onSelect
+  onSelect,
+  presentation = "anchored"
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState();
   const area = useRef(null);
   const trigger = useRef(null);
   const menu = useId();
+  const expanding = presentation === "expanding";
   const enabled = items.filter((i) => !i.disabled);
   const current = enabled.find((i) => i.id === active) ?? enabled[0];
   function show(last = false) {
@@ -66,6 +182,9 @@ function ActionMenu({
     if (restore) trigger.current?.focus();
   }
   useOutside(area, () => close(), open);
+  useLayoutEffect(() => {
+    if (expanding && area.current) return animateActionMenu(area.current);
+  }, [expanding]);
   useEffect(() => {
     if (open) {
       const node = area.current?.querySelector(
@@ -74,11 +193,28 @@ function ActionMenu({
       node?.focus();
     }
   }, [open, current?.id]);
+  const options = items.map((item) => /* @__PURE__ */ jsx(
+    "button",
+    {
+      type: "button",
+      role: "menuitem",
+      "aria-disabled": !!item.disabled,
+      tabIndex: current?.id === item.id ? 0 : -1,
+      onClick: () => {
+        if (item.disabled) return;
+        close(true);
+        onSelect(item.id);
+      },
+      children: item.label
+    },
+    item.id
+  ));
   return /* @__PURE__ */ jsxs(
     "div",
     {
       ref: area,
-      className: "yg-anchor",
+      className: expanding ? "yg-action-menu-expanding" : "yg-anchor",
+      "data-open": expanding ? open : void 0,
       onBlur: (e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) close();
       },
@@ -100,18 +236,22 @@ function ActionMenu({
             },
             children: [
               label,
-              /* @__PURE__ */ jsx(Icon, { name: "down" })
+              expanding ? /* @__PURE__ */ jsxs("span", { className: "yg-action-menu-glyph", "aria-hidden": "true", children: [
+                /* @__PURE__ */ jsx("i", {}),
+                /* @__PURE__ */ jsx("i", {})
+              ] }) : /* @__PURE__ */ jsx(Icon, { name: "down" })
             ]
           }
         ),
-        open && /* @__PURE__ */ jsx(
+        (open || expanding) && /* @__PURE__ */ jsx(
           "div",
           {
             id: menu,
             role: "menu",
             "aria-label": label,
             tabIndex: -1,
-            className: "yg-anchored-panel",
+            inert: !open,
+            className: expanding ? "yg-action-menu-fold" : "yg-anchored-panel",
             onKeyDown: (e) => {
               const index = enabled.findIndex((o) => o.id === current?.id);
               if (e.key === "Escape") {
@@ -146,22 +286,7 @@ function ActionMenu({
                 if (match) setActive(match.id);
               }
             },
-            children: items.map((o) => /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                role: "menuitem",
-                "aria-disabled": !!o.disabled,
-                tabIndex: current?.id === o.id ? 0 : -1,
-                onClick: () => {
-                  if (o.disabled) return;
-                  close(true);
-                  onSelect(o.id);
-                },
-                children: o.label
-              },
-              o.id
-            ))
+            children: expanding ? /* @__PURE__ */ jsx("div", { className: "yg-action-menu-options", children: options }) : options
           }
         )
       ]
@@ -354,6 +479,9 @@ function Tooltip({
 }
 
 export {
+  spring,
+  snap,
+  advanceSprings,
   Disclosure,
   ActionMenu,
   Popover,

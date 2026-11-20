@@ -56,15 +56,31 @@ const workStatuses = [
 
 function StorageExample() {
   const [used, setUsed] = useState(64);
+  const [cleanup, setCleanup] = useState<"idle" | "pending" | "success">("idle");
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  function freeSpace() {
+    if (used <= 34 || cleanup === "pending") return;
+    setCleanup("pending");
+    timer.current = setTimeout(() => {
+      setUsed(value => Math.max(34, value - 12));
+      setCleanup("success");
+      timer.current = setTimeout(() => setCleanup("idle"), 1600);
+    }, 900);
+  }
   return <div className="motion-sample-stack">
     <StorageMeter label="Workspace storage" used={used} capacity={100} unit="GB" categories={[
-      {id: "files", label: "Source files", amount: used - 34, detail: <><span>Review attachments</span><Button size="compact" emphasis="soft" disabled={used <= 34} onClick={() => setUsed(value => Math.max(34, value - 12))}>Free up space</Button></>},
+      {id: "files", label: "Source files", amount: used - 34, detail: <><span>Review attachments</span>
+        <LoadingSuccessButton label="Free up space" pendingLabel="Freeing space" successLabel="Space freed"
+          errorLabel="Try again" state={cleanup} onAction={freeSpace} /></>},
       {id: "exports", label: "Exports", amount: 22, detail: <span>Saved review exports</span>},
       {id: "notes", label: "Workspace notes", amount: 12, detail: <span>Notes and decision history</span>},
     ]} />
     <div className="motion-sample-actions">
       <Button size="compact" emphasis="soft" onClick={() => setUsed(value => Math.min(100, value + 12))}>Add files</Button>
-      <Button size="compact" emphasis="quiet" onClick={() => setUsed(64)}>Reset</Button>
+      <Button size="compact" emphasis="quiet" onClick={() => {
+        clearTimeout(timer.current); setCleanup("idle"); setUsed(64);
+      }}>Reset</Button>
     </div>
   </div>;
 }
@@ -141,8 +157,28 @@ function WritingExample({ kind }: {kind: "limit" | "ghost" | "password"}) {
 
 function FilesExample() {
   const [files, setFiles] = useState<File[]>([]);
+  const [progress, setProgress] = useState(0);
+  const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  useEffect(() => () => clearInterval(timer.current), []);
+  function prepare(next: File[]) {
+    clearInterval(timer.current);
+    setFiles(next);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setProgress(1);
+      return;
+    }
+    setProgress(0);
+    const start = performance.now();
+    timer.current = setInterval(() => {
+      const fraction = Math.min(1, (performance.now() - start) / 2100);
+      const paced = fraction < .35 ? fraction * 1.4 :
+        fraction < .6 ? .49 + (fraction - .35) * .4 : .59 + (fraction - .6) * 1.025;
+      setProgress(fraction === 1 ? 1 : Math.min(.99, paced));
+      if (fraction === 1) clearInterval(timer.current);
+    }, 30);
+  }
   return <div className="motion-sample-stack">
-    <FileDrop label="Attach files" onFiles={setFiles} multiple accept=".txt,.png,application/pdf" />
+    <FileDrop label="Attach files" onFiles={prepare} progress={progress} multiple accept=".txt,.png,application/pdf" />
     {files.length > 0 && <Text variant="help" role="status">{files.map(file => file.name).join(", ")}</Text>}
   </div>;
 }
@@ -193,7 +229,7 @@ function CommandExample({ kind }: {kind: "button" | "palette" | "menu"}) {
   return <div className="motion-sample-stack">
     {kind === "button" && <CommandButton label="Run command" items={pages} onSelect={setSelection} />}
     {kind === "palette" && <Command label="Open command palette" presentation="inline" triggerText="Search" items={[...commands]} onSelect={setSelection} />}
-    {kind === "menu" && <ActionMenu label="View actions"
+    {kind === "menu" && <ActionMenu label="View actions" presentation="expanding"
       items={pages.map(page => ({...page, disabled: page.id === selection}))} onSelect={setSelection} />}
     <Text variant="help" role="status">{selection ? `Opened ${(kind === "palette" ? commands : pages).find(page => page.id === selection)?.label}` : ""}</Text>
   </div>;
@@ -203,7 +239,12 @@ function StepExample({ agent }: {agent: boolean}) {
   const [index, setIndex] = useState(0);
   return <div className="motion-sample-stack">
     <Stepper label={agent ? "Agent steps" : "Step progress"} steps={steps} current={steps[index].id} variant={agent ? "list" : "progress"} />
-    <Button size="compact" emphasis="soft" onClick={() => setIndex(value => (value + 1) % steps.length)}>Next step</Button>
+    <div className="motion-sample-actions">
+      <Button size="compact" emphasis="quiet" disabled={index === 0} onClick={() => setIndex(value => value - 1)}>Back</Button>
+      <Button size="compact" emphasis="soft" onClick={() => setIndex(value => (value + 1) % steps.length)}>
+        {index === steps.length - 1 ? "Start over" : "Next step"}
+      </Button>
+    </div>
   </div>;
 }
 

@@ -2,8 +2,12 @@
 "use client";
 import {
   Command
-} from "./shared/chunk-P5XFFEXZ.js";
-import "./shared/chunk-OQUAFXG7.js";
+} from "./shared/chunk-WAIV4D2Y.js";
+import {
+  advanceSprings,
+  snap,
+  spring
+} from "./shared/chunk-56BSJQX7.js";
 import "./shared/chunk-WWQHEDM4.js";
 import "./shared/chunk-5GJUJT3P.js";
 import {
@@ -17,11 +21,14 @@ import {
 } from "./shared/chunk-3EP3O3HY.js";
 
 // packages/web/src/patterns/motion-inputs.tsx
-import { useId, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 function MentionPicker({ label, people, value, onChange }) {
   const id = useId();
   const input = useRef(null);
+  const marker = useRef(null);
+  const [edges] = useState(() => [spring(4, 620, 36), spring(44, 190, 19)]);
+  const markerOpen = useRef(false);
   const [caret, setCaret] = useState(0);
   const [focused, setFocused] = useState(false);
   const [dismissed, setDismissed] = useState(null);
@@ -34,6 +41,60 @@ function MentionPicker({ label, people, value, onChange }) {
   const options = match ? people.filter((person) => person.label.toLocaleLowerCase().includes(match[1].toLocaleLowerCase())) : [];
   const open = focused && !!match && dismissed !== tokenKey && options.length > 0;
   const index = Math.min(active, options.length - 1);
+  useLayoutEffect(() => {
+    const pill = marker.current;
+    const list = pill?.parentElement;
+    const row = list?.querySelector('[aria-selected="true"]');
+    if (!pill || !list || !row || !open) {
+      markerOpen.current = false;
+      return;
+    }
+    const preference = matchMedia("(prefers-reduced-motion: reduce)");
+    const [top, bottom] = edges;
+    const y = row.offsetTop, end2 = y + row.offsetHeight;
+    const forward = y >= top.target;
+    const lead = forward ? bottom : top, trail = forward ? top : bottom;
+    lead.stiffness = 620;
+    lead.damping = 36;
+    trail.stiffness = 190;
+    trail.damping = 19;
+    top.target = y;
+    bottom.target = end2;
+    if (!markerOpen.current || preference.matches) {
+      snap(top, y);
+      snap(bottom, end2);
+    }
+    markerOpen.current = true;
+    if (y < list.scrollTop) list.scrollTop = y;
+    else if (end2 > list.scrollTop + list.clientHeight && list.clientHeight > 0) {
+      list.scrollTop = end2 - list.clientHeight;
+    }
+    let frame = 0, previous = performance.now();
+    function paint() {
+      pill?.style.setProperty("--yg-mention-top", `${top.position}px`);
+      pill?.style.setProperty("--yg-mention-height", `${Math.max(0, bottom.position - top.position)}px`);
+    }
+    function tick(timestamp) {
+      const moving = advanceSprings(edges, (timestamp - previous) / 1e3);
+      previous = timestamp;
+      paint();
+      if (moving) frame = requestAnimationFrame(tick);
+    }
+    function changePreference() {
+      if (!preference.matches) return;
+      cancelAnimationFrame(frame);
+      snap(top, top.target);
+      snap(bottom, bottom.target);
+      paint();
+    }
+    paint();
+    if (!preference.matches) frame = requestAnimationFrame(tick);
+    preference.addEventListener("change", changePreference);
+    return () => {
+      cancelAnimationFrame(frame);
+      preference.removeEventListener("change", changePreference);
+    };
+  }, [edges, index, open, options.length]);
   function select(person) {
     const replacement = `@${person.label}`;
     const suffix = value.slice(end);
@@ -95,10 +156,30 @@ function MentionPicker({ label, people, value, onChange }) {
         }
       ),
       /* @__PURE__ */ jsx("span", { className: "yg-mention-hint", id: `${id}-hint`, children: "Type @ to mention" }),
-      open && /* @__PURE__ */ jsx("div", { id: `${id}-list`, className: "yg-mention-list", role: "listbox", "aria-label": "People", children: options.map((person, i) => /* @__PURE__ */ jsxs("button", { id: `${id}-option-${i}`, role: "option", "aria-selected": i === index, type: "button", onMouseDown: (event) => event.preventDefault(), onClick: () => select(person), children: [
-        /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: Array.from(person.label)[0]?.toLocaleUpperCase() }),
-        person.label
-      ] }, person.id)) })
+      /* @__PURE__ */ jsx("div", { className: "yg-mention-layer", "data-open": open, style: { "--yg-mention-count": options.length }, children: /* @__PURE__ */ jsxs("div", { id: `${id}-list`, className: "yg-mention-list", role: "listbox", "aria-label": "People", inert: !open, children: [
+        /* @__PURE__ */ jsx("span", { ref: marker, className: "yg-mention-marker", "aria-hidden": "true" }),
+        options.map((person, i) => /* @__PURE__ */ jsxs(
+          "button",
+          {
+            id: `${id}-option-${i}`,
+            role: "option",
+            "aria-selected": i === index,
+            type: "button",
+            tabIndex: -1,
+            style: { "--yg-mention-index": i },
+            onPointerMove: (event) => {
+              if (event.pointerType === "mouse") setActive(i);
+            },
+            onMouseDown: (event) => event.preventDefault(),
+            onClick: () => select(person),
+            children: [
+              /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: Array.from(person.label)[0]?.toLocaleUpperCase() }),
+              /* @__PURE__ */ jsx("b", { children: person.label })
+            ]
+          },
+          person.id
+        ))
+      ] }) })
     ] })
   ] });
 }
@@ -108,12 +189,15 @@ function acceptsFile(file, accept) {
   const name = file.name.toLowerCase(), type = file.type.toLowerCase();
   return rules.some((rule) => rule.startsWith(".") ? name.endsWith(rule) : rule.endsWith("/*") ? type.startsWith(rule.slice(0, -1)) : type === rule);
 }
-function FileDrop({ label, onFiles, accept, multiple = false }) {
+function FileDrop({ label, onFiles, accept, multiple = false, progress }) {
   const id = useId();
   const depth = useRef(0);
   const [dragging, setDragging] = useState(false);
   const [message, setMessage] = useState("");
   const [accepted, setAccepted] = useState(false);
+  const percent = accepted && progress !== void 0 && Number.isFinite(progress) ? Math.round(Math.min(1, Math.max(0, progress)) * 100) : null;
+  const processing = percent !== null && percent < 100;
+  const complete = accepted && !processing;
   function receive(files) {
     if (!files.length) return;
     const allowed = files.filter((file) => acceptsFile(file, accept));
@@ -132,7 +216,8 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
         htmlFor: id,
         className: "yg-file-drop",
         "data-dragging": dragging || void 0,
-        "data-accepted": accepted || void 0,
+        "data-processing": processing || void 0,
+        "data-accepted": complete || void 0,
         onDragEnter: (event) => {
           event.preventDefault();
           depth.current++;
@@ -154,22 +239,58 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
           receive(Array.from(event.dataTransfer.files));
         },
         children: [
-          /* @__PURE__ */ jsx("span", { className: "yg-file-drop-core", children: /* @__PURE__ */ jsx(
-            "svg",
-            {
-              className: "yg-file-drop-mark",
-              viewBox: "0 0 24 24",
-              fill: "none",
-              stroke: "currentColor",
-              strokeWidth: 1.7,
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              "aria-hidden": "true",
-              children: /* @__PURE__ */ jsx("path", { d: "M12 16V4m-4 4 4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" })
-            }
-          ) }),
+          /* @__PURE__ */ jsxs("span", { className: "yg-file-drop-core", children: [
+            /* @__PURE__ */ jsx(
+              "svg",
+              {
+                className: "yg-file-drop-mark",
+                viewBox: "0 0 24 24",
+                fill: "none",
+                stroke: "currentColor",
+                strokeWidth: 1.7,
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                "aria-hidden": "true",
+                children: /* @__PURE__ */ jsx("path", { d: "M12 16V4m-4 4 4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" })
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "svg",
+              {
+                className: "yg-file-drop-check",
+                viewBox: "0 0 24 24",
+                fill: "none",
+                stroke: "currentColor",
+                strokeWidth: "2.2",
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                "aria-hidden": "true",
+                children: /* @__PURE__ */ jsx("path", { d: "m5 12.5 4.5 4.5L19 7.5", pathLength: "24" })
+              }
+            ),
+            percent !== null && /* @__PURE__ */ jsxs(
+              "span",
+              {
+                className: "yg-file-drop-progress",
+                "data-complete": !processing || void 0,
+                role: "progressbar",
+                "aria-label": "Preparing selected files",
+                "aria-valuemin": 0,
+                "aria-valuemax": 100,
+                "aria-valuenow": percent,
+                "aria-hidden": !processing || void 0,
+                children: [
+                  /* @__PURE__ */ jsx("svg", { viewBox: "0 0 72 72", "aria-hidden": "true", children: /* @__PURE__ */ jsx("circle", { cx: "36", cy: "36", r: "33", pathLength: "100", style: { strokeDashoffset: 100 - percent } }) }),
+                  /* @__PURE__ */ jsxs("span", { children: [
+                    percent,
+                    "%"
+                  ] })
+                ]
+              }
+            )
+          ] }),
           /* @__PURE__ */ jsxs("div", { className: "yg-file-drop-copy", children: [
-            /* @__PURE__ */ jsx("strong", { children: "Drop files here" }),
+            /* @__PURE__ */ jsx("strong", { children: processing ? "Preparing files" : complete ? "Files selected" : "Drop files here" }, processing ? "processing" : complete ? "complete" : "idle"),
             /* @__PURE__ */ jsx("span", { id: `${id}-formats`, children: formats || "Choose a file from your device" })
           ] }),
           /* @__PURE__ */ jsx("input", { id, type: "file", "aria-labelledby": `${id}-label`, "aria-describedby": `${id}-formats`, accept, multiple, onChange: (event) => {
@@ -300,7 +421,185 @@ function LetterLimit({ label, value, onChange, limit, placeholder, onSubmit }) {
 }
 
 // packages/web/src/patterns/motion-layers.tsx
-import { useId as useId3, useLayoutEffect, useRef as useRef3, useState as useState3 } from "react";
+import { useId as useId3, useLayoutEffect as useLayoutEffect2, useRef as useRef3, useState as useState3 } from "react";
+
+// packages/web/src/patterns/spring-picker-motion.ts
+var clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
+function animateSpringPicker(root) {
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  const height = spring(0, 300, 23), lift = spring(0, 260, 24);
+  const chevron = spring(0, 300, 18), alpha = spring(0, 400, 34);
+  const press = spring(1, 500, 18), roll = spring(1, 340, 26);
+  const top = spring(6, 620, 36), bottom = spring(50, 620, 36), highlightAlpha = spring(0, 400, 32);
+  const springs = [height, lift, chevron, alpha, press, roll, top, bottom, highlightAlpha];
+  let menu = null;
+  let marker = null;
+  let rows = [], runningSprings = springs;
+  let active = -1, maxHeight = 0;
+  let open = false, now = 0, frame = 0, value = root.dataset.value;
+  function paint() {
+    const fraction = maxHeight > 0 ? height.position / maxHeight : 0;
+    root.style.setProperty("--yg-picker-lift-now", `${lift.position}px`);
+    root.style.setProperty("--yg-picker-chevron-now", `${chevron.position * 180}deg`);
+    root.style.setProperty("--yg-picker-press-now", String(press.position));
+    root.style.setProperty("--yg-picker-roll-in", String(roll.position));
+    if (!menu) return;
+    menu.style.setProperty("--yg-picker-open", String(clamp(fraction, 0, 1.06)));
+    menu.style.setProperty("--yg-picker-opacity", String(clamp(alpha.position)));
+    rows.forEach(({ element, path, amount, check }) => {
+      element.style.setProperty("--yg-picker-row", String(amount.position));
+      if (path) path.style.strokeDashoffset = `${22 * (1 - clamp(check.position))}px`;
+    });
+    if (!marker) return;
+    const y = clamp(Math.min(top.position, bottom.position - 16), 6, Math.max(6, maxHeight - 22));
+    const end = clamp(bottom.position, y + 16, Math.max(y + 16, maxHeight - 6));
+    marker.style.setProperty("--yg-spring-active-y", `${y}px`);
+    marker.style.setProperty("--yg-spring-active-height", `${end - y}px`);
+    marker.style.setProperty("--yg-spring-opacity", String(clamp(highlightAlpha.position)));
+  }
+  function tick(timestamp) {
+    frame = 0;
+    const elapsed = now ? (timestamp - now) / 1e3 : 0;
+    now = timestamp;
+    let waiting = false;
+    rows.forEach((row) => {
+      if (row.due === Infinity) return;
+      if (timestamp < row.due) waiting = true;
+      else {
+        row.amount.target = Number(open);
+        row.due = Infinity;
+      }
+    });
+    const moving = advanceSprings(runningSprings, elapsed);
+    paint();
+    if (waiting || moving) frame = requestAnimationFrame(tick);
+    else now = 0;
+  }
+  function play() {
+    if (preference.matches || frame) return;
+    now = performance.now();
+    frame = requestAnimationFrame(tick);
+  }
+  function highlight(index, immediately) {
+    const row = rows[index]?.element;
+    if (!row || index === active && !immediately) return;
+    const y = row.offsetTop, end = y + row.offsetHeight;
+    if (immediately || active < 0) {
+      snap(top, y);
+      snap(bottom, end);
+    } else {
+      const leading = index > active ? bottom : top;
+      const trailing = index > active ? top : bottom;
+      leading.stiffness = 620;
+      leading.damping = 36;
+      trailing.stiffness = 200;
+      trailing.damping = 20;
+      top.target = y;
+      bottom.target = end;
+    }
+    active = index;
+    highlightAlpha.target = 1;
+    marker?.setAttribute("data-ready", "");
+  }
+  function update() {
+    const list = root.querySelector(".yg-spring-menu");
+    const trigger = root.querySelector(".yg-spring-trigger");
+    const next = root.dataset.open === "true";
+    let selected = -1;
+    if (list !== menu) {
+      if (menu) size.unobserve(menu);
+      menu = list;
+      if (menu) size.observe(menu);
+      marker = list?.querySelector(".yg-spring-highlight") ?? null;
+      active = -1;
+    }
+    if (list) {
+      const elements = Array.from(list.querySelectorAll(".yg-spring-option"));
+      const oldRows = new Map(rows.map((row) => [row.element, row]));
+      selected = elements.findIndex((row) => row.dataset.state === "checked");
+      rows = elements.map((element, index) => {
+        const existing = oldRows.get(element);
+        const checked = Number(index === selected);
+        const row = existing ?? {
+          element,
+          path: element.querySelector(".yg-spring-check path"),
+          amount: spring(open && !next ? 1 : 0, 300, 24),
+          check: spring(checked, 260, 26),
+          due: next ? performance.now() + 50 + index * 45 : Infinity
+        };
+        row.check.target = checked;
+        return row;
+      });
+      maxHeight = list.offsetHeight;
+    } else {
+      rows = [];
+    }
+    runningSprings = [...springs, ...rows.flatMap((row) => [row.amount, row.check])];
+    if (value !== root.dataset.value) {
+      value = root.dataset.value;
+      snap(roll, 0);
+      roll.target = 1;
+    }
+    if (next !== open) {
+      open = next;
+      const time = performance.now();
+      rows.forEach((row, index) => {
+        row.due = time + (open ? 50 + index * 45 : (rows.length - 1 - index) * 20);
+      });
+      if (open) highlight(Math.max(0, selected), true);
+      else {
+        active = -1;
+        highlightAlpha.target = 0;
+      }
+    }
+    const shown = open && !!list;
+    height.target = shown ? maxHeight : 0;
+    alpha.target = chevron.target = Number(shown);
+    const room = Math.max(0, (trigger?.getBoundingClientRect().top ?? 0) - lift.position - 16);
+    lift.target = shown && list?.dataset.side === "bottom" ? -Math.min(room, (8 + maxHeight) / 2) : 0;
+    if (shown) {
+      const hovered = rows.findIndex((row) => row.element.hasAttribute("data-highlighted"));
+      highlight(hovered >= 0 ? hovered : active >= 0 ? active : Math.max(0, selected), active < 0);
+    }
+    if (preference.matches) {
+      cancelAnimationFrame(frame);
+      frame = now = 0;
+      springs.forEach((s) => snap(s, s.target));
+      rows.forEach((row) => {
+        snap(row.amount, Number(open));
+        snap(row.check, row.check.target);
+      });
+    }
+    paint();
+    play();
+  }
+  const changes = new MutationObserver(update);
+  const size = new ResizeObserver(update);
+  changes.observe(root, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ["data-open", "data-value", "data-side", "data-state", "data-highlighted"]
+  });
+  preference.addEventListener("change", update);
+  update();
+  return {
+    press(scale) {
+      if (preference.matches) return;
+      press.position = scale;
+      paint();
+      play();
+    },
+    dispose() {
+      changes.disconnect();
+      size.disconnect();
+      preference.removeEventListener("change", update);
+      cancelAnimationFrame(frame);
+    }
+  };
+}
+
+// packages/web/src/patterns/motion-layers.tsx
 import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
 function MorphTooltip({ label, detail }) {
   const id = useId3();
@@ -340,169 +639,97 @@ function MorphTooltip({ label, detail }) {
     }
   );
 }
-function SpringHighlight() {
-  const ref = useRef3(null);
-  useLayoutEffect(() => {
-    const highlight = ref.current;
-    const viewport = highlight?.parentElement;
-    if (!highlight || !viewport) return;
-    let lastTop;
-    let lastRow = null;
-    const update = () => {
-      const row = viewport.querySelector("[data-highlighted]") ?? (viewport.contains(lastRow) ? lastRow : null) ?? viewport.querySelector('[role="option"][data-state="checked"]');
-      if (!row) {
-        highlight.removeAttribute("data-ready");
-        lastTop = void 0;
-        return;
-      }
-      lastRow = row;
-      const top = row.offsetTop;
-      if (lastTop !== void 0 && lastTop !== top) {
-        highlight.toggleAttribute("data-forward", top > lastTop);
-      }
-      lastTop = top;
-      highlight.style.setProperty("--yg-spring-active-y", `${top}px`);
-      highlight.style.setProperty("--yg-spring-active-height", `${row.offsetHeight}px`);
-      highlight.style.setProperty("--yg-spring-active-end", `${top + row.offsetHeight}px`);
-      highlight.setAttribute("data-ready", "");
-    };
-    const changes = new MutationObserver(update);
-    changes.observe(viewport, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ["data-highlighted", "data-state"]
-    });
-    const sizes = new ResizeObserver(update);
-    sizes.observe(viewport);
-    update();
-    return () => {
-      changes.disconnect();
-      sizes.disconnect();
-    };
-  }, []);
-  return /* @__PURE__ */ jsx3("span", { ref, className: "yg-spring-highlight", "aria-hidden": "true" });
-}
 function SpringDropdown({ label, value, onChange, options }) {
   const id = useId3();
   const [portal, setPortal] = useState3(null);
-  const trigger = useRef3(null);
   const dismissTimer = useRef3(void 0);
   const keepSelectionVisible = useRef3(false);
-  const press = useRef3(void 0);
-  const [menu, setMenu] = useState3({ open: false, lift: 0 });
+  const motion = useRef3(null);
+  const [open, setOpen] = useState3(false);
   const selected = options.find((option) => option.id === value);
   const [roll, setRoll] = useState3({ value, previous: void 0 });
   if (roll.value !== value) setRoll({ value, previous: roll.value });
   const previous = options.find((option) => option.id === roll.previous);
-  useLayoutEffect(() => () => {
-    clearTimeout(dismissTimer.current);
-    press.current?.cancel();
-  }, []);
-  function bounceTrigger(scale) {
-    const button = trigger.current;
-    if (!button || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    press.current?.cancel();
-    press.current = button.animate([{ scale }, { scale: 1 }], {
-      duration: 545,
-      easing: getComputedStyle(button).getPropertyValue("--yg-motion-picker-press").trim() || "ease-out"
-    });
-  }
-  function changeOpen(open) {
-    if (!open && keepSelectionVisible.current) {
+  useLayoutEffect2(() => {
+    if (!portal) return;
+    const controller = animateSpringPicker(portal);
+    motion.current = controller;
+    return () => {
+      controller.dispose();
+      motion.current = null;
+    };
+  }, [portal]);
+  useLayoutEffect2(() => () => clearTimeout(dismissTimer.current), []);
+  function changeOpen(open2) {
+    if (!open2 && keepSelectionVisible.current) {
       keepSelectionVisible.current = false;
       return;
     }
     clearTimeout(dismissTimer.current);
-    if (!open) {
-      setMenu((current) => ({ ...current, open: false }));
-      return;
-    }
-    const top = portal?.getBoundingClientRect().top ?? 0;
-    const room = Math.max(0, top - 16);
-    const lift = Math.min(room, (8 + 12 + options.length * 44) / 2);
-    setMenu({ open: true, lift });
-    bounceTrigger(0.965);
+    setOpen(open2);
+    if (open2) motion.current?.press(0.965);
   }
   function select(next) {
-    if (menu.open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      bounceTrigger(0.955);
+    if (open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      motion.current?.press(0.955);
       keepSelectionVisible.current = true;
       clearTimeout(dismissTimer.current);
-      dismissTimer.current = setTimeout(() => setMenu((current) => ({ ...current, open: false })), 240);
+      dismissTimer.current = setTimeout(() => setOpen(false), 240);
     }
     onChange(next);
   }
-  return /* @__PURE__ */ jsxs3(
-    "div",
-    {
-      ref: setPortal,
-      className: "yg-spring-dropdown",
-      "data-open": menu.open,
-      style: { "--yg-picker-lift": `${menu.lift}px` },
-      children: [
-        /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
-        /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: select, open: menu.open, onOpenChange: changeOpen, children: [
-          /* @__PURE__ */ jsxs3(dist_exports.Trigger, { ref: trigger, className: "yg-spring-trigger", "aria-labelledby": id, children: [
-            /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value", children: [
-              previous && /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-outgoing": true, "aria-hidden": "true", children: [
-                /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": previous.marker }),
-                /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: previous.label })
-              ] }, `previous-${value}`),
-              /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-incoming": previous ? "" : void 0, children: [
-                /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": selected?.marker, "aria-hidden": "true" }),
-                /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) })
-              ] }, value)
-            ] }),
-            /* @__PURE__ */ jsx3(dist_exports.Icon, { asChild: true, children: /* @__PURE__ */ jsx3(
-              "svg",
-              {
-                className: "yg-spring-chevron",
-                viewBox: "0 0 24 24",
-                fill: "none",
-                stroke: "currentColor",
-                strokeWidth: "2",
-                strokeLinecap: "round",
-                strokeLinejoin: "round",
-                "aria-hidden": "true",
-                children: /* @__PURE__ */ jsx3("path", { d: "m6 9 6 6 6-6" })
-              }
-            ) })
-          ] }),
-          /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, collisionPadding: 16, children: /* @__PURE__ */ jsxs3(dist_exports.Viewport, { className: "yg-spring-viewport", children: [
-            /* @__PURE__ */ jsx3(SpringHighlight, {}),
-            options.map((option, index) => /* @__PURE__ */ jsxs3(
-              dist_exports.Item,
-              {
-                value: option.id,
-                className: "yg-spring-option",
-                style: { "--yg-spring-row-index": index, "--yg-spring-row-reverse": options.length - index - 1 },
-                children: [
-                  /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
-                  /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
-                  /* @__PURE__ */ jsx3(
-                    "svg",
-                    {
-                      className: "yg-spring-check",
-                      viewBox: "0 0 24 24",
-                      fill: "none",
-                      stroke: "currentColor",
-                      strokeWidth: "2.2",
-                      strokeLinecap: "round",
-                      strokeLinejoin: "round",
-                      "aria-hidden": "true",
-                      children: /* @__PURE__ */ jsx3("path", { d: "m5 12.5 4.5 4.5L19 7.5", pathLength: "22" })
-                    }
-                  )
-                ]
-              },
-              option.id
-            ))
-          ] }) }) })
-        ] })
-      ]
-    }
-  );
+  return /* @__PURE__ */ jsxs3("div", { ref: setPortal, className: "yg-spring-dropdown", "data-open": open, "data-value": value, children: [
+    /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
+    /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: select, open, onOpenChange: changeOpen, children: [
+      /* @__PURE__ */ jsxs3(dist_exports.Trigger, { className: "yg-spring-trigger", "aria-labelledby": id, children: [
+        /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value", children: [
+          previous && /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-outgoing": true, "aria-hidden": "true", children: [
+            /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": previous.marker }),
+            /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: previous.label })
+          ] }, `previous-${value}`),
+          /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-incoming": previous ? "" : void 0, children: [
+            /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": selected?.marker, "aria-hidden": "true" }),
+            /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) })
+          ] }, value)
+        ] }),
+        /* @__PURE__ */ jsx3(dist_exports.Icon, { asChild: true, children: /* @__PURE__ */ jsx3(
+          "svg",
+          {
+            className: "yg-spring-chevron",
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: "2",
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            "aria-hidden": "true",
+            children: /* @__PURE__ */ jsx3("path", { d: "m6 9 6 6 6-6" })
+          }
+        ) })
+      ] }),
+      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, collisionPadding: 16, children: /* @__PURE__ */ jsxs3(dist_exports.Viewport, { className: "yg-spring-viewport", children: [
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-highlight", "aria-hidden": "true" }),
+        options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
+          /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
+          /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
+          /* @__PURE__ */ jsx3(
+            "svg",
+            {
+              className: "yg-spring-check",
+              viewBox: "0 0 24 24",
+              fill: "none",
+              stroke: "currentColor",
+              strokeWidth: "2.2",
+              strokeLinecap: "round",
+              strokeLinejoin: "round",
+              "aria-hidden": "true",
+              children: /* @__PURE__ */ jsx3("path", { d: "m5 12.5 4.5 4.5L19 7.5", pathLength: "22" })
+            }
+          )
+        ] }, option.id))
+      ] }) }) })
+    ] })
+  ] });
 }
 function CommandButton({ label, items, onSelect }) {
   return /* @__PURE__ */ jsx3("div", { className: "yg-command-button", children: /* @__PURE__ */ jsx3(Command, { label, items, onSelect }) });
@@ -511,12 +738,25 @@ function CommandButton({ label, items, onSelect }) {
 // packages/web/src/patterns/motion-status.tsx
 import { useId as useId4, useState as useState4 } from "react";
 import { Fragment, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
+function StorageAmount({ value }) {
+  const [whole, fraction] = String(value).split(".");
+  const groups = [{ digits: whole, decimal: false }, { digits: fraction, decimal: true }];
+  return /* @__PURE__ */ jsx4("strong", { className: "yg-storage-count", "aria-hidden": "true", children: groups.map(({ digits, decimal }) => digits && /* @__PURE__ */ jsxs4("span", { children: [
+    decimal && ".",
+    Array.from(digits, (digit, index) => {
+      const column = digits.length - index - 1;
+      if (!/^[0-9]$/.test(digit)) return /* @__PURE__ */ jsx4("span", { children: digit }, column);
+      return /* @__PURE__ */ jsx4("span", { className: "yg-storage-reel", style: {
+        "--yg-reel-digit": Number(digit),
+        "--yg-reel-delay": column + (decimal ? 0 : fraction?.length ?? 0)
+      }, children: /* @__PURE__ */ jsx4("span", { children: Array.from("0123456789", (number) => /* @__PURE__ */ jsx4("span", { children: number }, number)) }) }, column);
+    })
+  ] }, String(decimal))) });
+}
 function StorageMeter({ label, used, capacity, unit, categories = [] }) {
   const id = useId4();
   const [expanded, setExpanded] = useState4(null);
   const known = Number.isFinite(used) && Number.isFinite(capacity) && capacity > 0 && used >= 0;
-  const [roll, setRoll] = useState4({ value: used, previous: used });
-  if (!Object.is(roll.value, used)) setRoll({ value: used, previous: roll.value });
   const ratio = known ? Math.min(1, used / capacity) : 0;
   let available = known ? Math.min(used, capacity) : 0;
   const breakdown = categories.filter((category) => Number.isFinite(category.amount) && category.amount > 0);
@@ -531,11 +771,8 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
     /* @__PURE__ */ jsx4("strong", { id, className: "yg-storage-heading", children: label }),
     known ? /* @__PURE__ */ jsxs4(Fragment, { children: [
       /* @__PURE__ */ jsxs4("div", { className: "yg-storage-amount", children: [
-        /* @__PURE__ */ jsxs4("strong", { className: "yg-storage-count", "data-decreased": used < roll.previous || void 0, children: [
-          Number.isFinite(roll.previous) && roll.previous !== used && /* @__PURE__ */ jsx4("span", { className: "yg-storage-count-before", "aria-hidden": "true", children: roll.previous }),
-          /* @__PURE__ */ jsx4("span", { className: "yg-storage-count-now", "data-roll": roll.previous !== used || void 0, children: used })
-        ] }, used),
-        /* @__PURE__ */ jsx4("b", { children: unit }),
+        /* @__PURE__ */ jsx4(StorageAmount, { value: used }),
+        /* @__PURE__ */ jsx4("b", { "aria-hidden": "true", children: unit }),
         /* @__PURE__ */ jsxs4("span", { children: [
           "of ",
           capacity,
@@ -665,7 +902,7 @@ function CopyButton({ value }) {
 }
 
 // packages/web/src/patterns/motion-conversation.tsx
-import { useId as useId5, useLayoutEffect as useLayoutEffect2, useRef as useRef4, useState as useState5 } from "react";
+import { useId as useId5, useLayoutEffect as useLayoutEffect3, useRef as useRef4, useState as useState5 } from "react";
 import { Fragment as Fragment2, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 function StreamingReply({ value, active = false }) {
   return /* @__PURE__ */ jsx5("div", { className: "yg-streaming-reply", "aria-busy": active || void 0, children: value ? /* @__PURE__ */ jsx5("span", { children: value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : /* @__PURE__ */ jsx5("span", { className: "yg-streaming-word", children: part }, index)) }) : active ? /* @__PURE__ */ jsx5("span", { className: "yg-streaming-wait", children: "Thinking" }) : null });
@@ -716,7 +953,7 @@ function GhostSuggestion({ value, suggestion, onChange }) {
 function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
   const editor = useRef4(null);
   const measure = useRef4(null);
-  useLayoutEffect2(() => {
+  useLayoutEffect3(() => {
     const target = editor.current;
     const source = measure.current;
     if (!target || !source) return;
@@ -1319,7 +1556,7 @@ function TaskList({ label, tasks }) {
 }
 
 // packages/web/src/patterns/motion-cart.tsx
-import { useEffect as useEffect3, useLayoutEffect as useLayoutEffect3, useRef as useRef7, useState as useState9 } from "react";
+import { useEffect as useEffect3, useLayoutEffect as useLayoutEffect4, useRef as useRef7, useState as useState9 } from "react";
 import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
 var holdDelay = 380;
 var initialRepeat = 150;
@@ -1331,7 +1568,7 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
   const previous = useRef7(count);
   const goingDown = count < previous.current;
   const lastCount = previous.current;
-  useLayoutEffect3(() => {
+  useLayoutEffect4(() => {
     previous.current = count;
   }, [count]);
   const [showLimit, setShowLimit] = useState9(false);

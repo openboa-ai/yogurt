@@ -1,23 +1,103 @@
-import { useState, useRef, type CSSProperties, type PointerEvent, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useState, useRef, type CSSProperties, type PointerEvent, type ReactNode } from "react";
 import { Button, Checkbox } from "@openboa/yogurt";
+import { advanceSprings, snap, spring } from "../../../packages/web/src/foundation/spring-motion.js";
 
 type Example = { id: string; title: string; body: ReactNode };
 const notes = [{ title: "Review kit", value: "12 items", detail: "Workspace collection · 24 pages", tags: ["Planning", "Team"] }, { title: "Handoff", value: "8 items", detail: "Project collection · 12 pages", tags: ["Notes", "Review"] }, { title: "Launch", value: "16 items", detail: "Release collection · 18 pages", tags: ["Planning", "Ready"] }];
 function Deck() {
   const [index, setIndex] = useState(0);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const start = useRef<{ x: number; y: number } | null>(null);
-  const advance = (direction: number) => { setIndex(i => (i + direction + notes.length) % notes.length); setOffset({ x: 0, y: 0 }); };
-  return <div className="extra-deck"><div className="extra-deck-stage" aria-label="Review notes">
-    {[2, 1, 0].map(depth => <article key={depth} className="extra-deck-sheet" data-depth={depth} style={depth === 0 ? { '--drag-x': `${offset.x}px`, '--drag-y': `${offset.y}px`, '--drag-rotate': `${offset.x * .065}deg` } as CSSProperties : undefined}
-      onPointerDown={depth === 0 ? e => { start.current = { x: e.clientX, y: e.clientY }; e.currentTarget.setPointerCapture(e.pointerId); } : undefined}
-      onPointerMove={depth === 0 ? e => { if (start.current) setOffset({ x: e.clientX - start.current.x, y: (e.clientY - start.current.y) * .6 }); } : undefined}
-      onPointerUp={depth === 0 ? () => { if (Math.abs(offset.x) > 110) advance(offset.x > 0 ? 1 : -1); else setOffset({ x: 0, y: 0 }); start.current = null; } : undefined}
-      onPointerCancel={() => { start.current = null; setOffset({ x: 0, y: 0 }); }}>
-      <div className="extra-deck-preview"><span className="extra-deck-landscape"/></div><div className="extra-deck-body"><div className="extra-deck-title"><strong>{notes[(index + depth) % notes.length].title}</strong><b>{notes[(index + depth) % notes.length].value}</b></div><small>{notes[(index + depth) % notes.length].detail}</small><div className="extra-deck-tags">{notes[(index + depth) % notes.length].tags.map(tag => <span key={tag}>{tag}</span>)}</div></div>
-      {depth === 0 && <span className="extra-deck-stamp" style={{ opacity: Math.min(Math.abs(offset.x) / 110, 1) }}>{offset.x > 0 ? "Next" : "Previous"}</span>}
-    </article>)}
-  </div><div className="extra-actions"><Button size="compact" emphasis="soft" onClick={() => advance(-1)}>Previous</Button><Button size="compact" emphasis="soft" onClick={() => advance(1)}>Next</Button></div></div>;
+  const [flight, setFlight] = useState<{index: number; x: number; y: number; end: number; spin: number; vx: number; vy: number} | null>(null);
+  const start = useRef<{id: number; x: number; y: number; lastX: number; lastY: number; time: number; vx: number; vy: number; spin: number} | null>(null);
+  const stage = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
+  useLayoutEffect(() => {
+    const card = stage.current?.querySelector<HTMLElement>("[data-flight]");
+    if (!flight || !card) return;
+    const horizontal = spring(flight.x, 70, 17), vertical = spring(flight.y, 70, 17);
+    horizontal.velocity = Math.sign(flight.end) * Math.max(Math.abs(flight.vx), 1500);
+    horizontal.target = flight.end;
+    vertical.target = flight.y + Math.max(-120, Math.min(120, flight.vy * .2));
+    const axes = [horizontal, vertical];
+    const start = performance.now();
+    let last = start;
+    function paint() {
+      card?.style.setProperty("--flight-x", `${horizontal.position}px`);
+      card?.style.setProperty("--flight-y", `${vertical.position}px`);
+      card?.style.setProperty("--flight-spin", `${horizontal.position * .065 * (flight?.spin ?? 1)}deg`);
+    }
+    function simulate(now: number) {
+      advanceSprings(axes, (now - last) / 1000);
+      last = now;
+      paint();
+      if (now - start >= 420) setFlight(null);
+      else frame = requestAnimationFrame(simulate);
+    }
+    paint();
+    let frame = requestAnimationFrame(simulate);
+    return () => cancelAnimationFrame(frame);
+  }, [flight]);
+  function release() { start.current = null; setDragging(false); setOffset({x: 0, y: 0}); }
+  function advance(direction: number, x = 0, y = 0, spin = 1, vx = 0, vy = 0) {
+    if (flight) return;
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setFlight({index, x, y, end: direction * Math.max(innerWidth / 2 + 360, Math.abs(x) + 420), spin, vx, vy});
+    }
+    setIndex(i => (i + direction + notes.length) % notes.length);
+    release();
+  }
+  return <div className="extra-deck"><div ref={stage} className="extra-deck-stage" aria-label="Review notes">
+    {notes.map((note, item) => {
+      const depth = (item - index + notes.length) % notes.length;
+      const leaving = flight?.index === item ? flight : null;
+      const interactive = depth === 0 && !flight;
+      const {x, y} = leaving ?? (depth === 0 ? offset : {x: 0, y: 0});
+      const spin = leaving?.spin ?? start.current?.spin ?? 1;
+      return <article key={note.title} className="extra-deck-sheet" data-depth={depth}
+        data-flight={Boolean(leaving) || undefined} data-dragging={interactive && dragging || undefined}
+        aria-hidden={depth !== 0 || undefined}
+        style={{
+          "--deck-depth": Math.max(0, depth - Math.min(Math.abs(offset.x) / 176, 1)),
+          "--drag-x": `${x}px`, "--drag-y": `${y}px`, "--drag-rotate": `${x * .065 * spin}deg`,
+        } as CSSProperties}
+        onPointerDown={e => {
+          if (!interactive || !e.isPrimary || e.button !== 0 || start.current) return;
+          const r = e.currentTarget.getBoundingClientRect();
+          start.current = {id: e.pointerId, x: e.clientX, y: e.clientY, lastX: e.clientX, lastY: e.clientY,
+            time: performance.now(), vx: 0, vy: 0, spin: e.clientY < r.top + r.height / 2 ? 1 : -1};
+          setDragging(true);
+          e.currentTarget.setPointerCapture(e.pointerId);
+        }}
+        onPointerMove={e => {
+          const gesture = start.current;
+          if (gesture?.id !== e.pointerId) return;
+          const now = performance.now();
+          const rate = 500 / Math.max(1, now - gesture.time);
+          gesture.vx = gesture.vx * .5 + (e.clientX - gesture.lastX) * rate;
+          gesture.vy = gesture.vy * .5 + (e.clientY - gesture.lastY) * rate;
+          gesture.lastX = e.clientX; gesture.lastY = e.clientY;
+          gesture.time = now;
+          setOffset({x: e.clientX - gesture.x, y: (e.clientY - gesture.y) * .6});
+        }}
+        onPointerUp={e => {
+          const gesture = start.current;
+          if (gesture?.id !== e.pointerId) return;
+          const x = e.clientX - gesture.x, y = (e.clientY - gesture.y) * .6;
+          const fast = performance.now() - gesture.time < 90 && Math.abs(gesture.vx) > 700;
+          if (Math.abs(x) > 110 || (fast && Math.sign(x || gesture.vx) === Math.sign(gesture.vx))) {
+            advance(Math.sign(x || gesture.vx), x, y, gesture.spin, gesture.vx, gesture.vy);
+          } else release();
+        }}
+        onLostPointerCapture={e => { if (start.current?.id === e.pointerId) release(); }}
+        onPointerCancel={release}>
+        <div className="extra-deck-preview"><span className="extra-deck-landscape"/></div>
+        <div className="extra-deck-body"><div className="extra-deck-title"><strong>{note.title}</strong><b>{note.value}</b></div>
+          <small>{note.detail}</small><div className="extra-deck-tags">{note.tags.map(tag => <span key={tag}>{tag}</span>)}</div></div>
+        {(depth === 0 || leaving) && <span className="extra-deck-stamp" aria-hidden="true"
+          style={{opacity: Math.min(Math.abs(x) / 110, 1)}}>{x > 0 ? "Next" : "Previous"}</span>}
+      </article>;
+    })}
+  </div><div className="extra-actions"><Button size="compact" emphasis="soft" aria-disabled={!!flight} onClick={() => advance(-1)}>Previous</Button><Button size="compact" emphasis="soft" aria-disabled={!!flight} onClick={() => advance(1)}>Next</Button></div></div>;
 }
 function Ticket() {
   const [flipped, setFlipped] = useState(false);
@@ -36,10 +116,70 @@ function Marker() {
   const [round, setRound] = useState(0);
   return <div className="extra-marker-demo" key={round}><h2>Thoughtful work starts with <span className="extra-ink extra-ink-highlight">clearer notes</span>.</h2><p>Keep decisions <span className="extra-ink extra-ink-underline">close to the work</span>, find context in <span className="extra-ink extra-ink-circle">a moment</span>, and share a <span className="extra-ink extra-ink-box">single place</span> with your team. Leave <span className="extra-ink extra-ink-strike">scattered updates</span> behind.</p><Button size="compact" emphasis="quiet" onClick={() => setRound(round + 1)}>↻ &nbsp;Replay</Button></div>;
 }
+const words = "Open the draft and check its revision before sending the review.".split(" ");
 function ReadAlong() {
-  const words = "Open the draft and check its revision before sending the review.".split(" ");
   const [word, setWord] = useState(0);
-  return <div className="extra-reading"><p aria-label={words.join(" ")}>{words.map((text, i) => <span key={i}><button type="button" aria-label={`Read from ${text}`} aria-pressed={i === word} data-past={i < word} onClick={() => setWord(i)}>{text}</button>{" "}</span>)}</p><div className="extra-actions"><Button size="compact" emphasis="soft" disabled={word === 0} onClick={() => setWord(word - 1)}>Previous word</Button><Button size="compact" emphasis="soft" disabled={word === words.length - 1} onClick={() => setWord(word + 1)}>Next word</Button></div><small>Word {word + 1} of {words.length}</small></div>;
+  const text = useRef<HTMLParagraphElement>(null);
+  const marker = useRef<HTMLSpanElement>(null);
+  const [edges] = useState(() => ({left: spring(0, 520, 40), right: spring(0, 520, 40), top: spring(0, 600, 48)}));
+  useLayoutEffect(() => {
+    const reader = text.current, pill = marker.current;
+    if (!reader || !pill) return;
+    const {left, right, top} = edges;
+    const preference = matchMedia("(prefers-reduced-motion: reduce)");
+    const movingEdges = [left, right, top];
+    let frame = 0, last = performance.now();
+    function paint() {
+      if (!pill) return;
+      pill.style.setProperty("--reading-left", `${left.position}px`);
+      pill.style.setProperty("--reading-right", `${right.position}px`);
+      pill.style.setProperty("--reading-top", `${top.position}px`);
+    }
+    function tick(time: number) {
+      const moving = advanceSprings(movingEdges, (time - last) / 1000);
+      last = time;
+      paint();
+      frame = moving ? requestAnimationFrame(tick) : 0;
+    }
+    function position(animate: boolean) {
+      if (!reader || !pill) return;
+      const active = reader.querySelector<HTMLButtonElement>('[aria-pressed="true"]');
+      if (!active) return;
+      const {offsetLeft: x, offsetTop: y, offsetWidth: width, offsetHeight: height} = active;
+      if (left.target === x && top.target === y && right.target === x + width && pill.offsetHeight === height &&
+        !preference.matches) return;
+      cancelAnimationFrame(frame);
+      const forward = x >= left.target;
+      const major = forward ? right : left, minor = forward ? left : right;
+      major.stiffness = 520; major.damping = 40;
+      minor.stiffness = 210; minor.damping = 26;
+      const motion = animate && !preference.matches;
+      if (!motion || !pill.hasAttribute("data-ready") || Math.abs(y - top.target) > 2) {
+        snap(left, x); snap(right, motion ? x : x + width); snap(top, y);
+      }
+      left.target = x; right.target = x + width; top.target = y;
+      pill.style.blockSize = `${height}px`;
+      pill.setAttribute("data-ready", "");
+      paint();
+      last = performance.now();
+      if (motion) frame = requestAnimationFrame(tick);
+    }
+    position(true);
+    const observer = new ResizeObserver(() => position(false));
+    observer.observe(reader);
+    const change = () => position(false);
+    preference.addEventListener("change", change);
+    return () => {
+      observer.disconnect();
+      preference.removeEventListener("change", change);
+      cancelAnimationFrame(frame);
+    };
+  }, [edges, word]);
+  return <div className="extra-reading"><p ref={text} aria-label={words.join(" ")}>
+    <span ref={marker} className="extra-reading-marker" aria-hidden="true" />
+    {words.map((value, i) => <span key={i}><button type="button" aria-label={`Read from ${value}`}
+      aria-pressed={i === word} data-past={i < word} onClick={() => setWord(i)}>{value}</button>{" "}</span>)}</p>
+    <div className="extra-actions"><Button size="compact" emphasis="soft" disabled={word === 0} onClick={() => setWord(word - 1)}>Previous word</Button><Button size="compact" emphasis="soft" disabled={word === words.length - 1} onClick={() => setWord(word + 1)}>Next word</Button></div><small>Word {word + 1} of {words.length}</small></div>;
 }
 const readingPages = ["Read the rollout plan.", "Check the monitoring checklist.", "Confirm the handoff owner."];
 
@@ -47,8 +187,14 @@ function Pages() {
   const [page, setPage] = useState(0);
   const [dragPosition, setDragPosition] = useState(0);
   const [dragging, setDragging] = useState(false);
+  const [turning, setTurning] = useState<{page: number; direction: number; progress: number} | null>(null);
   const drag = useRef<{ id: number; start: number; width: number } | null>(null);
   const last = page === readingPages.length - 1;
+  useEffect(() => {
+    if (!turning) return;
+    const deadline = setTimeout(() => setTurning(null), 675);
+    return () => clearTimeout(deadline);
+  }, [turning]);
 
   function reset() {
     drag.current = null;
@@ -56,9 +202,12 @@ function Pages() {
     setDragging(false);
   }
 
-  function turn(direction: number) {
+  function turn(direction: number, progress = 0) {
+    const next = Math.max(0, Math.min(readingPages.length - 1, page + direction));
+    if (next === page) return;
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setTurning({page, direction, progress});
     reset();
-    setPage(current => Math.max(0, Math.min(readingPages.length - 1, current + direction)));
+    setPage(next);
   }
 
   function travel(event: PointerEvent<HTMLDivElement>) {
@@ -72,7 +221,7 @@ function Pages() {
     <div className="extra-page-stack" data-dragging={dragging || undefined}
       style={{ "--page-travel": dragPosition } as CSSProperties}
       onPointerDown={event => {
-        if (last || !event.isPrimary || event.button !== 0 || drag.current) return;
+        if (last || turning || !event.isPrimary || event.button !== 0 || drag.current) return;
         const {right, width} = event.currentTarget.getBoundingClientRect();
         if (right - event.clientX > width * .27) return;
         drag.current = { id: event.pointerId, start: event.clientX, width };
@@ -84,7 +233,7 @@ function Pages() {
       }}
       onPointerUp={event => {
         if (drag.current?.id !== event.pointerId) return;
-        if (travel(event) >= .35) turn(1);
+        if (travel(event) >= .35) turn(1, travel(event));
         else reset();
       }}
       onPointerCancel={event => { if (drag.current?.id === event.pointerId) reset(); }}
@@ -92,6 +241,11 @@ function Pages() {
       onKeyDown={event => { if (event.key === "Escape") reset(); }}>
       {!last && <div className="extra-page extra-page-under" aria-hidden="true"><small>PAGE {page + 2}</small><p>{readingPages[page + 1]}</p></div>}
       <div className="extra-page extra-page-current" key={page} aria-live="polite" data-can-turn={!last || undefined}><small>PAGE {page + 1}</small><p>{readingPages[page]}</p></div>
+      {turning && <div key={`turn-${turning.page}`} className="extra-page extra-page-turning" aria-hidden="true"
+        style={{"--turn-from": `${-108 * turning.progress}deg`, "--turn-to": `${turning.direction * -170}deg`} as CSSProperties}
+        onAnimationEnd={() => setTurning(null)}>
+        <small>PAGE {turning.page + 1}</small><p>{readingPages[turning.page]}</p>
+      </div>}
     </div>
     <div className="extra-actions">
       <Button size="compact" emphasis="soft" disabled={page === 0} onClick={() => turn(-1)}>Back</Button>
@@ -101,7 +255,12 @@ function Pages() {
 }
 function RevealNote() {
   const [open, setOpen] = useState(false);
-  return <div className="extra-note"><small>HANDOFF NOTE</small><p>{open ? "The next review is ready for a second reader." : "Open the note for the review status."}</p><Button size="compact" emphasis="soft" onClick={() => setOpen(!open)}>{open ? "Fold note" : "Open note"}</Button></div>;
+  return <div className="extra-note" data-open={open}>
+    <small>HANDOFF NOTE</small>
+    <div className="extra-note-fold"><div><p id="extra-note-result" inert={!open}>The next review is ready for a second reader.</p></div></div>
+    <Button size="compact" emphasis="soft" aria-expanded={open} aria-controls="extra-note-result"
+      onClick={() => setOpen(!open)}>{open ? "Fold note" : "Open note"}</Button>
+  </div>;
 }
 function WordChoice() {
   const words = ["queued", "in review", "ready"];

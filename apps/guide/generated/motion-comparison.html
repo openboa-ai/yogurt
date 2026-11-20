@@ -469,23 +469,33 @@
 }
 
 .yg-root {
+  --yg-motion-menu-height: 470ms var(--yg-settle);
+  --yg-motion-exposure: 400ms var(--yg-settle);
+  --yg-motion-wheel: 560ms var(--yg-settle);
+  --yg-motion-pull-return: 535ms var(--yg-settle);
+  --yg-motion-storage-reel-fast: 450ms var(--yg-settle);
+  --yg-motion-storage-reel-medium: 435ms var(--yg-settle);
+  --yg-motion-storage-reel-slow: 420ms var(--yg-settle);
+  --yg-motion-file-check: 550ms var(--yg-settle);
+  --yg-motion-step-check: 660ms var(--yg-settle);
+  --yg-motion-deck-release: 550ms var(--yg-settle);
+  --yg-motion-deck-depth: 440ms var(--yg-settle);
+  --yg-motion-ticket-turn: 625ms var(--yg-settle);
+  --yg-motion-rating-pop: 525ms var(--yg-settle);
+  --yg-motion-drag-position: 360ms var(--yg-settle);
+  --yg-motion-refresh-pull: 525ms var(--yg-settle);
   --yg-motion-tag-enter: 480ms var(--yg-settle);
   --yg-motion-stepper-spin: 480ms var(--yg-settle);
   --yg-motion-pagination: 520ms var(--yg-settle);
   --yg-motion-reading-marker: 330ms var(--yg-settle);
   --yg-motion-selection-lead: 280ms var(--yg-settle);
   --yg-motion-selection-tail: 545ms var(--yg-settle);
-  --yg-motion-picker-tail: 470ms var(--yg-settle);
   --yg-motion-bottom-label: 420ms var(--yg-settle);
-  --yg-motion-picker-reveal: 420ms var(--yg-settle);
   --yg-motion-picker-opacity: 360ms var(--yg-settle);
   --yg-motion-picker-lift: 460ms var(--yg-settle);
-  --yg-motion-picker-check: 450ms var(--yg-settle);
-  --yg-motion-picker-press: linear;
   --yg-motion-picker-row: 390ms var(--yg-settle);
   --yg-motion-picker-slide: 380ms var(--yg-settle);
   --yg-motion-picker-highlight: 250ms var(--yg-settle);
-  --yg-motion-picker-chevron: 490ms var(--yg-settle);
   --yg-motion-switch-travel: 490ms var(--yg-settle);
   --yg-motion-storage-fill: 450ms var(--yg-settle);
   --yg-motion-storage-disclose: 460ms var(--yg-settle);
@@ -515,13 +525,27 @@
 
 @supports (animation-timing-function: linear(0, 1)) {
   .yg-root {
+    --yg-motion-menu-height: 470ms linear(0, 0.107, 0.312, 0.531, 0.718, 0.857, 0.95, 1.003, 1.029, 1.036, 1.034, 1.027, 1.019, 1.011, 1.006, 1);
+    --yg-motion-exposure: 400ms linear(0, 0.15, 0.357, 0.529, 0.659, 0.753, 0.822, 0.872, 0.907, 0.933, 0.952, 0.965, 0.975, 0.982, 0.987, 1);
+    --yg-motion-wheel: 560ms linear(0, 0.084, 0.237, 0.396, 0.537, 0.652, 0.743, 0.811, 0.863, 0.901, 0.928, 0.948, 0.963, 0.973, 0.981, 1);
+    --yg-motion-pull-return: 535ms linear(0, 0.151, 0.435, 0.719, 0.933, 1.059, 1.109, 1.108, 1.081, 1.048, 1.019, 0.999, 0.99, 0.987, 0.989, 1);
+    --yg-motion-storage-reel-fast: 450ms linear(0, 0.103, 0.297, 0.497, 0.669, 0.798, 0.889, 0.947, 0.981, 0.999, 1.007, 1.01, 1.009, 1.007, 1.005, 1);
+    --yg-motion-storage-reel-medium: 435ms linear(0, 0.099, 0.291, 0.496, 0.676, 0.814, 0.911, 0.971, 1.005, 1.021, 1.025, 1.023, 1.018, 1.013, 1.009, 1);
+    --yg-motion-storage-reel-slow: 420ms linear(0, 0.095, 0.284, 0.494, 0.682, 0.83, 0.934, 0.999, 1.034, 1.047, 1.046, 1.039, 1.029, 1.019, 1.011, 1);
+    --yg-motion-file-check: 550ms linear(0, 0.113, 0.31, 0.503, 0.66, 0.777, 0.858, 0.913, 0.948, 0.97, 0.983, 0.991, 0.995, 0.998, 0.999, 1);
+    --yg-motion-step-check: 660ms linear(0, 0.116, 0.323, 0.528, 0.695, 0.816, 0.898, 0.948, 0.978, 0.993, 1.001, 1.003, 1.004, 1.003, 1.003, 1);
+    --yg-motion-deck-release: 550ms linear(0, 0.173, 0.502, 0.822, 1.046, 1.155, 1.17, 1.13, 1.072, 1.019, 0.985, 0.971, 0.972, 0.98, 0.99, 1);
+    --yg-motion-deck-depth: 440ms linear(0, 0.103, 0.305, 0.523, 0.714, 0.86, 0.957, 1.014, 1.041, 1.047, 1.043, 1.034, 1.023, 1.014, 1.007, 1);
+    --yg-motion-ticket-turn: 625ms linear(0, 0.132, 0.361, 0.58, 0.749, 0.865, 0.936, 0.977, 0.997, 1.005, 1.007, 1.006, 1.005, 1.003, 1.002, 1);
+    --yg-motion-rating-pop: 525ms linear(0, 0.297, 0.832, 1.25, 1.388, 1.282, 1.076, 0.909, 0.85, 0.887, 0.967, 1.033, 1.058, 1.045, 1.014, 1);
+    --yg-motion-drag-position: 360ms linear(0, 0.2, 0.495, 0.727, 0.872, 0.95, 0.986, 1, 1.004, 1.004, 1.003, 1.002, 1.001, 1, 1, 1);
+    --yg-motion-refresh-pull: 525ms linear(0, 0.206, 0.568, 0.886, 1.076, 1.143, 1.127, 1.077, 1.028, 0.995, 0.981, 0.98, 0.987, 0.994, 1, 1);
     --yg-motion-tag-enter: 480ms linear(0, 0.186, 0.553, 0.926, 1.172, 1.261, 1.23, 1.135, 1.034, 0.965, 0.933, 0.937, 0.96, 0.986, 1.007, 1);
     --yg-motion-stepper-spin: 480ms linear(0, 0.219, 0.641, 1.04, 1.261, 1.29, 1.197, 1.064, 0.96, 0.914, 0.919, 0.954, 0.993, 1.018, 1.027, 1);
     --yg-motion-pagination: 520ms linear(0, 0.081, 0.252, 0.435, 0.598, 0.731, 0.832, 0.901, 0.947, 0.977, 0.993, 1.002, 1.006, 1.006, 1.006, 1);
     --yg-motion-reading-marker: 330ms linear(0, 0.098, 0.287, 0.481, 0.646, 0.777, 0.864, 0.922, 0.959, 0.981, 0.993, 0.999, 1.002, 1.002, 1.002, 1);
     --yg-motion-selection-lead: 280ms linear(0, 0.09, 0.271, 0.466, 0.639, 0.774, 0.871, 0.933, 0.975, 0.997, 1.009, 1.012, 1.012, 1.01, 1.008, 1);
     --yg-motion-selection-tail: 545ms linear(0, 0.092, 0.284, 0.495, 0.681, 0.821, 0.922, 0.985, 1.018, 1.032, 1.034, 1.029, 1.022, 1.015, 1.009, 1);
-    --yg-motion-picker-tail: 470ms linear(0, 0.082, 0.258, 0.458, 0.642, 0.792, 0.902, 0.976, 1.017, 1.037, 1.042, 1.038, 1.031, 1.023, 1.015, 1);
     --yg-motion-bottom-label: 420ms linear(0, 0.097, 0.293, 0.504, 0.688, 0.823, 0.919, 0.979, 1.011, 1.024, 1.027, 1.023, 1.018, 1.012, 1.008, 1);
     --yg-motion-card-open: 480ms linear(0, 0.103, 0.308, 0.538, 0.737, 0.884, 0.977, 1.03, 1.051, 1.053, 1.044, 1.032, 1.02, 1.011, 1.004, 1);
     --yg-motion-card-fan: 490ms linear(0, 0.097, 0.314, 0.549, 0.757, 0.919, 1.02, 1.073, 1.089, 1.083, 1.064, 1.043, 1.024, 1.009, 0.999, 1);
@@ -532,15 +556,11 @@
     --yg-motion-island-expand: 410ms linear(0, 0.093, 0.293, 0.527, 0.728, 0.883, 0.986, 1.047, 1.071, 1.072, 1.061, 1.044, 1.028, 1.015, 1.005, 1);
     --yg-motion-step-fill: 620ms linear(0, 0.105, 0.302, 0.506, 0.676, 0.798, 0.884, 0.939, 0.971, 0.989, 0.998, 1.002, 1.003, 1.003, 1.003, 1);
     --yg-motion-success-label: 375ms linear(0, 0.102, 0.305, 0.521, 0.706, 0.843, 0.934, 0.988, 1.016, 1.026, 1.026, 1.021, 1.016, 1.01, 1.006, 1);
-    --yg-motion-picker-reveal: 420ms linear(0, 0.099, 0.306, 0.534, 0.732, 0.877, 0.977, 1.033, 1.056, 1.059, 1.05, 1.037, 1.023, 1.013, 1.005, 1);
     --yg-motion-picker-opacity: 360ms linear(0, 0.101, 0.287, 0.48, 0.644, 0.771, 0.861, 0.921, 0.959, 0.982, 0.994, 1.001, 1.003, 1.004, 1.003, 1);
     --yg-motion-picker-lift: 460ms linear(0, 0.109, 0.316, 0.531, 0.712, 0.847, 0.935, 0.988, 1.014, 1.024, 1.024, 1.02, 1.015, 1.01, 1.006, 1);
-    --yg-motion-picker-check: 450ms linear(0, 0.103, 0.297, 0.497, 0.669, 0.798, 0.889, 0.947, 0.981, 0.999, 1.007, 1.01, 1.009, 1.007, 1.005, 1);
-    --yg-motion-picker-press: linear(0, 0.291, 0.772, 1.123, 1.242, 1.188, 1.072, 0.979, 0.942, 0.951, 0.978, 1.002, 1.013, 1.013, 1.006, 1);
     --yg-motion-picker-row: 390ms linear(0, 0.086, 0.269, 0.476, 0.664, 0.815, 0.922, 0.991, 1.029, 1.045, 1.047, 1.04, 1.031, 1.022, 1.013, 1);
     --yg-motion-picker-slide: 380ms linear(0, 0.089, 0.285, 0.494, 0.68, 0.832, 0.932, 0.995, 1.029, 1.041, 1.041, 1.034, 1.026, 1.017, 1.01, 1);
     --yg-motion-picker-highlight: 250ms linear(0, 0.075, 0.236, 0.422, 0.598, 0.745, 0.858, 0.938, 0.989, 1.018, 1.032, 1.035, 1.032, 1.027, 1.02, 1);
-    --yg-motion-picker-chevron: 490ms linear(0, 0.131, 0.416, 0.706, 0.936, 1.082, 1.141, 1.14, 1.106, 1.063, 1.023, 0.996, 0.982, 0.979, 0.982, 1);
     --yg-motion-switch-travel: 490ms linear(0, 0.14, 0.441, 0.743, 0.974, 1.112, 1.158, 1.143, 1.099, 1.05, 1.01, 0.985, 0.976, 0.976, 0.983, 1);
     --yg-motion-storage-fill: 450ms linear(0, 0.203, 0.618, 1, 1.244, 1.305, 1.232, 1.102, 0.989, 0.92, 0.907, 0.933, 0.973, 1.007, 1.026, 1);
     --yg-motion-storage-disclose: 460ms linear(0, 0.096, 0.301, 0.513, 0.701, 0.838, 0.934, 0.989, 1.017, 1.028, 1.028, 1.023, 1.017, 1.011, 1.007, 1);
@@ -1395,13 +1415,6 @@
   }
 }
 
-.yg-stage-list > progress {
-  display: block;
-  width: 100%;
-  height: var(--boa-space-4);
-  margin-block-end: var(--boa-space-12);
-  accent-color: var(--yg-inverse);
-}
 .yg-stepper li > div {
   min-width: 0;
   overflow-wrap: anywhere;
@@ -3108,26 +3121,51 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   color: var(--yg-muted);
   font: var(--yg-font-meta);
 }
-.yg-mention-list {
+.yg-mention-layer {
   position: absolute;
   z-index: 5;
   inset-block-start: calc(100% + var(--yg-offset-layer));
   inset-inline-start: 0;
-  min-inline-size: min(100%, 15rem);
-  max-block-size: 14rem;
-  overflow: auto;
-  padding: var(--yg-gap-tight);
+  inline-size: min(212px, 100%);
+  --yg-mention-row: 40px;
+  block-size: 0;
+  overflow: clip;
   border-radius: var(--yg-radius-panel);
   background: var(--yg-raised-surface);
+  opacity: 0;
+  pointer-events: none;
+}
+.yg-mention-layer[data-open="true"] {
+  block-size: min(14rem, calc(var(--yg-mention-count) * var(--yg-mention-row) + 8px));
   box-shadow: var(--yg-float-shadow);
+  opacity: 1;
+  pointer-events: auto;
+}
+.yg-mention-list {
+  position: relative;
+  block-size: 100%;
+  overflow: auto;
+  border-radius: inherit;
+}
+.yg-mention-marker {
+  position: absolute;
+  inset: 0 4px auto;
+  block-size: var(--yg-mention-height, var(--yg-mention-row));
+  translate: 0 var(--yg-mention-top, 4px);
+  border-radius: var(--yg-radius-small);
+  background: var(--yg-field);
+  pointer-events: none;
 }
 .yg-mention-list button {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--yg-gap-inline);
   inline-size: 100%;
-  min-block-size: var(--yg-size-regular);
-  padding: var(--yg-gap-tight) var(--yg-inset-compact);
+  block-size: var(--yg-mention-row);
+  inline-size: calc(100% - 8px);
+  margin-inline: 4px;
+  padding: 0 10px;
   border: 0;
   border-radius: var(--yg-radius-small);
   background: transparent;
@@ -3136,7 +3174,12 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   text-align: start;
   cursor: pointer;
 }
-.yg-mention-list button:is([aria-selected="true"], :hover) { background: var(--yg-field); }
+.yg-mention-list button:first-of-type { margin-block-start: 4px; }
+.yg-mention-list button:last-of-type { margin-block-end: 4px; }
+.yg-mention-list button b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: inherit; }
+@media (forced-colors: active) {
+  .yg-mention-list button[aria-selected="true"] { outline: 1px solid Highlight; outline-offset: -1px; }
+}
 .yg-mention-list button > span {
   display: grid;
   place-items: center;
@@ -3149,8 +3192,17 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   font: var(--yg-font-meta);
 }
 .yg-file-drop { position: relative; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; inline-size: min(100%, var(--yg-drop-measure)); min-block-size: 216px; padding: 38px var(--yg-inset-regular) var(--boa-space-20); border: 0; border-radius: var(--yg-radius-feature); background: var(--yg-raised-surface); text-align: center; cursor: pointer; }
-.yg-file-drop-core { display: grid; place-items: center; box-sizing: border-box; flex: none; inline-size: 72px; block-size: 72px; border-radius: 50%; background: var(--yg-field); color: var(--yg-text); }
-.yg-file-drop-mark { display: block; inline-size: 26px; block-size: 26px; }
+.yg-file-drop-core { position: relative; display: grid; place-items: center; box-sizing: border-box; flex: none; inline-size: 72px; block-size: 72px; border-radius: 50%; background: var(--yg-field); color: var(--yg-text); }
+.yg-file-drop-mark, .yg-file-drop-check { grid-area: 1 / 1; display: block; inline-size: 26px; block-size: 26px; }
+.yg-file-drop-check { opacity: 0; }
+.yg-file-drop-check path { stroke-dasharray: 24; stroke-dashoffset: 24; }
+.yg-file-drop[data-accepted] .yg-file-drop-check { opacity: 1; }
+.yg-file-drop[data-accepted] .yg-file-drop-check path { stroke-dashoffset: 0; }
+.yg-file-drop:is([data-processing], [data-accepted]) .yg-file-drop-mark { opacity: 0; }
+.yg-file-drop-progress { position: absolute; inset: 0; display: grid; place-items: center; font: var(--yg-font-label); font-variant-numeric: tabular-nums; }
+.yg-file-drop-progress[data-complete] { opacity: 0; pointer-events: none; }
+.yg-file-drop-progress svg { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; rotate: -90deg; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.yg-file-drop-progress circle { stroke-dasharray: 100; }
 .yg-file-drop-copy { display: grid; justify-items: center; gap: var(--yg-gap-tight); margin-top: 16px; min-inline-size: 0; }
 .yg-file-drop-copy strong { font: var(--yg-font-action); }
 .yg-file-drop-copy span { color: var(--yg-muted); font: var(--yg-font-meta); overflow-wrap: anywhere; }
@@ -3160,12 +3212,26 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-file-drop input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
 .yg-file-drop:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 .yg-file-drop-status:empty { display: none; }
-@media (pointer: coarse) { .yg-mention-list button { min-block-size: var(--yg-size-touch); } .yg-mention textarea { font: var(--yg-font-touch); } }
+@media (pointer: coarse) { .yg-mention-layer { --yg-mention-row: var(--yg-size-touch); } .yg-mention textarea { font: var(--yg-font-touch); } }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-mention-list { animation: yg-input-arrive var(--yg-travel) var(--yg-settle); }
+  .yg-mention-layer { transition: block-size var(--yg-motion-storage-disclose), opacity var(--yg-motion-picker-opacity); }
+  .yg-mention-layer[data-open="true"] button {
+    animation: yg-mention-row var(--yg-motion-picker-row) both;
+    animation-delay: calc(min(var(--yg-mention-index), 5) * 25ms);
+  }
   .yg-file-drop { transition: background-color var(--yg-travel) var(--yg-settle); }
+  .yg-file-drop-mark, .yg-file-drop-progress { transition: opacity var(--yg-motion-picker-opacity), translate var(--yg-motion-picker-slide); }
+  .yg-file-drop:is([data-processing], [data-accepted]) .yg-file-drop-mark { translate: 0 -12px; }
+  .yg-file-drop[data-processing] .yg-file-drop-core { animation: yg-file-gulp var(--yg-motion-file-press); }
+  .yg-file-drop[data-accepted] .yg-file-drop-core { animation: yg-file-done var(--yg-motion-file-press); }
+  .yg-file-drop-check { transition: opacity var(--yg-motion-picker-opacity); }
+  .yg-file-drop-check path { transition: stroke-dashoffset var(--yg-motion-file-check); }
+  .yg-file-drop-copy strong { animation: yg-file-caption var(--yg-motion-picker-slide); }
 }
-@keyframes yg-input-arrive { from { opacity: 0; translate: 0 -4px; } }
+@keyframes yg-mention-row { from { opacity: 0; translate: 0 -8px; } }
+@keyframes yg-file-caption { from { opacity: 0; translate: 0 16px; } }
+@keyframes yg-file-gulp { from { scale: 1.2; } }
+@keyframes yg-file-done { from { scale: .84; } }
 .yg-mention-list-heading { display: flex; justify-content: space-between; gap: var(--yg-gap-inline); padding: var(--yg-inset-layer) var(--boa-space-8); color: var(--yg-muted); font: var(--yg-font-meta); }
 .yg-mention-list-heading span { font-variant-numeric: tabular-nums; }
 
@@ -3178,8 +3244,8 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-mention-surface { box-sizing: border-box; gap: var(--boa-space-12); padding: var(--boa-space-16); border-radius: var(--yg-radius-sheet); }
 .yg-mention textarea { min-block-size: 64px; font: var(--yg-font-reading); line-height: 32px; }
 .yg-mention-hint { min-block-size: 36px; display: flex; align-items: center; }
-.yg-mention-list { box-sizing: border-box; inline-size: min(212px, 100%); min-inline-size: 0; padding: 4px; }
-.yg-mention-list button { box-sizing: border-box; min-block-size: 40px; padding: 0 10px; gap: 10px; }
+.yg-mention-list { box-sizing: border-box; }
+.yg-mention-list button { box-sizing: border-box; gap: 10px; }
 @media (prefers-reduced-motion: no-preference) {
   .yg-mention-list button { transition: background-color 160ms var(--yg-settle); }
   .yg-mention-list button > span { transition: transform 160ms var(--yg-settle), background-color 160ms var(--yg-settle); }
@@ -3331,32 +3397,6 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   75% { translate: -1px; }
 }
 
-@property --yg-picker-open {
-  syntax: "<number>";
-  inherits: false;
-  initial-value: 0;
-}
-@property --yg-picker-opacity {
-  syntax: "<number>";
-  inherits: false;
-  initial-value: 0;
-}
-@property --yg-picker-row {
-  syntax: "<number>";
-  inherits: false;
-  initial-value: 0;
-}
-@property --yg-picker-highlight-top {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-@property --yg-picker-highlight-bottom {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
-
 .yg-morph-tooltip { position: relative; display: inline-flex; }
 .yg-morph-tooltip-trigger {
   display: inline-flex; align-items: center; gap: var(--yg-gap-inline);
@@ -3412,6 +3452,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-spring-highlight {
   position: absolute;
   inset: 0 var(--yg-inset-layer) auto;
+  opacity: var(--yg-spring-opacity, 0);
   block-size: var(--yg-spring-active-height, 0px);
   translate: 0 var(--yg-spring-active-y, 0px);
   border-radius: var(--yg-radius-panel);
@@ -3429,74 +3470,43 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-spring-check path { stroke-dasharray: 22; stroke-dashoffset: 22; }
 .yg-spring-option[data-state="checked"] .yg-spring-check path { stroke-dashoffset: 0; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-spring-dropdown {
-    translate: 0 0;
-    transition: translate var(--yg-motion-picker-lift);
-  }
-  .yg-spring-dropdown[data-open="true"]:has(.yg-spring-menu[data-side="bottom"]) {
-    translate: 0 calc(-1 * var(--yg-picker-lift));
-  }
   .yg-morph-tooltip-card {
     transition: opacity var(--yg-motion-tooltip-arrive), transform var(--yg-motion-card-detail),
       visibility 0s linear 435ms;
   }
   .yg-morph-tooltip-card[data-open="true"] { transition-delay: 0s; }
+  .yg-spring-dropdown { translate: 0 var(--yg-picker-lift-now, 0px); }
+  .yg-spring-trigger { scale: var(--yg-picker-press-now, 1); }
+  .yg-spring-chevron, .yg-spring-trigger[data-state="open"] .yg-spring-chevron {
+    transform: rotate(var(--yg-picker-chevron-now, 0deg)); transition: none;
+  }
   .yg-spring-menu {
-    --yg-picker-hidden: calc((1 - clamp(0, var(--yg-picker-open), 1)) * 100%);
+    --yg-picker-hidden: calc((1 - var(--yg-picker-open, 0)) * 100%);
+    position: relative; isolation: isolate; overflow: visible; background: transparent;
     clip-path: inset(0 0 var(--yg-picker-hidden) round var(--yg-radius-popover));
-    opacity: clamp(0, var(--yg-picker-opacity), 1);
-    scale: calc(.9 + .1 * clamp(0, var(--yg-picker-open), 1.06)) 1;
-    transition: --yg-picker-open var(--yg-motion-picker-reveal),
-      --yg-picker-opacity var(--yg-motion-picker-opacity);
+    opacity: var(--yg-picker-opacity, 0);
+    scale: calc(.9 + .1 * var(--yg-picker-open, 0)) 1;
   }
-  .yg-spring-menu[data-side="top"] {
-    clip-path: inset(var(--yg-picker-hidden) 0 0 round var(--yg-radius-popover));
+  .yg-spring-menu[data-side="top"] { clip-path: inset(var(--yg-picker-hidden) 0 0 round var(--yg-radius-popover)); }
+  .yg-spring-menu::before {
+    content: ""; position: absolute; inset: 0 0 -6%; z-index: -1;
+    background: var(--yg-field); pointer-events: none;
   }
-  .yg-spring-menu[data-state="open"] { --yg-picker-open: 1; --yg-picker-opacity: 1; }
-  .yg-spring-menu[data-state="closed"] {
-    pointer-events: none;
-    animation: yg-spring-exit-presence 490ms linear both;
-  }
+  .yg-spring-menu[data-side="top"]::before { inset: -6% 0 0; }
+  .yg-spring-menu[data-state="closed"] { pointer-events: none; animation: yg-spring-exit-presence 500ms linear both; }
   .yg-spring-option {
-    opacity: clamp(0, var(--yg-picker-row), 1);
-    translate: 0 calc((var(--yg-picker-row) - 1) * 14px);
-    transition: --yg-picker-row var(--yg-motion-picker-row);
+    opacity: clamp(0, var(--yg-picker-row, 0), 1);
+    translate: 0 calc((var(--yg-picker-row, 0) - 1) * 14px);
   }
-  .yg-spring-menu[data-state="open"] .yg-spring-option {
-    --yg-picker-row: 1;
-    transition-delay: calc(50ms + 45ms * var(--yg-spring-row-index));
+  .yg-spring-value-roll[data-incoming] {
+    opacity: clamp(0, var(--yg-picker-roll-in, 1), 1);
+    translate: 0 calc((1 - var(--yg-picker-roll-in, 1)) * 20px);
   }
-  .yg-spring-menu[data-state="closed"] .yg-spring-option {
-    transition-delay: calc(20ms * var(--yg-spring-row-reverse));
+  .yg-spring-value-roll[data-outgoing] {
+    visibility: visible; opacity: clamp(0, calc(1 - var(--yg-picker-roll-in, 1)), 1);
+    translate: 0 calc(-20px * var(--yg-picker-roll-in, 1));
+    pointer-events: none;
   }
-  .yg-spring-check path { transition: stroke-dashoffset var(--yg-motion-picker-check); }
-  .yg-spring-value-roll[data-incoming] { animation: yg-spring-roll var(--yg-motion-picker-slide) both; }
-  .yg-spring-value-roll[data-outgoing] { animation: yg-spring-roll-out var(--yg-motion-picker-slide) both; }
-  .yg-spring-highlight[data-ready] {
-    --yg-picker-highlight-top: var(--yg-spring-active-y);
-    --yg-picker-highlight-bottom: var(--yg-spring-active-end);
-    translate: 0 var(--yg-picker-highlight-top);
-    block-size: max(0px, calc(var(--yg-picker-highlight-bottom) - var(--yg-picker-highlight-top)));
-    transition: --yg-picker-highlight-top var(--yg-motion-picker-highlight),
-      --yg-picker-highlight-bottom var(--yg-motion-picker-tail), opacity var(--yg-motion-picker-opacity);
-  }
-  .yg-spring-highlight[data-ready][data-forward] {
-    transition: --yg-picker-highlight-top var(--yg-motion-picker-tail),
-      --yg-picker-highlight-bottom var(--yg-motion-picker-highlight), opacity var(--yg-motion-picker-opacity);
-  }
-  .yg-spring-menu[data-state="closed"] .yg-spring-highlight { opacity: 0; }
-  .yg-spring-chevron { transition: transform var(--yg-motion-picker-chevron); }
-  @starting-style {
-    .yg-spring-menu[data-state="open"] { --yg-picker-open: 0; --yg-picker-opacity: 0; }
-    .yg-spring-menu[data-state="open"] .yg-spring-option { --yg-picker-row: 0; }
-    .yg-spring-option[data-state="checked"] .yg-spring-check path { stroke-dashoffset: 0; }
-    .yg-spring-highlight[data-ready] { opacity: 0; }
-  }
-}
-@keyframes yg-spring-roll { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
-@keyframes yg-spring-roll-out {
-  from { opacity: 1; visibility: visible; translate: 0 0; }
-  to { opacity: 0; visibility: hidden; translate: 0 -20px; }
 }
 @keyframes yg-spring-exit-presence {
   from { visibility: visible; }
@@ -3511,6 +3521,59 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   .yg-spring-trigger, .yg-spring-chevron { transition: none; }
   .yg-morph-tooltip-trigger, .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select, .yg-command-button .yg-button { transition: none; }
   .yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select:focus-within, .yg-command-button .yg-button:hover, .yg-command-button .yg-button:active { transform: none; }
+}
+.yg-action-menu-expanding {
+  inline-size: min(150px, 100%);
+  border-radius: 26px;
+  background: var(--yg-field);
+}
+.yg-action-menu-expanding[data-open="true"] { inline-size: min(300px, 100%); border-radius: 22px; }
+.yg-action-menu-expanding > .yg-button {
+  justify-content: space-between;
+  inline-size: 100%;
+  block-size: 52px;
+  padding-inline: 18px;
+  border-radius: inherit;
+}
+.yg-action-menu-fold { display: grid; grid-template-rows: 0fr; }
+.yg-action-menu-expanding[data-open="true"] .yg-action-menu-fold { grid-template-rows: 1fr; }
+.yg-action-menu-options { min-block-size: 0; overflow: clip; }
+.yg-action-menu-options > button {
+  display: block; inline-size: calc(100% - 12px); min-block-size: 48px; margin-inline: 6px;
+  padding-inline: 12px; border: 0; border-radius: 12px; background: transparent;
+  color: var(--yg-text); font: var(--yg-font-action); text-align: start;
+}
+.yg-action-menu-options > button:first-child { margin-block-start: 4px; }
+.yg-action-menu-options > button:last-child { margin-block-end: 10px; }
+.yg-action-menu-options > button:is(:hover, :focus-visible) { background: var(--yg-hover); }
+.yg-action-menu-options > [aria-disabled="true"] { opacity: .45; }
+.yg-action-menu-glyph { flex: none; display: grid; place-items: center; inline-size: 18px; block-size: 18px; }
+.yg-action-menu-glyph i { grid-area: 1 / 1; inline-size: 14px; block-size: 2px; border-radius: 2px; background: currentColor; }
+.yg-action-menu-glyph i:first-child { translate: 0 -4px; }
+.yg-action-menu-glyph i:last-child { translate: 0 4px; }
+.yg-action-menu-expanding[data-open="true"] .yg-action-menu-glyph i:first-child { translate: 0 0; rotate: 45deg; }
+.yg-action-menu-expanding[data-open="true"] .yg-action-menu-glyph i:last-child { translate: 0 0; rotate: -45deg; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-action-menu-expanding, .yg-action-menu-expanding[data-open="true"] {
+    inline-size: min(var(--yg-action-menu-width, 150px), 100%);
+    border-radius: calc(26px - 4px * clamp(0, var(--yg-action-menu-toggle, 0), 1));
+  }
+  .yg-action-menu-expanding .yg-action-menu-fold {
+    display: block; overflow: clip; block-size: var(--yg-action-menu-height, 0px);
+  }
+  .yg-action-menu-expanding .yg-action-menu-glyph i:first-child {
+    translate: 0 calc(-4px * (1 - var(--yg-action-menu-toggle, 0)));
+    rotate: calc(45deg * var(--yg-action-menu-toggle, 0));
+  }
+  .yg-action-menu-expanding .yg-action-menu-glyph i:last-child {
+    translate: 0 calc(4px * (1 - var(--yg-action-menu-toggle, 0)));
+    rotate: calc(-45deg * var(--yg-action-menu-toggle, 0));
+  }
+  .yg-action-menu-options > button {
+    opacity: clamp(0, var(--yg-action-menu-row, 0), 1);
+    translate: 0 calc(18px * (1 - var(--yg-action-menu-row, 0)));
+  }
+  .yg-action-menu-options > [aria-disabled="true"] { opacity: calc(.45 * clamp(0, var(--yg-action-menu-row, 0), 1)); }
 }
 
 .yg-storage-meter {
@@ -3540,9 +3603,9 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-storage-amount b { font: 650 18px/24px var(--boa-font-family); margin-block-end: 4px; }
 .yg-storage-amount > span, .yg-storage-category-amount { color: var(--yg-muted); font: var(--yg-font-help); }
 .yg-storage-amount > span { margin-inline-start: 4px; }
-.yg-storage-count { position: relative; display: inline-grid; overflow: clip; }
-.yg-storage-count > span { grid-area: 1 / 1; }
-.yg-storage-count-before { position: absolute; inset: 0 auto 0 0; visibility: hidden; }
+.yg-storage-count, .yg-storage-count > span { display: inline-flex; }
+.yg-storage-reel { display: inline-grid; overflow: clip; block-size: 40px; }
+.yg-storage-reel > span { display: grid; grid-auto-rows: 40px; translate: 0 calc(-40px * var(--yg-reel-digit)); }
 .yg-storage-bar {
   display: flex;
   align-items: center;
@@ -3598,15 +3661,9 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
       opacity var(--yg-motion-storage-lift), scale var(--yg-motion-storage-lift);
   }
   .yg-storage-reveal { transition: grid-template-rows var(--yg-motion-storage-disclose); }
-  .yg-storage-count { --yg-storage-roll-edge: 1.1em; }
-  .yg-storage-count[data-decreased] { --yg-storage-roll-edge: -1.1em; }
-  .yg-storage-count-now[data-roll] { animation: yg-storage-count-in var(--yg-motion-storage-disclose) both; }
-  .yg-storage-count-before { animation: yg-storage-count-out var(--yg-motion-storage-disclose) both; }
-}
-@keyframes yg-storage-count-in { from { translate: 0 var(--yg-storage-roll-edge); } }
-@keyframes yg-storage-count-out {
-  from { visibility: visible; translate: 0 0; }
-  to { visibility: hidden; translate: 0 calc(-1 * var(--yg-storage-roll-edge)); }
+  .yg-storage-reel > span { transition: translate var(--yg-motion-storage-reel-fast); transition-delay: calc(min(var(--yg-reel-delay), 4) * 50ms); }
+  .yg-storage-reel:nth-last-child(2) > span { transition: translate var(--yg-motion-storage-reel-medium) 50ms; }
+  .yg-storage-reel:nth-last-child(n+3) > span { transition: translate var(--yg-motion-storage-reel-slow) calc(min(var(--yg-reel-delay), 4) * 50ms); }
 }
 
 .yg-activity-island {
@@ -4326,6 +4383,38 @@ summary.yg-task-line:focus-visible {
     transition: opacity var(--yg-change) var(--yg-settle), scale var(--yg-panel) var(--yg-selection);
   }
 }
+.yg-step-track { position: relative; display: grid; block-size: 4px; margin-block-end: var(--boa-space-12); border-radius: 4px; background: var(--yg-field); }
+.yg-step-track progress { position: absolute; opacity: 0; inline-size: 100%; block-size: 100%; }
+.yg-step-track > span { inline-size: calc(var(--yg-step-progress) * 100%); border-radius: inherit; background: var(--yg-signal-positive); }
+.yg-step-number > * { grid-area: 1 / 1; }
+.yg-step-number svg { inline-size: 16px; block-size: 16px; opacity: 0; }
+.yg-step-number svg path { stroke-dasharray: 22; stroke-dashoffset: 22; }
+.yg-stepper [data-complete] .yg-step-number { background: var(--yg-signal-positive-soft); color: var(--yg-signal-positive); }
+.yg-stepper [data-complete] .yg-step-number > span { opacity: 0; }
+.yg-stepper [data-complete] .yg-step-number svg { opacity: 1; }
+.yg-stepper [data-complete] .yg-step-number svg path { stroke-dashoffset: 0; }
+.yg-stage-list[data-connected] { position: relative; }
+.yg-stage-list[data-connected] .yg-step-track {
+  position: absolute; inset: calc((var(--yg-size-compact) - 4px) / 2) calc(50% / var(--yg-step-count)) auto;
+  margin: 0;
+}
+.yg-stage-list[data-connected] .yg-stepper {
+  position: relative; grid-template-columns: repeat(var(--yg-step-count), minmax(0, 1fr)); column-gap: 0;
+}
+.yg-stage-list[data-connected] .yg-stepper li { text-align: center; align-items: center; padding-inline: 4px; }
+.yg-stage-list[data-connected] [aria-current] .yg-step-number { background: var(--yg-inverse); color: var(--yg-on-inverse); }
+@media (forced-colors: active) {
+  .yg-step-track { forced-color-adjust: none; background: GrayText; }
+  .yg-step-track > span { background: Highlight; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-step-track > span { transition: inline-size var(--yg-motion-step-fill); }
+  .yg-step-number, .yg-step-number > span { transition: background-color var(--yg-motion-picker-lift), color var(--yg-motion-picker-lift), opacity var(--yg-motion-picker-lift); }
+  .yg-step-number svg path { transition: stroke-dashoffset var(--yg-motion-step-check); }
+  .yg-stepper [data-complete] .yg-step-number svg path { transition-delay: 120ms; }
+  .yg-stepper [aria-current] .yg-step-number { animation: yg-step-current var(--yg-motion-stepper-spin); }
+}
+@keyframes yg-step-current { from { scale: .7; } }
 
 .yg-hold-confirm, .yg-slide-confirm {
   position: relative;

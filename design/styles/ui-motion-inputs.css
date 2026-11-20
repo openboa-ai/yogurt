@@ -45,26 +45,51 @@
   color: var(--yg-muted);
   font: var(--yg-font-meta);
 }
-.yg-mention-list {
+.yg-mention-layer {
   position: absolute;
   z-index: 5;
   inset-block-start: calc(100% + var(--yg-offset-layer));
   inset-inline-start: 0;
-  min-inline-size: min(100%, 15rem);
-  max-block-size: 14rem;
-  overflow: auto;
-  padding: var(--yg-gap-tight);
+  inline-size: min(212px, 100%);
+  --yg-mention-row: 40px;
+  block-size: 0;
+  overflow: clip;
   border-radius: var(--yg-radius-panel);
   background: var(--yg-raised-surface);
+  opacity: 0;
+  pointer-events: none;
+}
+.yg-mention-layer[data-open="true"] {
+  block-size: min(14rem, calc(var(--yg-mention-count) * var(--yg-mention-row) + 8px));
   box-shadow: var(--yg-float-shadow);
+  opacity: 1;
+  pointer-events: auto;
+}
+.yg-mention-list {
+  position: relative;
+  block-size: 100%;
+  overflow: auto;
+  border-radius: inherit;
+}
+.yg-mention-marker {
+  position: absolute;
+  inset: 0 4px auto;
+  block-size: var(--yg-mention-height, var(--yg-mention-row));
+  translate: 0 var(--yg-mention-top, 4px);
+  border-radius: var(--yg-radius-small);
+  background: var(--yg-field);
+  pointer-events: none;
 }
 .yg-mention-list button {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--yg-gap-inline);
   inline-size: 100%;
-  min-block-size: var(--yg-size-regular);
-  padding: var(--yg-gap-tight) var(--yg-inset-compact);
+  block-size: var(--yg-mention-row);
+  inline-size: calc(100% - 8px);
+  margin-inline: 4px;
+  padding: 0 10px;
   border: 0;
   border-radius: var(--yg-radius-small);
   background: transparent;
@@ -73,7 +98,12 @@
   text-align: start;
   cursor: pointer;
 }
-.yg-mention-list button:is([aria-selected="true"], :hover) { background: var(--yg-field); }
+.yg-mention-list button:first-of-type { margin-block-start: 4px; }
+.yg-mention-list button:last-of-type { margin-block-end: 4px; }
+.yg-mention-list button b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: inherit; }
+@media (forced-colors: active) {
+  .yg-mention-list button[aria-selected="true"] { outline: 1px solid Highlight; outline-offset: -1px; }
+}
 .yg-mention-list button > span {
   display: grid;
   place-items: center;
@@ -86,8 +116,17 @@
   font: var(--yg-font-meta);
 }
 .yg-file-drop { position: relative; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; inline-size: min(100%, var(--yg-drop-measure)); min-block-size: 216px; padding: 38px var(--yg-inset-regular) var(--boa-space-20); border: 0; border-radius: var(--yg-radius-feature); background: var(--yg-raised-surface); text-align: center; cursor: pointer; }
-.yg-file-drop-core { display: grid; place-items: center; box-sizing: border-box; flex: none; inline-size: 72px; block-size: 72px; border-radius: 50%; background: var(--yg-field); color: var(--yg-text); }
-.yg-file-drop-mark { display: block; inline-size: 26px; block-size: 26px; }
+.yg-file-drop-core { position: relative; display: grid; place-items: center; box-sizing: border-box; flex: none; inline-size: 72px; block-size: 72px; border-radius: 50%; background: var(--yg-field); color: var(--yg-text); }
+.yg-file-drop-mark, .yg-file-drop-check { grid-area: 1 / 1; display: block; inline-size: 26px; block-size: 26px; }
+.yg-file-drop-check { opacity: 0; }
+.yg-file-drop-check path { stroke-dasharray: 24; stroke-dashoffset: 24; }
+.yg-file-drop[data-accepted] .yg-file-drop-check { opacity: 1; }
+.yg-file-drop[data-accepted] .yg-file-drop-check path { stroke-dashoffset: 0; }
+.yg-file-drop:is([data-processing], [data-accepted]) .yg-file-drop-mark { opacity: 0; }
+.yg-file-drop-progress { position: absolute; inset: 0; display: grid; place-items: center; font: var(--yg-font-label); font-variant-numeric: tabular-nums; }
+.yg-file-drop-progress[data-complete] { opacity: 0; pointer-events: none; }
+.yg-file-drop-progress svg { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; rotate: -90deg; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.yg-file-drop-progress circle { stroke-dasharray: 100; }
 .yg-file-drop-copy { display: grid; justify-items: center; gap: var(--yg-gap-tight); margin-top: 16px; min-inline-size: 0; }
 .yg-file-drop-copy strong { font: var(--yg-font-action); }
 .yg-file-drop-copy span { color: var(--yg-muted); font: var(--yg-font-meta); overflow-wrap: anywhere; }
@@ -97,12 +136,26 @@
 .yg-file-drop input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
 .yg-file-drop:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 .yg-file-drop-status:empty { display: none; }
-@media (pointer: coarse) { .yg-mention-list button { min-block-size: var(--yg-size-touch); } .yg-mention textarea { font: var(--yg-font-touch); } }
+@media (pointer: coarse) { .yg-mention-layer { --yg-mention-row: var(--yg-size-touch); } .yg-mention textarea { font: var(--yg-font-touch); } }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-mention-list { animation: yg-input-arrive var(--yg-travel) var(--yg-settle); }
+  .yg-mention-layer { transition: block-size var(--yg-motion-storage-disclose), opacity var(--yg-motion-picker-opacity); }
+  .yg-mention-layer[data-open="true"] button {
+    animation: yg-mention-row var(--yg-motion-picker-row) both;
+    animation-delay: calc(min(var(--yg-mention-index), 5) * 25ms);
+  }
   .yg-file-drop { transition: background-color var(--yg-travel) var(--yg-settle); }
+  .yg-file-drop-mark, .yg-file-drop-progress { transition: opacity var(--yg-motion-picker-opacity), translate var(--yg-motion-picker-slide); }
+  .yg-file-drop:is([data-processing], [data-accepted]) .yg-file-drop-mark { translate: 0 -12px; }
+  .yg-file-drop[data-processing] .yg-file-drop-core { animation: yg-file-gulp var(--yg-motion-file-press); }
+  .yg-file-drop[data-accepted] .yg-file-drop-core { animation: yg-file-done var(--yg-motion-file-press); }
+  .yg-file-drop-check { transition: opacity var(--yg-motion-picker-opacity); }
+  .yg-file-drop-check path { transition: stroke-dashoffset var(--yg-motion-file-check); }
+  .yg-file-drop-copy strong { animation: yg-file-caption var(--yg-motion-picker-slide); }
 }
-@keyframes yg-input-arrive { from { opacity: 0; translate: 0 -4px; } }
+@keyframes yg-mention-row { from { opacity: 0; translate: 0 -8px; } }
+@keyframes yg-file-caption { from { opacity: 0; translate: 0 16px; } }
+@keyframes yg-file-gulp { from { scale: 1.2; } }
+@keyframes yg-file-done { from { scale: .84; } }
 .yg-mention-list-heading { display: flex; justify-content: space-between; gap: var(--yg-gap-inline); padding: var(--yg-inset-layer) var(--boa-space-8); color: var(--yg-muted); font: var(--yg-font-meta); }
 .yg-mention-list-heading span { font-variant-numeric: tabular-nums; }
 
@@ -115,8 +168,8 @@
 .yg-mention-surface { box-sizing: border-box; gap: var(--boa-space-12); padding: var(--boa-space-16); border-radius: var(--yg-radius-sheet); }
 .yg-mention textarea { min-block-size: 64px; font: var(--yg-font-reading); line-height: 32px; }
 .yg-mention-hint { min-block-size: 36px; display: flex; align-items: center; }
-.yg-mention-list { box-sizing: border-box; inline-size: min(212px, 100%); min-inline-size: 0; padding: 4px; }
-.yg-mention-list button { box-sizing: border-box; min-block-size: 40px; padding: 0 10px; gap: 10px; }
+.yg-mention-list { box-sizing: border-box; }
+.yg-mention-list button { box-sizing: border-box; gap: 10px; }
 @media (prefers-reduced-motion: no-preference) {
   .yg-mention-list button { transition: background-color 160ms var(--yg-settle); }
   .yg-mention-list button > span { transition: transform 160ms var(--yg-settle), background-color 160ms var(--yg-settle); }

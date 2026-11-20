@@ -38,3 +38,9 @@ Focused captures in both appearances show a stroke-free prompt and character-lim
 The standalone catalogs resolve motion curves from the shared stylesheet. Browser frame samples at 320, 768, and 1440 CSS pixels show intermediate picker heights and opacities, staggered rows, a stable trigger-to-menu gap during the lift, and a check drawing before the exit starts. The picker test tracks its highlight on arrow input and checks focus after Escape and pointer selection. Reduced-motion checks confirm immediate selection and closure in both appearances.
 
 The switch test checks the thumb stretch on a state change and reverses it with a second key press. The character editor renders rejected text while its accepted value stays at the character limit. Visual checks for other interaction phases remain open.
+
+## Catalog interaction pass
+
+The interaction suite discovers the guide's 78 example IDs and exercises a registered action for each. It checks outcomes such as a rejected overflow character, a drawn check, a completed file preparation, a changed page, a returned focus target, and an accepted choice. Layout coverage remains at 320, 768, and 1440 CSS pixels. The interaction suite also checks independently moving menu dimensions rather than only the final open panel.
+
+The spring picker frame samples show height overshoot at all three widths, separate opacity and staggered rows, a stable anchor gap, and a selected check drawing before the fold. The running gallery review also includes the expanding menu, file preparation, reading highlight, card throw, and storage feedback. Full motion comparison across the catalog remains open.

@@ -61,11 +61,45 @@
 .motion-tag button:focus-visible, .motion-stepper button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) {
   .motion-tag-chip { animation: motion-tag-enter var(--yg-motion-tag-enter) both; }
-  .motion-stepper-actions output span { animation: motion-step-number var(--yg-motion-stepper-spin) both; }
+  .motion-stepper-actions output { --yg-step-motion-edge: 14px; }
+  .motion-stepper-actions output[data-decreasing] { --yg-step-motion-edge: -14px; }
+  .motion-stepper-actions output .motion-stepper-in { animation: motion-step-number var(--yg-motion-stepper-spin) both; }
+  .motion-stepper-actions output .motion-stepper-out { animation: motion-step-exit var(--yg-motion-stepper-spin) both; }
   .motion-stepper-actions button:active { transform: scale(.9); }
 }
 @keyframes motion-tag-enter { from { opacity: 0; transform: scale(.8); } }
-@keyframes motion-step-number { from { opacity: 0; transform: translateY(14px); } }
+.motion-stepper-actions output span { grid-area: 1 / 1; }
+.motion-stepper-out { visibility: hidden; }
+@keyframes motion-step-number { from { opacity: 0; translate: 0 var(--yg-step-motion-edge); } }
+@keyframes motion-step-exit {
+  from { opacity: 1; visibility: visible; translate: 0 0; }
+  to { opacity: 0; visibility: hidden; translate: 0 calc(-1 * var(--yg-step-motion-edge)); }
+}
+.motion-refresh-panel { position: relative; min-block-size: 140px; overflow: clip; border-radius: var(--yg-radius-panel); background: var(--yg-field); touch-action: none; }
+.motion-refresh-content { position: relative; z-index: 1; display: grid; gap: var(--yg-gap-tight); padding: var(--yg-inset-panel); min-block-size: 84px; background: var(--yg-raised-surface); }
+.motion-refresh-drop {
+  position: absolute; inset: 8px 0 auto; margin-inline: auto; display: grid; place-items: center;
+  inline-size: 34px; block-size: 34px; border-radius: 50%; background: var(--yg-hover); color: var(--yg-text);
+}
+.motion-refresh-panel[data-armed] .motion-refresh-drop { background: var(--yg-inverse); color: var(--yg-on-inverse); }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-refresh-content { translate: 0 var(--refresh-offset); transition: translate var(--yg-motion-pull-return); }
+  .motion-refresh-panel[data-dragging] .motion-refresh-content { transition: translate var(--yg-motion-drag-position); }
+  .motion-refresh-drop { translate: 0 calc(var(--refresh-offset) * .24); scale: calc(.25 + .75 * var(--refresh-stretch)); transition: translate var(--yg-motion-refresh-pull), scale var(--yg-motion-refresh-pull); }
+  .motion-refresh-panel[data-pending] .motion-refresh-drop { animation: motion-refresh-spin .85s linear infinite; }
+  .motion-refresh-content strong { animation: motion-step-number var(--yg-motion-picker-slide); --yg-step-motion-edge: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-refresh-panel { min-block-size: 0; }
+  .motion-refresh-drop { display: none; }
+}
+@keyframes motion-refresh-spin { to { rotate: 1turn; } }
+.motion-wheel { touch-action: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-wheel-items { transition: transform var(--yg-motion-wheel); }
+  .motion-wheel[data-dragging] .motion-wheel-items { transition: none; }
+  .motion-extra-rating [data-filled] { animation: extra-rating-pop var(--yg-motion-rating-pop); }
+}
 
 .motion-extra-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .motion-invite { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr); min-inline-size: 0; width: min(320px, 100%); padding: 16px; border-radius: 24px; background: var(--yg-raised-surface); }
@@ -92,7 +126,6 @@
 .motion-invite :is(input, button):focus-visible, .motion-wheel:focus-visible, .motion-undo-button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) {
   .motion-invite-stack button { animation: motion-invite-enter 250ms ease-out both; }
-  .motion-wheel-items { transition: transform 400ms cubic-bezier(.2,.8,.2,1); }
   .motion-undo-button span { display: inline-block; animation: motion-undo-label 220ms ease-out; }
 }
 @media (prefers-reduced-motion: reduce) { .motion-undo-button i { animation: none; } }

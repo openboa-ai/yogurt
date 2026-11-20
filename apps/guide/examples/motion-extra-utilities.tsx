@@ -1,15 +1,15 @@
-import { useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { Button } from "@openboa/yogurt";
 import { CartButton } from "@openboa/yogurt/motion-patterns";
 
 function Player() {
   const tracks = ["Quiet morning", "Open windows", "After the rain"];
   const [track, setTrack] = useState(0), [playing, setPlaying] = useState(false);
-  return <div className="utility-demo utility-player"><span className="utility-record" data-playing={playing || undefined} aria-hidden="true">♪</span><div><small>LOCAL PLAYER PREVIEW</small><strong>{tracks[track]}</strong><span role="status">{playing ? "Playing preview" : "Paused"}</span></div><div className="utility-row"><Button size="compact" emphasis="quiet" aria-label="Previous track" onClick={() => setTrack((track + 2) % 3)}>◀◀</Button><Button size="compact" onClick={() => setPlaying(!playing)}>{playing ? "Pause" : "Play"}</Button><Button size="compact" emphasis="quiet" aria-label="Next track" onClick={() => setTrack((track + 1) % 3)}>▶▶</Button></div></div>;
+  return <div className="utility-demo utility-player"><span className="utility-record" data-playing={playing || undefined} aria-hidden="true">♪</span><div><small>LOCAL PLAYER PREVIEW</small><strong className="utility-track" key={track}>{tracks[track]}</strong><span role="status">{playing ? "Playing preview" : "Paused"}</span></div><div className="utility-row"><Button size="compact" emphasis="quiet" aria-label="Previous track" onClick={() => setTrack((track + 2) % 3)}>◀◀</Button><Button size="compact" onClick={() => setPlaying(!playing)}>{playing ? "Pause" : "Play"}</Button><Button size="compact" emphasis="quiet" aria-label="Next track" onClick={() => setTrack((track + 1) % 3)}>▶▶</Button></div></div>;
 }
 function Approval() {
   const [state, setState] = useState<"pending" | "approved" | "declined">("pending");
-  return <div className="utility-demo utility-panel"><small>TOOL REQUEST</small><strong>Read project notes</strong><span>Allow this preview to use the selected notes?</span>{state === "pending" ? <div className="utility-row"><Button size="compact" emphasis="soft" onClick={() => setState("declined")}>Decline</Button><Button size="compact" onClick={() => setState("approved")}>Allow once</Button></div> : <><span role="status">{state === "approved" ? "Allowed in preview" : "Declined in preview"}</span><Button size="compact" emphasis="quiet" onClick={() => setState("pending")}>Reset</Button></>}</div>;
+  return <div className="utility-demo utility-panel"><small>TOOL REQUEST</small><strong>Read project notes</strong><span>Allow this preview to use the selected notes?</span>{state === "pending" ? <div className="utility-row"><Button size="compact" emphasis="soft" onClick={() => setState("declined")}>Decline</Button><Button size="compact" onClick={() => setState("approved")}>Allow once</Button></div> : <><span className="utility-decision" role="status" data-state={state}>{state === "approved" ? "Allowed in preview" : "Declined in preview"}</span><Button size="compact" emphasis="quiet" onClick={() => setState("pending")}>Reset</Button></>}</div>;
 }
 const groceries = [
   { id: "yogurt", name: "Greek yogurt", detail: "500 g", price: 420, icon: "M9 3h6m-5 0v4l-3 4v9h10v-9l-3-4V3M7 13h10", tone: "neutral" },
@@ -71,23 +71,55 @@ function Dots() {
 }
 function Notifications() {
   const [enabled, setEnabled] = useState(false);
-  return <div className="utility-demo"><button className="utility-bell" type="button" aria-label="Notifications" aria-pressed={enabled} onClick={() => setEnabled(!enabled)}><span aria-hidden="true">♢</span>{enabled && <i />}</button><strong>{enabled ? "Notifications on" : "Notifications off"}</strong><span role="status">Preview preference only</span></div>;
+  const [touched, setTouched] = useState(false);
+  return <div className="utility-demo"><button className="utility-bell" type="button" aria-label="Notifications"
+    aria-pressed={enabled} onClick={() => { setEnabled(!enabled); setTouched(true); }}>
+    <svg key={String(enabled)} data-rung={touched || undefined} width="22" height="22" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5z" /><path d="M10 20a2 2 0 0 0 4 0" />
+    </svg>
+    {enabled && <i />}
+  </button><strong className="utility-bell-label" key={String(enabled)}>{enabled ? "Notifications on" : "Notifications off"}</strong><span role="status">Preview preference only</span></div>;
 }
 function Connection() {
   const [connected, setConnected] = useState(false);
   return <div className="utility-demo utility-panel"><div className="utility-row"><span className="utility-indicator" data-on={connected || undefined} /><strong>{connected ? "Connected" : "Disconnected"}</strong></div><span>Simulated workspace connection</span><Button size="compact" emphasis="soft" onClick={() => setConnected(!connected)}>{connected ? "Simulate disconnect" : "Simulate connect"}</Button></div>;
 }
 function Unlock() {
-  const [unlocked, setUnlocked] = useState(false);
-  return <div className="utility-demo utility-panel"><span className="utility-lock" aria-hidden="true">{unlocked ? "◡" : "⌒"}</span><strong>{unlocked ? "Preview unlocked" : "Preview locked"}</strong><span>No account or system setting changes.</span><Button size="compact" emphasis="soft" onClick={() => setUnlocked(!unlocked)}>{unlocked ? "Simulate lock" : "Simulate unlock"}</Button></div>;
+  const [phase, setPhase] = useState<"locked" | "scanning" | "unlocked">("locked");
+  useEffect(() => {
+    if (phase !== "scanning") return;
+    const scan = setTimeout(() => setPhase("unlocked"), 1800);
+    return () => clearTimeout(scan);
+  }, [phase]);
+  return <div className="utility-demo utility-panel">
+    <span className="utility-lock" data-phase={phase} aria-hidden="true">
+      <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+        <path className="utility-lock-brackets" pathLength="1" d="M9 18v-6a3 3 0 0 1 3-3h6M30 9h6a3 3 0 0 1 3 3v6M39 30v6a3 3 0 0 1-3 3h-6M18 39h-6a3 3 0 0 1-3-3v-6"/>
+        <path className="utility-lock-face" pathLength="1" d="M18 20v2m12-2v2m-11 6a6 6 0 0 0 10 0"/>
+        <path className="utility-lock-check" pathLength="1" d="m16 24 5 5 11-12"/>
+      </svg><i />
+    </span>
+    <strong role="status">{phase === "scanning" ? "Checking preview" : phase === "unlocked" ? "Preview unlocked" : "Preview locked"}</strong>
+    <span>No account or system setting changes.</span>
+    <Button size="compact" emphasis="soft" onClick={() => setPhase(current => {
+      if (current !== "locked") return "locked";
+      return matchMedia("(prefers-reduced-motion: reduce)").matches ? "unlocked" : "scanning";
+    })}>{phase === "scanning" ? "Cancel check" : phase === "unlocked" ? "Simulate lock" : "Simulate unlock"}</Button>
+  </div>;
 }
 function DynamicText() {
   const [name, setName] = useState("");
-  return <div className="utility-demo"><label className="utility-label">Name<input value={name} maxLength={32} onChange={event => setName(event.target.value)} placeholder="Add your name" /></label><p className="utility-greeting">Hello, <strong>{name.trim() || "friend"}</strong>.</p><span>Make yourself at home.</span></div>;
+  const word = name.trim() || "friend";
+  return <div className="utility-demo"><label className="utility-label">Name<input value={name} maxLength={32} onChange={event => setName(event.target.value)} placeholder="Add your name" /></label><p className="utility-greeting">Hello, <strong>
+    <span className="motion-extra-sr">{word}</span>
+    {Array.from(word, (letter, index) => <span aria-hidden="true" key={`${index}:${letter}`}
+      style={{"--letter-delay": `${Math.min(index * 35, 450)}ms`} as CSSProperties}>{letter === " " ? "\u00a0" : letter}</span>)}
+  </strong>.</p><span>Make yourself at home.</span></div>;
 }
 function Volume() {
   const [volume, setVolume] = useState(60), [muted, setMuted] = useState(false);
-  return <div className="utility-demo"><div className="utility-row"><strong>Preview volume</strong><output>{muted ? "Muted" : `${volume}%`}</output></div><input aria-label="Preview volume" type="range" min="0" max="100" value={volume} onChange={event => { setVolume(Number(event.target.value)); setMuted(false); }} /><Button size="compact" emphasis="soft" aria-pressed={muted} onClick={() => setMuted(!muted)}>{muted ? "Unmute" : "Mute"}</Button></div>;
+  return <div className="utility-demo"><div className="utility-row"><strong>Preview volume</strong><output>{muted ? "Muted" : `${volume}%`}</output></div><div className="utility-volume" style={{"--volume-level": `${muted ? 0 : volume}%`} as CSSProperties}><span aria-hidden="true" /><input aria-label="Preview volume" type="range" min="0" max="100" value={volume} onChange={event => { setVolume(Number(event.target.value)); setMuted(false); }} /></div><Button size="compact" emphasis="soft" aria-pressed={muted} onClick={() => setMuted(!muted)}>{muted ? "Unmute" : "Mute"}</Button></div>;
 }
 export const extraUtilities: { id: string; title: string; body: ReactNode }[] = [
   { id: "music-player", title: "Music player", body: <Player /> },

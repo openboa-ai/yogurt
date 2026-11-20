@@ -199,3 +199,35 @@
     transition: opacity var(--yg-change) var(--yg-settle), scale var(--yg-panel) var(--yg-selection);
   }
 }
+.yg-step-track { position: relative; display: grid; block-size: 4px; margin-block-end: var(--boa-space-12); border-radius: 4px; background: var(--yg-field); }
+.yg-step-track progress { position: absolute; opacity: 0; inline-size: 100%; block-size: 100%; }
+.yg-step-track > span { inline-size: calc(var(--yg-step-progress) * 100%); border-radius: inherit; background: var(--yg-signal-positive); }
+.yg-step-number > * { grid-area: 1 / 1; }
+.yg-step-number svg { inline-size: 16px; block-size: 16px; opacity: 0; }
+.yg-step-number svg path { stroke-dasharray: 22; stroke-dashoffset: 22; }
+.yg-stepper [data-complete] .yg-step-number { background: var(--yg-signal-positive-soft); color: var(--yg-signal-positive); }
+.yg-stepper [data-complete] .yg-step-number > span { opacity: 0; }
+.yg-stepper [data-complete] .yg-step-number svg { opacity: 1; }
+.yg-stepper [data-complete] .yg-step-number svg path { stroke-dashoffset: 0; }
+.yg-stage-list[data-connected] { position: relative; }
+.yg-stage-list[data-connected] .yg-step-track {
+  position: absolute; inset: calc((var(--yg-size-compact) - 4px) / 2) calc(50% / var(--yg-step-count)) auto;
+  margin: 0;
+}
+.yg-stage-list[data-connected] .yg-stepper {
+  position: relative; grid-template-columns: repeat(var(--yg-step-count), minmax(0, 1fr)); column-gap: 0;
+}
+.yg-stage-list[data-connected] .yg-stepper li { text-align: center; align-items: center; padding-inline: 4px; }
+.yg-stage-list[data-connected] [aria-current] .yg-step-number { background: var(--yg-inverse); color: var(--yg-on-inverse); }
+@media (forced-colors: active) {
+  .yg-step-track { forced-color-adjust: none; background: GrayText; }
+  .yg-step-track > span { background: Highlight; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-step-track > span { transition: inline-size var(--yg-motion-step-fill); }
+  .yg-step-number, .yg-step-number > span { transition: background-color var(--yg-motion-picker-lift), color var(--yg-motion-picker-lift), opacity var(--yg-motion-picker-lift); }
+  .yg-step-number svg path { transition: stroke-dashoffset var(--yg-motion-step-check); }
+  .yg-stepper [data-complete] .yg-step-number svg path { transition-delay: 120ms; }
+  .yg-stepper [aria-current] .yg-step-number { animation: yg-step-current var(--yg-motion-stepper-spin); }
+}
+@keyframes yg-step-current { from { scale: .7; } }

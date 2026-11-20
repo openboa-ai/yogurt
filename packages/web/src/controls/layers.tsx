@@ -1,8 +1,9 @@
 "use client";
 import { words } from "../foundation/words.js";
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Icon, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
+import { animateActionMenu } from "./action-menu-motion.js";
 
 export function Disclosure({
   label,
@@ -47,16 +48,19 @@ export function ActionMenu({
   label,
   items,
   onSelect,
+  presentation = "anchored",
 }: {
   label: string;
   items: Option[];
   onSelect: (id: string) => void;
+  presentation?: "anchored" | "expanding";
 }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | undefined>();
   const area = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const menu = useId();
+  const expanding = presentation === "expanding";
   const enabled = items.filter((i) => !i.disabled);
   const current = enabled.find((i) => i.id === active) ?? enabled[0];
   function show(last = false) {
@@ -68,6 +72,9 @@ export function ActionMenu({
     if (restore) trigger.current?.focus();
   }
   useOutside(area, () => close(), open);
+  useLayoutEffect(() => {
+    if (expanding && area.current) return animateActionMenu(area.current);
+  }, [expanding]);
   useEffect(() => {
     if (open) {
       const node =
@@ -77,10 +84,27 @@ export function ActionMenu({
       node?.focus();
     }
   }, [open, current?.id]);
+  const options = items.map(item => (
+    <button
+      type="button"
+      role="menuitem"
+      key={item.id}
+      aria-disabled={!!item.disabled}
+      tabIndex={current?.id === item.id ? 0 : -1}
+      onClick={() => {
+        if (item.disabled) return;
+        close(true);
+        onSelect(item.id);
+      }}
+    >
+      {item.label}
+    </button>
+  ));
   return (
     <div
       ref={area}
-      className="yg-anchor"
+      className={expanding ? "yg-action-menu-expanding" : "yg-anchor"}
+      data-open={expanding ? open : undefined}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) close();
       }}
@@ -100,15 +124,16 @@ export function ActionMenu({
         }}
       >
         {label}
-        <Icon name="down" />
+        {expanding ? <span className="yg-action-menu-glyph" aria-hidden="true"><i /><i /></span> : <Icon name="down" />}
       </Button>
-      {open && (
+      {(open || expanding) && (
         <div
           id={menu}
           role="menu"
           aria-label={label}
           tabIndex={-1}
-          className="yg-anchored-panel"
+          inert={!open}
+          className={expanding ? "yg-action-menu-fold" : "yg-anchored-panel"}
           onKeyDown={(e) => {
             const index = enabled.findIndex((o) => o.id === current?.id);
             if (e.key === "Escape") {
@@ -146,22 +171,7 @@ export function ActionMenu({
             }
           }}
         >
-          {items.map((o) => (
-            <button
-              type="button"
-              role="menuitem"
-              key={o.id}
-              aria-disabled={!!o.disabled}
-              tabIndex={current?.id === o.id ? 0 : -1}
-              onClick={() => {
-                if (o.disabled) return;
-                close(true);
-                onSelect(o.id);
-              }}
-            >
-              {o.label}
-            </button>
-          ))}
+          {expanding ? <div className="yg-action-menu-options">{options}</div> : options}
         </div>
       )}
     </div>

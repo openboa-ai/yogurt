@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import * as Y from "@openboa/yogurt";
 
 function InvitePeople() {
@@ -19,15 +19,62 @@ function TagInput() {
   </form>;
 }
 function Stepper() {
-  const [value, setValue] = useState(3);
-  return <div className="motion-stepper"><div><strong>Guests</strong><small>Choose up to 12 guests</small></div><div className="motion-stepper-actions"><button type="button" aria-label="Remove guest" disabled={value === 0} onClick={() => setValue(value - 1)}>−</button><output aria-live="polite"><span key={value}>{value}</span></output><button type="button" aria-label="Add guest" disabled={value === 12} onClick={() => setValue(value + 1)}>+</button></div></div>;
+  const [{value, previous}, setCount] = useState({value: 3, previous: 3});
+  const step = (delta: number) => setCount(current => ({value: current.value + delta, previous: current.value}));
+  return <div className="motion-stepper">
+    <div><strong>Guests</strong><small>Choose up to 12 guests</small></div>
+    <div className="motion-stepper-actions">
+      <button type="button" aria-label="Remove guest" disabled={value === 0} onClick={() => step(-1)}>−</button>
+      <output aria-live="polite" data-decreasing={value < previous || undefined}>
+        {value !== previous && <span key={`old-${value}`} className="motion-stepper-out" aria-hidden="true">{previous}</span>}
+        <span key={value} className={value !== previous ? "motion-stepper-in" : undefined}>{value}</span>
+      </output>
+      <button type="button" aria-label="Add guest" disabled={value === 12} onClick={() => step(1)}>+</button>
+    </div>
+  </div>;
 }
 function WheelPicker() {
   const options = ["Morning", "Midday", "Afternoon", "Evening"]; const [index, setIndex] = useState(0);
-  const start = useRef<number | null>(null);
+  const [offset, setOffset] = useState(0);
+  const start = useRef<{id: number; y: number} | null>(null);
   const move = (delta: number) => setIndex(current => Math.max(0, Math.min(options.length - 1, current + delta)));
-  return <div className="motion-wheel-wrap"><span>Preferred time</span><div className="motion-wheel" role="listbox" tabIndex={0} aria-label="Preferred time" aria-activedescendant={`motion-wheel-${index}`} onKeyDown={e => { if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); move(e.key === "ArrowDown" ? 1 : -1); } }} onPointerDown={e => { start.current = e.clientY; e.currentTarget.setPointerCapture(e.pointerId); }} onPointerUp={e => { if (start.current !== null) { const delta = start.current - e.clientY; if (Math.abs(delta) > 15) move(Math.round(delta / 36) || Math.sign(delta)); start.current = null; } }} onPointerCancel={() => { start.current = null; }}>
-    <div className="motion-wheel-highlight"/><div className="motion-wheel-items" style={{transform: `translateY(${72 - index * 36}px)`}}>{options.map((option, i) => <div id={`motion-wheel-${i}`} role="option" aria-selected={index === i} key={option} onClick={() => setIndex(i)}>{option}</div>)}</div></div><output aria-live="polite">{options[index]}</output></div>;
+  function release() { start.current = null; setOffset(0); }
+  return <div className="motion-wheel-wrap"><span>Preferred time</span>
+    <div className="motion-wheel" role="listbox" tabIndex={0} aria-label="Preferred time"
+      data-dragging={offset !== 0 || undefined} aria-activedescendant={`motion-wheel-${index}`}
+      onKeyDown={event => {
+        if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+          event.preventDefault(); move(event.key === "ArrowDown" ? 1 : -1);
+        }
+      }}
+      onPointerDown={event => {
+        if (event.isPrimary && event.button === 0) start.current = {id: event.pointerId, y: event.clientY};
+      }}
+      onPointerMove={event => {
+        const drag = start.current;
+        if (drag?.id !== event.pointerId) return;
+        const delta = event.clientY - drag.y;
+        if (Math.abs(delta) < 6 && !event.currentTarget.hasPointerCapture(event.pointerId)) return;
+        event.currentTarget.setPointerCapture(event.pointerId);
+        const edge = delta > index * 36 ? index * 36 : Math.max(delta, -(options.length - 1 - index) * 36);
+        setOffset(edge + (delta - edge) * .28);
+      }}
+      onPointerUp={event => {
+        if (start.current?.id !== event.pointerId) return;
+        const delta = start.current.y - event.clientY;
+        if (Math.abs(delta) > 15) move(Math.round(delta / 36) || Math.sign(delta));
+        release();
+      }}
+      onPointerCancel={release}
+      onLostPointerCapture={event => { if (start.current?.id === event.pointerId) release(); }}>
+      <div className="motion-wheel-highlight" />
+      <div className="motion-wheel-items" style={{transform: `translateY(${72 - index * 36 + offset}px)`}}>
+        {options.map((option, i) => <div id={`motion-wheel-${i}`} role="option" aria-selected={index === i}
+          key={option} onClick={() => setIndex(i)}>{option}</div>)}
+      </div>
+    </div>
+    <output aria-live="polite">{options[index]}</output>
+  </div>;
 }
 function Scrubber() {
   const [position, setPosition] = useState(36);
@@ -40,7 +87,52 @@ function UndoAction() {
 }
 function Refresh() {
   const [count, setCount] = useState(0);
-  return <div className="motion-extra"><div className="motion-extra-refresh" key={count} aria-hidden="true">↻</div><strong>Activity is up to date</strong><span role="status">{count ? `Refreshed ${count} ${count === 1 ? "time" : "times"} in this preview` : "Ready to refresh"}</span><Y.Button emphasis="soft" onClick={() => setCount(count + 1)}>Refresh activity</Y.Button></div>;
+  const [offset, setOffset] = useState(0);
+  const [pending, setPending] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const origin = useRef<{id: number; y: number} | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  function distance(delta: number) {
+    return delta <= 180 ? Math.max(0, delta * .55) : 99 + 60 * (1 - 1 / ((delta - 180) * .55 / 60 + 1));
+  }
+  function refresh() {
+    if (pending) return;
+    setPending(true); setOffset(64);
+    timer.current = setTimeout(() => {
+      setCount(value => value + 1); setPending(false); setOffset(0);
+    }, 1300);
+  }
+  function cancel() { origin.current = null; setDragging(false); setOffset(0); }
+  return <div className="motion-extra">
+    <div className="motion-refresh-panel" data-dragging={dragging || undefined}
+      data-armed={dragging && offset >= 88 || undefined} data-pending={pending || undefined}
+      style={{"--refresh-offset": `${offset}px`, "--refresh-stretch": Math.min(offset / 88, 1)} as CSSProperties}
+      onPointerDown={event => {
+        if (pending || origin.current || !event.isPrimary || event.button !== 0) return;
+        origin.current = {id: event.pointerId, y: event.clientY};
+        setDragging(true); event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerMove={event => {
+        if (origin.current?.id === event.pointerId) setOffset(distance(event.clientY - origin.current.y));
+      }}
+      onPointerUp={event => {
+        const drag = origin.current;
+        if (drag?.id !== event.pointerId) return;
+        cancel();
+        if (distance(event.clientY - drag.y) >= 88) refresh();
+      }}
+      onPointerCancel={cancel}
+      onLostPointerCapture={event => { if (origin.current?.id === event.pointerId) cancel(); }}>
+      <span className="motion-refresh-drop" aria-hidden="true">↻</span>
+      <div className="motion-refresh-content">
+        <strong key={count}>Activity is up to date</strong>
+        <span role="status">{pending ? "Updating…" : dragging ? (offset >= 88 ? "Release to refresh" : "Pull to refresh") :
+          count ? `Refreshed ${count} ${count === 1 ? "time" : "times"} in this preview` : "Ready to refresh"}</span>
+      </div>
+    </div>
+    <Y.Button emphasis="soft" disabled={pending} onClick={refresh}>Refresh activity</Y.Button>
+  </div>;
 }
 function Toolbar() {
   const [selected, setSelected] = useState<string[]>([]);

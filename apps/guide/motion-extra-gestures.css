@@ -58,3 +58,25 @@
 .extra-card { background: var(--yg-field); }
 @media (pointer: coarse) { .extra-toolbar > button { min-block-size: var(--yg-size-touch); } }
 @media (prefers-reduced-motion: reduce) { .extra-disclosure summary::before { transition: none; } }
+.extra-exposure-preview { filter: brightness(var(--exposure-light, 1)); }
+.extra-date-result, .extra-gesture-page, .extra-counter output, .extra-card strong { overflow: clip; }
+.extra-quantity-value, .extra-date-result > span { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .extra-exposure-preview { transition: filter var(--yg-motion-exposure); }
+  .extra-disclosure::details-content {
+    block-size: 0; overflow: clip;
+    transition: block-size var(--yg-motion-menu-height), content-visibility var(--yg-motion-menu-height) allow-discrete;
+    interpolate-size: allow-keywords;
+  }
+  .extra-disclosure[open]::details-content { block-size: auto; }
+  .extra-format-sample { transition: font-weight var(--yg-motion-picker-slide); }
+  .extra-rating [data-filled] { animation: extra-rating-pop var(--yg-motion-rating-pop); }
+  .extra-quantity-value { animation: extra-quantity-in var(--yg-motion-stepper-spin); }
+  .extra-gesture-page > div { animation: extra-note-in var(--yg-motion-card-detail); }
+  .extra-card strong { animation: extra-mask-in var(--yg-motion-picker-slide); }
+  .extra-date-result > span { animation: extra-quantity-in var(--yg-motion-picker-slide); }
+}
+@keyframes extra-rating-pop { from { scale: .7; } }
+@keyframes extra-quantity-in { from { opacity: 0; translate: 0 14px; } }
+@keyframes extra-note-in { from { opacity: 0; translate: 12px 0; } }
+@keyframes extra-mask-in { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
