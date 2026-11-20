@@ -1,0 +1,35 @@
+.yg-focus-picker, .yg-plan-switch { display: grid; gap: var(--boa-space-8); }
+.yg-focus-choice, .yg-plan-choice { position: relative; cursor: pointer; min-width: 0; border: 1px solid transparent; border-radius: var(--yg-radius-panel); background: var(--yg-field); color: var(--yg-text); }
+.yg-focus-choice input, .yg-plan-choice input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
+.yg-focus-choice:has(input:focus-visible), .yg-plan-choice:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
+.yg-focus-choice[data-selected], .yg-plan-choice[data-selected] { border-color: color-mix(in srgb, var(--yg-action) 28%, transparent); background: var(--yg-action-soft); }
+.yg-focus-choice { display: flex; align-items: center; gap: var(--boa-space-16); padding: var(--boa-space-16); }
+.yg-focus-orbit { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid color-mix(in srgb, currentColor 36%, transparent); border-radius: 50%; color: var(--yg-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.yg-focus-orbit::after { content: ""; inline-size: 8px; block-size: 8px; border-radius: 50%; background: currentColor; }
+.yg-focus-choice[data-selected] .yg-focus-orbit { color: var(--yg-action); box-shadow: inset 0 0 0 4px var(--yg-surface); background: var(--yg-surface); }
+.yg-choice-copy { display: grid; gap: var(--boa-space-4); flex: 1; min-width: 0; }
+.yg-choice-copy > span, .yg-plan-description { color: var(--yg-muted); font-size: 0.875em; line-height: 1.4; }
+.yg-choice-check { flex: none; display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid color-mix(in srgb, var(--yg-text) 22%, transparent); border-radius: 50%; color: transparent; }
+[data-selected] > .yg-choice-check, [data-selected] .yg-plan-heading .yg-choice-check { border-color: var(--yg-action); color: var(--yg-action); }
+.yg-plan-switch { grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr)); }
+.yg-plan-choice { display: flex; flex-direction: column; gap: var(--boa-space-8); padding: var(--boa-space-16); }
+.yg-plan-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--boa-space-8); }
+.yg-plan-price { margin-top: var(--boa-space-8); font-size: 1.5em; font-weight: 600; font-variant-numeric: tabular-nums; }
+.yg-letter-limit { display: grid; gap: var(--boa-space-8); color: var(--yg-text); }
+.yg-letter-limit > label { font-weight: 500; }
+.yg-letter-field { overflow: hidden; border: 1px solid transparent; border-radius: var(--yg-radius-control); background: var(--yg-field); }
+.yg-letter-field:focus-within { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
+.yg-letter-field textarea { display: block; box-sizing: border-box; width: 100%; min-height: 120px; padding: var(--boa-space-16); resize: vertical; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; }
+.yg-letter-meter { height: 3px; background: var(--yg-action-soft); }
+.yg-letter-meter > span { display: block; height: 100%; background: var(--yg-action); }
+.yg-letter-count { text-align: end; color: var(--yg-muted); font-size: 0.875em; font-variant-numeric: tabular-nums; }
+.yg-letter-limit[data-near] .yg-letter-count { color: var(--yg-text); font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-focus-choice, .yg-plan-choice { transition: background-color var(--yg-change) var(--yg-settle), border-color var(--yg-change) var(--yg-settle); }
+  .yg-focus-orbit, .yg-choice-check { transition: color var(--yg-change) var(--yg-settle), background-color var(--yg-change) var(--yg-settle), box-shadow var(--yg-change) var(--yg-settle); }
+  [data-selected] .yg-choice-check { animation: yg-choice-confirm var(--yg-panel) var(--yg-selection) both; }
+  .yg-letter-meter > span { transition: width var(--yg-change) var(--yg-settle); }
+}
+@media (forced-colors: active) { .yg-focus-choice[data-selected], .yg-plan-choice[data-selected] { outline: 2px solid Highlight; outline-offset: -2px; } }
+
+@keyframes yg-choice-confirm { from { scale: .72; } to { scale: 1; } }

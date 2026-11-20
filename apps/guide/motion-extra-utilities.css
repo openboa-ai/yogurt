@@ -1,0 +1,25 @@
+.utility-demo { display: grid; justify-items: start; gap: 10px; width: min(100%, 300px); }
+.utility-demo > span, .utility-demo small { color: var(--yg-muted, #666); }
+.utility-demo small { font-size: .7rem; letter-spacing: .08em; }
+.utility-panel { box-sizing: border-box; padding: 18px; border-radius: var(--yg-radius-panel); background: var(--yg-action-soft); }
+.utility-row { display: flex; align-items: center; gap: 8px; }
+.utility-player { grid-template-columns: auto 1fr; align-items: center; }
+.utility-player > div:not(.utility-row) { display: grid; gap: 3px; }
+.utility-player .utility-row { grid-column: 1 / -1; }
+.utility-record, .utility-lock, .utility-bell { display: grid; place-items: center; width: 54px; height: 54px; border: 0; border-radius: 50%; background: var(--yg-action-soft); color: var(--yg-action); font-size: 25px; }
+.utility-record[data-playing] { animation: utility-rotate 4s linear infinite; }
+.utility-badge { display: inline-grid; place-items: center; min-width: 1.4em; min-height: 1.4em; margin-inline-start: 8px; border-radius: 50%; background: #fff3; }
+.utility-dots { display: flex; gap: 8px; }
+.utility-dots button { width: 12px; height: 12px; padding: 0; border: 0; border-radius: 999px; background: var(--yg-action); opacity: .35; cursor: pointer; transition: width 180ms var(--yg-settle), opacity 180ms var(--yg-settle); }
+.utility-dots button[aria-current] { width: 28px; opacity: 1; }
+.utility-bell { position: relative; cursor: pointer; transition: transform 180ms var(--yg-settle); }
+.utility-bell:hover { transform: rotate(-10deg); }
+.utility-bell i { position: absolute; inset: 8px 8px auto auto; width: 9px; height: 9px; border-radius: 50%; background: var(--yg-action); }
+.utility-indicator { width: 10px; height: 10px; border-radius: 50%; background: var(--yg-muted, #777); }
+.utility-indicator[data-on] { background: #2b8b63; box-shadow: 0 0 0 4px #2b8b6322; }
+.utility-label { display: grid; gap: 6px; width: 100%; font-weight: 600; }
+.utility-label input { box-sizing: border-box; width: 100%; padding: 10px; border: 1px solid var(--yg-border, #aaa); border-radius: var(--yg-radius-control); background: var(--yg-surface); color: inherit; font: inherit; }
+.utility-greeting { margin: 4px 0 0; font-size: 1.35rem; overflow-wrap: anywhere; }
+.utility-demo :is(button, input):focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
+@keyframes utility-rotate { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .utility-record[data-playing] { animation: none; } .utility-dots button, .utility-bell { transition: none; } .utility-bell:hover { transform: none; } }

@@ -1,0 +1,37 @@
+.yg-morph-tooltip { position: relative; display: inline-flex; }
+.yg-morph-tooltip-trigger {
+  display: inline-flex; align-items: center; gap: var(--boa-space-8);
+  padding: var(--boa-space-8) var(--boa-space-12); border: 1px solid currentColor;
+  border-radius: var(--yg-radius-control); background: var(--yg-surface); color: var(--yg-action);
+  font: inherit; cursor: pointer;
+  transition: background-color var(--yg-travel) var(--yg-settle), transform var(--yg-travel) var(--yg-settle);
+}
+.yg-morph-tooltip-trigger:hover { background: var(--yg-action-soft); }
+.yg-morph-tooltip-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
+.yg-morph-tooltip-trigger span { transition: transform var(--yg-travel) var(--yg-settle); }
+.yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span { transform: translate(2px, -2px); }
+.yg-morph-tooltip-card {
+  position: absolute; z-index: 10; inset-block-end: calc(100% + 10px); inset-inline-start: 50%;
+  display: grid; gap: var(--boa-space-8); width: max-content; max-width: min(240px, 80vw);
+  padding: var(--boa-space-12); border-radius: var(--yg-radius-panel);
+  background: var(--yg-surface); color: var(--yg-action); box-shadow: 0 8px 28px rgb(0 0 0 / 0.16);
+  transform: translateX(-50%); transform-origin: center bottom;
+  animation: yg-morph-arrive 320ms cubic-bezier(.2, 1.3, .35, 1) both;
+}
+.yg-morph-tooltip-card[hidden] { display: none; }
+.yg-morph-tooltip-kicker { color: var(--yg-action); font-weight: 650; }
+@keyframes yg-morph-arrive {
+  from { opacity: 0; transform: translate(-50%, 8px) scale(.88, .94); }
+  70% { opacity: 1; transform: translate(-50%, -2px) scale(1.02, 1); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+.yg-spring-dropdown .yg-select { transition: transform 260ms cubic-bezier(.2, 1.3, .35, 1), background-color var(--yg-travel) var(--yg-settle); }
+.yg-spring-dropdown .yg-select:focus-within { transform: translateY(-2px); }
+.yg-command-button .yg-button { transition: transform 260ms cubic-bezier(.2, 1.3, .35, 1), background-color var(--yg-travel) var(--yg-settle); }
+.yg-command-button .yg-button:hover { transform: translateY(-2px); }
+.yg-command-button .yg-button:active { transform: translateY(1px) scale(.98); }
+@media (prefers-reduced-motion: reduce) {
+  .yg-morph-tooltip-card { animation: none; }
+  .yg-morph-tooltip-trigger, .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select, .yg-command-button .yg-button { transition: none; }
+  .yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select:focus-within, .yg-command-button .yg-button:hover, .yg-command-button .yg-button:active { transform: none; }
+}

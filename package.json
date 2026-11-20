@@ -65,6 +65,10 @@
       "types": "./packages/web/dist/entries/*.d.ts",
       "import": "./packages/web/dist/entries/*.js"
     },
+    "./motion-patterns": {
+      "types": "./packages/web/dist/patterns/motion-patterns.d.ts",
+      "import": "./packages/web/dist/motion-patterns.js"
+    },
     "./styles.css": "./design/styles/ui.css",
     "./tokens": "./design/tokens/ui.json",
     "./palette": "./design/tokens/brand.json",

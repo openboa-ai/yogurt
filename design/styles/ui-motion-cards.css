@@ -1,0 +1,48 @@
+:where(.yg-expand-card, .yg-stat-card, .yg-profile-card) {
+  border: 1px solid var(--yg-off);
+  border-radius: var(--yg-radius-panel, 12px);
+  background: var(--yg-canvas);
+  color: var(--yg-action);
+}
+.yg-expand-card { overflow: hidden; }
+.yg-expand-card summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px; cursor: pointer; font-weight: 650; list-style: none;
+}
+.yg-expand-card summary::-webkit-details-marker { display: none; }
+.yg-card-disclosure {
+  display: grid; place-items: center; flex: none; width: 30px; height: 30px;
+  border-radius: 50%; background: var(--yg-action-soft); font-size: 22px; line-height: 1;
+}
+.yg-expand-card[open] .yg-card-disclosure { transform: rotate(45deg); }
+.yg-expand-card-body { padding: 0 20px 20px; }
+.yg-fan-cards { display: grid; gap: 16px; }
+.yg-fan-cards-list { display: flex; align-items: stretch; gap: 8px; overflow-x: auto; padding: 8px 2px; }
+.yg-fan-cards-list button {
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: space-between;
+  gap: 24px; min-width: 112px; min-height: 142px; padding: 16px; border: 1px solid var(--yg-off);
+  border-radius: var(--yg-radius-panel, 12px); color: inherit; background: var(--yg-canvas);
+  font: inherit; text-align: start; cursor: pointer;
+}
+.yg-fan-cards-list button:nth-child(even) { transform: rotate(2deg); }
+.yg-fan-cards-list button:nth-child(odd) { transform: rotate(-2deg); }
+.yg-fan-cards-list button[aria-pressed="true"] { transform: translateY(-6px); background: var(--yg-action-soft); border-color: currentColor; }
+.yg-fan-cards-list button > :last-child { align-self: flex-end; }
+.yg-fan-number { font-size: .75em; opacity: .65; }
+.yg-fan-detail { display: grid; gap: 4px; margin: 0; }
+.yg-stat-card { display: grid; gap: 8px; padding: 20px; }
+.yg-stat-label, .yg-stat-detail { font-size: .875em; }
+.yg-stat-value { display: block; font-size: 2.5rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.yg-profile-card { padding: 20px; }
+.yg-profile-header { display: flex; align-items: center; gap: 14px; }
+.yg-profile-header p { margin: 4px 0 0; }
+.yg-profile-avatar { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 50%; background: var(--yg-action-soft); font-weight: 700; }
+.yg-profile-card details { margin-top: 16px; }
+.yg-profile-card summary { cursor: pointer; }
+.yg-profile-extra { padding-top: 12px; }
+:where(.yg-expand-card summary, .yg-fan-cards button, .yg-profile-card summary):focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-card-disclosure, .yg-fan-cards-list button { transition: transform var(--yg-travel) var(--yg-settle), background-color var(--yg-travel) var(--yg-settle); }
+  .yg-expand-card[open] .yg-expand-card-body, .yg-fan-detail, .yg-profile-card details[open] .yg-profile-extra, .yg-stat-value { animation: yg-card-arrive var(--yg-change) var(--yg-settle); }
+}
+@keyframes yg-card-arrive { from { opacity: 0; transform: translateY(5px); } }

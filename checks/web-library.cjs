@@ -48,6 +48,15 @@ const catalog = [
           );
           if (overflow > 1)
             failures.push([scheme, width, entry.id, "overflow", overflow]);
+          const misalignment = await example.evaluate(inner => {
+            const content = inner.getBoundingClientRect();
+            const stage = inner.parentElement.getBoundingClientRect();
+            const heading = document.querySelector(".catalog-intro").getBoundingClientRect();
+            const midpoint = Math.abs((content.left + content.right) - (stage.left + stage.right)) / 2;
+            return Math.max(midpoint, Math.abs(stage.left - heading.left));
+          });
+          if (misalignment > 1)
+            failures.push([scheme, width, entry.id, "misalignment", misalignment]);
           renders++;
         } catch (e) {
           failures.push([scheme, width, entry.id, String(e).slice(0, 160)]);

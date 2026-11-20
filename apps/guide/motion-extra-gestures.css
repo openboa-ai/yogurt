@@ -1,0 +1,26 @@
+.extra-gesture { display: grid; gap: 12px; width: min(100%, 320px); }
+.extra-gesture label { display: flex; justify-content: space-between; gap: 12px; font-weight: 600; }
+.extra-gesture input[type="range"] { width: 100%; accent-color: var(--yg-action); }
+.extra-exposure-preview { height: 96px; border-radius: 12px; background: linear-gradient(135deg, #263e58, #eab871); transition: filter 180ms ease; }
+.extra-disclosure { border: 1px solid var(--yg-off); border-radius: 10px; padding: 12px; }
+.extra-disclosure summary { cursor: pointer; font-weight: 600; }
+.extra-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.extra-toolbar > button, .extra-counter button { border: 1px solid var(--yg-off); background: var(--yg-field); color: inherit; border-radius: 8px; padding: 8px 12px; cursor: pointer; }
+.extra-toolbar > button[aria-pressed="true"] { background: var(--yg-action-soft); }
+.extra-rating { border: 0; padding: 0; margin: 0; }
+.extra-rating legend { font-weight: 600; }
+.extra-rating > div { display: flex; gap: 4px; margin-top: 8px; }
+.extra-rating label { position: relative; cursor: pointer; font-size: 30px; color: var(--yg-action); }
+.extra-rating input { position: absolute; opacity: 0; }
+.extra-rating input:focus-visible + span { outline: 2px solid currentColor; outline-offset: 2px; }
+.extra-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.extra-counter { display: flex; align-items: center; gap: 20px; }
+.extra-counter button:disabled { opacity: .45; cursor: default; }
+.extra-page, .extra-zoom-frame, .extra-card { border: 1px solid var(--yg-off); background: var(--yg-field); border-radius: 12px; padding: 18px; }
+.extra-page span, .extra-card small { font-size: .75em; opacity: .7; }
+.extra-zoom-frame { height: 100px; display: grid; place-items: center; overflow: hidden; }
+.extra-zoom-frame > div { font-size: 36px; transition: transform 180ms ease; }
+.extra-card { display: grid; gap: 20px; min-height: 100px; }
+.extra-card strong { font-variant-numeric: tabular-nums; letter-spacing: .06em; }
+.extra-card span { font-size: .8em; }
+@media (prefers-reduced-motion: reduce) { .extra-exposure-preview, .extra-zoom-frame > div { transition: none; } }

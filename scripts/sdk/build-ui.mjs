@@ -124,6 +124,7 @@ const declarations = execFileSync(
 );
 const entryPoints = Object.fromEntries([
   ["index", src + "/index.ts"],
+  ["motion-patterns", src + "/patterns/motion-patterns.ts"],
   ...catalog.map((e) => ["entries/" + e.id, src + "/entries/" + e.id + ".ts"]),
 ]);
 const built = await build({

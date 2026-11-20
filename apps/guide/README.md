@@ -35,3 +35,9 @@ Run `node apps/guide/tooling/build-site.mjs` from the repository root and open `
 ## Component motion comparison
 
 Generate the comparison with `node apps/guide/tooling/build-ui-gallery.mjs --motion-comparison`, then build the site. Open `site/motion-comparison.html` to compare the current and candidate interactions. Run `node checks/web-motion-comparison.cjs` from the repository root to exercise interrupted input, keyboard selection and touch drag. The review can follow the system appearance or switch between light and dark.
+
+## Motion pattern review
+
+Run `node apps/guide/tooling/build-ui-gallery.mjs --motion-patterns` after the SDK build. Open `site/motion-patterns.html` after staging the site, or open the generated HTML directly. The gallery links back to the full component index. Use search or a section link to find an interaction, and use the appearance control to compare surfaces.
+
+The reusable Web patterns are available from `@openboa/yogurt/motion-patterns` with `@openboa/yogurt/styles.css`. The additional studies are gallery examples. Run `node checks/web-motion-patterns.cjs` to exercise the gallery, alignment and representative interactions.

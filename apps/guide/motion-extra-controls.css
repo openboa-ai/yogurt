@@ -1,0 +1,17 @@
+.motion-extra { display: grid; justify-items: start; gap: 12px; width: min(100%, 320px); }
+.motion-extra label { display: grid; gap: 6px; width: 100%; font-weight: 600; }
+.motion-extra input:not([type="range"]) { box-sizing: border-box; width: 100%; padding: 10px 12px; border: 1px solid var(--yg-off, #ccc); border-radius: var(--yg-radius-control); background: var(--yg-surface); color: inherit; font: inherit; }
+.motion-extra small, .motion-extra > span { color: var(--yg-muted, #666); }
+.motion-extra-chips, .motion-extra-toolbar, .motion-extra-rating { display: flex; flex-wrap: wrap; gap: 6px; }
+.motion-extra-chips button, .motion-extra-toolbar button { border: 0; border-radius: var(--yg-radius-control); padding: 7px 11px; background: var(--yg-action-soft); color: var(--yg-action); font: inherit; cursor: pointer; transition: transform 180ms var(--yg-settle); }
+.motion-extra-toolbar button[aria-pressed="true"] { background: var(--yg-action); color: white; }
+.motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: translateY(-2px); }
+.motion-extra-wheel { display: grid; justify-items: center; gap: 6px; min-width: 140px; }
+.motion-extra-wheel output { display: grid; place-items: center; width: 100%; min-height: 52px; border-radius: var(--yg-radius-panel); background: var(--yg-action-soft); color: var(--yg-action); font-weight: 650; }
+.motion-extra-track { overflow: hidden; width: 100%; height: 8px; border-radius: 8px; background: var(--yg-action-soft); }
+.motion-extra-track span { display: block; height: 100%; background: var(--yg-action); transition: width 200ms var(--yg-settle); }
+.motion-extra-refresh { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--yg-action-soft); color: var(--yg-action); font-size: 26px; animation: motion-extra-turn 450ms var(--yg-settle); }
+.motion-extra-rating button { border: 0; padding: 2px; background: none; color: var(--yg-action); font-size: 28px; cursor: pointer; }
+.motion-extra button:focus-visible, .motion-extra input:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
+@keyframes motion-extra-turn { from { transform: rotate(-90deg) scale(.8); opacity: .4; } to { transform: rotate(0) scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .motion-extra-refresh { animation: none; } .motion-extra-chips button, .motion-extra-toolbar button, .motion-extra-track span { transition: none; } .motion-extra-chips button:hover, .motion-extra-toolbar button:hover { transform: none; } }

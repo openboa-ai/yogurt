@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { createRoot } from "react-dom/client";
 import {
   Yogurt,
@@ -53,6 +53,19 @@ function foldName(name: string) {
 }
 function compactName(name: string) {
   return name.replace(/[\s_\p{Dash_Punctuation}]+/gu, "");
+}
+const compactPreviews = new Set([
+  "button", "icon-button", "button-group", "toggle", "toggle-group", "pagination",
+  "badge", "status", "spinner", "project-mark", "avatar", "tooltip", "link", "kbd",
+]);
+const widePreviews = new Set([
+  "table", "data-table", "chart", "bar-chart", "grid-list", "resizable", "sidebar",
+  "sidebar-layout", "agent-avatar", "transcript", "navbar", "navigation-menu", "menubar",
+]);
+function previewLayout(entry: {id: string; family: string}) {
+  if (compactPreviews.has(entry.id)) return "compact";
+  if (entry.family === "Blocks" || entry.family === "Workspaces" || widePreviews.has(entry.id)) return "wide";
+  return "field";
 }
 const searchIndex = entries.map((entry) => {
   const names = [
@@ -134,6 +147,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
     [material, setMaterial] = useState<Material>("neutral"),
     [compare, setCompare] = useState(false),
     [showCode, setShowCode] = useState(false);
+  const navigation = useRef<HTMLElement>(null);
   const entry = entries.find((e) => e.id === id) ?? entries[0];
   const ScopedExample = scopedExamples[id as keyof typeof scopedExamples];
   useEffect(() => {
@@ -151,6 +165,15 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
       all.includes(entry.family) ? all : [...all, entry.family],
     );
   }, [entry.family]);
+  useEffect(() => {
+    const sidebar = navigation.current;
+    const active = sidebar?.querySelector("a[aria-current=page]");
+    if (!sidebar?.clientHeight || !active || search) return;
+    const available = sidebar.getBoundingClientRect();
+    const row = active.getBoundingClientRect();
+    if (row.top < available.top) sidebar.scrollTop += row.top - available.top;
+    if (row.bottom > available.bottom) sidebar.scrollTop += row.bottom - available.bottom;
+  }, [id, expanded, menu, search]);
   const matches = useMemo(() => {
     const term = foldName(search.trim());
     const compact = compactName(term);
@@ -197,6 +220,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
           >
             Brand &amp; tokens
           </button>
+          <a href="motion-patterns.html">Motion</a>
         </nav>
         <div className="header-actions">
           <IconButton
@@ -214,7 +238,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
         </div>
       </header>
       <div className="catalog-body">
-        <aside data-open={menu} aria-label="Components">
+        <aside ref={navigation} data-open={menu} aria-label="Components">
           <div className="catalog-search">
             <Icon name="search" />
             <input
@@ -296,6 +320,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                 material={material}
                 className="specimen"
                 data-component={id}
+                data-layout={previewLayout(entry)}
                 key={id}
               >
                 <div className="specimen-inner" onClick={inlinePreview ? submitPreviewForm : undefined}>
@@ -347,10 +372,11 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                   <Yogurt
                     appearance={appearance}
                     material={material}
-                    className="variant-body"
+                    className="specimen variant-body"
+                    data-layout={previewLayout(entry)}
                     key={id}
                   >
-                    <Example id={id} variation />
+                    <div className="specimen-inner"><Example id={id} variation /></div>
                   </Yogurt>
                 </section>
               )}

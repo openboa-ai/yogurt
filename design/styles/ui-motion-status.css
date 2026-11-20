@@ -1,0 +1,241 @@
+.yg-storage-meter {
+  display: grid;
+  gap: var(--boa-space-12);
+}
+.yg-motion-detail-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--boa-space-8);
+  font: var(--yg-font-help);
+}
+.yg-motion-detail-line > span,
+.yg-island-summary {
+  color: var(--yg-muted);
+  font: var(--yg-font-meta);
+  font-variant-numeric: tabular-nums;
+}
+.yg-storage-ticks {
+  display: grid;
+  grid-template-columns: repeat(24, minmax(0, 1fr));
+  gap: var(--boa-space-4);
+}
+.yg-storage-ticks > span {
+  block-size: var(--boa-space-16);
+  border-radius: var(--boa-radius-round);
+  background: var(--yg-field);
+  scale: 1 .8;
+  transition: scale var(--yg-change) var(--yg-selection),
+    background-color var(--yg-change) var(--yg-settle);
+}
+.yg-storage-ticks > [data-filled] {
+  background: var(--yg-action);
+  scale: 1;
+}
+.yg-storage-meter[data-full] .yg-storage-ticks > span {
+  background: var(--yg-warning);
+}
+.yg-activity-island {
+  background: var(--yg-field);
+  border-radius: var(--yg-radius-panel);
+}
+.yg-activity-island > button {
+  background: none;
+  border: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  text-align: start;
+  gap: var(--boa-space-8);
+  inline-size: 100%;
+  min-block-size: var(--yg-size-touch);
+  padding: var(--boa-space-8) var(--boa-space-12);
+  border-radius: inherit;
+  font: var(--yg-font-action);
+}
+.yg-activity-island > button:hover {
+  background: var(--yg-hover);
+}
+.yg-activity-island > button > svg:last-child {
+  transition: rotate var(--yg-change) var(--yg-arrive);
+}
+.yg-island-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--yg-panel) var(--yg-arrive);
+}
+.yg-island-reveal > div {
+  min-block-size: 0;
+  overflow: clip;
+}
+.yg-activity-island[data-open="true"] .yg-island-reveal {
+  grid-template-rows: 1fr;
+}
+.yg-activity-island[data-open="true"] > button > svg:last-child {
+  rotate: 180deg;
+}
+.yg-island-content {
+  padding: 0 var(--boa-space-12) var(--boa-space-12);
+}
+.yg-result-action-label {
+  display: inline-grid;
+  place-items: center;
+}
+.yg-result-action-label > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--boa-space-4);
+  grid-area: 1 / 1;
+}
+.yg-result-action-measure {
+  visibility: hidden;
+}
+.yg-root .yg-result-action[data-outcome="success"] {
+  background: var(--yg-success-soft);
+  color: var(--yg-success);
+}
+.yg-root .yg-result-action[data-outcome="error"] {
+  background: var(--yg-danger-soft);
+  color: var(--yg-danger);
+}
+.yg-root .yg-result-action[data-outcome="success"]:hover {
+  background: var(--yg-success-soft);
+}
+.yg-root .yg-result-action[data-outcome="error"]:hover {
+  background: var(--yg-danger-soft);
+}
+.yg-copy-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--boa-space-8);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-result-action-label > [data-result] {
+    animation: yg-action-result var(--yg-panel) var(--yg-arrive) both;
+  }
+}
+@keyframes yg-action-result {
+  from { translate: 0 5px; scale: .94; }
+  to { translate: 0 0; scale: 1; }
+}
+
+.yg-task-list {
+  background: var(--yg-canvas);
+  border-radius: var(--yg-radius-panel);
+  padding: var(--boa-space-12);
+}
+.yg-task-list > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--boa-space-4);
+  padding: var(--boa-space-4) var(--boa-space-4) var(--boa-space-12);
+  font: var(--yg-font-action);
+}
+.yg-task-list > header span,
+.yg-task-state {
+  color: var(--yg-muted);
+  font: var(--yg-font-meta);
+  font-variant-numeric: tabular-nums;
+}
+.yg-task-list ol {
+  display: grid;
+  gap: var(--boa-space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.yg-task-list > ol > li {
+  position: relative;
+  border-radius: var(--yg-radius-control);
+  background: var(--yg-surface);
+}
+.yg-task-line {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--boa-space-8);
+  min-block-size: var(--yg-size-touch);
+  padding: var(--boa-space-8);
+  font: var(--yg-font-help);
+}
+summary.yg-task-line {
+  grid-template-columns: 1.25rem minmax(0, 1fr) auto 1rem;
+}
+summary.yg-task-line::-webkit-details-marker { display: none; }
+.yg-task-copy {
+  display: grid;
+  overflow-wrap: anywhere;
+}
+.yg-task-marker {
+  color: var(--yg-task-mark, var(--yg-muted));
+  display: grid;
+  place-items: center;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: 50%;
+  background: var(--yg-field);
+}
+.yg-task-marker > span {
+  inline-size: 5px;
+  block-size: 5px;
+  border-radius: inherit;
+  background: currentColor;
+}
+.yg-task-marker svg {
+  inline-size: 14px;
+  block-size: 14px;
+}
+.yg-task-marker path {
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.yg-task-list [data-state="queued"] { --yg-task-mark: var(--yg-muted); }
+.yg-task-list [data-state="running"] { --yg-task-mark: var(--yg-action); }
+.yg-task-list [data-state="done"] { --yg-task-mark: var(--yg-success); }
+.yg-task-list [data-state="failed"] { --yg-task-mark: var(--yg-danger); }
+.yg-task-list [data-active] > div .yg-task-marker,
+.yg-task-list [data-active] > details > summary .yg-task-marker {
+  background: var(--yg-action-soft);
+}
+.yg-task-list .yg-task-children {
+  padding: 0 var(--boa-space-8) var(--boa-space-8) var(--boa-space-24);
+}
+.yg-task-list details[open] > summary > svg:last-child {
+  rotate: 180deg;
+}
+.yg-task-list [data-active] {
+  background: var(--yg-action-soft);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-task-list [data-active]::after {
+    content: "";
+    position: absolute;
+    inset-inline: var(--boa-space-8);
+    inset-block-end: 0;
+    block-size: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--yg-action), transparent);
+    background-size: 40% 100%;
+    background-repeat: no-repeat;
+    animation: yg-task-travel calc(2 * var(--yg-busy)) var(--yg-settle) infinite alternate;
+    pointer-events: none;
+  }
+  .yg-task-marker path[pathLength] {
+    stroke-dasharray: 1;
+    animation: yg-task-check var(--yg-panel) var(--yg-settle) both;
+  }
+  .yg-task-list details[open] > .yg-task-children {
+    animation: yg-task-disclose var(--yg-travel) var(--yg-arrive) both;
+  }
+  .yg-task-list summary > svg:last-child {
+    transition: rotate var(--yg-travel) var(--yg-settle);
+  }
+}
+@keyframes yg-task-travel { to { background-position-x: 100%; } }
+@keyframes yg-task-check { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes yg-task-disclose { from { translate: 0 -4px; } }

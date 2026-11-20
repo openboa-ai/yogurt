@@ -6,9 +6,10 @@ process.chdir(fileURLToPath(new URL("../../..", import.meta.url)));
 const family = process.argv[2] === "--agents";
 const motion = process.argv[2] === "--motion";
 const comparison = process.argv[2] === "--motion-comparison";
+const patterns = process.argv[2] === "--motion-patterns";
 const review = family || motion ? process.argv[3] : undefined;
 const entry = family ? "agent-family" : motion ? "motion-review" :
-  comparison ? "motion-comparison" : "ui-catalog";
+  comparison ? "motion-comparison" : patterns ? "motion-patterns" : "ui-catalog";
 const js = await build({
   entryPoints: ["apps/guide/" + entry + ".tsx"],
   write: false,
@@ -35,10 +36,26 @@ const galleryStyles = [
   "design/styles/ui-agent-motion.css",
   "design/styles/ui-motion-actions.css",
   "design/styles/ui-motion-navigation.css",
+  "design/styles/ui-motion-inputs.css",
+  "design/styles/ui-motion-choices.css",
+  "design/styles/ui-motion-layers.css",
+  "design/styles/ui-motion-status.css",
+  "design/styles/ui-motion-conversation.css",
+  "design/styles/ui-motion-cards.css",
+  "design/styles/ui-motion-stepped.css",
+  "design/styles/ui-motion-confirm.css",
   "design/styles/ui.css",
   "apps/guide/ui-catalog.css",
   ...(motion ? ["apps/guide/motion-review.css"] : []),
   ...(comparison ? ["apps/guide/motion-comparison.css"] : []),
+  ...(patterns ? [
+    "apps/guide/motion-pattern-gallery.css",
+    "apps/guide/motion-extra-cards.css",
+    "apps/guide/motion-extra-controls.css",
+    "apps/guide/motion-extra-gestures.css",
+    "apps/guide/motion-extra-utilities.css",
+    "apps/guide/motion-extra-expression.css",
+  ] : []),
 ];
 const familyStyles = ["design/styles/tokens.css", "design/styles/ui.css", "design/styles/ui-agent-motion.css", "apps/guide/agent-family.css"];
 const styles = (family ? familyStyles : galleryStyles)
@@ -67,7 +84,7 @@ const licenses = [
   .replaceAll("<", "\\u003c");
 const block =
   '<div id="' + (family ? "yogurt-agent-family" : motion ? "yogurt-motion-review" :
-    comparison ? "yogurt-motion-comparison" : "yogurt-ui-library") +
+    comparison ? "yogurt-motion-comparison" : patterns ? "yogurt-motion-patterns" : "yogurt-ui-library") +
   '"></div>\n<style>' +
   styles +
   "</style>\n<script>" +
@@ -79,9 +96,9 @@ if (review) {
   writeFileSync(review, block + "\n");
 } else writeFileSync(
   family ? "apps/guide/generated/agents.html" : comparison ? "apps/guide/generated/motion-comparison.html" :
-    "apps/guide/generated/components.html",
+    patterns ? "apps/guide/generated/motion-patterns.html" : "apps/guide/generated/components.html",
   '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
-    (family ? "Agent family" : comparison ? "Component motion" : "Component library") + ' · Yogurt</title></head><body>' +
+    (family ? "Agent family" : comparison ? "Component motion" : patterns ? "Motion patterns" : "Component library") + ' · Yogurt</title></head><body>' +
     block +
     "</body></html>\n",
 );

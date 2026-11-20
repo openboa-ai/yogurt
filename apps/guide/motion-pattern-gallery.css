@@ -1,0 +1,158 @@
+.motion-patterns-page {
+  min-block-size: 100vh;
+}
+.motion-patterns-page > main {
+  display: grid;
+  gap: clamp(24px, 4vw, 48px);
+  max-inline-size: 82rem;
+  margin-inline: auto;
+  padding: clamp(16px, 4vw, 56px);
+}
+.motion-patterns-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--boa-space-8);
+}
+.motion-patterns-header h1 {
+  margin: var(--boa-space-12) 0 var(--boa-space-8);
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.1;
+}
+.motion-patterns-header nav,
+.motion-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--boa-space-8) var(--boa-space-12);
+}
+.motion-patterns-header a,
+.motion-section-nav a {
+  display: inline-flex;
+  min-block-size: var(--yg-size-compact);
+  align-items: center;
+  border-radius: var(--yg-radius-control);
+  color: var(--yg-action);
+  font: var(--yg-font-help);
+  text-underline-offset: 2px;
+}
+.motion-section-nav a {
+  padding-inline: var(--boa-space-12);
+  background: var(--yg-field);
+  text-decoration: none;
+}
+.motion-patterns-page section > h2 {
+  margin-block-end: var(--boa-space-12);
+}
+.motion-pattern-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--boa-space-12);
+  align-items: stretch;
+}
+.motion-pattern-grid > article {
+  display: grid;
+  grid-template-rows: auto minmax(9rem, auto);
+  align-content: start;
+  gap: var(--boa-space-12);
+  min-inline-size: 0;
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-surface);
+  padding: clamp(12px, 2vw, 20px);
+  scroll-margin-top: var(--boa-space-12);
+}
+.motion-pattern-grid > article:target {
+  box-shadow: inset 0 0 0 2px var(--yg-action);
+}
+.motion-pattern-grid > article > h3 {
+  font: var(--yg-font-action);
+}
+.motion-pattern-stage,
+.motion-sample-stack {
+  display: grid;
+  min-inline-size: 0;
+  align-content: start;
+  gap: var(--boa-space-12);
+}
+.motion-sample-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--boa-space-8);
+}
+.motion-sample-stack > .yg-button {
+  justify-self: start;
+}
+.motion-sample-sidebar {
+  min-inline-size: 0;
+}
+.motion-sample-sidebar .yg-sidebar-main > div {
+  padding: var(--boa-space-8);
+}
+.motion-sample-nav {
+  display: grid;
+  justify-items: start;
+  gap: var(--boa-space-4);
+  padding: var(--boa-space-8);
+}
+.motion-pattern-stage code {
+  justify-self: start;
+  overflow-wrap: anywhere;
+}
+.motion-pill-tabs [role="tablist"] {
+  border-radius: var(--boa-radius-round);
+}
+.motion-pill-tabs [role="tablist"] button,
+.motion-pill-tabs .yg-selection-marker {
+  border-radius: var(--boa-radius-round);
+}
+.motion-smooth-tabs [role="tabpanel"] {
+  padding-block: var(--boa-space-12);
+}
+@media (max-width: 410px) {
+  .motion-patterns-page > main {
+    gap: var(--boa-space-24);
+  }
+}
+
+.motion-pattern-tools {
+  display: grid;
+  gap: var(--boa-space-12);
+}
+.motion-pattern-search {
+  display: grid;
+  gap: var(--boa-space-4);
+  inline-size: min(100%, 21rem);
+  font: var(--yg-font-help);
+}
+.motion-pattern-search input {
+  color: var(--yg-text);
+  background: var(--yg-field);
+  border: 0;
+  border-radius: var(--yg-radius-control);
+  padding: var(--boa-space-8) var(--boa-space-12);
+  min-inline-size: 0;
+  min-block-size: var(--yg-size-regular);
+}
+
+.motion-elastic-range input[type="range"],
+.motion-spring-input .yg-input {
+  transition: scale var(--yg-change) var(--yg-selection);
+}
+.motion-elastic-range input[type="range"]:active {
+  scale: 1 .86;
+}
+.motion-spring-input .yg-input:focus-within {
+  scale: 1.02 1.06;
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-elastic-range input[type="range"]:active,
+  .motion-spring-input .yg-input:focus-within {
+    scale: 1;
+  }
+}
+
+@media (min-width: 760px) {
+  .motion-pattern-grid > #task-list {
+    grid-column: span 2;
+  }
+}

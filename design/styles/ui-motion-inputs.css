@@ -1,0 +1,17 @@
+.yg-mention, .yg-file-drop-wrap { display: grid; gap: var(--boa-space-8); min-inline-size: 0; }
+.yg-mention-surface { position: relative; display: grid; gap: var(--boa-space-8); padding: var(--boa-space-12); border-radius: var(--yg-radius-small); background: var(--yg-hover); }
+.yg-mention textarea { width: 100%; min-height: 5rem; resize: vertical; border: 0; outline-offset: 3px; background: transparent; color: inherit; font: inherit; }
+.yg-mention-hint, .yg-file-drop small, .yg-file-drop-status { font-size: .8rem; opacity: .7; }
+.yg-mention-list { position: absolute; z-index: 5; inset-block-start: calc(100% + 4px); inset-inline-start: 0; min-width: min(100%, 14rem); max-height: 14rem; overflow: auto; padding: 4px; border-radius: var(--yg-radius-small); background: var(--yg-surface, white); box-shadow: 0 6px 24px #0002; animation: yg-input-arrive var(--yg-travel) var(--yg-settle); }
+.yg-mention-list button { display: flex; align-items: center; gap: var(--boa-space-8); width: 100%; padding: var(--boa-space-8); border: 0; border-radius: var(--yg-radius-small); background: transparent; color: inherit; font: inherit; text-align: start; cursor: pointer; }
+.yg-mention-list button[aria-selected="true"], .yg-mention-list button:hover { background: var(--yg-action-soft); }
+.yg-mention-list button span { display: grid; place-items: center; inline-size: 2rem; block-size: 2rem; border-radius: 50%; background: var(--yg-action-soft); }
+.yg-file-drop { position: relative; display: grid; justify-items: center; gap: var(--boa-space-8); padding: 1.5rem; border: 1px dashed currentColor; border-radius: var(--yg-radius-small); text-align: center; transition: background-color var(--yg-travel) var(--yg-settle), border-color var(--yg-travel) var(--yg-settle); }
+.yg-file-drop[data-dragging] { background: var(--yg-action-soft); }
+.yg-file-drop-mark { display: grid; place-items: center; inline-size: 2.5rem; block-size: 2.5rem; border-radius: 50%; background: var(--yg-action-soft); font-size: 1.3rem; transition: transform var(--yg-travel) var(--yg-settle); }
+.yg-file-drop[data-dragging] .yg-file-drop-mark { transform: translateY(-4px); }
+.yg-file-drop-button { padding: .45rem .8rem; border-radius: var(--yg-radius-small); background: var(--yg-action-soft); cursor: pointer; }
+.yg-file-drop input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
+.yg-file-drop:has(input:focus-visible) .yg-file-drop-button { outline: 2px solid currentColor; outline-offset: 3px; }
+@keyframes yg-input-arrive { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .yg-mention-list { animation: none; } .yg-file-drop, .yg-file-drop-mark { transition: none; } }
