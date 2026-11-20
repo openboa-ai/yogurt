@@ -84,3 +84,18 @@
 .utility-greeting { margin: 0; font-size: 18px; line-height: 24px; }
 .utility-cart { padding: 12px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--yg-surface-edge); }
 .utility-cart-total { border-top: 1px solid var(--yg-surface-edge); }
+
+.utility-demo { width: min(100%, 360px); gap: var(--boa-space-12); }
+.utility-panel, .utility-cart { box-sizing: border-box; padding: var(--yg-inset-panel); border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-panel); background: var(--yg-raised-surface); box-shadow: none; }
+.utility-panel > strong, .utility-player strong { font: var(--yg-font-action); }
+.utility-player { width: min(100%, 360px); }
+.utility-player .utility-row { padding-block-start: var(--boa-space-8); }
+.utility-row { flex-wrap: wrap; }
+.utility-label { gap: var(--boa-space-8); font: var(--yg-font-action); }
+.utility-label input { min-block-size: var(--yg-size-regular); padding: var(--boa-space-8) var(--boa-space-12); background: var(--yg-field); }
+.utility-demo input[type="range"] { width: 100%; min-block-size: var(--yg-size-touch); accent-color: var(--yg-action); }
+.utility-dots button { width: var(--yg-size-touch); height: var(--yg-size-touch); }
+.utility-dots button[aria-current] { width: var(--yg-size-touch); }
+.utility-dots button::after { inset: calc((var(--yg-size-touch) - 8px) / 2); }
+.utility-cart li + li { border-block-start: 1px solid var(--yg-surface-edge); padding-block-start: var(--boa-space-8); }
+.utility-cart-total { padding-block-start: var(--boa-space-12); }

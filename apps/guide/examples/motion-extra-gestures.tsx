@@ -7,7 +7,7 @@ function Exposure() {
 }
 function Toolbar() {
   const [bold, setBold] = useState(false), [italic, setItalic] = useState(false);
-  return <div className="extra-gesture"><details className="extra-disclosure"><summary>Text formatting</summary><div className="extra-toolbar"><button type="button" aria-pressed={bold} onClick={() => setBold(!bold)}>Bold</button><button type="button" aria-pressed={italic} onClick={() => setItalic(!italic)}>Italic</button></div></details><p style={{fontWeight: bold ? 700 : 400, fontStyle: italic ? "italic" : "normal"}}>A little room for ideas.</p></div>;
+  return <div className="extra-gesture"><details className="extra-disclosure"><summary>Text formatting</summary><div className="extra-toolbar"><Button type="button" size="compact" emphasis="soft" aria-pressed={bold} onClick={() => setBold(!bold)}>Bold</Button><Button type="button" size="compact" emphasis="soft" aria-pressed={italic} onClick={() => setItalic(!italic)}>Italic</Button></div></details><p style={{fontWeight: bold ? 700 : 400, fontStyle: italic ? "italic" : "normal"}}>A little room for ideas.</p></div>;
 }
 function Rating() {
   const [value, setValue] = useState(0);
@@ -15,7 +15,7 @@ function Rating() {
 }
 function Quantity() {
   const [value, setValue] = useState(1);
-  return <div className="extra-gesture"><span>Copies</span><div className="extra-counter"><button type="button" aria-label="Remove one copy" disabled={value <= 1} onClick={() => setValue(value - 1)}>−</button><output aria-live="polite">{value}</output><button type="button" aria-label="Add one copy" disabled={value >= 10} onClick={() => setValue(value + 1)}>+</button></div></div>;
+  return <div className="extra-gesture"><span>Copies</span><div className="extra-counter"><Button type="button" emphasis="soft" aria-label="Remove one copy" disabled={value <= 1} onClick={() => setValue(value - 1)}>−</Button><output aria-live="polite">{value}</output><Button type="button" emphasis="soft" aria-label="Add one copy" disabled={value >= 10} onClick={() => setValue(value + 1)}>+</Button></div></div>;
 }
 function Pages() {
   const [page, setPage] = useState(1);

@@ -177,8 +177,8 @@
   },
   "motion": {
     "press": 100,
-    "layer": 150,
-    "travel": 180,
+    "layer": 140,
+    "travel": 190,
     "change": 200,
     "panel": 250,
     "expand": 300,
@@ -187,11 +187,11 @@
   "elevation": {
     "lift": [[1, 4, 10]],
     "float": [[1, 2, 8], [4, 12, 10]],
-    "panel": [[10, 40, 18]]
+    "panel": [[8, 28, 16]]
   },
   "easing": {
     "settle": "cubic-bezier(.2, 0, 0, 1)",
-    "arrive": "cubic-bezier(.24, .8, .3, 1.04)",
+    "arrive": "cubic-bezier(.18, .78, .3, 1)",
     "selection": "cubic-bezier(.22, .8, .25, 1.1)"
   },
   "types": {

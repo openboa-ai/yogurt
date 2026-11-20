@@ -41,7 +41,8 @@ function ListRow({
   leading,
   trailing,
   href,
-  onActivate
+  onActivate,
+  current
 }) {
   const contents = /* @__PURE__ */ jsxs(Fragment, { children: [
     leading && /* @__PURE__ */ jsx("span", { className: "yg-leading", children: leading }),
@@ -51,7 +52,7 @@ function ListRow({
     ] }),
     trailing && /* @__PURE__ */ jsx("span", { className: "yg-trailing", children: trailing })
   ] });
-  return /* @__PURE__ */ jsx("li", { children: href ? /* @__PURE__ */ jsx("a", { className: "yg-row", href, children: contents }) : onActivate ? /* @__PURE__ */ jsx("button", { type: "button", className: "yg-row", onClick: onActivate, children: contents }) : /* @__PURE__ */ jsx("div", { className: "yg-row", children: contents }) });
+  return /* @__PURE__ */ jsx("li", { children: href ? /* @__PURE__ */ jsx("a", { className: "yg-row", href, "aria-current": current || void 0, children: contents }) : onActivate ? /* @__PURE__ */ jsx("button", { type: "button", className: "yg-row", onClick: onActivate, "aria-current": current || void 0, children: contents }) : /* @__PURE__ */ jsx("div", { className: "yg-row", children: contents }) });
 }
 function SelectionList({
   label,

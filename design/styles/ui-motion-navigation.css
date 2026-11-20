@@ -15,12 +15,16 @@
   border-radius: var(--yg-radius-small);
   box-sizing: border-box;
   background: var(--yg-action-soft);
+  border: 1px solid transparent;
   pointer-events: none;
 }
 .yg-segment > .yg-selection-marker {
   background: var(--yg-raised-surface);
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
+  border-color: var(--yg-surface-edge);
 }
+
+.yg-tabs [role="tab"], .yg-segment > button { min-block-size: var(--yg-size-regular); }
+.yg-tabs [role="tab"]:focus-visible, .yg-segment > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
 
 @media (forced-colors: none) {
   .yg-selection-marker[data-ready] {

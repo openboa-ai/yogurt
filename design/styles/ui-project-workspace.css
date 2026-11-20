@@ -137,3 +137,8 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
     min-block-size: var(--yg-size-touch);
   }
 }
+
+.yg-project-header { padding-block-end: var(--boa-space-12); }
+.yg-project-identity { flex: 1 1 16rem; }
+.yg-project-description, .yg-project-instructions { max-inline-size: 70ch; }
+button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }

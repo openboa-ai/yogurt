@@ -342,13 +342,13 @@
     "tracking": {
       "body": -0.006,
       "label": -0.006,
-      "heading": -0.027,
+      "heading": -0.031,
       "display": -0.045,
       "meta": 0.005
     },
     "roleWeight": {
-      "heading": 570,
-      "body": 425,
+      "heading": 590,
+      "body": 440,
       "ui": 550,
       "wordmark": 760
     }

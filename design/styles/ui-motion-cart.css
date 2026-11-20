@@ -99,3 +99,8 @@
 @media (forced-colors: active) {
   .yg-cart-stepper { box-shadow: inset 0 0 0 1px ButtonText; border: 1px solid ButtonText; }
 }
+
+.yg-cart-stepper { overflow: hidden; }
+.yg-cart-quantity { min-inline-size: 2ch; text-align: center; }
+.yg-cart-control[data-open="true"] .yg-cart-quantity { padding-inline: var(--boa-space-4); }
+.yg-cart-stepper > button { cursor: pointer; }

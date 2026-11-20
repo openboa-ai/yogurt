@@ -88,6 +88,7 @@ async function run(browser) {
       await page.close();
       continue;
     }
+    await page.getByText("Example controls", {exact: true}).click();
     const primarySize = await page.locator("#task-list .yg-button").first().evaluate(node => ({
       height: getComputedStyle(node).minBlockSize,
       corner: getComputedStyle(node).borderTopLeftRadius,
@@ -160,7 +161,8 @@ async function run(browser) {
     assert.equal(await island.getAttribute("aria-expanded"), "false");
 
     const tasks = await demo("task-list");
-    const summary = tasks.locator("summary");
+    await tasks.getByText("Example controls", {exact: true}).click();
+    const summary = tasks.locator(".yg-task-list summary");
     await summary.press("Enter");
     await tasks.getByText("Verify the revision").waitFor();
     await tasks.getByRole("button", {name: "Complete step"}).click();

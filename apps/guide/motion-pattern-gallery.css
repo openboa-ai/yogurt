@@ -317,3 +317,16 @@
   min-block-size: var(--yg-size-compact);
 }
 .motion-plan-benefits .yg-icon { color: var(--yg-action); }
+
+.motion-example-controls {
+  justify-self: start;
+  color: var(--yg-muted);
+  font: var(--yg-font-label);
+}
+.motion-example-controls summary {
+  padding-block: var(--boa-space-6);
+  cursor: pointer;
+}
+.motion-example-controls .motion-sample-actions {
+  padding-block-start: var(--yg-gap-tight);
+}

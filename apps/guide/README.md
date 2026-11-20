@@ -41,3 +41,5 @@ Generate the comparison with `node apps/guide/tooling/build-ui-gallery.mjs --mot
 Run `node apps/guide/tooling/build-ui-gallery.mjs --motion-patterns` after the SDK build. Open `site/motion-patterns.html` after staging the site, or open the generated HTML directly. The gallery links back to the full component index. Use search or a section link to find an interaction, and use the appearance control to compare surfaces.
 
 The reusable Web patterns are available from `@openboa/yogurt/motion-patterns` with `@openboa/yogurt/styles.css`. The additional studies are gallery examples. Run `node checks/web-motion-patterns.cjs` to exercise the gallery, alignment and representative interactions.
+
+Build the three interactive product workflows with `node apps/guide/tooling/build-ui-gallery.mjs --workflows` after the SDK build. The offline file is `generated/workflows.html`. Each workflow links to the actual component examples it uses.

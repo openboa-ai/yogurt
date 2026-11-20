@@ -24,3 +24,14 @@
 .motion-extra-wheel output { min-height: 44px; border: 1px solid var(--yg-surface-edge); border-radius: 8px; background: var(--yg-canvas); color: inherit; }
 .motion-extra-refresh { width: 44px; height: 44px; font-size: 22px; }
 .motion-extra-rating button { min-width: 36px; min-height: 36px; font-size: 24px; line-height: 1; }
+
+/* Keep the interaction and its result together at the specimen's reading edge. */
+.motion-extra { width: min(100%, 360px); gap: var(--boa-space-12); }
+.motion-extra > strong { font: var(--yg-font-action); }
+.motion-extra-chips { align-items: center; }
+.motion-extra-chips button { min-block-size: var(--yg-size-touch); overflow-wrap: anywhere; }
+.motion-extra-toolbar button[aria-pressed="true"] { box-shadow: inset 0 0 0 1px var(--yg-action); }
+.motion-extra-wheel { width: min(100%, 220px); gap: var(--boa-space-8); }
+.motion-extra-wheel output { min-block-size: var(--yg-size-touch); background: var(--yg-action-soft); color: var(--yg-action); }
+.motion-extra-rating button { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
+@media (pointer: coarse) { .motion-extra-toolbar button { min-block-size: var(--yg-size-touch); } }

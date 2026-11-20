@@ -1,0 +1,65 @@
+body { margin: 0; }
+.workflow-root { min-block-size: 100dvh; }
+.workflow-header, .workflow-body { max-inline-size: 76rem; margin-inline: auto; padding-inline: clamp(var(--boa-space-16), 4vi, var(--boa-space-48)); }
+.workflow-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--boa-space-16);
+  min-block-size: 64px;
+  padding-block: var(--boa-space-8);
+}
+.workflow-identity { display: inline-flex; align-items: center; gap: var(--yg-gap-inline); font: var(--yg-font-heading); }
+.workflow-header a { color: var(--yg-text); text-decoration: none; }
+.workflow-header nav { display: flex; gap: var(--boa-space-16); font: var(--yg-font-label); }
+.workflow-header .yg-icon-button { margin-inline-start: auto; }
+.workflow-body { padding-block: var(--boa-space-24) var(--boa-space-48); }
+.workflow-body h1 { margin: 0; font: var(--yg-font-display); letter-spacing: var(--boa-tracking-heading); }
+.workflow-parts { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline); }
+.workflow-parts a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--yg-size-compact);
+  padding-inline: var(--yg-inset-compact);
+  border-radius: var(--yg-radius-small);
+  color: var(--yg-muted);
+  text-decoration: none;
+  font: var(--yg-font-label);
+}
+.workflow-parts a:hover { background: var(--yg-hover); color: var(--yg-text); }
+.workflow-page-title { display: flex; align-items: center; gap: var(--yg-gap-inline); }
+.workflow-body .yg-sidebar-layout { min-block-size: 34rem; }
+.workflow-sort { margin-block-end: var(--boa-space-16); }
+.workflow-preview { margin-block: var(--boa-space-16); }
+.workflow-records, .workflow-decision {
+  display: grid;
+  grid-template-columns: minmax(16rem, 2fr) minmax(0, 3fr);
+  gap: var(--boa-space-24);
+  align-items: start;
+}
+.workflow-record-list, .workflow-evidence { min-inline-size: 0; padding: var(--yg-inset-panel); border-radius: var(--yg-radius-panel); background: var(--yg-surface); }
+.workflow-record-detail { min-inline-size: 0; padding: var(--yg-inset-panel); }
+.workflow-back { display: none; }
+.workflow-conversation { display: grid; gap: var(--boa-space-24); max-inline-size: 41rem; margin-inline: auto; padding: var(--yg-inset-sheet); background: var(--yg-surface); border-radius: var(--yg-radius-card); }
+.workflow-thread { min-block-size: clamp(230px, 40dvh, 360px); display: grid; align-content: start; gap: var(--yg-gap-stack); }
+.workflow-empty { align-self: center; padding-block: clamp(var(--boa-space-24), 8vh, var(--boa-space-64)); text-align: center; }
+.workflow-empty h2, .workflow-decision h2 { margin: 0; font: var(--yg-font-heading); letter-spacing: var(--boa-tracking-heading); }
+.workflow-empty p, .workflow-decision p { color: var(--yg-muted); margin: var(--boa-space-8) 0 var(--boa-space-16); }
+.workflow-request { justify-self: end; max-inline-size: min(38rem, 92%); padding: var(--yg-inset-compact) var(--yg-inset-regular); margin: 0; background: var(--yg-field); border-radius: var(--yg-radius-panel); overflow-wrap: anywhere; white-space: pre-wrap; }
+.workflow-recovery { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline); align-items: center; }
+.workflow-decision { grid-template-columns: minmax(0, 3fr) minmax(13rem, 2fr); }
+.workflow-decision-main { min-inline-size: 0; padding: var(--yg-inset-panel); }
+.workflow-kicker { display: block; color: var(--yg-muted); font: var(--yg-font-meta); margin-block-end: var(--boa-space-8); }
+.workflow-evidence h3 { margin-block: 0 var(--boa-space-8); font: var(--yg-font-action); }
+.workflow-evidence ol { margin: 0; padding-inline-start: var(--boa-space-16); }
+.workflow-evidence li + li { margin-block-start: var(--boa-space-8); }
+@media (max-width: 42rem) {
+  .workflow-records, .workflow-decision { grid-template-columns: minmax(0, 1fr); gap: var(--boa-space-12); }
+  .workflow-records[data-show-detail=false] .workflow-record-detail,
+  .workflow-records[data-show-detail=true] .workflow-record-list { display: none; }
+  .workflow-back { display: inline-flex; margin-block-end: var(--boa-space-16); }
+  .workflow-body h1 { font: var(--yg-font-heading); }
+}
+@media (pointer: coarse) {
+  .workflow-parts a { min-block-size: var(--yg-size-touch); }
+}

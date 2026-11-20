@@ -39,7 +39,7 @@ function Refresh() {
 }
 function Toolbar() {
   const [selected, setSelected] = useState<string[]>([]);
-  return <div className="motion-extra"><span>Formatting</span><div role="toolbar" aria-label="Formatting" className="motion-extra-toolbar">{["Bold", "Italic", "Underline"].map(item => <button key={item} type="button" aria-pressed={selected.includes(item)} onClick={() => setSelected(selected.includes(item) ? selected.filter(v => v !== item) : [...selected, item])}>{item}</button>)}</div><span role="status">{selected.length ? selected.join(", ") : "No formatting selected"}</span></div>;
+  return <div className="motion-extra"><span>Formatting</span><div role="toolbar" aria-label="Formatting" className="motion-extra-toolbar">{["Bold", "Italic", "Underline"].map(item => <Y.Button key={item} type="button" size="compact" emphasis="soft" aria-pressed={selected.includes(item)} onClick={() => setSelected(selected.includes(item) ? selected.filter(v => v !== item) : [...selected, item])}>{item}</Y.Button>)}</div><span role="status">{selected.length ? selected.join(", ") : "No formatting selected"}</span></div>;
 }
 function Rating() {
   const [value, setValue] = useState(0);

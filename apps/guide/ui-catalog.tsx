@@ -221,6 +221,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
             Brand &amp; tokens
           </button>
           <a href="motion-patterns.html">Motion</a>
+          <a href="workflows.html">Workflows</a>
         </nav>
         <div className="header-actions">
           <IconButton

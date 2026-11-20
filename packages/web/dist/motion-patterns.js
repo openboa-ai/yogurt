@@ -79,7 +79,7 @@ function MentionPicker({ label, people, value, onChange }) {
             onChange(event.currentTarget.value);
           },
           onKeyDown: (event) => {
-            if (!open) return;
+            if (!open || event.nativeEvent.isComposing) return;
             if (event.key === "Escape") {
               event.preventDefault();
               setDismissed(tokenKey);
@@ -97,10 +97,16 @@ function MentionPicker({ label, people, value, onChange }) {
         /* @__PURE__ */ jsx("kbd", { children: "@" }),
         " Mention someone"
       ] }),
-      open && /* @__PURE__ */ jsx("div", { id: `${id}-list`, className: "yg-mention-list", role: "listbox", "aria-label": "People", children: options.map((person, i) => /* @__PURE__ */ jsxs("button", { id: `${id}-option-${i}`, role: "option", "aria-selected": i === index, type: "button", onMouseDown: (event) => event.preventDefault(), onClick: () => select(person), children: [
-        /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: Array.from(person.label)[0]?.toLocaleUpperCase() }),
-        person.label
-      ] }, person.id)) })
+      open && /* @__PURE__ */ jsxs("div", { id: `${id}-list`, className: "yg-mention-list", role: "listbox", "aria-label": "People", children: [
+        /* @__PURE__ */ jsxs("div", { className: "yg-mention-list-heading", role: "presentation", children: [
+          "People ",
+          /* @__PURE__ */ jsx("span", { children: options.length })
+        ] }),
+        options.map((person, i) => /* @__PURE__ */ jsxs("button", { id: `${id}-option-${i}`, role: "option", "aria-selected": i === index, type: "button", onMouseDown: (event) => event.preventDefault(), onClick: () => select(person), children: [
+          /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: Array.from(person.label)[0]?.toLocaleUpperCase() }),
+          person.label
+        ] }, person.id))
+      ] })
     ] })
   ] });
 }
@@ -260,12 +266,9 @@ function MorphTooltip({ label, detail }) {
       children: [
         /* @__PURE__ */ jsxs3("button", { type: "button", className: "yg-morph-tooltip-trigger", "aria-describedby": open ? id : void 0, children: [
           label,
-          /* @__PURE__ */ jsx3("span", { "aria-hidden": "true", children: "\u2197" })
+          /* @__PURE__ */ jsx3("span", { "aria-hidden": "true", children: "i" })
         ] }),
-        /* @__PURE__ */ jsxs3("span", { id, role: "tooltip", className: "yg-morph-tooltip-card", "data-open": open, hidden: !open, children: [
-          /* @__PURE__ */ jsx3("span", { className: "yg-morph-tooltip-kicker", children: label }),
-          /* @__PURE__ */ jsx3("span", { children: detail })
-        ] })
+        /* @__PURE__ */ jsx3("span", { id, role: "tooltip", className: "yg-morph-tooltip-card", "data-open": open, hidden: !open, children: /* @__PURE__ */ jsx3("span", { children: detail }) })
       ]
     }
   );
@@ -446,16 +449,16 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
         if (!busy && value.trim()) onSubmit();
       },
       children: [
-        /* @__PURE__ */ jsx5(
+        /* @__PURE__ */ jsx5("div", { className: "yg-prompt-editor", "data-value": value, children: /* @__PURE__ */ jsx5(
           "textarea",
           {
             "aria-label": "Prompt",
             placeholder: "Ask anything",
-            rows: 3,
+            rows: 1,
             value,
             onChange: (event) => onChange(event.currentTarget.value)
           }
-        ),
+        ) }),
         /* @__PURE__ */ jsx5("div", { className: "yg-prompt-actions", children: busy && onCancel ? /* @__PURE__ */ jsx5(Button, { type: "button", emphasis: "soft", onClick: onCancel, children: "Stop" }) : /* @__PURE__ */ jsx5(Button, { type: "submit", disabled: busy || !value.trim(), children: "Send" }) })
       ]
     }
@@ -485,14 +488,15 @@ function FanCards({ items }) {
   const [selectedId, setSelectedId] = useState5(null);
   const selected = items.find((item) => item.id === selectedId);
   return /* @__PURE__ */ jsxs6("div", { className: "yg-fan-cards", children: [
-    /* @__PURE__ */ jsx6("div", { className: "yg-fan-cards-list", "aria-label": "Cards", children: items.map((item) => /* @__PURE__ */ jsxs6(
+    /* @__PURE__ */ jsx6("div", { className: "yg-fan-cards-list", "aria-label": "Cards", children: items.map((item, index) => /* @__PURE__ */ jsxs6(
       "button",
       {
         type: "button",
         "aria-pressed": item.id === selected?.id,
         onClick: () => setSelectedId(item.id === selectedId ? null : item.id),
         children: [
-          /* @__PURE__ */ jsx6("span", { children: item.label }),
+          /* @__PURE__ */ jsx6("span", { className: "yg-fan-index", "aria-hidden": "true", children: String(index + 1).padStart(2, "0") }),
+          /* @__PURE__ */ jsx6("span", { className: "yg-fan-label", children: item.label }),
           /* @__PURE__ */ jsx6(Icon, { name: "next" })
         ]
       },

@@ -19,10 +19,9 @@ export function MorphTooltip({ label, detail }: { label: string; detail: string 
       onBlur={() => { setFocused(false); setDismissed(false); }}
       onKeyDown={(event) => { if (event.key === "Escape") setDismissed(true); }}>
       <button type="button" className="yg-morph-tooltip-trigger" aria-describedby={open ? id : undefined}>
-        {label}<span aria-hidden="true">↗</span>
+        {label}<span aria-hidden="true">i</span>
       </button>
       <span id={id} role="tooltip" className="yg-morph-tooltip-card" data-open={open} hidden={!open}>
-        <span className="yg-morph-tooltip-kicker">{label}</span>
         <span>{detail}</span>
       </span>
     </span>

@@ -54,3 +54,9 @@
 .yg-letter-field textarea { min-height: 96px; padding: 12px; font-size: 14px; line-height: 20px; }
 .yg-letter-meter { margin: 0 12px 10px; }
 .yg-letter-count { font-size: 12px; line-height: 16px; }
+
+.yg-focus-choice, .yg-plan-choice { min-block-size: var(--yg-size-touch); box-sizing: border-box; }
+.yg-choice-copy, .yg-plan-description, .yg-plan-heading, .yg-plan-price { overflow-wrap: anywhere; }
+.yg-plan-choice { border-radius: var(--yg-radius-panel); padding: var(--boa-space-12); }
+.yg-letter-field textarea { min-block-size: 96px; }
+@media (pointer: coarse) { .yg-focus-choice, .yg-plan-choice { padding: var(--boa-space-16); } }

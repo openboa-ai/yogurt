@@ -198,14 +198,17 @@ function TaskListExample() {
         {id: "references", label: "Verify the revision", state: active > 0 ? "done" : "queued"},
       ] : undefined,
     }))} />
-    <div className="motion-sample-actions">
-      <Button disabled={active >= steps.length} onClick={() => {
-        if (failed) setFailed(false);
-        else setActive(index => index + 1);
-      }}>{failed ? "Retry step" : "Complete step"}</Button>
-      <Button size="compact" emphasis="quiet" disabled={failed || active >= steps.length} onClick={() => setFailed(true)}>Mark failed</Button>
-      <Button size="compact" emphasis="quiet" onClick={() => { setActive(0); setFailed(false); }}>Restart</Button>
-    </div>
+    <details className="motion-example-controls">
+      <summary>Example controls</summary>
+      <div className="motion-sample-actions">
+        <Button emphasis="soft" disabled={active >= steps.length} onClick={() => {
+          if (failed) setFailed(false);
+          else setActive(index => index + 1);
+        }}>{failed ? "Retry step" : "Complete step"}</Button>
+        <Button size="compact" emphasis="quiet" disabled={failed || active >= steps.length} onClick={() => setFailed(true)}>Mark failed</Button>
+        <Button size="compact" emphasis="quiet" onClick={() => { setActive(0); setFailed(false); }}>Restart</Button>
+      </div>
+    </details>
   </div>;
 }
 
@@ -405,6 +408,7 @@ function Gallery() {
         </a>
         <nav aria-label="Yogurt">
           <a href="components.html">Components</a>
+          <a href="workflows.html">Workflows</a>
           <a href="motion-patterns.html" aria-current="page">Patterns</a>
           <a href="motion-comparison.html">Compare motion</a>
           <a href="agents.html">Agents</a>

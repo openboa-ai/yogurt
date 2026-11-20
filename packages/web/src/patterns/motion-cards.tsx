@@ -18,10 +18,10 @@ export function FanCards({ items }: { items: FanItem[] }) {
   return (
     <div className="yg-fan-cards">
       <div className="yg-fan-cards-list" aria-label="Cards">
-        {items.map(item => (
+        {items.map((item, index) => (
           <button key={item.id} type="button" aria-pressed={item.id === selected?.id}
             onClick={() => setSelectedId(item.id === selectedId ? null : item.id)}>
-            <span>{item.label}</span><Icon name="next" />
+            <span className="yg-fan-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><span className="yg-fan-label">{item.label}</span><Icon name="next" />
           </button>
         ))}
       </div>

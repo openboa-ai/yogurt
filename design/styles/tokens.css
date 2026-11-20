@@ -274,8 +274,8 @@
   --boa-weight-regular: 400;
   --boa-weight-medium: 500;
   --boa-weight-semibold: 600;
-  --boa-role-weight-heading: 570;
-  --boa-role-weight-body: 425;
+  --boa-role-weight-heading: 590;
+  --boa-role-weight-body: 440;
   --boa-role-weight-ui: 550;
   --boa-role-weight-wordmark: 760;
   --boa-size-caption: 12px;
@@ -296,7 +296,7 @@
   --boa-line-height-help: 18px;
   --boa-tracking-body: -0.006em;
   --boa-tracking-label: -0.006em;
-  --boa-tracking-heading: -0.027em;
+  --boa-tracking-heading: -0.031em;
   --boa-tracking-display: -0.045em;
   --boa-tracking-meta: 0.005em;
   --boa-space-2: 2px;

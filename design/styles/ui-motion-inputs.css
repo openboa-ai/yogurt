@@ -139,3 +139,5 @@
   .yg-file-drop { transition: background-color var(--yg-travel) var(--yg-settle), border-color var(--yg-travel) var(--yg-settle); }
 }
 @keyframes yg-input-arrive { from { opacity: 0; translate: 0 -4px; } }
+.yg-mention-list-heading { display: flex; justify-content: space-between; gap: 8px; padding: 6px 8px; color: var(--yg-muted); font: var(--yg-font-meta); }
+.yg-mention-list-heading span { font-variant-numeric: tabular-nums; }

@@ -85,19 +85,22 @@
 .yg-artifact-library { container: yogurt-artifacts / inline-size; }
 @container yogurt-artifacts (width >= 40rem) {
   .yg-artifact-layout[data-preview] {
-    grid-template-columns: minmax(15rem, 2fr) minmax(0, 3fr);
+    grid-template-columns: minmax(14rem, 2fr) minmax(0, 3fr);
     align-items: start;
   }
 }
 .yg-artifact-preview {
-  padding: var(--boa-space-16);
+  padding: var(--boa-space-12);
   min-width: 0;
   overflow-wrap: anywhere;
   border-radius: var(--yg-radius-panel);
   background: var(--yg-canvas);
 }
 .yg-artifact-preview p { margin-bottom: 0; }
-.yg-access-roster li { background: var(--yg-field); overflow-wrap: anywhere; }
+.yg-access-roster li { overflow-wrap: anywhere; border-block-end: 1px solid var(--yg-surface-edge); border-radius: 0; }
+.yg-access-roster li:last-child { border-block-end: 0; }
+.yg-composer-tools, .yg-composer-footer { min-inline-size: 0; }
+.yg-artifact-layout > * { min-inline-size: 0; }
 @media (pointer: coarse) {
   .yg-composer textarea { font: var(--yg-font-touch); }
 }

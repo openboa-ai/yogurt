@@ -51,6 +51,7 @@ export function ListRow({
   trailing,
   href,
   onActivate,
+  current,
 }: {
   title: string;
   description?: string;
@@ -58,6 +59,7 @@ export function ListRow({
   trailing?: ReactNode;
   href?: string;
   onActivate?: () => void;
+  current?: boolean;
 }) {
   const contents = (
     <>
@@ -72,11 +74,11 @@ export function ListRow({
   return (
     <li>
       {href ? (
-        <a className="yg-row" href={href}>
+        <a className="yg-row" href={href} aria-current={current || undefined}>
           {contents}
         </a>
       ) : onActivate ? (
-        <button type="button" className="yg-row" onClick={onActivate}>
+        <button type="button" className="yg-row" onClick={onActivate} aria-current={current || undefined}>
           {contents}
         </button>
       ) : (

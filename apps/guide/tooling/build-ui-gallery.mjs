@@ -6,10 +6,11 @@ process.chdir(fileURLToPath(new URL("../../..", import.meta.url)));
 const family = process.argv[2] === "--agents";
 const motion = process.argv[2] === "--motion";
 const comparison = process.argv[2] === "--motion-comparison";
+const workflows = process.argv[2] === "--workflows";
 const patterns = process.argv[2] === "--motion-patterns";
 const review = family || motion ? process.argv[3] : undefined;
 const entry = family ? "agent-family" : motion ? "motion-review" :
-  comparison ? "motion-comparison" : patterns ? "motion-patterns" : "ui-catalog";
+  comparison ? "motion-comparison" : patterns ? "motion-patterns" : workflows ? "workflows" : "ui-catalog";
 const js = await build({
   entryPoints: ["apps/guide/" + entry + ".tsx"],
   write: false,
@@ -49,6 +50,7 @@ const galleryStyles = [
   "apps/guide/ui-catalog.css",
   ...(motion ? ["apps/guide/motion-review.css"] : []),
   ...(comparison ? ["apps/guide/motion-comparison.css"] : []),
+  ...(workflows ? ["apps/guide/workflows.css"] : []),
   ...(patterns ? [
     "apps/guide/motion-pattern-gallery.css",
     "apps/guide/motion-extra-cards.css",
@@ -84,7 +86,7 @@ const licenses = [
   .replaceAll("<", "\\u003c");
 const block =
   '<div id="' + (family ? "yogurt-agent-family" : motion ? "yogurt-motion-review" :
-    comparison ? "yogurt-motion-comparison" : patterns ? "yogurt-motion-patterns" : "yogurt-ui-library") +
+    comparison ? "yogurt-motion-comparison" : patterns ? "yogurt-motion-patterns" : workflows ? "yogurt-workflows" : "yogurt-ui-library") +
   '"></div>\n<style>' +
   styles +
   "</style>\n<script>" +
@@ -96,9 +98,9 @@ if (review) {
   writeFileSync(review, block + "\n");
 } else writeFileSync(
   family ? "apps/guide/generated/agents.html" : comparison ? "apps/guide/generated/motion-comparison.html" :
-    patterns ? "apps/guide/generated/motion-patterns.html" : "apps/guide/generated/components.html",
+    patterns ? "apps/guide/generated/motion-patterns.html" : workflows ? "apps/guide/generated/workflows.html" : "apps/guide/generated/components.html",
   '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
-    (family ? "Agent family" : comparison ? "Component motion" : patterns ? "Motion patterns" : "Component library") + ' · Yogurt</title></head><body>' +
+    (family ? "Agent family" : comparison ? "Component motion" : patterns ? "Motion patterns" : workflows ? "Product workflows" : "Component library") + ' · Yogurt</title></head><body>' +
     block +
     "</body></html>\n",
 );

@@ -1,91 +1,25 @@
-.yg-streaming-reply {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  line-height: 1.6;
-}
-.yg-streaming-cursor {
-  display: inline-block;
-  inline-size: .45em;
-  block-size: 1em;
-  margin-inline-start: .15em;
-  vertical-align: -.12em;
-  border-radius: var(--boa-radius-round);
-  background: var(--yg-action);
-  animation: yg-streaming-pulse 1s ease-in-out infinite alternate;
-}
-.yg-ghost-field { display: grid; gap: var(--boa-space-8); min-inline-size: 0; }
-.yg-ghost-field label { font-weight: 600; }
-.yg-ghost-input {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--yg-off);
-  border-radius: var(--yg-radius-panel);
-  background: var(--yg-field);
-}
-.yg-ghost-input:focus-within { outline: 2px solid var(--yg-action); outline-offset: 2px; }
-.yg-ghost-input input, .yg-ghost-mirror {
-  box-sizing: border-box;
-  width: 100%;
-  padding: var(--boa-space-12) var(--boa-space-16);
-  font: inherit;
-  line-height: 1.5;
-  white-space: pre;
-}
+.yg-streaming-reply { white-space: pre-wrap; overflow-wrap: anywhere; font: var(--yg-font-body); }
+.yg-streaming-cursor { display: inline-block; inline-size: .45em; block-size: 1em; margin-inline-start: .15em; vertical-align: -.12em; border-radius: var(--boa-radius-round); background: var(--yg-action); animation: yg-streaming-pulse 1s ease-in-out infinite alternate; }
+.yg-ghost-field { display: grid; gap: 8px; min-inline-size: 0; }
+.yg-ghost-field label { font: var(--yg-font-label); }
+.yg-ghost-input { position: relative; overflow: hidden; border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: var(--yg-raised-surface); }
+.yg-ghost-input:focus-within { border-color: var(--yg-action); box-shadow: 0 0 0 2px var(--yg-action-soft); }
+.yg-ghost-input input, .yg-ghost-mirror { box-sizing: border-box; width: 100%; min-height: var(--yg-size-regular); padding: 8px 12px; font: var(--yg-font-body); white-space: pre; }
 .yg-ghost-input input { position: relative; display: block; border: 0; outline: 0; color: transparent; caret-color: var(--yg-action); background: transparent; }
 .yg-ghost-mirror { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 .yg-ghost-suffix, .yg-ghost-hint { color: var(--yg-muted); }
-.yg-ghost-hint { font-size: .8em; }
-.yg-prompt-box {
-  display: grid;
-  gap: var(--boa-space-8);
-  padding: var(--boa-space-12);
-  border: 1px solid var(--yg-off);
-  border-radius: var(--yg-radius-panel);
-  background: var(--yg-field);
-  transition: border-color var(--yg-travel) var(--yg-settle), box-shadow var(--yg-travel) var(--yg-settle);
-}
+.yg-ghost-hint { font: var(--yg-font-meta); }
+.yg-prompt-box { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 8px; min-inline-size: 0; padding: 6px; border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-panel); background: var(--yg-raised-surface); }
 .yg-prompt-box:focus-within { border-color: var(--yg-action); box-shadow: 0 0 0 2px var(--yg-action-soft); }
-.yg-prompt-box textarea { display: block; width: 100%; min-inline-size: 0; resize: vertical; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; }
-.yg-prompt-actions { display: flex; justify-content: flex-end; }
-.yg-thinking { display: inline-flex; align-items: center; gap: var(--boa-space-8); color: var(--yg-muted); }
-.yg-thinking-shape {
-  inline-size: 1em;
-  block-size: 1em;
-  flex: none;
-  background: var(--yg-action);
-  border-radius: 40% 60% 55% 45%;
-  animation: yg-thinking-morph 2.4s var(--yg-settle) infinite alternate;
-}
-@keyframes yg-thinking-morph {
-  0% { border-radius: 40% 60% 55% 45%; transform: rotate(0deg) scale(.9); }
-  50% { border-radius: 65% 35% 40% 60%; transform: rotate(90deg) scale(1); }
-  100% { border-radius: 35% 65% 60% 40%; transform: rotate(180deg) scale(.9); }
-}
+.yg-prompt-editor { display: grid; min-inline-size: 0; max-block-size: 160px; overflow-y: auto; }
+.yg-prompt-editor::after, .yg-prompt-editor textarea { grid-area: 1 / 1; box-sizing: border-box; min-inline-size: 0; width: 100%; padding: 8px 6px; border: 0; font: var(--yg-font-body); white-space: pre-wrap; overflow-wrap: anywhere; }
+.yg-prompt-editor::after { content: attr(data-value) ' '; visibility: hidden; }
+.yg-prompt-editor textarea { display: block; resize: none; overflow: hidden; outline: 0; background: transparent; color: var(--yg-text); }
+.yg-prompt-actions { display: flex; align-items: end; }
+.yg-prompt-actions .yg-button { min-inline-size: 64px; }
+.yg-thinking { display: inline-flex; align-items: center; gap: 8px; color: var(--yg-muted); font: var(--yg-font-label); }
+.yg-thinking-shape { inline-size: 1em; block-size: 1em; flex: none; background: var(--yg-action); border-radius: 40% 60% 55% 45%; animation: yg-thinking-morph 2.4s var(--yg-settle) infinite alternate; }
+@keyframes yg-thinking-morph { 0% { border-radius: 40% 60% 55% 45%; transform: rotate(0deg) scale(.9); } 50% { border-radius: 65% 35% 40% 60%; transform: rotate(90deg) scale(1); } 100% { border-radius: 35% 65% 60% 40%; transform: rotate(180deg) scale(.9); } }
 @keyframes yg-streaming-pulse { from { opacity: .4; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  .yg-thinking-shape, .yg-streaming-cursor { animation: none; }
-  .yg-prompt-box { transition: none; }
-}
-@media (forced-colors: active) {
-  .yg-ghost-input input { color: FieldText; }
-  .yg-ghost-mirror { display: none; }
-  .yg-thinking-shape, .yg-streaming-cursor { background: CanvasText; }
-}
-
-.yg-ghost-input, .yg-prompt-box { border-color: var(--yg-surface-edge); background: color-mix(in srgb, var(--yg-surface) 78%, var(--yg-field)); }
-.yg-ghost-input:focus-within, .yg-prompt-box:focus-within { outline: none; border-color: var(--yg-action); box-shadow: 0 0 0 2px var(--yg-action-soft); }
-.yg-prompt-box { gap: 10px; padding: var(--yg-inset-panel); }
-.yg-prompt-box textarea { box-sizing: border-box; line-height: 1.5; }
-.yg-prompt-actions { padding-top: 4px; }
-.yg-ghost-suffix, .yg-ghost-hint { color: var(--yg-muted); }
-
-.yg-ghost-field { gap: 8px; }
-.yg-ghost-field label { font-size: 13px; line-height: 18px; }
-.yg-ghost-input { border-radius: 8px; }
-.yg-ghost-input input, .yg-ghost-mirror { min-height: 36px; padding: 8px 12px; font-size: 14px; line-height: 20px; }
-.yg-ghost-hint { font-size: 12px; line-height: 16px; }
-.yg-prompt-box { gap: 8px; padding: 12px; border-radius: 12px; }
-.yg-prompt-box textarea { min-height: 60px; padding: 0; font-size: 14px; line-height: 20px; }
-.yg-prompt-actions { padding-top: 0; }
-.yg-streaming-reply { font-size: 14px; line-height: 20px; }
-.yg-thinking { gap: 8px; font-size: 13px; line-height: 18px; }
+@media (prefers-reduced-motion: reduce) { .yg-thinking-shape, .yg-streaming-cursor { animation: none; } }
+@media (forced-colors: active) { .yg-ghost-input input { color: FieldText; } .yg-ghost-mirror { display: none; } .yg-thinking-shape, .yg-streaming-cursor { background: CanvasText; } .yg-prompt-box:focus-within, .yg-ghost-input:focus-within { outline: 2px solid Highlight; } }

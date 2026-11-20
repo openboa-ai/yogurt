@@ -276,8 +276,8 @@
   --boa-weight-regular: 400;
   --boa-weight-medium: 500;
   --boa-weight-semibold: 600;
-  --boa-role-weight-heading: 570;
-  --boa-role-weight-body: 425;
+  --boa-role-weight-heading: 590;
+  --boa-role-weight-body: 440;
   --boa-role-weight-ui: 550;
   --boa-role-weight-wordmark: 760;
   --boa-size-caption: 12px;
@@ -298,7 +298,7 @@
   --boa-line-height-help: 18px;
   --boa-tracking-body: -0.006em;
   --boa-tracking-label: -0.006em;
-  --boa-tracking-heading: -0.027em;
+  --boa-tracking-heading: -0.031em;
   --boa-tracking-display: -0.045em;
   --boa-tracking-meta: 0.005em;
   --boa-space-2: 2px;
@@ -498,7 +498,7 @@
   letter-spacing: var(--boa-tracking-label);
   text-align: center;
   overflow-wrap: anywhere;
-  transition: background-color var(--yg-press) linear;
+  transition: background-color var(--yg-press) var(--yg-settle), box-shadow var(--yg-press) var(--yg-settle);
 }
 .yg-button[data-control-size="compact"] {
   min-block-size: var(--yg-size-compact);
@@ -547,6 +547,7 @@
   gap: var(--yg-gap-tight);
 }
 .yg-button-label {
+  min-inline-size: 0;
   transition: transform var(--yg-press) var(--yg-settle);
 }
 .yg-button:active:not(:disabled, [aria-disabled="true"]) .yg-button-label {
@@ -595,7 +596,7 @@
   gap: var(--boa-space-4);
 }
 .yg-field > :is(.yg-help, .yg-error) {
-  padding-inline: var(--boa-space-2);
+  padding-inline: 0;
 }
 .yg-fieldset {
   border: 0;
@@ -621,6 +622,7 @@
   border: 0;
   border-radius: var(--yg-radius-control);
   padding: 0 var(--yg-inset-regular);
+  transition: box-shadow var(--yg-layer) var(--yg-settle);
 }
 .yg-input:has(input:focus-visible, textarea:focus-visible),
 .yg-select:has(select:focus-visible) {
@@ -735,7 +737,7 @@
   .yg-select[data-dropdown] option:checked {
     background: var(--yg-action-soft);
     color: var(--yg-action);
-    font-weight: var(--boa-weight-medium);
+    font-weight: var(--boa-role-weight-ui);
   }
   .yg-select[data-dropdown] option::checkmark {
     order: 1;
@@ -1149,10 +1151,18 @@
 @media (pointer: coarse) {
   :is(a, button).yg-row { min-height: var(--yg-size-touch); }
 }
+.yg-row[aria-current="true"] {
+  background: var(--yg-action-soft);
+  color: var(--yg-action);
+}
 .yg-row-label {
+  display: grid;
   flex: 1;
   min-width: 0;
+  gap: var(--boa-space-2);
+  overflow-wrap: anywhere;
 }
+.yg-row-label:has(.yg-help) { font: var(--yg-font-action); }
 .yg-leading,
 .yg-trailing {
   display: inline-flex;
@@ -1393,8 +1403,8 @@
       :disabled,
       [aria-disabled="true"]
     ),
-  a.yg-row:hover,
-  button.yg-row:hover,
+  a.yg-row:hover:not([aria-current]),
+  button.yg-row:hover:not([aria-current]),
   .yg-nav-list a:hover {
     background: var(--yg-field);
   }

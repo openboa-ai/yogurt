@@ -44,13 +44,14 @@ export function MentionPicker({ label, people, value, onChange }: {
         onSelect={event => { setCaret(event.currentTarget.selectionStart); setActive(0); }}
         onChange={event => { setCaret(event.currentTarget.selectionStart); setActive(0); setDismissed(null); onChange(event.currentTarget.value); }}
         onKeyDown={event => {
-          if (!open) return;
+          if (!open || event.nativeEvent.isComposing) return;
           if (event.key === "Escape") { event.preventDefault(); setDismissed(tokenKey); }
           else if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); setActive((index + (event.key === "ArrowDown" ? 1 : options.length - 1)) % options.length); }
           else if (event.key === "Enter" && !event.nativeEvent.isComposing) { event.preventDefault(); select(options[index]); }
         }} />
       <span className="yg-mention-hint" id={`${id}-hint`}><kbd>@</kbd> Mention someone</span>
       {open && <div id={`${id}-list`} className="yg-mention-list" role="listbox" aria-label="People">
+        <div className="yg-mention-list-heading" role="presentation">People <span>{options.length}</span></div>
         {options.map((person, i) => <button id={`${id}-option-${i}`} key={person.id} role="option" aria-selected={i === index} type="button" onMouseDown={event => event.preventDefault()} onClick={() => select(person)}><span aria-hidden="true">{Array.from(person.label)[0]?.toLocaleUpperCase()}</span>{person.label}</button>)}
       </div>}
     </div>

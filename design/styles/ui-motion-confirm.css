@@ -27,6 +27,7 @@
   position: absolute;
   inset: 0;
   background: var(--yg-action-soft);
+  border-inline-end: 2px solid var(--yg-action);
   transform: scaleX(var(--yg-confirm-progress, 0));
   transform-origin: left center;
   pointer-events: none;
@@ -35,6 +36,7 @@
 .yg-slide-confirm { touch-action: pan-y; padding-inline: 48px 12px; }
 .yg-slide-confirm-handle {
   position: absolute;
+  z-index: 2;
   left: calc(4px + var(--yg-confirm-progress, 0) * (100% - 40px));
   inline-size: 32px;
   block-size: 32px;

@@ -40,8 +40,10 @@ export function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }:
 }) {
   return <form className="yg-prompt-box" aria-label="Prompt" aria-busy={busy || undefined}
     onSubmit={(event) => { event.preventDefault(); if (!busy && value.trim()) onSubmit(); }}>
-    <textarea aria-label="Prompt" placeholder="Ask anything" rows={3} value={value}
-      onChange={(event) => onChange(event.currentTarget.value)} />
+    <div className="yg-prompt-editor" data-value={value}>
+      <textarea aria-label="Prompt" placeholder="Ask anything" rows={1} value={value}
+        onChange={(event) => onChange(event.currentTarget.value)} />
+    </div>
     <div className="yg-prompt-actions">
       {busy && onCancel ? <Button type="button" emphasis="soft" onClick={onCancel}>Stop</Button>
         : <Button type="submit" disabled={busy || !value.trim()}>Send</Button>}

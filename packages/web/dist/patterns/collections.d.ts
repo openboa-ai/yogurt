@@ -14,13 +14,14 @@ export declare function List({ label, children, }: {
     label: string;
     children: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function ListRow({ title, description, leading, trailing, href, onActivate, }: {
+export declare function ListRow({ title, description, leading, trailing, href, onActivate, current, }: {
     title: string;
     description?: string;
     leading?: ReactNode;
     trailing?: ReactNode;
     href?: string;
     onActivate?: () => void;
+    current?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function SelectionList({ label, options, selected, onValueChange, }: {
     label: string;

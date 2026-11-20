@@ -40,3 +40,20 @@
 .extra-card { gap: 12px; }
 .extra-card strong { overflow-wrap: anywhere; }
 .extra-gesture :is(button, input, summary):focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
+
+.extra-gesture { width: min(100%, 360px); gap: var(--boa-space-12); }
+.extra-gesture > label, .extra-gesture > span, .extra-rating legend { font: var(--yg-font-action); }
+.extra-gesture input[type="range"] { min-block-size: var(--yg-size-touch); margin: 0; }
+.extra-gesture input[type="date"] { box-sizing: border-box; min-block-size: var(--yg-size-regular); width: 100%; padding: var(--boa-space-8) var(--boa-space-12); border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: var(--yg-field); color: var(--yg-text); font: inherit; }
+.extra-disclosure { background: var(--yg-raised-surface); }
+.extra-disclosure summary { min-block-size: var(--yg-size-regular); display: flex; align-items: center; gap: var(--boa-space-8); }
+.extra-disclosure summary::before { content: "›"; color: var(--yg-action); transition: rotate var(--yg-change) var(--yg-settle); }
+.extra-disclosure[open] summary::before { rotate: 90deg; }
+.extra-counter { gap: var(--boa-space-12); }
+.extra-counter button { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
+.extra-rating label { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
+.extra-gesture-page { min-block-size: 96px; }
+.extra-gesture-page span, .extra-card small { color: var(--yg-muted); opacity: 1; }
+.extra-card { background: var(--yg-action-soft); }
+@media (pointer: coarse) { .extra-toolbar > button { min-block-size: var(--yg-size-touch); } }
+@media (prefers-reduced-motion: reduce) { .extra-disclosure summary::before { transition: none; } }

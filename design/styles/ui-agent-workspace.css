@@ -233,9 +233,11 @@
   justify-content: space-between;
   gap: var(--boa-space-4);
   padding: var(--boa-space-8);
-  background: var(--yg-canvas);
-  border-radius: var(--yg-radius-small);
+  border-block-end: 1px solid var(--yg-surface-edge);
 }
+.yg-runtime-sample-item:last-child { border-block-end: 0; }
+.yg-agent-roster-header { padding-block-end: var(--boa-space-8); }
+.yg-agent-group + .yg-agent-group { margin-block-start: var(--boa-space-16); }
 
 @container yogurt-agent-workspace (width < 42rem) {
   .yg-agent-workspace[data-has-agent="true"][data-roster-open="false"] .yg-agent-roster,
@@ -246,7 +248,7 @@
 
 @container yogurt-agent-workspace (width >= 42rem) {
   .yg-agent-workspace-grid {
-    grid-template-columns: minmax(12rem, 2fr) minmax(0, 5fr);
+    grid-template-columns: minmax(14rem, 19rem) minmax(0, 1fr);
   }
 
   .yg-agent-workspace .yg-agent-roster-toggle {
@@ -256,7 +258,7 @@
 
 @container yogurt-agent-detail (width >= 32rem) {
   .yg-agent-detail-grid[data-inspector="true"] {
-    grid-template-columns: minmax(0, 3fr) minmax(13rem, 2fr);
+    grid-template-columns: minmax(0, 1fr) minmax(13rem, 18rem);
     grid-template-areas: "header header" "conversation inspector";
   }
 

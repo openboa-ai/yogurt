@@ -45,9 +45,10 @@
     get("pb-parts").replaceChildren(...parts);
     text("pb-targets", "Web. " + pattern.support.web.detail + " Native. " + pattern.support.native.detail);
   }
-  function choose(sought) {
+  function choose(sought, patternId) {
     state.replaceChildren(...pick().scenes.map(scene => new Option(scene.label, scene.state)));
-    if (sought && [...state.options].some(option => option.value === sought)) state.value = sought;
+    const index = pick().scenes.findIndex(scene => scene.state === sought && (!patternId || scene.pattern === patternId));
+    if (index >= 0) state.selectedIndex = index;
     render();
   }
   project.addEventListener("change", () => choose());
@@ -61,13 +62,27 @@
   });
   for (const pattern of catalog.patterns) {
     const item = document.createElement("li");
-    const ref = document.createElement("a");
-    const example = examples.find(entry => entry.scenes.some(scene => scene.pattern === pattern.id));
-    const scene = example?.scenes.find(entry => entry.pattern === pattern.id);
-    ref.href = scene ? "playbook.html?project=" + example.id + "&state=" + scene.state : pattern.support.web.source || "catalog/patterns.json";
-    ref.textContent = pattern.name;
-    item.append(ref, ". " + pattern.when);
+    const heading = document.createElement("strong");
+    heading.textContent = pattern.name;
+    const description = document.createElement("p");
+    description.textContent = pattern.when;
+    const list = document.createElement("ul");
+    for (const rule of pattern.states) {
+      const row = document.createElement("li");
+      const example = examples.find(entry => entry.scenes.some(scene => scene.pattern === pattern.id && scene.state === rule.id));
+      if (example) {
+        const ref = document.createElement("a");
+        const query = new URLSearchParams({project: example.id, pattern: pattern.id, state: rule.id});
+        ref.href = "playbook.html?" + query;
+        ref.textContent = rule.label;
+        row.append(ref);
+      } else {
+        row.textContent = rule.label + " · example unavailable";
+      }
+      list.append(row);
+    }
+    item.append(heading, description, list);
     get("pb-directory").append(item);
   }
-  choose(link.get("state"));
+  choose(link.get("state"), link.get("pattern"));
 })();

@@ -98,6 +98,66 @@
           ]
         ],
         "action": "View the brief"
+      },
+      {
+        "label": "Decision unavailable",
+        "pattern": "pattern.review-decision",
+        "state": "denied",
+        "headline": "This decision is unavailable.",
+        "body": "You can review the brief, but this change is not available with your current access.",
+        "facts": [
+          [
+            "Decision",
+            "D-014"
+          ]
+        ],
+        "action": "Return to the brief"
+      },
+      {
+        "label": "Decision submitted",
+        "pattern": "pattern.review-decision",
+        "state": "submitted",
+        "headline": "Your request was submitted.",
+        "body": "Follow the original receipt for the outcome of this decision.",
+        "facts": [
+          [
+            "Request",
+            "R-014"
+          ]
+        ],
+        "action": "Check request R-014"
+      },
+      {
+        "label": "Request denied",
+        "pattern": "pattern.track-request",
+        "state": "denied",
+        "headline": "The request was not approved.",
+        "body": "The service denied this change. Review the brief before deciding what to do next.",
+        "facts": [
+          [
+            "Request",
+            "R-014"
+          ]
+        ],
+        "action": "Return to the brief"
+      },
+      {
+        "label": "Request conflict",
+        "pattern": "pattern.track-request",
+        "state": "conflict",
+        "headline": "The brief changed before the request was applied.",
+        "body": "Review the latest revision before making a new decision.",
+        "facts": [
+          [
+            "Request",
+            "R-014"
+          ],
+          [
+            "Current revision",
+            "8"
+          ]
+        ],
+        "action": "Review revision 8"
       }
     ]
   },
@@ -107,6 +167,15 @@
     "task": "Inspect company work",
     "inputs": "Authorized record, as-of time, source revision, coverage and current access.",
     "scenes": [
+      {
+        "label": "Loading record",
+        "pattern": "pattern.inspect-record",
+        "state": "loading",
+        "headline": "Loading company work",
+        "body": "Waiting for the first authorized response.",
+        "facts": [],
+        "action": "Wait for the record"
+      },
       {
         "label": "Current record",
         "pattern": "pattern.inspect-record",
@@ -198,6 +267,73 @@
         "state": "failed",
         "headline": "The work record could not be loaded.",
         "body": "The first read failed before any authorized record arrived.",
+        "facts": [],
+        "action": "Retry the read"
+      }
+    ]
+  },
+  {
+    "id": "yogurt",
+    "project": "Yogurt",
+    "task": "Find a record",
+    "inputs": "Authorized rows, stable IDs, filter choices and the current read result.",
+    "scenes": [
+      {
+        "label": "Matching results",
+        "pattern": "pattern.find-records",
+        "state": "ready",
+        "headline": "Matching records",
+        "body": "The current search found two authorized records.",
+        "facts": [
+          [
+            "Search",
+            "Weekly"
+          ],
+          [
+            "Results",
+            "2 records"
+          ]
+        ],
+        "action": "Open a record"
+      },
+      {
+        "label": "No matches",
+        "pattern": "pattern.find-records",
+        "state": "no-match",
+        "headline": "No matching records",
+        "body": "No records match the current search. Clear the filter to see the full collection.",
+        "facts": [
+          [
+            "Search",
+            "Quarterly"
+          ]
+        ],
+        "action": "Clear filters"
+      },
+      {
+        "label": "Empty collection",
+        "pattern": "pattern.find-records",
+        "state": "empty",
+        "headline": "No records yet",
+        "body": "There are no records in this collection. New records will appear here when available.",
+        "facts": [],
+        "action": "Return to the collection"
+      },
+      {
+        "label": "Loading collection",
+        "pattern": "pattern.find-records",
+        "state": "loading",
+        "headline": "Loading records",
+        "body": "Waiting for the first authorized response.",
+        "facts": [],
+        "action": "Wait for the results"
+      },
+      {
+        "label": "Collection read failed",
+        "pattern": "pattern.find-records",
+        "state": "failed",
+        "headline": "Records could not be loaded",
+        "body": "The collection read failed before results arrived.",
         "facts": [],
         "action": "Retry the read"
       }
