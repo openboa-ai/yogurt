@@ -2,53 +2,100 @@
   position: relative;
   display: inline-grid;
   place-items: center;
-  min-block-size: var(--yg-size-touch);
-  min-inline-size: 180px;
-  padding: 8px 12px;
+  box-sizing: border-box;
   overflow: hidden;
-  border: 1px solid var(--yg-off);
-  border-radius: var(--yg-radius-control);
+  border: 0;
   background: var(--yg-field);
   color: var(--yg-text);
-  font: inherit;
-  font-weight: 600;
-  line-height: 1.25;
-  cursor: pointer;
+  font: var(--yg-font-action);
   user-select: none;
-  box-sizing: border-box;
 }
+.yg-hold-confirm {
+  inline-size: 176px;
+  block-size: 40px;
+  border-radius: 8px;
+  padding: 0 16px;
+  background: var(--yg-hover);
+  cursor: pointer;
+  touch-action: none;
+}
+.yg-slide-confirm {
+  --yg-thumb-offset: calc(4px + var(--yg-confirm-progress, 0) * (100% - 56px));
+  inline-size: min(260px, 100%);
+  block-size: 56px;
+  border-radius: var(--boa-radius-round);
+  padding: 0 12px 0 36px;
+  color: var(--yg-muted);
+  cursor: grab;
+  touch-action: pan-y;
+}
+.yg-slide-confirm[data-dragging] { cursor: grabbing; }
 .yg-hold-confirm:focus-visible, .yg-slide-confirm:focus-visible {
   outline: var(--boa-stroke-focus) solid var(--yg-action);
   outline-offset: 3px;
 }
-.yg-hold-confirm:hover, .yg-slide-confirm:hover { background: var(--yg-hover); }
-.yg-hold-confirm:active, .yg-slide-confirm:active { border-color: var(--yg-action); }
 .yg-confirm-fill {
   position: absolute;
   inset: 0;
-  background: var(--yg-action-soft);
-  border-inline-end: 2px solid var(--yg-action);
+  background: color-mix(in srgb, currentColor 15%, transparent);
   transform: scaleX(var(--yg-confirm-progress, 0));
   transform-origin: left center;
   pointer-events: none;
 }
-.yg-confirm-label { position: relative; z-index: 1; text-align: center; pointer-events: none; }
-.yg-slide-confirm { touch-action: pan-y; padding-inline: 48px 12px; }
-.yg-slide-confirm-handle {
-  position: absolute;
-  z-index: 2;
-  left: calc(4px + var(--yg-confirm-progress, 0) * (100% - 40px));
-  inline-size: 32px;
-  block-size: 32px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--yg-radius-control);
-  background: var(--yg-action);
-  color: var(--yg-on-action, white);
-  font-size: 18px;
-  line-height: 1;
+.yg-confirm-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
   pointer-events: none;
 }
-@media (prefers-reduced-motion: reduce) {
-  .yg-hold-confirm, .yg-slide-confirm, .yg-confirm-fill, .yg-slide-confirm-handle { transition: none; animation: none; }
+.yg-slide-confirm .yg-confirm-fill {
+  display: grid;
+  place-items: center;
+  padding-inline: 36px 12px;
+  background: var(--yg-text);
+  color: var(--yg-canvas);
+  clip-path: inset(0 calc(100% - var(--yg-thumb-offset) - 24px) 0 0);
+  opacity: min(1, var(--yg-confirm-progress, 0) * 8);
+  transform: none;
+}
+.yg-slide-confirm-handle {
+  position: absolute;
+  inset-inline-start: var(--yg-thumb-offset);
+  inline-size: 48px;
+  block-size: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--boa-radius-round);
+  background: var(--yg-raised-surface);
+  color: var(--yg-text);
+  box-shadow: 0 1px 2px var(--yg-surface-edge), inset 0 0 0 1px var(--yg-surface-edge);
+  pointer-events: none;
+}
+.yg-slide-confirm-handle .yg-icon { inline-size: 20px; block-size: 20px; }
+.yg-hold-confirm[data-done] { background: var(--yg-text); color: var(--yg-canvas); }
+.yg-hold-confirm[data-done] .yg-confirm-fill { opacity: 0; }
+.yg-slide-confirm[data-done] .yg-confirm-fill {
+  padding-inline: 12px 36px;
+  background: var(--yg-success);
+  color: var(--yg-canvas);
+  clip-path: none;
+}
+.yg-slide-confirm[data-done] .yg-slide-confirm-handle { color: var(--yg-success); }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-hold-confirm { transition: background-color 150ms ease-out, color 150ms ease-out; }
+  .yg-hold-confirm .yg-confirm-fill { transition: transform 300ms var(--yg-settle); }
+  .yg-slide-confirm .yg-confirm-fill { transition: clip-path 300ms var(--yg-settle), opacity 200ms ease-out; }
+  .yg-slide-confirm-handle { transition: inset-inline-start 300ms var(--yg-settle); }
+  .yg-hold-confirm[data-holding] .yg-confirm-fill,
+  .yg-slide-confirm[data-dragging] .yg-confirm-fill,
+  .yg-slide-confirm[data-dragging] .yg-slide-confirm-handle { transition: none; }
+  .yg-hold-confirm[data-done] .yg-confirm-label,
+  .yg-slide-confirm[data-done] .yg-slide-confirm-handle svg { animation: yg-confirm-check 260ms var(--yg-arrive); }
+}
+@keyframes yg-confirm-check { from { opacity: 0; transform: translateY(6px); } }
+@media (forced-colors: active) {
+  .yg-hold-confirm, .yg-slide-confirm { box-shadow: inset 0 0 0 1px ButtonText; }
+  .yg-slide-confirm-handle { outline: 1px solid ButtonText; }
 }

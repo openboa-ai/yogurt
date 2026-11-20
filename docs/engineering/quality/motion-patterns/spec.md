@@ -83,3 +83,7 @@ Record web examples in light and dark appearance and at wide and narrow widths. 
 ## Source-driven interaction fidelity
 
 Use the actual resting geometry and interaction of each approved reference when a matching example exists. Adapt its form and motion to the shared appearance, existing public API, local icon set, and accessible input behavior. Preserve the visible intent of the reference through interrupted input and reduced motion. Record source reuse terms before incorporating code, with the required notices in the deliverable. Use the same geometry and state-change principles for controls without a matching reference. Check original and rendered geometry at the same scale, then verify against a product composition.
+
+### Geometry-preserving ports
+
+The owner selected Yogurt implementations with the reference geometry and timing. Preserve the original width, height, proportions, spacing, state arrangement and motion where a matching example exists. Map color and font family to the existing system. Implement these rules in the existing TypeScript and CSS. Keep the SDK's component IDs, inputs, callbacks, focus, keyboard and reduced-motion behavior. Compare the running control against the observed reference at equivalent size and state. Distinguish geometry measurements from visual acceptance and from renderer-specific evidence.

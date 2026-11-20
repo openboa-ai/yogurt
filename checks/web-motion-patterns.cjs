@@ -129,6 +129,19 @@ async function run(browser) {
     const meter = storage.getByRole("meter");
     await storage.getByRole("button", {name: "Add files"}).click();
     assert.equal(await meter.getAttribute("aria-valuenow"), "76");
+    const category = storage.getByRole("button", {name: /Source files/});
+    await category.press("Enter");
+    assert.equal(await category.getAttribute("aria-expanded"), "true");
+    await storage.getByRole("button", {name: "Free up space"}).click();
+    assert.equal(await meter.getAttribute("aria-valuenow"), "64");
+
+    const letterLimit = await demo("letter-limit");
+    const letterField = letterLimit.getByRole("textbox", {name: "Short bio"});
+    await letterField.fill("a".repeat(60));
+    assert.equal((await letterField.inputValue()).length, 48);
+    assert.equal(await letterLimit.locator(".yg-letter-limit").getAttribute("data-limit-state"), "full");
+    await letterLimit.getByRole("button", {name: "Post"}).click();
+    assert.equal(await letterField.inputValue(), "");
 
     const mentionExample = await demo("mention-picker");
     const mention = mentionExample.locator("textarea");
@@ -177,6 +190,9 @@ async function run(browser) {
     const tasks = await demo("task-list");
     await tasks.getByText("Example controls", {exact: true}).click();
     const summary = tasks.locator(".yg-task-list summary");
+    await tasks.getByText("Verify the revision").waitFor();
+    await summary.press("Enter");
+    await tasks.getByText("Verify the revision").waitFor({state:"hidden"});
     await summary.press("Enter");
     await tasks.getByText("Verify the revision").waitFor();
     await tasks.getByRole("button", {name: "Complete step"}).click();
@@ -185,7 +201,7 @@ async function run(browser) {
     await tasks.getByRole("button", {name: "Mark failed"}).click();
     await tasks.getByText("Failed", {exact: true}).waitFor();
     await tasks.getByRole("button", {name: "Retry step"}).click();
-    await tasks.getByText("Running", {exact: true}).waitFor();
+    await tasks.locator('[data-active][data-state="running"]').waitFor();
     if (output) await tasks.screenshot({path: join(output, "yogurt-task-list-review.png")});
 
     const cart = await demo("cart-button");
@@ -198,9 +214,9 @@ async function run(browser) {
     assert(await increase.evaluate(node => node === document.activeElement), "Add retains focus after opening");
     assert.equal(await subtotal.textContent(), "$11.20");
     await increase.press("Space");
-    assert.equal(await yogurt.locator("output").textContent(), "2");
+    assert.equal(await yogurt.locator("output").getAttribute("data-quantity"), "2");
     await yogurt.getByRole("button", {name: "Decrease quantity of Greek yogurt"}).click();
-    assert.equal(await yogurt.locator("output").textContent(), "1");
+    assert.equal(await yogurt.locator("output").getAttribute("data-quantity"), "1");
     await yogurt.getByRole("button", {name: "Remove Greek yogurt"}).press("Enter");
     assert(await add.evaluate(node => node === document.activeElement), "Removing the line focuses Add");
     assert.equal(await subtotal.textContent(), "$7.00");
@@ -211,23 +227,43 @@ async function run(browser) {
     const increaseBox = await berryIncrease.boundingBox();
     await page.mouse.move(increaseBox.x + increaseBox.width / 2, increaseBox.y + increaseBox.height / 2);
     await page.mouse.down();
-    await page.waitForFunction(() => document.querySelector('#cart-button [aria-label="Quantity of Blueberries"]').textContent === "9");
+    await page.waitForFunction(() => document.querySelector('#cart-button [aria-label="Quantity of Blueberries"]').dataset.quantity === "9");
     await page.mouse.up();
     assert.equal(await berryIncrease.getAttribute("aria-disabled"), "true");
-    assert.equal(await berries.locator("output").textContent(), "9");
+    assert.equal(await berries.locator("output").getAttribute("data-quantity"), "9");
     await berryIncrease.press("Enter");
     await berries.getByText("Limit 9 per order", {exact:true}).waitFor();
     const berryDecrease = berries.getByRole("button", {name: "Decrease quantity of Blueberries"});
     const decreaseBox = await berryDecrease.boundingBox();
     await page.mouse.move(decreaseBox.x + decreaseBox.width / 2, decreaseBox.y + decreaseBox.height / 2);
     await page.mouse.down();
-    await page.waitForFunction(() => document.querySelector('#cart-button [aria-label="Quantity of Blueberries"]').textContent === "1");
+    await page.waitForFunction(() => document.querySelector('#cart-button [aria-label="Quantity of Blueberries"]').dataset.quantity === "1");
     await page.mouse.up();
-    assert.equal(await berries.locator("output").textContent(), "1", "A held decrease keeps the last item");
+    assert.equal(await berries.locator("output").getAttribute("data-quantity"), "1", "A held decrease keeps the last item");
     assert.equal(await subtotal.textContent(), "$3.50");
     await add.click();
     if (output) await cart.screenshot({path: join(output, "yogurt-cart-button.png"), animations: "disabled"});
 
+    const slide = await demo("slide-confirm");
+    const slideTrack = slide.locator(".yg-slide-confirm");
+    const thumb = slide.locator(".yg-slide-confirm-handle");
+    const trackBounds = await slideTrack.boundingBox();
+    const thumbBounds = await thumb.boundingBox();
+    const startX = thumbBounds.x + thumbBounds.width / 2;
+    const startY = thumbBounds.y + thumbBounds.height / 2;
+    await page.mouse.move(startX, startY);
+    await page.mouse.down();
+    await page.mouse.move(startX + 30, startY, {steps: 3});
+    await page.mouse.up();
+    assert.equal((await slide.getByRole("status").textContent()).trim(), "");
+    await thumb.evaluate(node => Promise.all(node.getAnimations().map(animation => animation.finished)));
+    await page.mouse.move(startX, startY);
+    await page.mouse.down();
+    await page.mouse.move(trackBounds.x + trackBounds.width - 24, startY, {steps: 12});
+    await page.mouse.up();
+    assert.equal((await slide.getByRole("status").textContent()).trim(), "Approved 1 time.");
+
+    await demo("cart-button");
     await page.emulateMedia({reducedMotion: "reduce"});
     assert.equal(await yogurt.locator(".yg-cart-stepper").evaluate(n => getComputedStyle(n).transitionDuration), "0s");
     await demo("task-list");
@@ -235,8 +271,8 @@ async function run(browser) {
       getComputedStyle(n, "::after").animationName), "none");
     const thinking = await demo("thinking");
     await thinking.getByRole("button", {name: "Start thinking"}).click();
-    assert.equal(await thinking.locator(".yg-thinking-shape").evaluate(n =>
-      n.getAnimations().length), 0);
+    assert.equal(await thinking.locator(".yg-thinking-dots").evaluate(n =>
+      n.getAnimations({subtree: true}).length), 0);
 
     await page.close();
     console.log(JSON.stringify({interactivePatterns: ids.length, viewport: [320, 768, 1440], errors}));

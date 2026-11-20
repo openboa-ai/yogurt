@@ -121,11 +121,13 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
   const depth = useRef(0);
   const [dragging, setDragging] = useState(false);
   const [message, setMessage] = useState("");
+  const [accepted, setAccepted] = useState(false);
   function receive(files) {
     if (!files.length) return;
     const allowed = files.filter((file) => acceptsFile(file, accept));
     const selected = multiple ? allowed : allowed.slice(0, 1);
     const rejected = files.length - selected.length;
+    setAccepted(selected.length > 0);
     setMessage(rejected ? `${rejected} ${rejected === 1 ? "file was" : "files were"} not added${accept ? ` (accepted: ${accept})` : ""}.` : `${selected.length} ${selected.length === 1 ? "file" : "files"} selected.`);
     if (selected.length) onFiles(selected);
   }
@@ -133,10 +135,12 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
   return /* @__PURE__ */ jsxs("div", { className: "yg-file-drop-wrap", children: [
     /* @__PURE__ */ jsx("span", { className: "yg-label", id: `${id}-label`, children: label }),
     /* @__PURE__ */ jsxs(
-      "div",
+      "label",
       {
+        htmlFor: id,
         className: "yg-file-drop",
         "data-dragging": dragging || void 0,
+        "data-accepted": accepted || void 0,
         onDragEnter: (event) => {
           event.preventDefault();
           depth.current++;
@@ -158,7 +162,7 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
           receive(Array.from(event.dataTransfer.files));
         },
         children: [
-          /* @__PURE__ */ jsx(
+          /* @__PURE__ */ jsx("span", { className: "yg-file-drop-core", children: /* @__PURE__ */ jsx(
             "svg",
             {
               className: "yg-file-drop-mark",
@@ -171,16 +175,12 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
               "aria-hidden": "true",
               children: /* @__PURE__ */ jsx("path", { d: "M12 16V4m-4 4 4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" })
             }
-          ),
+          ) }),
           /* @__PURE__ */ jsxs("div", { className: "yg-file-drop-copy", children: [
             /* @__PURE__ */ jsx("strong", { children: "Drop files here" }),
-            formats && /* @__PURE__ */ jsx("span", { id: `${id}-formats`, children: formats })
+            /* @__PURE__ */ jsx("span", { id: `${id}-formats`, children: formats || "Choose a file from your device" })
           ] }),
-          /* @__PURE__ */ jsxs("label", { className: "yg-file-drop-button", htmlFor: id, children: [
-            "Choose ",
-            multiple ? "files" : "a file"
-          ] }),
-          /* @__PURE__ */ jsx("input", { id, type: "file", "aria-labelledby": `${id}-label`, "aria-describedby": formats ? `${id}-formats` : void 0, accept, multiple, onChange: (event) => {
+          /* @__PURE__ */ jsx("input", { id, type: "file", "aria-labelledby": `${id}-label`, "aria-describedby": `${id}-formats`, accept, multiple, onChange: (event) => {
             receive(Array.from(event.currentTarget.files ?? []));
             event.currentTarget.value = "";
           } })
@@ -218,17 +218,33 @@ function PlanSwitch({ value, onChange, options }) {
     /* @__PURE__ */ jsx2("span", { className: "yg-plan-description", children: option.description })
   ] }, option.id)) });
 }
-function LetterLimit({ label, value, onChange, limit }) {
+function LetterLimit({ label, value, onChange, limit, placeholder, onSubmit }) {
   const id = useId2();
   const maximum = Number.isFinite(limit) ? Math.max(0, Math.floor(limit)) : 0;
   const remaining = maximum - value.length;
-  return /* @__PURE__ */ jsxs2("div", { className: "yg-letter-limit", "data-near": remaining <= Math.max(10, maximum * 0.1) || void 0, children: [
-    /* @__PURE__ */ jsx2("label", { htmlFor: id, children: label }),
-    /* @__PURE__ */ jsxs2("div", { className: "yg-letter-field", children: [
-      /* @__PURE__ */ jsx2("textarea", { id, value, maxLength: maximum, onChange: (event) => onChange(event.currentTarget.value), "aria-describedby": `${id}-count` }),
-      /* @__PURE__ */ jsx2("div", { className: "yg-letter-meter", "aria-hidden": "true", children: /* @__PURE__ */ jsx2("span", { style: { width: `${maximum ? Math.min(100, value.length / maximum * 100) : 0}%` } }) })
-    ] }),
-    /* @__PURE__ */ jsx2("div", { className: "yg-letter-count", id: `${id}-count`, children: remaining < 0 ? `${-remaining} over limit` : `${remaining} remaining` })
+  const progress = maximum > 0 ? Math.min(1, value.length / maximum) : 0;
+  const state = remaining <= 0 ? "full" : remaining <= Math.max(10, maximum * 0.1) ? "near" : "normal";
+  return /* @__PURE__ */ jsxs2("div", { className: "yg-letter-limit", "data-limit-state": state, children: [
+    /* @__PURE__ */ jsx2(
+      "textarea",
+      {
+        id,
+        "aria-label": label,
+        placeholder,
+        value,
+        maxLength: maximum,
+        onChange: (event) => onChange(event.currentTarget.value),
+        "aria-describedby": `${id}-count`
+      }
+    ),
+    /* @__PURE__ */ jsxs2("div", { className: "yg-letter-footer", children: [
+      /* @__PURE__ */ jsxs2("svg", { className: "yg-letter-meter", viewBox: "0 0 24 24", "aria-hidden": "true", children: [
+        /* @__PURE__ */ jsx2("circle", { cx: "12", cy: "12", r: "9.5" }),
+        /* @__PURE__ */ jsx2("circle", { cx: "12", cy: "12", r: "9.5", pathLength: "1", strokeDasharray: "1 1", strokeDashoffset: 1 - progress })
+      ] }),
+      /* @__PURE__ */ jsx2("span", { className: "yg-letter-count", id: `${id}-count`, children: remaining < 0 ? `${-remaining} over limit` : `${remaining} remaining` }),
+      onSubmit && /* @__PURE__ */ jsx2(Button, { onClick: () => onSubmit(value), disabled: remaining < 0 || !value.trim(), children: "Post" })
+    ] })
   ] });
 }
 
@@ -280,12 +296,12 @@ function SpringDropdown({ label, value, onChange, options }) {
     /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
     /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: onChange, children: [
       /* @__PURE__ */ jsxs3(dist_exports.Trigger, { className: "yg-spring-trigger", "aria-labelledby": id, children: [
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "aria-hidden": "true", children: "\u25C6" }),
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-value", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) }),
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-value", children: /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-roll", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) }, value) }),
         /* @__PURE__ */ jsx3(dist_exports.Icon, { className: "yg-spring-chevron", "aria-hidden": "true", children: "\u2304" })
       ] }),
-      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 6, children: /* @__PURE__ */ jsx3(dist_exports.Viewport, { className: "yg-spring-viewport", children: options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-option-symbol", "aria-hidden": "true", children: "\u25C6" }),
+      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, children: /* @__PURE__ */ jsx3(dist_exports.Viewport, { className: "yg-spring-viewport", children: options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-option-symbol", "aria-hidden": "true" }),
         /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
         /* @__PURE__ */ jsx3(dist_exports.ItemIndicator, { className: "yg-spring-check", "aria-hidden": "true", children: "\u2713" })
       ] }, option.id)) }) }) })
@@ -298,40 +314,82 @@ function CommandButton({ label, items, onSelect }) {
 
 // packages/web/src/patterns/motion-status.tsx
 import { useId as useId4, useState as useState3 } from "react";
-import { jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
-function StorageMeter({ label, used, capacity, unit }) {
+import { Fragment, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
+function StorageMeter({ label, used, capacity, unit, categories = [] }) {
   const id = useId4();
+  const [expanded, setExpanded] = useState3(null);
   const known = Number.isFinite(used) && Number.isFinite(capacity) && capacity > 0 && used >= 0;
   const ratio = known ? Math.min(1, used / capacity) : 0;
-  const ticks = 24;
-  return /* @__PURE__ */ jsxs4("div", { className: "yg-storage-meter", "data-full": ratio === 1 || void 0, children: [
+  let available = known ? Math.min(used, capacity) : 0;
+  const breakdown = categories.filter((category) => Number.isFinite(category.amount) && category.amount > 0);
+  const bars = breakdown.map((category, index) => {
+    const amount = Math.min(category.amount, available);
+    available -= amount;
+    return { id: category.id, fraction: known ? amount / capacity : 0, tone: index % 3 };
+  });
+  if (available > 0) bars.push({ fraction: available / capacity, tone: categories.length === 0 ? 0 : 2 });
+  return /* @__PURE__ */ jsxs4("section", { className: "yg-storage-meter", "data-full": ratio === 1 || void 0, children: [
     /* @__PURE__ */ jsx4("strong", { id, className: "yg-storage-heading", children: label }),
-    known ? /* @__PURE__ */ jsxs4("div", { className: "yg-storage-amount", children: [
-      /* @__PURE__ */ jsxs4("strong", { children: [
-        used,
-        " ",
-        unit
+    known ? /* @__PURE__ */ jsxs4(Fragment, { children: [
+      /* @__PURE__ */ jsxs4("div", { className: "yg-storage-amount", children: [
+        /* @__PURE__ */ jsx4("strong", { children: used }, used),
+        /* @__PURE__ */ jsx4("b", { children: unit }),
+        /* @__PURE__ */ jsxs4("span", { children: [
+          "of ",
+          capacity,
+          " ",
+          unit
+        ] })
       ] }),
-      /* @__PURE__ */ jsxs4("span", { children: [
-        "of ",
-        capacity,
-        " ",
-        unit
-      ] })
-    ] }) : /* @__PURE__ */ jsx4("span", { className: "yg-help", children: "Capacity unavailable" }),
-    known && /* @__PURE__ */ jsx4(
-      "div",
-      {
-        className: "yg-storage-ticks",
-        role: "meter",
-        "aria-labelledby": id,
-        "aria-valuemin": 0,
-        "aria-valuemax": capacity,
-        "aria-valuenow": Math.min(used, capacity),
-        "aria-valuetext": `${used} of ${capacity} ${unit} used`,
-        children: Array.from({ length: ticks }, (_, index) => /* @__PURE__ */ jsx4("span", { "data-filled": index + 0.5 <= ratio * ticks || void 0 }, index))
-      }
-    )
+      /* @__PURE__ */ jsx4(
+        "div",
+        {
+          className: "yg-storage-bar",
+          role: "meter",
+          "aria-labelledby": id,
+          "aria-valuemin": 0,
+          "aria-valuemax": capacity,
+          "aria-valuenow": Math.min(used, capacity),
+          "aria-valuetext": `${used} of ${capacity} ${unit} used`,
+          "data-highlight": breakdown.some((category) => category.id === expanded) || void 0,
+          children: bars.map(({ id: categoryId, fraction, tone }) => /* @__PURE__ */ jsx4(
+            "span",
+            {
+              "data-tone": tone,
+              "data-selected": categoryId === expanded || void 0,
+              style: { inlineSize: `${fraction * 100}%` }
+            },
+            categoryId ?? id
+          ))
+        }
+      ),
+      breakdown.length > 0 && /* @__PURE__ */ jsx4("ul", { className: "yg-storage-categories", children: breakdown.map((category, index) => {
+        const opened = expanded === category.id;
+        const detailId = `${id}-category-${index}`;
+        return /* @__PURE__ */ jsxs4("li", { "data-open": opened || void 0, children: [
+          /* @__PURE__ */ jsxs4(
+            "button",
+            {
+              type: "button",
+              onClick: () => setExpanded(opened ? null : category.id),
+              "aria-expanded": category.detail ? opened : void 0,
+              "aria-pressed": category.detail ? void 0 : opened,
+              "aria-controls": category.detail ? detailId : void 0,
+              children: [
+                /* @__PURE__ */ jsx4("span", { className: "yg-storage-dot", "data-tone": index % 3, "aria-hidden": "true" }),
+                /* @__PURE__ */ jsx4("span", { children: category.label }),
+                /* @__PURE__ */ jsxs4("span", { className: "yg-storage-category-amount", children: [
+                  category.amount,
+                  " ",
+                  unit
+                ] })
+              ]
+            }
+          ),
+          category.detail && /* @__PURE__ */ jsx4("div", { className: "yg-storage-reveal", id: detailId, inert: !opened, children: /* @__PURE__ */ jsx4("div", { children: /* @__PURE__ */ jsx4("div", { className: "yg-storage-category-detail", children: category.detail }) }) })
+        ] }, category.id);
+      }) })
+    ] }) : /* @__PURE__ */ jsx4("span", { className: "yg-help", children: "Capacity unavailable" })
   ] });
 }
 function ActivityIsland({ label, summary, children }) {
@@ -408,10 +466,7 @@ function CopyButton({ value }) {
 import { useId as useId5, useRef as useRef2, useState as useState4 } from "react";
 import { jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 function StreamingReply({ value, active = false }) {
-  return /* @__PURE__ */ jsxs5("div", { className: "yg-streaming-reply", "aria-busy": active || void 0, children: [
-    /* @__PURE__ */ jsx5("span", { children: value }),
-    active && /* @__PURE__ */ jsx5("span", { className: "yg-streaming-cursor", "aria-hidden": "true" })
-  ] });
+  return /* @__PURE__ */ jsx5("div", { className: "yg-streaming-reply", "aria-busy": active || void 0, children: value ? /* @__PURE__ */ jsx5("span", { children: value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : /* @__PURE__ */ jsx5("span", { className: "yg-streaming-word", children: part }, index)) }) : active ? /* @__PURE__ */ jsx5("span", { className: "yg-streaming-wait", children: "Thinking" }) : null });
 }
 function GhostSuggestion({ value, suggestion, onChange }) {
   const id = useId5();
@@ -420,11 +475,14 @@ function GhostSuggestion({ value, suggestion, onChange }) {
   const suffix = value && suggestion.startsWith(value) ? suggestion.slice(value.length) : "";
   const show = atEnd && !!suffix;
   return /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-field", children: [
-    /* @__PURE__ */ jsx5("label", { htmlFor: id, children: "Your message" }),
+    /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-head", children: [
+      /* @__PURE__ */ jsx5("label", { htmlFor: id, children: "Your message" }),
+      show && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-key", "aria-hidden": "true", children: "Tab \u21B9" })
+    ] }),
     /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-input", children: [
       /* @__PURE__ */ jsxs5("div", { ref: mirror, className: "yg-ghost-mirror", "aria-hidden": "true", children: [
         /* @__PURE__ */ jsx5("span", { children: value }),
-        show && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-suffix", children: suffix })
+        show && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-suffix", children: Array.from(suffix).map((letter, index) => /* @__PURE__ */ jsx5("span", { style: { animationDelay: `${Math.min(index * 8, 200)}ms` }, children: letter }, index)) })
       ] }),
       /* @__PURE__ */ jsx5(
         "input",
@@ -486,16 +544,28 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
             onClick: busy && onCancel ? onCancel : void 0,
             children: /* @__PURE__ */ jsx5("span", { className: "yg-prompt-action-mark", "aria-hidden": "true", children: busy && onCancel ? /* @__PURE__ */ jsx5("svg", { viewBox: "0 0 16 16", children: /* @__PURE__ */ jsx5("rect", { x: "4", y: "4", width: "8", height: "8", rx: "1.5", fill: "currentColor" }) }) : /* @__PURE__ */ jsx5("svg", { viewBox: "0 0 16 16", fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx5("path", { d: "M8 12V4M4.5 7.5 8 4l3.5 3.5" }) }) })
           }
-        ) })
+        ) }),
+        busy && /* @__PURE__ */ jsxs5("div", { className: "yg-prompt-status", role: "status", children: [
+          /* @__PURE__ */ jsx5("span", { "aria-hidden": "true" }),
+          "Working on your request"
+        ] })
       ]
     }
   );
 }
 function ThinkingIndicator({ label = "Thinking", active = true }) {
+  const filter = useId5();
   if (!active) return null;
-  return /* @__PURE__ */ jsxs5("div", { className: "yg-thinking", role: "status", children: [
-    /* @__PURE__ */ jsx5("span", { className: "yg-thinking-shape", "aria-hidden": "true" }),
-    /* @__PURE__ */ jsx5("span", { children: label })
+  return /* @__PURE__ */ jsxs5("div", { className: "yg-thinking", role: "status", "aria-label": label, children: [
+    /* @__PURE__ */ jsx5("svg", { width: "0", height: "0", "aria-hidden": "true", focusable: "false", children: /* @__PURE__ */ jsx5("defs", { children: /* @__PURE__ */ jsxs5("filter", { id: filter, children: [
+      /* @__PURE__ */ jsx5("feGaussianBlur", { in: "SourceGraphic", stdDeviation: "2", result: "blur" }),
+      /* @__PURE__ */ jsx5("feColorMatrix", { in: "blur", mode: "matrix", values: "1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" })
+    ] }) }) }),
+    /* @__PURE__ */ jsxs5("span", { className: "yg-thinking-dots", "aria-hidden": "true", style: { filter: `url(#${filter})` }, children: [
+      /* @__PURE__ */ jsx5("i", {}),
+      /* @__PURE__ */ jsx5("i", {}),
+      /* @__PURE__ */ jsx5("i", {})
+    ] })
   ] });
 }
 
@@ -644,37 +714,60 @@ function DetentDial({ options, value, onChange }) {
 // packages/web/src/patterns/motion-confirm.tsx
 import { useEffect, useRef as useRef3, useState as useState6 } from "react";
 import { jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
-var HOLD_MS = 1e3;
+function useConfirmation(onConfirm) {
+  const [done, setDone] = useState6(false);
+  const locked = useRef3(false);
+  const timer = useRef3(null);
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
+  const confirm = () => {
+    if (locked.current) return;
+    locked.current = true;
+    setDone(true);
+    timer.current = setTimeout(() => {
+      locked.current = false;
+      setDone(false);
+    }, 1800);
+    onConfirm();
+  };
+  return { done, locked, confirm };
+}
 function HoldButton({ label, onConfirm }) {
   const [progress, setProgress] = useState6(0);
   const [armed, setArmed] = useState6(false);
+  const [holding, setHolding] = useState6(false);
   const active = useRef3(null);
   const frame = useRef3(null);
   const callback = useRef3(onConfirm);
   callback.current = onConfirm;
+  const { done, locked, confirm } = useConfirmation(() => callback.current());
   const cancel = () => {
     active.current = null;
     if (frame.current !== null) cancelAnimationFrame(frame.current);
     frame.current = null;
+    setHolding(false);
     setProgress(0);
   };
   useEffect(() => () => {
     if (frame.current !== null) cancelAnimationFrame(frame.current);
   }, []);
   const start = (event) => {
-    if (!event.isPrimary || event.button !== 0 || active.current !== null) return;
+    if (!event.isPrimary || event.button !== 0 || active.current !== null || locked.current) return;
     setArmed(false);
+    setHolding(true);
     active.current = event.pointerId;
     event.currentTarget.setPointerCapture(event.pointerId);
     const started = performance.now();
     const tick = (now) => {
       if (active.current === null) return;
-      const next = Math.min(1, (now - started) / HOLD_MS);
+      const next = Math.min(1, (now - started) / 1200);
       setProgress(next);
       if (next === 1) {
         active.current = null;
         frame.current = null;
-        callback.current();
+        setHolding(false);
+        confirm();
       } else frame.current = requestAnimationFrame(tick);
     };
     frame.current = requestAnimationFrame(tick);
@@ -683,7 +776,10 @@ function HoldButton({ label, onConfirm }) {
     "button",
     {
       type: "button",
+      "aria-label": armed ? `Confirm ${label}` : label,
       className: "yg-hold-confirm",
+      "data-holding": holding || void 0,
+      "data-done": done || void 0,
       style: { "--yg-confirm-progress": progress },
       onPointerDown: start,
       onPointerMove: (event) => {
@@ -705,15 +801,15 @@ function HoldButton({ label, onConfirm }) {
         }
       },
       onClick: (event) => {
-        if (event.detail !== 0) return;
+        if (event.detail !== 0 || locked.current) return;
         if (armed) {
           setArmed(false);
-          callback.current();
+          confirm();
         } else setArmed(true);
       },
       children: [
         /* @__PURE__ */ jsx8("span", { className: "yg-confirm-fill", "aria-hidden": "true" }),
-        /* @__PURE__ */ jsx8("span", { className: "yg-confirm-label", children: armed ? `Confirm ${label}` : label })
+        /* @__PURE__ */ jsx8("span", { className: "yg-confirm-label", children: done ? /* @__PURE__ */ jsx8(Icon, { name: "check" }) : armed ? `Confirm ${label}` : label })
       ]
     }
   );
@@ -721,12 +817,15 @@ function HoldButton({ label, onConfirm }) {
 function SlideConfirm({ label, onConfirm }) {
   const [progress, setProgress] = useState6(0);
   const [armed, setArmed] = useState6(false);
+  const [dragging, setDragging] = useState6(false);
   const active = useRef3(null);
   const value = useRef3(0);
+  const { done, locked, confirm } = useConfirmation(onConfirm);
   const reset = () => {
     active.current = null;
     value.current = 0;
     setProgress(0);
+    setDragging(false);
   };
   const update = (event) => {
     const drag = active.current;
@@ -738,24 +837,28 @@ function SlideConfirm({ label, onConfirm }) {
     "button",
     {
       type: "button",
+      "aria-label": armed ? `Confirm ${label}` : label,
       className: "yg-slide-confirm",
-      style: { "--yg-confirm-progress": progress },
+      "data-dragging": dragging || void 0,
+      "data-done": done || void 0,
+      style: { "--yg-confirm-progress": done ? 1 : progress },
       onPointerDown: (event) => {
-        if (!event.isPrimary || event.button !== 0 || active.current) return;
+        if (!event.isPrimary || event.button !== 0 || active.current || locked.current) return;
         setArmed(false);
         const handle = event.currentTarget.querySelector(".yg-slide-confirm-handle");
-        const width = event.currentTarget.clientWidth - (handle?.offsetWidth ?? 0);
+        const width = event.currentTarget.clientWidth - (handle?.offsetWidth ?? 0) - 8;
         if (width <= 0) return;
         active.current = { id: event.pointerId, start: event.clientX, width };
+        setDragging(true);
         event.currentTarget.setPointerCapture(event.pointerId);
       },
       onPointerMove: update,
       onPointerUp: (event) => {
         if (active.current?.id !== event.pointerId) return;
         update(event);
-        const complete = value.current >= 0.95;
+        const complete = value.current >= 0.9;
         reset();
-        if (complete) onConfirm();
+        if (complete) confirm();
       },
       onPointerCancel: reset,
       onLostPointerCapture: reset,
@@ -770,23 +873,23 @@ function SlideConfirm({ label, onConfirm }) {
         }
       },
       onClick: (event) => {
-        if (event.detail !== 0) return;
+        if (event.detail !== 0 || locked.current) return;
         if (armed) {
           setArmed(false);
-          onConfirm();
+          confirm();
         } else setArmed(true);
       },
       children: [
-        /* @__PURE__ */ jsx8("span", { className: "yg-confirm-fill", "aria-hidden": "true" }),
         /* @__PURE__ */ jsx8("span", { className: "yg-confirm-label", children: armed ? `Confirm ${label}` : label }),
-        /* @__PURE__ */ jsx8("span", { className: "yg-slide-confirm-handle", "aria-hidden": "true", children: "\u2192" })
+        /* @__PURE__ */ jsx8("span", { className: "yg-confirm-fill", "aria-hidden": "true", children: done ? "Confirmed" : label }),
+        /* @__PURE__ */ jsx8("span", { className: "yg-slide-confirm-handle", "aria-hidden": "true", children: /* @__PURE__ */ jsx8(Icon, { name: done ? "check" : "arrow" }) })
       ]
     }
   );
 }
 
 // packages/web/src/patterns/motion-task-list.tsx
-import { Fragment, jsx as jsx9, jsxs as jsxs9 } from "react/jsx-runtime";
+import { Fragment as Fragment2, jsx as jsx9, jsxs as jsxs9 } from "react/jsx-runtime";
 var stateName = {
   queued: "Queued",
   running: "Running",
@@ -794,13 +897,14 @@ var stateName = {
   failed: "Failed"
 };
 function TaskLine({ task }) {
-  return /* @__PURE__ */ jsxs9(Fragment, { children: [
-    /* @__PURE__ */ jsx9("span", { className: "yg-task-marker", "aria-hidden": "true", children: task.state === "done" ? /* @__PURE__ */ jsx9("svg", { viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsx9("path", { pathLength: "1", d: "M5 12.5l4.2 4.2L19 7" }) }) : task.state === "failed" ? /* @__PURE__ */ jsx9(Icon, { name: "close" }) : /* @__PURE__ */ jsx9("span", {}) }),
-    /* @__PURE__ */ jsxs9("span", { className: "yg-task-copy", children: [
-      /* @__PURE__ */ jsx9("strong", { children: task.label }),
-      task.detail && /* @__PURE__ */ jsx9("span", { className: "yg-help", children: task.detail })
-    ] }),
-    /* @__PURE__ */ jsx9("span", { className: "yg-task-state", children: stateName[task.state] })
+  const showState = task.state === "failed";
+  return /* @__PURE__ */ jsxs9(Fragment2, { children: [
+    /* @__PURE__ */ jsx9("span", { className: "yg-task-marker", "aria-hidden": "true", children: task.state === "done" ? /* @__PURE__ */ jsx9("svg", { viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsx9("path", { pathLength: "1", d: "M5 12.5l4.2 4.2L19 7" }) }) : task.state === "failed" ? /* @__PURE__ */ jsx9(Icon, { name: "close" }) : null }),
+    /* @__PURE__ */ jsx9("span", { className: "yg-task-copy", children: /* @__PURE__ */ jsx9("strong", { children: task.label }) }),
+    /* @__PURE__ */ jsxs9("span", { className: "yg-task-meta", children: [
+      task.detail && !showState && /* @__PURE__ */ jsx9("span", { className: "yg-task-note", children: task.detail }),
+      /* @__PURE__ */ jsx9("span", { className: showState ? "yg-task-state" : "yg-task-sr", children: stateName[task.state] })
+    ] })
   ] });
 }
 function TaskList({ label, tasks }) {
@@ -810,18 +914,22 @@ function TaskList({ label, tasks }) {
     /* @__PURE__ */ jsxs9("header", { children: [
       /* @__PURE__ */ jsx9("strong", { children: label }),
       /* @__PURE__ */ jsxs9("span", { role: "status", children: [
-        complete,
-        " of ",
-        tasks.length,
-        " done"
+        /* @__PURE__ */ jsxs9("span", { className: "yg-task-sr", children: [
+          complete,
+          " of ",
+          tasks.length,
+          " done"
+        ] }),
+        /* @__PURE__ */ jsxs9("span", { "aria-hidden": "true", children: [
+          complete,
+          "/",
+          tasks.length
+        ] })
       ] })
     ] }),
-    tasks.length > 0 ? /* @__PURE__ */ jsx9("div", { className: "yg-task-progress", "aria-hidden": "true", children: tasks.map((task) => /* @__PURE__ */ jsx9("span", { "data-state": task.state }, task.id)) }) : /* @__PURE__ */ jsx9("p", { className: "yg-help", children: "No steps yet." }),
-    /* @__PURE__ */ jsx9("ol", { children: tasks.map((task) => /* @__PURE__ */ jsx9("li", { "data-state": task.state, "data-active": active === task.id || void 0, children: task.steps?.length ? /* @__PURE__ */ jsxs9("details", { children: [
-      /* @__PURE__ */ jsxs9("summary", { className: "yg-task-line", children: [
-        /* @__PURE__ */ jsx9(TaskLine, { task }),
-        /* @__PURE__ */ jsx9(Icon, { name: "down" })
-      ] }),
+    tasks.length === 0 && /* @__PURE__ */ jsx9("p", { className: "yg-help", children: "No steps yet." }),
+    /* @__PURE__ */ jsx9("ol", { children: tasks.map((task) => /* @__PURE__ */ jsx9("li", { "data-state": task.state, "data-active": active === task.id || void 0, children: task.steps?.length ? /* @__PURE__ */ jsxs9("details", { open: true, children: [
+      /* @__PURE__ */ jsx9("summary", { className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task }) }),
       /* @__PURE__ */ jsx9("ol", { className: "yg-task-children", children: task.steps.map((step) => /* @__PURE__ */ jsx9("li", { "data-state": step.state, className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task: step }) }, step.id)) })
     ] }) : /* @__PURE__ */ jsx9("div", { className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task }) }) }, task.id)) })
   ] });
@@ -839,6 +947,7 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
   const count = Number.isFinite(quantity) ? Math.max(0, Math.min(limit, Math.floor(quantity))) : 0;
   const previous = useRef4(count);
   const goingDown = count < previous.current;
+  const lastCount = previous.current;
   useLayoutEffect(() => {
     previous.current = count;
   }, [count]);
@@ -961,7 +1070,10 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
               )
             }
           ),
-          /* @__PURE__ */ jsx10("output", { className: "yg-cart-quantity", "aria-label": `Quantity of ${label}`, hidden: !open, children: /* @__PURE__ */ jsx10("span", { "data-direction": goingDown ? "down" : "up", children: count }, count) }),
+          /* @__PURE__ */ jsx10("output", { className: "yg-cart-quantity", "aria-label": `Quantity of ${label}`, "data-quantity": count, hidden: !open, children: /* @__PURE__ */ jsxs10("span", { className: "yg-cart-roll", "data-direction": goingDown ? "down" : "up", children: [
+            lastCount !== count && lastCount > 0 && /* @__PURE__ */ jsx10("span", { className: "yg-cart-previous", "aria-hidden": "true", children: lastCount }),
+            /* @__PURE__ */ jsx10("span", { className: "yg-cart-current", children: count })
+          ] }, count) }),
           /* @__PURE__ */ jsxs10(
             "button",
             {

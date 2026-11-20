@@ -1,44 +1,84 @@
 .yg-storage-meter {
-  display: grid;
-  gap: var(--boa-space-12);
+  inline-size: min(300px, 100%);
+  padding: 18px 8px 8px;
+  border-radius: 24px;
+  background: var(--yg-raised-surface);
 }
-.yg-storage-heading { font: var(--yg-font-action); }
+.yg-storage-heading {
+  display: block;
+  padding-inline: 12px;
+  color: var(--yg-muted);
+  font: 500 14px/20px var(--boa-font-family);
+}
 .yg-storage-amount {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
-  gap: var(--yg-gap-tight);
+  gap: 4px;
+  padding: 4px 12px 0;
   font-variant-numeric: tabular-nums;
 }
-.yg-storage-amount > strong {
-  font: var(--boa-role-weight-heading) var(--boa-size-title)/var(--boa-line-height-title) var(--boa-font-family);
-  letter-spacing: var(--boa-tracking-heading);
+.yg-storage-amount strong {
+  font: 650 34px/40px var(--boa-font-family);
+  letter-spacing: -.03em;
 }
-.yg-storage-amount > span, .yg-island-summary {
-  color: var(--yg-muted);
-  font: var(--yg-font-meta);
-  font-variant-numeric: tabular-nums;
-}
-.yg-storage-ticks {
-  display: grid;
-  grid-template-columns: repeat(24, minmax(0, 1fr));
-  gap: var(--boa-space-4);
-}
-.yg-storage-ticks > span {
-  block-size: var(--boa-space-16);
+.yg-storage-amount b { font: 650 18px/24px var(--boa-font-family); }
+.yg-storage-amount span, .yg-storage-category-amount { color: var(--yg-muted); font: var(--yg-font-help); }
+.yg-storage-amount span { margin-inline-start: 4px; }
+.yg-storage-bar {
+  display: flex;
+  margin: 14px 12px 12px;
+  block-size: 14px;
+  overflow: clip;
   border-radius: var(--boa-radius-round);
   background: var(--yg-field);
-  scale: 1 .8;
-  transition: scale var(--yg-change) var(--yg-selection),
-    background-color var(--yg-change) var(--yg-settle);
 }
-.yg-storage-ticks > [data-filled] {
-  background: var(--yg-action);
-  scale: 1;
+.yg-storage-bar > span, .yg-storage-dot { background: var(--yg-storage-tone, var(--yg-action)); }
+.yg-storage-bar > span { flex: none; block-size: 100%; border-radius: var(--boa-radius-round); }
+.yg-storage-bar[data-highlight] > span:not([data-selected]) { opacity: .35; }
+.yg-storage-meter [data-tone="1"] { --yg-storage-tone: light-dark(var(--boa-color-violet-700), var(--boa-color-violet-300)); }
+.yg-storage-meter [data-tone="2"] { --yg-storage-tone: var(--yg-muted); }
+.yg-storage-categories { margin: 0; padding: 0; list-style: none; }
+.yg-storage-categories li { border-radius: 16px; }
+.yg-storage-categories li[data-open] { background: var(--yg-field); }
+.yg-storage-categories button {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  inline-size: 100%;
+  min-block-size: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--yg-text);
+  font: var(--yg-font-help);
+  text-align: start;
+  cursor: pointer;
 }
-.yg-storage-meter[data-full] .yg-storage-ticks > span {
-  background: var(--yg-warning);
+.yg-storage-categories button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
+.yg-storage-category-amount { font-variant-numeric: tabular-nums; }
+.yg-storage-dot { inline-size: 10px; block-size: 10px; border-radius: 50%; }
+.yg-storage-reveal { display: grid; grid-template-rows: 0fr; }
+.yg-storage-reveal > div { min-block-size: 0; overflow: clip; }
+.yg-storage-categories [data-open] .yg-storage-reveal { grid-template-rows: 1fr; }
+.yg-storage-category-detail {
+  display: flex;
+  min-block-size: 50px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 6px 6px 32px;
+  font: var(--yg-font-meta);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-storage-bar > span { transition: inline-size 420ms var(--yg-arrive), opacity 240ms ease; }
+  .yg-storage-reveal { transition: grid-template-rows 280ms var(--yg-arrive); }
+  .yg-storage-amount strong { animation: yg-storage-count 260ms var(--yg-arrive) both; }
+}
+@keyframes yg-storage-count { from { opacity: 0; translate: 0 6px; } }
+
 .yg-activity-island {
   background: var(--yg-field);
   border-radius: var(--yg-radius-panel);
@@ -63,6 +103,7 @@
 .yg-activity-island > button > svg:last-child {
   transition: rotate var(--yg-change) var(--yg-arrive);
 }
+.yg-island-summary { color: var(--yg-muted); font: var(--yg-font-meta); font-variant-numeric: tabular-nums; }
 .yg-island-reveal {
   display: grid;
   grid-template-rows: 0fr;
@@ -124,81 +165,66 @@
   to { translate: 0 0; scale: 1; }
 }
 
+.yg-activity-island > button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
+
+.yg-motion-detail-line { min-block-size: 30px; }
+.yg-activity-island { border-radius: 12px; }
+.yg-activity-island > button { min-block-size: 44px; padding: 8px 12px; gap: 8px; }
+.yg-activity-island > button > span:nth-child(2) { min-inline-size: 0; overflow-wrap: anywhere; }
+.yg-island-content {
+  padding: var(--yg-inset-regular) 12px 12px;
+  border-block-start: 1px solid var(--yg-surface-edge);
+}
+.yg-copy-action [role="status"]:not(:empty) { max-inline-size: 32ch; line-height: 1.4; }
+
 .yg-task-list {
   display: grid;
-  gap: var(--yg-gap-stack);
-  padding: var(--yg-inset-panel);
-  border-radius: var(--yg-radius-panel);
+  inline-size: min(100%, 260px);
+  gap: 6px;
+  padding: 12px;
+  border-radius: 12px;
   background: var(--yg-raised-surface);
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge);
 }
 .yg-task-list > header {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: var(--yg-gap-inline);
-  padding-inline: var(--yg-inset-layer);
+  gap: 8px;
+  font: var(--yg-font-action);
 }
-.yg-task-list > header strong { font: var(--yg-font-heading); }
-.yg-task-list > header span, .yg-task-state {
+.yg-task-list > header [role="status"], .yg-task-note, .yg-task-state {
   color: var(--yg-muted);
   font: var(--yg-font-meta);
   font-variant-numeric: tabular-nums;
 }
-.yg-task-progress {
-  display: flex;
-  gap: var(--boa-space-4);
-  margin-inline: var(--yg-inset-layer);
-}
-.yg-task-progress > span {
-  flex: 1;
-  block-size: var(--boa-space-4);
-  border-radius: var(--boa-radius-round);
-  background: var(--yg-hover);
-}
-.yg-task-progress > [data-state="done"] { background: var(--yg-action); }
-.yg-task-progress > [data-state="running"] { background: var(--yg-active-edge); }
-.yg-task-progress > [data-state="failed"] { background: var(--yg-danger); }
-.yg-task-list ol {
-  display: grid;
-  gap: var(--boa-space-2);
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.yg-task-list > ol > li { position: relative; border-radius: var(--yg-radius-control); }
+.yg-task-list ol { list-style: none; margin: 0; padding: 0; }
+.yg-task-list > ol > li { position: relative; }
 .yg-task-line {
   display: grid;
-  grid-template-columns: var(--yg-glyph) minmax(0, 1fr) auto var(--yg-glyph);
-  align-items: center;
-  gap: var(--yg-gap-inline);
-  min-block-size: var(--yg-size-touch);
-  padding: var(--yg-inset-compact) var(--yg-inset-regular);
-  border-radius: var(--yg-radius-control);
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 8px;
+  padding: 4px 0;
 }
 summary.yg-task-line { cursor: pointer; list-style: none; }
 summary.yg-task-line::-webkit-details-marker { display: none; }
-summary.yg-task-line:hover { background: var(--yg-field); }
-.yg-task-copy { min-inline-size: 0; display: grid; gap: var(--boa-space-2); overflow-wrap: anywhere; }
-.yg-task-copy strong { font: var(--yg-font-action); }
+summary.yg-task-line:focus-visible {
+  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline-offset: 2px;
+}
+.yg-task-copy { min-inline-size: 0; overflow-wrap: anywhere; }
+.yg-task-copy strong { font: var(--yg-font-help); }
 .yg-task-marker {
   display: grid;
   place-items: center;
-  inline-size: var(--yg-glyph);
-  block-size: var(--yg-glyph);
-  border-radius: 50%;
+  inline-size: 14px;
+  block-size: 14px;
+  margin-block-start: 2px;
+  border: 1.4px solid currentColor;
+  border-radius: 3.5px;
   color: var(--yg-task-mark, var(--yg-muted));
 }
-.yg-task-marker > span {
-  inline-size: var(--boa-space-8);
-  block-size: var(--boa-space-8);
-  border: 1px solid currentColor;
-  border-radius: inherit;
-}
-[data-state="running"] > .yg-task-line .yg-task-marker > span,
-[data-state="running"] > details > .yg-task-line .yg-task-marker > span { background: currentColor; }
-.yg-task-marker svg { inline-size: var(--yg-glyph); block-size: var(--yg-glyph); }
+.yg-task-marker svg { inline-size: 12px; block-size: 12px; }
 .yg-task-marker path {
   stroke: currentColor;
   stroke-width: 1.7;
@@ -208,25 +234,30 @@ summary.yg-task-line:hover { background: var(--yg-field); }
 .yg-task-list [data-state="running"] { --yg-task-mark: var(--yg-action); }
 .yg-task-list [data-state="done"] { --yg-task-mark: var(--yg-success); }
 .yg-task-list [data-state="failed"] { --yg-task-mark: var(--yg-danger); }
-.yg-task-list .yg-task-state { color: var(--yg-task-mark, var(--yg-muted)); text-align: end; }
-.yg-task-list .yg-task-children {
-  padding: 0 0 var(--yg-inset-layer) var(--yg-inset-panel);
+.yg-task-list [data-state="done"] .yg-task-marker { background: var(--yg-success-soft); }
+.yg-task-list [data-state="done"] > .yg-task-line .yg-task-copy,
+.yg-task-list [data-state="done"] > details > .yg-task-line .yg-task-copy { color: var(--yg-muted); }
+.yg-task-meta { text-align: end; }
+.yg-task-state { color: var(--yg-task-mark, var(--yg-muted)); }
+.yg-task-list .yg-task-children { padding-inline-start: 20px; }
+.yg-task-sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-.yg-task-children .yg-task-line { min-block-size: var(--yg-size-regular); }
-.yg-task-list details[open] > summary > svg:last-child { rotate: 180deg; }
-.yg-task-list [data-active] { background: var(--yg-action-soft); }
 @media (prefers-reduced-motion: no-preference) {
   .yg-task-list [data-active]::after {
     content: "";
     position: absolute;
-    inset-inline: var(--boa-space-8);
+    inset-inline: 0;
     inset-block-end: 0;
-    block-size: 2px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, transparent, var(--yg-action), transparent);
-    background-size: 40% 100%;
-    background-repeat: no-repeat;
-    animation: yg-task-travel calc(2 * var(--yg-busy)) var(--yg-settle) infinite alternate;
+    block-size: 1px;
+    background: linear-gradient(90deg, transparent, var(--yg-action), transparent) 0 0 / 50% 100% no-repeat;
+    opacity: .5;
+    animation: yg-task-ruler 1.4s ease-in-out infinite;
     pointer-events: none;
   }
   .yg-task-marker path[pathLength] {
@@ -236,99 +267,10 @@ summary.yg-task-line:hover { background: var(--yg-field); }
   .yg-task-list details[open] > .yg-task-children {
     animation: yg-task-disclose var(--yg-travel) var(--yg-arrive) both;
   }
-  .yg-task-list summary > svg:last-child {
-    transition: rotate var(--yg-travel) var(--yg-settle);
-  }
 }
-@keyframes yg-task-travel { to { background-position-x: 100%; } }
+@keyframes yg-task-ruler { to { background-position-x: 200%; } }
 @keyframes yg-task-check { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes yg-task-disclose { from { translate: 0 -4px; } }
-
-/* Status surfaces have their own measure when embedded in a workspace. */
-.yg-storage-meter { padding: var(--yg-inset-panel); border-radius: var(--yg-radius-card); background: var(--yg-surface); }
-.yg-storage-ticks { gap: var(--boa-space-4); }
-.yg-storage-ticks > span { block-size: var(--boa-space-12); }
-.yg-activity-island > button:focus-visible, .yg-task-list summary:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: -2px; }
-
-/* Align state, label and disclosure on the same compact row. */
-.yg-storage-meter { gap: var(--boa-space-8); padding: var(--boa-space-12); border-radius: 12px; }
-.yg-storage-ticks { gap: 3px; }
-.yg-storage-ticks > span { block-size: 8px; scale: 1; }
-.yg-motion-detail-line { min-block-size: 30px; }
-.yg-activity-island { border-radius: 12px; }
-.yg-activity-island > button { min-block-size: 44px; padding: 8px 12px; gap: 8px; }
-.yg-island-content { padding: 0 12px 12px; }
-.yg-task-list { padding: 12px; border-radius: 12px; }
-.yg-task-list > header { min-block-size: 30px; padding: 0 4px 8px; }
-.yg-task-list > header > strong { font-size: 1rem; }
-.yg-task-list ol { gap: 0; }
-.yg-task-list > ol > li { background: transparent; border-radius: 8px; }
-.yg-task-line { grid-template-columns: 20px minmax(0, 1fr) auto; min-block-size: 36px; padding: 6px 8px; gap: 8px; }
-summary.yg-task-line { grid-template-columns: 20px minmax(0, 1fr) auto 16px; }
-.yg-task-marker { width: 20px; height: 20px; background: transparent; }
-.yg-task-list [data-active] > div .yg-task-marker,
-.yg-task-list [data-active] > details > summary .yg-task-marker { background: transparent; }
-.yg-task-list [data-active] { background: var(--yg-action-soft); }
-.yg-task-list .yg-task-children { padding: 0 8px 8px 28px; }
-.yg-task-list .yg-task-children .yg-task-line { min-block-size: 36px; }
-.yg-task-state { line-height: 1.2; }
-@media (pointer: coarse) {
-  .yg-task-line, .yg-task-list .yg-task-children .yg-task-line { min-block-size: 44px; }
-}
-
-/* The active step is the focal point; finished steps remain readable and quiet. */
-.yg-task-list > ol { gap: var(--boa-space-4); }
-.yg-task-list > ol > li[data-active] { box-shadow: inset 3px 0 var(--yg-action); }
-.yg-task-list > ol > li[data-active] .yg-task-copy strong { color: var(--yg-action); }
-.yg-task-list > ol > li[data-state="done"] > :is(div, details > summary) .yg-task-copy strong { color: var(--yg-muted); }
-.yg-task-list > ol > li[data-state="failed"] { box-shadow: inset 3px 0 var(--yg-danger); }
-.yg-task-list .yg-task-children { margin-inline-start: 17px; padding-inline-start: 10px; border-inline-start: 1px solid var(--yg-surface-edge); }
-.yg-task-list .yg-task-children .yg-task-copy strong { font: var(--yg-font-help); }
-.yg-task-state { white-space: nowrap; }
-.yg-storage-heading { color: var(--yg-muted); }
-.yg-storage-amount { gap: var(--yg-gap-inline); }
-.yg-storage-ticks { margin-block-start: var(--boa-space-4); }
-.yg-activity-island > button > span:nth-child(2) { min-inline-size: 0; overflow-wrap: anywhere; }
-.yg-island-content { border-block-start: 1px solid var(--yg-surface-edge); padding-block-start: var(--yg-inset-regular); }
-.yg-copy-action [role="status"]:not(:empty) { max-inline-size: 32ch; line-height: 1.4; }
-
-/* A compact square marks each step; the active row carries one travelling rule. */
-.yg-task-list { gap: 6px; padding: 12px; }
-.yg-task-list > header { min-block-size: 0; padding: 0; align-items: baseline; }
-.yg-task-list > ol { gap: 0; }
-.yg-task-line, .yg-task-list .yg-task-children .yg-task-line {
-  grid-template-columns: 14px minmax(0, 1fr) auto;
-  min-block-size: 0;
-  align-items: start;
-  gap: 8px;
-  padding: 4px 0;
-}
-summary.yg-task-line { grid-template-columns: 14px minmax(0, 1fr) auto 16px; }
-.yg-task-marker {
-  position: relative;
-  width: 14px;
-  height: 14px;
-  margin-block-start: 2px;
-  border: 1.4px solid currentColor;
-  border-radius: 3.5px;
-  box-sizing: border-box;
-}
-.yg-task-marker > span { width: 0; height: 0; border: 0; }
-.yg-task-marker svg { width: 12px; height: 12px; }
-.yg-task-list [data-state="done"] .yg-task-marker { background: var(--yg-success-soft); }
-.yg-task-list [data-state="running"] > .yg-task-line .yg-task-marker > span,
-.yg-task-list [data-state="running"] > details > .yg-task-line .yg-task-marker > span { background: none; }
-.yg-task-list > ol > li[data-active], .yg-task-list > ol > li[data-state="failed"] { box-shadow: none; background: transparent; }
-.yg-task-list .yg-task-children { margin: 0; padding: 0 0 0 20px; border: 0; }
-.yg-task-list [data-active]::after { inset-inline: 0; block-size: 1px; }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-task-list [data-active]::after {
-    background-size: 50% 100%;
-    opacity: .5;
-    animation: yg-task-ruler 1.4s ease-in-out infinite;
-  }
-}
-@keyframes yg-task-ruler { from { background-position-x: 0%; } to { background-position-x: 200%; } }
 @media (pointer: coarse) {
   summary.yg-task-line { min-block-size: 44px; align-items: center; }
 }

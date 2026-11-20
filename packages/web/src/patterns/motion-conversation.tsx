@@ -4,7 +4,7 @@ import { useId, useRef, useState } from "react";
 
 export function StreamingReply({ value, active = false }: { value: string; active?: boolean }) {
   return <div className="yg-streaming-reply" aria-busy={active || undefined}>
-    <span>{value}</span>{active && <span className="yg-streaming-cursor" aria-hidden="true" />}
+    {value ? <span>{value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : <span className="yg-streaming-word" key={index}>{part}</span>)}</span> : active ? <span className="yg-streaming-wait">Thinking</span> : null}
   </div>;
 }
 
@@ -17,9 +17,9 @@ export function GhostSuggestion({ value, suggestion, onChange }: {
   const suffix = value && suggestion.startsWith(value) ? suggestion.slice(value.length) : "";
   const show = atEnd && !!suffix;
   return <div className="yg-ghost-field">
-    <label htmlFor={id}>Your message</label>
+    <div className="yg-ghost-head"><label htmlFor={id}>Your message</label>{show && <span className="yg-ghost-key" aria-hidden="true">Tab ↹</span>}</div>
     <div className="yg-ghost-input">
-      <div ref={mirror} className="yg-ghost-mirror" aria-hidden="true"><span>{value}</span>{show && <span className="yg-ghost-suffix">{suffix}</span>}</div>
+      <div ref={mirror} className="yg-ghost-mirror" aria-hidden="true"><span>{value}</span>{show && <span className="yg-ghost-suffix">{Array.from(suffix).map((letter, index) => <span key={index} style={{animationDelay: `${Math.min(index * 8, 200)}ms`}}>{letter}</span>)}</span>}</div>
       <input id={id} value={value} autoComplete="off" aria-describedby={show ? `${id}-hint` : undefined}
         onScroll={(event) => { if (mirror.current) mirror.current.scrollLeft = event.currentTarget.scrollLeft; }}
         onChange={(event) => { onChange(event.currentTarget.value); setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length); }}
@@ -53,10 +53,15 @@ export function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }:
         </span>
       </button>
     </div>
+    {busy && <div className="yg-prompt-status" role="status"><span aria-hidden="true" />Working on your request</div>}
   </form>;
 }
 
 export function ThinkingIndicator({ label = "Thinking", active = true }: { label?: string; active?: boolean }) {
+  const filter = useId();
   if (!active) return null;
-  return <div className="yg-thinking" role="status"><span className="yg-thinking-shape" aria-hidden="true" /><span>{label}</span></div>;
+  return <div className="yg-thinking" role="status" aria-label={label}>
+    <svg width="0" height="0" aria-hidden="true" focusable="false"><defs><filter id={filter}><feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" /><feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" /></filter></defs></svg>
+    <span className="yg-thinking-dots" aria-hidden="true" style={{filter: `url(#${filter})`}}><i /><i /><i /></span>
+  </div>;
 }

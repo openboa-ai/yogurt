@@ -21,6 +21,7 @@ export function CartButton({ label, quantity, onQuantityChange, max = 99, addLab
   const count = Number.isFinite(quantity) ? Math.max(0, Math.min(limit, Math.floor(quantity))) : 0;
   const previous = useRef(count);
   const goingDown = count < previous.current;
+  const lastCount = previous.current;
   useLayoutEffect(() => { previous.current = count; }, [count]);
   const [showLimit, setShowLimit] = useState(false);
   const notice = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -127,8 +128,11 @@ export function CartButton({ label, quantity, onQuantityChange, max = 99, addLab
             <path d={count === 1 ? "M4 6h16M9 6V4h6v2m3 0-1 14H7L6 6m4 4v6m4-6v6" : "M5 12h14"} />
           </svg>
         </button>
-        <output className="yg-cart-quantity" aria-label={`Quantity of ${label}`} hidden={!open}>
-          <span key={count} data-direction={goingDown ? "down" : "up"}>{count}</span>
+        <output className="yg-cart-quantity" aria-label={`Quantity of ${label}`} data-quantity={count} hidden={!open}>
+          <span className="yg-cart-roll" key={count} data-direction={goingDown ? "down" : "up"}>
+            {lastCount !== count && lastCount > 0 && <span className="yg-cart-previous" aria-hidden="true">{lastCount}</span>}
+            <span className="yg-cart-current">{count}</span>
+          </span>
         </output>
         <button ref={increase} type="button" className="yg-cart-increase" aria-disabled={reachedLimit || undefined}
           aria-label={open ? `Increase quantity of ${label}` : `${addLabel} ${label}`}

@@ -12,14 +12,15 @@ function InvitePeople() {
 }
 function TagInput() {
   const [text, setText] = useState(""); const [tags, setTags] = useState(["Ideas", "Research"]);
-  return <form className="motion-extra" onSubmit={e => { e.preventDefault(); const next = text.trim(); if (next && !tags.includes(next)) setTags([...tags, next]); setText(""); }}>
-    <Y.TextField label="Add a tag" value={text} onChange={e => setText(e.target.value)} placeholder="Type a tag" /><Y.Button type="submit" emphasis="soft">Add tag</Y.Button>
-    <div className="motion-extra-chips">{tags.map(tag => <button key={tag} type="button" onClick={() => setTags(tags.filter(t => t !== tag))} aria-label={`Remove ${tag}`}>{tag} ×</button>)}</div>
+  return <form className="motion-tag" onSubmit={e => { e.preventDefault(); const next = text.trim(); if (next && !tags.includes(next)) setTags([...tags, next]); setText(""); }}>
+    <label htmlFor="motion-tag-input">Tags</label>
+    <div className="motion-tag-field">{tags.map(tag => <span className="motion-tag-chip" key={tag}>{tag}<button type="button" onClick={() => setTags(tags.filter(t => t !== tag))} aria-label={`Remove ${tag}`}>×</button></span>)}<input id="motion-tag-input" value={text} onChange={e => setText(e.target.value)} placeholder="Add a tag" /></div>
+    <Y.Button type="submit" size="compact" emphasis="quiet">Add tag</Y.Button>
   </form>;
 }
 function Stepper() {
   const [value, setValue] = useState(3);
-  return <div className="motion-extra"><Y.NumericSpinner label="Guests" min={0} max={12} value={value} onValueChange={setValue} /><small>Choose up to 12 guests.</small></div>;
+  return <div className="motion-stepper"><div><strong>Guests</strong><small>Choose up to 12 guests</small></div><div className="motion-stepper-actions"><button type="button" aria-label="Remove guest" disabled={value === 0} onClick={() => setValue(value - 1)}>−</button><output aria-live="polite"><span key={value}>{value}</span></output><button type="button" aria-label="Add guest" disabled={value === 12} onClick={() => setValue(value + 1)}>+</button></div></div>;
 }
 function WheelPicker() {
   const options = ["Morning", "Midday", "Afternoon", "Evening"]; const [index, setIndex] = useState(0);
@@ -27,7 +28,7 @@ function WheelPicker() {
 }
 function Scrubber() {
   const [position, setPosition] = useState(36);
-  return <div className="motion-extra"><Y.Slider label="Preview position" value={position} onValueChange={setPosition} unit="%" /><div className="motion-extra-track" aria-hidden="true"><span style={{ width: `${position}%` }} /></div></div>;
+  return <div className="motion-scrubber"><label htmlFor="motion-scrubber">Preview position</label><div className="motion-scrubber-bar"><span className="motion-scrubber-fill" style={{width: `${position}%`}}/><span className="motion-scrubber-ticks" aria-hidden="true"/><input id="motion-scrubber" type="range" min="0" max="100" value={position} onChange={e => setPosition(Number(e.target.value))} aria-valuetext={`${position}%`} /><span className="motion-scrubber-value" aria-hidden="true">{position}%</span></div></div>;
 }
 function UndoAction() {
   const [saved, setSaved] = useState(true);

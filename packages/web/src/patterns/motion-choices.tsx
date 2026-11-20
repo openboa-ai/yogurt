@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { Button } from '../controls/actions.js';
 
 type FocusOption = { id: string; label: string; description: string };
 type PlanOption = FocusOption & { price: string };
@@ -46,20 +47,28 @@ type LetterLimitProps = {
   value: string;
   onChange: (value: string) => void;
   limit: number;
+  placeholder?: string;
+  onSubmit?: (value: string) => void;
 };
 
-export function LetterLimit({ label, value, onChange, limit }: LetterLimitProps) {
+export function LetterLimit({ label, value, onChange, limit, placeholder, onSubmit }: LetterLimitProps) {
   const id = useId();
   const maximum = Number.isFinite(limit) ? Math.max(0, Math.floor(limit)) : 0;
   const remaining = maximum - value.length;
+  const progress = maximum > 0 ? Math.min(1, value.length / maximum) : 0;
+  const state = remaining <= 0 ? "full" : remaining <= Math.max(10, maximum * 0.1) ? "near" : "normal";
   return (
-    <div className="yg-letter-limit" data-near={remaining <= Math.max(10, maximum * 0.1) || undefined}>
-      <label htmlFor={id}>{label}</label>
-      <div className="yg-letter-field">
-        <textarea id={id} value={value} maxLength={maximum} onChange={(event) => onChange(event.currentTarget.value)} aria-describedby={`${id}-count`} />
-        <div className="yg-letter-meter" aria-hidden="true"><span style={{ width: `${maximum ? Math.min(100, value.length / maximum * 100) : 0}%` }} /></div>
+    <div className="yg-letter-limit" data-limit-state={state}>
+      <textarea id={id} aria-label={label} placeholder={placeholder} value={value} maxLength={maximum}
+        onChange={event => onChange(event.currentTarget.value)} aria-describedby={`${id}-count`} />
+      <div className="yg-letter-footer">
+        <svg className="yg-letter-meter" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.5" />
+          <circle cx="12" cy="12" r="9.5" pathLength="1" strokeDasharray="1 1" strokeDashoffset={1 - progress} />
+        </svg>
+        <span className="yg-letter-count" id={`${id}-count`}>{remaining < 0 ? `${-remaining} over limit` : `${remaining} remaining`}</span>
+        {onSubmit && <Button onClick={() => onSubmit(value)} disabled={remaining < 0 || !value.trim()}>Post</Button>}
       </div>
-      <div className="yg-letter-count" id={`${id}-count`}>{remaining < 0 ? `${-remaining} over limit` : `${remaining} remaining`}</div>
     </div>
   );
 }

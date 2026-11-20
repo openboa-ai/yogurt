@@ -40,15 +40,15 @@ export function SpringDropdown({ label, value, onChange, options }: {
     <label id={id} className="yg-spring-label">{label}</label>
     <SelectPrimitive.Root value={value} onValueChange={onChange}>
       <SelectPrimitive.Trigger className="yg-spring-trigger" aria-labelledby={id}>
-        <span className="yg-spring-symbol" aria-hidden="true">◆</span>
-        <span className="yg-spring-value"><SelectPrimitive.Value placeholder="Choose an option" /></span>
+        <span className="yg-spring-symbol" aria-hidden="true" />
+        <span className="yg-spring-value"><span key={value} className="yg-spring-value-roll"><SelectPrimitive.Value placeholder="Choose an option" /></span></span>
         <SelectPrimitive.Icon className="yg-spring-chevron" aria-hidden="true">⌄</SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal container={portal}>
-        <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={6}>
+        <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={8}>
           <SelectPrimitive.Viewport className="yg-spring-viewport">
             {options.map(option => <SelectPrimitive.Item key={option.id} value={option.id} className="yg-spring-option">
-              <span className="yg-spring-option-symbol" aria-hidden="true">◆</span>
+              <span className="yg-spring-option-symbol" aria-hidden="true" />
               <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
               <SelectPrimitive.ItemIndicator className="yg-spring-check" aria-hidden="true">✓</SelectPrimitive.ItemIndicator>
             </SelectPrimitive.Item>)}

@@ -12,9 +12,9 @@ function Approval() {
   return <div className="utility-demo utility-panel"><small>TOOL REQUEST</small><strong>Read project notes</strong><span>Allow this preview to use the selected notes?</span>{state === "pending" ? <div className="utility-row"><Button size="compact" emphasis="soft" onClick={() => setState("declined")}>Decline</Button><Button size="compact" onClick={() => setState("approved")}>Allow once</Button></div> : <><span role="status">{state === "approved" ? "Allowed in preview" : "Declined in preview"}</span><Button size="compact" emphasis="quiet" onClick={() => setState("pending")}>Reset</Button></>}</div>;
 }
 const groceries = [
-  { id: "yogurt", name: "Greek yogurt", detail: "500 g", price: 420 },
-  { id: "blueberries", name: "Blueberries", detail: "125 g", price: 350 },
-  { id: "granola", name: "Maple granola", detail: "300 g", price: 560 },
+  { id: "yogurt", name: "Greek yogurt", detail: "500 g", price: 420, icon: "M9 3h6m-5 0v4l-3 4v9h10v-9l-3-4V3M7 13h10", tone: "brand" },
+  { id: "blueberries", name: "Blueberries", detail: "125 g", price: 350, icon: "M12 3v6m0-6c4 0 6 3 6 5M11 6C7 8 5 10 5 13m13 0c0 5-6 5-6 0s6-5 6 0zm-6 4c0 5-7 5-7 0s7-5 7 0z", tone: "accent" },
+  { id: "granola", name: "Maple granola", detail: "300 g", price: 560, icon: "M4 16c0-6 5-10 11-10l4 4c-2 5-6 8-12 8l-3-2zm5-7 4 7m2-10 1 7", tone: "warning" },
 ];
 const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
@@ -24,14 +24,16 @@ function Cart() {
   const subtotal = groceries.reduce((total, item) => total + item.price * (cart[item.id] ?? 0), 0);
   const count = Object.values(cart).reduce((total, quantity) => total + quantity, 0);
   return (
-    <div className="utility-cart">
-      <div className="utility-cart-header"><strong>Cart</strong><span>{count} {count === 1 ? "item" : "items"}</span></div>
+    <section className="utility-cart" aria-label="Cart">
       <ul>
         {groceries.map(item => (
           <li key={item.id}>
+            <span className="utility-cart-tile" data-tone={item.tone} aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round"><path d={item.icon} /></svg>
+            </span>
             <div className="utility-cart-product">
               <strong>{item.name}</strong>
-              <span>{item.detail} · {currency.format(item.price / 100)}</span>
+              <span>{currency.format(item.price / 100)} · {item.detail}</span>
             </div>
             <CartButton label={item.name} quantity={cart[item.id] ?? 0} max={9}
               onQuantityChange={quantity => {
@@ -42,13 +44,13 @@ function Cart() {
         ))}
       </ul>
       <div className="utility-cart-total">
-        <div><span>Subtotal</span>
+        <div><span>{count ? `Subtotal · ${count} ${count === 1 ? "item" : "items"}` : "Your cart is empty"}</span>
           <strong data-cart-subtotal>{currency.format(subtotal / 100)}</strong></div>
         <Button disabled={!count || confirmed} onClick={() => setConfirmed(true)}>
           {confirmed ? "Cart reviewed" : "Review cart"}
         </Button>
       </div>
-    </div>
+    </section>
   );
 }
 

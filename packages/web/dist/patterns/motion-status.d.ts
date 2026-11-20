@@ -1,9 +1,16 @@
 import { type ReactNode } from "react";
-export declare function StorageMeter({ label, used, capacity, unit }: {
+type StorageCategory = {
+    id: string;
+    label: string;
+    amount: number;
+    detail?: ReactNode;
+};
+export declare function StorageMeter({ label, used, capacity, unit, categories }: {
     label: string;
     used: number;
     capacity: number;
     unit: string;
+    categories?: readonly StorageCategory[];
 }): import("react/jsx-runtime").JSX.Element;
 export declare function ActivityIsland({ label, summary, children }: {
     label: string;

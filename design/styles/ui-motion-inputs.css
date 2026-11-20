@@ -83,57 +83,18 @@
   color: var(--yg-text);
   font: var(--yg-font-meta);
 }
-.yg-file-drop {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: var(--yg-gap-stack);
-  padding: var(--yg-inset-regular);
-  border: var(--boa-stroke-rule) dashed var(--yg-surface-edge);
-  border-radius: var(--yg-radius-panel);
-  background: var(--yg-raised-surface);
-}
-.yg-file-drop[data-dragging] { border-color: var(--yg-action); background: var(--yg-action-soft); }
-.yg-file-drop-mark {
-  box-sizing: border-box;
-  inline-size: var(--yg-size-regular);
-  block-size: var(--yg-size-regular);
-  padding: var(--yg-inset-compact);
-  border-radius: var(--yg-radius-control);
-  background: var(--yg-field);
-  color: var(--yg-action);
-}
-.yg-file-drop-copy { min-inline-size: 0; display: grid; gap: var(--boa-space-2); }
+.yg-file-drop { position: relative; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; inline-size: min(100%, 296px); min-block-size: 216px; padding: 38px 12px 20px; border: 1px dashed var(--yg-surface-edge); border-radius: 28px; background: var(--yg-raised-surface); text-align: center; cursor: pointer; }
+.yg-file-drop-core { display: grid; place-items: center; box-sizing: border-box; flex: none; inline-size: 72px; block-size: 72px; border: 2px solid var(--yg-surface-edge); border-radius: 50%; background: var(--yg-field); color: var(--yg-action); }
+.yg-file-drop-mark { display: block; inline-size: 26px; block-size: 26px; }
+.yg-file-drop-copy { display: grid; justify-items: center; gap: 4px; margin-top: 16px; min-inline-size: 0; }
 .yg-file-drop-copy strong { font: var(--yg-font-action); }
 .yg-file-drop-copy span { color: var(--yg-muted); font: var(--yg-font-meta); overflow-wrap: anywhere; }
-.yg-file-drop-button {
-  display: grid;
-  place-items: center;
-  min-block-size: var(--yg-size-regular);
-  padding-inline: var(--yg-inset-regular);
-  border-radius: var(--yg-radius-control);
-  background: var(--yg-action-soft);
-  color: var(--yg-action);
-  font: var(--yg-font-label);
-  white-space: nowrap;
-  cursor: pointer;
-}
-.yg-file-drop-button:hover { background: var(--yg-action-soft-hover); }
+.yg-file-drop[data-dragging] { border-color: var(--yg-action); background: var(--yg-action-soft); }
+.yg-file-drop:is([data-dragging], [data-accepted]) .yg-file-drop-core { border-color: var(--yg-action); }
 .yg-file-drop input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; }
-.yg-file-drop:has(input:focus-visible) .yg-file-drop-button {
-  outline: var(--boa-stroke-focus) solid var(--yg-action);
-  outline-offset: 2px;
-}
+.yg-file-drop:has(input:focus-visible) { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 3px; }
 .yg-file-drop-status:empty { display: none; }
-@media (max-width: 25rem) {
-  .yg-file-drop { grid-template-columns: auto minmax(0, 1fr); gap: var(--yg-gap-inline); }
-  .yg-file-drop-button { grid-column: 2; justify-self: start; }
-}
-@media (pointer: coarse) {
-  .yg-mention-list button, .yg-file-drop-button { min-block-size: var(--yg-size-touch); }
-  .yg-mention textarea { font: var(--yg-font-touch); }
-}
+@media (pointer: coarse) { .yg-mention-list button { min-block-size: var(--yg-size-touch); } .yg-mention textarea { font: var(--yg-font-touch); } }
 @media (prefers-reduced-motion: no-preference) {
   .yg-mention-list { animation: yg-input-arrive var(--yg-travel) var(--yg-settle); }
   .yg-file-drop { transition: background-color var(--yg-travel) var(--yg-settle), border-color var(--yg-travel) var(--yg-settle); }
@@ -141,3 +102,5 @@
 @keyframes yg-input-arrive { from { opacity: 0; translate: 0 -4px; } }
 .yg-mention-list-heading { display: flex; justify-content: space-between; gap: 8px; padding: 6px 8px; color: var(--yg-muted); font: var(--yg-font-meta); }
 .yg-mention-list-heading span { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: no-preference) { .yg-file-drop-core { transition: transform var(--yg-change) var(--yg-settle), border-color var(--yg-change) var(--yg-settle); } .yg-file-drop[data-dragging] .yg-file-drop-core { transform: scale(1.06); } }

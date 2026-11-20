@@ -75,11 +75,13 @@ export function FileDrop({ label, onFiles, accept, multiple = false }: {
   const depth = useRef(0);
   const [dragging, setDragging] = useState(false);
   const [message, setMessage] = useState("");
+  const [accepted, setAccepted] = useState(false);
   function receive(files: File[]) {
     if (!files.length) return;
     const allowed = files.filter(file => acceptsFile(file, accept));
     const selected = multiple ? allowed : allowed.slice(0, 1);
     const rejected = files.length - selected.length;
+    setAccepted(selected.length > 0);
     setMessage(rejected ? `${rejected} ${rejected === 1 ? "file was" : "files were"} not added${accept ? ` (accepted: ${accept})` : ""}.` : `${selected.length} ${selected.length === 1 ? "file" : "files"} selected.`);
     if (selected.length) onFiles(selected);
   }
@@ -88,22 +90,21 @@ export function FileDrop({ label, onFiles, accept, multiple = false }: {
       (rule.split("/").at(-1) ?? rule).replace(/^\./, "").toUpperCase()).join(", ");
   return <div className="yg-file-drop-wrap">
     <span className="yg-label" id={`${id}-label`}>{label}</span>
-    <div className="yg-file-drop" data-dragging={dragging || undefined}
+    <label htmlFor={id} className="yg-file-drop" data-dragging={dragging || undefined} data-accepted={accepted || undefined}
       onDragEnter={event => { event.preventDefault(); depth.current++; setDragging(true); }}
       onDragOver={event => { event.preventDefault(); event.dataTransfer.dropEffect = "copy"; }}
       onDragLeave={event => { event.preventDefault(); depth.current = Math.max(0, depth.current - 1); if (!depth.current) setDragging(false); }}
       onDrop={event => { event.preventDefault(); depth.current = 0; setDragging(false); receive(Array.from(event.dataTransfer.files)); }}>
-      <svg className="yg-file-drop-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      <span className="yg-file-drop-core"><svg className="yg-file-drop-mark" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 16V4m-4 4 4-4 4 4M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3" />
-      </svg>
+      </svg></span>
       <div className="yg-file-drop-copy">
         <strong>Drop files here</strong>
-        {formats && <span id={`${id}-formats`}>{formats}</span>}
+        <span id={`${id}-formats`}>{formats || "Choose a file from your device"}</span>
       </div>
-      <label className="yg-file-drop-button" htmlFor={id}>Choose {multiple ? "files" : "a file"}</label>
-      <input id={id} type="file" aria-labelledby={`${id}-label`} aria-describedby={formats ? `${id}-formats` : undefined} accept={accept} multiple={multiple} onChange={event => { receive(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} />
-    </div>
+      <input id={id} type="file" aria-labelledby={`${id}-label`} aria-describedby={`${id}-formats`} accept={accept} multiple={multiple} onChange={event => { receive(Array.from(event.currentTarget.files ?? [])); event.currentTarget.value = ""; }} />
+    </label>
     <span className="yg-file-drop-status" role="status">{message}</span>
   </div>;
 }

@@ -16,15 +16,6 @@
 .yg-plan-choice { display: flex; flex-direction: column; gap: var(--boa-space-8); padding: var(--boa-space-12); }
 .yg-plan-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--boa-space-8); }
 .yg-plan-price { font-size: 1.4em; font-weight: 650; letter-spacing: -.03em; line-height: 1.15; font-variant-numeric: tabular-nums; }
-.yg-letter-limit { display: grid; gap: var(--boa-space-8); color: var(--yg-text); }
-.yg-letter-limit > label { font-weight: 500; }
-.yg-letter-field { overflow: hidden; border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: var(--yg-raised-surface); }
-.yg-letter-field:focus-within { outline: var(--boa-stroke-focus) solid var(--yg-action); outline-offset: 2px; }
-.yg-letter-field textarea { display: block; box-sizing: border-box; width: 100%; min-height: 104px; padding: var(--boa-space-12); resize: vertical; border: 0; outline: 0; background: transparent; color: inherit; font: inherit; line-height: 1.5; }
-.yg-letter-meter { height: 2px; margin: 0 var(--boa-space-12) var(--boa-space-8); border-radius: var(--boa-radius-round); overflow: hidden; background: var(--yg-field); }
-.yg-letter-meter > span { display: block; height: 100%; background: var(--yg-action); }
-.yg-letter-count { text-align: end; color: var(--yg-muted); font-size: 0.875em; font-variant-numeric: tabular-nums; }
-.yg-letter-limit[data-near] .yg-letter-count { color: var(--yg-text); font-weight: 600; }
 @media (hover: hover) {
   .yg-focus-choice:hover:not([data-selected]), .yg-plan-choice:hover:not([data-selected]) { background: var(--yg-surface); border-color: var(--yg-active-edge); }
 }
@@ -32,7 +23,6 @@
   .yg-focus-choice, .yg-plan-choice { transition: background-color var(--yg-change) var(--yg-settle), border-color var(--yg-change) var(--yg-settle); }
   .yg-focus-orbit, .yg-choice-check { transition: color var(--yg-change) var(--yg-settle), background-color var(--yg-change) var(--yg-settle), box-shadow var(--yg-change) var(--yg-settle); }
   [data-selected] .yg-choice-check { animation: yg-choice-confirm var(--yg-panel) var(--yg-selection) both; }
-  .yg-letter-meter > span { transition: width var(--yg-change) var(--yg-settle); }
 }
 @media (forced-colors: active) { .yg-focus-choice[data-selected], .yg-plan-choice[data-selected] { outline: 2px solid Highlight; outline-offset: -2px; } }
 
@@ -48,15 +38,74 @@
 .yg-choice-check { width: 20px; height: 20px; }
 .yg-plan-choice { gap: 8px; min-height: 0; padding: 12px; }
 .yg-plan-price { margin-top: 4px; font-size: 20px; line-height: 24px; }
-.yg-letter-limit { gap: 8px; }
-.yg-letter-limit > label { font-size: 13px; line-height: 18px; }
-.yg-letter-field { border-radius: 8px; }
-.yg-letter-field textarea { min-height: 96px; padding: 12px; font-size: 14px; line-height: 20px; }
-.yg-letter-meter { margin: 0 12px 10px; }
-.yg-letter-count { font-size: 12px; line-height: 16px; }
 
 .yg-focus-choice, .yg-plan-choice { min-block-size: var(--yg-size-touch); box-sizing: border-box; }
 .yg-choice-copy, .yg-plan-description, .yg-plan-heading, .yg-plan-price { overflow-wrap: anywhere; }
 .yg-plan-choice { border-radius: var(--yg-radius-panel); padding: var(--boa-space-12); }
-.yg-letter-field textarea { min-block-size: 96px; }
 @media (pointer: coarse) { .yg-focus-choice, .yg-plan-choice { padding: var(--boa-space-16); } }
+
+.yg-letter-limit {
+  inline-size: min(100%, 320px);
+  padding: 16px;
+  border-radius: 28px;
+  background: var(--yg-raised-surface);
+  color: var(--yg-text);
+  --yg-letter-ink: var(--yg-muted);
+}
+.yg-letter-limit[data-limit-state="near"] { --yg-letter-ink: var(--yg-warning); }
+.yg-letter-limit[data-limit-state="full"] { --yg-letter-ink: var(--yg-danger); }
+.yg-letter-limit textarea {
+  display: block;
+  inline-size: 100%;
+  block-size: 72px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: 400 16px/24px var(--boa-font-family);
+  letter-spacing: -.01em;
+  resize: none;
+}
+.yg-letter-limit textarea:focus-visible {
+  outline: var(--boa-stroke-focus) solid var(--yg-action);
+  outline-offset: 6px;
+}
+.yg-letter-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-block-start: 14px;
+  min-block-size: 36px;
+}
+.yg-letter-meter {
+  flex: none;
+  inline-size: 24px;
+  block-size: 24px;
+  rotate: -90deg;
+  fill: none;
+  stroke: var(--yg-surface-edge);
+  stroke-width: 2.6;
+}
+.yg-letter-meter > circle:last-child { stroke: var(--yg-letter-ink); stroke-linecap: round; }
+.yg-letter-count { font: var(--yg-font-help); font-variant-numeric: tabular-nums; color: var(--yg-letter-ink); }
+.yg-root .yg-letter-footer .yg-button {
+  margin-inline-start: auto;
+  min-block-size: 36px;
+  padding-inline: 18px;
+  border-radius: var(--boa-radius-round);
+  background: var(--yg-text);
+  color: var(--yg-canvas);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-letter-meter > circle:last-child { transition: stroke-dashoffset 280ms var(--yg-arrive), stroke 200ms ease; }
+  .yg-letter-count { transition: color 200ms ease; }
+  .yg-letter-limit[data-limit-state="full"] :is(.yg-letter-meter, .yg-letter-count) {
+    animation: yg-letter-limit-stop 310ms ease-out;
+  }
+}
+@keyframes yg-letter-limit-stop {
+  20% { translate: -3px; }
+  50% { translate: 2px; }
+  75% { translate: -1px; }
+}

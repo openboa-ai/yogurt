@@ -48,7 +48,11 @@ const steps = [
 function StorageExample() {
   const [used, setUsed] = useState(64);
   return <div className="motion-sample-stack">
-    <StorageMeter label="Workspace storage" used={used} capacity={100} unit="GB" />
+    <StorageMeter label="Workspace storage" used={used} capacity={100} unit="GB" categories={[
+      {id: "files", label: "Source files", amount: used - 34, detail: <><span>Review attachments</span><Button size="compact" emphasis="soft" disabled={used <= 34} onClick={() => setUsed(value => Math.max(34, value - 12))}>Free up space</Button></>},
+      {id: "exports", label: "Exports", amount: 22, detail: <span>Saved review exports</span>},
+      {id: "notes", label: "Workspace notes", amount: 12, detail: <span>Notes and decision history</span>},
+    ]} />
     <div className="motion-sample-actions">
       <Button size="compact" emphasis="soft" onClick={() => setUsed(value => Math.min(100, value + 12))}>Add files</Button>
       <Button size="compact" emphasis="quiet" onClick={() => setUsed(64)}>Reset</Button>
@@ -81,16 +85,20 @@ const inbox = [
 
 function FocusModeExample() {
   const [focus, setFocus] = useState(false);
-  return <div className="motion-context-panel">
-    <header><strong>Inbox</strong><Text variant="help" role="status">{focus ? "Priority only" : "All updates"}</Text></header>
+  return <div className="motion-context-panel motion-focus" data-focused={focus}>
     <ul className="motion-focus-inbox">
       {inbox.map(item => <li key={item.name} data-deferred={focus && !item.priority || undefined}>
         <span className="motion-context-icon"><Icon name={item.icon} /></span>
         <span><strong>{item.name}</strong><span>{item.detail}</span></span>
-        <Text variant="meta">{focus && !item.priority ? "Quiet" : item.priority ? "Priority" : ""}</Text>
+
       </li>)}
     </ul>
-    <Switch label="Focus mode" checked={focus} onCheckedChange={setFocus} />
+    <div className="motion-focus-bar">
+      <span className="motion-focus-symbol"><Icon name="moon" /></span>
+      <Text role="status" className="motion-focus-summary">{focus ? "Priority only" : "All updates"}</Text>
+      <span className="motion-focus-count" aria-hidden="true" key={String(focus)}>{focus ? 1 : inbox.length}</span>
+      <Switch label="Focus mode" checked={focus} onCheckedChange={setFocus} />
+    </div>
   </div>;
 }
 
@@ -98,23 +106,30 @@ const billingOptions = [{id: "monthly", label: "Monthly"}, {id: "yearly", label:
 function BillingExample() {
   const [cadence, setCadence] = useState("monthly");
   const annual = cadence === "yearly";
-  return <div className="motion-context-panel">
-    <header><strong>Workspace Plus</strong><SegmentedControl label="Billing period"
-      options={billingOptions} value={cadence} onValueChange={setCadence} /></header>
-    <div className="motion-billing-price" role="status">
-      <div><strong>{annual ? "$20" : "$24"}</strong><Text variant="help">per month</Text></div>
-      <Text variant="help">{annual ? "$240 billed yearly" : "$24 billed monthly"}</Text>
+  const [reviewed, setReviewed] = useState(false);
+  return <div className="motion-context-panel motion-billing">
+    <SegmentedControl label="Billing period" options={billingOptions} value={cadence} onValueChange={(value) => {
+      setCadence(value);
+      setReviewed(false);
+    }} />
+    <div className="motion-billing-detail">
+      <header><strong>Workspace Plus</strong>{annual && <span className="motion-billing-save">Save 17%</span>}</header>
+      <div className="motion-billing-price" role="status">
+        <div><span className="motion-billing-currency">$</span><strong key={cadence}>{annual ? "20" : "24"}</strong><Text variant="help">per month</Text></div>
+        <Text variant="help">{annual ? "$240 billed yearly" : "$24 billed monthly"}</Text>
+      </div>
+      <ul className="motion-plan-benefits">
+        <li><Icon name="check" /> Shared projects and reviews</li>
+        <li><Icon name="check" /> Extended activity history</li>
+      </ul>
     </div>
-    <ul className="motion-plan-benefits">
-      <li><Icon name="check" /> Shared projects and reviews</li>
-      <li><Icon name="check" /> Extended activity history</li>
-    </ul>
+    <Button onClick={() => setReviewed(true)} disabled={reviewed}>{reviewed ? "Plan reviewed" : "Review plan"}</Button>
   </div>;
 }
 
 function WritingExample({ kind }: {kind: "limit" | "ghost" | "password"}) {
   const [value, setValue] = useState(kind === "ghost" ? "Review" : "");
-  if (kind === "limit") return <LetterLimit label="Short bio" value={value} onChange={setValue} limit={48} />;
+  if (kind === "limit") return <LetterLimit label="Short bio" placeholder="Tell the workspace about yourself…" value={value} onChange={setValue} limit={48} onSubmit={() => setValue("")} />;
   if (kind === "password") return <PasswordStrength value={value} onChange={setValue} />;
   return <GhostSuggestion value={value} suggestion="Review the workspace notes" onChange={setValue} />;
 }
@@ -186,12 +201,15 @@ function StepExample({ agent }: {agent: boolean}) {
   </div>;
 }
 
+const reviewDetails = ["2 files", "1 draft", "1 reviewer"];
+
 function TaskListExample() {
   const [active, setActive] = useState(1);
   const [failed, setFailed] = useState(false);
   return <div className="motion-sample-stack">
     <TaskList label="Review the brief" tasks={steps.map((step, index) => ({
       ...step,
+      detail: reviewDetails[index],
       state: index < active ? "done" : index === active ? (failed ? "failed" : "running") : "queued",
       steps: index === 0 ? [
         {id: "notes", label: "Open the source notes", state: active > 0 ? "done" : "running"},
