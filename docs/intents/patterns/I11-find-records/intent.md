@@ -16,4 +16,4 @@ A person searches or filters a collection and needs to distinguish an empty coll
 
 Bind pattern.find-records to the product’s authorized projection and stable IDs. Search and reset are view changes. Row actions belong to their own product contracts.
 
-[patterns.json](../../../../catalog/patterns.json) · [Working roster](../../../../system.html#components) · [Working task states](../../../../patterns/task-states.html)
+[patterns.json](../../../../catalog/patterns.json) · [Working roster](https://yogurt-theta.vercel.app/system.html#components) · [Working task states](https://yogurt-theta.vercel.app/patterns/task-states.html)

@@ -16,4 +16,4 @@ An editor needs a short company introduction, a project description and a messag
 
 Write public and UI copy in English. The product owns observed state and allowed recovery. The brand owner owns company wording, naming and additions to the terms list.
 
-[terms.json](../../../../content/terms.json) · [Brand voice](../../../../index.html#voice) · [Company introduction](../../../../index.html#identity)
+[terms.json](../../../../content/terms.json) · [Brand voice](https://yogurt-theta.vercel.app/index.html#voice) · [Company introduction](https://yogurt-theta.vercel.app/index.html#identity)

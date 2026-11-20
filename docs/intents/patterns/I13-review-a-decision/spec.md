@@ -24,4 +24,4 @@ Change the revision while the decision is open. Clear the previous confirmation,
 
 **End scene.** Inspect two similarly named decisions, cancel one review, then confirm an authorized revision. Only that exact target produces one host request, and the UI shows it as sent.
 
-**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](../../../../playbook.html) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html) · [Delivery status and owner decisions](../../../status.md)

@@ -1692,7 +1692,7 @@ npx yogurt add project-sidebar --target native
 <tr>
 <td>Guide presentation</td>
 <td><a href="../apps/guide/README.md">Guide sources</a>, its browser runtime and the design records</td>
-<td>Root HTML entry pages and the generated handbook</td>
+<td>Hosted and offline guide, including the generated handbook</td>
 </tr>
 <tr>
 <td>Product examples</td>
@@ -1706,17 +1706,17 @@ npx yogurt add project-sidebar --target native
 </tr>
 <tr>
 <td>Verification</td>
-<td><a href="../checks/README.md">Checks</a>, <a href="../evals/README.md">evals</a> and the maintainers’ <a href="../.agents/skills/yogurt-evaluate/SKILL.md">evaluation skill</a></td>
+<td><a href="../checks/README.md">Checks</a>, <a href="../checks/evals/README.md">evals</a> and the maintainers’ <a href="../.agents/skills/yogurt-evaluate/SKILL.md">evaluation skill</a></td>
 <td>CI and Yogurt maintainers</td>
 </tr>
 <tr>
 <td>Build and release</td>
-<td><a href="../scripts/README.md">Maintainer entry points</a> and <a href="../releases/README.md">release records</a></td>
+<td><a href="../scripts/README.md">Maintainer entry points</a> and <a href="releases/README.md">release records</a></td>
 <td>Maintainers and pinned SDK consumers</td>
 </tr>
 </tbody></table></div>
-<p>The SDK build writes <code>dist/</code> and <code>registry/</code> from the renderer sources and component catalog. Update the source and regenerate the output together. The guide owns its browser scripts in <code>apps/guide/runtime/</code>. Its standalone HTML entry pages keep their existing URLs. The SDK <a href="#using-yogurt">install guide</a> and <a href="../plugins/yogurt/README.md">plugin instructions</a> describe the pins each product selects.</p>
-<p>The <a href="../packages/web/README.md#source-layout">Web source layout</a> separates foundations, controls, compositions and identity. Catalog IDs resolve to the implementation during the build. The <a href="../scripts/README.md">maintainer tools</a> divide generation by output owner. The <a href="../apps/guide/README.md#hosting">hosted guide build</a> uses the existing HTML entry pages and copies their required runtime and reference files into the static site.</p>
+<p>The SDK build writes <code>dist/</code> and <code>registry/</code> from the renderer sources and component catalog. Update the source and regenerate the output together. The guide owns its HTML sources in <code>apps/guide/pages/</code> and its browser scripts in <code>apps/guide/runtime/</code>. The site build keeps the existing routes. The standalone galleries are generated SDK artifacts. The SDK <a href="#using-yogurt">install guide</a> and <a href="../plugins/yogurt/README.md">plugin instructions</a> describe the pins each product selects.</p>
+<p>The <a href="../packages/web/README.md#source-layout">Web source layout</a> separates foundations, controls, compositions and identity. Catalog IDs resolve to the implementation during the build. The <a href="../scripts/README.md">maintainer tools</a> divide generation by output owner. The <a href="../apps/guide/README.md#hosting">hosted guide build</a> stages the same site for hosted and offline use from the authored pages, generated pages and shared assets.</p>
 <p>Use <a href="../AGENTS.md">AGENTS.md</a> when working on Yogurt itself. An adopting project can generate a short instruction index from its own binding. <a href="engineering/adoption/U19D-guide-and-evaluate-skills/source-boundaries/spec.md">Scope and verification for the guide move</a></p>
 <p>The original brand assets and copy have one editable owner. Each role color refers back to the common palette. A public token format or native theme can be generated from that source. The Design Tokens Community Group documents typed values and references for exchanging tokens across tools. <a href="https://www.designtokens.org/tr/2025.10/format/">Format specification</a></p>
 <h2>Design the library from complete tasks</h2>

@@ -4,19 +4,19 @@ import { cp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { installSdk } from "../checks/fixtures/install-sdk.mjs";
+import { installSdk } from "../fixtures/install-sdk.mjs";
 import { decisionCaseId, decisionContract, observeDecision, readDecisionScenario, useDecisionScenario } from "./decision.mjs";
 import { permissionConfig, probeFixture } from "./fixture.mjs";
 import { decisionRetryHint, gradeCase, outcomeGraders, responseContracts, skillReads, usage } from "./grade.mjs";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
+const root = fileURLToPath(new URL("../../", import.meta.url));
 const candidate = ["yogurt-ui", "yogurt-build", "yogurt-review", "yogurt-feedback"];
 const evaluationSkill = "yogurt-evaluate";
 const { values: args } = parseArgs({ options: {
   out: { type: "string" },
   case: { type: "string", multiple: true },
   split: { type: "string", default: "development" },
-  profiles: { type: "string", default: join(root, "evals/profiles.json") },
+  profiles: { type: "string", default: join(root, "checks/evals/profiles.json") },
   arm: { type: "string", multiple: true },
   "baseline-skill": { type: "string" },
   repeats: { type: "string", default: "1" },
@@ -258,7 +258,7 @@ async function trial({ item, arm, repeat }) {
     const issueEvidence = issueCases.has(item.id) ? join(dir, `issue-evidence-${sequence}.json`) : null;
     const issueOptions = issueEvidence ? [
       `mcp_servers.issue_fixture.command=${JSON.stringify(process.execPath)}`,
-      `mcp_servers.issue_fixture.args=${JSON.stringify([join(root, "evals/issue-fixture.mjs"), item.id, project, issueEvidence])}`,
+      `mcp_servers.issue_fixture.args=${JSON.stringify([join(root, "checks/evals/issue-fixture.mjs"), item.id, project, issueEvidence])}`,
       'mcp_servers.issue_fixture.enabled_tools=["report_issue"]',
       'mcp_servers.issue_fixture.default_tools_approval_mode="approve"',
     ].flatMap(setting => ["-c", setting]) : [];

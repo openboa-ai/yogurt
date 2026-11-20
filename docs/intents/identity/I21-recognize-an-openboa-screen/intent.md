@@ -16,4 +16,4 @@ A team building an inbox or a record detail should be able to compose a screen t
 
 The brand owner owns art direction, foundation tokens and shared expression. Products own the facts, consequences and order implied by their tasks. The system-wide primary is the original symbol’s Ink blue, slate.750 (#175174).
 
-[Visual direction](../../../design-direction.md) · [Type scale](../../../../system.html#type) · [brand.json](../../../../tokens/brand.json) · [Product playbook](../../../../playbook.html) · [Component foundation](../../../component-foundation.md)
+[Visual direction](../../../design-direction.md) · [Type scale](https://yogurt-theta.vercel.app/system.html#type) · [brand.json](../../../../tokens/brand.json) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html) · [Component foundation](../../../component-foundation.md)

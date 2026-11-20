@@ -30,4 +30,4 @@ Interrupt an opening transition, reopen it and remove the invoker in a separate 
 
 **End scene.** Navigate a secondary action menu, change a tab, then open and dismiss a confirmation. Keyboard and pointer users reach the same destinations and can tell which item or panel is active.
 
-**Current sources and open decisions.** [Current web menu](../../../action-menu.md) · [Product playbook](../../../../playbook.html) · [patterns.json](../../../../catalog/patterns.json) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [Current web menu](../../../action-menu.md) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html) · [patterns.json](../../../../catalog/patterns.json) · [Delivery status and owner decisions](../../../status.md)

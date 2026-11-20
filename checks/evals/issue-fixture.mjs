@@ -1,8 +1,8 @@
 import { readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
-import { issueLedger } from "../plugins/yogurt/bin/issue-ledger.mjs";
-import { reportIssue } from "../plugins/yogurt/bin/report-issue.mjs";
+import { issueLedger } from "../../plugins/yogurt/bin/issue-ledger.mjs";
+import { reportIssue } from "../../plugins/yogurt/bin/report-issue.mjs";
 
 const [scenario, projectArg, evidence] = process.argv.slice(2);
 const project = realpathSync(projectArg);

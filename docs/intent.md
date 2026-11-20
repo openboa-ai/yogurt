@@ -8,4 +8,4 @@ An OpenBoa product team should be able to start with what a person came to do an
 
 **Retained decisions.** OpenBoa owns the identity, shared conventions and component support claims. Each product owns its authority, data model, user tasks and production adoption. App clients use Vercel Native SDK as their default stack. The main brand color is the original symbol’s Ink blue, slate.750 (#175174). The production web behavior provider remains under review.
 
-[Product specification](spec.md) · [Visual direction](design-direction.md) · [Working product examples](../playbook.html)
+[Product specification](spec.md) · [Visual direction](design-direction.md) · [Working product examples](https://yogurt-theta.vercel.app/playbook.html)

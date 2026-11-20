@@ -1,6 +1,6 @@
 # How projects use yogurt
 
-A team can ask “How does someone review this decision?” and find a screen pattern, its building blocks, English wording, failure behavior and a way to check the result. A project can use the same material whether its implementer is a designer, an engineer or an agent. [Open the working playbook](../playbook.html)
+A team can ask “How does someone review this decision?” and find a screen pattern, its building blocks, English wording, failure behavior and a way to check the result. A project can use the same material whether its implementer is a designer, an engineer or an agent. [Open the working playbook](https://yogurt-theta.vercel.app/playbook.html)
 
 ## A product brief goes in. A screen can be built from the answer.
 
@@ -20,15 +20,15 @@ The [design handbook](index.html) and [canonical portfolio](README.md) connect t
 | Brand and language | [Artwork and fonts](../assets/README.md), [approved terms](../content/terms.json), [numbered palette](../tokens/brand.json) and [UI roles](../tokens/ui.json) | The guide, SDK, brand CSS and Native theme |
 | Design contracts | [Catalog](../catalog/README.md) and the [paired design records](README.md) | The SDK, pattern lookup, guide and plugin |
 | Public rendering | [Web and Native adapters](../packages/README.md), [compositions](../blocks/) and [styles](../styles/) | Product apps, the guide and examples |
-| Guide presentation | [Guide sources](../apps/guide/README.md), its browser runtime and the design records | Root HTML entry pages and the generated handbook |
+| Guide presentation | [Guide sources](../apps/guide/README.md), its browser runtime and the design records | Hosted and offline guide, including the generated handbook |
 | Product examples | [Examples](../examples/README.md) | The playbook, developers and design review |
 | Installation and agent workflows | [Consumer CLI](../bin/yogurt.mjs), [agent plugin](../plugins/README.md), [installed design entry](../DESIGN.md) | Products and their agents |
-| Verification | [Checks](../checks/README.md), [evals](../evals/README.md) and the maintainers’ [evaluation skill](../.agents/skills/yogurt-evaluate/SKILL.md) | CI and Yogurt maintainers |
-| Build and release | [Maintainer entry points](../scripts/README.md) and [release records](../releases/README.md) | Maintainers and pinned SDK consumers |
+| Verification | [Checks](../checks/README.md), [evals](../checks/evals/README.md) and the maintainers’ [evaluation skill](../.agents/skills/yogurt-evaluate/SKILL.md) | CI and Yogurt maintainers |
+| Build and release | [Maintainer entry points](../scripts/README.md) and [release records](releases/README.md) | Maintainers and pinned SDK consumers |
 
-The SDK build writes `dist/` and `registry/` from the renderer sources and component catalog. Update the source and regenerate the output together. The guide owns its browser scripts in `apps/guide/runtime/`. Its standalone HTML entry pages keep their existing URLs. The SDK [install guide](using-yogurt.md) and [plugin instructions](../plugins/yogurt/README.md) describe the pins each product selects.
+The SDK build writes `dist/` and `registry/` from the renderer sources and component catalog. Update the source and regenerate the output together. The guide owns its HTML sources in `apps/guide/pages/` and its browser scripts in `apps/guide/runtime/`. The site build keeps the existing routes. The standalone galleries are generated SDK artifacts. The SDK [install guide](using-yogurt.md) and [plugin instructions](../plugins/yogurt/README.md) describe the pins each product selects.
 
-The [Web source layout](../packages/web/README.md#source-layout) separates foundations, controls, compositions and identity. Catalog IDs resolve to the implementation during the build. The [maintainer tools](../scripts/README.md) divide generation by output owner. The [hosted guide build](../apps/guide/README.md#hosting) uses the existing HTML entry pages and copies their required runtime and reference files into the static site.
+The [Web source layout](../packages/web/README.md#source-layout) separates foundations, controls, compositions and identity. Catalog IDs resolve to the implementation during the build. The [maintainer tools](../scripts/README.md) divide generation by output owner. The [hosted guide build](../apps/guide/README.md#hosting) stages the same site for hosted and offline use from the authored pages, generated pages and shared assets.
 
 Use [AGENTS.md](../AGENTS.md) when working on Yogurt itself. An adopting project can generate a short instruction index from its own binding. [Scope and verification for the guide move](engineering/adoption/U19D-guide-and-evaluate-skills/source-boundaries/spec.md)
 
@@ -56,7 +56,7 @@ The proposed release manifest identifies a compatible version of the rules, toke
 
 An intent refers to one or more pattern IDs. It keeps the project-owned state mapping, permission source, effect, and test case. The optional agent skill reads the installed version. A developer can use the same catalog and check without installing a plugin. A short design entry that points from an agent to maintained project sources follows the approach Vercel describes for its own systems. [Vercel’s design.md](https://vercel.com/blog/how-our-agents-build-on-brand-pages-with-design-md)
 
-Build app clients on Vercel Native SDK by default. The [native stack decision](native-stack.md) describes the markup, typed host messages and first native fixture. Build web clients on the same React DOM/CSS adapter for Next.js and Vite. Support a deliberate WebView as a web surface and test its return to the native host. For native-rendered views, map the common contract to the Native SDK and its supported native-rendered controls. Check keyboard and accessibility on that renderer. One adopting team can upgrade independently of the others. Rehearse the changed screens before switching its pin and retain the preceding working release. [Native SDK](https://github.com/vercel-labs/native) · [Adoption and rollback](../adoption.html#releases)
+Build app clients on Vercel Native SDK by default. The [native stack decision](native-stack.md) describes the markup, typed host messages and first native fixture. Build web clients on the same React DOM/CSS adapter for Next.js and Vite. Support a deliberate WebView as a web surface and test its return to the native host. For native-rendered views, map the common contract to the Native SDK and its supported native-rendered controls. Check keyboard and accessibility on that renderer. One adopting team can upgrade independently of the others. Rehearse the changed screens before switching its pin and retain the preceding working release. [Native SDK](https://github.com/vercel-labs/native) · [Adoption and rollback](https://yogurt-theta.vercel.app/adoption.html#releases)
 
 ## Decide what can be enforced
 

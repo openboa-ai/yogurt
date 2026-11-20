@@ -26,4 +26,4 @@ Review crops on both surfaces, then export an emoji with a joined sequence. Comp
 
 **End scene.** At 16, 24 and 32 px a reader distinguishes the yogurt cup, scored loaf and peppered meatball. A search by name or full Unicode sequence returns the matching original drawing and accessible name.
 
-**Current sources and open decisions.** [emoji.json](../../../../assets/projects/emoji.json) · [README.md](../../../../assets/emoji/README.md) · [catalog.json](../../../../assets/emoji/catalog.json) · [Project emoji](../../../../library.html#emoji) · [search.svg](../../../../assets/icons/search.svg) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [emoji.json](../../../../assets/projects/emoji.json) · [README.md](../../../../assets/emoji/README.md) · [catalog.json](../../../../assets/emoji/catalog.json) · [Project emoji](https://yogurt-theta.vercel.app/library.html#emoji) · [search.svg](../../../../assets/icons/search.svg) · [Delivery status and owner decisions](../../../status.md)

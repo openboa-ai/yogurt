@@ -16,4 +16,4 @@ Someone sends a decision and the connection drops. They need to distinguish a lo
 
 Bind pattern.track-request to an existing host-owned receipt, status and lookup permission. Yogurt never creates business commands or new tracking IDs.
 
-[patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](../../../../playbook.html)
+[patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html)

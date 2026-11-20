@@ -16,4 +16,4 @@ A Meatball user sees a decision requiring their action. They need to know the af
 
 Bind pattern.review-decision to caller-supplied actor scope, project, record, revision and choices. Only the product can authorize or execute the action.
 
-[patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](../../../../playbook.html)
+[patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html)

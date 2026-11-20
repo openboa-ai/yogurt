@@ -16,4 +16,4 @@ A person sees a page load, update or fail. They need to know whether they can wa
 
 The product owns progress facts and whether a retry is safe. Yogurt owns placement, announcements and text hierarchy. Motion must not imply confirmation.
 
-[Working task states](../../../../patterns/task-states.html) · [Component inventory](../../../../system.html#catalog) · [patterns.json](../../../../catalog/patterns.json)
+[Working task states](https://yogurt-theta.vercel.app/patterns/task-states.html) · [Component inventory](https://yogurt-theta.vercel.app/system.html#catalog) · [patterns.json](../../../../catalog/patterns.json)

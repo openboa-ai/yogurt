@@ -16,4 +16,4 @@ A person checking a trend wants to distinguish a measured zero, a missing readin
 
 The client owns measures, units, authorization, coverage and time. Yogurt owns the encoding, text equivalent, legend and layout. Chart roles use the shared palette.
 
-[notch-positions.csv](../../../../assets/charts/notch-positions.csv) · [notch-positions.svg](../../../../assets/charts/notch-positions.svg) · [Source library](../../../../library.html) · [brand.json](../../../../tokens/brand.json)
+[notch-positions.csv](../../../../assets/charts/notch-positions.csv) · [notch-positions.svg](../../../../assets/charts/notch-positions.svg) · [Source library](https://yogurt-theta.vercel.app/library.html) · [brand.json](../../../../tokens/brand.json)

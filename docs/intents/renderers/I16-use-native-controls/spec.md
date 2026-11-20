@@ -24,4 +24,4 @@ Exercise focus return, reduced motion and unmount during an active request in a 
 
 **End scene.** On a named OS/device, open the installed build, navigate with native controls and complete the same fixture. Compare the accessible state and measured interaction with a baseline on that device.
 
-**Current sources and open decisions.** [Default native stack](../../../native-stack.md) · [Repository blueprint](../../../repository.md) · [Adoption guide](../../../../adoption.html) · [brand.json](../../../../tokens/brand.json) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [Default native stack](../../../native-stack.md) · [Repository blueprint](../../../repository.md) · [Adoption guide](https://yogurt-theta.vercel.app/adoption.html) · [brand.json](../../../../tokens/brand.json) · [Delivery status and owner decisions](../../../status.md)

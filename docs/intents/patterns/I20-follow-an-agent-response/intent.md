@@ -16,4 +16,4 @@ A person following a named agent needs to read partial output, interrupt when su
 
 The host owns agent and message identity, order, capability, retention and effects of stop or retry. The pattern owns transcript layout, status, reading order and user-controlled following.
 
-[eye-motion.json](../../../../assets/agents/eye-motion.json) · [terms.json](../../../../content/terms.json) · [Agent motion](../../../../library.html#motion) · [Repository blueprint](../../../repository.md)
+[eye-motion.json](../../../../assets/agents/eye-motion.json) · [terms.json](../../../../content/terms.json) · [Agent motion](https://yogurt-theta.vercel.app/library.html#motion) · [Repository blueprint](../../../repository.md)

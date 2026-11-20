@@ -10,10 +10,10 @@ Yogurt is OpenBoa’s design system and UI SDK. It gives projects shared rules f
 
 ## Getting started
 
-- **Design a screen** with the [design rules](DESIGN.md), [component gallery](components.html) and [product playbook](playbook.html).
+- **Design a screen** with the [design rules](DESIGN.md), [component gallery](components.html) and [product playbook](https://yogurt-theta.vercel.app/playbook.html).
 - **Build a product** using a pinned SDK revision. Follow the [Web setup](docs/using-yogurt.md#web) or [Zig and Vercel Native setup](docs/using-yogurt.md#zig-and-vercel-native-sdk).
 - **Use Yogurt with Codex** by installing the [Yogurt plugin](plugins/yogurt/README.md) and pointing it at the project's SDK pin.
-- **Make something on brand** with the [identity guide](index.html), [design tokens](system.html) and [artwork and emoji](assets/README.md).
+- **Make something on brand** with the [identity guide](https://yogurt-theta.vercel.app/index.html), [design tokens](https://yogurt-theta.vercel.app/system.html) and [artwork and emoji](assets/README.md).
 
 From an existing product, install the SDK at the full GitHub commit you want to use.
 
@@ -31,10 +31,10 @@ For a local archive, see [SDK installation](docs/using-yogurt.md#install-the-loc
 | [Design sources](assets/README.md) | Artwork, fonts, tokens and product language |
 | [Catalog](catalog/README.md) | Shared component and pattern IDs, contracts and target bindings |
 | [Packages](packages/README.md) | The React and Native adapters that implementing projects use |
-| [Guide](apps/guide/README.md) | The interactive guide, gallery and generated handbook |
+| [Guide](apps/guide/README.md) | Authored pages, browser runtime and interactive gallery examples |
 | [Plugins](plugins/README.md) | Installable agent workflows |
 | [Examples](examples/README.md) | Complete screens and integration cases |
-| [Checks](checks/README.md) and [evals](evals/README.md) | Runtime verification and agent evaluation |
+| [Checks](checks/README.md) | Runtime verification and [agent evaluations](checks/evals/README.md) |
 | [Maintainer scripts](scripts/README.md) | Build, export and installed lookup entry points |
 
 The [repository map](docs/repository.md#keep-one-owner-for-each-source) explains where to make a change and what each source generates. The [design records](docs/README.md) connect intents, decisions and verification.
@@ -49,7 +49,7 @@ npm run build
 npm run check:ui
 ```
 
-See the [guide build commands](apps/guide/README.md) to regenerate the offline pages. Use the [verification guide](checks/README.md) to test an installed SDK in an independent project.
+Build the [offline guide](apps/guide/README.md#hosting) with `node apps/guide/tooling/build-site.mjs`, then open `site/index.html`. Use the [verification guide](checks/README.md) to test an installed SDK in an independent project.
 
 ## Contributing
 

@@ -24,4 +24,4 @@ Compare the company header, source master and co-attribution together. On a narr
 
 **End scene.** Open a company header at its 160 px example width and a project detail at message size. A fresh reader can locate the company signature, the project mark and the named agent in their respective roles.
 
-**Current sources and open decisions.** [Company signature](../../../../index.html#logo) · [upright-9.svg](../../../../assets/logo/upright-9.svg) · [openboa-lockup.svg](../../../../assets/logo/openboa-lockup.svg) · [Signature study](../../../../examples/signature/index.html) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [Company signature](https://yogurt-theta.vercel.app/index.html#logo) · [upright-9.svg](../../../../assets/logo/upright-9.svg) · [openboa-lockup.svg](../../../../assets/logo/openboa-lockup.svg) · [Signature study](../../../../examples/signature/index.html) · [Delivery status and owner decisions](../../../status.md)

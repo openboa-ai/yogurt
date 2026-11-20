@@ -16,4 +16,4 @@ A Board Client reader opens a record with partial coverage. They need its source
 
 Bind pattern.inspect-record to the product’s authorized projection. The product owns credentials, access, revision and coverage. The pattern reads facts and offers only supported recovery.
 
-[patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](../../../../playbook.html)
+[patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html)

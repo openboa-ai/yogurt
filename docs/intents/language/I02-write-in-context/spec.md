@@ -24,4 +24,4 @@ Review one introduction, one short repository description and one denied or unce
 
 **End scene.** Read the three project descriptions beside their food names. In a separate interrupted action, a reader can say what was sent, what remains unknown and where to check.
 
-**Current sources and open decisions.** [terms.json](../../../../content/terms.json) · [Brand voice](../../../../index.html#voice) · [Company introduction](../../../../index.html#identity) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [terms.json](../../../../content/terms.json) · [Brand voice](https://yogurt-theta.vercel.app/index.html#voice) · [Company introduction](https://yogurt-theta.vercel.app/index.html#identity) · [Delivery status and owner decisions](../../../status.md)

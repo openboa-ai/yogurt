@@ -24,4 +24,4 @@ While reading an older turn, receive a new chunk. Keep the reading position, off
 
 **End scene.** Stream two parts for one reply, stop at an authorized boundary and reopen it. The visible transcript preserves exactly the confirmed text and names the state of the remaining reply.
 
-**Current sources and open decisions.** [eye-motion.json](../../../../assets/agents/eye-motion.json) · [terms.json](../../../../content/terms.json) · [Agent motion](../../../../library.html#motion) · [Repository blueprint](../../../repository.md) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [eye-motion.json](../../../../assets/agents/eye-motion.json) · [terms.json](../../../../content/terms.json) · [Agent motion](https://yogurt-theta.vercel.app/library.html#motion) · [Repository blueprint](../../../repository.md) · [Delivery status and owner decisions](../../../status.md)

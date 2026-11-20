@@ -16,4 +16,4 @@ An OpenBoa client team builds on Vercel Native SDK, the selected default applica
 
 Vercel Native SDK (vercel-labs/native) is the selected default stack for OpenBoa app clients. The adapter owner owns SDK mapping, version qualification and per-OS support. The consumer owns its model, effects and host navigation. A deliberately embedded WebView follows the web contract.
 
-[Default native stack](../../../native-stack.md) · [Repository blueprint](../../../repository.md) · [Adoption guide](../../../../adoption.html) · [brand.json](../../../../tokens/brand.json)
+[Default native stack](../../../native-stack.md) · [Repository blueprint](../../../repository.md) · [Adoption guide](https://yogurt-theta.vercel.app/adoption.html) · [brand.json](../../../../tokens/brand.json)

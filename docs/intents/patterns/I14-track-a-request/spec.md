@@ -24,4 +24,4 @@ Deliver an out-of-order status, restore connectivity and inspect the original re
 
 **End scene.** Reopen the same request and reconcile its stable receipt. Sent, unknown, confirmed and rejected each show only the action and facts justified by the source.
 
-**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](../../../../playbook.html) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [patterns.json](../../../../catalog/patterns.json) · [Product fixtures](../../../../examples/project-use/scenarios.json) · [Product playbook](https://yogurt-theta.vercel.app/playbook.html) · [Delivery status and owner decisions](../../../status.md)

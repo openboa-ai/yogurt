@@ -26,4 +26,4 @@ Compare the current 45 fitted pairs at actual roster size. The illustrative 45 �
 
 **End scene.** The same assigned identity retains its outline, fitted notch, fill and name across renders. Kai and Sol retain their original gestures. A working state remains legible with motion reduced.
 
-**Current sources and open decisions.** [silhouettes.json](../../../../assets/agents/silhouettes.json) · [kai.svg](../../../../assets/agents/kai.svg) · [sol.svg](../../../../assets/agents/sol.svg) · [eye-motion.json](../../../../assets/agents/eye-motion.json) · [Agent motion](../../../../library.html#motion) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [silhouettes.json](../../../../assets/agents/silhouettes.json) · [kai.svg](../../../../assets/agents/kai.svg) · [sol.svg](../../../../assets/agents/sol.svg) · [eye-motion.json](../../../../assets/agents/eye-motion.json) · [Agent motion](https://yogurt-theta.vercel.app/library.html#motion) · [Delivery status and owner decisions](../../../status.md)

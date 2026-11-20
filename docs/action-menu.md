@@ -1,6 +1,6 @@
 # Action menu
 
-Use a menu for related secondary commands on the current item. A select fits a persistent choice such as a filter. Give a primary or consequential action its own visible entry. The playbook uses a menu to navigate to the selected pattern’s component choices and review checks. [Try the menu](../playbook.html#usage)
+Use a menu for related secondary commands on the current item. A select fits a persistent choice such as a filter. Give a primary or consequential action its own visible entry. The playbook uses a menu to navigate to the selected pattern’s component choices and review checks. [Try the menu](https://yogurt-theta.vercel.app/playbook.html#usage)
 
 ## Use the plain web control
 
