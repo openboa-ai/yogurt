@@ -27,3 +27,9 @@ Include agent steps, hold to confirm, smooth tabs, slide to confirm and notifica
 Publish a temporary branch preview for hands-on review. Keep the comparison and existing library reachable from the preview. Leave the pull request unmerged until the owner finishes reviewing. Include additional reusable patterns identified during the catalog review and expose them as interactive examples.
 
 The owner selected an expandable task list for additional refinement. The list shows supplied queued, running, done and failed states, a count derived from the dataset and expandable child steps. A quiet travel indicator marks the first active row. A check draws when a task completes. Motion reduction leaves status text, counts and disclosure available. The fixture can advance, fail and restart without starting an external task.
+
+## Component visual refinement
+
+The owner asked to improve the visual quality of the components across both catalogs. Refine the static control, field, selection, card and layer geometry before applying motion. Use Yogurt's existing type and palette. Interactive elements use compact boundaries, consistent label and icon placement, and a visible focus treatment. Use soft surfaces to group related information and reserve stronger contrast for the active item and primary action. Keep the size and content footprint stable when motion begins.
+
+Apply the refinement to shared Web styles and to the standalone patterns, with before and after capture of representative controls in light and dark at mobile and desktop widths. Verify single activation, focus, overlay geometry, task state and reduced motion. Deliver it to the existing draft preview for hands-on review.
