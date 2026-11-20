@@ -169,6 +169,15 @@
   background: light-dark(var(--yg-surface), var(--boa-color-neutral-950));
 }
 .motion-pattern-article[data-wide] .motion-pattern-stage { inline-size: min(100%, 52rem); }
+#spring-dropdown .motion-pattern-stage { min-block-size: 17.5rem; }
+#spring-dropdown .yg-spring-label {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .motion-pattern-sample, .motion-sample-stack {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

@@ -347,13 +347,15 @@ function SpringHighlight() {
     const viewport = highlight?.parentElement;
     if (!highlight || !viewport) return;
     let lastTop;
+    let lastRow = null;
     const update = () => {
-      const row = viewport.querySelector("[data-highlighted]") ?? viewport.querySelector('[role="option"][data-state="checked"]');
+      const row = viewport.querySelector("[data-highlighted]") ?? (viewport.contains(lastRow) ? lastRow : null) ?? viewport.querySelector('[role="option"][data-state="checked"]');
       if (!row) {
         highlight.removeAttribute("data-ready");
         lastTop = void 0;
         return;
       }
+      lastRow = row;
       const top = row.offsetTop;
       if (lastTop !== void 0 && lastTop !== top) {
         highlight.toggleAttribute("data-forward", top > lastTop);
@@ -384,11 +386,53 @@ function SpringHighlight() {
 function SpringDropdown({ label, value, onChange, options }) {
   const id = useId3();
   const [portal, setPortal] = useState3(null);
+  const trigger = useRef3(null);
+  const dismissTimer = useRef3(void 0);
+  const keepSelectionVisible = useRef3(false);
+  const press = useRef3(void 0);
   const [menu, setMenu] = useState3({ open: false, lift: 0 });
   const selected = options.find((option) => option.id === value);
   const [roll, setRoll] = useState3({ value, previous: void 0 });
   if (roll.value !== value) setRoll({ value, previous: roll.value });
   const previous = options.find((option) => option.id === roll.previous);
+  useLayoutEffect(() => () => {
+    clearTimeout(dismissTimer.current);
+    press.current?.cancel();
+  }, []);
+  function bounceTrigger(scale) {
+    const button = trigger.current;
+    if (!button || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    press.current?.cancel();
+    press.current = button.animate([{ scale }, { scale: 1 }], {
+      duration: 545,
+      easing: getComputedStyle(button).getPropertyValue("--yg-motion-picker-press").trim() || "ease-out"
+    });
+  }
+  function changeOpen(open) {
+    if (!open && keepSelectionVisible.current) {
+      keepSelectionVisible.current = false;
+      return;
+    }
+    clearTimeout(dismissTimer.current);
+    if (!open) {
+      setMenu((current) => ({ ...current, open: false }));
+      return;
+    }
+    const top = portal?.getBoundingClientRect().top ?? 0;
+    const room = Math.max(0, top - 16);
+    const lift = Math.min(room, (8 + 12 + options.length * 44) / 2);
+    setMenu({ open: true, lift });
+    bounceTrigger(0.965);
+  }
+  function select(next) {
+    if (menu.open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      bounceTrigger(0.955);
+      keepSelectionVisible.current = true;
+      clearTimeout(dismissTimer.current);
+      dismissTimer.current = setTimeout(() => setMenu((current) => ({ ...current, open: false })), 240);
+    }
+    onChange(next);
+  }
   return /* @__PURE__ */ jsxs3(
     "div",
     {
@@ -398,12 +442,8 @@ function SpringDropdown({ label, value, onChange, options }) {
       style: { "--yg-picker-lift": `${menu.lift}px` },
       children: [
         /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
-        /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: onChange, onOpenChange: (open) => {
-          const room = Math.max(0, (portal?.getBoundingClientRect().top ?? 0) - 16);
-          const lift = Math.min(room, 10 + Math.min(options.length, 4) * 22);
-          setMenu({ open, lift });
-        }, children: [
-          /* @__PURE__ */ jsxs3(dist_exports.Trigger, { className: "yg-spring-trigger", "aria-labelledby": id, children: [
+        /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: select, open: menu.open, onOpenChange: changeOpen, children: [
+          /* @__PURE__ */ jsxs3(dist_exports.Trigger, { ref: trigger, className: "yg-spring-trigger", "aria-labelledby": id, children: [
             /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value", children: [
               previous && /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-outgoing": true, "aria-hidden": "true", children: [
                 /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": previous.marker }),
@@ -414,9 +454,22 @@ function SpringDropdown({ label, value, onChange, options }) {
                 /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) })
               ] }, value)
             ] }),
-            /* @__PURE__ */ jsx3(dist_exports.Icon, { className: "yg-spring-chevron", "aria-hidden": "true", children: "\u2304" })
+            /* @__PURE__ */ jsx3(dist_exports.Icon, { asChild: true, children: /* @__PURE__ */ jsx3(
+              "svg",
+              {
+                className: "yg-spring-chevron",
+                viewBox: "0 0 24 24",
+                fill: "none",
+                stroke: "currentColor",
+                strokeWidth: "2",
+                strokeLinecap: "round",
+                strokeLinejoin: "round",
+                "aria-hidden": "true",
+                children: /* @__PURE__ */ jsx3("path", { d: "m6 9 6 6 6-6" })
+              }
+            ) })
           ] }),
-          /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, children: /* @__PURE__ */ jsxs3(dist_exports.Viewport, { className: "yg-spring-viewport", children: [
+          /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, collisionPadding: 16, children: /* @__PURE__ */ jsxs3(dist_exports.Viewport, { className: "yg-spring-viewport", children: [
             /* @__PURE__ */ jsx3(SpringHighlight, {}),
             options.map((option, index) => /* @__PURE__ */ jsxs3(
               dist_exports.Item,
@@ -427,7 +480,20 @@ function SpringDropdown({ label, value, onChange, options }) {
                 children: [
                   /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
                   /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
-                  /* @__PURE__ */ jsx3(dist_exports.ItemIndicator, { className: "yg-spring-check", "aria-hidden": "true", children: "\u2713" })
+                  /* @__PURE__ */ jsx3(
+                    "svg",
+                    {
+                      className: "yg-spring-check",
+                      viewBox: "0 0 24 24",
+                      fill: "none",
+                      stroke: "currentColor",
+                      strokeWidth: "2.2",
+                      strokeLinecap: "round",
+                      strokeLinejoin: "round",
+                      "aria-hidden": "true",
+                      children: /* @__PURE__ */ jsx3("path", { d: "m5 12.5 4.5 4.5L19 7.5", pathLength: "22" })
+                    }
+                  )
                 ]
               },
               option.id

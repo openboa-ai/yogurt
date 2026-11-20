@@ -35,8 +35,6 @@ Focused captures in both appearances show a stroke-free prompt and character-lim
 
 ## Spring responses and interrupted input
 
-The picker test tracks its highlight on arrow input and checks focus after menu exit and pointer selection. The switch test checks the thumb stretch on a state change and reverses it with a second key press. The character editor renders rejected text while its accepted value stays at the character limit. The guide exercises the same controls with reduced motion. Individual visual evidence covers the picker, storage, switch, and character editor. Broader frame-by-frame visual verification remains open.
+The standalone catalogs resolve motion curves from the shared stylesheet. Browser frame samples at 320, 768, and 1440 CSS pixels show intermediate picker heights and opacities, staggered rows, a stable trigger-to-menu gap during the lift, and a check drawing before the exit starts. The picker test tracks its highlight on arrow input and checks focus after Escape and pointer selection. Reduced-motion checks confirm immediate selection and closure in both appearances.
 
-## Spring responses and interrupted input
-
-The picker test tracks its highlight on arrow input and checks focus after menu exit and pointer selection. The switch test checks the thumb stretch on a state change and reverses it with a second key press. The character editor renders rejected text while its accepted value stays at the character limit. The guide exercises the same controls with reduced motion. The private browser comparison records the picker, storage, switch, and character editor. Visual checks for other interaction phases remain open.
+The switch test checks the thumb stretch on a state change and reverses it with a second key press. The character editor renders rejected text while its accepted value stays at the character limit. Visual checks for other interaction phases remain open.

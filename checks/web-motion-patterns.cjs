@@ -132,21 +132,49 @@ async function run(browser) {
     assert.equal(await promptBox.getAttribute("aria-busy"), null, "Stop closes the status and settles the control");
     const dropdown = await demo("spring-dropdown");
     const view = dropdown.getByRole("combobox", {name:"Work status"});
+    const trigger = dropdown.locator(".yg-spring-trigger");
+    const reveal = dropdown.evaluate(node => new Promise(resolve => {
+      let observed = false;
+      const deadline = performance.now() + 1200;
+      const sample = () => {
+        const menu = node.querySelector(".yg-spring-menu[data-state='open']");
+        if (menu) {
+          const style = getComputedStyle(menu);
+          const height = Number(style.getPropertyValue("--yg-picker-open"));
+          const opacity = Number(style.opacity);
+          const rows = menu.querySelectorAll("[role='option']");
+          const staggered = Number(getComputedStyle(rows[0]).opacity) > Number(getComputedStyle(rows[3]).opacity);
+          observed ||= height > 0 && height < 1 && opacity > 0 && opacity < 1 && staggered;
+        }
+        if (observed || performance.now() > deadline) resolve(observed);
+        else requestAnimationFrame(sample);
+      };
+      requestAnimationFrame(sample);
+    }));
     await view.press("Space");
     const options = page.getByRole("listbox");
     await options.waitFor();
+    assert(await reveal, "The standalone gallery animates menu height, opacity and row stagger");
     await page.keyboard.press("ArrowDown");
     await page.waitForFunction(() => {
       const row = document.querySelector(".yg-spring-option[data-highlighted]");
       const highlight = document.querySelector(".yg-spring-highlight[data-ready]");
       return row && highlight?.style.getPropertyValue("--yg-spring-active-y") === `${row.offsetTop}px`;
     });
+    await page.waitForFunction(() => document.activeElement?.textContent.includes("In review"));
     await page.keyboard.press("Escape");
     await options.waitFor({state:"hidden"});
     await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
     await view.click();
-    await options.getByRole("option", {name:"In review"}).click();
-    assert.match(await view.textContent(), /In review/);
+    const review = options.getByRole("option", {name:"In review"});
+    await review.click();
+    assert.match(await trigger.textContent(), /In review/);
+    assert.equal(await trigger.getAttribute("aria-expanded"), "true", "Selection draws its check before folding the menu");
+    await review.locator(".yg-spring-check path").evaluate(path => {
+      if (!path.getAnimations().some(animation => animation.transitionProperty === "stroke-dashoffset")) {
+        throw Error("The selected check must draw in the menu");
+      }
+    });
     await options.waitFor({state:"hidden"});
     await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
 
@@ -477,6 +505,8 @@ async function checkColorRoles(browser, colorScheme) {
     const complete = page.getByRole("option", {name: "Complete"});
     await expectRole(complete.locator(".yg-spring-symbol"), "signal-positive");
     await complete.click();
+    assert.equal(await dropdown.locator(".yg-spring-trigger").getAttribute("aria-expanded"), "false",
+      "Reduced motion closes the menu with the selected value");
     await expectRole(currentMarker, "signal-positive");
 
     const storage = await show("storage-meter");

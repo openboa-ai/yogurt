@@ -468,6 +468,98 @@
   --yg-muted: light-dark(var(--boa-color-mist-700), var(--boa-color-mist-300));
 }
 
+.yg-root {
+  --yg-motion-tag-enter: 480ms var(--yg-settle);
+  --yg-motion-stepper-spin: 480ms var(--yg-settle);
+  --yg-motion-pagination: 520ms var(--yg-settle);
+  --yg-motion-reading-marker: 330ms var(--yg-settle);
+  --yg-motion-selection-lead: 280ms var(--yg-settle);
+  --yg-motion-selection-tail: 545ms var(--yg-settle);
+  --yg-motion-picker-tail: 470ms var(--yg-settle);
+  --yg-motion-bottom-label: 420ms var(--yg-settle);
+  --yg-motion-picker-reveal: 420ms var(--yg-settle);
+  --yg-motion-picker-opacity: 360ms var(--yg-settle);
+  --yg-motion-picker-lift: 460ms var(--yg-settle);
+  --yg-motion-picker-check: 450ms var(--yg-settle);
+  --yg-motion-picker-press: linear;
+  --yg-motion-picker-row: 390ms var(--yg-settle);
+  --yg-motion-picker-slide: 380ms var(--yg-settle);
+  --yg-motion-picker-highlight: 250ms var(--yg-settle);
+  --yg-motion-picker-chevron: 490ms var(--yg-settle);
+  --yg-motion-switch-travel: 490ms var(--yg-settle);
+  --yg-motion-storage-fill: 450ms var(--yg-settle);
+  --yg-motion-storage-disclose: 460ms var(--yg-settle);
+  --yg-motion-storage-lift: 420ms var(--yg-settle);
+  --yg-motion-letter-progress: 430ms var(--yg-settle);
+  --yg-motion-prompt-editor: 340ms var(--yg-settle);
+  --yg-motion-prompt-status: 360ms var(--yg-settle);
+  --yg-motion-prompt-action: 345ms var(--yg-settle);
+  --yg-motion-nav-divider: 480ms var(--yg-settle);
+  --yg-motion-nav-bottom: 395ms var(--yg-settle);
+  --yg-motion-command-width: 420ms var(--yg-settle);
+  --yg-motion-command-height: 460ms var(--yg-settle);
+  --yg-motion-command-highlight: 350ms var(--yg-settle);
+  --yg-motion-task-check: 650ms var(--yg-settle);
+  --yg-motion-checklist-strike: 550ms var(--yg-settle);
+  --yg-motion-file-press: 460ms var(--yg-settle);
+  --yg-motion-card-open: 480ms var(--yg-settle);
+  --yg-motion-card-fan: 490ms var(--yg-settle);
+  --yg-motion-card-lift: 385ms var(--yg-settle);
+  --yg-motion-card-detail: 435ms var(--yg-settle);
+  --yg-motion-text-pop: 475ms var(--yg-settle);
+  --yg-motion-tooltip-arrive: 370ms var(--yg-settle);
+  --yg-motion-island-expand: 410ms var(--yg-settle);
+  --yg-motion-step-fill: 620ms var(--yg-settle);
+  --yg-motion-success-label: 375ms var(--yg-settle);
+}
+
+@supports (animation-timing-function: linear(0, 1)) {
+  .yg-root {
+    --yg-motion-tag-enter: 480ms linear(0, 0.186, 0.553, 0.926, 1.172, 1.261, 1.23, 1.135, 1.034, 0.965, 0.933, 0.937, 0.96, 0.986, 1.007, 1);
+    --yg-motion-stepper-spin: 480ms linear(0, 0.219, 0.641, 1.04, 1.261, 1.29, 1.197, 1.064, 0.96, 0.914, 0.919, 0.954, 0.993, 1.018, 1.027, 1);
+    --yg-motion-pagination: 520ms linear(0, 0.081, 0.252, 0.435, 0.598, 0.731, 0.832, 0.901, 0.947, 0.977, 0.993, 1.002, 1.006, 1.006, 1.006, 1);
+    --yg-motion-reading-marker: 330ms linear(0, 0.098, 0.287, 0.481, 0.646, 0.777, 0.864, 0.922, 0.959, 0.981, 0.993, 0.999, 1.002, 1.002, 1.002, 1);
+    --yg-motion-selection-lead: 280ms linear(0, 0.09, 0.271, 0.466, 0.639, 0.774, 0.871, 0.933, 0.975, 0.997, 1.009, 1.012, 1.012, 1.01, 1.008, 1);
+    --yg-motion-selection-tail: 545ms linear(0, 0.092, 0.284, 0.495, 0.681, 0.821, 0.922, 0.985, 1.018, 1.032, 1.034, 1.029, 1.022, 1.015, 1.009, 1);
+    --yg-motion-picker-tail: 470ms linear(0, 0.082, 0.258, 0.458, 0.642, 0.792, 0.902, 0.976, 1.017, 1.037, 1.042, 1.038, 1.031, 1.023, 1.015, 1);
+    --yg-motion-bottom-label: 420ms linear(0, 0.097, 0.293, 0.504, 0.688, 0.823, 0.919, 0.979, 1.011, 1.024, 1.027, 1.023, 1.018, 1.012, 1.008, 1);
+    --yg-motion-card-open: 480ms linear(0, 0.103, 0.308, 0.538, 0.737, 0.884, 0.977, 1.03, 1.051, 1.053, 1.044, 1.032, 1.02, 1.011, 1.004, 1);
+    --yg-motion-card-fan: 490ms linear(0, 0.097, 0.314, 0.549, 0.757, 0.919, 1.02, 1.073, 1.089, 1.083, 1.064, 1.043, 1.024, 1.009, 0.999, 1);
+    --yg-motion-card-lift: 385ms linear(0, 0.123, 0.376, 0.666, 0.911, 1.07, 1.154, 1.17, 1.143, 1.096, 1.049, 1.01, 0.984, 0.973, 0.971, 1);
+    --yg-motion-card-detail: 435ms linear(0, 0.106, 0.328, 0.569, 0.768, 0.92, 1.014, 1.061, 1.074, 1.067, 1.051, 1.034, 1.018, 1.007, 0.999, 1);
+    --yg-motion-text-pop: 475ms linear(0, 0.215, 0.663, 1.055, 1.275, 1.295, 1.194, 1.054, 0.951, 0.907, 0.918, 0.956, 0.997, 1.022, 1.029, 1);
+    --yg-motion-tooltip-arrive: 370ms linear(0, 0.105, 0.302, 0.518, 0.699, 0.829, 0.92, 0.975, 1.002, 1.015, 1.018, 1.016, 1.013, 1.009, 1.005, 1);
+    --yg-motion-island-expand: 410ms linear(0, 0.093, 0.293, 0.527, 0.728, 0.883, 0.986, 1.047, 1.071, 1.072, 1.061, 1.044, 1.028, 1.015, 1.005, 1);
+    --yg-motion-step-fill: 620ms linear(0, 0.105, 0.302, 0.506, 0.676, 0.798, 0.884, 0.939, 0.971, 0.989, 0.998, 1.002, 1.003, 1.003, 1.003, 1);
+    --yg-motion-success-label: 375ms linear(0, 0.102, 0.305, 0.521, 0.706, 0.843, 0.934, 0.988, 1.016, 1.026, 1.026, 1.021, 1.016, 1.01, 1.006, 1);
+    --yg-motion-picker-reveal: 420ms linear(0, 0.099, 0.306, 0.534, 0.732, 0.877, 0.977, 1.033, 1.056, 1.059, 1.05, 1.037, 1.023, 1.013, 1.005, 1);
+    --yg-motion-picker-opacity: 360ms linear(0, 0.101, 0.287, 0.48, 0.644, 0.771, 0.861, 0.921, 0.959, 0.982, 0.994, 1.001, 1.003, 1.004, 1.003, 1);
+    --yg-motion-picker-lift: 460ms linear(0, 0.109, 0.316, 0.531, 0.712, 0.847, 0.935, 0.988, 1.014, 1.024, 1.024, 1.02, 1.015, 1.01, 1.006, 1);
+    --yg-motion-picker-check: 450ms linear(0, 0.103, 0.297, 0.497, 0.669, 0.798, 0.889, 0.947, 0.981, 0.999, 1.007, 1.01, 1.009, 1.007, 1.005, 1);
+    --yg-motion-picker-press: linear(0, 0.291, 0.772, 1.123, 1.242, 1.188, 1.072, 0.979, 0.942, 0.951, 0.978, 1.002, 1.013, 1.013, 1.006, 1);
+    --yg-motion-picker-row: 390ms linear(0, 0.086, 0.269, 0.476, 0.664, 0.815, 0.922, 0.991, 1.029, 1.045, 1.047, 1.04, 1.031, 1.022, 1.013, 1);
+    --yg-motion-picker-slide: 380ms linear(0, 0.089, 0.285, 0.494, 0.68, 0.832, 0.932, 0.995, 1.029, 1.041, 1.041, 1.034, 1.026, 1.017, 1.01, 1);
+    --yg-motion-picker-highlight: 250ms linear(0, 0.075, 0.236, 0.422, 0.598, 0.745, 0.858, 0.938, 0.989, 1.018, 1.032, 1.035, 1.032, 1.027, 1.02, 1);
+    --yg-motion-picker-chevron: 490ms linear(0, 0.131, 0.416, 0.706, 0.936, 1.082, 1.141, 1.14, 1.106, 1.063, 1.023, 0.996, 0.982, 0.979, 0.982, 1);
+    --yg-motion-switch-travel: 490ms linear(0, 0.14, 0.441, 0.743, 0.974, 1.112, 1.158, 1.143, 1.099, 1.05, 1.01, 0.985, 0.976, 0.976, 0.983, 1);
+    --yg-motion-storage-fill: 450ms linear(0, 0.203, 0.618, 1, 1.244, 1.305, 1.232, 1.102, 0.989, 0.92, 0.907, 0.933, 0.973, 1.007, 1.026, 1);
+    --yg-motion-storage-disclose: 460ms linear(0, 0.096, 0.301, 0.513, 0.701, 0.838, 0.934, 0.989, 1.017, 1.028, 1.028, 1.023, 1.017, 1.011, 1.007, 1);
+    --yg-motion-storage-lift: 420ms linear(0, 0.097, 0.293, 0.504, 0.688, 0.823, 0.919, 0.979, 1.011, 1.024, 1.027, 1.023, 1.018, 1.012, 1.008, 1);
+    --yg-motion-letter-progress: 430ms linear(0, 0.099, 0.299, 0.529, 0.724, 0.878, 0.977, 1.035, 1.059, 1.062, 1.053, 1.039, 1.026, 1.014, 1.005, 1);
+    --yg-motion-prompt-editor: 340ms linear(0, 0.089, 0.269, 0.452, 0.623, 0.757, 0.855, 0.919, 0.962, 0.987, 1, 1.006, 1.008, 1.008, 1.006, 1);
+    --yg-motion-prompt-status: 360ms linear(0, 0.09, 0.274, 0.474, 0.652, 0.792, 0.891, 0.956, 0.994, 1.013, 1.02, 1.021, 1.018, 1.013, 1.009, 1);
+    --yg-motion-prompt-action: 345ms linear(0, 0.113, 0.343, 0.585, 0.786, 0.928, 1.013, 1.053, 1.062, 1.054, 1.039, 1.025, 1.012, 1.004, 0.999, 1);
+    --yg-motion-nav-divider: 480ms linear(0, 0.129, 0.384, 0.66, 0.88, 1.022, 1.09, 1.106, 1.091, 1.063, 1.034, 1.011, 0.997, 0.99, 0.989, 1);
+    --yg-motion-nav-bottom: 395ms linear(0, 0.094, 0.294, 0.501, 0.681, 0.818, 0.916, 0.975, 1.006, 1.021, 1.024, 1.022, 1.017, 1.012, 1.008, 1);
+    --yg-motion-command-width: 420ms linear(0, 0.097, 0.293, 0.504, 0.688, 0.823, 0.919, 0.979, 1.011, 1.024, 1.027, 1.023, 1.018, 1.012, 1.008, 1);
+    --yg-motion-command-height: 460ms linear(0, 0.089, 0.279, 0.479, 0.661, 0.797, 0.897, 0.958, 0.995, 1.013, 1.019, 1.019, 1.016, 1.012, 1.009, 1);
+    --yg-motion-command-highlight: 350ms linear(0, 0.092, 0.291, 0.498, 0.688, 0.828, 0.924, 0.986, 1.018, 1.031, 1.032, 1.027, 1.021, 1.014, 1.008, 1);
+    --yg-motion-task-check: 650ms linear(0, 0.1, 0.286, 0.478, 0.636, 0.759, 0.846, 0.904, 0.943, 0.967, 0.982, 0.99, 0.995, 0.998, 0.999, 1);
+    --yg-motion-checklist-strike: 550ms linear(0, 0.086, 0.264, 0.464, 0.637, 0.775, 0.874, 0.94, 0.982, 1.004, 1.014, 1.016, 1.015, 1.012, 1.009, 1);
+    --yg-motion-file-press: 460ms linear(0, 0.168, 0.545, 0.923, 1.2, 1.312, 1.288, 1.184, 1.056, 0.958, 0.907, 0.902, 0.93, 0.97, 1.005, 1);
+  }
+}
+
 /* Extended component anatomy. All color roles follow the nearest Yogurt. */
 .yg-bottom-action[data-fixed] {
   position: fixed;
@@ -3244,6 +3336,16 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   inherits: false;
   initial-value: 0;
 }
+@property --yg-picker-opacity {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --yg-picker-row {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
 @property --yg-picker-highlight-top {
   syntax: "<length>";
   inherits: false;
@@ -3290,22 +3392,21 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   transition: border-color var(--yg-change) var(--yg-settle), background-color var(--yg-change) var(--yg-settle);
 }
 .yg-spring-trigger:hover { background: var(--yg-hover); }
-.yg-spring-trigger[data-state="open"] { background: var(--yg-focus-surface); }
+.yg-spring-trigger[data-state="open"] { background: var(--yg-field); }
 .yg-spring-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 .yg-spring-symbol { display: block; flex: none; inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--yg-muted); }
 .yg-spring-symbol[data-marker="in-progress"] { background: var(--yg-signal-warning); }
 .yg-spring-symbol[data-marker="review"] { background: var(--yg-action); }
 .yg-spring-symbol[data-marker="done"] { background: var(--yg-signal-positive); }
-.yg-spring-value { flex: 1; display: grid; min-inline-size: 0; overflow: hidden; white-space: nowrap; font-weight: 500; }
+.yg-spring-value { flex: 1; display: grid; min-inline-size: 0; block-size: 100%; overflow: hidden; white-space: nowrap; font-weight: 500; }
 .yg-spring-value-roll { display: flex; grid-area: 1 / 1; min-inline-size: 0; align-items: center; gap: var(--yg-gap-row); }
 .yg-spring-value-roll[data-outgoing] { visibility: hidden; }
 .yg-spring-value-label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; }
 .yg-spring-chevron { display: grid; place-items: center; flex: none; inline-size: 20px; block-size: 20px; color: var(--yg-muted); font-size: 20px; line-height: 1; transition: transform var(--yg-change) var(--yg-selection); }
 .yg-spring-trigger[data-state="open"] .yg-spring-chevron { transform: rotate(180deg); }
-.yg-spring-menu { z-index: 100; box-sizing: border-box; inline-size: var(--radix-select-trigger-width); max-block-size: var(--radix-select-content-available-height); overflow: hidden; border: 0; border-radius: var(--yg-radius-popover); background: var(--yg-surface); color: var(--yg-text); box-shadow: var(--yg-float-shadow); transform-origin: var(--radix-select-content-transform-origin); }
+.yg-spring-menu { z-index: 100; box-sizing: border-box; inline-size: var(--radix-select-trigger-width); max-block-size: var(--radix-select-content-available-height); overflow: hidden; border: 0; border-radius: var(--yg-radius-popover); background: var(--yg-field); color: var(--yg-text); transform-origin: var(--radix-select-content-transform-origin); }
 .yg-spring-viewport { position: relative; isolation: isolate; padding: var(--yg-inset-layer); }
-.yg-spring-option { position: relative; display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-size-touch); padding: 0 var(--yg-inset-compact) 0 var(--yg-inset-regular); border-radius: var(--yg-radius-panel); outline: none; cursor: pointer; box-sizing: border-box; }
-.yg-spring-option[data-state="checked"] { background: var(--yg-field); color: var(--yg-text); font-weight: 600; }
+.yg-spring-option { position: relative; display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-size-touch); padding: 0 var(--yg-inset-compact) 0 var(--yg-inset-regular); border-radius: var(--yg-radius-panel); font-weight: 500; outline: none; cursor: pointer; box-sizing: border-box; }
 .yg-spring-option[data-highlighted] { background: var(--yg-hover); }
 .yg-spring-option:focus-visible { outline: none; }
 .yg-spring-highlight {
@@ -3324,11 +3425,13 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   .yg-spring-option:focus-visible { outline: var(--boa-stroke-focus) solid Highlight; outline-offset: -2px; }
 }
 
-.yg-spring-check { display: grid; place-items: center; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-text); font-weight: 700; }
+.yg-spring-check { flex: none; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-text); }
+.yg-spring-check path { stroke-dasharray: 22; stroke-dashoffset: 22; }
+.yg-spring-option[data-state="checked"] .yg-spring-check path { stroke-dashoffset: 0; }
 @media (prefers-reduced-motion: no-preference) {
   .yg-spring-dropdown {
     translate: 0 0;
-    transition: translate var(--yg-motion-storage-disclose);
+    transition: translate var(--yg-motion-picker-lift);
   }
   .yg-spring-dropdown[data-open="true"]:has(.yg-spring-menu[data-side="bottom"]) {
     translate: 0 calc(-1 * var(--yg-picker-lift));
@@ -3339,27 +3442,34 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   }
   .yg-morph-tooltip-card[data-open="true"] { transition-delay: 0s; }
   .yg-spring-menu {
-    clip-path: inset(0 calc(-12px * var(--yg-picker-open)) calc((1 - var(--yg-picker-open)) * 100% - 16px * var(--yg-picker-open)) round var(--yg-radius-popover));
-    opacity: clamp(0, var(--yg-picker-open), 1);
-    scale: calc(.9 + .1 * var(--yg-picker-open)) 1;
-    transition: --yg-picker-open var(--yg-motion-picker-reveal);
+    --yg-picker-hidden: calc((1 - clamp(0, var(--yg-picker-open), 1)) * 100%);
+    clip-path: inset(0 0 var(--yg-picker-hidden) round var(--yg-radius-popover));
+    opacity: clamp(0, var(--yg-picker-opacity), 1);
+    scale: calc(.9 + .1 * clamp(0, var(--yg-picker-open), 1.06)) 1;
+    transition: --yg-picker-open var(--yg-motion-picker-reveal),
+      --yg-picker-opacity var(--yg-motion-picker-opacity);
   }
-  .yg-spring-menu[data-state="open"] { --yg-picker-open: 1; }
-  @starting-style {
-    .yg-spring-menu[data-state="open"] { --yg-picker-open: 0; }
+  .yg-spring-menu[data-side="top"] {
+    clip-path: inset(var(--yg-picker-hidden) 0 0 round var(--yg-radius-popover));
   }
+  .yg-spring-menu[data-state="open"] { --yg-picker-open: 1; --yg-picker-opacity: 1; }
   .yg-spring-menu[data-state="closed"] {
     pointer-events: none;
-    animation: yg-spring-exit-presence var(--yg-motion-picker-reveal) both;
+    animation: yg-spring-exit-presence 490ms linear both;
+  }
+  .yg-spring-option {
+    opacity: clamp(0, var(--yg-picker-row), 1);
+    translate: 0 calc((var(--yg-picker-row) - 1) * 14px);
+    transition: --yg-picker-row var(--yg-motion-picker-row);
   }
   .yg-spring-menu[data-state="open"] .yg-spring-option {
-    animation: yg-spring-row var(--yg-motion-picker-row) both;
-    animation-delay: calc(50ms + 45ms * min(var(--yg-spring-row-index), 5));
+    --yg-picker-row: 1;
+    transition-delay: calc(50ms + 45ms * var(--yg-spring-row-index));
   }
   .yg-spring-menu[data-state="closed"] .yg-spring-option {
-    animation: yg-spring-row var(--yg-motion-picker-row) reverse both;
-    animation-delay: calc(20ms * min(var(--yg-spring-row-reverse), 5));
+    transition-delay: calc(20ms * var(--yg-spring-row-reverse));
   }
+  .yg-spring-check path { transition: stroke-dashoffset var(--yg-motion-picker-check); }
   .yg-spring-value-roll[data-incoming] { animation: yg-spring-roll var(--yg-motion-picker-slide) both; }
   .yg-spring-value-roll[data-outgoing] { animation: yg-spring-roll-out var(--yg-motion-picker-slide) both; }
   .yg-spring-highlight[data-ready] {
@@ -3368,15 +3478,21 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
     translate: 0 var(--yg-picker-highlight-top);
     block-size: max(0px, calc(var(--yg-picker-highlight-bottom) - var(--yg-picker-highlight-top)));
     transition: --yg-picker-highlight-top var(--yg-motion-picker-highlight),
-      --yg-picker-highlight-bottom var(--yg-motion-picker-tail);
+      --yg-picker-highlight-bottom var(--yg-motion-picker-tail), opacity var(--yg-motion-picker-opacity);
   }
   .yg-spring-highlight[data-ready][data-forward] {
     transition: --yg-picker-highlight-top var(--yg-motion-picker-tail),
-      --yg-picker-highlight-bottom var(--yg-motion-picker-highlight);
+      --yg-picker-highlight-bottom var(--yg-motion-picker-highlight), opacity var(--yg-motion-picker-opacity);
   }
+  .yg-spring-menu[data-state="closed"] .yg-spring-highlight { opacity: 0; }
   .yg-spring-chevron { transition: transform var(--yg-motion-picker-chevron); }
+  @starting-style {
+    .yg-spring-menu[data-state="open"] { --yg-picker-open: 0; --yg-picker-opacity: 0; }
+    .yg-spring-menu[data-state="open"] .yg-spring-option { --yg-picker-row: 0; }
+    .yg-spring-option[data-state="checked"] .yg-spring-check path { stroke-dashoffset: 0; }
+    .yg-spring-highlight[data-ready] { opacity: 0; }
+  }
 }
-@keyframes yg-spring-row { from { opacity: 0; translate: 0 -14px; } to { opacity: 1; translate: 0 0; } }
 @keyframes yg-spring-roll { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
 @keyframes yg-spring-roll-out {
   from { opacity: 1; visibility: visible; translate: 0 0; }
@@ -4450,27 +4566,6 @@ summary.yg-task-line:focus-visible {
   padding: var(--boa-space-4) var(--yg-inset-compact);
   border-radius: var(--yg-radius-small);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @font-face {
   font-family: "Rethink Sans";

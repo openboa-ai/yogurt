@@ -1,6 +1,7 @@
 import { build } from "esbuild";
 import { anatomy } from "../../../scripts/sdk/anatomy.mjs";
 import { readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 process.chdir(fileURLToPath(new URL("../../..", import.meta.url)));
 const family = process.argv[2] === "--agents";
@@ -25,27 +26,11 @@ const js = await build({
   define: { "process.env.NODE_ENV": '"production"' },
 });
 const read = (p) => readFileSync(p, "utf8");
+const inlineStyles = (path) => read(path).replace(
+  /^@import "\.\/([^"]+)";$/gm,
+  (_, imported) => inlineStyles(join(dirname(path), imported)),
+);
 const galleryStyles = [
-  "design/styles/tokens.css",
-  "design/styles/ui-tokens.css",
-  "design/styles/ui-catalog-parts.css",
-  "design/styles/ui-workspaces.css",
-  "design/styles/ui-agent-workspace.css",
-  "design/styles/ui-project-workspace.css",
-  "design/styles/ui-operations.css",
-  "design/styles/ui-sidebar.css",
-  "design/styles/ui-agent-motion.css",
-  "design/styles/ui-motion-actions.css",
-  "design/styles/ui-motion-navigation.css",
-  "design/styles/ui-motion-inputs.css",
-  "design/styles/ui-motion-choices.css",
-  "design/styles/ui-motion-layers.css",
-  "design/styles/ui-motion-status.css",
-  "design/styles/ui-motion-conversation.css",
-  "design/styles/ui-motion-cards.css",
-  "design/styles/ui-motion-stepped.css",
-  "design/styles/ui-motion-confirm.css",
-  "design/styles/ui-motion-cart.css",
   "design/styles/ui.css",
   "apps/guide/ui-catalog.css",
   ...(motion ? ["apps/guide/motion-review.css"] : []),
@@ -60,10 +45,8 @@ const galleryStyles = [
   ] : []),
 ];
 const familyStyles = ["design/styles/tokens.css", "design/styles/ui.css", "design/styles/ui-agent-motion.css", "apps/guide/agent-family.css"];
-const styles = (family ? familyStyles : galleryStyles)
-  .map(read)
+const styles = (family ? familyStyles.map(path => read(path).replace(/^@import .*?;$/gm, "")) : galleryStyles.map(inlineStyles))
   .join("\n")
-  .replace(/^@import .*?;$/gm, "")
   .replace(
     /url\("\.\.\/(assets\/fonts\/[^"]+)"\)/g,
     (_, p) =>

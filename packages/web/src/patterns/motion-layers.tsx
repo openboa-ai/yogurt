@@ -40,14 +40,17 @@ function SpringHighlight() {
     const viewport = highlight?.parentElement;
     if (!highlight || !viewport) return;
     let lastTop: number | undefined;
+    let lastRow: HTMLElement | null = null;
     const update = () => {
       const row = viewport.querySelector<HTMLElement>("[data-highlighted]")
+        ?? (viewport.contains(lastRow) ? lastRow : null)
         ?? viewport.querySelector<HTMLElement>('[role="option"][data-state="checked"]');
       if (!row) {
         highlight.removeAttribute("data-ready");
         lastTop = undefined;
         return;
       }
+      lastRow = row;
       const top = row.offsetTop;
       if (lastTop !== undefined && lastTop !== top) {
         highlight.toggleAttribute("data-forward", top > lastTop);
@@ -75,20 +78,62 @@ export function SpringDropdown({ label, value, onChange, options }: {
 }) {
   const id = useId();
   const [portal, setPortal] = useState<HTMLDivElement | null>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const dismissTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const keepSelectionVisible = useRef(false);
+  const press = useRef<Animation | undefined>(undefined);
   const [menu, setMenu] = useState({open: false, lift: 0});
   const selected = options.find(option => option.id === value);
   const [roll, setRoll] = useState({value, previous: undefined as string | undefined});
   if (roll.value !== value) setRoll({value, previous: roll.value});
   const previous = options.find(option => option.id === roll.previous);
+  useLayoutEffect(() => () => {
+    clearTimeout(dismissTimer.current);
+    press.current?.cancel();
+  }, []);
+
+  function bounceTrigger(scale: number) {
+    const button = trigger.current;
+    if (!button || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    press.current?.cancel();
+    press.current = button.animate([{scale}, {scale: 1}], {
+      duration: 545,
+      easing: getComputedStyle(button).getPropertyValue("--yg-motion-picker-press").trim() || "ease-out",
+    });
+  }
+
+  function changeOpen(open: boolean) {
+    if (!open && keepSelectionVisible.current) {
+      keepSelectionVisible.current = false;
+      return;
+    }
+    clearTimeout(dismissTimer.current);
+    if (!open) {
+      setMenu(current => ({...current, open: false}));
+      return;
+    }
+    const top = portal?.getBoundingClientRect().top ?? 0;
+    const room = Math.max(0, top - 16);
+    const lift = Math.min(room, (8 + 12 + options.length * 44) / 2);
+    setMenu({open: true, lift});
+    bounceTrigger(.965);
+  }
+
+  function select(next: string) {
+    if (menu.open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      bounceTrigger(.955);
+      keepSelectionVisible.current = true;
+      clearTimeout(dismissTimer.current);
+      dismissTimer.current = setTimeout(() => setMenu(current => ({...current, open: false})), 240);
+    }
+    onChange(next);
+  }
+
   return <div ref={setPortal} className="yg-spring-dropdown" data-open={menu.open}
     style={{"--yg-picker-lift": `${menu.lift}px`} as CSSProperties}>
     <label id={id} className="yg-spring-label">{label}</label>
-    <SelectPrimitive.Root value={value} onValueChange={onChange} onOpenChange={open => {
-      const room = Math.max(0, (portal?.getBoundingClientRect().top ?? 0) - 16);
-      const lift = Math.min(room, 10 + Math.min(options.length, 4) * 22);
-      setMenu({open, lift});
-    }}>
-      <SelectPrimitive.Trigger className="yg-spring-trigger" aria-labelledby={id}>
+    <SelectPrimitive.Root value={value} onValueChange={select} open={menu.open} onOpenChange={changeOpen}>
+      <SelectPrimitive.Trigger ref={trigger} className="yg-spring-trigger" aria-labelledby={id}>
         <span className="yg-spring-value">
           {previous && <span key={`previous-${value}`} className="yg-spring-value-roll" data-outgoing aria-hidden="true">
             <span className="yg-spring-symbol" data-marker={previous.marker} />
@@ -101,17 +146,25 @@ export function SpringDropdown({ label, value, onChange, options }: {
             </span>
           </span>
         </span>
-        <SelectPrimitive.Icon className="yg-spring-chevron" aria-hidden="true">⌄</SelectPrimitive.Icon>
+        <SelectPrimitive.Icon asChild>
+          <svg className="yg-spring-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal container={portal}>
-        <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={8}>
+        <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={8} collisionPadding={16}>
           <SelectPrimitive.Viewport className="yg-spring-viewport">
             <SpringHighlight />
             {options.map((option, index) => <SelectPrimitive.Item key={option.id} value={option.id}
               className="yg-spring-option" style={{"--yg-spring-row-index": index, "--yg-spring-row-reverse": options.length - index - 1} as CSSProperties}>
               <span className="yg-spring-symbol" data-marker={option.marker} aria-hidden="true" />
               <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>
-              <SelectPrimitive.ItemIndicator className="yg-spring-check" aria-hidden="true">✓</SelectPrimitive.ItemIndicator>
+              <svg className="yg-spring-check" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m5 12.5 4.5 4.5L19 7.5" pathLength="22" />
+              </svg>
             </SelectPrimitive.Item>)}
           </SelectPrimitive.Viewport>
         </SelectPrimitive.Content>

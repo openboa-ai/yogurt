@@ -8,6 +8,10 @@
   --yg-motion-picker-tail: 470ms var(--yg-settle);
   --yg-motion-bottom-label: 420ms var(--yg-settle);
   --yg-motion-picker-reveal: 420ms var(--yg-settle);
+  --yg-motion-picker-opacity: 360ms var(--yg-settle);
+  --yg-motion-picker-lift: 460ms var(--yg-settle);
+  --yg-motion-picker-check: 450ms var(--yg-settle);
+  --yg-motion-picker-press: linear;
   --yg-motion-picker-row: 390ms var(--yg-settle);
   --yg-motion-picker-slide: 380ms var(--yg-settle);
   --yg-motion-picker-highlight: 250ms var(--yg-settle);
@@ -59,6 +63,10 @@
     --yg-motion-step-fill: 620ms linear(0, 0.105, 0.302, 0.506, 0.676, 0.798, 0.884, 0.939, 0.971, 0.989, 0.998, 1.002, 1.003, 1.003, 1.003, 1);
     --yg-motion-success-label: 375ms linear(0, 0.102, 0.305, 0.521, 0.706, 0.843, 0.934, 0.988, 1.016, 1.026, 1.026, 1.021, 1.016, 1.01, 1.006, 1);
     --yg-motion-picker-reveal: 420ms linear(0, 0.099, 0.306, 0.534, 0.732, 0.877, 0.977, 1.033, 1.056, 1.059, 1.05, 1.037, 1.023, 1.013, 1.005, 1);
+    --yg-motion-picker-opacity: 360ms linear(0, 0.101, 0.287, 0.48, 0.644, 0.771, 0.861, 0.921, 0.959, 0.982, 0.994, 1.001, 1.003, 1.004, 1.003, 1);
+    --yg-motion-picker-lift: 460ms linear(0, 0.109, 0.316, 0.531, 0.712, 0.847, 0.935, 0.988, 1.014, 1.024, 1.024, 1.02, 1.015, 1.01, 1.006, 1);
+    --yg-motion-picker-check: 450ms linear(0, 0.103, 0.297, 0.497, 0.669, 0.798, 0.889, 0.947, 0.981, 0.999, 1.007, 1.01, 1.009, 1.007, 1.005, 1);
+    --yg-motion-picker-press: linear(0, 0.291, 0.772, 1.123, 1.242, 1.188, 1.072, 0.979, 0.942, 0.951, 0.978, 1.002, 1.013, 1.013, 1.006, 1);
     --yg-motion-picker-row: 390ms linear(0, 0.086, 0.269, 0.476, 0.664, 0.815, 0.922, 0.991, 1.029, 1.045, 1.047, 1.04, 1.031, 1.022, 1.013, 1);
     --yg-motion-picker-slide: 380ms linear(0, 0.089, 0.285, 0.494, 0.68, 0.832, 0.932, 0.995, 1.029, 1.041, 1.041, 1.034, 1.026, 1.017, 1.01, 1);
     --yg-motion-picker-highlight: 250ms linear(0, 0.075, 0.236, 0.422, 0.598, 0.745, 0.858, 0.938, 0.989, 1.018, 1.032, 1.035, 1.032, 1.027, 1.02, 1);
