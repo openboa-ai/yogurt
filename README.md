@@ -1,4 +1,4 @@
-<img src="assets/projects/yogurt.svg" alt="Yogurt project mark" width="96">
+<img src="design/assets/projects/yogurt.svg" alt="Yogurt project mark" width="96">
 
 <!-- starter:project -->
 # yogurt
@@ -8,12 +8,14 @@ ships with live cultures
 
 Yogurt is OpenBoa’s design system and UI SDK. It gives projects shared rules for color, type, motion and product language, plus components and screen patterns for React and Vercel Native SDK.
 
+[Browse the design system](https://yogurt.openboa.ai/)
+
 ## Getting started
 
-- **Design a screen** with the [design rules](DESIGN.md), [component gallery](components.html) and [product playbook](https://yogurt-theta.vercel.app/playbook.html).
+- **Design a screen** with the [design rules](DESIGN.md), [component gallery](apps/guide/generated/components.html) and [product playbook](https://yogurt-theta.vercel.app/playbook.html).
 - **Build a product** using a pinned SDK revision. Follow the [Web setup](docs/using-yogurt.md#web) or [Zig and Vercel Native setup](docs/using-yogurt.md#zig-and-vercel-native-sdk).
 - **Use Yogurt with Codex** by installing the [Yogurt plugin](plugins/yogurt/README.md) and pointing it at the project's SDK pin.
-- **Make something on brand** with the [identity guide](https://yogurt-theta.vercel.app/index.html), [design tokens](https://yogurt-theta.vercel.app/system.html) and [artwork and emoji](assets/README.md).
+- **Make something on brand** with the [identity guide](https://yogurt-theta.vercel.app/index.html), [design tokens](https://yogurt-theta.vercel.app/system.html) and [artwork and emoji](design/assets/README.md).
 
 From an existing product, install the SDK at the full GitHub commit you want to use.
 
@@ -28,10 +30,10 @@ For a local archive, see [SDK installation](docs/using-yogurt.md#install-the-loc
 
 | Area | Responsibility |
 | --- | --- |
-| [Design sources](assets/README.md) | Artwork, fonts, tokens and product language |
+| [Design sources](design/README.md) | Artwork, fonts, tokens and product language |
 | [Catalog](catalog/README.md) | Shared component and pattern IDs, contracts and target bindings |
-| [Packages](packages/README.md) | The React and Native adapters that implementing projects use |
-| [Guide](apps/guide/README.md) | Authored pages, browser runtime and interactive gallery examples |
+| [Packages](packages/README.md) | React, Native and editable composition recipes |
+| [Guide](apps/guide/README.md) | Authored pages, interactive examples and generated galleries |
 | [Plugins](plugins/README.md) | Installable agent workflows |
 | [Examples](examples/README.md) | Complete screens and integration cases |
 | [Checks](checks/README.md) | Runtime verification and [agent evaluations](checks/evals/README.md) |

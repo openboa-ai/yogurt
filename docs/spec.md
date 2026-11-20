@@ -18,7 +18,7 @@ OpenBoa app clients use [Vercel Native SDK](native-stack.md) as their default. T
 
 ## First reviewable slice
 
-The owner selected the 8 px corners in the [first-four study](engineering/controls/first-four/README.md) and authorized extending its type, spacing and interaction to the full inventory. The [component library specification](engineering/controls/component-library/spec.md) records the sources and the two renderer boundaries. Use the [SDK gallery](../components.html) to inspect the implementation. The original Upright 9 ink blue, slate.750, anchors both targets.
+The owner selected the 8 px corners in the [first-four study](engineering/controls/first-four/README.md) and authorized extending its type, spacing and interaction to the full inventory. The [component library specification](engineering/controls/component-library/spec.md) records the sources and the two renderer boundaries. Use the [SDK gallery](../apps/guide/generated/components.html) to inspect the implementation. The original Upright 9 ink blue, slate.750, anchors both targets.
 
 ## Ownership, failures and delivery
 

@@ -1,4 +1,4 @@
-/* Generated from assets/agents/presence-motion.json. */
+/* Generated from design/assets/agents/presence-motion.json. */
 .yg-eye { transform-box: fill-box; transform-origin: center; }
 .yg-eyes[data-gaze="ready"]:where(:not([data-static])) {
   animation: yg-gaze-ready 5100ms var(--yg-settle, ease-out) infinite;

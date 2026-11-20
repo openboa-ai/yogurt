@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import motion from "../../assets/agents/avatar-motion.json";
+import motion from "../../design/assets/agents/avatar-motion.json";
 import { AgentAvatar, getAgentFamily, type AgentColor, type AgentVariant } from "../../packages/web/src/identity/identity.js";
 import { agentPresenceLabels } from "../../packages/web/src/identity/agent-motion-data.js";
 

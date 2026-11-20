@@ -16,4 +16,4 @@ A theme author needs a color for a status, chart series and agent. A designer sh
 
 The foundation owner owns primitive IDs and role bindings. Keep neutral endpoints within the existing range. The brand owner selected the original symbol’s Ink blue, slate.750 (#175174), as the primary. Theme-specific controls resolve to a numbered primitive with readable contrast.
 
-[brand.json](../../../../tokens/brand.json) · [tokens.css](../../../../styles/tokens.css) · [Color in context](https://yogurt-theta.vercel.app/system.html#color)
+[brand.json](../../../../design/tokens/brand.json) · [tokens.css](../../../../design/styles/tokens.css) · [Color in context](https://yogurt-theta.vercel.app/system.html#color)

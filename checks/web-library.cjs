@@ -7,7 +7,7 @@ const catalog = [
     ...require("../catalog/components.json"),
     ...require("../catalog/blocks.json"),
   ],
-  url = pathToFileURL(path.resolve(__dirname, "../components.html")).href;
+  url = pathToFileURL(path.resolve(__dirname, "../apps/guide/generated/components.html")).href;
 (async () => {
   const browser = await chromium.launch({
       channel: process.env.YOGURT_BROWSER_CHANNEL || "chrome",

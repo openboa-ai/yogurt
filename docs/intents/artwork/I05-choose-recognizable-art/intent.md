@@ -16,4 +16,4 @@ Someone adding a project to a release note needs its food mark. Someone labeling
 
 The original project masters, single contour notch and accepted face finishes are selected. The art owner curates additional drawings. The functional icon owner specifies semantics and accessible labels.
 
-[emoji.json](../../../../assets/projects/emoji.json) · [README.md](../../../../assets/emoji/README.md) · [catalog.json](../../../../assets/emoji/catalog.json) · [Project emoji](https://yogurt-theta.vercel.app/library.html#emoji) · [search.svg](../../../../assets/icons/search.svg)
+[emoji.json](../../../../design/assets/projects/emoji.json) · [README.md](../../../../design/assets/emoji/README.md) · [catalog.json](../../../../design/assets/emoji/catalog.json) · [Project emoji](https://yogurt-theta.vercel.app/library.html#emoji) · [search.svg](../../../../design/assets/icons/search.svg)

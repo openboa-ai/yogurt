@@ -8,7 +8,7 @@ Parent: [I03 design r2](../../../intents/foundations/I03-choose-system-colors/sp
 
 Keep hue families at one primitive level. All text, focus, state, series and artwork color roles resolve to one of those values. Preserve gray ramps through near-white and near-black. Keep the existing neutral.0 and neutral.1000 at #FCFCFC and #121212 in this revision.
 
-**Proposed writer.** Design foundations maintainer, `tokens/brand.json`. **Consumer.** Token exporters, themes, artwork and data series. **Independent verifier.** A foundation reviewer who resolves the token references and samples rendered foregrounds and backgrounds. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
+**Proposed writer.** Design foundations maintainer, `design/tokens/brand.json`. **Consumer.** Token exporters, themes, artwork and data series. **Independent verifier.** A foundation reviewer who resolves the token references and samples rendered foregrounds and backgrounds. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
 ## Contract
 

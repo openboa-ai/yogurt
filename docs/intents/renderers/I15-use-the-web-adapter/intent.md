@@ -16,4 +16,4 @@ Teams using Next.js, Vite and a web view need one accessible import and the same
 
 Yogurt owns the proposed web adapter and exported styles. Host routing, embedding, navigation and authority live with the consumer. Support is recorded per host.
 
-[Repository blueprint](../../../repository.md) · [Current web menu](../../../action-menu.md) · [components.css](../../../../styles/components.css) · [Project binding](https://yogurt-theta.vercel.app/adoption.html#setup) · [Component foundation](../../../component-foundation.md)
+[Repository blueprint](../../../repository.md) · [Current web menu](../../../action-menu.md) · [components.css](../../../../design/styles/components.css) · [Project binding](https://yogurt-theta.vercel.app/adoption.html#setup) · [Component foundation](../../../component-foundation.md)

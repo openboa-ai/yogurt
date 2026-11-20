@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const { resolve, join } = require("node:path");
 const { pathToFileURL } = require("node:url");
 
-const gallery = pathToFileURL(resolve(__dirname, "../components.html")).href;
+const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/components.html")).href;
 
 (async () => {
   const browser = await chromium.launch({ channel: process.env.YOGURT_BROWSER_CHANNEL || "chrome" });

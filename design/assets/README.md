@@ -2,7 +2,7 @@
 
 This directory owns the editable artwork and redistributable files used by products and the guide.
 
-- [Company signature](logo/openboa-lockup.svg) pairs the Upright 9 symbol with the outlined Rethink Sans 760 wordmark. Its ink blue comes from `slate.750` in the [numbered palette](../tokens/brand.json). See the [logo rules](https://yogurt-theta.vercel.app/index.html#logo) and [weight study](../examples/signature/index.html).
+- [Company signature](logo/openboa-lockup.svg) pairs the Upright 9 symbol with the outlined Rethink Sans 760 wordmark. Its ink blue comes from `slate.750` in the [numbered palette](../tokens/brand.json). See the [logo rules](https://yogurt-theta.vercel.app/index.html#logo) and [weight study](../../examples/signature/index.html).
 - [Project marks](projects/emoji.json) take their colors from the same palette. Change the paths or token names in this file and run `node scripts/export-emoji.mjs` to update the SVGs. Chat PNGs use a transparent 128 × 128 canvas.
 - [Agent artwork](agents/) includes silhouettes and motion source. The [asset library](https://yogurt-theta.vercel.app/library.html) displays the editable resources.
 - [Emoji](emoji/README.md) contains the artwork, searchable inventory and credits.

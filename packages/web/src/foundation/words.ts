@@ -1,4 +1,4 @@
-// Generated from content/terms.json.
+// Generated from design/content/terms.json.
 export const words = {
   "action.save-view": "Save view",
   "action.cancel": "Cancel",

@@ -4,21 +4,21 @@
   "company": "OpenBoa",
   "typeface": "Rethink Sans",
   "signature": {
-    "symbol": "assets/logo/upright-9.svg",
-    "lockup": "assets/logo/openboa-lockup.svg",
-    "wordmark": "assets/logo/openboa-wordmark.svg",
+    "symbol": "design/assets/logo/upright-9.svg",
+    "lockup": "design/assets/logo/openboa-lockup.svg",
+    "wordmark": "design/assets/logo/openboa-wordmark.svg",
     "layout": "B2",
     "wordmarkWeight": 760,
     "color": "slate.750"
   },
   "sources": {
-    "primitives": "tokens/brand.json",
-    "roles": "tokens/ui.json",
-    "words": "content/terms.json",
+    "primitives": "design/tokens/brand.json",
+    "roles": "design/tokens/ui.json",
+    "words": "design/content/terms.json",
     "components": "catalog/components.json",
-    "projectArtwork": "assets/projects/emoji.json",
-    "agentShapes": "assets/agents/silhouettes.json",
-    "eyeMotion": "assets/agents/eye-motion.json"
+    "projectArtwork": "design/assets/projects/emoji.json",
+    "agentShapes": "design/assets/agents/silhouettes.json",
+    "eyeMotion": "design/assets/agents/eye-motion.json"
   },
   "rules": [
     {

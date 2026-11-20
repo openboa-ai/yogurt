@@ -1,6 +1,6 @@
 # Use Yogurt in a product
 
-Start at the [component library and brand reference](../components.html). Each entry has one stable name, an English purpose, an interactive web example, an individual React export and an editable Vercel Native markup template. A project owns its data, navigation and effects.
+Start at the [component library and brand reference](../apps/guide/generated/components.html). Each entry has one stable name, an English purpose, an interactive web example, an individual React export and an editable Vercel Native markup template. A project owns its data, navigation and effects.
 
 ## Install the local SDK
 
@@ -59,9 +59,9 @@ Include `@import("yogurt/button.zig").file` in `UiApp.Options.markup.sources`. T
 | Need | Canonical source | Consumer entry |
 | --- | --- | --- |
 | Company signature, project marks, agent identity, English tone | [Brand rules](../catalog/brand.json) and the [identity guide](../DESIGN.md#carry-the-identity-into-a-screen) | `@openboa/yogurt/brand` |
-| Approved product language and repository descriptions | [Terms](../content/terms.json) | `@openboa/yogurt/terms`, React `words`, Zig `words.zig` |
-| Numbered colors, one type family, size and spacing primitives | [Brand tokens](../tokens/brand.json) | `@openboa/yogurt/palette` |
-| Paired light/dark surface and action roles, dimensions and motion | [UI bindings](../tokens/ui.json) | `@openboa/yogurt/tokens`, generated CSS and Zig |
+| Approved product language and repository descriptions | [Terms](../design/content/terms.json) | `@openboa/yogurt/terms`, React `words`, Zig `words.zig` |
+| Numbered colors, one type family, size and spacing primitives | [Brand tokens](../design/tokens/brand.json) | `@openboa/yogurt/palette` |
+| Paired light/dark surface and action roles, dimensions and motion | [UI bindings](../design/tokens/ui.json) | `@openboa/yogurt/tokens`, generated CSS and Zig |
 | Names, purpose and recipes | [Component inventory](../catalog/components.json) and [task patterns](../catalog/patterns.json) | Single-component import or local source installation |
 
 Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. The four approved controls provide the proportions for larger compositions. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. [Accepted basis](engineering/controls/component-library/spec.md)
@@ -120,4 +120,4 @@ import { AgentAvatar } from "@openboa/yogurt/agent-avatar";
 
 For the Native canvas, after installing `agent-avatar`, use `Playback.initVariant(.round_star_right, 24, .thinking, now_ms)`. Set `playback.color = .blue_300` to use the same token. Keep the `Playback` instance per avatar, and pass the current host state and reduced-motion preference to its drawing call.
 
-[Agent family gallery](../agents.html) · [Motion](motion.md#agent-family)
+[Agent family gallery](../apps/guide/generated/agents.html) · [Motion](motion.md#agent-family)

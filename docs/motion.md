@@ -13,7 +13,7 @@ Use motion to make input, changes and current work legible. The [component motio
 
 ## Eye and body motion
 
-The current avatar uses [six authored clips](../assets/agents/avatar-motion.json) for its body and two eyes. Direction, posture and rhythm distinguish the states.
+The current avatar uses [six authored clips](../design/assets/agents/avatar-motion.json) for its body and two eyes. Direction, posture and rhythm distinguish the states.
 
 | State | Timing and gesture |
 | --- | --- |
@@ -30,8 +30,8 @@ The web implementation interpolates the shared poses. The Zig renderer samples t
 
 ## Agent family
 
-[Open the family gallery](../agents.html) to play the same six performances across fifteen silhouettes and forty-five fitted notches. Select a silhouette to see all of its notch placements at 96 px. The roster renders every placement at 24 px. The shared palette provides 26 fill options with at least 4.5:1 eye contrast.
+[Open the family gallery](../apps/guide/generated/agents.html) to play the same six performances across fifteen silhouettes and forty-five fitted notches. Select a silhouette to see all of its notch placements at 96 px. The roster renders every placement at 24 px. The shared palette provides 26 fill options with at least 4.5:1 eye contrast.
 
-The [SVG inventory](../assets/agents/silhouettes.json) defines each outline and its eye center. [Animation fits](../assets/agents/animation-fits.json) set travel, tilt and gaze ranges for each silhouette. The fit reuses the same durations, motion curves, eye outlines and phase boundaries across notch positions and colors. Kai and Sol keep their existing authored profiles.
+The [SVG inventory](../design/assets/agents/silhouettes.json) defines each outline and its eye center. [Animation fits](../design/assets/agents/animation-fits.json) set travel, tilt and gaze ranges for each silhouette. The fit reuses the same durations, motion curves, eye outlines and phase boundaries across notch positions and colors. Kai and Sol keep their existing authored profiles.
 
 Use a registered shape-and-notch ID such as `round-star-right`. The 1,170 geometry and color combinations are renderable candidates. An identity counts toward assignment only after the palette review confirms it is distinguishable at roster size.

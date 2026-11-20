@@ -1,6 +1,6 @@
 # OpenBoa product art direction
 
-The [approved control basis](engineering/controls/component-library/spec.md) and [live library](../components.html) apply this direction to web and native product work.
+The [approved control basis](engineering/controls/component-library/spec.md) and [live library](../apps/guide/generated/components.html) apply this direction to web and native product work.
 
 Design revision 1. The system should feel clear enough to use at once and human enough to remember. Someone reviewing a decision should see what is at stake before they notice the styling. The character can have the opposite role in an agent roster, where recognizing an individual is the job. [Company guide](https://yogurt-theta.vercel.app/index.html) · [Surface composition spec](engineering/identity/U21A-compose-a-product-surface/spec.md)
 
@@ -15,7 +15,7 @@ Design revision 1. The system should feel clear enough to use at once and human 
 | Space as grouping | The current product study uses 4 units between related lines, 8 between controls and 16–24 between tasks. These are working choices from the existing scale. Density can tighten around comparable rows. | A person can tell which help, error or action belongs to which item at 320 px and at increased text size. |
 | Movement from a cause | A pressed control responds at its point of contact. An anchored menu emerges from the trigger, an indicator follows a selection, and a busy label holds its space. End the movement when the new relationship is clear. | Watch the first frame, interrupt the movement and read the final state. With reduced motion, the same control and outcome remain apparent. |
 
-OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, `slate.750` (#175174). Use the exact color for a main action on paper and a contrast-tested lighter slate on ink. The shared palette has room for colorful art without requiring colorful chrome. [Token source](../tokens/brand.json) · [Signature study](../examples/signature/index.html)
+OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, `slate.750` (#175174). Use the exact color for a main action on paper and a contrast-tested lighter slate on ink. The shared palette has room for colorful art without requiring colorful chrome. [Token source](../design/tokens/brand.json) · [Signature study](../examples/signature/index.html)
 
 ## Three surfaces, three first reads
 

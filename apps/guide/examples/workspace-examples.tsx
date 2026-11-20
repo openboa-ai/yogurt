@@ -3,8 +3,8 @@ import {
   Composer, VoiceControl, Stack, Status,
   type DraftAttachment, type VoiceState,
 } from "@openboa/yogurt";
-import { ArtifactLibrary, type LibraryArtifact } from "../../../blocks/artifact-library/web";
-import { ProjectAccess, type ProjectRole } from "../../../blocks/project-access/web";
+import { ArtifactLibrary, type LibraryArtifact } from "../../../packages/recipes/artifact-library/web";
+import { ProjectAccess, type ProjectRole } from "../../../packages/recipes/project-access/web";
 
 const sources: LibraryArtifact[] = [
   { id: "summary", name: "November review", kind: "page", detail: "Today", pinned: true,

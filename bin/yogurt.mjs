@@ -85,7 +85,7 @@ function run() {
     if (block) {
       add(
         "src/yogurt/" + file,
-        readFileSync(join(kit, "blocks", item.id, "view.native")),
+        readFileSync(join(kit, "packages", "recipes", item.id, "view.native")),
       );
       const imports = block.native.map((id) =>
         binding("items/" + id + ".native"),
@@ -100,11 +100,11 @@ function run() {
     add("src/yogurt/" + item.id + ".zig", Buffer.from(entry));
     add(
       "src/yogurt/rethink-sans.ttf",
-      readFileSync(join(kit, "assets/fonts/rethink-sans/rethink-sans.ttf")),
+      readFileSync(join(kit, "design/assets/fonts/rethink-sans/rethink-sans.ttf")),
     );
     add(
       "src/yogurt/OFL.txt",
-      readFileSync(join(kit, "assets/fonts/rethink-sans/OFL.txt")),
+      readFileSync(join(kit, "design/assets/fonts/rethink-sans/OFL.txt")),
     );
   }
   const artEntries = ["project-mark", "agent-avatar", "gaze", "agent-row", "project-workspace", "agent-profile", "agent-sidebar", "project-sidebar"];

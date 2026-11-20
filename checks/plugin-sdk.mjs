@@ -77,7 +77,8 @@ try {
   const unknown = result(web, "web", "--lookup", "not-an-installed-component");
   assert.equal(unknown.status, 1);
   assert.match(unknown.stderr, /Unknown installed pattern or component/);
-  const missingTypes = join(observed.kit, "dist/entries/receipt.d.ts");
+  const sdkManifest = JSON.parse(readFileSync(join(observed.kit, "package.json"), "utf8"));
+  const missingTypes = join(observed.kit, sdkManifest.exports["./*"].types.replace("*", "receipt"));
   renameSync(missingTypes, missingTypes + ".disabled");
   const missing = result(web, "web", "--lookup", "receipt");
   assert.equal(missing.status, 1);

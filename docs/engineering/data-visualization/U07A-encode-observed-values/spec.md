@@ -8,7 +8,7 @@ Parent: [I07 design r1](../../../intents/data-visualization/I07-read-a-series/sp
 
 Use the same observation records for the graphic and table. Carry units, precision, as-of time and coverage. Provide non-color distinction for series and a reading order for the accompanying values.
 
-**Proposed writer.** Data visualization maintainer, `assets/charts`. **Consumer.** Chart primitives, table alternatives and detail views. **Independent verifier.** A data reviewer who reads the source fixture and both rendered representations. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
+**Proposed writer.** Data visualization maintainer, `design/assets/charts`. **Consumer.** Chart primitives, table alternatives and detail views. **Independent verifier.** A data reviewer who reads the source fixture and both rendered representations. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
 ## Contract
 

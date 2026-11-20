@@ -1,8 +1,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const read = (name) => readFileSync(name, "utf8");
-const { clips, compact, expressions, eyeMarks, rosterMax, transitionMs, easing } = JSON.parse(read("assets/agents/avatar-motion.json"));
-const states = Object.keys(JSON.parse(read("assets/agents/presence-motion.json")));
+const { clips, compact, expressions, eyeMarks, rosterMax, transitionMs, easing } = JSON.parse(read("design/assets/agents/avatar-motion.json"));
+const states = Object.keys(JSON.parse(read("design/assets/agents/presence-motion.json")));
 if (states.some((state) => !clips[state]) || Object.keys(clips).length !== states.length ||
     easing.join(",") !== "0.333333,0,0.666667,1") {
   throw Error("Expected all avatar states and the shared smoothstep curve");
@@ -122,7 +122,7 @@ for (const [name, commands] of Object.entries(eyeMarks)) {
 const svgMarks = Object.fromEntries(Object.entries(eyeMarks).map(([name, commands]) =>
   [name, commands.map(([verb, ...points]) => verb + points.join(" ")).join(" ")]));
 const types = [
-  "// Generated from assets/agents/avatar-motion.json. See scripts/avatar-motion.mjs.",
+  "// Generated from design/assets/agents/avatar-motion.json. See scripts/agents/avatar-motion.mjs.",
   "export type Transform = readonly [number, number, number, number, number];",
   "export type Pose = readonly [Transform, Transform, Transform];",
   "export const eyeMarks = " + JSON.stringify(svgMarks, null, 2) + " as const;",
@@ -163,7 +163,7 @@ const zig = [
 
 const paths = [];
 for (const agent of Object.keys(agents)) {
-  const master = read("assets/agents/" + agent + ".svg");
+  const master = read("design/assets/agents/" + agent + ".svg");
   const [, id, fill] = master.match(/<use href="#([^"]+)" fill="([^"]+)"/);
   const [, path] = master.match(new RegExp('<path id="' + id + '" d="([^"]+)"'));
   const [, ink, cx, cy] = master.match(/<g id="eyes" fill="([^"]+)">\s*<circle cx="([^"]+)" cy="([^"]+)"/);

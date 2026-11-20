@@ -25,10 +25,10 @@ Run `node scripts/describe-pattern.mjs --list` from the installed SDK root. For 
 
 ## Carry the identity into a screen
 
-- Use the Upright 9 company symbol and its B2 signature where the company signs a surface. The Rethink Sans family serves every text role. Keep the outlined 760 wordmark for the company nameplate. The food marks identify projects. A named agent uses its own face and silhouette. [Company signature](assets/logo/openboa-lockup.svg)
-- Start from the Upright 9 symbol’s Ink blue, `slate.750` (#175174), for the main action on paper. Take hue and lightness from the single numbered palette. A component may give an existing token a role for text, focus or a surface. Keep the base palette common to UI, charts, emoji and agents. Use a word or shape with a state color. [Tokens](tokens/brand.json)
-- Keep a product screen quiet enough to read at a glance. Give one consequence the primary action, keep supporting facts near the decision and put secondary detail behind a disclosure when it can wait. Use the existing control and touch dimensions. [UI roles and dimensions](tokens/ui.json)
-- Write English product copy. Name the object and next action. A pending request can say “Request sent.” A verified result can name the effect. Keep the light touch for brand and project descriptions. Errors and permission messages should help someone recover. [Terms](content/terms.json)
+- Use the Upright 9 company symbol and its B2 signature where the company signs a surface. The Rethink Sans family serves every text role. Keep the outlined 760 wordmark for the company nameplate. The food marks identify projects. A named agent uses its own face and silhouette. [Company signature](design/assets/logo/openboa-lockup.svg)
+- Start from the Upright 9 symbol’s Ink blue, `slate.750` (#175174), for the main action on paper. Take hue and lightness from the single numbered palette. A component may give an existing token a role for text, focus or a surface. Keep the base palette common to UI, charts, emoji and agents. Use a word or shape with a state color. [Tokens](design/tokens/brand.json)
+- Keep a product screen quiet enough to read at a glance. Give one consequence the primary action, keep supporting facts near the decision and put secondary detail behind a disclosure when it can wait. Use the existing control and touch dimensions. [UI roles and dimensions](design/tokens/ui.json)
+- Write English product copy. Name the object and next action. A pending request can say “Request sent.” A verified result can name the effect. Keep the light touch for brand and project descriptions. Errors and permission messages should help someone recover. [Terms](design/content/terms.json)
 - Use a short transition to explain a change of position or visibility. Respect reduced motion and keep the final state and focus legible. [Motion catalog](catalog/motion.json)
 
 ## Match the target

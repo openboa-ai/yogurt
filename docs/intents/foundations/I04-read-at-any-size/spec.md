@@ -14,7 +14,7 @@ Parent: [originating intent, revision 1](intent.md). Review: NOT ACCEPTED. Desig
 
 | Change and contract | Proposed writer boundary | Consumer | Independent observer |
 | --- | --- | --- | --- |
-| [U04A · Lay out text, spacing and operable controls](../../../engineering/foundations/U04A-compose-responsive-type/spec.md) | `tokens/brand.json` | Responsive screens, chart labels and native text styles | A reviewer operating a narrow viewport and enlarged text with keyboard and touch |
+| [U04A · Lay out text, spacing and operable controls](../../../engineering/foundations/U04A-compose-responsive-type/spec.md) | `design/tokens/brand.json` | Responsive screens, chart labels and native text styles | A reviewer operating a narrow viewport and enlarged text with keyboard and touch |
 
 The change specifications identify their individual predecessors. The scene below checks their joined behavior.
 
@@ -24,4 +24,4 @@ Test a long owner name and a three-digit value in the same row. Let them wrap or
 
 **End scene.** Read a long English label at 320 CSS px and with enlarged text. Reach the same action by keyboard and touch, with a visible focus indicator and a stable reading order.
 
-**Current sources and open decisions.** [brand.json](../../../../tokens/brand.json) · [OFL.txt](../../../../assets/fonts/rethink-sans/OFL.txt) · [Type scale](https://yogurt-theta.vercel.app/system.html#type) · [Dimensions](https://yogurt-theta.vercel.app/system.html#dimensions) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [brand.json](../../../../design/tokens/brand.json) · [OFL.txt](../../../../design/assets/fonts/rethink-sans/OFL.txt) · [Type scale](https://yogurt-theta.vercel.app/system.html#type) · [Dimensions](https://yogurt-theta.vercel.app/system.html#dimensions) · [Delivery status and owner decisions](../../../status.md)

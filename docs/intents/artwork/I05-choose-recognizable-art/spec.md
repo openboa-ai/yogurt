@@ -15,8 +15,8 @@ Parent: [originating intent, revision 1](intent.md). Review: NOT ACCEPTED. Desig
 
 | Change and contract | Proposed writer boundary | Consumer | Independent observer |
 | --- | --- | --- | --- |
-| [U05A · Preserve each food mark at small sizes](../../../engineering/artwork/U05A-export-project-marks/spec.md) | `assets/projects` | Project headers, chat messages and release notes | An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces |
-| [U05B · Resolve an icon or emoji to its intended drawing](../../../engineering/artwork/U05B-select-original-glyphs/spec.md) | `assets/emoji` | Message galleries, accessible controls and local asset exporters | A reader finding a drawing by name or sequence and identifying it at actual display size |
+| [U05A · Preserve each food mark at small sizes](../../../engineering/artwork/U05A-export-project-marks/spec.md) | `design/assets/projects` | Project headers, chat messages and release notes | An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces |
+| [U05B · Resolve an icon or emoji to its intended drawing](../../../engineering/artwork/U05B-select-original-glyphs/spec.md) | `design/assets/emoji` | Message galleries, accessible controls and local asset exporters | A reader finding a drawing by name or sequence and identifying it at actual display size |
 
 The change specifications identify their individual predecessors. The scene below checks their joined behavior.
 
@@ -26,4 +26,4 @@ Review crops on both surfaces, then export an emoji with a joined sequence. Comp
 
 **End scene.** At 16, 24 and 32 px a reader distinguishes the yogurt cup, scored loaf and peppered meatball. A search by name or full Unicode sequence returns the matching original drawing and accessible name.
 
-**Current sources and open decisions.** [emoji.json](../../../../assets/projects/emoji.json) · [README.md](../../../../assets/emoji/README.md) · [catalog.json](../../../../assets/emoji/catalog.json) · [Project emoji](https://yogurt-theta.vercel.app/library.html#emoji) · [search.svg](../../../../assets/icons/search.svg) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [emoji.json](../../../../design/assets/projects/emoji.json) · [README.md](../../../../design/assets/emoji/README.md) · [catalog.json](../../../../design/assets/emoji/catalog.json) · [Project emoji](https://yogurt-theta.vercel.app/library.html#emoji) · [search.svg](../../../../design/assets/icons/search.svg) · [Delivery status and owner decisions](../../../status.md)

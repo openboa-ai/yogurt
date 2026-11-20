@@ -12,7 +12,7 @@ export function checkProject(directory, kit) {
     readFileSync(resolve(kit, "package.json")),
   );
   const palette = JSON.parse(
-    readFileSync(resolve(kit, "tokens/brand.json")),
+    readFileSync(resolve(kit, "design/tokens/brand.json")),
   ).color;
   const catalog = JSON.parse(
     readFileSync(resolve(kit, "catalog/components.json")),

@@ -12,7 +12,7 @@ import {
 import {
   ProjectWorkspace,
   type WorkspaceProject,
-} from "../../../blocks/project-workspace/web";
+} from "../../../packages/recipes/project-workspace/web";
 
 const sampleThread: WorkspaceThread = {
   id: "release-review",

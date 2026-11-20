@@ -16,4 +16,4 @@ A reader switches from a pointer-driven desktop window to a narrow touch screen 
 
 Rethink Sans is the only authored family. The 760 outline belongs to the wordmark. The client owns any locale or platform fallback needed for user-supplied characters.
 
-[brand.json](../../../../tokens/brand.json) · [OFL.txt](../../../../assets/fonts/rethink-sans/OFL.txt) · [Type scale](https://yogurt-theta.vercel.app/system.html#type) · [Dimensions](https://yogurt-theta.vercel.app/system.html#dimensions)
+[brand.json](../../../../design/tokens/brand.json) · [OFL.txt](../../../../design/assets/fonts/rethink-sans/OFL.txt) · [Type scale](https://yogurt-theta.vercel.app/system.html#type) · [Dimensions](https://yogurt-theta.vercel.app/system.html#dimensions)

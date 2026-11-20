@@ -8,7 +8,7 @@ Parent: [I06 design r1](../../../intents/artwork/I06-recognize-an-agent/spec.md)
 
 Use the two eyes as one subtle gesture tied to an observed state. Keep the outline, notch and resting identity fixed. Reduced motion conveys the same activity through text and a stable face.
 
-**Proposed writer.** Artwork and agents maintainer, `assets/agents/eye-motion.json`. **Consumer.** Agent rows, detail views and conversation attribution. **Independent verifier.** A motion reviewer viewing the same named agent at roster and detail sizes. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
+**Proposed writer.** Artwork and agents maintainer, `design/assets/agents/eye-motion.json`. **Consumer.** Agent rows, detail views and conversation attribution. **Independent verifier.** A motion reviewer viewing the same named agent at roster and detail sizes. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
 ## Contract
 

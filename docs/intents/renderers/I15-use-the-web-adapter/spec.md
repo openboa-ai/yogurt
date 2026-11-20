@@ -26,4 +26,4 @@ Install only declared artifacts in each fixture and use the shipped entry. Recor
 
 **End scene.** Render the same fixture in Next.js with server rendering, a Vite client and a supported embedded web view. Navigate away and back, activate once and compare name, layout and event count.
 
-**Current sources and open decisions.** [Repository blueprint](../../../repository.md) · [Current web menu](../../../action-menu.md) · [components.css](../../../../styles/components.css) · [Project binding](https://yogurt-theta.vercel.app/adoption.html#setup) · [Component foundation](../../../component-foundation.md) · [Delivery status and owner decisions](../../../status.md)
+**Current sources and open decisions.** [Repository blueprint](../../../repository.md) · [Current web menu](../../../action-menu.md) · [components.css](../../../../design/styles/components.css) · [Project binding](https://yogurt-theta.vercel.app/adoption.html#setup) · [Component foundation](../../../component-foundation.md) · [Delivery status and owner decisions](../../../status.md)

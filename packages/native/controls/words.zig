@@ -1,4 +1,4 @@
-// Generated from content/terms.json.
+// Generated from design/content/terms.json.
 pub const action_save_view = "Save view";
 pub const action_cancel = "Cancel";
 pub const action_close = "Close";

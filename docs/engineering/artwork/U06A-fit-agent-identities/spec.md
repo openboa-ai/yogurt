@@ -8,7 +8,7 @@ Parent: [I06 design r1](../../../intents/artwork/I06-recognize-an-agent/spec.md)
 
 Keep the 15 distinct rounded silhouettes, Kai’s pinched upper notch and Sol’s shallow lower notch. Each permitted position has a hand-fitted path. Merge visually redundant options before counting them.
 
-**Proposed writer.** Artwork and agents maintainer, `assets/agents/silhouettes.json`. **Consumer.** Rosters and agent detail surfaces. **Independent verifier.** An art reviewer using the actual roster and a registry reader resolving saved assignments. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
+**Proposed writer.** Artwork and agents maintainer, `design/assets/agents/silhouettes.json`. **Consumer.** Rosters and agent detail surfaces. **Independent verifier.** An art reviewer using the actual roster and a registry reader resolving saved assignments. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
 ## Contract
 

@@ -9,7 +9,7 @@ import tempfile
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
-KIT = ROOT / "assets" / "emoji"
+KIT = ROOT / "design" / "assets" / "emoji"
 SOURCE = KIT / "source"
 NS = "http://www.w3.org/2000/svg"
 ET.register_namespace("", NS)
@@ -43,7 +43,7 @@ def write_if_changed(path, content):
 
 
 def export():
-    palette = json.loads((ROOT / "tokens" / "brand.json").read_text())["color"]
+    palette = json.loads((ROOT / "design" / "tokens" / "brand.json").read_text())["color"]
     symbols = list(ET.parse(SOURCE / "originals.svg").iter(f"{{{NS}}}symbol"))
     originals = {}
     for symbol in symbols:

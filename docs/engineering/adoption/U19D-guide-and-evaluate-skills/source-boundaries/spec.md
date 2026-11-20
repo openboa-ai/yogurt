@@ -39,3 +39,13 @@ Track this follow-up in [issue #1](https://github.com/openboa-ai/yogurt/issues/1
 - Keep the generated standalone component and agent galleries at their installed paths. Keep the package name, release pin, exports, CLI, registry, native copy paths, asset paths and plugin paths stable.
 - Move the agent evaluation runner, fixtures and graders under `checks/evals/`. Preserve its case IDs, model-call budget, replay behavior and permission model. Keep the release overview in `docs/releases/`.
 - Verify the staged route inventory and browser navigation in the offline guide, the web interaction suite, package contents and installed guidance, and evaluator unit tests and dry run. Keep deployment and merge requirements in effect.
+
+## Design and package ownership follow-up
+
+Track this follow-up in [issue #3](https://github.com/openboa-ai/yogurt/issues/3).
+
+- Keep artwork, tokens, terms and shared styles under `design/`. The Web adapter owns generated JavaScript and declarations in `packages/web/dist/`. The composition recipes live in `packages/recipes/`, and the guide owns its generated galleries.
+- Translate the new source paths to the existing hosted URLs during the static build. The generated offline handbook uses those same URLs. Preserve the published SDK package name, version, export names, component IDs, binary command, catalog, registry and Native install paths. Resolve relocated package internals through the exports map or their owning tool. Packages installed from Git pins and tarballs must work without a package lifecycle script.
+- Verify the installed Web and Native entry points, recipe generation, catalog and plugin lookup, font loading and all hosted routes. Compare the prior and reorganized package inventories with their respective internal paths. Serve the same approved designs and data.
+
+Web lookup resolves each installed declaration through the SDK export map. Accept generated named re-exports from nested renderer directories and keep resolving the target file within the locked SDK root. The installed plugin test exercises nested lookup, missing declarations and both target bindings.
