@@ -21,17 +21,19 @@ type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & {
     size?: ControlSize;
 };
 export declare function TextField({ id, label, help, error, className, size, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
-export declare function SearchField({ id, label, help, error, value, onValueChange, placeholder, disabled, name, }: FieldInfo & {
+export declare function SearchField({ id, label, help, error, value, onValueChange, placeholder, disabled, name, size, }: FieldInfo & {
     value: string;
     onValueChange: (value: string) => void;
     placeholder?: string;
     disabled?: boolean;
     name?: string;
+    size?: ControlSize;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Textarea({ id, label, help, error, className, ...props }: FieldInfo & ComponentProps<"textarea">): import("react/jsx-runtime").JSX.Element;
-export declare function Select({ id, label, help, error, options, placeholder, onPointerDown, onKeyDown, ...props }: FieldInfo & ComponentProps<"select"> & {
+export declare function Select({ id, label, help, error, options, placeholder, onPointerDown, onKeyDown, controlSize, ...props }: FieldInfo & ComponentProps<"select"> & {
     options: Option[];
     placeholder?: string;
+    controlSize?: ControlSize;
 }): import("react/jsx-runtime").JSX.Element;
 interface Checkable {
     id?: string;

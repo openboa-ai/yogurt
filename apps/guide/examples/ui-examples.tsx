@@ -346,6 +346,16 @@ export function Example({
       );
     case "search-field":
     case "filter-bar":
+      if (id === "search-field" && variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
+              <Y.SearchField key={size} label={size[0].toUpperCase() + size.slice(1)}
+                size={size} value={query} onValueChange={setQuery} placeholder="Find a view" />
+            ))}
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Stack>
           <Y.FilterBar
@@ -375,6 +385,17 @@ export function Example({
         </Y.Stack>
       );
     case "select":
+      if (variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
+              <Y.Select key={size} label={size[0].toUpperCase() + size.slice(1)}
+                controlSize={size} options={projects} value={choice} onChange={(e) => setChoice(e.target.value)} />
+            ))}
+            <Y.Select label="Multiple choice" multiple size={3} options={projects} />
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Select
           label="Project"

@@ -94,6 +94,7 @@ const variants = new Set([
   "text-field",
   "textarea",
   "search-field",
+  "select",
   "filter-bar",
   "switch",
   "list",

@@ -327,7 +327,8 @@ function SearchField({
   onValueChange,
   placeholder,
   disabled,
-  name
+  name,
+  size = "regular"
 }) {
   const ref = useRef3(null);
   return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsx(
@@ -338,7 +339,7 @@ function SearchField({
       ref,
       type: "search",
       variant: "soft",
-      className: "yg-input",
+      className: cx("yg-input", `yg-input-size-${size}`),
       value,
       disabled,
       placeholder,
@@ -349,6 +350,7 @@ function SearchField({
         {
           label: "Clear " + label.toLowerCase(),
           icon: "close",
+          size: size === "compact" ? "compact" : "regular",
           onClick: () => {
             onValueChange("");
             ref.current?.focus();
@@ -386,6 +388,7 @@ function Select({
   placeholder,
   onPointerDown,
   onKeyDown,
+  controlSize = "regular",
   ...props
 }) {
   const dropdown = !props.multiple && (props.size ?? 1) <= 1;
@@ -402,7 +405,7 @@ function Select({
       select.parentElement.dataset.pickerSide = below < desired && above > below ? "above" : "below";
     }
   }
-  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs("div", { className: "yg-select", "data-dropdown": dropdown || void 0, children: [
+  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs("div", { className: cx("yg-select", `yg-input-size-${controlSize}`), "data-dropdown": dropdown || void 0, children: [
     /* @__PURE__ */ jsxs(
       "select",
       {

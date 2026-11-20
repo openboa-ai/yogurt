@@ -331,12 +331,12 @@
   margin: 0;
   padding: 0;
 }
-.yg-input[class*="yg-input-size-"] { --yg-input-height: var(--yg-size-regular); min-height: var(--yg-input-height); }
-.yg-input[class*="yg-input-size-"] input { min-height: var(--yg-input-height); }
-.yg-input.yg-input-size-compact { --yg-input-height: var(--yg-size-compact); }
-.yg-input.yg-input-size-comfortable { --yg-input-height: var(--yg-size-comfort); }
-.yg-input.yg-input-size-spacious { --yg-input-height: var(--yg-size-spacious); }
-.yg-input.yg-input-size-touch { --yg-input-height: var(--yg-size-touch); }
+:is(.yg-input, .yg-select)[class*="yg-input-size-"] { --yg-input-height: var(--yg-size-regular); min-height: var(--yg-input-height); }
+:is(.yg-input, .yg-select)[class*="yg-input-size-"] :is(input, select) { min-height: var(--yg-input-height); }
+:is(.yg-input, .yg-select).yg-input-size-compact { --yg-input-height: var(--yg-size-compact); }
+:is(.yg-input, .yg-select).yg-input-size-comfortable { --yg-input-height: var(--yg-size-comfort); }
+:is(.yg-input, .yg-select).yg-input-size-spacious { --yg-input-height: var(--yg-size-spacious); }
+:is(.yg-input, .yg-select).yg-input-size-touch { --yg-input-height: var(--yg-size-touch); }
 .yg-input:has(.yg-icon-button) {
   padding-inline-end: var(--boa-space-2);
 }

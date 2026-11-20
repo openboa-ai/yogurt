@@ -95,12 +95,14 @@ export function SearchField({
   placeholder,
   disabled,
   name,
+  size = "regular",
 }: FieldInfo & {
   value: string;
   onValueChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
   name?: string;
+  size?: ControlSize;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   return (
@@ -112,7 +114,7 @@ export function SearchField({
           ref={ref}
           type="search"
           variant="soft"
-          className="yg-input"
+          className={cx("yg-input", `yg-input-size-${size}`)}
           value={value}
           disabled={disabled}
           placeholder={placeholder}
@@ -123,6 +125,7 @@ export function SearchField({
               <IconButton
                 label={"Clear " + label.toLowerCase()}
                 icon="close"
+                size={size === "compact" ? "compact" : "regular"}
                 onClick={() => {
                   onValueChange("");
                   ref.current?.focus();
@@ -166,9 +169,10 @@ export function Select({
   placeholder,
   onPointerDown,
   onKeyDown,
+  controlSize = "regular",
   ...props
 }: FieldInfo &
-  ComponentProps<"select"> & { options: Option[]; placeholder?: string }) {
+  ComponentProps<"select"> & { options: Option[]; placeholder?: string; controlSize?: ControlSize }) {
   const dropdown = !props.multiple && (props.size ?? 1) <= 1;
   function positionPicker(select: HTMLSelectElement) {
     if (!dropdown || !select.ownerDocument.defaultView?.CSS.supports("appearance", "base-select")) return;
@@ -187,7 +191,7 @@ export function Select({
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <div className="yg-select" data-dropdown={dropdown || undefined}>
+        <div className={cx("yg-select", `yg-input-size-${controlSize}`)} data-dropdown={dropdown || undefined}>
           <select
             {...props}
             {...binding}

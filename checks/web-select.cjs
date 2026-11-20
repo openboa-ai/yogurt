@@ -128,7 +128,7 @@ async function metrics(select) {
         await page.keyboard.press("Enter");
         assert.equal(await select.inputValue(), "meatball");
         await select.click();
-        await page.getByRole("option", { name: "Yogurt", exact: true }).click();
+        await select.getByRole("option", { name: "Yogurt", exact: true }).click();
         assert.equal(await select.inputValue(), "yogurt");
         for (const name of ["Paper", "Mist"]) {
           await page.getByRole("radio", { name, exact: true }).click();
@@ -147,7 +147,7 @@ async function metrics(select) {
           /neutral\.975/,
         );
       } else {
-        await page.getByRole("option", { name: "Yogurt", exact: true }).tap();
+        await select.getByRole("option", { name: "Yogurt", exact: true }).tap();
         assert.equal(await select.inputValue(), "yogurt");
       }
       seen.push(m);
