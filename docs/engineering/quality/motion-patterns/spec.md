@@ -17,3 +17,5 @@ Check focus retention, real input, cancel, repeat and reduced motion. Confirm th
 ## Additional patterns
 
 The owner added streaming replies, inline suggestions, a prompt box, a thinking indicator, expanding and fanned cards, statistic and profile cards, loading and success feedback, clipboard feedback, tabs, a dynamic menu, a bottom bar, a segmented control, sidebar collapse, a command palette, step progress, OTP and a switch. Provide working Web cases using the common controls and task-owned state. The sample streaming sequence uses local data. Clipboard feedback follows the real browser result. Every sample includes a way to cancel or change a reversible choice when the interaction calls for it.
+
+Range, password guidance, checkbox lists and stepped dials are also in scope. Values stay keyboard-accessible with a visible current state. The password indicator describes local input checks. Drag and key changes select the same discrete dial values.
