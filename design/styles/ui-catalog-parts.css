@@ -984,11 +984,11 @@
 .yg-inline-command .yg-inline-command-panel > .yg-help { padding: var(--yg-inset-compact) var(--yg-inset-roomy); }
 @media (prefers-reduced-motion: no-preference) {
   .yg-inline-command {
-    transition: inline-size var(--yg-reveal) var(--yg-arrive),
-      block-size var(--yg-reveal) var(--yg-arrive), border-radius var(--yg-expand) var(--yg-arrive);
+    transition: inline-size var(--yg-motion-command-width),
+      block-size var(--yg-motion-command-height), border-radius var(--yg-motion-command-height);
   }
   .yg-inline-command-panel { transition: opacity var(--yg-change) var(--yg-settle); }
-  .yg-inline-command-marker { transition: translate var(--yg-travel) var(--yg-arrive); }
+  .yg-inline-command-marker { transition: translate var(--yg-motion-command-highlight); }
   .yg-inline-command[data-open="true"] [role="option"] { animation: yg-inline-option var(--yg-panel) var(--yg-arrive) both; }
 }
 @keyframes yg-inline-option { from { opacity: 0; translate: 0 4px; } }

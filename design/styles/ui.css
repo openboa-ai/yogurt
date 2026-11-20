@@ -1,5 +1,6 @@
 @import "./tokens.css";
 @import "./ui-tokens.css";
+@import "./ui-motion-curves.css";
 @import "./ui-catalog-parts.css";
 @import "./ui-workspaces.css";
 @import "./ui-agent-workspace.css";
@@ -500,6 +501,18 @@
 }
 .yg-switch [role="switch"][data-state="checked"]:dir(rtl) > span {
   transform: translateX(calc(-1 * var(--yg-thumb-travel)));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-switch [role="switch"] { transition: background-color var(--yg-motion-switch-travel); }
+  .yg-switch [role="switch"] > span {
+    transform-origin: left center;
+    transition: transform var(--yg-motion-switch-travel), background-color var(--yg-motion-switch-travel);
+  }
+  .yg-switch [role="switch"][data-state="checked"] > span,
+  .yg-switch [role="switch"]:not([data-state="checked"]):dir(rtl) > span {
+    transform-origin: right center;
+  }
+  .yg-switch [role="switch"][data-state="checked"]:dir(rtl) > span { transform-origin: left center; }
 }
 .yg-checkbox [role="checkbox"],
 .yg-radio [role="radio"] {

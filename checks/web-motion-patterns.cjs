@@ -135,14 +135,20 @@ async function run(browser) {
     await view.press("Space");
     const options = page.getByRole("listbox");
     await options.waitFor();
+    await page.keyboard.press("ArrowDown");
+    await page.waitForFunction(() => {
+      const row = document.querySelector(".yg-spring-option[data-highlighted]");
+      const highlight = document.querySelector(".yg-spring-highlight[data-ready]");
+      return row && highlight?.style.getPropertyValue("--yg-spring-active-y") === `${row.offsetTop}px`;
+    });
     await page.keyboard.press("Escape");
     await options.waitFor({state:"hidden"});
-    assert(await view.evaluate(node => node === document.activeElement));
+    await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
     await view.click();
     await options.getByRole("option", {name:"In review"}).click();
     assert.match(await view.textContent(), /In review/);
     await options.waitFor({state:"hidden"});
-    assert(await view.evaluate(node => node === document.activeElement));
+    await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
 
     const pillTabs = await demo("tab-pill");
     const overviewTab = pillTabs.getByRole("tab", {name:"Overview"});
@@ -171,6 +177,10 @@ async function run(browser) {
     assert.equal(rightInset, 3, "The checked thumb remains inside the track");
     await wifi.press("Space");
     assert.equal(await wifi.getAttribute("aria-checked"), "false");
+    assert(await wifi.locator("span").first().evaluate(node =>
+      node.getAnimations().some(animation => animation.id === "yg-switch-stretch")));
+    await wifi.press("Space");
+    assert.equal(await wifi.getAttribute("aria-checked"), "true");
 
     const command = await demo("command-palette");
     const open = command.getByRole("button", {name:"Open command palette"});
@@ -203,6 +213,9 @@ async function run(browser) {
     await letterField.fill("a".repeat(60));
     assert.equal((await letterField.inputValue()).length, 48);
     assert.equal(await letterLimit.locator(".yg-letter-limit").getAttribute("data-limit-state"), "full");
+    await letterField.press("x");
+    assert.equal((await letterField.inputValue()).length, 48);
+    await letterLimit.locator(".yg-letter-rejected > span").first().waitFor();
     await letterLimit.getByRole("button", {name: "Post"}).click();
     assert.equal(await letterField.inputValue(), "");
 
@@ -451,19 +464,20 @@ async function checkColorRoles(browser, colorScheme) {
 
     const dropdown = await show("spring-dropdown");
     const view = dropdown.getByRole("combobox", {name: "Work status"});
-    await expectRole(view.locator(".yg-spring-symbol"), "signal-warning");
+    const currentMarker = view.locator(".yg-spring-value-roll:not([data-outgoing]) .yg-spring-symbol");
+    await expectRole(currentMarker, "signal-warning");
     await view.click();
     await neutral(page.getByRole("listbox"));
-    await neutral(page.locator(".yg-spring-option[data-state=checked]"));
+    await neutral(page.locator(".yg-spring-highlight[data-ready]"));
     const review = page.getByRole("option", {name: "In review"});
     await expectRole(review.locator(".yg-spring-symbol"), "action");
     await review.click();
-    await expectRole(view.locator(".yg-spring-symbol"), "action");
+    await expectRole(currentMarker, "action");
     await view.press("Space");
     const complete = page.getByRole("option", {name: "Complete"});
     await expectRole(complete.locator(".yg-spring-symbol"), "signal-positive");
     await complete.click();
-    await expectRole(view.locator(".yg-spring-symbol"), "signal-positive");
+    await expectRole(currentMarker, "signal-positive");
 
     const storage = await show("storage-meter");
     const meter = storage.getByRole("meter");

@@ -42,7 +42,7 @@ interface Checkable {
     onFocus?: React.FocusEventHandler<HTMLButtonElement>;
     onBlur?: React.FocusEventHandler<HTMLButtonElement>;
 }
-export declare function Switch({ label, help, ...props }: Checkable & {
+export declare function Switch({ label, help, onCheckedChange, ...props }: Checkable & {
     help?: string;
     checked?: boolean;
     defaultChecked?: boolean;

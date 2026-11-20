@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import { Button } from "@openboa/yogurt";
 import { CartButton } from "@openboa/yogurt/motion-patterns";
 
@@ -57,7 +57,17 @@ function Cart() {
 function Dots() {
   const [page, setPage] = useState(0);
   const notes = ["Gather ideas", "Find a direction", "Make it happen", "Share the result"];
-  return <div className="utility-demo utility-panel"><strong>{notes[page]}</strong><span>Step {page + 1} of {notes.length}</span><nav className="utility-dots" aria-label="Preview steps">{notes.map((note, i) => <button type="button" key={note} aria-label={`Step ${i + 1}: ${note}`} aria-current={i === page ? "step" : undefined} onClick={() => setPage(i)} />)}</nav></div>;
+  return <div className="utility-demo utility-panel">
+    <strong>{notes[page]}</strong>
+    <span>Step {page + 1} of {notes.length}</span>
+    <nav className="utility-dots" aria-label="Preview steps" style={{"--yg-dot-index": page} as CSSProperties}>
+      <span className="utility-dot-marker" aria-hidden="true" />
+      {notes.map((note, i) => <button type="button" key={note}
+        aria-label={`Step ${i + 1}: ${note}`}
+        aria-current={i === page ? "step" : undefined}
+        onClick={() => setPage(i)} />)}
+    </nav>
+  </div>;
 }
 function Notifications() {
   const [enabled, setEnabled] = useState(false);

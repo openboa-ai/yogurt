@@ -23,8 +23,11 @@
   letter-spacing: -.03em;
 }
 .yg-storage-amount b { font: 650 18px/24px var(--boa-font-family); margin-block-end: 4px; }
-.yg-storage-amount span, .yg-storage-category-amount { color: var(--yg-muted); font: var(--yg-font-help); }
-.yg-storage-amount span { margin-inline-start: 4px; }
+.yg-storage-amount > span, .yg-storage-category-amount { color: var(--yg-muted); font: var(--yg-font-help); }
+.yg-storage-amount > span { margin-inline-start: 4px; }
+.yg-storage-count { position: relative; display: inline-grid; overflow: clip; }
+.yg-storage-count > span { grid-area: 1 / 1; }
+.yg-storage-count-before { position: absolute; inset: 0 auto 0 0; visibility: hidden; }
 .yg-storage-bar {
   display: flex;
   align-items: center;
@@ -76,13 +79,20 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .yg-storage-bar > span {
-    transition: inline-size var(--yg-reveal) var(--yg-arrive),
-      opacity var(--yg-change) var(--yg-settle), scale var(--yg-expand) var(--yg-selection);
+    transition: inline-size var(--yg-motion-storage-fill),
+      opacity var(--yg-motion-storage-lift), scale var(--yg-motion-storage-lift);
   }
-  .yg-storage-reveal { transition: grid-template-rows 280ms var(--yg-arrive); }
-  .yg-storage-amount strong { animation: yg-storage-count 260ms var(--yg-arrive) both; }
+  .yg-storage-reveal { transition: grid-template-rows var(--yg-motion-storage-disclose); }
+  .yg-storage-count { --yg-storage-roll-edge: 1.1em; }
+  .yg-storage-count[data-decreased] { --yg-storage-roll-edge: -1.1em; }
+  .yg-storage-count-now[data-roll] { animation: yg-storage-count-in var(--yg-motion-storage-disclose) both; }
+  .yg-storage-count-before { animation: yg-storage-count-out var(--yg-motion-storage-disclose) both; }
 }
-@keyframes yg-storage-count { from { opacity: 0; translate: 0 6px; } }
+@keyframes yg-storage-count-in { from { translate: 0 var(--yg-storage-roll-edge); } }
+@keyframes yg-storage-count-out {
+  from { visibility: visible; translate: 0 0; }
+  to { visibility: hidden; translate: 0 calc(-1 * var(--yg-storage-roll-edge)); }
+}
 
 .yg-activity-island {
   background: var(--yg-field);
@@ -161,8 +171,9 @@
   gap: var(--boa-space-8);
 }
 @media (prefers-reduced-motion: no-preference) {
+  .yg-island-reveal { transition: grid-template-rows var(--yg-motion-island-expand); }
   .yg-result-action-label > [data-result] {
-    animation: yg-action-result var(--yg-panel) var(--yg-arrive) both;
+    animation: yg-action-result var(--yg-motion-success-label) both;
   }
 }
 @keyframes yg-action-result {

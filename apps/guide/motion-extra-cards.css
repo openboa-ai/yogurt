@@ -76,7 +76,7 @@ button.extra-ticket[data-flipped="true"] { --flip: 180deg; background: transpare
   .extra-deck-sheet { transition: transform 280ms cubic-bezier(.2,.8,.2,1); }
   .extra-deck-sheet:active { transition: none; cursor: grabbing; }
   button.extra-ticket, .extra-ticket-art, .extra-ticket-copy { transition: transform 450ms cubic-bezier(.2,.8,.2,1); }
-  .extra-reading p button { transition: color var(--yg-change) ease, background-color var(--yg-change) ease; }
+  .extra-reading p button { transition: color var(--yg-motion-reading-marker), background-color var(--yg-motion-reading-marker); }
   .extra-page-current { transition: transform var(--yg-expand) var(--yg-arrive); }
   .extra-page-stack[data-dragging] .extra-page-current { transition: none; }
   .extra-page-current { animation: extra-page-turn var(--yg-reveal) var(--yg-arrive); }

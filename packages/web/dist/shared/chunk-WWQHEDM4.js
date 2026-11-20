@@ -429,15 +429,37 @@ function Select({
 function Switch2({
   label,
   help,
+  onCheckedChange,
   ...props
 }) {
+  const labelRef = useRef3(null);
+  const change = (checked) => {
+    const thumb = labelRef.current?.closest(".yg-switch")?.querySelector('[role="switch"] > span');
+    if (thumb && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const scale = getComputedStyle(thumb).scale;
+      thumb.getAnimations().find((animation) => animation.id === "yg-switch-stretch")?.cancel();
+      const stretch = thumb.animate([
+        { scale, offset: 0 },
+        { scale: "1.385 1", offset: 1 / 9 },
+        { scale: "1.385 1", offset: 1 / 3 },
+        { scale: "1.363 1", offset: 4 / 9 },
+        { scale: "1.187 1", offset: 5 / 9 },
+        { scale: "1.053 1", offset: 2 / 3 },
+        { scale: "1", offset: 7 / 9 },
+        { scale: "1", offset: 1 }
+      ], { duration: 300 });
+      stretch.id = "yg-switch-stretch";
+    }
+    onCheckedChange?.(checked);
+  };
   return /* @__PURE__ */ jsx(
     Switch,
     {
       ...props,
       labelPosition: "start",
       className: cx("yg-choice yg-switch", props.className),
-      label: /* @__PURE__ */ jsxs("span", { children: [
+      onCheckedChange: change,
+      label: /* @__PURE__ */ jsxs("span", { ref: labelRef, children: [
         label,
         help && /* @__PURE__ */ jsx("span", { className: "yg-help", children: help })
       ] })

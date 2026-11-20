@@ -1,0 +1,83 @@
+.yg-root {
+  --yg-motion-tag-enter: 480ms var(--yg-settle);
+  --yg-motion-stepper-spin: 480ms var(--yg-settle);
+  --yg-motion-pagination: 520ms var(--yg-settle);
+  --yg-motion-reading-marker: 330ms var(--yg-settle);
+  --yg-motion-selection-lead: 280ms var(--yg-settle);
+  --yg-motion-selection-tail: 545ms var(--yg-settle);
+  --yg-motion-picker-tail: 470ms var(--yg-settle);
+  --yg-motion-bottom-label: 420ms var(--yg-settle);
+  --yg-motion-picker-reveal: 420ms var(--yg-settle);
+  --yg-motion-picker-row: 390ms var(--yg-settle);
+  --yg-motion-picker-slide: 380ms var(--yg-settle);
+  --yg-motion-picker-highlight: 250ms var(--yg-settle);
+  --yg-motion-picker-chevron: 490ms var(--yg-settle);
+  --yg-motion-switch-travel: 490ms var(--yg-settle);
+  --yg-motion-storage-fill: 450ms var(--yg-settle);
+  --yg-motion-storage-disclose: 460ms var(--yg-settle);
+  --yg-motion-storage-lift: 420ms var(--yg-settle);
+  --yg-motion-letter-progress: 430ms var(--yg-settle);
+  --yg-motion-prompt-editor: 340ms var(--yg-settle);
+  --yg-motion-prompt-status: 360ms var(--yg-settle);
+  --yg-motion-prompt-action: 345ms var(--yg-settle);
+  --yg-motion-nav-divider: 480ms var(--yg-settle);
+  --yg-motion-nav-bottom: 395ms var(--yg-settle);
+  --yg-motion-command-width: 420ms var(--yg-settle);
+  --yg-motion-command-height: 460ms var(--yg-settle);
+  --yg-motion-command-highlight: 350ms var(--yg-settle);
+  --yg-motion-task-check: 650ms var(--yg-settle);
+  --yg-motion-checklist-strike: 550ms var(--yg-settle);
+  --yg-motion-file-press: 460ms var(--yg-settle);
+  --yg-motion-card-open: 480ms var(--yg-settle);
+  --yg-motion-card-fan: 490ms var(--yg-settle);
+  --yg-motion-card-lift: 385ms var(--yg-settle);
+  --yg-motion-card-detail: 435ms var(--yg-settle);
+  --yg-motion-text-pop: 475ms var(--yg-settle);
+  --yg-motion-tooltip-arrive: 370ms var(--yg-settle);
+  --yg-motion-island-expand: 410ms var(--yg-settle);
+  --yg-motion-step-fill: 620ms var(--yg-settle);
+  --yg-motion-success-label: 375ms var(--yg-settle);
+}
+
+@supports (animation-timing-function: linear(0, 1)) {
+  .yg-root {
+    --yg-motion-tag-enter: 480ms linear(0, 0.186, 0.553, 0.926, 1.172, 1.261, 1.23, 1.135, 1.034, 0.965, 0.933, 0.937, 0.96, 0.986, 1.007, 1);
+    --yg-motion-stepper-spin: 480ms linear(0, 0.219, 0.641, 1.04, 1.261, 1.29, 1.197, 1.064, 0.96, 0.914, 0.919, 0.954, 0.993, 1.018, 1.027, 1);
+    --yg-motion-pagination: 520ms linear(0, 0.081, 0.252, 0.435, 0.598, 0.731, 0.832, 0.901, 0.947, 0.977, 0.993, 1.002, 1.006, 1.006, 1.006, 1);
+    --yg-motion-reading-marker: 330ms linear(0, 0.098, 0.287, 0.481, 0.646, 0.777, 0.864, 0.922, 0.959, 0.981, 0.993, 0.999, 1.002, 1.002, 1.002, 1);
+    --yg-motion-selection-lead: 280ms linear(0, 0.09, 0.271, 0.466, 0.639, 0.774, 0.871, 0.933, 0.975, 0.997, 1.009, 1.012, 1.012, 1.01, 1.008, 1);
+    --yg-motion-selection-tail: 545ms linear(0, 0.092, 0.284, 0.495, 0.681, 0.821, 0.922, 0.985, 1.018, 1.032, 1.034, 1.029, 1.022, 1.015, 1.009, 1);
+    --yg-motion-picker-tail: 470ms linear(0, 0.082, 0.258, 0.458, 0.642, 0.792, 0.902, 0.976, 1.017, 1.037, 1.042, 1.038, 1.031, 1.023, 1.015, 1);
+    --yg-motion-bottom-label: 420ms linear(0, 0.097, 0.293, 0.504, 0.688, 0.823, 0.919, 0.979, 1.011, 1.024, 1.027, 1.023, 1.018, 1.012, 1.008, 1);
+    --yg-motion-card-open: 480ms linear(0, 0.103, 0.308, 0.538, 0.737, 0.884, 0.977, 1.03, 1.051, 1.053, 1.044, 1.032, 1.02, 1.011, 1.004, 1);
+    --yg-motion-card-fan: 490ms linear(0, 0.097, 0.314, 0.549, 0.757, 0.919, 1.02, 1.073, 1.089, 1.083, 1.064, 1.043, 1.024, 1.009, 0.999, 1);
+    --yg-motion-card-lift: 385ms linear(0, 0.123, 0.376, 0.666, 0.911, 1.07, 1.154, 1.17, 1.143, 1.096, 1.049, 1.01, 0.984, 0.973, 0.971, 1);
+    --yg-motion-card-detail: 435ms linear(0, 0.106, 0.328, 0.569, 0.768, 0.92, 1.014, 1.061, 1.074, 1.067, 1.051, 1.034, 1.018, 1.007, 0.999, 1);
+    --yg-motion-text-pop: 475ms linear(0, 0.215, 0.663, 1.055, 1.275, 1.295, 1.194, 1.054, 0.951, 0.907, 0.918, 0.956, 0.997, 1.022, 1.029, 1);
+    --yg-motion-tooltip-arrive: 370ms linear(0, 0.105, 0.302, 0.518, 0.699, 0.829, 0.92, 0.975, 1.002, 1.015, 1.018, 1.016, 1.013, 1.009, 1.005, 1);
+    --yg-motion-island-expand: 410ms linear(0, 0.093, 0.293, 0.527, 0.728, 0.883, 0.986, 1.047, 1.071, 1.072, 1.061, 1.044, 1.028, 1.015, 1.005, 1);
+    --yg-motion-step-fill: 620ms linear(0, 0.105, 0.302, 0.506, 0.676, 0.798, 0.884, 0.939, 0.971, 0.989, 0.998, 1.002, 1.003, 1.003, 1.003, 1);
+    --yg-motion-success-label: 375ms linear(0, 0.102, 0.305, 0.521, 0.706, 0.843, 0.934, 0.988, 1.016, 1.026, 1.026, 1.021, 1.016, 1.01, 1.006, 1);
+    --yg-motion-picker-reveal: 420ms linear(0, 0.099, 0.306, 0.534, 0.732, 0.877, 0.977, 1.033, 1.056, 1.059, 1.05, 1.037, 1.023, 1.013, 1.005, 1);
+    --yg-motion-picker-row: 390ms linear(0, 0.086, 0.269, 0.476, 0.664, 0.815, 0.922, 0.991, 1.029, 1.045, 1.047, 1.04, 1.031, 1.022, 1.013, 1);
+    --yg-motion-picker-slide: 380ms linear(0, 0.089, 0.285, 0.494, 0.68, 0.832, 0.932, 0.995, 1.029, 1.041, 1.041, 1.034, 1.026, 1.017, 1.01, 1);
+    --yg-motion-picker-highlight: 250ms linear(0, 0.075, 0.236, 0.422, 0.598, 0.745, 0.858, 0.938, 0.989, 1.018, 1.032, 1.035, 1.032, 1.027, 1.02, 1);
+    --yg-motion-picker-chevron: 490ms linear(0, 0.131, 0.416, 0.706, 0.936, 1.082, 1.141, 1.14, 1.106, 1.063, 1.023, 0.996, 0.982, 0.979, 0.982, 1);
+    --yg-motion-switch-travel: 490ms linear(0, 0.14, 0.441, 0.743, 0.974, 1.112, 1.158, 1.143, 1.099, 1.05, 1.01, 0.985, 0.976, 0.976, 0.983, 1);
+    --yg-motion-storage-fill: 450ms linear(0, 0.203, 0.618, 1, 1.244, 1.305, 1.232, 1.102, 0.989, 0.92, 0.907, 0.933, 0.973, 1.007, 1.026, 1);
+    --yg-motion-storage-disclose: 460ms linear(0, 0.096, 0.301, 0.513, 0.701, 0.838, 0.934, 0.989, 1.017, 1.028, 1.028, 1.023, 1.017, 1.011, 1.007, 1);
+    --yg-motion-storage-lift: 420ms linear(0, 0.097, 0.293, 0.504, 0.688, 0.823, 0.919, 0.979, 1.011, 1.024, 1.027, 1.023, 1.018, 1.012, 1.008, 1);
+    --yg-motion-letter-progress: 430ms linear(0, 0.099, 0.299, 0.529, 0.724, 0.878, 0.977, 1.035, 1.059, 1.062, 1.053, 1.039, 1.026, 1.014, 1.005, 1);
+    --yg-motion-prompt-editor: 340ms linear(0, 0.089, 0.269, 0.452, 0.623, 0.757, 0.855, 0.919, 0.962, 0.987, 1, 1.006, 1.008, 1.008, 1.006, 1);
+    --yg-motion-prompt-status: 360ms linear(0, 0.09, 0.274, 0.474, 0.652, 0.792, 0.891, 0.956, 0.994, 1.013, 1.02, 1.021, 1.018, 1.013, 1.009, 1);
+    --yg-motion-prompt-action: 345ms linear(0, 0.113, 0.343, 0.585, 0.786, 0.928, 1.013, 1.053, 1.062, 1.054, 1.039, 1.025, 1.012, 1.004, 0.999, 1);
+    --yg-motion-nav-divider: 480ms linear(0, 0.129, 0.384, 0.66, 0.88, 1.022, 1.09, 1.106, 1.091, 1.063, 1.034, 1.011, 0.997, 0.99, 0.989, 1);
+    --yg-motion-nav-bottom: 395ms linear(0, 0.094, 0.294, 0.501, 0.681, 0.818, 0.916, 0.975, 1.006, 1.021, 1.024, 1.022, 1.017, 1.012, 1.008, 1);
+    --yg-motion-command-width: 420ms linear(0, 0.097, 0.293, 0.504, 0.688, 0.823, 0.919, 0.979, 1.011, 1.024, 1.027, 1.023, 1.018, 1.012, 1.008, 1);
+    --yg-motion-command-height: 460ms linear(0, 0.089, 0.279, 0.479, 0.661, 0.797, 0.897, 0.958, 0.995, 1.013, 1.019, 1.019, 1.016, 1.012, 1.009, 1);
+    --yg-motion-command-highlight: 350ms linear(0, 0.092, 0.291, 0.498, 0.688, 0.828, 0.924, 0.986, 1.018, 1.031, 1.032, 1.027, 1.021, 1.014, 1.008, 1);
+    --yg-motion-task-check: 650ms linear(0, 0.1, 0.286, 0.478, 0.636, 0.759, 0.846, 0.904, 0.943, 0.967, 0.982, 0.99, 0.995, 0.998, 0.999, 1);
+    --yg-motion-checklist-strike: 550ms linear(0, 0.086, 0.264, 0.464, 0.637, 0.775, 0.874, 0.94, 0.982, 1.004, 1.014, 1.016, 1.015, 1.012, 1.009, 1);
+    --yg-motion-file-press: 460ms linear(0, 0.168, 0.545, 0.923, 1.2, 1.312, 1.288, 1.184, 1.056, 0.958, 0.907, 0.902, 0.93, 0.97, 1.005, 1);
+  }
+}

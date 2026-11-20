@@ -133,3 +133,9 @@ Use the shared numbered palette for information that the interaction reveals or 
 | Verified result and rating | Show green on completed action feedback, the accepted file mark, and the savings indicator. Use yellow on filled rating stars. |
 
 Confirm the role and corresponding text or position in light and dark. Check rapid reversals, pointer and keyboard interaction, and immediate state with reduced motion. The behavior and default labels of existing callers remain valid.
+
+### State transition profiles
+
+Apply each supported interaction's established spring response, displacement, sequencing, and stagger before comparing the rendered result. Keep separately timed movement for a switch thumb, a picker surface, a selected row, and changing text. Picker options reveal from the anchored edge and leave in reverse order. When room permits, the picker and its bottom-opening menu rise together. Its highlight follows the active row, and the outgoing and incoming status carry their own markers. A switch stretches its thumb along the direction of travel and changes track color during the same move.
+
+Keep the editor values and accessibility state available throughout the motion. Keyboard focus and listbox selection remain owned by the control. Reopening, reversing, or changing a choice settles on the latest input. Honor reduced motion immediately. Verify each exercised state in the browser and record the scope of any frame comparison. Keep the established dimensions, appearance roles, and absent editor perimeter strokes.

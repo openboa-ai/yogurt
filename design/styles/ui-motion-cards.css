@@ -154,9 +154,13 @@
 .yg-fan-index { margin-top: 12px; font-size: .7rem; }.yg-fan-label { display: block; flex: none; margin-top: 2px; }
 .yg-fan-detail { margin-top: 16px; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-fan-cards-list:not([data-many]) button { transition: transform 340ms cubic-bezier(.2,.9,.2,1.15), translate 250ms ease, background-color 180ms; }
-  .yg-expand-art { transition: width 300ms var(--yg-settle), height 300ms var(--yg-settle); }
-  .yg-stat-value { animation: yg-card-number 350ms var(--yg-settle); }
+  .yg-fan-cards-list:not([data-many]) button {
+    transition: transform var(--yg-motion-card-fan), translate var(--yg-motion-card-lift), background-color var(--yg-change);
+  }
+  .yg-expand-art { transition: width var(--yg-motion-card-open), height var(--yg-motion-card-open); }
+  .yg-expand-card[open] .yg-expand-card-body { animation: yg-card-arrive var(--yg-motion-card-open) both; }
+  .yg-profile-card details[open] .yg-profile-extra { animation: yg-card-arrive var(--yg-motion-card-detail) both; }
+  .yg-stat-value { animation: yg-card-number var(--yg-motion-step-fill); }
   @keyframes yg-card-number { from { opacity: 0; transform: translateY(8px); } }
 }
 @media (prefers-reduced-motion: reduce) { .yg-fan-cards-list:not([data-many]) button { transition: none; } }

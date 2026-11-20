@@ -21,6 +21,8 @@ export function StorageMeter({ label, used, capacity, unit, categories = [] }: {
   const id = useId();
   const [expanded, setExpanded] = useState<string | null>(null);
   const known = Number.isFinite(used) && Number.isFinite(capacity) && capacity > 0 && used >= 0;
+  const [roll, setRoll] = useState({value: used, previous: used});
+  if (!Object.is(roll.value, used)) setRoll({value: used, previous: roll.value});
   const ratio = known ? Math.min(1, used / capacity) : 0;
   let available = known ? Math.min(used, capacity) : 0;
   const breakdown = categories.filter(category => Number.isFinite(category.amount) && category.amount > 0);
@@ -38,7 +40,11 @@ export function StorageMeter({ label, used, capacity, unit, categories = [] }: {
       {known ? (
         <>
           <div className="yg-storage-amount">
-            <strong key={used}>{used}</strong><b>{unit}</b>
+            <strong className="yg-storage-count" key={used} data-decreased={used < roll.previous || undefined}>
+              {Number.isFinite(roll.previous) && roll.previous !== used &&
+                <span className="yg-storage-count-before" aria-hidden="true">{roll.previous}</span>}
+              <span className="yg-storage-count-now" data-roll={roll.previous !== used || undefined}>{used}</span>
+            </strong><b>{unit}</b>
             <span>of {capacity} {unit}</span>
           </div>
           <div className="yg-storage-bar" role="meter" aria-labelledby={id}

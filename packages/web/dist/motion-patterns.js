@@ -2,9 +2,9 @@
 "use client";
 import {
   Command
-} from "./shared/chunk-I4YIUKTP.js";
+} from "./shared/chunk-P5XFFEXZ.js";
 import "./shared/chunk-OQUAFXG7.js";
-import "./shared/chunk-UJUDQD47.js";
+import "./shared/chunk-WWQHEDM4.js";
 import "./shared/chunk-5GJUJT3P.js";
 import {
   dist_exports10 as dist_exports
@@ -184,7 +184,7 @@ function FileDrop({ label, onFiles, accept, multiple = false }) {
 }
 
 // packages/web/src/patterns/motion-choices.tsx
-import { useId as useId2 } from "react";
+import { useEffect, useId as useId2, useRef as useRef2, useState as useState2 } from "react";
 import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
 function FocusPicker({ value, onChange, options }) {
   const name = useId2();
@@ -212,22 +212,78 @@ function PlanSwitch({ value, onChange, options }) {
 }
 function LetterLimit({ label, value, onChange, limit, placeholder, onSubmit }) {
   const id = useId2();
+  const editor = useRef2(null);
+  const end = useRef2(null);
+  const [rejected, setRejected] = useState2();
   const maximum = Number.isFinite(limit) ? Math.max(0, Math.floor(limit)) : 0;
   const remaining = maximum - value.length;
   const progress = maximum > 0 ? Math.min(1, value.length / maximum) : 0;
   const state = remaining <= 0 ? "full" : remaining <= Math.max(10, maximum * 0.1) ? "near" : "normal";
+  useEffect(() => {
+    const field = editor.current;
+    const card = field?.parentElement;
+    if (!field || !card) return;
+    const reject = (text) => {
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const space = Math.max(0, maximum - field.value.length + field.selectionEnd - field.selectionStart);
+      const letters = Array.from(text.slice(space, space + 24)).filter((letter) => letter.trim()).slice(0, 12);
+      const marker = end.current?.getBoundingClientRect();
+      if (!letters.length || !marker) return;
+      const frame = card.getBoundingClientRect();
+      const y = Math.max(field.offsetTop, marker.top - frame.top - field.scrollTop);
+      const floor = Math.min(frame.height + 46, innerHeight - frame.top - 14);
+      setRejected((previous) => ({
+        key: (previous?.key ?? 0) + 1,
+        letters,
+        x: marker.left - frame.left,
+        y,
+        fall: Math.max(0, floor - y)
+      }));
+    };
+    const insert = (event) => {
+      if (!event.isComposing && event.inputType !== "insertFromPaste" && event.data) reject(event.data);
+    };
+    const paste = (event) => reject(event.clipboardData?.getData("text/plain") ?? "");
+    field.addEventListener("beforeinput", insert);
+    field.addEventListener("paste", paste);
+    return () => {
+      field.removeEventListener("beforeinput", insert);
+      field.removeEventListener("paste", paste);
+    };
+  }, [maximum]);
   return /* @__PURE__ */ jsxs2("div", { className: "yg-letter-limit", "data-limit-state": state, children: [
     /* @__PURE__ */ jsx2(
       "textarea",
       {
+        ref: editor,
         id,
         "aria-label": label,
         placeholder,
         value,
         maxLength: maximum,
-        onChange: (event) => onChange(event.currentTarget.value),
+        onChange: (event) => {
+          if (event.currentTarget.value.length < value.length) setRejected(void 0);
+          onChange(event.currentTarget.value);
+        },
         "aria-describedby": `${id}-count`
       }
+    ),
+    /* @__PURE__ */ jsxs2("span", { className: "yg-letter-measure", "aria-hidden": "true", children: [
+      value,
+      /* @__PURE__ */ jsx2("span", { ref: end, children: "\u200B" })
+    ] }),
+    rejected && /* @__PURE__ */ jsx2(
+      "span",
+      {
+        className: "yg-letter-rejected",
+        "aria-hidden": "true",
+        style: { left: rejected.x, top: rejected.y, "--yg-letter-fall": `${rejected.fall}px` },
+        children: rejected.letters.map((letter, index) => /* @__PURE__ */ jsx2("span", { style: {
+          "--yg-letter-order": index,
+          "--yg-letter-drift": `${(index % 5 - 2) * 12}px`
+        }, children: letter }, index))
+      },
+      rejected.key
     ),
     /* @__PURE__ */ jsxs2("div", { className: "yg-letter-footer", children: [
       /* @__PURE__ */ jsxs2("svg", { className: "yg-letter-meter", viewBox: "0 0 24 24", "aria-hidden": "true", children: [
@@ -235,19 +291,22 @@ function LetterLimit({ label, value, onChange, limit, placeholder, onSubmit }) {
         /* @__PURE__ */ jsx2("circle", { cx: "12", cy: "12", r: "9.5", pathLength: "1", strokeDasharray: "1 1", strokeDashoffset: 1 - progress })
       ] }),
       /* @__PURE__ */ jsx2("span", { className: "yg-letter-count", id: `${id}-count`, children: remaining < 0 ? `${-remaining} over limit` : `${remaining} remaining` }),
-      onSubmit && /* @__PURE__ */ jsx2(Button, { onClick: () => onSubmit(value), disabled: remaining < 0 || !value.trim(), children: "Post" })
+      onSubmit && /* @__PURE__ */ jsx2(Button, { onClick: () => {
+        setRejected(void 0);
+        onSubmit(value);
+      }, disabled: remaining < 0 || !value.trim(), children: "Post" })
     ] })
   ] });
 }
 
 // packages/web/src/patterns/motion-layers.tsx
-import { useId as useId3, useState as useState2 } from "react";
+import { useId as useId3, useLayoutEffect, useRef as useRef3, useState as useState3 } from "react";
 import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
 function MorphTooltip({ label, detail }) {
   const id = useId3();
-  const [hovered, setHovered] = useState2(false);
-  const [focused, setFocused] = useState2(false);
-  const [dismissed, setDismissed] = useState2(false);
+  const [hovered, setHovered] = useState3(false);
+  const [focused, setFocused] = useState3(false);
+  const [dismissed, setDismissed] = useState3(false);
   const open = !dismissed && (hovered || focused);
   return /* @__PURE__ */ jsxs3(
     "span",
@@ -281,39 +340,117 @@ function MorphTooltip({ label, detail }) {
     }
   );
 }
+function SpringHighlight() {
+  const ref = useRef3(null);
+  useLayoutEffect(() => {
+    const highlight = ref.current;
+    const viewport = highlight?.parentElement;
+    if (!highlight || !viewport) return;
+    let lastTop;
+    const update = () => {
+      const row = viewport.querySelector("[data-highlighted]") ?? viewport.querySelector('[role="option"][data-state="checked"]');
+      if (!row) {
+        highlight.removeAttribute("data-ready");
+        lastTop = void 0;
+        return;
+      }
+      const top = row.offsetTop;
+      if (lastTop !== void 0 && lastTop !== top) {
+        highlight.toggleAttribute("data-forward", top > lastTop);
+      }
+      lastTop = top;
+      highlight.style.setProperty("--yg-spring-active-y", `${top}px`);
+      highlight.style.setProperty("--yg-spring-active-height", `${row.offsetHeight}px`);
+      highlight.style.setProperty("--yg-spring-active-end", `${top + row.offsetHeight}px`);
+      highlight.setAttribute("data-ready", "");
+    };
+    const changes = new MutationObserver(update);
+    changes.observe(viewport, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["data-highlighted", "data-state"]
+    });
+    const sizes = new ResizeObserver(update);
+    sizes.observe(viewport);
+    update();
+    return () => {
+      changes.disconnect();
+      sizes.disconnect();
+    };
+  }, []);
+  return /* @__PURE__ */ jsx3("span", { ref, className: "yg-spring-highlight", "aria-hidden": "true" });
+}
 function SpringDropdown({ label, value, onChange, options }) {
   const id = useId3();
-  const [portal, setPortal] = useState2(null);
+  const [portal, setPortal] = useState3(null);
+  const [menu, setMenu] = useState3({ open: false, lift: 0 });
   const selected = options.find((option) => option.id === value);
-  return /* @__PURE__ */ jsxs3("div", { ref: setPortal, className: "yg-spring-dropdown", children: [
-    /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
-    /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: onChange, children: [
-      /* @__PURE__ */ jsxs3(dist_exports.Trigger, { className: "yg-spring-trigger", "aria-labelledby": id, children: [
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-value", children: /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", children: [
-          /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": selected?.marker, "aria-hidden": "true" }),
-          /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) })
-        ] }, value) }),
-        /* @__PURE__ */ jsx3(dist_exports.Icon, { className: "yg-spring-chevron", "aria-hidden": "true", children: "\u2304" })
-      ] }),
-      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, children: /* @__PURE__ */ jsx3(dist_exports.Viewport, { className: "yg-spring-viewport", children: options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
-        /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
-        /* @__PURE__ */ jsx3(dist_exports.ItemIndicator, { className: "yg-spring-check", "aria-hidden": "true", children: "\u2713" })
-      ] }, option.id)) }) }) })
-    ] })
-  ] });
+  const [roll, setRoll] = useState3({ value, previous: void 0 });
+  if (roll.value !== value) setRoll({ value, previous: roll.value });
+  const previous = options.find((option) => option.id === roll.previous);
+  return /* @__PURE__ */ jsxs3(
+    "div",
+    {
+      ref: setPortal,
+      className: "yg-spring-dropdown",
+      "data-open": menu.open,
+      style: { "--yg-picker-lift": `${menu.lift}px` },
+      children: [
+        /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
+        /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: onChange, onOpenChange: (open) => {
+          const room = Math.max(0, (portal?.getBoundingClientRect().top ?? 0) - 16);
+          const lift = Math.min(room, 10 + Math.min(options.length, 4) * 22);
+          setMenu({ open, lift });
+        }, children: [
+          /* @__PURE__ */ jsxs3(dist_exports.Trigger, { className: "yg-spring-trigger", "aria-labelledby": id, children: [
+            /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value", children: [
+              previous && /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-outgoing": true, "aria-hidden": "true", children: [
+                /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": previous.marker }),
+                /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: previous.label })
+              ] }, `previous-${value}`),
+              /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-incoming": previous ? "" : void 0, children: [
+                /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": selected?.marker, "aria-hidden": "true" }),
+                /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) })
+              ] }, value)
+            ] }),
+            /* @__PURE__ */ jsx3(dist_exports.Icon, { className: "yg-spring-chevron", "aria-hidden": "true", children: "\u2304" })
+          ] }),
+          /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, children: /* @__PURE__ */ jsxs3(dist_exports.Viewport, { className: "yg-spring-viewport", children: [
+            /* @__PURE__ */ jsx3(SpringHighlight, {}),
+            options.map((option, index) => /* @__PURE__ */ jsxs3(
+              dist_exports.Item,
+              {
+                value: option.id,
+                className: "yg-spring-option",
+                style: { "--yg-spring-row-index": index, "--yg-spring-row-reverse": options.length - index - 1 },
+                children: [
+                  /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
+                  /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
+                  /* @__PURE__ */ jsx3(dist_exports.ItemIndicator, { className: "yg-spring-check", "aria-hidden": "true", children: "\u2713" })
+                ]
+              },
+              option.id
+            ))
+          ] }) }) })
+        ] })
+      ]
+    }
+  );
 }
 function CommandButton({ label, items, onSelect }) {
   return /* @__PURE__ */ jsx3("div", { className: "yg-command-button", children: /* @__PURE__ */ jsx3(Command, { label, items, onSelect }) });
 }
 
 // packages/web/src/patterns/motion-status.tsx
-import { useId as useId4, useState as useState3 } from "react";
+import { useId as useId4, useState as useState4 } from "react";
 import { Fragment, jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
 function StorageMeter({ label, used, capacity, unit, categories = [] }) {
   const id = useId4();
-  const [expanded, setExpanded] = useState3(null);
+  const [expanded, setExpanded] = useState4(null);
   const known = Number.isFinite(used) && Number.isFinite(capacity) && capacity > 0 && used >= 0;
+  const [roll, setRoll] = useState4({ value: used, previous: used });
+  if (!Object.is(roll.value, used)) setRoll({ value: used, previous: roll.value });
   const ratio = known ? Math.min(1, used / capacity) : 0;
   let available = known ? Math.min(used, capacity) : 0;
   const breakdown = categories.filter((category) => Number.isFinite(category.amount) && category.amount > 0);
@@ -328,7 +465,10 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
     /* @__PURE__ */ jsx4("strong", { id, className: "yg-storage-heading", children: label }),
     known ? /* @__PURE__ */ jsxs4(Fragment, { children: [
       /* @__PURE__ */ jsxs4("div", { className: "yg-storage-amount", children: [
-        /* @__PURE__ */ jsx4("strong", { children: used }, used),
+        /* @__PURE__ */ jsxs4("strong", { className: "yg-storage-count", "data-decreased": used < roll.previous || void 0, children: [
+          Number.isFinite(roll.previous) && roll.previous !== used && /* @__PURE__ */ jsx4("span", { className: "yg-storage-count-before", "aria-hidden": "true", children: roll.previous }),
+          /* @__PURE__ */ jsx4("span", { className: "yg-storage-count-now", "data-roll": roll.previous !== used || void 0, children: used })
+        ] }, used),
         /* @__PURE__ */ jsx4("b", { children: unit }),
         /* @__PURE__ */ jsxs4("span", { children: [
           "of ",
@@ -390,7 +530,7 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
 }
 function ActivityIsland({ label, summary, children }) {
   const id = useId4();
-  const [open, setOpen] = useState3(false);
+  const [open, setOpen] = useState4(false);
   return /* @__PURE__ */ jsxs4("section", { className: "yg-activity-island", "data-open": open, children: [
     /* @__PURE__ */ jsxs4("button", { type: "button", "aria-expanded": open, "aria-controls": id, onClick: () => setOpen((value) => !value), children: [
       /* @__PURE__ */ jsx4(Icon, { name: "clock" }),
@@ -432,7 +572,7 @@ function LoadingSuccessButton({ label, pendingLabel, successLabel, errorLabel, s
   );
 }
 function CopyButton({ value }) {
-  const [state, setState] = useState3("idle");
+  const [state, setState] = useState4("idle");
   async function copy() {
     setState("pending");
     try {
@@ -459,15 +599,15 @@ function CopyButton({ value }) {
 }
 
 // packages/web/src/patterns/motion-conversation.tsx
-import { useId as useId5, useLayoutEffect, useRef as useRef2, useState as useState4 } from "react";
+import { useId as useId5, useLayoutEffect as useLayoutEffect2, useRef as useRef4, useState as useState5 } from "react";
 import { Fragment as Fragment2, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 function StreamingReply({ value, active = false }) {
   return /* @__PURE__ */ jsx5("div", { className: "yg-streaming-reply", "aria-busy": active || void 0, children: value ? /* @__PURE__ */ jsx5("span", { children: value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : /* @__PURE__ */ jsx5("span", { className: "yg-streaming-word", children: part }, index)) }) : active ? /* @__PURE__ */ jsx5("span", { className: "yg-streaming-wait", children: "Thinking" }) : null });
 }
 function GhostSuggestion({ value, suggestion, onChange }) {
   const id = useId5();
-  const [atEnd, setAtEnd] = useState4(true);
-  const mirror = useRef2(null);
+  const [atEnd, setAtEnd] = useState5(true);
+  const mirror = useRef4(null);
   const suffix = value && suggestion.startsWith(value) ? suggestion.slice(value.length) : "";
   const show = atEnd && !!suffix;
   return /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-field", children: [
@@ -508,9 +648,9 @@ function GhostSuggestion({ value, suggestion, onChange }) {
   ] });
 }
 function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
-  const editor = useRef2(null);
-  const measure = useRef2(null);
-  useLayoutEffect(() => {
+  const editor = useRef4(null);
+  const measure = useRef4(null);
+  useLayoutEffect2(() => {
     const target = editor.current;
     const source = measure.current;
     if (!target || !source) return;
@@ -592,7 +732,7 @@ function ThinkingIndicator({ label = "Thinking", active = true }) {
 }
 
 // packages/web/src/patterns/motion-cards.tsx
-import { useState as useState5 } from "react";
+import { useState as useState6 } from "react";
 import { jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
 function ExpandCard({ title, children }) {
   return /* @__PURE__ */ jsxs6("details", { className: "yg-expand-card", children: [
@@ -605,7 +745,7 @@ function ExpandCard({ title, children }) {
   ] });
 }
 function FanCards({ items }) {
-  const [selectedId, setSelectedId] = useState5(null);
+  const [selectedId, setSelectedId] = useState6(null);
   const selected = items.find((item) => item.id === selectedId);
   return /* @__PURE__ */ jsxs6("div", { className: "yg-fan-cards", children: [
     /* @__PURE__ */ jsx6("div", { className: "yg-fan-cards-list", "aria-label": "Cards", "data-many": items.length > 3 || void 0, children: items.map((item, index) => /* @__PURE__ */ jsxs6(
@@ -659,7 +799,7 @@ function ProfileCard({ name, detail, initials, children }) {
 }
 
 // packages/web/src/patterns/motion-stepped.tsx
-import { useId as useId6, useRef as useRef3, useState as useState6 } from "react";
+import { useId as useId6, useRef as useRef5, useState as useState7 } from "react";
 import { jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
 function RangeSlider({
   label,
@@ -674,7 +814,7 @@ function RangeSlider({
   formatValue = String
 }) {
   const id = useId6();
-  const activeDrag = useRef3(null);
+  const activeDrag = useRef5(null);
   const percent = (number) => max > min ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
   const first = percent(value);
   if (end === void 0 || !onEndChange) {
@@ -812,7 +952,7 @@ function RangeSlider({
 }
 function PasswordStrength({ value, onChange }) {
   const id = useId6();
-  const [shown, setShown] = useState6(false);
+  const [shown, setShown] = useState7(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
   return /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password", "data-score": score, children: [
@@ -876,13 +1016,13 @@ function DetentDial({ options, value, onChange }) {
 }
 
 // packages/web/src/patterns/motion-confirm.tsx
-import { useEffect, useRef as useRef4, useState as useState7 } from "react";
+import { useEffect as useEffect2, useRef as useRef6, useState as useState8 } from "react";
 import { jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
 function useConfirmation(onConfirm) {
-  const [done, setDone] = useState7(false);
-  const locked = useRef4(false);
-  const timer = useRef4(null);
-  useEffect(() => () => {
+  const [done, setDone] = useState8(false);
+  const locked = useRef6(false);
+  const timer = useRef6(null);
+  useEffect2(() => () => {
     if (timer.current) clearTimeout(timer.current);
   }, []);
   const confirm = () => {
@@ -898,12 +1038,12 @@ function useConfirmation(onConfirm) {
   return { done, locked, confirm };
 }
 function HoldButton({ label, onConfirm }) {
-  const [progress, setProgress] = useState7(0);
-  const [armed, setArmed] = useState7(false);
-  const [holding, setHolding] = useState7(false);
-  const active = useRef4(null);
-  const frame = useRef4(null);
-  const callback = useRef4(onConfirm);
+  const [progress, setProgress] = useState8(0);
+  const [armed, setArmed] = useState8(false);
+  const [holding, setHolding] = useState8(false);
+  const active = useRef6(null);
+  const frame = useRef6(null);
+  const callback = useRef6(onConfirm);
   callback.current = onConfirm;
   const { done, locked, confirm } = useConfirmation(() => callback.current());
   const cancel = () => {
@@ -913,7 +1053,7 @@ function HoldButton({ label, onConfirm }) {
     setHolding(false);
     setProgress(0);
   };
-  useEffect(() => () => {
+  useEffect2(() => () => {
     if (frame.current !== null) cancelAnimationFrame(frame.current);
   }, []);
   const start = (event) => {
@@ -979,11 +1119,11 @@ function HoldButton({ label, onConfirm }) {
   );
 }
 function SlideConfirm({ label, onConfirm }) {
-  const [progress, setProgress] = useState7(0);
-  const [armed, setArmed] = useState7(false);
-  const [dragging, setDragging] = useState7(false);
-  const active = useRef4(null);
-  const value = useRef4(0);
+  const [progress, setProgress] = useState8(0);
+  const [armed, setArmed] = useState8(false);
+  const [dragging, setDragging] = useState8(false);
+  const active = useRef6(null);
+  const value = useRef6(0);
   const { done, locked, confirm } = useConfirmation(onConfirm);
   const reset = () => {
     active.current = null;
@@ -1113,7 +1253,7 @@ function TaskList({ label, tasks }) {
 }
 
 // packages/web/src/patterns/motion-cart.tsx
-import { useEffect as useEffect2, useLayoutEffect as useLayoutEffect2, useRef as useRef5, useState as useState8 } from "react";
+import { useEffect as useEffect3, useLayoutEffect as useLayoutEffect3, useRef as useRef7, useState as useState9 } from "react";
 import { jsx as jsx10, jsxs as jsxs10 } from "react/jsx-runtime";
 var holdDelay = 380;
 var initialRepeat = 150;
@@ -1122,27 +1262,27 @@ var limitNoticeDuration = 1600;
 function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "Add" }) {
   const limit = Number.isFinite(max) ? Math.max(0, Math.floor(max)) : 99;
   const count = Number.isFinite(quantity) ? Math.max(0, Math.min(limit, Math.floor(quantity))) : 0;
-  const previous = useRef5(count);
+  const previous = useRef7(count);
   const goingDown = count < previous.current;
   const lastCount = previous.current;
-  useLayoutEffect2(() => {
+  useLayoutEffect3(() => {
     previous.current = count;
   }, [count]);
-  const [showLimit, setShowLimit] = useState8(false);
-  const notice = useRef5(void 0);
+  const [showLimit, setShowLimit] = useState9(false);
+  const notice = useRef7(void 0);
   const open = count > 0;
   const reachedLimit = count >= limit;
-  const latest = useRef5({ count, limit, onQuantityChange });
+  const latest = useRef7({ count, limit, onQuantityChange });
   latest.current = { count, limit, onQuantityChange };
-  const increase = useRef5(null);
-  const pointer = useRef5(void 0);
-  const timer = useRef5(void 0);
-  const skipClick = useRef5(false);
+  const increase = useRef7(null);
+  const pointer = useRef7(void 0);
+  const timer = useRef7(void 0);
+  const skipClick = useRef7(false);
   function stop() {
     clearTimeout(timer.current);
     pointer.current = void 0;
   }
-  useEffect2(() => {
+  useEffect3(() => {
     window.addEventListener("blur", stop);
     return () => {
       window.removeEventListener("blur", stop);

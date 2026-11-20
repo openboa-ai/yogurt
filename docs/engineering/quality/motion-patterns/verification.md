@@ -32,3 +32,11 @@ The neutral material audit visited each of the 125 component entries, 14 blocks,
 Browser checks in both appearances confirm that storage selection recedes and restores the other segments, a switch returns to its neutral off track, the character counter and arc advance through orange and red, and the spring picker carries the chosen marker into its trigger. Filled rating stars and accepted file feedback use the shared palette. The bottom bar, command palette, and picker containers retain their neutral treatments. The Native fixture verifies the checked switch track and thumb against the generated roles.
 
 Focused captures in both appearances show a stroke-free prompt and character-limit editor. The character-limit card uses the neutral field fill during entry, and the prompt keeps its resting fill.
+
+## Spring responses and interrupted input
+
+The picker test tracks its highlight on arrow input and checks focus after menu exit and pointer selection. The switch test checks the thumb stretch on a state change and reverses it with a second key press. The character editor renders rejected text while its accepted value stays at the character limit. The guide exercises the same controls with reduced motion. Individual visual evidence covers the picker, storage, switch, and character editor. Broader frame-by-frame visual verification remains open.
+
+## Spring responses and interrupted input
+
+The picker test tracks its highlight on arrow input and checks focus after menu exit and pointer selection. The switch test checks the thumb stretch on a state change and reverses it with a second key press. The character editor renders rejected text while its accepted value stays at the character limit. The guide exercises the same controls with reduced motion. The private browser comparison records the picker, storage, switch, and character editor. Visual checks for other interaction phases remain open.

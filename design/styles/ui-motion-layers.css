@@ -1,3 +1,19 @@
+@property --yg-picker-open {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --yg-picker-highlight-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --yg-picker-highlight-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 .yg-morph-tooltip { position: relative; display: inline-flex; }
 .yg-morph-tooltip-trigger {
   display: inline-flex; align-items: center; gap: var(--yg-gap-inline);
@@ -39,32 +55,96 @@
 .yg-spring-symbol[data-marker="in-progress"] { background: var(--yg-signal-warning); }
 .yg-spring-symbol[data-marker="review"] { background: var(--yg-action); }
 .yg-spring-symbol[data-marker="done"] { background: var(--yg-signal-positive); }
-.yg-spring-value { flex: 1; min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
-.yg-spring-value-roll { display: flex; align-items: center; gap: var(--yg-gap-row); animation: yg-spring-roll var(--yg-expand) var(--yg-selection) both; }
+.yg-spring-value { flex: 1; display: grid; min-inline-size: 0; overflow: hidden; white-space: nowrap; font-weight: 500; }
+.yg-spring-value-roll { display: flex; grid-area: 1 / 1; min-inline-size: 0; align-items: center; gap: var(--yg-gap-row); }
+.yg-spring-value-roll[data-outgoing] { visibility: hidden; }
 .yg-spring-value-label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; }
 .yg-spring-chevron { display: grid; place-items: center; flex: none; inline-size: 20px; block-size: 20px; color: var(--yg-muted); font-size: 20px; line-height: 1; transition: transform var(--yg-change) var(--yg-selection); }
 .yg-spring-trigger[data-state="open"] .yg-spring-chevron { transform: rotate(180deg); }
 .yg-spring-menu { z-index: 100; box-sizing: border-box; inline-size: var(--radix-select-trigger-width); max-block-size: var(--radix-select-content-available-height); overflow: hidden; border: 0; border-radius: var(--yg-radius-popover); background: var(--yg-surface); color: var(--yg-text); box-shadow: var(--yg-float-shadow); transform-origin: var(--radix-select-content-transform-origin); }
-.yg-spring-menu[data-state="open"] .yg-spring-option { animation: yg-spring-row var(--yg-expand) var(--yg-selection) both; }
-.yg-spring-menu[data-state="open"] .yg-spring-option:nth-child(2) { animation-delay: 35ms; }
-.yg-spring-menu[data-state="open"] .yg-spring-option:nth-child(3) { animation-delay: 70ms; }
-.yg-spring-menu[data-state="open"] .yg-spring-option:nth-child(n+4) { animation-delay: 105ms; }
-.yg-spring-menu[data-state="open"] { animation: yg-spring-enter var(--yg-expand) var(--yg-selection) both; }
-.yg-spring-menu[data-state="closed"] { animation: yg-spring-exit var(--yg-travel) var(--yg-settle) both; }
-.yg-spring-viewport { padding: var(--yg-inset-layer); }
-.yg-spring-option { display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-size-touch); padding: 0 var(--yg-inset-compact) 0 var(--yg-inset-regular); border-radius: var(--yg-radius-panel); outline: none; cursor: pointer; box-sizing: border-box; }
+.yg-spring-viewport { position: relative; isolation: isolate; padding: var(--yg-inset-layer); }
+.yg-spring-option { position: relative; display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-size-touch); padding: 0 var(--yg-inset-compact) 0 var(--yg-inset-regular); border-radius: var(--yg-radius-panel); outline: none; cursor: pointer; box-sizing: border-box; }
 .yg-spring-option[data-state="checked"] { background: var(--yg-field); color: var(--yg-text); font-weight: 600; }
 .yg-spring-option[data-highlighted] { background: var(--yg-hover); }
 .yg-spring-option:focus-visible { outline: none; }
+.yg-spring-highlight {
+  position: absolute;
+  inset: 0 var(--yg-inset-layer) auto;
+  block-size: var(--yg-spring-active-height, 0px);
+  translate: 0 var(--yg-spring-active-y, 0px);
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-hover);
+  pointer-events: none;
+}
+@media (forced-colors: none) {
+  .yg-spring-viewport:has(.yg-spring-highlight[data-ready]) > .yg-spring-option[data-highlighted] { background: transparent; }
+}
 @media (forced-colors: active) {
   .yg-spring-option:focus-visible { outline: var(--boa-stroke-focus) solid Highlight; outline-offset: -2px; }
 }
 
 .yg-spring-check { display: grid; place-items: center; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-text); font-weight: 700; }
-@keyframes yg-spring-row { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes yg-spring-roll { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes yg-spring-enter { from { opacity: 0; transform: translateY(-5px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes yg-spring-exit { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: translateY(-3px) scale(.98); } }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-spring-dropdown {
+    translate: 0 0;
+    transition: translate var(--yg-motion-storage-disclose);
+  }
+  .yg-spring-dropdown[data-open="true"]:has(.yg-spring-menu[data-side="bottom"]) {
+    translate: 0 calc(-1 * var(--yg-picker-lift));
+  }
+  .yg-morph-tooltip-card {
+    transition: opacity var(--yg-motion-tooltip-arrive), transform var(--yg-motion-card-detail),
+      visibility 0s linear 435ms;
+  }
+  .yg-morph-tooltip-card[data-open="true"] { transition-delay: 0s; }
+  .yg-spring-menu {
+    clip-path: inset(0 calc(-12px * var(--yg-picker-open)) calc((1 - var(--yg-picker-open)) * 100% - 16px * var(--yg-picker-open)) round var(--yg-radius-popover));
+    opacity: clamp(0, var(--yg-picker-open), 1);
+    scale: calc(.9 + .1 * var(--yg-picker-open)) 1;
+    transition: --yg-picker-open var(--yg-motion-picker-reveal);
+  }
+  .yg-spring-menu[data-state="open"] { --yg-picker-open: 1; }
+  @starting-style {
+    .yg-spring-menu[data-state="open"] { --yg-picker-open: 0; }
+  }
+  .yg-spring-menu[data-state="closed"] {
+    pointer-events: none;
+    animation: yg-spring-exit-presence var(--yg-motion-picker-reveal) both;
+  }
+  .yg-spring-menu[data-state="open"] .yg-spring-option {
+    animation: yg-spring-row var(--yg-motion-picker-row) both;
+    animation-delay: calc(50ms + 45ms * min(var(--yg-spring-row-index), 5));
+  }
+  .yg-spring-menu[data-state="closed"] .yg-spring-option {
+    animation: yg-spring-row var(--yg-motion-picker-row) reverse both;
+    animation-delay: calc(20ms * min(var(--yg-spring-row-reverse), 5));
+  }
+  .yg-spring-value-roll[data-incoming] { animation: yg-spring-roll var(--yg-motion-picker-slide) both; }
+  .yg-spring-value-roll[data-outgoing] { animation: yg-spring-roll-out var(--yg-motion-picker-slide) both; }
+  .yg-spring-highlight[data-ready] {
+    --yg-picker-highlight-top: var(--yg-spring-active-y);
+    --yg-picker-highlight-bottom: var(--yg-spring-active-end);
+    translate: 0 var(--yg-picker-highlight-top);
+    block-size: max(0px, calc(var(--yg-picker-highlight-bottom) - var(--yg-picker-highlight-top)));
+    transition: --yg-picker-highlight-top var(--yg-motion-picker-highlight),
+      --yg-picker-highlight-bottom var(--yg-motion-picker-tail);
+  }
+  .yg-spring-highlight[data-ready][data-forward] {
+    transition: --yg-picker-highlight-top var(--yg-motion-picker-tail),
+      --yg-picker-highlight-bottom var(--yg-motion-picker-highlight);
+  }
+  .yg-spring-chevron { transition: transform var(--yg-motion-picker-chevron); }
+}
+@keyframes yg-spring-row { from { opacity: 0; translate: 0 -14px; } to { opacity: 1; translate: 0 0; } }
+@keyframes yg-spring-roll { from { opacity: 0; translate: 0 20px; } to { opacity: 1; translate: 0 0; } }
+@keyframes yg-spring-roll-out {
+  from { opacity: 1; visibility: visible; translate: 0 0; }
+  to { opacity: 0; visibility: hidden; translate: 0 -20px; }
+}
+@keyframes yg-spring-exit-presence {
+  from { visibility: visible; }
+  to { visibility: hidden; }
+}
 .yg-command-button .yg-button { transition: transform var(--yg-change) var(--yg-selection), background-color var(--yg-travel) var(--yg-settle); }
 .yg-command-button .yg-button:hover { background: var(--yg-hover); }
 .yg-command-button .yg-button:active { transform: scale(.98); }

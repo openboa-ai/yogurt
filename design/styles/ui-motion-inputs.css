@@ -106,7 +106,10 @@
 .yg-mention-list-heading { display: flex; justify-content: space-between; gap: var(--yg-gap-inline); padding: var(--yg-inset-layer) var(--boa-space-8); color: var(--yg-muted); font: var(--yg-font-meta); }
 .yg-mention-list-heading span { font-variant-numeric: tabular-nums; }
 
-@media (prefers-reduced-motion: no-preference) { .yg-file-drop-core { transition: transform var(--yg-change) var(--yg-settle), background-color var(--yg-change) var(--yg-settle); } .yg-file-drop[data-dragging] .yg-file-drop-core { transform: scale(1.06); } }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-file-drop-core { transition: transform var(--yg-motion-file-press), background-color var(--yg-motion-storage-lift); }
+  .yg-file-drop[data-dragging] .yg-file-drop-core { transform: scale(1.06); }
+}
 
 .yg-mention { inline-size: min(100%, 320px); }
 .yg-mention-surface { box-sizing: border-box; gap: var(--boa-space-12); padding: var(--boa-space-16); border-radius: var(--yg-radius-sheet); }

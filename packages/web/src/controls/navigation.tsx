@@ -90,7 +90,11 @@ function SelectionMarker({ selector }: { selector: string }) {
           previous.width === width && previous.height === height) return;
 
       // A move on the same row follows selection. Reflow and row changes settle immediately.
-      const canSlide = allowSlide && previous && previous.button !== button && previous.y === y;
+      const switched = allowSlide && previous?.button !== button;
+      const labelMoving = previous?.button === button && marker.hasAttribute("data-slide") &&
+        Boolean(button.querySelector(".yg-tab-label")?.getAnimations().length);
+      const canSlide = previous?.y === y && (switched || labelMoving);
+      if (canSlide && switched && previous) marker.toggleAttribute("data-forward", x >= previous.x);
       marker.toggleAttribute("data-slide", Boolean(canSlide));
       marker.style.setProperty("--yg-selection-x", `${x}px`);
       marker.style.setProperty("--yg-selection-y", `${y}px`);

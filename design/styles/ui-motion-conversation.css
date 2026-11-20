@@ -109,8 +109,10 @@
 .yg-prompt-action[data-busy] .yg-prompt-arrow { rotate: 90deg; scale: 0; }
 .yg-prompt-action[data-busy] .yg-prompt-stop { scale: 1; }
 @media (prefers-reduced-motion: no-preference) {
+  .yg-prompt-editor { transition: block-size var(--yg-motion-prompt-editor); }
+  .yg-prompt-panel { transition: grid-template-rows var(--yg-motion-prompt-status), opacity var(--yg-motion-prompt-status); }
   .yg-prompt-action { transition: scale var(--yg-press) var(--yg-settle), background-color var(--yg-change) var(--yg-settle), color var(--yg-change) var(--yg-settle); }
-  .yg-prompt-arrow, .yg-prompt-stop { transition: scale var(--yg-panel) var(--yg-selection), rotate var(--yg-panel) var(--yg-arrive); }
+  .yg-prompt-arrow, .yg-prompt-stop { transition: scale var(--yg-motion-prompt-action), rotate var(--yg-motion-prompt-action); }
   .yg-prompt-action:not(:disabled):active { scale: .9; }
   .yg-prompt-indicator { animation: yg-prompt-pulse 1s ease-in-out infinite; }
 }
@@ -124,7 +126,7 @@
 
 /* Reply and suggestion surfaces */
 .yg-streaming-reply { box-sizing: border-box; inline-size: fit-content; max-inline-size: min(90%, 324px); min-block-size: var(--yg-size-comfort); padding: 9px var(--yg-inset-row); border-radius: var(--yg-radius-card); background: var(--yg-field); color: var(--yg-text); line-height: 22px; }
-.yg-streaming-word { display: inline-block; animation: yg-reply-word 300ms cubic-bezier(.2,.8,.2,1) both; }
+.yg-streaming-word { display: inline-block; animation: yg-reply-word var(--yg-motion-picker-slide) both; }
 .yg-streaming-wait { color: var(--yg-muted); font-weight: 500; }
 @keyframes yg-reply-word { from { opacity: 0; transform: translateY(6px); filter: blur(4px); } }
 .yg-ghost-field { box-sizing: border-box; width: min(380px, 100%); gap: var(--yg-gap-row); padding: var(--yg-inset-row) var(--yg-inset-panel) var(--yg-inset-panel); border-radius: var(--yg-radius-card); background: var(--yg-raised-surface); }
@@ -135,7 +137,7 @@
 .yg-ghost-input input, .yg-ghost-mirror { min-height: 3em; padding: 0; font: inherit; font-size: 1.25rem; line-height: 1.5; letter-spacing: -.01em; }
 .yg-ghost-input input { color: var(--yg-text); }
 .yg-ghost-mirror > span:first-child { color: transparent; }
-.yg-ghost-suffix > span { display: inline-block; white-space: pre; animation: yg-ghost-appear 180ms ease both; }
+.yg-ghost-suffix > span { display: inline-block; white-space: pre; animation: yg-ghost-appear var(--yg-motion-text-pop) both; }
 @keyframes yg-ghost-appear { from { opacity: 0; transform: translateY(3px); } }
 .yg-thinking { position: relative; box-sizing: border-box; display: inline-flex; width: 64px; height: 40px; align-items: center; justify-content: center; border-radius: var(--yg-radius-card); background: var(--yg-field); }
 .yg-thinking-dots { position: relative; display: flex; gap: var(--yg-gap-tight); align-items: center; }

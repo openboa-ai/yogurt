@@ -244,6 +244,9 @@
 .motion-spring-input .yg-input {
   transition: scale var(--yg-change) var(--yg-selection);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .motion-spring-input .yg-input { transition: scale var(--yg-motion-nav-divider); }
+}
 .motion-elastic-range input[type="range"]:active {
   scale: 1 .86;
 }
@@ -313,7 +316,8 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .motion-focus-inbox li { transition: translate 280ms var(--yg-arrive), scale 280ms var(--yg-arrive), opacity var(--yg-change) var(--yg-settle); }
-  .motion-focus-count, .motion-billing-price strong { animation: motion-value-arrive var(--yg-panel) var(--yg-arrive) both; }
+  .motion-focus-count, .motion-billing-price strong { animation: motion-value-arrive var(--yg-motion-text-pop) both; }
+  .motion-billing-save { animation: motion-value-arrive var(--yg-motion-storage-disclose) both; }
 }
 @keyframes motion-value-arrive { from { opacity: .4; translate: 0 .45em; } }
 
@@ -459,21 +463,13 @@
 @media (prefers-reduced-motion: no-preference) {
   .motion-segment-caption span { animation: motion-caption var(--yg-panel) var(--yg-arrive) both; }
   .motion-bottom-bar .yg-tab-label {
-    transition: max-inline-size var(--yg-expand) var(--yg-arrive),
-      margin-inline-start var(--yg-expand) var(--yg-arrive),
+    transition: max-inline-size var(--yg-motion-bottom-label),
+      margin-inline-start var(--yg-motion-bottom-label),
       opacity var(--yg-change) var(--yg-settle);
   }
   .motion-bottom-bar [aria-selected="true"] .yg-icon {
     animation: motion-tab-mark var(--yg-panel) var(--yg-selection);
   }
-  .motion-switches .yg-switch [role="switch"] > span {
-    animation: motion-switch-thumb var(--yg-expand) var(--yg-arrive);
-  }
-  .motion-switches .yg-switch [role="switch"][data-state="checked"] > span {
-    animation-name: motion-switch-thumb-checked;
-  }
 }
 @keyframes motion-caption { from { opacity: 0; translate: 0 6px; filter: blur(3px); } }
 @keyframes motion-tab-mark { 45% { scale: 1.17; } }
-@keyframes motion-switch-thumb { 43% { scale: 1.18 .93; } }
-@keyframes motion-switch-thumb-checked { 43% { scale: 1.18 .93; } }

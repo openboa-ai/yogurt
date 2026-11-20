@@ -45,6 +45,7 @@
 @media (pointer: coarse) { .yg-focus-choice, .yg-plan-choice { padding: var(--boa-space-16); } }
 
 .yg-letter-limit {
+  position: relative;
   inline-size: min(100%, 320px);
   padding: var(--yg-inset-roomy);
   border-radius: var(--yg-radius-feature);
@@ -71,6 +72,17 @@
   letter-spacing: var(--boa-tracking-body);
   resize: none;
 }
+.yg-letter-measure {
+  position: absolute;
+  inset: var(--yg-inset-roomy) var(--yg-inset-roomy) auto;
+  visibility: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  font: var(--yg-font-reading);
+  letter-spacing: var(--boa-tracking-body);
+  pointer-events: none;
+}
+.yg-letter-rejected { display: none; }
 @media (forced-colors: active) {
   .yg-letter-limit textarea:focus-visible {
     outline: var(--boa-stroke-focus) solid Highlight;
@@ -104,11 +116,26 @@
   color: var(--yg-canvas);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-letter-meter > circle:last-child { transition: stroke-dashoffset 280ms var(--yg-arrive), stroke var(--yg-change) ease; }
+  .yg-letter-meter > circle:last-child { transition: stroke-dashoffset var(--yg-motion-letter-progress), stroke var(--yg-change) ease; }
   .yg-letter-count { transition: color var(--yg-change) ease; }
+  .yg-letter-rejected { display: block; position: absolute; color: var(--yg-signal-limit); pointer-events: none; }
+  .yg-letter-rejected > span {
+    position: absolute;
+    font: var(--yg-font-reading);
+    animation: yg-letter-fall 560ms ease-in both;
+    animation-delay: calc(12ms * var(--yg-letter-order));
+  }
   .yg-letter-limit[data-limit-state="full"] :is(.yg-letter-meter, .yg-letter-count) {
     animation: yg-letter-limit-stop 310ms ease-out;
   }
+}
+@keyframes yg-letter-fall {
+  0% { opacity: 0; transform: translateY(0); }
+  11% { opacity: 1; }
+  27% { transform: translate(-4px, -12px) rotate(-12deg); }
+  73% { opacity: 1; transform: translate(var(--yg-letter-drift), var(--yg-letter-fall)) rotate(18deg); }
+  85% { transform: translate(var(--yg-letter-drift), calc(var(--yg-letter-fall) - 8px)) rotate(14deg); }
+  100% { opacity: 1; transform: translate(var(--yg-letter-drift), var(--yg-letter-fall)) rotate(18deg); }
 }
 @keyframes yg-letter-limit-stop {
   20% { translate: -3px; }

@@ -1,3 +1,14 @@
+@property --yg-selection-left {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --yg-selection-right {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 :where(.yg-tabs [role="tablist"], .yg-segment) {
   position: relative;
   isolation: isolate;
@@ -51,9 +62,23 @@
   .yg-selection-marker[data-slide] {
     transition: translate var(--yg-travel) var(--yg-settle), width var(--yg-travel) var(--yg-settle);
   }
-  :where(.yg-segment, .yg-tabs):not([data-motion-baseline] *) .yg-selection-marker[data-slide] {
-    transition-duration: var(--yg-change);
-    transition-timing-function: var(--yg-selection);
+  .yg-tabs:not([data-motion-baseline] *, .motion-bottom-bar *) .yg-selection-marker {
+    --yg-selection-left: var(--yg-selection-x);
+    --yg-selection-right: calc(var(--yg-selection-x) + var(--yg-selection-width));
+    translate: var(--yg-selection-left) var(--yg-selection-y);
+    width: max(0px, calc(var(--yg-selection-right) - var(--yg-selection-left)));
+  }
+  .yg-tabs:not([data-motion-baseline] *, .motion-bottom-bar *) .yg-selection-marker[data-slide] {
+    transition: --yg-selection-left var(--yg-motion-selection-lead), --yg-selection-right var(--yg-motion-selection-tail);
+  }
+  .yg-tabs:not([data-motion-baseline] *, .motion-bottom-bar *) .yg-selection-marker[data-slide][data-forward] {
+    transition: --yg-selection-left var(--yg-motion-selection-tail), --yg-selection-right var(--yg-motion-selection-lead);
+  }
+  .yg-segment:not([data-motion-baseline] *) .yg-selection-marker[data-slide] {
+    transition: translate var(--yg-motion-nav-divider), width var(--yg-motion-nav-divider);
+  }
+  .motion-bottom-bar .yg-tabs .yg-selection-marker[data-slide] {
+    transition: translate var(--yg-motion-nav-bottom), width var(--yg-motion-nav-bottom);
   }
   .yg-tabs [role="tabpanel"]:not([hidden]) {
     animation: yg-section-arrive var(--yg-change) var(--yg-settle);

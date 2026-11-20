@@ -28,11 +28,26 @@
 .utility-demo small { font-size: 12px; line-height: 16px; letter-spacing: .04em; }
 .utility-panel { padding: var(--yg-inset-regular); border: 1px solid var(--yg-surface-edge); border-radius: var(--yg-radius-panel); background: var(--yg-canvas); }
 .utility-record, .utility-lock, .utility-bell { width: 44px; height: 44px; font-size: 21px; }
-.utility-dots { gap: 0; }
+.utility-dots { position: relative; isolation: isolate; gap: 0; }
+.utility-dot-marker {
+  position: absolute;
+  inset-block-start: calc((var(--yg-size-touch) - 8px) / 2);
+  inset-inline-start: calc((var(--yg-size-touch) - 20px) / 2);
+  inline-size: 20px;
+  block-size: 8px;
+  translate: calc(var(--yg-size-touch) * var(--yg-dot-index)) 0;
+  border-radius: var(--yg-radius-pill);
+  background: var(--yg-inverse);
+  pointer-events: none;
+}
+.utility-dot-marker:dir(rtl) { translate: calc(-1 * var(--yg-size-touch) * var(--yg-dot-index)) 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .utility-dot-marker { transition: translate var(--yg-motion-pagination); }
+}
 .utility-dots button { position: relative; width: 36px; height: 36px; background: transparent; opacity: 1; }
 .utility-dots button::after { content: ""; position: absolute; inset: 14px; border-radius: 50%; background: var(--yg-inverse); opacity: .35; }
 .utility-dots button[aria-current] { width: 36px; }
-.utility-dots button[aria-current]::after { opacity: 1; }
+.utility-dots button[aria-current]::after { opacity: 0; }
 .utility-label input { min-height: 36px; padding: var(--boa-space-8) var(--yg-inset-regular); }
 .utility-greeting { margin: 0; font-size: 18px; line-height: 24px; }
 
