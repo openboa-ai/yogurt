@@ -1,14 +1,19 @@
 import { build } from "esbuild";
+import { anatomy } from "../../../scripts/sdk/anatomy.mjs";
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 process.chdir(fileURLToPath(new URL("../../..", import.meta.url)));
 const family = process.argv[2] === "--agents";
 const motion = process.argv[2] === "--motion";
+const comparison = process.argv[2] === "--motion-comparison";
 const review = family || motion ? process.argv[3] : undefined;
+const entry = family ? "agent-family" : motion ? "motion-review" :
+  comparison ? "motion-comparison" : "ui-catalog";
 const js = await build({
-  entryPoints: [family ? "apps/guide/agent-family.tsx" : motion ? "apps/guide/motion-review.tsx" : "apps/guide/ui-catalog.tsx"],
+  entryPoints: ["apps/guide/" + entry + ".tsx"],
   write: false,
   bundle: true,
+  plugins: comparison ? [anatomy] : [],
   minify: true,
   format: "iife",
   jsx: "automatic",
@@ -33,6 +38,7 @@ const galleryStyles = [
   "design/styles/ui.css",
   "apps/guide/ui-catalog.css",
   ...(motion ? ["apps/guide/motion-review.css"] : []),
+  ...(comparison ? ["apps/guide/motion-comparison.css"] : []),
 ];
 const familyStyles = ["design/styles/tokens.css", "design/styles/ui.css", "design/styles/ui-agent-motion.css", "apps/guide/agent-family.css"];
 const styles = (family ? familyStyles : galleryStyles)
@@ -60,7 +66,8 @@ const licenses = [
   .join("\n\n")
   .replaceAll("<", "\\u003c");
 const block =
-  '<div id="' + (family ? "yogurt-agent-family" : motion ? "yogurt-motion-review" : "yogurt-ui-library") +
+  '<div id="' + (family ? "yogurt-agent-family" : motion ? "yogurt-motion-review" :
+    comparison ? "yogurt-motion-comparison" : "yogurt-ui-library") +
   '"></div>\n<style>' +
   styles +
   "</style>\n<script>" +
@@ -71,9 +78,10 @@ const block =
 if (review) {
   writeFileSync(review, block + "\n");
 } else writeFileSync(
-  family ? "apps/guide/generated/agents.html" : "apps/guide/generated/components.html",
+  family ? "apps/guide/generated/agents.html" : comparison ? "apps/guide/generated/motion-comparison.html" :
+    "apps/guide/generated/components.html",
   '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' +
-    (family ? "Agent family" : "Component library") + ' · Yogurt</title></head><body>' +
+    (family ? "Agent family" : comparison ? "Component motion" : "Component library") + ' · Yogurt</title></head><body>' +
     block +
     "</body></html>\n",
 );

@@ -10,6 +10,7 @@ import { basename, dirname, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
+import { anatomy } from "./anatomy.mjs";
 process.chdir(fileURLToPath(new URL("../..", import.meta.url)));
 await import("../brand/export-css.mjs");
 await import("./ui-tokens.mjs");
@@ -121,31 +122,6 @@ const declarations = execFileSync(
   ["node_modules/typescript/bin/tsc", "--emitDeclarationOnly", "--listEmittedFiles", "--pretty", "false"],
   { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] },
 );
-// Keep upstream's interaction implementation. Replace its private CSS modules
-// with stable anatomy names. Consumers load Yogurt's scoped stylesheet once.
-const anatomy = {
-  name: "yogurt-anatomy",
-  setup(b) {
-    b.onLoad({ filter: /\.module\.css$/ }, ({ path }) => {
-      const family = basename(path, ".module.css");
-      const css = read(path);
-      const names = [
-        ...new Set([...css.matchAll(/\.([A-Za-z_][\w-]*)/g)].map((m) => m[1])),
-      ];
-      return {
-        loader: "js",
-        contents:
-          "export default " +
-          JSON.stringify(
-            Object.fromEntries(
-              names.map((n) => [n, "yg-sdk-" + family + "-" + n]),
-            ),
-          ) +
-          ";",
-      };
-    });
-  },
-};
 const entryPoints = Object.fromEntries([
   ["index", src + "/index.ts"],
   ...catalog.map((e) => ["entries/" + e.id, src + "/entries/" + e.id + ".ts"]),
