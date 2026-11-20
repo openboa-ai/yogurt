@@ -399,6 +399,13 @@ async function checkColorRoles(browser, colorScheme) {
     }, {role, property});
     assert.equal(actual, expected, `${colorScheme} ${locator} uses ${role}`);
   };
+  const expectUnoutlined = async locator => {
+    const perimeter = await locator.evaluate(node => {
+      const style = getComputedStyle(node);
+      return [style.borderTopWidth, style.outlineStyle, style.boxShadow];
+    });
+    assert.deepEqual(perimeter, ["0px", "none", "none"]);
+  };
 
   try {
     await page.goto(gallery("components") + "#button");
@@ -418,6 +425,8 @@ async function checkColorRoles(browser, colorScheme) {
     const restingFill = await neutral(box);
     await editor.fill("Review the draft");
     assert.equal(await neutral(box), restingFill, "An active prompt keeps its surface");
+    await expectUnoutlined(box);
+    await expectUnoutlined(editor);
     await neutral(editor, "caretColor");
     await neutral(prompt.getByRole("button", {name: "Send"}), "color");
     await neutral(prompt.getByRole("button", {name: "Send"}));
@@ -472,10 +481,14 @@ async function checkColorRoles(browser, colorScheme) {
 
     const letters = await show("letter-limit");
     const input = letters.getByRole("textbox", {name: "Short bio"});
+    const letterCard = letters.locator(".yg-letter-limit");
     const count = letters.locator(".yg-letter-count");
     const arc = letters.locator(".yg-letter-meter > circle:last-child");
     await neutral(count, "color");
     await input.fill("a".repeat(41));
+    await expectUnoutlined(input);
+    await expectUnoutlined(letterCard);
+    await expectRole(letterCard, "field");
     await expectRole(count, "signal-warning", "color");
     await expectRole(arc, "signal-warning", "stroke");
     await input.fill("a".repeat(48));
@@ -510,6 +523,11 @@ async function checkColorRoles(browser, colorScheme) {
     await expectRole(wifi, "off");
     await wifi.press("Space");
     await expectRole(wifi, "signal-positive");
+
+    await page.emulateMedia({forcedColors: "active"});
+    await show("letter-limit");
+    await input.focus();
+    assert.equal(await input.evaluate(node => getComputedStyle(node).outlineStyle), "solid");
   } finally {
     await page.close();
   }

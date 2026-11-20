@@ -112,6 +112,8 @@ Keep the numbered palette, geometry, motion, and public component APIs. Verify r
 
 The prompt uses a 380 px measure, a 52 px resting height, a 24 px corner and a 32 px visible action. Text growth keeps the action at the trailing edge. The 30 px thinking line opens above the text, and Send turns into Stop in place. Enter submits and Shift+Enter inserts a line. Composition events retain text entry. Touch leaves the visual circle unchanged and extends the hit area. Confirm that the composer closes its status when the host stops, and verify layout with reduced motion.
 
+Keep the prompt and character-limit editor free of a visible perimeter stroke in ordinary appearances, including keyboard focus and text entry. The prompt keeps its existing surface and visible caret. The character-limit card changes to a neutral field fill while its editor has focus. Use the system focus indicator in forced colors.
+
 ### Individual specimen review
 
 Review matched specimens side by side in their empty, active and completed states. Use shared values only where they resolve to the intended dimensions and motion. Preserve each specimen's content arrangement, nesting, visible action, and state-specific scale in its component or recipe. Initial and interrupted frames must preserve what input was taken and how to proceed. Exercise pointer, keyboard and reduced-motion paths in the running guide. Retain local measurements or captures so the owner can distinguish a shared style change from an individually checked port.

@@ -30,3 +30,5 @@ The neutral material audit visited each of the 125 component entries, 14 blocks,
 ## Palette signals
 
 Browser checks in both appearances confirm that storage selection recedes and restores the other segments, a switch returns to its neutral off track, the character counter and arc advance through orange and red, and the spring picker carries the chosen marker into its trigger. Filled rating stars and accepted file feedback use the shared palette. The bottom bar, command palette, and picker containers retain their neutral treatments. The Native fixture verifies the checked switch track and thumb against the generated roles.
+
+Focused captures in both appearances show a stroke-free prompt and character-limit editor. The character-limit card uses the neutral field fill during entry, and the prompt keeps its resting fill.

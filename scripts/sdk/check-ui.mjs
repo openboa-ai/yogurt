@@ -52,8 +52,10 @@ for (const over of [{}, ...Object.values(ui.materials)]) {
     ["signal-positive", "signal-positive-soft"],
     ["signal-warning", "canvas"],
     ["signal-warning", "surface"],
+    ["signal-warning", "field"],
     ["signal-limit", "canvas"],
     ["signal-limit", "surface"],
+    ["signal-limit", "field"],
     ["signal-rating", "surface"],
   ]) {
     for (let i = 0; i < 2; i++) {

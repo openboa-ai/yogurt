@@ -50,8 +50,10 @@
   border-radius: var(--yg-radius-feature);
   background: var(--yg-raised-surface);
   color: var(--yg-text);
+  transition: background-color var(--yg-change) var(--yg-settle);
   --yg-letter-ink: var(--yg-muted);
 }
+.yg-letter-limit:has(textarea:focus) { background: var(--yg-field); }
 .yg-letter-limit[data-limit-state="near"] { --yg-letter-ink: var(--yg-signal-warning); }
 .yg-letter-limit[data-limit-state="full"] { --yg-letter-ink: var(--yg-signal-limit); }
 .yg-letter-limit textarea {
@@ -60,16 +62,20 @@
   block-size: 72px;
   padding: 0;
   border: 0;
+  outline: none;
   border-radius: var(--yg-radius-inset);
   background: transparent;
   color: inherit;
+  caret-color: var(--yg-text);
   font: var(--yg-font-reading);
   letter-spacing: var(--boa-tracking-body);
   resize: none;
 }
-.yg-letter-limit textarea:focus-visible {
-  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
-  outline-offset: 6px;
+@media (forced-colors: active) {
+  .yg-letter-limit textarea:focus-visible {
+    outline: var(--boa-stroke-focus) solid Highlight;
+    outline-offset: 2px;
+  }
 }
 .yg-letter-footer {
   display: flex;
