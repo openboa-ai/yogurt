@@ -38,6 +38,7 @@ pub fn editCode(editor: *CodeEditor, event: canvas.TextInputEvent) void {
 pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEditor, title: []const u8, help: []const u8, on_input: canvas.Ui(Msg).InputMsgFn) canvas.Ui(Msg).Node {
     const value = editor.text();
     var slots: [6]canvas.Ui(Msg).Node = undefined;
+    const active_slot = @min(editor.selection.focus, slots.len - 1);
     for (&slots, 0..) |*slot, index| {
         const digit = if (index < value.len) value[index .. index + 1] else "";
         slot.* = ui.column(.{
@@ -46,7 +47,7 @@ pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEdit
             .height = tokens.otp_slot_height,
             .main = .center,
             .style = .{ .radius = tokens.otp_slot_radius },
-            .style_tokens = .{ .background = .surface_subtle },
+            .style_tokens = .{ .background = if (index == active_slot) .surface_pressed else .surface_subtle },
         }, .{ui.text(.{ .size = .heading, .text_alignment = .center }, digit)});
     }
     return ui.column(.{ .gap = 6, .max_width = 320 }, .{
@@ -57,7 +58,14 @@ pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEdit
                 .height = tokens.otp_slot_height,
                 .text = value,
                 .semantics = .{ .label = title },
-                .style = .{ .background = transparent, .foreground = transparent, .stroke_width = 0, .radius = tokens.otp_slot_radius },
+                .style = .{
+                    .background = transparent,
+                    .foreground = transparent,
+                    .border = transparent,
+                    .focus_ring = transparent,
+                    .stroke_width = 0,
+                    .radius = tokens.otp_slot_radius,
+                },
                 .on_input = on_input,
             }),
         }),

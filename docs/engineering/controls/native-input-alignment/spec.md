@@ -22,4 +22,6 @@ The six-slot view uses one accessible SDK editor with a separate visual projecti
 
 ## Evidence
 
+The six OTP slots remain separate neutral surfaces during editing. The slot at the editor's caret uses the shared pressed surface color. The transparent SDK editor carries no group outline, including when focused. Check the focused six-slot view in the Native guide.
+
 Instantiate the edited templates in the native catalog and run strict markup validation. Render an installed sample with both controls; confirm input can be edited and each enabled button reports its distinct message once, while boundaries disable the appropriate action. Check the labeled templates' typography, spacing, popup placement and existing callbacks at narrow width. Inspect the narrow layout and keyboard names. Check that the single switch displays its label and sends one `toggle` request per pointer or keyboard activation. Record actual Native renderer and SDK evidence separately from source or markup compilation; do not claim OTP appearance or full visual/motion parity.
