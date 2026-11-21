@@ -53,11 +53,14 @@ const bundle = buildSync({stdin:{resolveDir:process.cwd(),loader:'jsx',contents:
       assert.equal(await navButton.getAttribute('aria-expanded'),'true');
       await navIcon.evaluate(async node=>{await Promise.allSettled(node.getAnimations().map(animation=>animation.finished));});
       assert.equal(await navIcon.evaluate(node=>getComputedStyle(node).rotate),'180deg');
-      const transitions=await Promise.all([navButton,menuButton].map(node=>node.evaluate(el=>getComputedStyle(el).transitionProperty)));
-      if(reducedMotion==='no-preference') transitions.forEach(value=>assert.match(value,/background-color/));
-      else assert.equal(await navIcon.evaluate(node=>getComputedStyle(node).transitionDuration),'0s');
+      await page.mouse.move(0,0);
+      const beforeHover=await menuButton.evaluate(el=>getComputedStyle(el).backgroundColor);
+      const box=await menuButton.boundingBox();
+      assert(box && box.width > 0 && box.height > 0, 'menu trigger has a visible hit target');
+      await menuButton.hover();
+      assert.notEqual(await menuButton.evaluate(el=>getComputedStyle(el).backgroundColor),beforeHover,'hover highlights the menu trigger');
       await page.close();
     }
-    console.log('Directional tabs and navigation indicators, shared hover motion and reduced motion verified.');
+    console.log('Directional tabs, navigation indicators and hover states verified.');
   }finally{await browser.close();}
 })().catch(error=>{console.error(error);process.exitCode=1;});

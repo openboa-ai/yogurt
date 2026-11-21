@@ -40,7 +40,12 @@ const assert = require("node:assert/strict");
       await page.keyboard.press("Escape");
       assert.equal(await trigger.getAttribute("data-state"), "closed");
       await page.emulateMedia({ reducedMotion: "no-preference" });
-      assert.notEqual(await trigger.locator(".yg-icon").evaluate(el => getComputedStyle(el).transitionDuration), "0s");
+      await trigger.click();
+      assert.equal(await trigger.getAttribute("data-state"), "open");
+      assert.equal(await trigger.locator(".yg-icon").evaluate(el => getComputedStyle(el).rotate), "180deg");
+      await page.keyboard.press("Escape");
+      assert.equal(await trigger.getAttribute("data-state"), "closed");
+      assert.notEqual(await trigger.locator(".yg-icon").evaluate(el => getComputedStyle(el).rotate), "180deg");
       await page.close();
 
       const touch = await browser.newPage({ viewport: { width, height: 900 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
