@@ -80,6 +80,14 @@ for (const over of [{}, ...Object.values(ui.materials)]) {
 assert.equal(new Set(terms.map((t) => t.id)).size, terms.length);
 assert.equal(new Set(catalog.map((e) => e.id)).size, catalog.length);
 const componentIds = new Set(catalog.map((entry) => entry.id));
+for (const entry of catalog) {
+  if (!entry.guidance) continue;
+  const { useWhen, combineWith, avoid, verify } = entry.guidance;
+  assert(typeof useWhen === "string" && useWhen.trim(), entry.id);
+  assert(typeof avoid === "string" && avoid.trim(), entry.id);
+  assert(Array.isArray(combineWith) && combineWith.every(id => componentIds.has(id) && id !== entry.id), entry.id);
+  assert(Array.isArray(verify) && verify.length > 0 && verify.every(state => typeof state === "string" && state.trim()), entry.id);
+}
 const blocks = json("catalog/blocks.json");
 const motion = json("catalog/motion.json");
 assert.deepEqual(

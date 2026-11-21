@@ -12,6 +12,7 @@ import {
 } from "react";
 import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
 import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
+import { Radio as SDKRadio, RadioGroup as SDKRadioGroup } from "@ui-sdk/react/radio";
 import { Button, IconButton } from "./actions.js";
 import { Checkbox, Field } from "./forms.js";
 import { cx, Icon, type ControlSize, type Option } from "../foundation/foundation.js";
@@ -384,7 +385,8 @@ export function Rating({
     const glyphs = Array.from(node.querySelectorAll<SVGSVGElement>(".yg-rating svg"));
     const springs = [roller, ...stars.flatMap(star => [star.fill, star.press])];
     roller.target = shown;
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const preference = matchMedia("(prefers-reduced-motion: reduce)");
+    const reduced = preference.matches;
     let stop: (() => void) | undefined;
     const render = () => {
       node.style.setProperty("--yg-rating-shown", String(roller.position));
@@ -407,7 +409,19 @@ export function Rating({
       return setTimeout(() => { light(); stop?.(); stop = playSprings(springs, render); }, index * 50);
     });
     stop = playSprings(springs, render);
-    return () => { timers.forEach(clearTimeout); stop?.(); };
+    const settle = () => {
+      if (!preference.matches) return;
+      timers.forEach(clearTimeout);
+      stop?.();
+      snap(roller, shown);
+      stars.forEach((star, index) => {
+        snap(star.fill, Number(index < shown));
+        snap(star.press, 1);
+      });
+      render();
+    };
+    preference.addEventListener("change", settle);
+    return () => { preference.removeEventListener("change", settle); timers.forEach(clearTimeout); stop?.(); };
   }, [shown, stars, roller, editable]);
   if (!onValueChange)
     return (
@@ -418,23 +432,31 @@ export function Rating({
   return (
     <fieldset className="yg-fieldset" ref={root}>
       <legend className="yg-label">{label}</legend>
-      <div className="yg-rating" onPointerLeave={() => setHovered(0)}>
+      <SDKRadioGroup className="yg-rating" aria-label={label} name={id} value={String(value)}
+        onValueChange={(next, details) => {
+          const selected = Number(next);
+          if (next === null || !Number.isInteger(selected) || selected < 1 || selected > count) {
+            details.cancel();
+            return;
+          }
+          onValueChange(selected);
+        }} onPointerLeave={() => setHovered(0)}
+        onKeyDown={event => {
+          if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) setHovered(0);
+        }}>
         {Array.from({ length: count }, (_, i) => (
           <label key={i} data-filled={i < shown || undefined}
             onPointerEnter={event => { if (event.pointerType === "mouse") setHovered(i + 1); }}>
-            <input
-              type="radio"
-              name={id}
+            <SDKRadio
+              value={String(i + 1)}
               aria-label={i + 1 + " of " + count}
-              checked={value === i + 1}
-              onChange={() => onValueChange(i + 1)}
             />
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z" />
             </svg>
           </label>
         ))}
-      </div>
+      </SDKRadioGroup>
       {showStatus && <span className="yg-help yg-rating-status" role="status"
         aria-label={value ? `${value} of ${count} selected` : "Choose a rating"}>
         <span aria-hidden="true">{["Choose a rating", ...Array.from({ length: count }, (_, i) => `${i + 1} of ${count} selected`)]

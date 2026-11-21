@@ -75,7 +75,7 @@ function nativeInstallation(root, expected, inspecting) {
     const members = inspecting
       ? new Set(execFileSync("tar", ["-tzf", archive], { encoding: "utf8" }).split("\n"))
       : null;
-    for (const name of ["package.json", ...files]) {
+    for (const name of ["package.json", ...files, "catalog/components.json"]) {
       if (members && name !== "package.json" && !members.has("package/" + name) && !optionalFile(kit, name)) continue;
       const archived = execFileSync("tar", ["-xOf", archive, "package/" + name]);
       if (!archived.equals(readFileSync(inside(kit, name)))) {
@@ -182,10 +182,11 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
   }
 
   const entries = [...components].map(id => {
-    if (target === "web") return webComponent(binding, manifest, id);
+    const guidance = inventory.find(item => item.id === id)?.guidance ?? null;
+    if (target === "web") return { ...webComponent(binding, manifest, id), guidance };
     const template = optionalFile(binding.kit, `packages/native/controls/items/${id}.native`);
     if (!template) throw Error(`The installed SDK is missing the Native template for ${id}.`);
-    return { id, template, install: `yogurt add ${id} --target native` };
+    return { id, template, install: `yogurt add ${id} --target native`, guidance };
   });
 
   const declarations = Object.create(null);

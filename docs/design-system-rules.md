@@ -13,6 +13,12 @@ OpenBoa products share Yogurt tokens, basic components and common interaction be
 
 When a role or state is missing, assemble the closest supported parts and record the gap. Extend the existing shared part when the missing behavior belongs to its contract. A new entry earns its place when it serves a distinct task or interaction.
 
+## Choosing and combining controls
+
+The installed component catalog stores each reviewed control's `guidance` with its stable ID. It identifies an appropriate use, companion controls, an unsuitable use and states to check. The component guide presents the same guidance. Resolve the relevant IDs through the Yogurt skill's installed SDK lookup to retrieve the guidance alongside public imports or Native templates. The task pattern catalog describes complete workflows and their host-owned inputs.
+
+Guidance is being added as components are reviewed. An entry without it is a documented coverage gap. Inspect the current component contract and target support before composing with it. An entry's guidance does not by itself qualify its renderer or grant an agent access to product data.
+
 ## When a composition becomes shared
 
 Review real examples from the projects that use the same function. Compare inputs, normal use, narrow layouts, keyboard operation and failure recovery. Extract the common input and behavior and keep project context in slots and callbacks. Supply an editable preset when the whole combination recurs. Test the shared result with its actual consuming examples and record which renderers support it.

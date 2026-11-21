@@ -2,7 +2,7 @@
 
 Each entry is pending until its normal package export, guide, registry and supported renderer have been replaced and verified. A specimen is a starting point for its geometry and behavior.
 
-The Web behavior runtime transition is in progress. Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle, ToggleGroup, Dialog, Sheet, Drawer, Popover, Accordion, Progress and SplitTextField have Web implementation and installed-consumer evidence in their scoped control records. Their overall state remains pending until the corresponding registry and Native behavior, visual treatment and motion are qualified. Remaining entries have not been admitted as converted merely because their gallery tests pass.
+The Web behavior runtime transition is in progress. Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle, ToggleGroup, Dialog, Sheet, Drawer, Popover, Accordion, Progress, SplitTextField and Rating have Web implementation and installed-consumer evidence in their scoped control records. Their overall state remains pending until the corresponding registry and Native behavior, visual treatment and motion are qualified. Remaining entries have not been admitted as converted merely because their gallery tests pass.
 
 ActionMenu has a partial Web transition: shared inline popup and button behaviors with a Yogurt keyboard adapter. Tooltip has shared inline popup state with a Yogurt activation adapter. InputOTP has shared input behavior with an explicit secret mark and retains its Yogurt numeric and cursor adapter. NumericSpinner uses shared buttons with the existing Yogurt quantity adapter. InputGroup uses shared input behavior for compatible text fields and retains a native input adapter for specialized types. Their complete shared behaviors and other renderers remain pending.
 
@@ -99,11 +99,11 @@ ActionMenu has a partial Web transition: shared inline popup and button behavior
 | `marker` | conversation | Family design | Pending |
 | `code-block` | conversation | Family design | Pending |
 | `trace` | conversation | Family design | Pending |
-| `input-group` | input | Family design | Pending |
+| `input-group` | input | `spring-input` | Pending |
 | `input-otp` | input | `otp` | Pending |
 | `split-text-field` | input | Family design | Pending |
 | `slider` | input | `range-slider`, `elastic-slider` | Pending |
-| `numeric-spinner` | input | Family design | Pending |
+| `numeric-spinner` | input | `cart-button` | Pending |
 | `rating` | input | `star-rating` | Pending |
 | `agreement` | input | Family design | Pending |
 | `keypad` | input | Family design | Pending |

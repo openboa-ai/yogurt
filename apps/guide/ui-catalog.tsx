@@ -149,6 +149,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
     [showCode, setShowCode] = useState(false);
   const navigation = useRef<HTMLElement>(null);
   const entry = entries.find((e) => e.id === id) ?? entries[0];
+  const guidance = "guidance" in entry ? entry.guidance : undefined;
   const missing = id !== "brand" && !entries.some((item) => item.id === id);
   const ScopedExample = scopedExamples[id as keyof typeof scopedExamples];
   useEffect(() => {
@@ -381,6 +382,26 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                   >
                     <div className="specimen-inner"><Example id={id} variation /></div>
                   </Yogurt>
+                </section>
+              )}
+              {guidance && (
+                <section className="catalog-guidance">
+                  <Heading>When to use</Heading>
+                  <p>{guidance.useWhen}</p>
+                  <p className="yg-help">{guidance.avoid}</p>
+                  <h3>Works with</h3>
+                  <div className="catalog-guidance-links">
+                    {guidance.combineWith.map(companion => {
+                      const component = catalog.find(item => item.id === companion);
+                      return <Link key={companion} href={sectionHref("components", companion)}
+                        onClick={event => {
+                          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                          event.preventDefault(); go(companion);
+                        }}>{component?.name ?? companion}</Link>;
+                    })}
+                  </div>
+                  <h3>Check</h3>
+                  <p className="yg-help">{guidance.verify.join(" · ")}</p>
                 </section>
               )}
               {id === "button" && (

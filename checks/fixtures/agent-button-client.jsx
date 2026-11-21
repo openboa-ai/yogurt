@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputGroup, InputOTP, NumericSpinner, Popover, Progress, RadioGroup, SearchField, SegmentedControl, SplitTextField, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
+import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputGroup, InputOTP, NumericSpinner, Popover, Progress, RadioGroup, Rating, SearchField, SegmentedControl, SplitTextField, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 import { Button as CopiedButton } from "../src/components/ui/button";
 
@@ -20,6 +20,7 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent segment" && step.action === "setValue") ||
       (step.label === "Agent tabs" && step.action === "setValue") ||
       (step.label === "Agent radio" && step.action === "setValue") ||
+      (step.label === "Agent rating" && step.action === "setValue") ||
       (step.label === "Agent toggle" && step.action === "setPressed") ||
       (step.label === "Agent filters" && step.action === "setValue") ||
       (step.label === "Fixture dialog" && step.action === "setOpen") ||
@@ -65,6 +66,9 @@ export default function AgentButtonFixture() {
   const [radio, setRadio] = useState("one");
   const [deniedRadio, setDeniedRadio] = useState("one");
   const [radioChanges, setRadioChanges] = useState(0);
+  const [rating, setRating] = useState(2);
+  const [ratingChanges, setRatingChanges] = useState(0);
+  const [deniedRating, setDeniedRating] = useState(2);
   const [toggled, setToggled] = useState(false);
   const [toggleChanges, setToggleChanges] = useState(0);
   const [filters, setFilters] = useState([]);
@@ -140,6 +144,8 @@ export default function AgentButtonFixture() {
         <Tabs label="Fallback tabs" items={tabs} value="missing" onValueChange={() => {}} />
         <Tabs label="Disabled tabs" items={tabs.map(item => ({...item, disabled: true}))} value="one" onValueChange={() => {}} />
         <RadioGroup label="Agent radio" options={options} value={radio} onValueChange={value => { setRadio(value); setRadioChanges(count => count + 1); }} />
+        <Rating label="Agent rating" value={rating} onValueChange={value => { setRating(value); setRatingChanges(count => count + 1); }} />
+        <Rating label="Denied rating" value={deniedRating} onValueChange={setDeniedRating} />
         <RadioGroup label="Denied radio" options={options} value={deniedRadio} onValueChange={setDeniedRadio} />
         <RadioGroup label="Disabled radio" options={options} value="one" disabled onValueChange={() => {}} />
         <Toggle pressed={toggled} onPressedChange={value => { setToggled(value); setToggleChanges(count => count + 1); }}>Agent toggle</Toggle>
@@ -196,6 +202,7 @@ export default function AgentButtonFixture() {
           <TextField label="Form text" name="title" defaultValue="Original" />
           <Textarea label="Form notes" name="description" defaultValue="Original note" />
           <RadioGroup label="Form choice" name="choice" options={options} value={radio} onValueChange={setRadio} />
+          <Rating label="Form rating" value={rating} onValueChange={setRating} />
           <Toggle pressed={formToggle} onPressedChange={setFormToggle}>Form toggle</Toggle>
           <InputOTP label="Form code" name="code" value={formCode} onValueChange={setFormCode} />
           <InputGroup label="Form group" name="group" defaultValue="original group" />
@@ -220,6 +227,9 @@ export default function AgentButtonFixture() {
         <output data-testid="radio-value">{radio}</output>
         <output data-testid="denied-radio-value">{deniedRadio}</output>
         <output data-testid="radio-changes">{radioChanges}</output>
+        <output data-testid="rating-value">{rating}</output>
+        <output data-testid="rating-changes">{ratingChanges}</output>
+        <output data-testid="denied-rating-value">{deniedRating}</output>
         <output data-testid="toggle-changes">{toggleChanges}</output>
         <output data-testid="filter-value">{filters.join(",")}</output>
         <output data-testid="denied-filter-value">{deniedFilters.join(",")}</output>

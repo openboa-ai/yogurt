@@ -1,0 +1,5 @@
+# Rating behavior migration
+
+The owner requested the shared behavior runtime for Web components while retaining the approved rating design and spring response. This slice replaces editable rating selection with the shared radio behavior, preserving the existing public properties, star geometry, pointer preview, sequential fill, spring response, reduced-motion result, status text and read-only presentation. The host controls the rating and its effects.
+
+Keep one accessible radio group with the existing labels and keyboard selection. A connected agent is host-controlled; allowed selection updates the host once, refused or out-of-range selection does not update it. Preserve the current form representation and avoid extra visual outlines except keyboard and forced-color indicators. Verify installed Vite and Next.js consumers, normal and reduced-motion selection, pointer preview, keyboard behavior, controlled updates, accessible names, snapshots and host policy refusal. Native rendering and independent visual approval remain separate.
