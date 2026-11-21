@@ -13,7 +13,7 @@ const states = Object.keys(agentPresenceLabels) as Presence[];
 const variants = Object.keys(agentVariants) as AgentVariant[];
 const byShape = Object.fromEntries(shapes.map(shape => [shape, variants.filter(id => agentVariants[id].shape === shape)])) as Record<Shape, AgentVariant[]>;
 
-function AgentFamily() {
+export function AgentFamily() {
   const [shape, setShape] = useState<Shape>("kai");
   const [state, setState] = useState<Presence>("ready");
   const [color, setColor] = useState<AgentColor>();
@@ -98,4 +98,5 @@ function AgentFamily() {
   );
 }
 
-createRoot(document.getElementById("yogurt-agent-family")!).render(<AgentFamily />);
+const host = document.getElementById("yogurt-agent-family");
+if (host) createRoot(host).render(<AgentFamily />);

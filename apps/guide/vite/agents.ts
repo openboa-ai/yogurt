@@ -1,3 +1,2 @@
-import "../../../design/styles/ui.css";
 import "../agent-family.css";
-import "../agent-family.tsx";
+export { AgentFamily as default } from "../agent-family";

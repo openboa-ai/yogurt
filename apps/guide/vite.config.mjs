@@ -2,37 +2,21 @@ import { readFileSync } from "node:fs";
 import { basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
+import { matchGuidePath } from "./guide-routes.mjs";
 
 const repo = fileURLToPath(new URL("../..", import.meta.url));
 const root = resolve(repo, "apps/guide/vite");
-const pageNames = ["components", "motion-patterns", "motion-comparison", "workflows", "agents"];
-
-function documentRoute(path, live) {
-  if (/^\/components(?:\/[^/]+)?\/?$/.test(path) || path === "/components.html")
-    return live ? "/_entry-components.html" : "/components.html";
-  if (/^\/motion(?:\/[^/]+)?\/?$/.test(path) || path === "/motion-patterns.html")
-    return live ? "/_entry-motion-patterns.html" : "/motion-patterns.html";
-  for (const name of ["workflows", "agents", "motion-comparison"]) {
-    if (path === "/" + name || path === "/" + name + ".html")
-      return live ? "/_entry-" + name + ".html" : "/" + name + ".html";
-  }
-  for (const name of ["system", "library", "adoption", "playbook", "emoji"]) {
-    if (path === "/" + name) return "/" + name + ".html";
-  }
-  return undefined;
-}
 
 function guideRoutes() {
-  const configure = (server, live) => server.middlewares.use((request, _response, next) => {
+  const configure = (server) => server.middlewares.use((request, _response, next) => {
     const url = new URL(request.url || "/", "http://localhost");
-    const destination = documentRoute(url.pathname, live);
-    if (destination) request.url = destination + url.search;
+    if (matchGuidePath(url.pathname)) request.url = "/index.html" + url.search;
     next();
   });
   return {
     name: "yogurt-guide-routes",
-    configureServer(server) { configure(server, true); },
-    configurePreviewServer(server) { configure(server, false); },
+    configureServer(server) { configure(server); },
+    configurePreviewServer(server) { configure(server); },
   };
 }
 
@@ -75,8 +59,5 @@ export default defineConfig({
     outDir: resolve(repo, ".vite-guide"),
     emptyOutDir: true,
     copyPublicDir: false,
-    rolldownOptions: {
-      input: Object.fromEntries(pageNames.map(name => [name, resolve(root, "_entry-" + name + ".html")])),
-    },
   },
 });

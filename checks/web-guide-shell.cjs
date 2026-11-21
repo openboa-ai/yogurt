@@ -1,0 +1,95 @@
+const assert = require("node:assert/strict");
+const { chromium } = require("playwright-core");
+
+const base = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
+const destinations = [
+  ["Design system", "/system", "Design system"],
+  ["Components", "/components", "Button"],
+  ["Motion", "/motion", "Task list"],
+  ["Workflows", "/workflows", "Find a record"],
+  ["Design sources", "/library", "Design sources"],
+  ["Project use", "/adoption", "Use yogurt in a project"],
+  ["Brand", "/", "Yogurt"],
+];
+
+async function checkGuide(browser, width) {
+  const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: "light" });
+  const errors = [];
+  page.on("pageerror", error => errors.push(error.message));
+  const heading = name => page.getByRole("heading", { name, level: 1, exact: true });
+  const nav = page.getByRole("navigation", { name: "Yogurt guide" });
+  const openMenu = page.getByRole("button", { name: "Open menu" });
+  const mobile = width < 832;
+  page.setDefaultTimeout(8000);
+  try {
+    await page.goto(base);
+    await heading("Yogurt").waitFor();
+    assert.equal(await page.locator("link[rel=icon]").getAttribute("href"), "/assets/projects/yogurt.svg");
+    await page.locator(".guide-home-tagline").filter({ hasText: /^ships with live cultures$/ }).waitFor();
+    await page.getByText(/^Yogurt is OpenBoa’s design system and UI SDK/).waitFor();
+    await page.getByText("Every limit has a shelf life.", { exact: true }).waitFor();
+    await page.locator(".guide-masthead").evaluate(element => { element.dataset.checkPersistence = "yes"; });
+
+    for (const [label, path, title] of destinations) {
+      if (mobile) await openMenu.click();
+      await nav.getByRole("link", { name: label, exact: true }).click();
+      await heading(title).waitFor();
+      assert.equal(new URL(page.url()).pathname, path);
+      assert.equal(await page.locator(".guide-masthead").getAttribute("data-check-persistence"), "yes");
+      assert.equal(await page.locator("#guide-navigation [aria-current=page]").innerText(), label);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, path);
+    }
+
+    await page.goBack();
+    await heading("Use yogurt in a project").waitFor();
+    await page.goForward();
+    await heading("Yogurt").waitFor();
+    assert.equal(await page.locator(".guide-masthead").getAttribute("data-check-persistence"), "yes");
+    await page.getByRole("button", { name: "Use dark appearance" }).click();
+    await page.getByRole("link", { name: "Browse components", exact: true }).click();
+    await heading("Button").waitFor();
+    assert.equal(await page.locator(".catalog").getAttribute("data-appearance"), "dark");
+    await page.reload();
+    await heading("Button").waitFor();
+    assert.equal(await page.locator(".guide-shell").getAttribute("data-appearance"), "dark");
+
+    await page.goto(base + "/components.html#input-otp");
+    await heading("InputOTP").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/components/input-otp");
+    await page.goto(base + "/motion-patterns.html#plan-switch");
+    await heading("Plan switch").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/motion/plan-switch");
+    await page.goto(base + "/motion/unrecognized");
+    await heading("Pattern not found").waitFor();
+    await page.goto(base + "/workflows#records");
+    await heading("Find a record").waitFor();
+    await page.goto(base + "/system#color");
+    await page.locator("#swatches button").first().waitFor();
+    await page.locator("#hue").selectOption("orange");
+    assert.match(await page.locator("#color-name").innerText(), /^orange\./);
+    await page.goto(base + "/emoji.html?emoji=1f60a");
+    await page.locator("#emoji-name").filter({ hasText: /Smiling Face/i }).waitFor();
+    await page.goto(base + "/playbook?project=sourdough");
+    await page.locator("#pb-project option").first().waitFor({ state: "attached" });
+    assert.equal(await page.locator("#pb-project").inputValue(), "sourdough");
+    await page.goto(base + "/agents");
+    await page.getByRole("button", { name: "Play sequence" }).click();
+    await page.getByRole("button", { name: "Stop sequence" }).waitFor();
+    assert.deepEqual(errors, []);
+  } finally {
+    await page.close();
+  }
+}
+
+(async () => {
+  const browser = await chromium.launch({ channel: "chrome" });
+  try {
+    await Promise.all([checkGuide(browser, 320), checkGuide(browser, 1440)]);
+    console.log("Guide shell passed at 320px and 1440px.");
+  } finally {
+    await browser.close();
+  }
+})().catch(error => {
+  console.error(error);
+  process.exitCode = 1;
+});

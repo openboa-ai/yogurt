@@ -28,7 +28,7 @@ The handbook generator writes `docs/index.html`. The guide consumes the shared [
 
 ## Hosting
 
-Run `npm run guide:dev` from the repository root for the Vite development server. Run `npm run guide:build` followed by `npm run guide:preview` to build and serve the production site locally. The [Vercel configuration](../../vercel.json) builds the same output. The published guide uses extensionless paths such as `/components/button` and `/motion/checkbox-list`; previously shared HTML links remain available. Open `generated/components.html` and the other files in `generated/` directly for the offline galleries.
+Run `npm run guide:dev` from the repository root for the Vite development server. Run `npm run guide:build` followed by `npm run guide:preview` to build and serve the production site locally. The [Vercel configuration](../../vercel.json) builds the same output. The published guide uses extensionless paths such as `/components/button` and `/motion/checkbox-list`; previously shared HTML links remain available. The hosted routes share a single React shell and appearance preference. The published artwork, typography and story are available from Brand; original editable sources are available from Design sources. With the preview running on port 5273, run `node checks/web-guide-shell.cjs` to exercise the common navigation and direct links. Open `generated/components.html` and the other files in `generated/` directly for the offline galleries.
 
 [U17A · Resolve a task to design guidance on the pinned version](../../docs/engineering/guidance/U17A-index-design-guidance/spec.md) · [Design portfolio](../../docs/README.md)
 

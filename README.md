@@ -6,7 +6,7 @@
 ships with live cultures
 <!-- /starter:project -->
 
-Yogurt is OpenBoa’s design system and UI SDK. It gives projects shared rules for color, type, motion and product language, plus components and screen patterns for React and Vercel Native SDK.
+Yogurt is OpenBoa’s design system and UI SDK, with shared design tokens, artwork, product language, and components for web and native apps.
 
 [Browse the design system](https://yogurt.openboa.ai/)
 

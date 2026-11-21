@@ -5,17 +5,17 @@
   "buildCommand": "npm run guide:build",
   "outputDirectory": "site",
   "rewrites": [
-    { "source": "/components", "destination": "/components.html" },
-    { "source": "/components/:id", "destination": "/components.html" },
-    { "source": "/motion", "destination": "/motion-patterns.html" },
-    { "source": "/motion/:id", "destination": "/motion-patterns.html" },
-    { "source": "/workflows", "destination": "/workflows.html" },
-    { "source": "/agents", "destination": "/agents.html" },
-    { "source": "/motion-comparison", "destination": "/motion-comparison.html" },
-    { "source": "/system", "destination": "/system.html" },
-    { "source": "/library", "destination": "/library.html" },
-    { "source": "/adoption", "destination": "/adoption.html" },
-    { "source": "/playbook", "destination": "/playbook.html" },
-    { "source": "/emoji", "destination": "/emoji.html" }
+    { "source": "/components", "destination": "/index.html" },
+    { "source": "/components/:id", "destination": "/index.html" },
+    { "source": "/motion", "destination": "/index.html" },
+    { "source": "/motion/:id", "destination": "/index.html" },
+    { "source": "/workflows", "destination": "/index.html" },
+    { "source": "/agents", "destination": "/index.html" },
+    { "source": "/motion-comparison", "destination": "/index.html" },
+    { "source": "/system", "destination": "/index.html" },
+    { "source": "/library", "destination": "/index.html" },
+    { "source": "/adoption", "destination": "/index.html" },
+    { "source": "/playbook", "destination": "/index.html" },
+    { "source": "/emoji", "destination": "/index.html" }
   ]
 }

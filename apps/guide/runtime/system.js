@@ -1,4 +1,4 @@
-(() => {
+window.mountYogurtSystem = function () {
   const byId = id => document.getElementById(id);
   const style = getComputedStyle(document.documentElement);
   const prop = key => style.getPropertyValue("--boa-" + key).trim();
@@ -111,4 +111,6 @@
   byId("dark-surface").addEventListener("change", event => {
     byId("roster").dataset.appearance = event.target.checked ? "dark" : "light";
   });
-})();
+};
+
+if (document.currentScript) window.mountYogurtSystem();

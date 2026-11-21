@@ -1,3 +1,2 @@
-import "../../../design/styles/ui.css";
 import "../ui-catalog.css";
-import "../ui-catalog.tsx";
+export { Catalog as default } from "../ui-catalog";

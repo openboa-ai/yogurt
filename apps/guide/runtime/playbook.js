@@ -1,4 +1,4 @@
-(() => {
+window.mountYogurtPlaybook = function () {
   const {catalog, examples} = window.yogurtPlaybook;
   const get = id => document.getElementById(id);
   const text = (id, value) => { get(id).textContent = value; };
@@ -53,7 +53,7 @@
   }
   project.addEventListener("change", () => choose());
   state.addEventListener("change", render);
-  window.yogurtActionMenu.mount(get("pb-menu"));
+  const dispose = window.yogurtActionMenu.mount(get("pb-menu"));
   get("pb-menu").addEventListener("yogurt-menu-select", event => {
     const details = get(event.detail);
     if (!details || !["parts", "proof"].includes(details.id)) return;
@@ -85,4 +85,7 @@
     get("pb-directory").append(item);
   }
   choose(link.get("state"), link.get("pattern"));
-})();
+  return dispose;
+};
+
+if (document.currentScript) window.mountYogurtPlaybook();

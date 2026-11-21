@@ -152,7 +152,7 @@ function readFlow() {
   return flows.find(({ id }) => location.hash === "#" + id) ?? flows[0];
 }
 
-function Workflows() {
+export function Workflows({ guideAppearance }: { guideAppearance?: "light" | "dark" }) {
   const [flow, setFlow] = useState(readFlow);
   const [dark, setDark] = useState(() => matchMedia("(prefers-color-scheme: dark)").matches);
   useEffect(() => {
@@ -160,12 +160,12 @@ function Workflows() {
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
-  return <Yogurt appearance={dark ? "dark" : "light"} className="workflow-root">
-    <header className="workflow-header">
+  return <Yogurt appearance={guideAppearance ?? (dark ? "dark" : "light")} className="workflow-root">
+    {!guideAppearance && <header className="workflow-header">
       <a className="workflow-identity" href={sectionHref("components")}><ProjectMark project="openboa" size={26} />Yogurt</a>
       <nav aria-label="Guide"><a href={sectionHref("components")}>Components</a><a href={sectionHref("motion")}>Motion</a></nav>
       <IconButton icon={dark ? "sun" : "moon"} label={dark ? "Use light appearance" : "Use dark appearance"} onClick={() => setDark(!dark)} />
-    </header>
+    </header>}
     <main className="workflow-body">
       <SidebarLayout label="Workflows" width="12rem" compactAt={760} variant="flat" navigation={
         <SidebarContent label="Workflows"><SidebarGroup label="Workflows">

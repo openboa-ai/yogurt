@@ -539,7 +539,7 @@ function locationPattern() {
     demos.find(section => section.id === id)?.items[0]?.id ?? (id || "task-list");
 }
 
-function Gallery() {
+export function Gallery({ guideAppearance }: { guideAppearance?: "light" | "dark" }) {
   const [appearance, setAppearance] = useState<"light" | "dark">(() =>
     window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   const [selected, setSelected] = useState(locationPattern);
@@ -582,9 +582,9 @@ function Gallery() {
     choose(id);
   }
 
-  return <Yogurt appearance={appearance} className="motion-patterns-page">
+  return <Yogurt appearance={guideAppearance ?? appearance} className="motion-patterns-page">
     <main>
-      <header className="motion-patterns-header">
+      {!guideAppearance && <header className="motion-patterns-header">
         <Link className="motion-pattern-brand" href={sectionHref("components")}>
           <ProjectMark project="openboa" size={26} /> Yogurt
         </Link>
@@ -598,7 +598,7 @@ function Gallery() {
         <IconButton label={appearance === "dark" ? "Use light appearance" : "Use dark appearance"}
           icon={appearance === "dark" ? "sun" : "moon"}
           onClick={() => setAppearance(appearance === "dark" ? "light" : "dark")} />
-      </header>
+      </header>}
       <div className="motion-pattern-layout">
         <aside className="motion-pattern-index" data-open={indexOpen}>
           <Button className="motion-index-toggle" emphasis="quiet" size="compact" type="button" aria-expanded={indexOpen} aria-controls="pattern-directory"
@@ -607,6 +607,7 @@ function Gallery() {
           </Button>
           <div id="pattern-directory" className="motion-index-directory">
             <p className="motion-index-title">Motion patterns</p>
+            {guideAppearance && <Link className="guide-compare-link" href={guideHref("motion-comparison")}>Compare motion</Link>}
             <div className="motion-pattern-search">
               <SearchField label="Find a pattern" placeholder="Find a pattern" value={query}
                 onValueChange={setQuery}

@@ -10,6 +10,8 @@ Existing `components.html#<id>` and `motion-patterns.html#<id>` links remain usa
 
 ## Build and boundaries
 
+The hosted guide uses one Vite entry and a persistent Yogurt shell for Brand, Design system, Components, Motion, Workflows, Design sources and supporting guides. The Yogurt project mark identifies the guide in the masthead and browser tab. The home and README present “ships with live cultures” as the tagline, followed by a plain description of the OpenBoa design system and UI SDK. Keep the OpenBoa signature, shelf-life line, About copy and remaining brand story under the brand content. Keep existing example behavior, authoring sources, asset downloads and offline galleries. Route changes preserve the shared shell and support keyboard navigation, browser history, old URLs and direct links; the guide owns no product data or commands.
+
 The normal development server and online interactive guide build use Vite with React. Existing static guide documents and offline packaged examples remain part of the build; no server-side rendering, database, runtime service or production data is required. The SDK build and its individual imports stay independent of Vite and Next.js. Source changes must reach the deployed artifact through the Vercel build, and no credentials or local absolute paths belong in the output.
 
 ## Acceptance

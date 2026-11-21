@@ -136,7 +136,7 @@ function submitPreviewForm(event: MouseEvent<HTMLDivElement>) {
   if (!form.noValidate && !submitter.formNoValidate && !form.reportValidity()) return;
   form.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true, submitter }));
 }
-function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
+export function Catalog({ inlinePreview = false, guideAppearance }: { inlinePreview?: boolean; guideAppearance?: "light" | "dark" }) {
   const [id, select] = useState(keyFromHash),
     [search, setSearch] = useState(""),
     [expanded, expand] = useState<string[]>(["Actions"]),
@@ -194,7 +194,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
     setShowCode(false);
     navigateSection("components", next);
   }
-  const appearance = dark ? "dark" : "light";
+  const appearance = guideAppearance ?? (dark ? "dark" : "light");
   const tokenLabel =
     id === "button"
       ? "14 / 20 type · 36 px high · 8 px corners"
@@ -206,7 +206,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
       <a className="skip" href="#yg-inspect">
         Skip to component
       </a>
-      <header className="catalog-header">
+      {!guideAppearance && <header className="catalog-header">
         <div className="catalog-identity">
           <ProjectMark project="openboa" label="OpenBoa" size={30} />
           <span>Yogurt</span>
@@ -241,7 +241,8 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
             onClick={() => setDark(!dark)}
           />
         </div>
-      </header>
+      </header>}
+      {guideAppearance && <div className="guide-catalog-tools"><Button emphasis="quiet" onClick={() => setMenu(!menu)} aria-expanded={menu}><Icon name={menu ? "close" : "menu"} />Browse components</Button></div>}
       <div className="catalog-body">
         <aside ref={navigation} data-open={menu} aria-label="Components">
           <div className="catalog-search">
