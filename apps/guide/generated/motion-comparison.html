@@ -1537,6 +1537,13 @@
   min-height: var(--yg-size-regular);
   border-radius: var(--yg-radius-control);
 }
+.yg-date-trigger[data-state="open"] { background: var(--yg-hover); }
+.yg-date-trigger[data-state="open"] .yg-icon { rotate: 180deg; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-date-trigger { transition: background-color var(--yg-motion-surface-focus); }
+  .yg-date-trigger .yg-icon { transition: rotate var(--yg-motion-picker-slide); }
+  .yg-calendar button { transition: background-color var(--yg-motion-surface-focus), color var(--yg-motion-surface-focus); }
+}
 .yg-calendar {
   position: relative;
   width: fit-content;
@@ -1607,6 +1614,7 @@
 }
 @media (hover: hover) {
   .yg-calendar button:not(:disabled):hover,
+  .yg-date-trigger:hover,
   .yg-toggle-item:not(:disabled):hover,
   .yg-sidebar a:hover,
   .yg-menu-bar > button:hover,
@@ -1614,8 +1622,25 @@
     background: var(--yg-hover);
     color: var(--yg-text);
   }
+  .yg-calendar .rdp-selected button:not(:disabled):hover {
+    background: var(--yg-inverse);
+    color: var(--yg-on-inverse);
+  }
 }
 @media (pointer: coarse) {
+  .yg-calendar {
+    --yg-date-size: var(--yg-size-touch);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+  .yg-calendar button:focus-visible { outline-offset: calc(-1 * var(--boa-stroke-focus)); }
+  .yg-date-popup {
+    max-inline-size: 100vi;
+    padding: var(--boa-space-4);
+  }
+  .yg-calendar .rdp-month_caption {
+    padding-inline-end: calc(2 * var(--yg-date-size) + var(--boa-space-2));
+  }
   .yg-resize-handle {
     width: var(--boa-space-24);
   }
@@ -3997,6 +4022,14 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   .yg-tooltip-bar > button[aria-pressed="true"] { outline: 1px solid Highlight; outline-offset: -1px; }
 }
 
+.yg-notice > div,
+.yg-toast > [role="status"],
+.yg-result {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.yg-toast { box-sizing: border-box; }
+
 .yg-storage-meter {
   inline-size: min(300px, 100%);
   padding: 18px 8px 8px;
@@ -6024,7 +6057,9 @@ summary.yg-task-line:focus-visible {
   gap: var(--boa-space-4);
 }
 .yg-breadcrumb .yg-icon {
-  width: 12px;
+  inline-size: var(--boa-space-12);
+  block-size: var(--boa-space-12);
+  flex: none;
   color: var(--yg-muted);
 }
 .yg-nav-list {

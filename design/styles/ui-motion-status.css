@@ -1,3 +1,11 @@
+.yg-notice > div,
+.yg-toast > [role="status"],
+.yg-result {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.yg-toast { box-sizing: border-box; }
+
 .yg-storage-meter {
   inline-size: min(300px, 100%);
   padding: 18px 8px 8px;
