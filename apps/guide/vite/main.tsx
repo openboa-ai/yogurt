@@ -89,7 +89,7 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
   switch (id) {
     case "components": return <Catalog guideAppearance={appearance} />;
     case "templates": return <Templates id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
-    case "examples": return <Examples id={new URL(href, location.origin).pathname.split("/")[2]} />;
+    case "examples": return <Examples id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
     case "agents": return <div className="guide-agents"><AgentFamily /></div>;
     default: return <main><PageHeader title="Guide page not found" action={<Link href="/">Go to Yogurt</Link>} /></main>;
   }
