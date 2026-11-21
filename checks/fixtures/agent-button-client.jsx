@@ -31,7 +31,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent code" && step.action === "setValue") ||
       (step.label === "Increase Agent quantity" && step.action === "press") ||
       (step.label === "Agent team" && step.action === "setValue") ||
-      (step.label === "Agent path" && step.action === "setValue"),
+      (step.label === "Agent path" && step.action === "setValue") ||
+      (step.label === "Selection group" && step.action === "setValue"),
   });
 }
 

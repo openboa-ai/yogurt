@@ -39,14 +39,16 @@ function InputGroup({
   size = "featured",
   ...input
 }) {
-  const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") && !input.onSelect && !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
+  const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") && !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
+  const { onSelect, ...sharedProps } = input;
   return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs(SDKInputGroup, { className: cx("yg-input yg-input-group", `yg-input-size-${size}`), children: [
     leading,
     sharedInput ? /* @__PURE__ */ jsx(
       SDKInput,
       {
-        ...input,
+        ...sharedProps,
         ...binding,
+        render: onSelect ? /* @__PURE__ */ jsx("input", { onSelect }) : void 0,
         value: input.value == null ? void 0 : String(input.value),
         defaultValue: input.defaultValue == null ? void 0 : String(input.defaultValue),
         onValueChange: (next, details) => {

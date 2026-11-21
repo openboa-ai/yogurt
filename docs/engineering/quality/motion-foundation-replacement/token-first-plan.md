@@ -1,6 +1,6 @@
 # Token-first component and motion redesign
 
-Status: design draft. This document plans the replacement; it is not evidence that a token, component or renderer is complete.
+Status: owner-selected implementation plan. Component and renderer completion is recorded separately.
 
 ## Outcome
 
@@ -13,7 +13,7 @@ This is a full-library design and behavior replacement. An example supplies evid
 - `design/tokens/brand.json` contains palette and primitive values. `design/tokens/ui.json` defines semantic roles and some component geometry; `scripts/sdk/ui-tokens.mjs` generates CSS and Zig outputs.
 - Motion is split between duration/easing roles, sampled CSS profiles and behavior-specific spring parameters. Examples and components may also contain fixed values. The existing generated Zig values do not establish Native rendering or motion parity.
 - The current inventory contains 125 component entries and 78 retained Web motion examples. Inventory counts and gallery rendering do not establish visual approval, runtime coverage or completion. Some Web interactions use the shared behavior runtime; Native is a separate renderer.
-- The uncommitted input-group and motion-profile edits are a provisional experiment. They are not a completed token redesign and must be reassessed against this plan before admission, testing or delivery. Generated outputs may not match the latest source while that work is paused.
+- The first input-group and motion-profile changes have Web fixture evidence. Their full visual review and Native qualification remain open, and the overall token redesign continues across the other families.
 
 ## Architecture to design and qualify
 

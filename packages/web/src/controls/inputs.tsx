@@ -36,13 +36,15 @@ export function InputGroup({
   size?: ControlSize | "featured";
 }) {
   const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") &&
-    !input.onSelect && !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
+    !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
+  const { onSelect, ...sharedProps } = input;
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
         <SDKInputGroup className={cx("yg-input yg-input-group", `yg-input-size-${size}`)}>
           {leading}
-          {sharedInput ? <SDKInput {...input} {...binding}
+          {sharedInput ? <SDKInput {...sharedProps} {...binding}
+            render={onSelect ? <input onSelect={onSelect} /> : undefined}
             value={input.value == null ? undefined : String(input.value)}
             defaultValue={input.defaultValue == null ? undefined : String(input.defaultValue)}
             onValueChange={(next, details) => {
