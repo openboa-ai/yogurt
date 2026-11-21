@@ -1,10 +1,10 @@
 .yg-agent-row {
   display: flex;
   align-items: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-list-row-gap);
   width: 100%;
-  min-block-size: var(--yg-size-touch);
-  padding: var(--boa-space-6) var(--yg-inset-compact);
+  min-block-size: var(--yg-list-row-height);
+  padding: var(--boa-space-6) var(--yg-list-row-inset);
   color: var(--yg-text);
   background: transparent;
   border: 0;
@@ -14,8 +14,16 @@
   cursor: pointer;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .yg-agent-row { transition: background-color var(--yg-press) var(--yg-settle); }
+}
+
 @media (hover: hover) {
   .yg-agent-row:hover {
+    background: var(--yg-hover);
+  }
+
+  .yg-agent-row[aria-current="true"]:hover {
     background: var(--yg-hover);
   }
 }
@@ -230,12 +238,12 @@
 
 .yg-runtime-sample-item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--boa-space-4);
-  padding: var(--boa-space-8);
-  border-block-end: 1px solid var(--yg-surface-edge);
+  gap: var(--yg-list-row-gap);
+  min-block-size: var(--yg-list-row-height);
+  padding: var(--boa-space-6) var(--yg-list-row-inset);
 }
-.yg-runtime-sample-item:last-child { border-block-end: 0; }
 .yg-agent-roster-header { padding-block-end: var(--boa-space-8); }
 .yg-agent-group + .yg-agent-group { margin-block-start: var(--boa-space-16); }
 

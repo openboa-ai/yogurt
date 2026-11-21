@@ -344,21 +344,62 @@ export function Tooltip({
 }) {
   const id = useId();
   const [visible, setVisible] = useState(false);
+  const hovered = useRef(false);
+  const focused = useRef(false);
+  const anchor = useRef<HTMLSpanElement>(null);
+  useLayoutEffect(() => {
+    const host = anchor.current;
+    const tip = host?.querySelector<HTMLElement>(".yg-tip");
+    const view = host?.ownerDocument.defaultView;
+    if (!visible || !host || !tip || !view) return;
+    const place = () => {
+      const bounds = host.getBoundingClientRect();
+      const viewport = view.visualViewport;
+      const left = viewport?.offsetLeft ?? 0;
+      const top = viewport?.offsetTop ?? 0;
+      const width = viewport?.width ?? view.innerWidth;
+      const center = (bounds.left + bounds.right) / 2;
+      const half = tip.offsetWidth / 2;
+      const safeCenter = Math.max(left + 8 + half, Math.min(center, left + width - 8 - half));
+      tip.style.setProperty("--yg-tip-shift", `${safeCenter - center}px`);
+      tip.dataset.side = bounds.top - top < tip.offsetHeight + 16 ? "below" : "above";
+    };
+    place();
+    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(place);
+    observer?.observe(host);
+    observer?.observe(tip);
+    view.addEventListener("resize", place);
+    view.addEventListener("scroll", place, true);
+    view.visualViewport?.addEventListener("resize", place);
+    view.visualViewport?.addEventListener("scroll", place);
+    return () => {
+      observer?.disconnect();
+      view.removeEventListener("resize", place);
+      view.removeEventListener("scroll", place, true);
+      view.visualViewport?.removeEventListener("resize", place);
+      view.visualViewport?.removeEventListener("scroll", place);
+    };
+  }, [visible, label]);
   return (
     <SDKPopover open={visible} onOpenChange={setVisible} dismissible={false}>
     <span
+      ref={anchor}
       className="yg-tip-anchor"
-      onPointerEnter={() => setVisible(true)}
-      onPointerLeave={() => setVisible(false)}
-      onFocus={() => setVisible(true)}
-      onBlur={() => setVisible(false)}
+      onPointerEnter={() => { hovered.current = true; setVisible(true); }}
+      onPointerLeave={() => { hovered.current = false; if (!focused.current) setVisible(false); }}
+      onFocus={() => { focused.current = true; setVisible(true); }}
+      onBlur={(event) => {
+        if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+        focused.current = false;
+        if (!hovered.current) setVisible(false);
+      }}
       onKeyDown={(e) => {
         if (e.key === "Escape") setVisible(false);
       }}
     >
       {children({ "aria-describedby": id })}
       <PopoverContent inline keepMounted initialFocus="none" finalFocus="none"
-        render={(props) => <span {...props} role="tooltip" id={id} aria-label={label} hidden={!visible} tabIndex={undefined} className="yg-tip" />}>
+        render={(props) => <span {...props} role="tooltip" id={id} aria-label={label} hidden={false} aria-hidden={!visible} data-open={visible} tabIndex={undefined} className="yg-tip" />}>
         {label}
       </PopoverContent>
     </span>

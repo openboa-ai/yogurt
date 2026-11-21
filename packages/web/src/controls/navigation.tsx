@@ -238,7 +238,7 @@ export function Pagination({
         Previous
       </Button>
       <span className="yg-meta" aria-live="polite">
-        {page} of {pages}
+        <span className="yg-pagination-value" key={page}>{page}</span> of {pages}
       </span>
       <Button
         emphasis="quiet"

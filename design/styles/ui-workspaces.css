@@ -2,11 +2,11 @@
   display: grid;
   gap: var(--yg-gap-row);
   min-width: 0;
-  padding: var(--yg-inset-regular);
+  padding: var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-panel);
   border: 0;
   border-radius: var(--yg-radius-sheet);
-  background: var(--yg-field);
-  transition: background-color var(--yg-change) var(--yg-settle);
+  background: var(--yg-raised-surface);
+  transition: background-color var(--yg-motion-surface-focus);
 }
 .yg-composer:focus-within {
   background: var(--yg-focus-surface);
@@ -21,10 +21,11 @@
   font: var(--yg-font-help);
 }
 .yg-composer textarea {
+  box-sizing: border-box;
   width: 100%;
   min-width: 0;
   min-block-size: var(--yg-size-touch);
-  padding: var(--boa-space-4) 0;
+  padding: var(--boa-space-4) var(--boa-space-4) var(--boa-space-4) 0;
   resize: vertical;
   color: var(--yg-text);
   background: transparent;
@@ -51,6 +52,19 @@
   flex-wrap: wrap;
 }
 .yg-composer-footer { justify-content: space-between; }
+.yg-composer-footer > .yg-composer-tools:last-child { margin-inline-start: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-composer[aria-busy="true"] .yg-composer-footer > .yg-composer-tools:last-child > .yg-button {
+    animation: yg-composer-action-arrive var(--yg-motion-prompt-action) both;
+  }
+  @keyframes yg-composer-action-arrive {
+    from { opacity: 0; transform: scale(.94); }
+    to { opacity: 1; transform: scale(1); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yg-composer { transition: none; }
+}
 .yg-voice {
   padding: var(--boa-space-8);
   border-radius: var(--yg-radius-control);

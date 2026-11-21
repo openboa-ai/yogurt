@@ -1,7 +1,7 @@
 "use client";
 import {
   Link
-} from "../shared/chunk-R4VQZVXS.js";
+} from "../shared/chunk-RCVS7NNW.js";
 import "../shared/chunk-DRQJWO7S.js";
 import "../shared/chunk-4IPCB3MM.js";
 import "../shared/chunk-GW3HPY4O.js";

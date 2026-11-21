@@ -335,7 +335,7 @@ function Pagination({
       }
     ),
     /* @__PURE__ */ jsxs("span", { className: "yg-meta", "aria-live": "polite", children: [
-      page,
+      /* @__PURE__ */ jsx("span", { className: "yg-pagination-value", children: page }, page),
       " of ",
       pages
     ] }),

@@ -647,6 +647,8 @@
 .yg-gradient,
 .yg-slide,
 .yg-sidebar {
+  box-sizing: border-box;
+  min-inline-size: 0;
   padding: var(--yg-inset-panel);
   border-radius: var(--yg-radius-panel);
   background: var(--yg-surface);
@@ -748,7 +750,7 @@
 }
 .yg-post {
   max-inline-size: 65ch;
-  line-height: 1.6;
+  font: var(--yg-font-reading);
   overflow-wrap: anywhere;
 }
 .yg-post > * + * {
@@ -765,12 +767,13 @@
 }
 .yg-grid-list {
   display: grid;
-  gap: var(--boa-space-12);
+  gap: var(--yg-gap-row);
   grid-template-columns: repeat(
     auto-fit,
     minmax(min(100%, var(--yg-cell)), 1fr)
   );
 }
+.yg-grid-list > li { min-inline-size: 0; }
 .yg-section-line,
 .yg-value-row,
 .yg-code header,
@@ -818,18 +821,23 @@
 .yg-value-row dt {
   color: var(--yg-muted);
 }
+.yg-value-row :is(dt, dd) {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
 .yg-value-row dd {
   margin: 0;
   font-weight: var(--boa-weight-medium);
+  font-variant-numeric: tabular-nums;
 }
 .yg-amount {
   display: grid;
   gap: var(--boa-space-4);
 }
 .yg-amount strong {
-  font-size: 1.75rem;
-  line-height: 1.2;
-  letter-spacing: -0.035em;
+  font: var(--yg-font-value);
+  letter-spacing: var(--boa-tracking-value);
+  font-variant-numeric: tabular-nums;
 }
 .yg-amount small {
   font: var(--yg-font-action);
@@ -846,11 +854,13 @@
 }
 .yg-bars li {
   display: grid;
-  grid-template-columns: minmax(4ch, auto) minmax(3rem, 1fr) auto;
+  grid-template-columns: minmax(0, auto) minmax(3rem, 1fr) auto;
   align-items: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-gap-inline);
   min-height: var(--yg-size-compact);
 }
+.yg-bars li > span:first-child { min-inline-size: 0; overflow-wrap: anywhere; }
+.yg-bars li > span:last-child { font-variant-numeric: tabular-nums; }
 .yg-bar-track {
   position: relative;
   height: var(--boa-space-8);
@@ -862,6 +872,7 @@
   position: absolute;
   inset-block: 0;
   background: var(--yg-inverse);
+  border-radius: inherit;
 }
 .yg-bars small,
 .yg-attachment small,
@@ -909,6 +920,38 @@
 .yg-attachment button.yg-file-name {
   border: 0;
   background: transparent;
+  color: var(--yg-text);
+  cursor: pointer;
+  border-radius: var(--yg-radius-small);
+}
+.yg-attachment button.yg-file-name:focus-visible {
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
+  outline-offset: var(--boa-space-2);
+}
+@media (forced-colors: active) {
+  .yg-attachment button.yg-file-name:focus-visible { outline-color: Highlight; }
+}
+@media (hover: hover) {
+  .yg-attachment button.yg-file-name:hover { color: var(--yg-inverse); }
+}
+@media (forced-colors: none) {
+  .yg-attachment progress {
+    appearance: none;
+    inline-size: min(6rem, 100%);
+    block-size: var(--boa-space-4);
+    border: 0;
+    border-radius: var(--boa-radius-round);
+    background: var(--yg-hover);
+    overflow: hidden;
+  }
+  .yg-attachment progress::-webkit-progress-bar { background: var(--yg-hover); }
+  .yg-attachment progress::-webkit-progress-value { background: var(--yg-inverse); border-radius: var(--boa-radius-round); }
+  .yg-attachment progress::-moz-progress-bar { background: var(--yg-inverse); border-radius: var(--boa-radius-round); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-attachment button.yg-file-name { transition: color var(--yg-motion-surface-focus); }
+  .yg-attachment progress::-webkit-progress-value { transition: width var(--yg-motion-letter-progress); }
+  .yg-attachment progress::-moz-progress-bar { transition: width var(--yg-motion-letter-progress); }
 }
 .yg-marker {
   display: flex;
@@ -1241,6 +1284,9 @@
 }
 .yg-accordion h3 button[data-state="open"] .yg-icon {
   rotate: 180deg;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-accordion h3 button .yg-icon { transition: rotate var(--yg-motion-picker-slide); }
 }
 .yg-accordion-content {
   padding-block: 0 var(--boa-space-12);
@@ -1607,6 +1653,13 @@
 .yg-table-sort span {
   color: var(--yg-muted);
 }
+@media (hover: hover) {
+  .yg-table-sort:hover { color: var(--yg-inverse); }
+  .yg-table-sort:hover span { color: inherit; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-table-sort, .yg-table-sort span { transition: color var(--yg-motion-surface-focus); }
+}
 @media (pointer: coarse) {
   .yg-drawer-grip,
   .yg-table-sort {
@@ -1714,11 +1767,11 @@
   display: grid;
   gap: var(--yg-gap-row);
   min-width: 0;
-  padding: var(--yg-inset-regular);
+  padding: var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-panel);
   border: 0;
   border-radius: var(--yg-radius-sheet);
-  background: var(--yg-field);
-  transition: background-color var(--yg-change) var(--yg-settle);
+  background: var(--yg-raised-surface);
+  transition: background-color var(--yg-motion-surface-focus);
 }
 .yg-composer:focus-within {
   background: var(--yg-focus-surface);
@@ -1733,10 +1786,11 @@
   font: var(--yg-font-help);
 }
 .yg-composer textarea {
+  box-sizing: border-box;
   width: 100%;
   min-width: 0;
   min-block-size: var(--yg-size-touch);
-  padding: var(--boa-space-4) 0;
+  padding: var(--boa-space-4) var(--boa-space-4) var(--boa-space-4) 0;
   resize: vertical;
   color: var(--yg-text);
   background: transparent;
@@ -1763,6 +1817,19 @@
   flex-wrap: wrap;
 }
 .yg-composer-footer { justify-content: space-between; }
+.yg-composer-footer > .yg-composer-tools:last-child { margin-inline-start: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-composer[aria-busy="true"] .yg-composer-footer > .yg-composer-tools:last-child > .yg-button {
+    animation: yg-composer-action-arrive var(--yg-motion-prompt-action) both;
+  }
+  @keyframes yg-composer-action-arrive {
+    from { opacity: 0; transform: scale(.94); }
+    to { opacity: 1; transform: scale(1); }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yg-composer { transition: none; }
+}
 .yg-voice {
   padding: var(--boa-space-8);
   border-radius: var(--yg-radius-control);
@@ -1825,10 +1892,10 @@
 .yg-agent-row {
   display: flex;
   align-items: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-list-row-gap);
   width: 100%;
-  min-block-size: var(--yg-size-touch);
-  padding: var(--boa-space-6) var(--yg-inset-compact);
+  min-block-size: var(--yg-list-row-height);
+  padding: var(--boa-space-6) var(--yg-list-row-inset);
   color: var(--yg-text);
   background: transparent;
   border: 0;
@@ -1838,8 +1905,16 @@
   cursor: pointer;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .yg-agent-row { transition: background-color var(--yg-press) var(--yg-settle); }
+}
+
 @media (hover: hover) {
   .yg-agent-row:hover {
+    background: var(--yg-hover);
+  }
+
+  .yg-agent-row[aria-current="true"]:hover {
     background: var(--yg-hover);
   }
 }
@@ -2054,12 +2129,12 @@
 
 .yg-runtime-sample-item {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--boa-space-4);
-  padding: var(--boa-space-8);
-  border-block-end: 1px solid var(--yg-surface-edge);
+  gap: var(--yg-list-row-gap);
+  min-block-size: var(--yg-list-row-height);
+  padding: var(--boa-space-6) var(--yg-list-row-inset);
 }
-.yg-runtime-sample-item:last-child { border-block-end: 0; }
 .yg-agent-roster-header { padding-block-end: var(--boa-space-8); }
 .yg-agent-group + .yg-agent-group { margin-block-start: var(--boa-space-16); }
 
@@ -2106,11 +2181,11 @@
 .yg-workspace-row-body {
   display: flex;
   align-items: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-list-row-gap);
   flex: 1 1 auto;
   min-inline-size: 0;
-  min-block-size: var(--yg-size-comfort);
-  padding: var(--yg-gap-control) var(--yg-inset-regular);
+  min-block-size: var(--yg-list-row-height);
+  padding: var(--boa-space-6) var(--yg-list-row-inset);
   border: 0;
   border-radius: inherit;
   background: transparent;
@@ -2123,16 +2198,14 @@ button.yg-workspace-row-body {
   cursor: pointer;
 }
 
-@media (pointer: coarse) {
-  button.yg-workspace-row-body { min-block-size: var(--yg-size-touch); }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-workspace-row,
+  button.yg-workspace-row-body { transition: background-color var(--yg-press) var(--yg-settle); }
 }
 
-button.yg-workspace-row-body:hover {
-  background: var(--yg-field);
-}
-
-button.yg-workspace-row-body[aria-current="true"]:hover {
-  background: var(--yg-hover);
+@media (hover: hover) {
+  button.yg-workspace-row-body:hover { background: var(--yg-field); }
+  button.yg-workspace-row-body[aria-current="true"]:hover { background: var(--yg-hover); }
 }
 
 .yg-resource-row > .yg-button {
@@ -2464,13 +2537,20 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-sidebar-chevron {
   margin-inline-start: auto;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-sidebar-item {
+    transition: background-color var(--yg-motion-surface-focus), color var(--yg-motion-surface-focus);
+  }
+  .yg-sidebar-chevron {
+    transition: rotate var(--yg-motion-card-detail);
+  }
+}
 .yg-sidebar-item[aria-expanded="true"] .yg-sidebar-chevron {
   rotate: 180deg;
 }
 .yg-sidebar-submenu-content {
   margin-inline-start: var(--boa-space-16);
   padding-inline-start: var(--boa-space-8);
-  border-inline-start: 1px solid var(--yg-surface-edge);
 }
 .yg-sidebar-layout[data-panel="rail"] .yg-sidebar-item {
   justify-content: center;
@@ -2801,20 +2881,28 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-input,
 .yg-select,
 .yg-standalone {
-  transition: background-color var(--yg-change, var(--yg-travel)) var(--yg-settle);
+  transition: background-color var(--yg-motion-surface-focus);
+}
+
+.yg-pagination-value { display: inline-block; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-pagination-value { animation: yg-pagination-arrive var(--yg-motion-pagination) both; }
+  @keyframes yg-pagination-arrive {
+    from { opacity: .72; translate: 0 var(--boa-space-4); }
+    to { opacity: 1; translate: 0 0; }
+  }
 }
 
 .yg-switch [role="switch"] {
-  transition: background-color var(--yg-travel) var(--yg-settle);
+  transition: background-color var(--yg-motion-switch-travel);
 }
 
 .yg-switch [role="switch"] > span {
   transition:
-    transform var(--yg-travel) var(--yg-settle),
-    background-color var(--yg-travel) var(--yg-settle);
+    transform var(--yg-motion-switch-travel),
+    background-color var(--yg-motion-switch-travel);
 }
 
-.yg-checkbox [role="checkbox"],
 .yg-radio [role="radio"],
 .yg-toggle-item,
 .yg-rating label,
@@ -2822,6 +2910,21 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   transition:
     background-color var(--yg-change, var(--yg-travel)) var(--yg-settle),
     color var(--yg-change, var(--yg-travel)) var(--yg-settle);
+}
+
+.yg-checkbox [role="checkbox"] {
+  transition: background-color var(--yg-motion-surface-focus),
+    transform var(--yg-motion-switch-travel);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .yg-toggle-item {
+    transition: background-color var(--yg-motion-picker-highlight),
+      color var(--yg-motion-picker-highlight), transform var(--yg-motion-prompt-action);
+  }
+  .yg-toggle-item:active:not(:disabled, [aria-disabled="true"]) {
+    transform: scale(.97);
+  }
 }
 
 .yg-range input:not(:disabled):active {
@@ -3052,8 +3155,8 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 
 @media (prefers-reduced-motion: no-preference) {
   .yg-bar-track i {
-    transition: inline-size var(--yg-change) var(--yg-settle),
-      inset-inline-start var(--yg-change) var(--yg-settle);
+    transition: inline-size var(--yg-motion-storage-fill),
+      inset-inline-start var(--yg-motion-storage-fill);
   }
 }
 
@@ -5772,11 +5875,58 @@ summary.yg-task-line:focus-visible {
   padding: var(--boa-space-12);
 }
 .yg-tip {
+  inset-block-start: auto;
+  inset-block-end: calc(100% + var(--boa-space-12));
+  inset-inline-start: auto;
+  left: 50%;
+  box-sizing: border-box;
   width: max-content;
-  background: var(--yg-text);
-  color: var(--yg-canvas);
-  font: var(--yg-font-meta);
-  padding: var(--boa-space-4) var(--boa-space-8);
+  max-inline-size: min(240px, 80vw);
+  padding: var(--boa-space-8) var(--boa-space-12);
+  border: 0;
+  border-radius: 11px;
+  background: var(--yg-inverse);
+  color: var(--yg-on-inverse);
+  box-shadow: none;
+  font: var(--yg-font-label);
+  line-height: 18px;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(calc(-50% + var(--yg-tip-shift, 0px)), 5px) scale(.92);
+  transform-origin: 50% 140%;
+  animation: none;
+}
+.yg-tip::after {
+  content: "";
+  position: absolute;
+  left: clamp(10px, calc(50% - var(--yg-tip-shift, 0px) - 5px), calc(100% - 20px));
+  bottom: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: inherit;
+  transform: rotate(45deg);
+}
+.yg-tip[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(calc(-50% + var(--yg-tip-shift, 0px)), 0) scale(1);
+  transition-delay: 0s;
+}
+.yg-tip[data-side="below"] {
+  inset-block-start: calc(100% + var(--boa-space-12));
+  inset-block-end: auto;
+  transform-origin: 50% -40%;
+}
+.yg-tip[data-side="below"]::after { top: -4px; bottom: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-tip {
+    transition: opacity var(--yg-motion-tooltip-arrive), transform var(--yg-motion-card-detail),
+      visibility 0s linear 435ms;
+  }
+  .yg-tip[data-open="true"] { transition-delay: 0s; }
 }
 @keyframes yg-enter {
   from {

@@ -39,20 +39,28 @@
 .yg-input,
 .yg-select,
 .yg-standalone {
-  transition: background-color var(--yg-change, var(--yg-travel)) var(--yg-settle);
+  transition: background-color var(--yg-motion-surface-focus);
+}
+
+.yg-pagination-value { display: inline-block; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-pagination-value { animation: yg-pagination-arrive var(--yg-motion-pagination) both; }
+  @keyframes yg-pagination-arrive {
+    from { opacity: .72; translate: 0 var(--boa-space-4); }
+    to { opacity: 1; translate: 0 0; }
+  }
 }
 
 .yg-switch [role="switch"] {
-  transition: background-color var(--yg-travel) var(--yg-settle);
+  transition: background-color var(--yg-motion-switch-travel);
 }
 
 .yg-switch [role="switch"] > span {
   transition:
-    transform var(--yg-travel) var(--yg-settle),
-    background-color var(--yg-travel) var(--yg-settle);
+    transform var(--yg-motion-switch-travel),
+    background-color var(--yg-motion-switch-travel);
 }
 
-.yg-checkbox [role="checkbox"],
 .yg-radio [role="radio"],
 .yg-toggle-item,
 .yg-rating label,
@@ -60,6 +68,21 @@
   transition:
     background-color var(--yg-change, var(--yg-travel)) var(--yg-settle),
     color var(--yg-change, var(--yg-travel)) var(--yg-settle);
+}
+
+.yg-checkbox [role="checkbox"] {
+  transition: background-color var(--yg-motion-surface-focus),
+    transform var(--yg-motion-switch-travel);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .yg-toggle-item {
+    transition: background-color var(--yg-motion-picker-highlight),
+      color var(--yg-motion-picker-highlight), transform var(--yg-motion-prompt-action);
+  }
+  .yg-toggle-item:active:not(:disabled, [aria-disabled="true"]) {
+    transform: scale(.97);
+  }
 }
 
 .yg-range input:not(:disabled):active {
@@ -290,8 +313,8 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .yg-bar-track i {
-    transition: inline-size var(--yg-change) var(--yg-settle),
-      inset-inline-start var(--yg-change) var(--yg-settle);
+    transition: inline-size var(--yg-motion-storage-fill),
+      inset-inline-start var(--yg-motion-storage-fill);
   }
 }
 

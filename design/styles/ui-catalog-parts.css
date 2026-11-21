@@ -23,6 +23,8 @@
 .yg-gradient,
 .yg-slide,
 .yg-sidebar {
+  box-sizing: border-box;
+  min-inline-size: 0;
   padding: var(--yg-inset-panel);
   border-radius: var(--yg-radius-panel);
   background: var(--yg-surface);
@@ -124,7 +126,7 @@
 }
 .yg-post {
   max-inline-size: 65ch;
-  line-height: 1.6;
+  font: var(--yg-font-reading);
   overflow-wrap: anywhere;
 }
 .yg-post > * + * {
@@ -141,12 +143,13 @@
 }
 .yg-grid-list {
   display: grid;
-  gap: var(--boa-space-12);
+  gap: var(--yg-gap-row);
   grid-template-columns: repeat(
     auto-fit,
     minmax(min(100%, var(--yg-cell)), 1fr)
   );
 }
+.yg-grid-list > li { min-inline-size: 0; }
 .yg-section-line,
 .yg-value-row,
 .yg-code header,
@@ -194,18 +197,23 @@
 .yg-value-row dt {
   color: var(--yg-muted);
 }
+.yg-value-row :is(dt, dd) {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
 .yg-value-row dd {
   margin: 0;
   font-weight: var(--boa-weight-medium);
+  font-variant-numeric: tabular-nums;
 }
 .yg-amount {
   display: grid;
   gap: var(--boa-space-4);
 }
 .yg-amount strong {
-  font-size: 1.75rem;
-  line-height: 1.2;
-  letter-spacing: -0.035em;
+  font: var(--yg-font-value);
+  letter-spacing: var(--boa-tracking-value);
+  font-variant-numeric: tabular-nums;
 }
 .yg-amount small {
   font: var(--yg-font-action);
@@ -222,11 +230,13 @@
 }
 .yg-bars li {
   display: grid;
-  grid-template-columns: minmax(4ch, auto) minmax(3rem, 1fr) auto;
+  grid-template-columns: minmax(0, auto) minmax(3rem, 1fr) auto;
   align-items: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-gap-inline);
   min-height: var(--yg-size-compact);
 }
+.yg-bars li > span:first-child { min-inline-size: 0; overflow-wrap: anywhere; }
+.yg-bars li > span:last-child { font-variant-numeric: tabular-nums; }
 .yg-bar-track {
   position: relative;
   height: var(--boa-space-8);
@@ -238,6 +248,7 @@
   position: absolute;
   inset-block: 0;
   background: var(--yg-inverse);
+  border-radius: inherit;
 }
 .yg-bars small,
 .yg-attachment small,
@@ -285,6 +296,38 @@
 .yg-attachment button.yg-file-name {
   border: 0;
   background: transparent;
+  color: var(--yg-text);
+  cursor: pointer;
+  border-radius: var(--yg-radius-small);
+}
+.yg-attachment button.yg-file-name:focus-visible {
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
+  outline-offset: var(--boa-space-2);
+}
+@media (forced-colors: active) {
+  .yg-attachment button.yg-file-name:focus-visible { outline-color: Highlight; }
+}
+@media (hover: hover) {
+  .yg-attachment button.yg-file-name:hover { color: var(--yg-inverse); }
+}
+@media (forced-colors: none) {
+  .yg-attachment progress {
+    appearance: none;
+    inline-size: min(6rem, 100%);
+    block-size: var(--boa-space-4);
+    border: 0;
+    border-radius: var(--boa-radius-round);
+    background: var(--yg-hover);
+    overflow: hidden;
+  }
+  .yg-attachment progress::-webkit-progress-bar { background: var(--yg-hover); }
+  .yg-attachment progress::-webkit-progress-value { background: var(--yg-inverse); border-radius: var(--boa-radius-round); }
+  .yg-attachment progress::-moz-progress-bar { background: var(--yg-inverse); border-radius: var(--boa-radius-round); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-attachment button.yg-file-name { transition: color var(--yg-motion-surface-focus); }
+  .yg-attachment progress::-webkit-progress-value { transition: width var(--yg-motion-letter-progress); }
+  .yg-attachment progress::-moz-progress-bar { transition: width var(--yg-motion-letter-progress); }
 }
 .yg-marker {
   display: flex;
@@ -617,6 +660,9 @@
 }
 .yg-accordion h3 button[data-state="open"] .yg-icon {
   rotate: 180deg;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-accordion h3 button .yg-icon { transition: rotate var(--yg-motion-picker-slide); }
 }
 .yg-accordion-content {
   padding-block: 0 var(--boa-space-12);
@@ -982,6 +1028,13 @@
 }
 .yg-table-sort span {
   color: var(--yg-muted);
+}
+@media (hover: hover) {
+  .yg-table-sort:hover { color: var(--yg-inverse); }
+  .yg-table-sort:hover span { color: inherit; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-table-sort, .yg-table-sort span { transition: color var(--yg-motion-surface-focus); }
 }
 @media (pointer: coarse) {
   .yg-drawer-grip,

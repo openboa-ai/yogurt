@@ -138,13 +138,20 @@
 .yg-sidebar-chevron {
   margin-inline-start: auto;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-sidebar-item {
+    transition: background-color var(--yg-motion-surface-focus), color var(--yg-motion-surface-focus);
+  }
+  .yg-sidebar-chevron {
+    transition: rotate var(--yg-motion-card-detail);
+  }
+}
 .yg-sidebar-item[aria-expanded="true"] .yg-sidebar-chevron {
   rotate: 180deg;
 }
 .yg-sidebar-submenu-content {
   margin-inline-start: var(--boa-space-16);
   padding-inline-start: var(--boa-space-8);
-  border-inline-start: 1px solid var(--yg-surface-edge);
 }
 .yg-sidebar-layout[data-panel="rail"] .yg-sidebar-item {
   justify-content: center;
