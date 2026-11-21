@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Accordion, Button, Checkbox, Dialog, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
+import { Accordion, ActionMenu, Button, Checkbox, Dialog, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
+import { Button as CopiedButton } from "../src/components/ui/button";
 
 if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
   window.yogurtFixtureCreateAgent = createYogurtAgent;
   window.yogurtFixtureAgent = createYogurtAgent({
     allow: step => (step.label === "Agent action" && step.action === "press") ||
+      (step.label === "Copied action" && step.action === "press") ||
       (step.label === "Agent checkbox" && step.action === "setChecked") ||
       (step.label === "Agent switch" && step.action === "setChecked") ||
       (step.label === "Agent title" && step.action === "setValue") ||
@@ -20,12 +22,15 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent filters" && step.action === "setValue") ||
       (step.label === "Fixture dialog" && step.action === "setOpen") ||
       (step.label === "Agent popover" && step.action === "setOpen") ||
-      (step.label === "Agent accordion" && step.action === "setValue"),
+      (step.label === "Agent accordion" && step.action === "setValue") ||
+      (step.label === "Agent menu" && step.action === "setOpen") ||
+      (step.label === "Menu second" && step.action === "press"),
   });
 }
 
 export default function AgentButtonFixture() {
   const [calls, setCalls] = useState(0);
+  const [copiedCalls, setCopiedCalls] = useState(0);
   const [submits, setSubmits] = useState(0);
   const [checked, setChecked] = useState(false);
   const [checkboxChanges, setCheckboxChanges] = useState(0);
@@ -58,6 +63,8 @@ export default function AgentButtonFixture() {
   const [modalChanges, setModalChanges] = useState(0);
   const [nestedModal, setNestedModal] = useState(false);
   const [nestedChanges, setNestedChanges] = useState(0);
+  const [menuSelection, setMenuSelection] = useState("");
+  const [menuCalls, setMenuCalls] = useState(0);
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
   const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
   const sections = options.map(option => ({ id: option.id, title: option.label, disabled: option.disabled, content: <input aria-label={`Section ${option.id}`} defaultValue="Original" /> }));
@@ -67,6 +74,7 @@ export default function AgentButtonFixture() {
     <Yogurt>
       <main>
         <Button ref={actionRef} onClick={hit}>Agent action</Button>
+        <CopiedButton onClick={() => setCopiedCalls(value => value + 1)}>Copied action</CopiedButton>
         <Button onClick={() => actionRef.current?.focus()}>Focus action</Button>
         <Button onClick={hit}>Denied action</Button>
         <Button onClick={hit} aria-disabled="true">Unavailable action</Button>
@@ -119,6 +127,9 @@ export default function AgentButtonFixture() {
         <Accordion label="Agent accordion" items={sections} />
         <Accordion label="Multiple accordion" items={sections} multiple />
         <Accordion label="Denied accordion" items={sections} />
+        <ActionMenu label="Agent menu" items={[{id: "one", label: "Menu first"}, {id: "two", label: "Menu second"}, {id: "locked", label: "Menu unavailable", disabled: true}]}
+          onSelect={value => { setMenuSelection(value); setMenuCalls(count => count + 1); }} />
+        <ActionMenu label="Denied menu" items={[{id: "denied", label: "Denied menu option"}]} onSelect={() => setMenuCalls(count => count + 1)} />
         <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
         <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
           <input aria-label="Draft" defaultValue="Original draft" />
@@ -139,6 +150,7 @@ export default function AgentButtonFixture() {
           <Button onClick={hit}>Ordinary action</Button>
         </form>
         <output data-testid="calls">{calls}</output>
+        <output data-testid="copied-calls">{copiedCalls}</output>
         <output data-testid="submits">{submits}</output>
         <output data-testid="checkbox-changes">{checkboxChanges}</output>
         <output data-testid="switch-changes">{switchChanges}</output>
@@ -162,6 +174,8 @@ export default function AgentButtonFixture() {
         <output data-testid="single-value">{single.join(",")}</output>
         <output data-testid="modal-changes">{modalChanges}</output>
         <output data-testid="nested-changes">{nestedChanges}</output>
+        <output data-testid="menu-selection">{menuSelection}</output>
+        <output data-testid="menu-calls">{menuCalls}</output>
       </main>
     </Yogurt>
   );

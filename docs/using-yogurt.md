@@ -76,6 +76,8 @@ Keep all colors on the same numbered palette. Neutral is the approved default. P
 
 The web Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle, ToggleGroup, Dialog, Sheet, Drawer, Popover and Accordion use the UI SDK behavior runtime with Yogurt's own presentation. An application that explicitly connects an agent must resolve its bridge and these controls to the same installed UI SDK core. Yogurt does not start a bridge or grant actions by rendering a component. The host owns access and effects. Other entries continue to use their existing behavior implementations while replacement is in progress. The built package retains third-party notices.
 
+Web ActionMenu uses shared inline popup and button behaviors with a Yogurt keyboard adapter. It is not yet based on the complete shared menu behavior.
+
 ### Connect an agent to web controls
 
 Create a bridge only in the browser, when the host has decided who can receive its results. The action policy is required. This example refuses every action until the host supplies its own policy.

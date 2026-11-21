@@ -19,6 +19,7 @@ import {
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { Dialog as SDKDialog, DialogContent } from "@ui-sdk/react/dialog";
 import { Popover as SDKPopover, PopoverContent } from "@ui-sdk/react/popover";
+import { Button as SDKButton } from "@ui-sdk/react/button";
 
 // packages/web/src/controls/action-menu-motion.ts
 function animateActionMenu(root) {
@@ -175,7 +176,7 @@ function ActionMenu({
     }
   }, [open, current?.id]);
   const options = items.map((item) => /* @__PURE__ */ jsx(
-    "button",
+    SDKButton,
     {
       type: "button",
       role: "menuitem",
@@ -190,7 +191,7 @@ function ActionMenu({
     },
     item.id
   ));
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(SDKPopover, { open, onOpenChange: setOpen, dismissible: false, children: /* @__PURE__ */ jsxs(
     "div",
     {
       ref: area,
@@ -225,15 +226,29 @@ function ActionMenu({
           }
         ),
         (open || expanding) && /* @__PURE__ */ jsx(
-          "div",
+          PopoverContent,
           {
+            inline: true,
+            keepMounted: expanding,
             id: menu,
             role: "menu",
             "aria-label": label,
             tabIndex: -1,
             inert: !open,
             className: expanding ? "yg-action-menu-fold" : "yg-anchored-panel",
-            onKeyDown: (e) => {
+            render: (props) => /* @__PURE__ */ jsx(
+              "div",
+              {
+                ...props,
+                id: menu,
+                role: "menu",
+                "aria-label": label,
+                tabIndex: -1,
+                hidden: false,
+                inert: !open
+              }
+            ),
+            onKeyDownCapture: (e) => {
               const index = enabled.findIndex((o) => o.id === current?.id);
               if (e.key === "Escape") {
                 e.preventDefault();
@@ -272,7 +287,7 @@ function ActionMenu({
         )
       ]
     }
-  );
+  ) });
 }
 function Popover({
   label,
@@ -287,7 +302,7 @@ function Popover({
   useEffect(() => {
     if (open) content.current?.focus();
   }, [open]);
-  return /* @__PURE__ */ jsx(SDKPopover, { open, onOpenChange: setOpen, children: /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(SDKPopover, { open, onOpenChange: setOpen, dismissible: false, children: /* @__PURE__ */ jsxs(
     "div",
     {
       ref: outer,

@@ -3,6 +3,7 @@ import { words } from "../foundation/words.js";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Dialog as SDKDialog, DialogContent } from "@ui-sdk/react/dialog";
 import { Popover as SDKPopover, PopoverContent } from "@ui-sdk/react/popover";
+import { Button as SDKButton } from "@ui-sdk/react/button";
 import { Icon, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
 import { animateActionMenu } from "./action-menu-motion.js";
@@ -87,7 +88,7 @@ export function ActionMenu({
     }
   }, [open, current?.id]);
   const options = items.map(item => (
-    <button
+    <SDKButton
       type="button"
       role="menuitem"
       key={item.id}
@@ -100,9 +101,10 @@ export function ActionMenu({
       }}
     >
       {item.label}
-    </button>
+    </SDKButton>
   ));
   return (
+    <SDKPopover open={open} onOpenChange={setOpen} dismissible={false}>
     <div
       ref={area}
       className={expanding ? "yg-action-menu-expanding" : "yg-anchor"}
@@ -129,14 +131,17 @@ export function ActionMenu({
         {expanding ? <span className="yg-action-menu-glyph" aria-hidden="true"><i /><i /></span> : <Icon name="down" />}
       </Button>
       {(open || expanding) && (
-        <div
+        <PopoverContent inline
+          keepMounted={expanding}
           id={menu}
           role="menu"
           aria-label={label}
           tabIndex={-1}
           inert={!open}
           className={expanding ? "yg-action-menu-fold" : "yg-anchored-panel"}
-          onKeyDown={(e) => {
+          render={(props) => <div {...props} id={menu} role="menu" aria-label={label}
+            tabIndex={-1} hidden={false} inert={!open} />}
+          onKeyDownCapture={(e) => {
             const index = enabled.findIndex((o) => o.id === current?.id);
             if (e.key === "Escape") {
               e.preventDefault();
@@ -174,9 +179,10 @@ export function ActionMenu({
           }}
         >
           {expanding ? <div className="yg-action-menu-options">{options}</div> : options}
-        </div>
+        </PopoverContent>
       )}
     </div>
+    </SDKPopover>
   );
 }
 export function Popover({
@@ -196,7 +202,7 @@ export function Popover({
     if (open) content.current?.focus();
   }, [open]);
   return (
-    <SDKPopover open={open} onOpenChange={setOpen}>
+    <SDKPopover open={open} onOpenChange={setOpen} dismissible={false}>
     <div
       ref={outer}
       className="yg-anchor"

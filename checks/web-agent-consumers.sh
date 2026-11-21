@@ -15,6 +15,7 @@ npm install --prefix "$fixture" --no-audit --no-fund --save-exact \
   vite@8.3.8 next@16.4.6 react@19.2.0 react-dom@19.2.0 "$fixture/$archive" > "$fixture/install.log" 2>&1 || {
   tail -50 "$fixture/install.log"; exit 1;
 }
+node "$fixture/node_modules/@openboa/yogurt/bin/yogurt.mjs" add button --target web --dir "$fixture" > "$fixture/registry-install.log" 2>&1
 cp checks/fixtures/agent-button-client.jsx "$fixture/app/fixture.jsx"
 cat > "$fixture/app/layout.jsx" <<'JS'
 import '@openboa/yogurt/styles.css';
