@@ -9,6 +9,19 @@
   initial-value: 0px;
 }
 
+/* Navigation remains readable when a host supplies a long label. */
+.yg-breadcrumb ol > li {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  flex-wrap: nowrap;
+}
+.yg-breadcrumb li > :is(a, span), .yg-nav-list a {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.yg-navbar { flex-wrap: wrap; }
+.yg-navbar > strong { flex: 1 1 min(12rem, 100%); }
+
 :where(.yg-tabs [role="tablist"], .yg-segment) {
   position: relative;
   isolation: isolate;

@@ -99,7 +99,7 @@ export function SelectionList({
   onValueChange: (ids: string[]) => void;
 }) {
   return (
-    <fieldset className="yg-fieldset">
+    <fieldset className="yg-fieldset yg-selection-list">
       <legend className="yg-label">{label}</legend>
       {options.map((o) => (
         <Checkbox

@@ -162,7 +162,15 @@
     minmax(min(100%, var(--yg-cell)), 1fr)
   );
 }
-.yg-grid-list > li { min-inline-size: 0; }
+.yg-grid-list > li { min-inline-size: 0; overflow-wrap: anywhere; }
+.yg-row > :is(.yg-leading, .yg-trailing) {
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+.yg-row > .yg-trailing { flex-wrap: wrap; justify-content: end; }
+.yg-selection-list .yg-choice label { min-inline-size: 0; overflow-wrap: anywhere; }
 .yg-section-line,
 .yg-value-row,
 .yg-code header,
@@ -181,7 +189,9 @@
 .yg-section-line,
 .yg-value-row {
   flex-wrap: wrap;
+  overflow-wrap: anywhere;
 }
+.yg-section-line > :not(div) { min-inline-size: 0; max-inline-size: 100%; }
 .yg-section-line .yg-heading {
   font: var(--yg-font-action);
 }

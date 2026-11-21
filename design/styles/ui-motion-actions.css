@@ -43,6 +43,12 @@
 }
 
 .yg-pagination-value { display: inline-block; font-variant-numeric: tabular-nums; }
+.yg-root :is(.yg-badge, .yg-count, .yg-status, .yg-legend) {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+.yg-progress > span { min-inline-size: 0; flex-wrap: wrap; overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: no-preference) {
   .yg-pagination-value { animation: yg-pagination-arrive var(--yg-motion-pagination) both; }
   @keyframes yg-pagination-arrive {

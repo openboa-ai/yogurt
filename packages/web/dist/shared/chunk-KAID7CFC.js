@@ -60,7 +60,7 @@ function SelectionList({
   selected,
   onValueChange
 }) {
-  return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset", children: [
+  return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset yg-selection-list", children: [
     /* @__PURE__ */ jsx("legend", { className: "yg-label", children: label }),
     options.map((o) => /* @__PURE__ */ jsx(
       Checkbox,

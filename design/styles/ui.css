@@ -255,6 +255,11 @@
   padding: 0;
   flex: none;
 }
+.yg-icon-button[data-control-size="compact"] { width: var(--yg-button-size-compact); min-block-size: var(--yg-button-size-compact); }
+.yg-icon-button[data-control-size="regular"] { width: var(--yg-button-size-regular); min-block-size: var(--yg-button-size-regular); }
+.yg-icon-button[data-control-size="comfortable"] { width: var(--yg-button-size-comfort); min-block-size: var(--yg-button-size-comfort); }
+.yg-icon-button[data-control-size="spacious"] { width: var(--yg-button-size-spacious); min-block-size: var(--yg-button-size-spacious); }
+.yg-icon-button[data-control-size="touch"] { width: var(--yg-button-size-touch); min-block-size: var(--yg-button-size-touch); }
 .yg-bottom-action {
   padding: var(--boa-space-12) 0
     max(var(--boa-space-12), env(safe-area-inset-bottom));
@@ -874,7 +879,10 @@
   height: 100dvh;
   max-height: 100dvh;
   align-content: start;
-  border-radius: var(--yg-radius-sheet) 0 0 var(--yg-radius-sheet);
+  border-start-start-radius: var(--yg-radius-sheet);
+  border-end-start-radius: var(--yg-radius-sheet);
+  border-start-end-radius: 0;
+  border-end-end-radius: 0;
 }
 @media (max-width: 38rem) {
   .yg-sheet[open],
