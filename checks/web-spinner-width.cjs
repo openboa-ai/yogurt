@@ -160,7 +160,9 @@ const esbuild = require("esbuild");
       assert.equal(await decrease.evaluate(el => el.matches(":focus-visible")), true);
       await page.emulateMedia({ reducedMotion: "no-preference" });
       await controlledHost.getByTestId("forward").click();
-      assert.notEqual(await result.locator("span:last-child").evaluate(el => getComputedStyle(el).animationName), "none");
+      assert.equal(await result.locator("span:last-child").textContent(), "100000");
+      assert.equal(await result.locator("span:last-child").evaluate(el => getComputedStyle(el).animationName), "none", "updated values settle immediately");
+      assert.equal(await result.locator(".yg-quantity-out").isVisible(), false, "the previous value stays hidden");
       await page.close();
     }
     console.log(JSON.stringify({ measurements, failures }));
