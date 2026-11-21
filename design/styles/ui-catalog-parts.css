@@ -67,8 +67,14 @@
   object-fit: cover;
 }
 .yg-avatar {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
   border-radius: 50%;
   font: var(--yg-font-action);
+}
+.yg-avatar img {
+  inline-size: 100%;
+  block-size: 100%;
 }
 .yg-gradient {
   background: linear-gradient(115deg, var(--yg-field), var(--yg-surface));
@@ -129,8 +135,9 @@
   font: var(--yg-font-reading);
   overflow-wrap: anywhere;
 }
-.yg-post > * + * {
-  margin-block-start: var(--boa-space-12);
+.yg-post > * + *,
+.yg-post > * + p {
+  margin-block-start: var(--yg-gap-stack);
 }
 .yg-grid-list,
 .yg-stepper,
@@ -230,13 +237,17 @@
 }
 .yg-bars li {
   display: grid;
-  grid-template-columns: minmax(0, auto) minmax(3rem, 1fr) auto;
+  grid-template-columns: minmax(0, auto) minmax(3rem, 1fr) minmax(0, auto);
   align-items: center;
   gap: var(--yg-gap-inline);
   min-height: var(--yg-size-compact);
 }
 .yg-bars li > span:first-child { min-inline-size: 0; overflow-wrap: anywhere; }
-.yg-bars li > span:last-child { font-variant-numeric: tabular-nums; }
+.yg-bars li > span:last-child {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
 .yg-bar-track {
   position: relative;
   height: var(--boa-space-8);
@@ -294,6 +305,9 @@
   overflow-wrap: anywhere;
 }
 .yg-attachment button.yg-file-name {
+  min-block-size: var(--yg-size-touch);
+  padding: 0;
+  align-content: center;
   border: 0;
   background: transparent;
   color: var(--yg-text);

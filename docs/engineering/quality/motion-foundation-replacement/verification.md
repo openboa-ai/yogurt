@@ -13,6 +13,7 @@ The replacement is in progress. The inventory is not a completion claim.
 - Guide search and category navigation use shared controls and are exercised at narrow and wide widths.
 - The first consistency pass aligns workspace rows, input surfaces, sidebar states, the composer, attachment progress and accordion feedback with existing shared roles. Browser checks cover narrow and wide layouts, attachment progress values and focus, pagination boundaries and keyboard use, and tooltip focus, interruption, viewport edges and reduced motion. The tooltip and composer were viewed locally; owner visual review and animation-frame comparison remain open.
 - Trace spacing, disclosure feedback and Progress value motion also use shared roles. Catalog and browser interaction checks passed; visual and intermediate-frame review of these two controls remains open.
+- Post spacing, long chart values, portrait and landscape avatar cropping, image fallback and the attachment open target were checked at 320 and 1440 px. The tests exercise browser layout and interaction; they do not establish full design approval.
 - The existing web gallery interaction suite exercises 78 examples at 320, 768 and 1440 px. It detects runtime failures, but it is not evidence of complete visual equivalence for all component states.
 - The token generator produces CSS and Zig dimensions from the shared source. A generated value does not establish a native rendering or interaction.
 
