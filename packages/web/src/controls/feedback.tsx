@@ -1,6 +1,7 @@
 "use client";
 import type { CSSProperties, ReactNode } from "react";
 import { Badge as SDKBadge } from "@openai/apps-sdk-ui/components/Badge";
+import { Progress as SDKProgress } from "@ui-sdk/react/progress";
 import { type Tone, Heading, Icon, Stack } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
 
@@ -99,7 +100,8 @@ export function Progress({
           </span>
         )}
       </span>
-      <progress value={current} max={limit} />
+      <SDKProgress value={current ?? null} max={limit}
+        render={(props) => <progress {...props} value={current} max={limit} />} />
       <span
         className="yg-progress-track"
         aria-hidden="true"

@@ -1,7 +1,7 @@
 "use client";
 import {
   Badge
-} from "./chunk-XSFUPADT.js";
+} from "./chunk-QVZBBQIY.js";
 import {
   Button
 } from "./chunk-4IPCB3MM.js";

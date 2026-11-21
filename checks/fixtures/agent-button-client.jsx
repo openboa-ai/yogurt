@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputOTP, NumericSpinner, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
+import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputOTP, NumericSpinner, Popover, Progress, RadioGroup, SearchField, SegmentedControl, SplitTextField, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 import { Button as CopiedButton } from "../src/components/ui/button";
 
@@ -27,7 +27,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Menu second" && step.action === "press") ||
       (step.label === "Agent hint" && step.action === "setOpen") ||
       (step.label === "Agent code" && step.action === "setValue") ||
-      (step.label === "Increase Agent quantity" && step.action === "press"),
+      (step.label === "Increase Agent quantity" && step.action === "press") ||
+      (step.label === "Agent team" && step.action === "setValue"),
   });
 }
 
@@ -73,6 +74,9 @@ export default function AgentButtonFixture() {
   const [formCode, setFormCode] = useState("12");
   const [quantity, setQuantity] = useState(1);
   const [quantityCalls, setQuantityCalls] = useState(0);
+  const [split, setSplit] = useState({ team: "AB", record: "12" });
+  const [splitCalls, setSplitCalls] = useState(0);
+  const [splitLast, setSplitLast] = useState("");
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
   const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
   const sections = options.map(option => ({ id: option.id, title: option.label, disabled: option.disabled, content: <input aria-label={`Section ${option.id}`} defaultValue="Original" /> }));
@@ -146,6 +150,12 @@ export default function AgentButtonFixture() {
         <NumericSpinner label="Agent quantity" value={quantity} min={0} max={7} step={2}
           onValueChange={next => { setQuantity(next); setQuantityCalls(count => count + 1); }} />
         <NumericSpinner label="Disabled quantity" value={1} disabled onValueChange={() => setQuantityCalls(count => count + 1)} />
+        <Progress label="Agent progress" value={2} max={4} />
+        <Progress label="Unknown progress" />
+        <Progress label="Completed progress" value={120} max={100} />
+        <Progress label="Default progress maximum" value={25} max={Number.NaN} />
+        <SplitTextField label="Agent reference" parts={[{id:"team",label:"Agent team",value:split.team,maxLength:3}, {id:"record",label:"Agent record",value:split.record,maxLength:4,inputMode:"numeric"}]}
+          onValueChange={(id, value) => { setSplit(current => ({ ...current, [id]: value })); setSplitCalls(count => count + 1); setSplitLast(id); }} />
         <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
         <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
           <input aria-label="Draft" defaultValue="Original draft" />
@@ -195,6 +205,8 @@ export default function AgentButtonFixture() {
         <output data-testid="menu-calls">{menuCalls}</output>
         <output data-testid="quantity-value">{quantity}</output>
         <output data-testid="quantity-calls">{quantityCalls}</output>
+        <output data-testid="split-calls">{splitCalls}</output>
+        <output data-testid="split-last">{splitLast}</output>
       </main>
     </Yogurt>
   );

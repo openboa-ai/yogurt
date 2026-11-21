@@ -14,7 +14,7 @@ import {
 } from "./shared/chunk-PBKNEVS3.js";
 import {
   Slider
-} from "./shared/chunk-TB3TEBQQ.js";
+} from "./shared/chunk-PWJHVOFY.js";
 import {
   dist_exports7 as dist_exports
 } from "./shared/chunk-F374JVJP.js";

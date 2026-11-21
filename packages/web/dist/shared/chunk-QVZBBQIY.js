@@ -88,6 +88,7 @@ var Badge = ({ children, className, variant = "soft", color = "secondary", size 
 };
 
 // packages/web/src/controls/feedback.tsx
+import { Progress as SDKProgress } from "@ui-sdk/react/progress";
 import { jsx, jsxs } from "react/jsx-runtime";
 function Badge2({
   children,
@@ -150,7 +151,14 @@ function Progress({
         "%"
       ] })
     ] }),
-    /* @__PURE__ */ jsx("progress", { value: current, max: limit }),
+    /* @__PURE__ */ jsx(
+      SDKProgress,
+      {
+        value: current ?? null,
+        max: limit,
+        render: (props) => /* @__PURE__ */ jsx("progress", { ...props, value: current, max: limit })
+      }
+    ),
     /* @__PURE__ */ jsx(
       "span",
       {

@@ -74,7 +74,7 @@ Include `@import("yogurt/button.zig").file` in `UiApp.Options.markup.sources`. T
 
 Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. Shared dimensions are generated from the UI bindings; use the component's documented roles rather than local copies of measurements. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. [Foundation replacement](engineering/quality/motion-foundation-replacement/spec.md)
 
-The web Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle, ToggleGroup, Dialog, Sheet, Drawer, Popover and Accordion use the UI SDK behavior runtime with Yogurt's own presentation. An application that explicitly connects an agent must resolve its bridge and these controls to the same installed UI SDK core. Yogurt does not start a bridge or grant actions by rendering a component. The host owns access and effects. Other entries continue to use their existing behavior implementations while replacement is in progress. The built package retains third-party notices.
+The web Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle, ToggleGroup, Dialog, Sheet, Drawer, Popover, Accordion, Progress and SplitTextField use the UI SDK behavior runtime with Yogurt's own presentation. An application that explicitly connects an agent must resolve its bridge and these controls to the same installed UI SDK core. Yogurt does not start a bridge or grant actions by rendering a component. The host owns access and effects. Other entries continue to use their existing behavior implementations while replacement is in progress. The built package retains third-party notices.
 
 Web ActionMenu uses shared inline popup and button behaviors with a Yogurt keyboard adapter. Web Tooltip uses shared inline popup state with a Yogurt activation adapter. Web InputOTP uses shared input behavior with an explicit secret mark and retains the Yogurt numeric and cursor adapter. NumericSpinner uses shared buttons with the existing Yogurt quantity adapter. They are not yet based on the complete shared menu, tooltip, one-time-code and numeric behaviors.
 
@@ -89,7 +89,7 @@ const agent = createYogurtAgent({ allow: () => false });
 const controls = agent.snapshot();
 ```
 
-The action policy controls requested changes; it does not filter snapshots or queries. The host must choose what information is exposed and handle any confirmation marks. An action's result does not authorize or confirm a product operation. Inspect the returned steps and host state, including partial results, before reporting an outcome. Importing the entry does not create a bridge or register browser tools. Native agent integration is not supplied by this Web entry.
+The action policy controls requested changes; it does not filter snapshots or queries. The host must choose what information is exposed and handle any confirmation marks. An action's result does not authorize or confirm a product operation. A successful request (`ok: true`) can contain a refused step (`result: false`); inspect each returned step and the observed host state, including partial results, before reporting an outcome. Importing the entry does not create a bridge or register browser tools. Native agent integration is not supplied by this Web entry.
 
 ## Check a consuming project
 

@@ -200,13 +200,23 @@ export function SplitTextField({
         {parts.map((p, i) => (
           <span key={p.id}>
             {i > 0 && <i aria-hidden="true">{separator}</i>}
-            <input
+            <SDKInput
               className="yg-standalone"
               aria-label={p.label}
               value={p.value}
               maxLength={p.maxLength}
               inputMode={p.inputMode}
-              onChange={(e) => onValueChange(p.id, e.target.value)}
+              onValueChange={(next, details) => {
+                if (p.maxLength !== undefined && p.maxLength >= 0 && next.length > p.maxLength) details.cancel();
+              }}
+              onChange={(e) => {
+                const next = e.currentTarget.value;
+                if (p.maxLength !== undefined && p.maxLength >= 0 && next.length > p.maxLength) {
+                  e.currentTarget.value = p.value;
+                  return;
+                }
+                onValueChange(p.id, next);
+              }}
             />
           </span>
         ))}

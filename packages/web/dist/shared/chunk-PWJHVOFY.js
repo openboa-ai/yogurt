@@ -183,14 +183,24 @@ function SplitTextField({
     /* @__PURE__ */ jsx("div", { className: "yg-split-inputs", children: parts.map((p, i) => /* @__PURE__ */ jsxs("span", { children: [
       i > 0 && /* @__PURE__ */ jsx("i", { "aria-hidden": "true", children: separator }),
       /* @__PURE__ */ jsx(
-        "input",
+        SDKInput,
         {
           className: "yg-standalone",
           "aria-label": p.label,
           value: p.value,
           maxLength: p.maxLength,
           inputMode: p.inputMode,
-          onChange: (e) => onValueChange(p.id, e.target.value)
+          onValueChange: (next, details) => {
+            if (p.maxLength !== void 0 && p.maxLength >= 0 && next.length > p.maxLength) details.cancel();
+          },
+          onChange: (e) => {
+            const next = e.currentTarget.value;
+            if (p.maxLength !== void 0 && p.maxLength >= 0 && next.length > p.maxLength) {
+              e.currentTarget.value = p.value;
+              return;
+            }
+            onValueChange(p.id, next);
+          }
         }
       )
     ] }, p.id)) })

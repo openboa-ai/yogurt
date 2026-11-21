@@ -1,8 +1,8 @@
 "use client";
 import {
   Bubble
-} from "../shared/chunk-5XWGPITE.js";
-import "../shared/chunk-XSFUPADT.js";
+} from "../shared/chunk-H3T76CDH.js";
+import "../shared/chunk-QVZBBQIY.js";
 import "../shared/chunk-F374JVJP.js";
 import "../shared/chunk-4IPCB3MM.js";
 import "../shared/chunk-GW3HPY4O.js";
