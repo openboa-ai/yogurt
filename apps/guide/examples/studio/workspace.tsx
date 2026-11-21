@@ -23,6 +23,7 @@ export function StudioWorkspace({ appearance }: { appearance: "light" | "dark" }
   const [trail, setTrail] = useState<{ views: View[]; index: number }>({ views: ["conversations"], index: 0 });
   const view = trail.views[trail.index];
   const [selected, setSelected] = useState("kai");
+  const [conversationToolbar, setConversationToolbar] = useState<HTMLDivElement | null>(null);
   const [files, setFiles] = useState(studioFiles);
   const [fileTarget, setFileTarget] = useState<{ id: string }>();
   const [search, setSearch] = useState(false);
@@ -53,7 +54,7 @@ export function StudioWorkspace({ appearance }: { appearance: "light" | "dark" }
   const fileSearchItems = files.map(item => ({ id: item.id, title: item.name, kind: "Files", view: "library" as const }));
   const matches = [...searchItems, ...fileSearchItems].filter(item => (kind === "All" || item.kind === kind) && item.title.toLowerCase().includes(query.toLowerCase()));
   const panels: Record<View, ReactNode> = {
-    conversations: <Inbox selected={selected} setSelected={setSelected} active={view === "conversations"} />,
+    conversations: <Inbox selected={selected} setSelected={setSelected} active={view === "conversations"} toolbarTarget={conversationToolbar} />,
     tasks: <Tasks />, workflows: <Workflows />, schedule: <Schedule />, usage: <Usage />,
     library: <Library files={files} target={fileTarget} onRemove={ids => setFiles(previous => previous.filter(item => !ids.includes(item.id)))} />, customers: <Customers />, extensions: <Connections />,
     providers: <Connections providers />, settings: <Settings onAppearance={setScheme} />, help: <Help />,
@@ -73,28 +74,35 @@ export function StudioWorkspace({ appearance }: { appearance: "light" | "dark" }
         </Y.SidebarContent>
       </>}>
       <div className="studio-main">
-        <header className="studio-toolbar">
-          <Y.Inline>
+        <header className="studio-toolbar" data-conversation={view === "conversations"}>
+          <Y.Inline className="studio-workspace-actions" gap={4}>
             <Y.SidebarTrigger label="Browse workspace" />
-            <Y.IconButton label="Previous view" icon="back" disabled={trail.index === 0} onClick={() => setTrail(previous => ({ ...previous, index: previous.index - 1 }))} />
-            <Y.IconButton label="Next view" icon="next" disabled={trail.index >= trail.views.length - 1} onClick={() => setTrail(previous => ({ ...previous, index: previous.index + 1 }))} />
-            <Y.Heading level={2} className="studio-view-title">{workspaceViews.find(item => item.id === view)?.label}</Y.Heading>
+            <Y.Inline className="studio-history" gap={2}>
+              <Y.IconButton label="Previous view" icon="back" disabled={trail.index === 0} onClick={() => setTrail(previous => ({ ...previous, index: previous.index - 1 }))} />
+              <Y.IconButton label="Next view" icon="next" disabled={trail.index >= trail.views.length - 1} onClick={() => setTrail(previous => ({ ...previous, index: previous.index + 1 }))} />
+            </Y.Inline>
+            {view !== "conversations" && <Y.Heading level={2} className="studio-view-title">{workspaceViews.find(item => item.id === view)?.label}</Y.Heading>}
           </Y.Inline>
-          <Y.Inline>
-            <Y.Button emphasis="quiet" onClick={() => setSearch(true)}><Y.Icon name="search" /> Search</Y.Button>
-            <Y.ActionMenu label="Workspace menu" items={[
+          <Y.Inline className="studio-workspace-menu" gap={4}>
+            <Y.IconButton label="Search" icon="search" onClick={() => setSearch(true)} />
+            <Y.ActionMenu label="Workspace menu" triggerText="Workspace" items={[
+              { id: "previous", label: "Previous view", disabled: trail.index === 0 },
+              { id: "next", label: "Next view", disabled: trail.index >= trail.views.length - 1 },
               ...workspaces.map(name => ({ id: "workspace:" + name, label: name })),
               { id: "add", label: "Add sample workspace" }, { id: "settings", label: "Workspace settings" },
               { id: "restart", label: "Restart sample" }, { id: "remove", label: "Remove sample workspace", disabled: server === "Sourdough Studio" },
             ]} onSelect={id => {
               setNotice("");
-              if (id === "add") setManage(true);
+              if (id === "previous") setTrail(previous => ({ ...previous, index: Math.max(0, previous.index - 1) }));
+              else if (id === "next") setTrail(previous => ({ ...previous, index: Math.min(previous.views.length - 1, previous.index + 1) }));
+              else if (id === "add") setManage(true);
               else if (id === "settings") navigate("settings");
               else if (id === "restart") setRestart(true);
               else if (id === "remove") setRemove(true);
               else setServer(id.slice("workspace:".length));
             }} />
           </Y.Inline>
+          {view === "conversations" && <div className="studio-conversation-slot" ref={setConversationToolbar} />}
         </header>
         {notice && <Y.Text className="studio-workspace-note" variant="help" role="status">{notice}</Y.Text>}
         {workspaceViews.map(item => <section key={item.id} hidden={item.id !== view} aria-label={item.label} className="studio-view" data-view={item.id}>

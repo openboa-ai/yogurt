@@ -33,3 +33,7 @@ In Studio, honor the same shared control and surface roles. The compact conversa
 ### Composed screen review
 
 Keep all 64 templates in reading order and give each composition only the width its contents need. Chart cards share a row with other specimens when space allows; broad workspace and record layouts can span the board. Keep visible title, controls and content on a shared reading edge. In Studio, use the same surface and inset roles to distinguish navigation, the conversation list, the content pane and overlays. Content remains reachable at narrow widths, and view and inspector transitions honor reduced motion.
+
+### Studio conversation framing
+
+Use one Studio toolbar for the workspace and the active conversation. Keep the two navigation controls distinguishable by accessible name and preserve conversation actions and history. In a narrow frame, let the toolbar wrap into two groups without compressing the text or touch targets. The transcript, reply context, and composer share a reading width. Keep short transcripts close to the composer and allow long transcripts to scroll without losing the composer or the jump-to-latest action. Keep the inspector focus behavior and the existing fixture boundary.

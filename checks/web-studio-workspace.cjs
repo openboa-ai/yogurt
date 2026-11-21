@@ -27,8 +27,28 @@ async function exercise(browser, width) {
     for (const name of names) await go(name);
 
     const inbox = await go("Conversations");
+    const toolbar = app.locator(".studio-toolbar");
     const composer = inbox.getByRole("textbox", { name: "Message Kai" });
-    if (width >= 780) assert(await composer.evaluate(el => el.getBoundingClientRect().bottom <= innerHeight), "composer must fit in desktop viewport");
+    const conversations = toolbar.getByRole("button", { name: "Browse conversations" });
+    await conversations.click();
+    if (width >= 780) {
+      assert.equal(await conversations.getAttribute("aria-expanded"), "false");
+      assert(await composer.evaluate(el => el.getBoundingClientRect().bottom <= innerHeight), "composer must fit in desktop viewport");
+    } else {
+      const drawer = page.getByRole("dialog", { name: "Conversation list" });
+      await drawer.waitFor();
+      await drawer.getByRole("button", { name: "Close conversation list" }).click();
+      assert(await conversations.evaluate(el => document.activeElement === el), "closing the conversation list restores toolbar focus");
+    }
+    if (width >= 780) await conversations.click();
+    const geometry = await inbox.evaluate(region => {
+      const composer = region.querySelector(".yg-composer").getBoundingClientRect();
+      const transcript = region.querySelector(".yg-transcript").getBoundingClientRect();
+      const latest = region.querySelector(".yg-message:last-of-type").getBoundingClientRect();
+      return { aligned: Math.abs(composer.left - transcript.left) <= 1 && Math.abs(composer.width - transcript.width) <= 1, gap: composer.top - latest.bottom };
+    });
+    assert(geometry.aligned, "conversation and composer should use the same reading column");
+    assert(geometry.gap >= 0 && geometry.gap <= 24, "latest message should sit close to the composer");
     assert.equal(await inbox.getByRole("button", { name: "Jump to latest" }).count(), 0);
     const source = inbox.getByRole("button", { name: "Open morning brief" });
     await source.click();
@@ -45,7 +65,7 @@ async function exercise(browser, width) {
     await composer.fill("Please compare the timestamps.");
     await inbox.getByRole("button", { name: "Send", exact: true }).click();
     await inbox.getByRole("region", { name: "Kai transcript" }).getByText(/I added your note/).waitFor();
-    await inbox.getByRole("button", { name: "New thread" }).click();
+    await toolbar.getByRole("button", { name: "New thread" }).click();
     await inbox.getByRole("textbox", { name: "Message Thread 1" }).fill("Use the observation log.");
     await inbox.getByRole("button", { name: "Attach", exact: true }).click();
     await page.getByRole("dialog", { name: "Attach a sample file" }).getByRole("button", { name: /Observation log/ }).click();

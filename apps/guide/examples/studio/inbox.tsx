@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import * as Y from "@openboa/yogurt";
 import { commands, conversations, options, studioFiles, type Conversation, type Entry } from "./fixtures";
 
 type Panel = "Files" | "Threads" | "Agent settings" | "Pinned messages" | "Members" | "Computer";
 type CreateKind = typeof commands[number]["id"];
 
-export function Inbox({ selected, setSelected, active }: { selected: string; setSelected: (id: string) => void; active: boolean }) {
+export function Inbox({ selected, setSelected, active, toolbarTarget }: {
+  selected: string; setSelected: (id: string) => void; active: boolean; toolbarTarget: HTMLDivElement | null;
+}) {
   const [items, setItems] = useState(conversations);
   const [folders, setFolders] = useState<string[]>([]);
   const [query, setQuery] = useState("");
@@ -193,17 +196,17 @@ export function Inbox({ selected, setSelected, active }: { selected: string; set
         icon={<Y.Icon name="copy" />} onSelect={() => { setQuery(""); setFilter("All"); }} />)}</Y.SidebarGroup>}
     </Y.SidebarContent>}>
     <div className="studio-conversation" ref={frame}>
-      <Y.Inline className="studio-conversation-head">
-        <Y.Inline><Y.SidebarTrigger label="Browse conversations" />
-          {current.kind === "agent" && <Y.AgentAvatar agent={current.art} size={44} state={gazeFor(current.id)} />}
-          <Y.Stack gap={2}><Y.Heading level={2}>{thread || current.name}</Y.Heading><Y.Text variant="help">{thread ? current.name : current.role}</Y.Text></Y.Stack>
+      {active && toolbarTarget && createPortal(<Y.Inline className="studio-conversation-head">
+        <Y.Inline className="studio-conversation-identity" gap={4}><Y.SidebarTrigger label="Browse conversations" />
+          {current.kind === "agent" && <Y.AgentAvatar agent={current.art} size={32} state={gazeFor(current.id)} />}
+          <Y.Stack gap={2} className="studio-conversation-name"><Y.Heading level={2}>{thread || current.name}</Y.Heading><Y.Text variant="help">{thread ? current.name : current.role}</Y.Text></Y.Stack>
         </Y.Inline>
-        <Y.Inline>
+        <Y.Inline className="studio-conversation-actions" gap={4}>
           <Y.IconButton icon="plus" label="New thread" onClick={startThread} />
-          <Y.IconButton icon="bookmark" label="Pinned messages" aria-pressed={panel === "Pinned messages"} onClick={event => { setFile(undefined); if (panel === "Pinned messages") closePanel(); else openPanel("Pinned messages", event.currentTarget); }} />
-          <Y.ActionMenu label="Conversation details" triggerText="Details" items={options("Files", "Threads", "Computer", current.kind === "agent" ? "Agent settings" : "Members")} onSelect={id => { setFile(undefined); openPanel(id as Panel); }} />
+          <span className="studio-direct-pins"><Y.IconButton icon="bookmark" label="Pinned messages" aria-pressed={panel === "Pinned messages"} onClick={event => { setFile(undefined); if (panel === "Pinned messages") closePanel(); else openPanel("Pinned messages", event.currentTarget); }} /></span>
+          <Y.ActionMenu label="Conversation details" triggerText="Details" items={options("Files", "Threads", "Computer", current.kind === "agent" ? "Agent settings" : "Members", "Pinned messages")} onSelect={id => { setFile(undefined); openPanel(id as Panel); }} />
         </Y.Inline>
-      </Y.Inline>
+      </Y.Inline>, toolbarTarget)}
       <div className="studio-thread-layout" data-panel={Boolean(panel) && inspectorInline}>
         <Y.Stack gap={12} className="studio-thread">
           <Y.Transcript label={current.name + " transcript"} revision={messages.length} readingAnchor="when-away" key={threadKey}>

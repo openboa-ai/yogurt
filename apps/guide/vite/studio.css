@@ -42,6 +42,11 @@
   background: var(--yg-canvas);
   border-start-end-radius: var(--yg-radius-panel);
 }
+.studio-workspace-actions, .studio-workspace-menu, .studio-history { flex: none; flex-wrap: nowrap; }
+.studio-toolbar[data-conversation="true"] .studio-workspace-menu { margin-inline-start: 0; }
+.studio-toolbar[data-conversation="true"] .studio-conversation-slot { margin-inline-start: var(--yg-gap-stack); }
+.studio-workspace-menu { margin-inline-start: auto; }
+.studio-conversation-slot { flex: 1; min-inline-size: 0; }
 .studio-view-title { margin-inline-start: var(--boa-space-4); font: var(--yg-font-heading); }
 .studio-view {
   flex: 1;
@@ -63,16 +68,21 @@
 .studio-inbox .yg-sidebar-item { min-block-size: var(--yg-size-featured); }
 .studio-attention-dot { inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--yg-action); }
 .studio-conversation {
-  padding: var(--yg-gap-inline) var(--studio-inset) var(--yg-gap-stack);
+  padding: 0 var(--studio-inset) var(--yg-gap-panel);
   min-inline-size: 0;
   min-block-size: 0;
   block-size: 100%;
   display: flex;
   flex-direction: column;
-  gap: var(--boa-space-12);
 }
 .studio-conversation-head, .studio-split { justify-content: space-between; }
-.studio-conversation-head { min-block-size: 48px; flex: none; }
+.studio-conversation-head, .studio-conversation-identity, .studio-conversation-actions { flex-wrap: nowrap; }
+.studio-conversation-head { min-inline-size: 0; gap: var(--yg-gap-tight); }
+.studio-conversation-identity, .studio-conversation-name { min-inline-size: 0; }
+.studio-conversation-identity { flex: 1; }
+.studio-conversation-identity > .yg-icon-button, .studio-conversation-actions { flex: none; }
+.studio-conversation-name .yg-heading { font: var(--yg-font-card-title); }
+.studio-conversation-name :is(.yg-heading, .yg-text) { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .studio-thread-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 0fr);
@@ -89,14 +99,40 @@
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) auto;
   inline-size: 100%;
-  max-inline-size: 43rem;
+  max-inline-size: 40rem;
   margin-inline: auto;
   min-inline-size: 0;
   min-block-size: 0;
 }
 .studio-thread:has(> .yg-inline) { grid-template-rows: minmax(0, 1fr) auto auto; }
 .studio-thread .yg-transcript { position: relative; min-block-size: 0; }
-.studio-thread .yg-transcript > .yg-scroll { block-size: 100%; max-block-size: none; padding-inline: var(--boa-space-8); }
+/* Auto margin consumes spare height without clipping earlier messages when the thread scrolls. */
+.studio-thread .yg-transcript > .yg-scroll {
+  display: flex;
+  flex-direction: column;
+  block-size: 100%;
+  max-block-size: none;
+  padding-block: var(--yg-gap-control) var(--yg-gap-tight);
+  padding-inline: var(--yg-inset-compact);
+}
+.studio-thread .yg-transcript > .yg-scroll > * { flex-shrink: 0; }
+.studio-thread .yg-transcript > .yg-scroll > :first-child { margin-block-start: auto; }
+.studio-thread .yg-message[data-variant="sent"] { padding-inline-start: 0; }
+.studio-thread .yg-message[data-variant="sent"] > :first-child,
+.studio-thread .yg-message[data-variant="sent"] .yg-message-content { justify-self: end; }
+.studio-thread .yg-message[data-variant="sent"] .yg-message-body { display: grid; }
+.studio-thread .yg-message[data-variant="sent"] .yg-message-actions { justify-content: flex-end; }
+@media (hover: hover) and (pointer: fine) {
+  .studio-thread .yg-message > :first-child { padding-inline-end: calc(3 * var(--yg-size-compact) + var(--yg-gap-inline)); }
+  .studio-thread .yg-message[data-variant="sent"] > :first-child { padding-inline: calc(3 * var(--yg-size-compact) + var(--yg-gap-inline)) 0; }
+  .studio-thread .yg-message-actions {
+    position: absolute;
+    inset-block-start: var(--yg-gap-tight);
+    inset-inline-end: 0;
+    margin: 0;
+  }
+  .studio-thread .yg-message[data-variant="sent"] .yg-message-actions { inset-inline: 0 auto; }
+}
 .studio-thread .yg-message { animation: studio-view-in var(--yg-change) var(--yg-arrive) both; }
 .studio-thread .yg-reading-anchor {
   position: absolute;
@@ -202,20 +238,21 @@
   .studio-demo :is(.studio-view, .studio-inspector, .yg-message, .studio-detail) { animation: none; }
   .studio-thread-layout { transition: none; }
 }
+@media (max-width: 46rem) {
+  .studio-toolbar[data-conversation="true"] { gap: var(--yg-gap-tight); }
+  .studio-toolbar[data-conversation="true"] .studio-conversation-slot { flex: 1 1 100%; margin-inline-start: 0; }
+  .studio-toolbar[data-conversation="true"] .studio-workspace-menu { margin-inline-start: auto; }
+}
 @media (max-width: 36rem) {
   .studio-page-heading { gap: var(--yg-gap-control) var(--yg-gap-panel); }
   .studio-page-heading > a { margin-inline-start: auto; }
-  .studio-toolbar > .yg-inline:first-child {
-    display: grid;
-    flex: 1 1 100%;
-    grid-template-columns: repeat(3, auto) minmax(0, 1fr);
-    gap: var(--yg-gap-tight);
-  }
-  .studio-view-title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .studio-conversation-head > .yg-inline:last-child { gap: var(--boa-space-4); }
+  .studio-toolbar[data-conversation="false"] .studio-workspace-actions { flex: 1 1 100%; }
+  .studio-view-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .studio-conversation-head .yg-icon-button { min-inline-size: 44px; min-block-size: 44px; }
+  .studio-conversation-actions { gap: var(--boa-space-2); }
+  .studio-toolbar[data-conversation="true"] .studio-history, .studio-direct-pins { display: none; }
+  .studio-thread .yg-composer-footer, .studio-thread .yg-composer-tools { gap: var(--yg-gap-tight); }
+  .studio-thread .yg-composer-tools .yg-button { padding-inline: var(--yg-gap-control); }
+  .studio-thread .yg-composer-tools .yg-shared-action { min-inline-size: var(--yg-size-featured); }
   .studio-view .yg-inline > .yg-field { max-inline-size: 100%; }
 }
