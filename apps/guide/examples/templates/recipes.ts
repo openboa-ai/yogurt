@@ -17,7 +17,7 @@ export const recipeFamilies = [
     ["preferences", "Display preferences", "Keep appearance and density choices near their preview.", "select", "switch"],
     ["notifications", "Notification settings", "Let people choose the updates they receive.", "switch"],
     ["appointment", "Book an appointment", "Choose a date and an available time in that order.", "calendar", "select", "button"],
-    ["files", "Upload a file", "Keep an attachment picker beside its upload status.", "file-drop"],
+    ["upload-file", "Upload a file", "Keep an attachment picker beside its upload status.", "motion-file-drop"],
     ["shade", "Adjust a device", "Set the position of a connected shade.", "slider"],
     ["payout", "Payout threshold", "Set the minimum balance for an automatic payout.", "numeric-spinner", "button"],
     ["receiving", "Receiving method", "Choose where incoming payments arrive.", "radio-group"],

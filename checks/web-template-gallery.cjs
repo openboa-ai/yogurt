@@ -1,5 +1,8 @@
 const assert = require("node:assert/strict");
 const { chromium } = require("playwright-core");
+const components = require("../catalog/components.json");
+const motionComponents = require("../catalog/motion-components.json").components;
+const componentPaths = new Set([...components, ...motionComponents].map(item => "/components/" + item.id));
 
 const origin = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
 
@@ -25,6 +28,8 @@ async function checkGallery(browser, width) {
         await picker.selectOption(id);
         await stage.getByRole("heading", { name, exact: true }).first().waitFor();
         assert(await stage.locator(".yg-card").first().locator(":scope > :last-child > *").count(), id + " has no content");
+        const documented = await page.locator(".template-component-links a").evaluateAll(links => links.map(link => link.pathname));
+        assert(documented.length > 0 && documented.every(path => componentPaths.has(path)), id + " has a missing component page");
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), id + " overflows");
       }
       recipes += examples.length;
@@ -90,6 +95,9 @@ async function checkGallery(browser, width) {
     await stage.getByRole("searchbox", { name: "Find a release" }).fill("2.4");
     await stage.getByRole("cell", { name: "Workspace 2.4" }).waitFor();
     assert.equal(await stage.getByRole("cell", { name: "Workspace 2.3" }).count(), 0);
+
+    await page.goto(origin + "/templates/files");
+    await page.getByRole("heading", { name: "File tree", exact: true }).waitFor();
 
     await page.goto(origin + "/templates/dialog");
     const picker = stage.getByRole("button", { name: "Find a destination" });

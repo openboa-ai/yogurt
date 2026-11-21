@@ -66,7 +66,7 @@ export function FormRecipe({ recipe }: { recipe: Recipe }) {
         <Y.Inline><Y.Button disabled={!selected || saved} onClick={() => setSaved(true)}>Book appointment</Y.Button>
           {saved && <Y.Status tone="success">Reserved for {date} at {selected}.</Y.Status>}</Y.Inline>
       </Y.Stack>;
-    case "files":
+    case "upload-file":
       return <Y.Stack gap={12}>
         <FileDrop label="Choose a file" onFiles={setFiles} progress={files.length ? 1 : undefined} />
         {files.map(file => <Y.Text key={file.name} variant="help" role="status">{file.name} ready</Y.Text>)}
