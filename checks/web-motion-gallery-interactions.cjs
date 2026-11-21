@@ -217,7 +217,7 @@ const actions = {
     }));
     assert.notEqual(colors.foreground, colors.background);
   },
-  "number-stepper": async root => {await click(root,"Add guest");await root.locator(".motion-stepper-in").getByText("4").waitFor();},
+  "number-stepper": async root => {await click(root,"Add guest");await root.locator(".yg-quantity-in").getByText("4").waitFor();},
   "otp": async (root, page) => {
     const input = root.getByRole("textbox", {name:"Verification code"});
     await input.fill("12345");
@@ -304,7 +304,7 @@ const actions = {
   "prompt-box": async root => {const input=root.getByRole("textbox",{name:"Prompt"});await input.fill("Summarize the review");await input.press("Enter");await root.getByRole("status").getByText("Thinking").waitFor();await click(root,"Stop");await input.waitFor();},
   "quantity-stepper": async root => {await click(root,"Add one copy");await root.locator("output").getByText("2").waitFor();},
   "range-slider": root => press(root.getByRole("slider",{name:"Minimum price"}),"ArrowRight","200"),
-  "rating": root => select(root,"button","4 out of 5","aria-pressed"),
+  "rating": async root => { const item = root.getByRole("radio", {name: "4 of 5"}); await item.check(); assert(await item.isChecked()); },
   "read-along": async (root,page) => {
     const marker = root.locator(".extra-reading-marker");
     const start = await marker.evaluate(el=>el.style.getPropertyValue("--reading-left"));

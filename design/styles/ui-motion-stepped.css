@@ -88,7 +88,12 @@
 .yg-motion-range-heading { font-size: 16px; line-height: 20px; }
 .yg-motion-range-area { position: relative; height: 28px; margin-top: 52px; }
 .yg-motion-range-area input { position: absolute; inset: 0; height: 28px; min-height: 0; }
+.yg-motion-range:not([data-interval]) .yg-motion-range-area input {
+  inset-block: calc((28px - var(--yg-slider-hit-height)) / 2);
+  height: var(--yg-slider-hit-height);
+}
 .yg-motion-range-tip { position: absolute; bottom: 40px; transform: translateX(-50%); padding: 5px 10px; border-radius: 10px; background: var(--yg-inverse); color: var(--yg-on-inverse); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap; }
+.yg-motion-range:not([data-interval]) .yg-motion-range-tip:dir(rtl) { transform: translateX(50%); }
 @media (forced-colors: none) {
   .yg-motion-range input::-webkit-slider-thumb { width: var(--yg-slider-thumb-size); height: var(--yg-slider-thumb-size); margin-top: calc((var(--yg-slider-track-height) - var(--yg-slider-thumb-size)) / 2); border: 0; background: var(--yg-inverse); }
   .yg-motion-range input::-moz-range-thumb { width: var(--yg-slider-thumb-size); height: var(--yg-slider-thumb-size); border: 0; background: var(--yg-inverse); }
@@ -142,26 +147,16 @@
 .yg-motion-checklist-heading span { color: var(--yg-muted); font-size: 12px; }
 .yg-motion-checklist-heading b { color: var(--yg-text); font-variant-numeric: tabular-nums; }
 .yg-motion-checklist-item, .yg-motion-checklist-item:has(input:checked) { position: relative; min-height: var(--yg-list-row-height); gap: var(--yg-list-row-gap); padding: 0; border: 0; border-radius: 0; background: transparent; }
-.yg-motion-checklist-item input { position: absolute; width: var(--yg-checkbox-size); height: var(--yg-checkbox-size); margin: 0; opacity: 0; }
-.yg-motion-checklist-box { display: grid; place-items: center; flex: none; width: var(--yg-checkbox-size); height: var(--yg-checkbox-size); border-radius: var(--yg-checkbox-radius); background: var(--yg-field); color: var(--yg-on-inverse); transition: background-color var(--yg-change) var(--yg-settle), transform var(--yg-travel) var(--yg-arrive); }
-.yg-motion-checklist-box svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.8; stroke-dasharray: 18; stroke-dashoffset: 18; transition: stroke-dashoffset var(--yg-change) var(--yg-settle); }
-.yg-motion-checklist-item:has(input:checked) .yg-motion-checklist-box { background: var(--yg-inverse); }
-.yg-motion-checklist-item input:checked + .yg-motion-checklist-box svg { stroke-dashoffset: 0; transition-delay: 80ms; }
-.yg-motion-checklist-item input:focus-visible + .yg-motion-checklist-box { outline: 2px solid var(--yg-inverse); outline-offset: 2px; }
-.yg-motion-checklist-item:active .yg-motion-checklist-box { transform: scale(.85); }
-.yg-motion-checklist-text { position: relative; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--yg-change); }
-.yg-motion-checklist-text::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--yg-change) var(--yg-settle); }
-.yg-motion-checklist-item:has(input:checked) .yg-motion-checklist-text { color: var(--yg-muted); }
-.yg-motion-checklist-item:has(input:checked) .yg-motion-checklist-text::after {
+.yg-motion-checklist-item > label { position: relative; flex: 1; display: flex; align-items: center; min-height: var(--yg-list-row-height); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--yg-change); }
+.yg-motion-checklist-item > label > span { position: relative; overflow: hidden; text-overflow: ellipsis; }
+.yg-motion-checklist-item > label > span::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--yg-change) var(--yg-settle); }
+.yg-motion-checklist-item:has([role="checkbox"][data-state="checked"]) > label { color: var(--yg-muted); }
+.yg-motion-checklist-item:has([role="checkbox"][data-state="checked"]) > label > span::after {
   transform: scaleX(1);
   transition: transform var(--yg-motion-checklist-strike) 110ms;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-motion-checklist-box svg { transition: stroke-dashoffset var(--yg-motion-task-check); }
-}
 @media (prefers-reduced-motion: reduce) {
-  .yg-motion-password-slash, .yg-motion-password-meter i, .yg-motion-checklist-box, .yg-motion-checklist-box svg, .yg-motion-checklist-text, .yg-motion-checklist-text::after { transition: none !important; }
-  .yg-motion-checklist-item:active .yg-motion-checklist-box { transform: none; }
+  .yg-motion-password-slash, .yg-motion-password-meter i, .yg-motion-checklist-item > label, .yg-motion-checklist-item > label > span::after { transition: none !important; }
 }
 
 .yg-motion-range[data-interval] { background: var(--yg-raised-surface); }

@@ -91,19 +91,9 @@ function TagInput() {
   </form>;
 }
 function Stepper() {
-  const [{value, previous}, setCount] = useState({value: 3, previous: 3});
-  const step = (delta: number) => setCount(current => ({value: current.value + delta, previous: current.value}));
-  return <div className="motion-stepper">
-    <div><strong>Guests</strong><small>Choose up to 12 guests</small></div>
-    <div className="motion-stepper-actions">
-      <button type="button" aria-label="Remove guest" disabled={value === 0} onClick={() => step(-1)}>−</button>
-      <output aria-live="polite" data-decreasing={value < previous || undefined}>
-        {value !== previous && <span key={`old-${value}`} className="motion-stepper-out" aria-hidden="true">{previous}</span>}
-        <span key={value} className={value !== previous ? "motion-stepper-in" : undefined}>{value}</span>
-      </output>
-      <button type="button" aria-label="Add guest" disabled={value === 12} onClick={() => step(1)}>+</button>
-    </div>
-  </div>;
+  const [value, setValue] = useState(3);
+  return <Y.NumericSpinner label="Guests" help="Choose up to 12 guests" value={value} min={0} max={12}
+    decreaseLabel="Remove guest" increaseLabel="Add guest" onValueChange={setValue} />;
 }
 const times = ["Morning", "Midday", "Afternoon", "Evening"];
 const wheelRowHeight = 36;
@@ -377,7 +367,7 @@ function Toolbar() {
 }
 function Rating() {
   const [value, setValue] = useState(0);
-  return <div className="motion-extra"><span id="motion-rating-label">How was your experience?</span><div role="group" aria-labelledby="motion-rating-label" className="motion-extra-rating">{[1, 2, 3, 4, 5].map(n => <button key={n} type="button" aria-label={`${n} out of 5`} aria-pressed={value === n} data-filled={n <= value || undefined} onClick={() => setValue(n)}>{n <= value ? "★" : "☆"}</button>)}</div><span role="status">{value ? `${value} out of 5` : "Choose a rating"}</span></div>;
+  return <div className="motion-extra"><Y.Rating label="How was your experience?" value={value} onValueChange={setValue} showStatus /></div>;
 }
 export const extraControls: { id: string; title: string; body: ReactNode }[] = [
   { id: "invite-people", title: "Invite people", body: <InvitePeople /> },

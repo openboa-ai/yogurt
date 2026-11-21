@@ -351,6 +351,7 @@ export function ExtendedExample({
           value={number * 10}
           onValueChange={(v) => setNumber(v / 10)}
           unit="%"
+          presentation={variation ? "card" : "inline"}
         />
       );
     case "numeric-spinner":

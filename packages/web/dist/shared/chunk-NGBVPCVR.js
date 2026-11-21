@@ -7,24 +7,25 @@ import {
 import {
   Checkbox,
   Field
-} from "./chunk-Z3UHK76K.js";
+} from "./chunk-FRX6FSCQ.js";
 import {
   dist_exports12 as dist_exports
-} from "./chunk-5SWGMKHQ.js";
+} from "./chunk-4T4N3D6L.js";
 import {
   Button,
   IconButton
-} from "./chunk-XHKWNKXE.js";
+} from "./chunk-ZKE52UUY.js";
 import {
   Icon,
   cx
-} from "./chunk-3EP3O3HY.js";
+} from "./chunk-6UUZC5QN.js";
 
 // packages/web/src/controls/inputs.tsx
 import {
   useEffect,
   useId,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState
 } from "react";
@@ -203,17 +204,39 @@ function Slider({
   max = 100,
   step = 1,
   unit = "",
-  disabled
+  disabled,
+  presentation = "inline",
+  formatValue
 }) {
   const id = useId();
   const fill = max > min ? Math.max(0, Math.min(100, (value - min) / (max - min) * 100)) : 0;
+  const formatted = formatValue ? formatValue(value) : value + unit;
+  if (presentation === "card") {
+    return /* @__PURE__ */ jsxs("div", { className: "yg-motion-range", style: { "--yg-range-fill": `${fill}%` }, children: [
+      /* @__PURE__ */ jsx("div", { className: "yg-motion-range-heading", children: /* @__PURE__ */ jsx("label", { htmlFor: id, children: label }) }),
+      /* @__PURE__ */ jsxs("div", { className: "yg-motion-range-area", children: [
+        /* @__PURE__ */ jsx("span", { className: "yg-motion-range-tip", "aria-hidden": "true", style: { insetInlineStart: `${fill}%` }, children: formatted }),
+        /* @__PURE__ */ jsx(
+          "input",
+          {
+            id,
+            type: "range",
+            min,
+            max,
+            step,
+            value,
+            disabled,
+            "aria-valuetext": formatValue || unit ? formatted : void 0,
+            onChange: (event) => onValueChange(event.currentTarget.valueAsNumber)
+          }
+        )
+      ] })
+    ] });
+  }
   return /* @__PURE__ */ jsxs("div", { className: "yg-range", children: [
     /* @__PURE__ */ jsxs("div", { children: [
       /* @__PURE__ */ jsx("label", { htmlFor: id, className: "yg-label", children: label }),
-      /* @__PURE__ */ jsxs("output", { htmlFor: id, children: [
-        value,
-        unit
-      ] })
+      /* @__PURE__ */ jsx("output", { htmlFor: id, children: formatted })
     ] }),
     /* @__PURE__ */ jsx(
       "input",
@@ -226,7 +249,7 @@ function Slider({
         value,
         disabled,
         style: { "--yg-range-fill": `${fill}%` },
-        "aria-valuetext": unit ? value + unit : void 0,
+        "aria-valuetext": formatValue || unit ? formatted : void 0,
         onChange: (e) => onValueChange(e.target.valueAsNumber)
       }
     )
@@ -234,6 +257,9 @@ function Slider({
 }
 function NumericSpinner({
   label,
+  help,
+  decreaseLabel,
+  increaseLabel,
   value,
   min = 0,
   max = 99,
@@ -248,7 +274,10 @@ function NumericSpinner({
     previous.current = value;
   }, [value]);
   return /* @__PURE__ */ jsxs("div", { className: "yg-quantity", role: "group", "aria-label": label, children: [
-    /* @__PURE__ */ jsx("span", { className: "yg-label", children: label }),
+    /* @__PURE__ */ jsxs("span", { className: "yg-quantity-label", children: [
+      /* @__PURE__ */ jsx("span", { className: "yg-label", children: label }),
+      help && /* @__PURE__ */ jsx("span", { className: "yg-help", children: help })
+    ] }),
     /* @__PURE__ */ jsxs("div", { children: [
       /* @__PURE__ */ jsx(
         Button,
@@ -256,7 +285,7 @@ function NumericSpinner({
           emphasis: "soft",
           shape: "pill",
           size: "comfortable",
-          "aria-label": "Decrease " + label,
+          "aria-label": decreaseLabel ?? "Decrease " + label,
           disabled: disabled || value <= min,
           onClick: () => onValueChange(Math.max(min, value - increment)),
           children: "\u2212"
@@ -270,7 +299,7 @@ function NumericSpinner({
         IconButton,
         {
           icon: "plus",
-          label: "Increase " + label,
+          label: increaseLabel ?? "Increase " + label,
           emphasis: "soft",
           shape: "pill",
           size: "comfortable",
@@ -285,30 +314,100 @@ function Rating({
   label,
   value,
   onValueChange,
-  max = 5
+  max = 5,
+  showStatus = false
 }) {
   const id = useId(), count = Math.max(1, Math.min(10, Math.floor(max) || 5));
+  const [hovered, setHovered] = useState(0);
+  const root = useRef(null);
+  const [roller] = useState(() => spring(0, 260, 22));
+  const stars = useMemo(() => Array.from({ length: count }, () => ({
+    fill: spring(0, 300, 24),
+    press: spring(1, 520, 13)
+  })), [count]);
+  const shown = Math.max(0, Math.min(count, hovered || value));
+  const editable = Boolean(onValueChange);
+  useLayoutEffect(() => {
+    const node = root.current;
+    if (!node) return;
+    const glyphs = Array.from(node.querySelectorAll(".yg-rating svg"));
+    const springs = [roller, ...stars.flatMap((star) => [star.fill, star.press])];
+    roller.target = shown;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let stop;
+    const render = () => {
+      node.style.setProperty("--yg-rating-shown", String(roller.position));
+      stars.forEach((star, index) => {
+        const alpha = Math.min(1, Math.max(0, star.fill.position));
+        glyphs[index]?.style.setProperty("--yg-star-fill", `${alpha * 100}%`);
+        glyphs[index]?.style.setProperty("--yg-star-scale", String(star.press.position));
+      });
+    };
+    const timers = stars.map((star, index) => {
+      const on = index < shown;
+      const light = () => {
+        if (on && star.fill.target !== 1 && !reduced) {
+          star.press.position = 0.7;
+          star.press.velocity = 7;
+        }
+        star.fill.target = Number(on);
+      };
+      if (!on || reduced || index === 0) {
+        light();
+        return void 0;
+      }
+      return setTimeout(() => {
+        light();
+        stop?.();
+        stop = playSprings(springs, render);
+      }, index * 50);
+    });
+    stop = playSprings(springs, render);
+    return () => {
+      timers.forEach(clearTimeout);
+      stop?.();
+    };
+  }, [shown, stars, roller, editable]);
   if (!onValueChange)
     return /* @__PURE__ */ jsxs("span", { className: "yg-score", "aria-label": label, children: [
       value,
       " / ",
       count
     ] });
-  return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset", children: [
+  return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset", ref: root, children: [
     /* @__PURE__ */ jsx("legend", { className: "yg-label", children: label }),
-    /* @__PURE__ */ jsx("div", { className: "yg-rating", children: Array.from({ length: count }, (_, i) => /* @__PURE__ */ jsxs("label", { "data-filled": i < value || void 0, children: [
-      /* @__PURE__ */ jsx(
-        "input",
-        {
-          type: "radio",
-          name: id,
-          "aria-label": i + 1 + " of " + count,
-          checked: value === i + 1,
-          onChange: () => onValueChange(i + 1)
-        }
-      ),
-      /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: i < value ? "\u2605" : "\u2606" })
-    ] }, i)) })
+    /* @__PURE__ */ jsx("div", { className: "yg-rating", onPointerLeave: () => setHovered(0), children: Array.from({ length: count }, (_, i) => /* @__PURE__ */ jsxs(
+      "label",
+      {
+        "data-filled": i < shown || void 0,
+        onPointerEnter: (event) => {
+          if (event.pointerType === "mouse") setHovered(i + 1);
+        },
+        children: [
+          /* @__PURE__ */ jsx(
+            "input",
+            {
+              type: "radio",
+              name: id,
+              "aria-label": i + 1 + " of " + count,
+              checked: value === i + 1,
+              onChange: () => onValueChange(i + 1)
+            }
+          ),
+          /* @__PURE__ */ jsx("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", children: /* @__PURE__ */ jsx("path", { d: "m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z" }) })
+        ]
+      },
+      i
+    )) }),
+    showStatus && /* @__PURE__ */ jsx(
+      "span",
+      {
+        className: "yg-help yg-rating-status",
+        role: "status",
+        "aria-label": value ? `${value} of ${count} selected` : "Choose a rating",
+        children: /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: ["Choose a rating", ...Array.from({ length: count }, (_, i) => `${i + 1} of ${count} selected`)].map((text) => /* @__PURE__ */ jsx("span", { children: text }, text)) })
+      }
+    )
   ] });
 }
 function Agreement({

@@ -21,6 +21,18 @@ const assert = require("node:assert/strict");
       assert.notEqual(await control.getAttribute("aria-checked"), before);
       await page.emulateMedia({ forcedColors: "active" });
       assert.equal(await control.evaluate(el => getComputedStyle(el).borderWidth), "1px");
+      await page.emulateMedia({ forcedColors: "none", reducedMotion: "reduce" });
+      await control.press("Space");
+      assert.equal(await control.getAttribute("aria-checked"), before);
+      assert.equal(await control.locator(".yg-checkbox-check").evaluate(el => getComputedStyle(el).strokeDashoffset), "0px");
+      const variation = page.locator(".variation .specimen");
+      const form = variation.getByRole("form", { name: "Checkbox form" });
+      assert.equal(await form.evaluate(el => new FormData(el).get("notes")), "include");
+      const notes = form.getByRole("checkbox", { name: "Include notes" });
+      await notes.uncheck();
+      assert.equal(await form.evaluate(el => new FormData(el).get("notes")), null);
+      assert.equal(await variation.getByRole("checkbox", { name: "Some records selected" }).getAttribute("aria-checked"), "mixed");
+      assert(await variation.getByRole("checkbox", { name: "Unavailable option" }).isDisabled());
       await page.close();
     }
     console.log("Checkbox dimensions, keyboard and forced colors verified at 320 and 1440 px.");

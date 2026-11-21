@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type 
 import { createRoot } from "react-dom/client";
 import {
   ActionMenu, Button, Command, Icon, IconButton, InputOTP,
-  ProjectMark, SegmentedControl, SidebarItem, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
+  ProjectMark, SearchField, Link, SegmentedControl, SidebarItem, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
 } from "@openboa/yogurt";
 import {
   ActivityIsland, CheckboxList, CommandButton, CopyButton, DetentDial, ExpandCard, FanCards, FileDrop,
@@ -16,6 +16,7 @@ import { extraGestures } from "./examples/motion-extra-gestures";
 import { extraUtilities } from "./examples/motion-extra-utilities";
 import { SpringInputExample } from "./examples/spring-field";
 import { NotificationStackExample } from "./examples/notification-stack";
+import { guideHref, locationId, navigateSection, sectionHref } from "./routing";
 
 const pages = [
   {id: "overview", label: "Overview"},
@@ -532,9 +533,9 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
 const patterns = demos.flatMap(section => section.items.map(item => ({ ...item, section })));
 
 function locationPattern() {
-  const hash = window.location.hash.slice(1);
-  return patterns.find(pattern => pattern.id === hash)?.id ??
-    demos.find(section => section.id === hash)?.items[0]?.id ?? "task-list";
+  const id = locationId("motion");
+  return patterns.find(pattern => pattern.id === id)?.id ??
+    demos.find(section => section.id === id)?.items[0]?.id ?? (id || "task-list");
 }
 
 function Gallery() {
@@ -545,7 +546,7 @@ function Gallery() {
   const [indexOpen, setIndexOpen] = useState(false);
   const heading = useRef<HTMLHeadingElement>(null);
   const term = query.trim().toLowerCase();
-  const current = patterns.find(pattern => pattern.id === selected)!;
+  const current = patterns.find(pattern => pattern.id === selected);
   const matches = demos.map(section => ({
     ...section,
     items: term ? section.items.filter(item =>
@@ -558,11 +559,12 @@ function Gallery() {
       setQuery("");
     }
     window.addEventListener("hashchange", followHash);
-    return () => window.removeEventListener("hashchange", followHash);
+    window.addEventListener("popstate", followHash);
+    return () => { window.removeEventListener("hashchange", followHash); window.removeEventListener("popstate", followHash); };
   }, []);
 
   function choose(id: string) {
-    if (window.location.hash !== "#" + id) window.history.pushState(null, "", "#" + id);
+    navigateSection("motion", id);
     setSelected(id);
     setIndexOpen(false);
     setQuery("");
@@ -581,15 +583,15 @@ function Gallery() {
   return <Yogurt appearance={appearance} className="motion-patterns-page">
     <main>
       <header className="motion-patterns-header">
-        <a className="motion-pattern-brand" href="components.html">
+        <Link className="motion-pattern-brand" href={sectionHref("components")}>
           <ProjectMark project="openboa" size={26} /> Yogurt
-        </a>
+        </Link>
         <nav aria-label="Yogurt">
-          <a href="components.html">Components</a>
-          <a href="workflows.html">Workflows</a>
-          <a href="motion-patterns.html" aria-current="page">Patterns</a>
-          <a href="motion-comparison.html">Compare motion</a>
-          <a href="agents.html">Agents</a>
+          <Link href={sectionHref("components")}>Components</Link>
+          <Link href={guideHref("workflows")}>Workflows</Link>
+          <Link href={sectionHref("motion")} aria-current="page">Patterns</Link>
+          <Link href={guideHref("motion-comparison")}>Compare motion</Link>
+          <Link href={guideHref("agents")}>Agents</Link>
         </nav>
         <IconButton label={appearance === "dark" ? "Use light appearance" : "Use dark appearance"}
           icon={appearance === "dark" ? "sun" : "moon"}
@@ -597,27 +599,26 @@ function Gallery() {
       </header>
       <div className="motion-pattern-layout">
         <aside className="motion-pattern-index" data-open={indexOpen}>
-          <button className="motion-index-toggle" type="button" aria-expanded={indexOpen} aria-controls="pattern-directory"
+          <Button className="motion-index-toggle" emphasis="quiet" size="compact" type="button" aria-expanded={indexOpen} aria-controls="pattern-directory"
             onClick={() => setIndexOpen(value => !value)}>
             <Icon name="menu" /> Browse patterns <Icon name="down" />
-          </button>
+          </Button>
           <div id="pattern-directory" className="motion-index-directory">
             <p className="motion-index-title">Motion patterns</p>
-            <label className="motion-pattern-search">
-              <Icon name="search" />
-              <input type="search" aria-label="Find a pattern" placeholder="Find a pattern" value={query}
-                onChange={event => setQuery(event.target.value)}
+            <div className="motion-pattern-search">
+              <SearchField label="Find a pattern" placeholder="Find a pattern" value={query}
+                onValueChange={setQuery}
                 onKeyDown={event => {
                   if (event.key === "Enter" && term && matches[0]) choose(matches[0].items[0].id);
                 }} />
-            </label>
+            </div>
             <nav aria-label="Pattern index">
-              {matches.map(section => <details key={section.id} open={!!term || current.section.id === section.id}>
+              {matches.map(section => <details key={section.id} open={!!term || current?.section.id === section.id}>
                 <summary>{section.title}<Icon name="down" /></summary>
                 <ul>
                   {section.items.map(item => <li key={item.id}>
-                    <a href={`#${item.id}`} aria-current={selected === item.id ? "location" : undefined}
-                      onClick={event => followLink(event, item.id)}>{item.title}</a>
+                    <Link href={sectionHref("motion", item.id)} aria-current={selected === item.id ? "location" : undefined}
+                      onClick={event => followLink(event, item.id)}>{item.title}</Link>
                   </li>)}
                 </ul>
               </details>)}
@@ -626,7 +627,7 @@ function Gallery() {
           </div>
         </aside>
         <div className="motion-pattern-main">
-          <header className="motion-pattern-intro">
+          {current ? <><header className="motion-pattern-intro">
             <p>{current.section.title}</p>
             <h1 ref={heading} tabIndex={-1}>{current.title}</h1>
             {current.detail && <p className="motion-pattern-detail">{current.detail}</p>}
@@ -635,6 +636,8 @@ function Gallery() {
             aria-label={current.title} data-wide={current.wide || undefined}>
             <div className="motion-pattern-stage"><div className="motion-pattern-sample">{current.body}</div></div>
           </article>
+          </> : <header className="motion-pattern-intro"><h1 ref={heading} tabIndex={-1}>Pattern not found</h1>
+            <p>Choose a pattern from the index.</p></header>}
         </div>
       </div>
     </main>

@@ -444,6 +444,8 @@
   border-radius: var(--yg-card-corner);
   background: var(--yg-raised-surface);
 }
+.yg-quantity-label { display: grid; gap: var(--yg-gap-tight); min-width: 0; }
+.yg-quantity-label > span { overflow-wrap: anywhere; }
 .yg-quantity > div > .yg-button {
   flex: none;
   min-inline-size: var(--yg-quantity-action-size);
@@ -471,6 +473,7 @@
   .yg-quantity output[data-decreasing] { --yg-quantity-edge: -14px; }
   .yg-quantity-in { animation: yg-quantity-enter var(--yg-motion-stepper-spin) both; }
   .yg-quantity-out { animation: yg-quantity-exit var(--yg-motion-stepper-spin) both; }
+  .yg-root .yg-quantity > div > .yg-button:active:not(:disabled) { transform: scale(.9); box-shadow: none; }
 }
 @keyframes yg-quantity-enter { from { opacity: 0; translate: 0 var(--yg-quantity-edge); } }
 @keyframes yg-quantity-exit {
@@ -480,16 +483,14 @@
 .yg-rating {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--yg-gap-control);
+  gap: var(--yg-gap-tight);
 }
 .yg-rating label {
   position: relative;
   display: grid;
   place-items: center;
-  width: var(--yg-size-regular);
-  height: var(--yg-size-regular);
-  font-size: 28px;
-  color: var(--yg-muted);
+  width: var(--yg-size-touch);
+  height: var(--yg-size-touch);
 }
 .yg-rating input {
   position: absolute;
@@ -497,9 +498,18 @@
   opacity: 0;
   cursor: pointer;
 }
-.yg-rating [data-filled] {
-  color: var(--yg-signal-rating);
+.yg-rating label > svg {
+  pointer-events: none;
+  inline-size: 28px;
+  block-size: 28px;
+  scale: var(--yg-star-scale, 1);
+  fill: color-mix(in srgb, var(--yg-signal-rating) var(--yg-star-fill, 0%), var(--yg-field));
+  stroke: color-mix(in srgb, var(--yg-signal-rating) var(--yg-star-fill, 0%), var(--yg-muted));
+  stroke-width: 1.4;
+  stroke-linejoin: round;
 }
+.yg-rating-status { display: block; block-size: 20px; overflow: clip; margin-block-start: var(--yg-gap-tight); }
+.yg-rating-status > span { display: grid; grid-auto-rows: 20px; translate: 0 calc(-20px * var(--yg-rating-shown, 0)); }
 .yg-rating label:has(:focus-visible) {
   outline: var(--boa-stroke-focus) solid var(--yg-inverse);
   border-radius: var(--yg-radius-small);

@@ -3,12 +3,12 @@ import {
   IconButton,
   clsx_default,
   wrapTextNodeSiblings
-} from "./chunk-XHKWNKXE.js";
+} from "./chunk-ZKE52UUY.js";
 import {
   Heading,
   Icon,
   Stack
-} from "./chunk-3EP3O3HY.js";
+} from "./chunk-6UUZC5QN.js";
 
 // node_modules/@openai/apps-sdk-ui/dist/es/components/Badge/index.js
 import { jsx as _jsx } from "react/jsx-runtime";

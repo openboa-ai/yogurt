@@ -74,7 +74,7 @@ Include `@import("yogurt/button.zig").file` in `UiApp.Options.markup.sources`. T
 
 Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. Shared dimensions are generated from the UI bindings; use the component's documented roles rather than local copies of measurements. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. [Foundation replacement](engineering/quality/motion-foundation-replacement/spec.md)
 
-The web adapter uses the actual Button, Input, Textarea, Switch, Checkbox, RadioGroup, SegmentedControl and Badge implementations from OpenAI Apps SDK UI 0.2.2. It binds their anatomy to Yogurt’s own styles. Other entries use platform elements or Yogurt compositions. The built package retains third-party notices.
+The web adapter uses the actual Button, Input, Textarea, Switch, RadioGroup, SegmentedControl and Badge implementations from OpenAI Apps SDK UI 0.2.2. It binds their anatomy to Yogurt’s own styles. Other entries use platform elements or Yogurt compositions. The built package retains third-party notices.
 
 ## Check a consuming project
 

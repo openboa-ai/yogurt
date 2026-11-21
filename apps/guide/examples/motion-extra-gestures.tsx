@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
-import { Button } from "@openboa/yogurt";
+import { Button, Rating as SharedRating } from "@openboa/yogurt";
 import { playSprings, spring } from "../../../packages/web/src/foundation/spring-motion.js";
 
 function Exposure() {
@@ -77,64 +77,10 @@ function Toolbar() {
 }
 function Rating() {
   const [value, setValue] = useState(0);
-  const [hovered, setHovered] = useState(0);
-  const root = useRef<HTMLFieldSetElement>(null);
-  const [roller] = useState(() => spring(0,260,22));
-  const [stars] = useState(() => Array.from({length:5}, () => ({
-    fill: spring(0,300,24), press: spring(1,520,13),
-  })));
-  const shown = hovered || value;
-  useLayoutEffect(() => {
-    const node = root.current;
-    if (!node) return;
-    const glyphs = Array.from(node.querySelectorAll<SVGSVGElement>("svg"));
-    const springs = [roller,...stars.flatMap(star=>[star.fill,star.press])];
-    roller.target = shown;
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let stop: (()=>void) | undefined;
-    function render() {
-      node?.style.setProperty("--yg-rating-shown",String(roller.position));
-      stars.forEach((star,index)=>{
-        const alpha = Math.min(1,Math.max(0,star.fill.position));
-        glyphs[index]?.style.setProperty("--yg-star-fill",`${alpha*100}%`);
-        glyphs[index]?.style.setProperty("--yg-star-scale",String(star.press.position));
-      });
-    }
-    const timers = stars.map((star,i) => {
-      const on = i < shown;
-      function light() {
-        if (on && star.fill.target !== 1 && !reduced) {
-          star.press.position=.7;
-          star.press.velocity=7;
-        }
-        star.fill.target=Number(on);
-      }
-      if (!on || reduced || i === 0) { light(); return undefined; }
-      return setTimeout(()=>{
-        light();
-        stop?.();
-        stop=playSprings(springs,render);
-      },i*50);
-    });
-    stop = playSprings(springs,render);
-    return ()=>{timers.forEach(clearTimeout);stop?.();};
-  },[roller,shown,stars]);
-  return <fieldset ref={root} className="extra-rating"><legend>Rate this view</legend>
-    <div onPointerLeave={()=>setHovered(0)}>
-      {[1,2,3,4,5].map(n => <label key={n} onPointerEnter={event=>{if (event.pointerType==="mouse")setHovered(n);}}>
-        <input type="radio" name="extra-rating" value={n} checked={value === n} onChange={() => setValue(n)} />
-        <svg viewBox="0 0 24 24" aria-hidden="true" data-filled={n <= shown || undefined}>
-          <path d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z" />
-        </svg>
-        <span className="extra-sr">{n} of 5</span>
-      </label>)}
-    </div>
-    <p className="extra-rating-roll" aria-label={value ? `${value} of 5 selected` : "Choose a rating"}>
-      <span aria-hidden="true">{["Choose a rating", ...[1,2,3,4,5].map(n=>`${n} of 5 selected`)]
-        .map(text=><span key={text}>{text}</span>)}</span>
-    </p>
-    <Button size="compact" emphasis="quiet" onClick={() => {setHovered(0);setValue(0);}}>Clear</Button>
-  </fieldset>;
+  return <div className="extra-gesture">
+    <SharedRating label="Rate this view" value={value} onValueChange={setValue} showStatus />
+    <Button size="compact" emphasis="quiet" onClick={() => setValue(0)}>Clear</Button>
+  </div>;
 }
 function Quantity() {
   const [value, setValue] = useState(1);

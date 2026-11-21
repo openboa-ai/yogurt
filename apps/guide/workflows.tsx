@@ -7,6 +7,7 @@ import {
 import { PromptBox, StreamingReply, TaskList } from "@openboa/yogurt/motion-patterns";
 import { CollectionBrowser } from "../../packages/recipes/collection-browser/web";
 import { DecisionReview } from "../../packages/recipes/decision-review/web";
+import { sectionHref } from "./routing";
 
 const flows = [
   { id: "records", label: "Find a record", icon: "search", components: [["sidebar", "Sidebar"], ["search-field", "Search field"], ["select", "Select"], ["list-row", "List row"], ["collection-browser", "Collection browser"]] },
@@ -160,8 +161,8 @@ function Workflows() {
   }, []);
   return <Yogurt appearance={dark ? "dark" : "light"} className="workflow-root">
     <header className="workflow-header">
-      <a className="workflow-identity" href="components.html"><ProjectMark project="openboa" size={26} />Yogurt</a>
-      <nav aria-label="Guide"><a href="components.html">Components</a><a href="motion-patterns.html">Motion</a></nav>
+      <a className="workflow-identity" href={sectionHref("components")}><ProjectMark project="openboa" size={26} />Yogurt</a>
+      <nav aria-label="Guide"><a href={sectionHref("components")}>Components</a><a href={sectionHref("motion")}>Motion</a></nav>
       <IconButton icon={dark ? "sun" : "moon"} label={dark ? "Use light appearance" : "Use dark appearance"} onClick={() => setDark(!dark)} />
     </header>
     <main className="workflow-body">
@@ -176,7 +177,7 @@ function Workflows() {
           {flow.id === "records" ? <RecordsWorkflow /> : flow.id === "request" ? <RequestWorkflow /> : <DecisionWorkflow />}
         </div>
         <nav className="workflow-parts" aria-label="Components used">
-          {flow.components.map(([id, label]) => <a key={id} href={id.includes("#") ? id : "components.html#" + id}>{label}</a>)}
+          {flow.components.map(([id, label]) => <a key={id} href={id.includes("#") ? sectionHref("motion", id.split("#")[1]) : sectionHref("components", id)}>{label}</a>)}
         </nav>
       </SidebarLayout>
     </main>

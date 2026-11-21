@@ -16,6 +16,7 @@ __pycache__/
 
 # Yogurt build and package output
 /site/
+/.vite-guide/
 /.site-*/
 node_modules/
 *.tgz

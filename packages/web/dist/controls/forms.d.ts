@@ -21,12 +21,13 @@ type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & {
     size?: ControlSize;
 };
 export declare function TextField({ id, label, help, error, className, size, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
-export declare function SearchField({ id, label, help, error, value, onValueChange, placeholder, disabled, name, size, }: FieldInfo & {
+export declare function SearchField({ id, label, help, error, value, onValueChange, placeholder, disabled, name, onKeyDown, size, }: FieldInfo & {
     value: string;
     onValueChange: (value: string) => void;
     placeholder?: string;
     disabled?: boolean;
     name?: string;
+    onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     size?: ControlSize;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Textarea({ id, label, help, error, className, ...props }: FieldInfo & ComponentProps<"textarea">): import("react/jsx-runtime").JSX.Element;
@@ -52,7 +53,7 @@ export declare function Switch({ label, help, onCheckedChange, ...props }: Check
     defaultChecked?: boolean;
     onCheckedChange?: (value: boolean) => void;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Checkbox({ label, ...props }: Checkable & {
+export declare function Checkbox({ label, id, className, disabled, ...props }: Checkable & {
     checked?: boolean | "indeterminate";
     defaultChecked?: boolean | "indeterminate";
     onCheckedChange?: (value: boolean | "indeterminate") => void;

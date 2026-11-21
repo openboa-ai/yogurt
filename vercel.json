@@ -1,7 +1,21 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "true",
-  "buildCommand": "node apps/guide/tooling/build-site.mjs",
-  "outputDirectory": "site"
+  "installCommand": "npm ci",
+  "buildCommand": "npm run guide:build",
+  "outputDirectory": "site",
+  "rewrites": [
+    { "source": "/components", "destination": "/components.html" },
+    { "source": "/components/:id", "destination": "/components.html" },
+    { "source": "/motion", "destination": "/motion-patterns.html" },
+    { "source": "/motion/:id", "destination": "/motion-patterns.html" },
+    { "source": "/workflows", "destination": "/workflows.html" },
+    { "source": "/agents", "destination": "/agents.html" },
+    { "source": "/motion-comparison", "destination": "/motion-comparison.html" },
+    { "source": "/system", "destination": "/system.html" },
+    { "source": "/library", "destination": "/library.html" },
+    { "source": "/adoption", "destination": "/adoption.html" },
+    { "source": "/playbook", "destination": "/playbook.html" },
+    { "source": "/emoji", "destination": "/emoji.html" }
+  ]
 }

@@ -1,5 +1,5 @@
 .extra-gesture { display: grid; gap: var(--yg-gap-stack); width: min(100%, 320px); }
-.extra-gesture label { display: flex; justify-content: space-between; gap: var(--yg-gap-stack); font-weight: 600; }
+.extra-gesture > label { display: flex; justify-content: space-between; gap: var(--yg-gap-stack); font-weight: 600; }
 .extra-gesture input[type="range"] { width: 100%; accent-color: var(--yg-inverse); }
 .extra-exposure-preview { height: 96px; border-radius: var(--yg-radius-panel); background: linear-gradient(135deg, var(--boa-color-neutral-800), var(--boa-color-neutral-300)); transition: filter var(--yg-change) ease; }
 .extra-disclosure { border: 0; border-radius: var(--yg-radius-control); padding: var(--yg-inset-regular); }
@@ -7,23 +7,6 @@
 .extra-toolbar { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline); margin-top: 10px; }
 .extra-toolbar > button, .extra-counter button { border: 0; background: var(--yg-field); color: inherit; border-radius: var(--yg-radius-control); padding: var(--boa-space-8) var(--yg-inset-regular); cursor: pointer; }
 .extra-toolbar > button[aria-pressed="true"] { background: var(--yg-field); }
-.extra-rating { border: 0; padding: 0; margin: 0; }
-.extra-rating legend { font-weight: 600; }
-.extra-rating > div { display: flex; gap: var(--yg-gap-tight); margin-top: 8px; }
-.extra-rating label { position: relative; cursor: pointer; font-size: 30px; color: var(--yg-inverse); }
-.extra-rating [data-filled] { color: var(--yg-signal-rating); }
-.extra-rating input { position: absolute; opacity: 0; }
-.extra-rating input:focus-visible + span { outline: 2px solid currentColor; outline-offset: 2px; }
-.extra-rating input:focus-visible + svg { outline: 2px solid var(--yg-inverse); outline-offset: 2px; }
-.extra-rating label > svg {
-  inline-size: 28px; block-size: 28px; scale: var(--yg-star-scale, 1);
-  fill: color-mix(in srgb, var(--yg-signal-rating) var(--yg-star-fill, 0%), var(--yg-field));
-  stroke: color-mix(in srgb, var(--yg-signal-rating) var(--yg-star-fill, 0%), var(--yg-muted));
-  stroke-width: 1.4; stroke-linejoin: round;
-}
-.extra-rating-roll { block-size: 20px; overflow: clip; }
-.extra-rating-roll > span { display: grid; grid-auto-rows: 20px; translate: 0 calc(-20px * var(--yg-rating-shown, 0)); }
-.extra-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .extra-counter { display: flex; align-items: center; gap: var(--boa-space-20); }
 .extra-counter button:disabled { opacity: .45; cursor: default; }
 .extra-gesture-page, .extra-zoom-frame, .extra-card { border: 0; background: var(--yg-field); border-radius: var(--yg-radius-panel); padding: var(--yg-inset-panel); }
@@ -35,16 +18,14 @@
 .extra-card span { font-size: .8em; }
 @media (prefers-reduced-motion: reduce) { .extra-exposure-preview, .extra-zoom-frame > div { transition: none; } }
 
-.extra-gesture, .extra-rating { font-size: 14px; line-height: 20px; }
+.extra-gesture { font-size: 14px; line-height: 20px; }
 .extra-gesture { gap: var(--yg-gap-stack); }
-.extra-gesture p, .extra-rating p { margin: 0; }
+.extra-gesture p { margin: 0; }
 .extra-gesture label output { font-variant-numeric: tabular-nums; }
 .extra-disclosure, .extra-gesture-page, .extra-zoom-frame, .extra-card { box-sizing: border-box; border-radius: var(--yg-radius-control); padding: var(--yg-inset-regular); }
 .extra-toolbar { gap: var(--yg-gap-inline); margin-top: 8px; }
 .extra-toolbar > button, .extra-counter button { min-height: 36px; font: inherit; font-size: 13px; line-height: 18px; }
 .extra-counter output { min-width: 20px; text-align: center; font-variant-numeric: tabular-nums; }
-.extra-rating label { display: grid; place-items: center; min-width: 36px; min-height: 36px; font-size: 26px; line-height: 1; }
-.extra-rating p { margin: 8px 0; color: var(--yg-muted); font-size: 13px; line-height: 18px; }
 .extra-gesture-page span, .extra-card small { font-size: 12px; line-height: 16px; }
 .extra-gesture-page p { margin-top: 8px; }
 .extra-card { gap: var(--yg-gap-stack); }
@@ -52,7 +33,7 @@
 .extra-gesture :is(button, input, summary):focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
 
 .extra-gesture { width: min(100%, 360px); gap: var(--boa-space-12); }
-.extra-gesture > label, .extra-gesture > span, .extra-rating legend { font: var(--yg-font-action); }
+.extra-gesture > label, .extra-gesture > span { font: var(--yg-font-action); }
 .extra-gesture input[type="range"] { min-block-size: var(--yg-size-touch); margin: 0; }
 .extra-gesture input[type="date"] { box-sizing: border-box; min-block-size: var(--yg-size-regular); width: 100%; padding: var(--boa-space-8) var(--boa-space-12); border: 0; border-radius: var(--yg-radius-control); background: var(--yg-field); color: var(--yg-text); font: inherit; }
 .extra-disclosure { background: var(--yg-raised-surface); }
@@ -61,7 +42,6 @@
 .extra-disclosure[open] summary::before { rotate: 90deg; }
 .extra-counter { gap: var(--boa-space-12); }
 .extra-counter button { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
-.extra-rating label { min-inline-size: var(--yg-size-touch); min-block-size: var(--yg-size-touch); }
 .extra-gesture-page { min-block-size: 96px; }
 .extra-gesture-page span, .extra-card small { color: var(--yg-muted); opacity: 1; }
 .extra-card { background: var(--yg-field); }

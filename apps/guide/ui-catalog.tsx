@@ -25,6 +25,7 @@ import { WorkspaceExample } from "./examples/workspace-examples";
 import { AgentProfileExample } from "./examples/agent-profile-example";
 import { RunInspectorExample } from "./examples/run-inspector-example";
 import { SidebarExample } from "./examples/sidebar-example";
+import { guideHref, locationId, navigateSection, sectionHref } from "./routing";
 const scopedExamples = {
   "agent-row": AgentWorkspaceExample,
   "runtime-panel": AgentWorkspaceExample,
@@ -98,6 +99,8 @@ const variants = new Set([
   "textarea",
   "search-field",
   "select",
+  "checkbox",
+  "slider",
   "filter-bar",
   "switch",
   "list",
@@ -114,16 +117,8 @@ const variants = new Set([
   "help-text",
 ]);
 function keyFromHash() {
-  try {
-    const id =
-      decodeURIComponent(location.hash.slice(1)) ||
-      document.getElementById("yogurt-ui-library")?.dataset.initialComponent;
-    return id === "brand"
-      ? id
-      : (entries.find((e) => e.id === id)?.id ?? "button");
-  } catch {
-    return "button";
-  }
+  return locationId("components") ||
+    document.getElementById("yogurt-ui-library")?.dataset.initialComponent || "button";
 }
 // The embedded guide can run local form examples while its frame blocks navigation.
 function submitPreviewForm(event: MouseEvent<HTMLDivElement>) {
@@ -153,16 +148,19 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
     [showCode, setShowCode] = useState(false);
   const navigation = useRef<HTMLElement>(null);
   const entry = entries.find((e) => e.id === id) ?? entries[0];
+  const missing = id !== "brand" && !entries.some((item) => item.id === id);
   const ScopedExample = scopedExamples[id as keyof typeof scopedExamples];
   useEffect(() => {
     const listener = () => {
       const next = keyFromHash();
+      if (next === "yg-inspect") return;
       select(next);
       setMenu(false);
       setShowCode(false);
     };
     addEventListener("hashchange", listener);
-    return () => removeEventListener("hashchange", listener);
+    addEventListener("popstate", listener);
+    return () => { removeEventListener("hashchange", listener); removeEventListener("popstate", listener); };
   }, []);
   useEffect(() => {
     expand((all) =>
@@ -192,7 +190,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
     select(next);
     setMenu(false);
     setShowCode(false);
-    location.hash = next;
+    navigateSection("components", next);
   }
   const appearance = dark ? "dark" : "light";
   const tokenLabel =
@@ -224,8 +222,8 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
           >
             Brand &amp; tokens
           </Button>
-          <Link href="motion-patterns.html">Motion</Link>
-          <Link href="workflows.html">Workflows</Link>
+          <Link href={sectionHref("motion")}>Motion</Link>
+          <Link href={guideHref("workflows")}>Workflows</Link>
         </nav>
         <div className="header-actions">
           <IconButton
@@ -271,9 +269,10 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                     rows.map((e) => (
                       <Link
                         key={e.id}
-                        href={"#" + e.id}
+                        href={sectionHref("components", e.id)}
                         aria-current={e.id === id ? "page" : undefined}
                         onClick={(ev) => {
+                          if (ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.altKey) return;
                           ev.preventDefault();
                           go(e.id);
                         }}
@@ -290,7 +289,16 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
           </nav>
         </aside>
         <main id="yg-inspect" tabIndex={-1}>
-          {id === "brand" ? (
+          {missing ? (
+            <section className="catalog-intro">
+              <h1>Component not found</h1>
+              <p>Choose a component from the index.</p>
+              <Link href={sectionHref("components", "button")} onClick={event => {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault(); go("button");
+              }}>Browse components</Link>
+            </section>
+          ) : id === "brand" ? (
             <BrandTokens />
           ) : (
             <>
@@ -379,11 +387,11 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                   <Heading>Related actions</Heading>
                   <p className="yg-help">Use a dedicated action when the interaction has its own state.</p>
                   <div>
-                    <Link href="motion-patterns.html#copy-button">Copy</Link>
-                    <Link href="motion-patterns.html#cart-button">Quantity</Link>
-                    <Link href="motion-patterns.html#hold-button">Hold to confirm</Link>
-                    <Link href="motion-patterns.html#slide-confirm">Slide to confirm</Link>
-                    <Link href="motion-patterns.html#loading-to-success">Loading result</Link>
+                    <Link href={sectionHref("motion", "copy-button")}>Copy</Link>
+                    <Link href={sectionHref("motion", "cart-button")}>Quantity</Link>
+                    <Link href={sectionHref("motion", "hold-button")}>Hold to confirm</Link>
+                    <Link href={sectionHref("motion", "slide-confirm")}>Slide to confirm</Link>
+                    <Link href={sectionHref("motion", "loading-to-success")}>Loading result</Link>
                   </div>
                 </section>
               )}

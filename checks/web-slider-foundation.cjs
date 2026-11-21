@@ -25,6 +25,16 @@ const assert = require("node:assert/strict");
       await page.keyboard.press("ArrowRight");
       assert(Number(await slider.inputValue()) > initial);
       assert.notEqual(await slider.evaluate(el => el.style.getPropertyValue("--yg-range-fill")), geometry.fill);
+      const card = page.locator(".variation .specimen").getByRole("slider", { name: "Preview volume" });
+      await card.waitFor();
+      assert((await card.boundingBox()).height >= 44);
+      assert.equal(await card.getAttribute("aria-valuetext"), "30%");
+      await card.focus();
+      await page.keyboard.press("ArrowRight");
+      assert.equal(await card.getAttribute("aria-valuetext"), "31%");
+      const cardBox = await card.boundingBox();
+      await card.click({ position: { x: cardBox.width * .75, y: cardBox.height / 2 } });
+      assert(Number(await card.inputValue()) > 50);
       await page.close();
     }
     console.log("Slider geometry and keyboard updates verified at 320 and 1440 px.");

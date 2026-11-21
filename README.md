@@ -12,10 +12,10 @@ Yogurt is OpenBoa’s design system and UI SDK. It gives projects shared rules f
 
 ## Getting started
 
-- **Design a screen** with the [design rules](DESIGN.md), [component gallery](https://yogurt.openboa.ai/components.html) and [product playbook](https://yogurt.openboa.ai/playbook.html).
+- **Design a screen** with the [design rules](DESIGN.md), [component gallery](https://yogurt.openboa.ai/components) and [product playbook](https://yogurt.openboa.ai/playbook).
 - **Build a product** using a pinned SDK revision. Follow the [Web setup](docs/using-yogurt.md#web) or [Zig and Vercel Native setup](docs/using-yogurt.md#zig-and-vercel-native-sdk).
 - **Use Yogurt with Codex** by installing the [Yogurt plugin](plugins/yogurt/README.md) and pointing it at the project's SDK pin.
-- **Make something on brand** with the [identity guide](https://yogurt.openboa.ai/), [design tokens](https://yogurt.openboa.ai/system.html) and [artwork and emoji](design/assets/README.md).
+- **Make something on brand** with the [identity guide](https://yogurt.openboa.ai/), [design tokens](https://yogurt.openboa.ai/system) and [artwork and emoji](design/assets/README.md).
 
 From an existing product, install the SDK at the full GitHub commit you want to use.
 
@@ -48,10 +48,18 @@ Run these commands from the repository root.
 ```sh
 npm ci
 npm run build
+npm run guide:dev
+```
+
+The guide uses React and Vite. To build and preview the hosted site locally:
+
+```sh
+npm run guide:build
+npm run guide:preview
 npm run check:ui
 ```
 
-Build the [offline guide](apps/guide/README.md#hosting) with `node apps/guide/tooling/build-site.mjs`, then open `site/index.html`. Use the [verification guide](checks/README.md) to test an installed SDK in an independent project.
+Use the [verification guide](checks/README.md) to test an installed SDK in an independent project. The generated component galleries can also be opened directly from `apps/guide/generated/`.
 
 ## Contributing
 

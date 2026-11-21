@@ -558,17 +558,25 @@
   background: var(--yg-inverse);
   border-color: var(--yg-inverse);
 }
-.yg-checkbox [data-state="checked"] > span {
-  width: 10px;
-  height: 6px;
-  border-left: 2px solid var(--yg-on-inverse);
-  border-bottom: 2px solid var(--yg-on-inverse);
-  transform: translateY(-1px) rotate(-45deg);
+.yg-checkbox [role="checkbox"] > span { display: grid; place-items: center; }
+.yg-checkbox [role="checkbox"] svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--yg-on-inverse);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.8;
 }
-.yg-checkbox [data-state="indeterminate"] > span {
-  width: 8px;
-  height: 2px;
-  background: var(--yg-on-inverse);
+.yg-checkbox-check { stroke-dasharray: 18; stroke-dashoffset: 18; }
+.yg-checkbox-mixed { opacity: 0; }
+.yg-checkbox [data-state="checked"] .yg-checkbox-check { stroke-dashoffset: 0; }
+.yg-checkbox [data-state="indeterminate"] .yg-checkbox-mixed { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-checkbox [role="checkbox"] { transition: background-color var(--yg-change) var(--yg-settle), transform var(--yg-travel) var(--yg-arrive); }
+  .yg-checkbox [role="checkbox"]:active:not(:disabled) { transform: scale(.85); }
+  .yg-checkbox-check { transition: stroke-dashoffset var(--yg-motion-task-check); }
+  .yg-checkbox [data-state="checked"] .yg-checkbox-check { transition-delay: 80ms; }
 }
 .yg-radio [role="radio"] > span {
   width: 6px;
@@ -1169,8 +1177,8 @@
     border-color: Highlight;
     background: Highlight;
   }
-  .yg-checkbox [data-state="checked"] > span { border-color: HighlightText; }
-  .yg-checkbox [data-state="indeterminate"] > span { background: HighlightText; }
+  .yg-checkbox [data-state="checked"] svg,
+  .yg-checkbox [data-state="indeterminate"] svg { stroke: HighlightText; }
   :is(.yg-input, .yg-select):focus-within,
   .yg-standalone:focus-visible {
     outline: var(--boa-stroke-focus) solid Highlight;

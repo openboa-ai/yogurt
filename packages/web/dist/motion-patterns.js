@@ -8,28 +8,33 @@ import {
   LoadingSuccessButton,
   SlideConfirm,
   StorageMeter
-} from "./shared/chunk-TJGFMF4C.js";
+} from "./shared/chunk-3VE4WPSJ.js";
 import {
   Command
-} from "./shared/chunk-W57WH7WH.js";
-import "./shared/chunk-YAAPSXDJ.js";
+} from "./shared/chunk-WG276ZZK.js";
+import {
+  Slider
+} from "./shared/chunk-NGBVPCVR.js";
+import "./shared/chunk-XCIPDTLZ.js";
 import {
   advanceSprings,
   playSprings,
   snap,
   spring
 } from "./shared/chunk-DRQJWO7S.js";
-import "./shared/chunk-Z3UHK76K.js";
+import {
+  Checkbox
+} from "./shared/chunk-FRX6FSCQ.js";
 import "./shared/chunk-5GJUJT3P.js";
 import {
   dist_exports10 as dist_exports
-} from "./shared/chunk-5SWGMKHQ.js";
+} from "./shared/chunk-4T4N3D6L.js";
 import {
   Button
-} from "./shared/chunk-XHKWNKXE.js";
+} from "./shared/chunk-ZKE52UUY.js";
 import {
   Icon
-} from "./shared/chunk-3EP3O3HY.js";
+} from "./shared/chunk-6UUZC5QN.js";
 
 // packages/web/src/patterns/motion-inputs.tsx
 import { useId, useLayoutEffect, useRef, useState } from "react";
@@ -1760,24 +1765,19 @@ function RangeSlider({
     if (presentation === "elastic") {
       return /* @__PURE__ */ jsx8(ElasticRange, { label, value, onChange, min, max, step, formatValue });
     }
-    return /* @__PURE__ */ jsxs8("div", { className: "yg-motion-range", style: { "--yg-range-fill": `${first}%` }, children: [
-      /* @__PURE__ */ jsx8("div", { className: "yg-motion-range-heading", children: /* @__PURE__ */ jsx8("label", { htmlFor: id, children: label }) }),
-      /* @__PURE__ */ jsxs8("div", { className: "yg-motion-range-area", children: [
-        /* @__PURE__ */ jsx8("span", { className: "yg-motion-range-tip", "aria-hidden": "true", style: { left: `${first}%` }, children: formatValue(value) }),
-        /* @__PURE__ */ jsx8(
-          "input",
-          {
-            id,
-            type: "range",
-            min,
-            max,
-            step,
-            value,
-            onChange: (event) => onChange(event.currentTarget.valueAsNumber)
-          }
-        )
-      ] })
-    ] });
+    return /* @__PURE__ */ jsx8(
+      Slider,
+      {
+        label,
+        value,
+        min,
+        max,
+        step,
+        onValueChange: onChange,
+        formatValue,
+        presentation: "card"
+      }
+    );
   }
   const joined = last - first < 25;
   const increment = step > 0 && Number.isFinite(step) ? step : 1;
@@ -1981,11 +1981,18 @@ function CheckboxList({ options, value, onChange }) {
         " done"
       ] })
     ] }),
-    options.map((option) => /* @__PURE__ */ jsxs8("label", { className: "yg-motion-checklist-item", children: [
-      /* @__PURE__ */ jsx8("input", { type: "checkbox", checked: value.includes(option.id), onChange: (event) => onChange(event.currentTarget.checked ? [...value, option.id] : value.filter((id) => id !== option.id)) }),
-      /* @__PURE__ */ jsx8("span", { className: "yg-motion-checklist-box", "aria-hidden": "true", children: /* @__PURE__ */ jsx8("svg", { viewBox: "0 0 24 24", children: /* @__PURE__ */ jsx8("path", { d: "M6 12.5l4 4L18 8" }) }) }),
-      /* @__PURE__ */ jsx8("span", { className: "yg-motion-checklist-text", children: option.label })
-    ] }, option.id))
+    options.map(
+      (option) => /* @__PURE__ */ jsx8(
+        Checkbox,
+        {
+          className: "yg-motion-checklist-item",
+          label: option.label,
+          checked: value.includes(option.id),
+          onCheckedChange: (checked) => onChange(checked === true ? [...value, option.id] : value.filter((id) => id !== option.id))
+        },
+        option.id
+      )
+    )
   ] });
 }
 function DetentDial({ options, value, onChange }) {

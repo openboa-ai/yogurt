@@ -584,10 +584,23 @@ async function checkColorRoles(browser, colorScheme) {
     await expectRole(count, "signal-warning", "color");
 
     const rating = await show("rating");
-    const fourStars = rating.getByRole("button", {name: "4 out of 5"});
-    await neutral(fourStars, "color");
-    await fourStars.click();
-    await expectRole(fourStars, "signal-rating", "color");
+    const fourStars = rating.getByRole("radio", {name: "4 of 5"});
+    const star = rating.locator(".yg-rating label").nth(3).locator("svg");
+    await fourStars.check();
+    await page.waitForFunction(() => document.querySelector('#rating .yg-rating label:nth-child(4) svg')?.style.getPropertyValue("--yg-star-fill") === "100%");
+    const colors = await star.evaluate(node => {
+      const sample = document.createElement("span");
+      sample.style.color = "var(--yg-signal-rating)";
+      node.parentElement.append(sample);
+      const canvas = document.createElement("canvas");
+      canvas.width = canvas.height = 1;
+      const ctx = canvas.getContext("2d");
+      const pixels = color => { ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); return Array.from(ctx.getImageData(0, 0, 1, 1).data); };
+      const result = [pixels(getComputedStyle(node).fill), pixels(getComputedStyle(sample).color)];
+      sample.remove();
+      return result;
+    });
+    assert.deepEqual(colors[0], colors[1], "Selected star uses the rating palette role");
 
     const files = await show("file-drop");
     const dropZone = files.locator(".yg-file-drop");

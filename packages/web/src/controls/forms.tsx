@@ -10,7 +10,7 @@ import {
 import { Input as SDKInput } from "@openai/apps-sdk-ui/components/Input";
 import { Textarea as SDKTextarea } from "@openai/apps-sdk-ui/components/Textarea";
 import { Switch as SDKSwitch } from "@openai/apps-sdk-ui/components/Switch";
-import { Checkbox as SDKCheckbox } from "@openai/apps-sdk-ui/components/Checkbox";
+import { Checkbox as RadixCheckbox } from "radix-ui";
 import { RadioGroup as SDKRadio } from "@openai/apps-sdk-ui/components/RadioGroup";
 import { Icon, type ControlSize, type Option, cx } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
@@ -95,6 +95,7 @@ export function SearchField({
   placeholder,
   disabled,
   name,
+  onKeyDown,
   size = "regular",
 }: FieldInfo & {
   value: string;
@@ -102,6 +103,7 @@ export function SearchField({
   placeholder?: string;
   disabled?: boolean;
   name?: string;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
   size?: ControlSize;
 }) {
   const ref = useRef<HTMLInputElement>(null);
@@ -119,6 +121,7 @@ export function SearchField({
           disabled={disabled}
           placeholder={placeholder}
           onChange={(e) => onValueChange(e.target.value)}
+          onKeyDown={onKeyDown}
           startAdornment={<Icon name="search" />}
           endAdornment={
             value && !disabled ? (
@@ -278,18 +281,29 @@ export function Switch({
 }
 export function Checkbox({
   label,
+  id,
+  className,
+  disabled,
   ...props
 }: Checkable & {
   checked?: boolean | "indeterminate";
   defaultChecked?: boolean | "indeterminate";
   onCheckedChange?: (value: boolean | "indeterminate") => void;
 }) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
   return (
-    <SDKCheckbox
-      {...props}
-      label={label}
-      className={cx("yg-choice yg-checkbox", props.className)}
-    />
+    <div className={cx("yg-choice yg-checkbox", className)} data-disabled={disabled || undefined}>
+      <RadixCheckbox.Root {...props} id={inputId} disabled={disabled}>
+        <RadixCheckbox.Indicator forceMount>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path className="yg-checkbox-check" d="M6 12.5l4 4L18 8" />
+            <path className="yg-checkbox-mixed" d="M7 12h10" />
+          </svg>
+        </RadixCheckbox.Indicator>
+      </RadixCheckbox.Root>
+      <label htmlFor={inputId}><span>{label}</span></label>
+    </div>
   );
 }
 export interface Choices {

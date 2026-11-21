@@ -3,6 +3,7 @@ import {
   useEffect,
   useId,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type ComponentProps,
@@ -220,6 +221,8 @@ export function Slider({
   step = 1,
   unit = "",
   disabled,
+  presentation = "inline",
+  formatValue,
 }: {
   label: string;
   value: number;
@@ -229,9 +232,25 @@ export function Slider({
   step?: number;
   unit?: string;
   disabled?: boolean;
+  presentation?: "inline" | "card";
+  formatValue?: (value: number) => string;
 }) {
   const id = useId();
   const fill = max > min ? Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100)) : 0;
+  const formatted = formatValue ? formatValue(value) : value + unit;
+  if (presentation === "card") {
+    return (
+      <div className="yg-motion-range" style={{ "--yg-range-fill": `${fill}%` } as CSSProperties}>
+        <div className="yg-motion-range-heading"><label htmlFor={id}>{label}</label></div>
+        <div className="yg-motion-range-area">
+          <span className="yg-motion-range-tip" aria-hidden="true" style={{ insetInlineStart: `${fill}%` }}>{formatted}</span>
+          <input id={id} type="range" min={min} max={max} step={step} value={value} disabled={disabled}
+            aria-valuetext={formatValue || unit ? formatted : undefined}
+            onChange={(event) => onValueChange(event.currentTarget.valueAsNumber)} />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="yg-range">
       <div>
@@ -239,8 +258,7 @@ export function Slider({
           {label}
         </label>
         <output htmlFor={id}>
-          {value}
-          {unit}
+          {formatted}
         </output>
       </div>
       <input
@@ -252,7 +270,7 @@ export function Slider({
         value={value}
         disabled={disabled}
         style={{ "--yg-range-fill": `${fill}%` } as CSSProperties}
-        aria-valuetext={unit ? value + unit : undefined}
+        aria-valuetext={formatValue || unit ? formatted : undefined}
         onChange={(e) => onValueChange(e.target.valueAsNumber)}
       />
     </div>
@@ -260,6 +278,9 @@ export function Slider({
 }
 export function NumericSpinner({
   label,
+  help,
+  decreaseLabel,
+  increaseLabel,
   value,
   min = 0,
   max = 99,
@@ -268,6 +289,9 @@ export function NumericSpinner({
   disabled,
 }: {
   label: string;
+  help?: string;
+  decreaseLabel?: string;
+  increaseLabel?: string;
   value: number;
   min?: number;
   max?: number;
@@ -281,13 +305,16 @@ export function NumericSpinner({
   useLayoutEffect(() => { previous.current = value; }, [value]);
   return (
     <div className="yg-quantity" role="group" aria-label={label}>
-      <span className="yg-label">{label}</span>
+      <span className="yg-quantity-label">
+        <span className="yg-label">{label}</span>
+        {help && <span className="yg-help">{help}</span>}
+      </span>
       <div>
         <Button
           emphasis="soft"
           shape="pill"
           size="comfortable"
-          aria-label={"Decrease " + label}
+          aria-label={decreaseLabel ?? "Decrease " + label}
           disabled={disabled || value <= min}
           onClick={() => onValueChange(Math.max(min, value - increment))}
         >
@@ -299,7 +326,7 @@ export function NumericSpinner({
         </output>
         <IconButton
           icon="plus"
-          label={"Increase " + label}
+          label={increaseLabel ?? "Increase " + label}
           emphasis="soft"
           shape="pill"
           size="comfortable"
@@ -315,14 +342,55 @@ export function Rating({
   value,
   onValueChange,
   max = 5,
+  showStatus = false,
 }: {
   label: string;
   value: number;
   onValueChange?: (value: number) => void;
   max?: number;
+  showStatus?: boolean;
 }) {
   const id = useId(),
     count = Math.max(1, Math.min(10, Math.floor(max) || 5));
+  const [hovered, setHovered] = useState(0);
+  const root = useRef<HTMLFieldSetElement>(null);
+  const [roller] = useState(() => spring(0, 260, 22));
+  const stars = useMemo(() => Array.from({ length: count }, () => ({
+    fill: spring(0, 300, 24), press: spring(1, 520, 13),
+  })), [count]);
+  const shown = Math.max(0, Math.min(count, hovered || value));
+  const editable = Boolean(onValueChange);
+  useLayoutEffect(() => {
+    const node = root.current;
+    if (!node) return;
+    const glyphs = Array.from(node.querySelectorAll<SVGSVGElement>(".yg-rating svg"));
+    const springs = [roller, ...stars.flatMap(star => [star.fill, star.press])];
+    roller.target = shown;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let stop: (() => void) | undefined;
+    const render = () => {
+      node.style.setProperty("--yg-rating-shown", String(roller.position));
+      stars.forEach((star, index) => {
+        const alpha = Math.min(1, Math.max(0, star.fill.position));
+        glyphs[index]?.style.setProperty("--yg-star-fill", `${alpha * 100}%`);
+        glyphs[index]?.style.setProperty("--yg-star-scale", String(star.press.position));
+      });
+    };
+    const timers = stars.map((star, index) => {
+      const on = index < shown;
+      const light = () => {
+        if (on && star.fill.target !== 1 && !reduced) {
+          star.press.position = .7;
+          star.press.velocity = 7;
+        }
+        star.fill.target = Number(on);
+      };
+      if (!on || reduced || index === 0) { light(); return undefined; }
+      return setTimeout(() => { light(); stop?.(); stop = playSprings(springs, render); }, index * 50);
+    });
+    stop = playSprings(springs, render);
+    return () => { timers.forEach(clearTimeout); stop?.(); };
+  }, [shown, stars, roller, editable]);
   if (!onValueChange)
     return (
       <span className="yg-score" aria-label={label}>
@@ -330,11 +398,12 @@ export function Rating({
       </span>
     );
   return (
-    <fieldset className="yg-fieldset">
+    <fieldset className="yg-fieldset" ref={root}>
       <legend className="yg-label">{label}</legend>
-      <div className="yg-rating">
+      <div className="yg-rating" onPointerLeave={() => setHovered(0)}>
         {Array.from({ length: count }, (_, i) => (
-          <label key={i} data-filled={i < value || undefined}>
+          <label key={i} data-filled={i < shown || undefined}
+            onPointerEnter={event => { if (event.pointerType === "mouse") setHovered(i + 1); }}>
             <input
               type="radio"
               name={id}
@@ -342,10 +411,17 @@ export function Rating({
               checked={value === i + 1}
               onChange={() => onValueChange(i + 1)}
             />
-            <span aria-hidden="true">{i < value ? "★" : "☆"}</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z" />
+            </svg>
           </label>
         ))}
       </div>
+      {showStatus && <span className="yg-help yg-rating-status" role="status"
+        aria-label={value ? `${value} of ${count} selected` : "Choose a rating"}>
+        <span aria-hidden="true">{["Choose a rating", ...Array.from({ length: count }, (_, i) => `${i + 1} of ${count} selected`)]
+          .map(text => <span key={text}>{text}</span>)}</span>
+      </span>}
     </fieldset>
   );
 }

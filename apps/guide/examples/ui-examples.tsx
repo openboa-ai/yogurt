@@ -393,6 +393,13 @@ export function Example({
         />
       );
     case "checkbox":
+      if (variation) {
+        return <Y.Stack gap={8}>
+          <form aria-label="Checkbox form"><Y.Checkbox label="Include notes" name="notes" value="include" defaultChecked /></form>
+          <Y.Checkbox label="Some records selected" checked="indeterminate" />
+          <Y.Checkbox label="Unavailable option" disabled />
+        </Y.Stack>;
+      }
       return (
         <Y.Checkbox
           label="Include archived views"

@@ -61,32 +61,9 @@
   font: var(--yg-font-action);
 }
 .motion-pattern-search {
-  display: flex;
-  align-items: center;
-  gap: var(--yg-gap-inline);
-  min-block-size: var(--yg-size-regular);
-  padding-inline: var(--yg-inset-compact);
-  border-radius: var(--yg-radius-control);
-  background: var(--yg-field);
-  color: var(--yg-muted);
-  cursor: text;
-}
-.motion-pattern-search:focus-within {
-  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
-  outline-offset: -2px;
-}
-.motion-pattern-search input {
-  inline-size: 100%;
   min-inline-size: 0;
-  block-size: var(--yg-size-regular);
-  padding: 0;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: var(--yg-text);
-  font: var(--yg-font-body);
 }
-.motion-pattern-search input:focus-visible { outline: none; }
+.motion-pattern-search .yg-label { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .motion-index-directory nav {
   display: grid;
   gap: var(--boa-space-4);
@@ -135,6 +112,8 @@
   font-weight: var(--boa-role-weight-ui);
 }
 .motion-index-toggle { display: none; }
+.motion-index-toggle .yg-button-label,
+.motion-index-toggle .yg-button-content { display: flex; inline-size: 100%; gap: var(--yg-gap-inline); }
 .motion-pattern-main { min-inline-size: 0; }
 .motion-pattern-intro {
   display: grid;
@@ -170,6 +149,7 @@
 }
 .motion-pattern-article[data-wide] .motion-pattern-stage { inline-size: min(100%, 52rem); }
 #otp .motion-pattern-sample > .yg-field { inline-size: min(100%, 320px); }
+#number-stepper .motion-pattern-sample > .yg-quantity { inline-size: min(100%, 320px); }
 #spring-dropdown .motion-pattern-stage { min-block-size: 17.5rem; }
 #spring-dropdown .yg-spring-label {
   position: absolute;

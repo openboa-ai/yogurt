@@ -1,6 +1,8 @@
 "use client";
 import { useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
 import { ElasticRange } from "./elastic-range.js";
+import { Checkbox } from "../controls/forms.js";
+import { Slider } from "../controls/inputs.js";
 import { advanceSprings, playSprings, snap, spring } from "../foundation/spring-motion.js";
 
 type Option = { id: string; label: string };
@@ -116,14 +118,8 @@ export function RangeSlider({
     if (presentation === "elastic") {
       return <ElasticRange label={label} value={value} onChange={onChange} min={min} max={max} step={step} formatValue={formatValue} />;
     }
-    return <div className="yg-motion-range" style={{ "--yg-range-fill": `${first}%` } as CSSProperties}>
-      <div className="yg-motion-range-heading"><label htmlFor={id}>{label}</label></div>
-      <div className="yg-motion-range-area">
-        <span className="yg-motion-range-tip" aria-hidden="true" style={{left: `${first}%`}}>{formatValue(value)}</span>
-        <input id={id} type="range" min={min} max={max} step={step} value={value}
-          onChange={event => onChange(event.currentTarget.valueAsNumber)} />
-      </div>
-    </div>;
+    return <Slider label={label} value={value} min={min} max={max} step={step}
+      onValueChange={onChange} formatValue={formatValue} presentation="card" />;
   }
 
   const joined = last - first < 25;
@@ -251,7 +247,11 @@ export function PasswordStrength({ value, onChange }: { value: string; onChange:
 
 export function CheckboxList({ options, value, onChange }: { options: Option[]; value: string[]; onChange: (value: string[]) => void }) {
   const count = options.filter(option => value.includes(option.id)).length;
-  return <fieldset className="yg-motion-checklist"><legend>Choose options</legend><div className="yg-motion-checklist-heading"><strong>Today</strong><span><b>{count}</b> of {options.length} done</span></div>{options.map(option => <label key={option.id} className="yg-motion-checklist-item"><input type="checkbox" checked={value.includes(option.id)} onChange={event => onChange(event.currentTarget.checked ? [...value, option.id] : value.filter(id => id !== option.id))} /><span className="yg-motion-checklist-box" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4L18 8" /></svg></span><span className="yg-motion-checklist-text">{option.label}</span></label>)}</fieldset>;
+  return <fieldset className="yg-motion-checklist"><legend>Choose options</legend><div className="yg-motion-checklist-heading"><strong>Today</strong><span><b>{count}</b> of {options.length} done</span></div>{options.map(option =>
+    <Checkbox key={option.id} className="yg-motion-checklist-item" label={option.label}
+      checked={value.includes(option.id)} onCheckedChange={checked =>
+        onChange(checked === true ? [...value, option.id] : value.filter(id => id !== option.id))} />
+  )}</fieldset>;
 }
 
 export function DetentDial({ options, value, onChange }: { options: Option[]; value: string; onChange: (value: string) => void }) {

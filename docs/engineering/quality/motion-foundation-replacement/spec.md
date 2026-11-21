@@ -28,16 +28,16 @@ Text fields, search fields and single-choice select controls use the same compac
 
 Cards use a shared 24 px corner and 18 px regular inset. Compact and spacious density choices use 12 px and 24 px insets without changing the caller's content or action. The ordinary card and the existing metric and profile cards consume these same roles. Cards remain fluid in their container and do not gain a perimeter outline.
 
-The single-value slider shares the motion specimen's four-pixel track and 28 px circular thumb, with a 44 px interaction area. Its filled section follows the controlled value and reading direction. Preserve its native input, min, max, step, disabled state, keyboard behavior and accessible value text; forced colors retain platform control appearance.
+The single-value slider shares the motion specimen's four-pixel track and 28 px circular thumb, with a 44 px interaction area. Its filled section follows the controlled value and reading direction. The card presentation uses the same slider in the interactive example, including the floating formatted value. Preserve its native input, min, max, step, disabled state, keyboard behavior and accessible value text; forced colors retain platform control appearance.
 
-The basic checkbox shares a 24 px mark and 8 px corner with the checklist. Use a filled surface instead of an ordinary perimeter border, preserve checked and indeterminate states, and keep a 44 px pointer target and visible keyboard and forced-color focus.
+The basic checkbox and checklist use one 24 px mark and 8 px corner. The checkmark draws in after selection and the control responds to a press. Use a filled surface instead of an ordinary perimeter border, preserve checked and indeterminate states, form name and value, and keep a 44 px pointer target and visible keyboard and forced-color focus. The checklist preserves its independent selection and completion text.
 
-An editable rating uses filled and outlined star marks with the same visual scale and selection feedback as the interactive rating. Keep the radio group, accessible names, maximum count, keyboard selection and read-only text contract; reduce motion when requested.
+An editable rating uses the same five-star interaction as the interactive rating: pointer preview, sequential fill and spring response. Preserve the configurable maximum, radio group, accessible names, keyboard selection and read-only text contract; reduce motion when requested. The interactive example uses the shared implementation, including its optional status and clear affordance.
 
-The numeric spinner has two circular 40 px actions, a fixed-width rolling value and a borderless card surface. Preserve its label, disabled and range boundaries, integer stepping, callback and live value announcement. A value change rolls in the direction of the change and settles immediately under reduced motion.
+The numeric spinner has two circular 40 px actions, a fixed-width rolling value and a borderless card surface. Preserve its label, disabled and range boundaries, integer stepping, callback and live value announcement. Optional supporting text and action names allow a host to describe the controlled value. A value change rolls in the direction of the change and settles immediately under reduced motion. The gallery uses this same component.
 
 Layered menus, attachments and carousel slides use surface contrast or elevation for their ordinary boundary instead of an inset perimeter line. Retain forced-color and keyboard-focus indicators.
 
 List rows use a 48 px minimum height and 12 px content gap. Their text, leading and trailing slots remain flexible and wrap when needed; links and actions retain their original behavior and current state. Noninteractive rows do not become buttons.
 
-The component guide itself uses the shared search field and action controls for navigation. Preserve search, category disclosure, focus, links and narrow-screen access. The guide may supply layout-specific styling, but must not duplicate interactive control behavior.
+The component guide and motion index use the shared search field, links and action controls for navigation. Preserve search, Enter-to-select, category disclosure, focus, links and narrow-screen access. The guide may supply layout-specific styling, but must not duplicate interactive control behavior.

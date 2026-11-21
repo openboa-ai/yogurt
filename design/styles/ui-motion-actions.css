@@ -62,21 +62,6 @@
     color var(--yg-change, var(--yg-travel)) var(--yg-settle);
 }
 
-.yg-rating label > span {
-  pointer-events: none;
-  transition: transform var(--yg-press) var(--yg-settle);
-}
-
-.yg-rating label:has(input:active) > span {
-  transform: translateY(1px);
-}
-@media (prefers-reduced-motion: no-preference) {
-  .yg-rating label[data-filled] > span { animation: yg-rating-pop var(--yg-motion-rating-pop); }
-}
-@keyframes yg-rating-pop {
-  from { scale: .7; }
-}
-
 .yg-range input:not(:disabled):active {
   accent-color: var(--yg-inverse-press);
 }
@@ -169,10 +154,6 @@
   .yg-otp-slots > span,
   .yg-progress-track > span {
     transition: none;
-  }
-
-  .yg-rating label:has(input:active) > span {
-    transform: none;
   }
 
   .yg-progress progress:not([value]) + .yg-progress-track > span {

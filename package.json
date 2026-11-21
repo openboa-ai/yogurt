@@ -50,7 +50,8 @@
     "docs/design-system-rules.md"
   ],
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "./apps/guide/**"
   ],
   "exports": {
     ".": {
@@ -80,6 +81,9 @@
   },
   "scripts": {
     "build": "node scripts/build-ui.mjs",
+    "guide:dev": "npm run build && node apps/guide/tooling/build-site.mjs --static-only && vite --config apps/guide/vite.config.mjs",
+    "guide:build": "npm run build && vite build --config apps/guide/vite.config.mjs && node apps/guide/tooling/build-site.mjs",
+    "guide:preview": "vite preview --config apps/guide/vite.config.mjs --outDir ../../../site",
     "gallery": "node scripts/build-ui-gallery.mjs",
     "gallery:agents": "node scripts/build-ui-gallery.mjs --agents",
     "check:agents": "node checks/agent-family.mjs && node checks/web-agent-family.cjs",
@@ -94,14 +98,15 @@
     "@openai/apps-sdk-ui": "0.2.2",
     "@types/react": "19.2.10",
     "@types/react-dom": "19.2.2",
-    "esbuild": "0.25.12",
+    "esbuild": "0.28.2",
     "playwright-core": "1.62.1",
     "radix-ui": "1.8.1",
     "react": "19.2.0",
     "react-day-picker": "9.11.1",
     "react-dom": "19.2.0",
     "react-resizable-panels": "3.0.6",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite": "8.3.8"
   },
   "bin": {
     "yogurt": "./bin/yogurt.mjs"
