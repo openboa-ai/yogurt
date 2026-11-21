@@ -34,16 +34,17 @@ const bundle = buildSync({
 (async () => {
   const browser = await chromium.launch({ channel: process.env.YOGURT_BROWSER_CHANNEL || "chrome" });
   try {
-    for (const width of [320, 1440]) {
-      const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
+    for (const width of [320, 1440]) for (const appearance of ["light", "dark"]) {
+      const page = await browser.newPage({ viewport: { width, height: 900 }, reducedMotion: "reduce", colorScheme: appearance });
       await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href);
-      await page.evaluate(() => {
+      await page.evaluate((appearance) => {
         const host = document.createElement("div");
         host.id = "toast-stack-fixture";
         host.className = "yg-root";
+        host.dataset.appearance = appearance;
         Object.assign(host.style, { position: "fixed", inset: "20px auto auto 20px", width: "min(280px, calc(100vw - 40px))", zIndex: "9999" });
         document.body.append(host);
-      });
+      }, appearance);
       await page.addScriptTag({ content: bundle });
       const stacked = page.getByRole("region", { name: "Compact notifications" });
       const defaults = page.getByRole("region", { name: "Default notifications" });
@@ -56,10 +57,19 @@ const bundle = buildSync({
       const first = stacked.locator('[data-yg-toast-id="a"]');
       const second = stacked.locator('[data-yg-toast-id="b"]');
       assert.equal(await second.locator("..").getAttribute("data-behind"), "true");
+      const layers = stacked.locator('.yg-toast-stack-slot');
+      const colors = await layers.locator('.yg-toast').all();
+      const surfaces = await Promise.all(colors.slice(0, 3).map(node => node.evaluate(element => getComputedStyle(element).backgroundColor)));
+      assert.equal(new Set(surfaces).size, 3, `${appearance} compact stack must show three distinct surface depths`);
+      const layerBoxes = await Promise.all([0, 1, 2].map(i => layers.nth(i).boundingBox()));
+      assert(layerBoxes[0].y < layerBoxes[1].y && layerBoxes[1].y < layerBoxes[2].y,
+        'each compact layer must have its own exposed vertical strip');
       await second.getByRole("button", { name: "Dismiss notification" }).focus();
       await page.waitForFunction(() => document.querySelector('[aria-label="Compact notifications"] button[aria-controls]')?.getAttribute("aria-expanded") === "true");
       assert.equal(await second.getByRole("button", { name: "Dismiss notification" }).evaluate(node => node === document.activeElement), true);
       assert.equal(await stacked.locator(".yg-toast-stack-slot[data-behind]").count(), 0);
+      const expandedSurfaces = await Promise.all(colors.slice(0, 3).map(node => node.evaluate(element => getComputedStyle(element).backgroundColor)));
+      assert.equal(new Set(expandedSurfaces).size, 1, 'expanded notices return to the same readable surface');
       const boxes = await Promise.all([first.boundingBox(), second.boundingBox()]);
       assert(boxes[1].y >= boxes[0].y + boxes[0].height - 1, "expanded notices must not overlap");
       assert.equal(await stacked.locator(".yg-toast-stack-stage").evaluate(node => getComputedStyle(node).transitionDuration), "0s");

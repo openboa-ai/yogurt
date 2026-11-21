@@ -31,7 +31,10 @@ export declare function LoadingSuccessButton({ presentation, ...props }: ResultA
     presentation?: "fitted" | "morphing";
     fluid?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function CopyButton({ value }: {
+export declare function CopyButton({ value, onCopy, presentation, errorLabel }: {
     value: string;
+    onCopy?: (text: string) => Promise<void>;
+    presentation?: "standard" | "quiet";
+    errorLabel?: string;
 }): import("react/jsx-runtime").JSX.Element;
 export {};

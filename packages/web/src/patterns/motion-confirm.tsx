@@ -110,7 +110,7 @@ export function SlideConfirm({ label, onConfirm }: ConfirmProps) {
   const [armed, setArmed] = useState(false);
   const [dragging, setDragging] = useState(false);
   const active = useRef<{
-    id: number; start: number; width: number; samples: { x: number; time: number }[];
+    id: number; start: number; width: number; direction: 1 | -1; samples: { x: number; time: number }[];
   } | null>(null);
   const value = useRef(0);
   const { done, locked, confirm } = useConfirmation(onConfirm);
@@ -118,7 +118,7 @@ export function SlideConfirm({ label, onConfirm }: ConfirmProps) {
   const update = (event: PointerEvent<HTMLButtonElement>) => {
     const drag = active.current;
     if (!drag || drag.id !== event.pointerId) return;
-    value.current = Math.max(0, Math.min(1, (event.clientX - drag.start) / drag.width));
+    value.current = Math.max(0, Math.min(1, (event.clientX - drag.start) * drag.direction / drag.width));
     drag.samples = drag.samples.filter(sample => event.timeStamp - sample.time <= 80);
     drag.samples.push({ x: event.clientX, time: event.timeStamp });
     setProgress(value.current);
@@ -134,6 +134,7 @@ export function SlideConfirm({ label, onConfirm }: ConfirmProps) {
       if (width <= 0) return;
       active.current = {
         id: event.pointerId, start: event.clientX, width,
+        direction: getComputedStyle(event.currentTarget).direction === "rtl" ? -1 : 1,
         samples: [{ x: event.clientX, time: event.timeStamp }],
       };
       setDragging(true);
@@ -146,7 +147,7 @@ export function SlideConfirm({ label, onConfirm }: ConfirmProps) {
       update(event);
       const first = drag.samples[0];
       const elapsed = event.timeStamp - first.time;
-      const speed = elapsed > 0 ? (event.clientX - first.x) * 1000 / elapsed : 0;
+      const speed = elapsed > 0 ? (event.clientX - first.x) * drag.direction * 1000 / elapsed : 0;
       const complete = value.current >= 0.9 || (value.current > 0.45 && speed > 900);
       reset();
       if (complete) confirm();

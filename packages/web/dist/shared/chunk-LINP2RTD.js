@@ -3,15 +3,22 @@ import {
   Toast
 } from "./chunk-QVZBBQIY.js";
 import {
+  CopyButton
+} from "./chunk-F4E3YYJ6.js";
+import {
   dist_exports
 } from "./chunk-F374JVJP.js";
+import {
+  playSprings,
+  snap,
+  spring
+} from "./chunk-DRQJWO7S.js";
 import {
   Button,
   IconButton
 } from "./chunk-4IPCB3MM.js";
 import {
   Heading,
-  Icon,
   cx
 } from "./chunk-GW3HPY4O.js";
 
@@ -149,12 +156,105 @@ function Highlight({ children }) {
 function Spinner({ label = "Loading" }) {
   return /* @__PURE__ */ jsx("span", { className: "yg-loading", role: "status", "aria-label": label, children: /* @__PURE__ */ jsx("span", { className: "yg-spinner", "aria-hidden": "true" }) });
 }
+function SwipeToast({ message, disabled, exiting, onDismiss }) {
+  const card = useRef(null);
+  const motion = useRef(spring(0, 520, 2 * Math.sqrt(520)));
+  const stop = useRef(void 0);
+  const active = useRef(null);
+  const wasDisabled = useRef(disabled);
+  useEffect(() => () => {
+    active.current = null;
+    stop.current?.();
+  }, []);
+  useLayoutEffect(() => {
+    if (disabled) {
+      active.current = null;
+      stop.current?.();
+    }
+    if (disabled && !exiting || !disabled && wasDisabled.current) {
+      snap(motion.current, 0);
+      if (card.current) {
+        card.current.style.translate = "0px 0";
+        card.current.style.opacity = "1";
+      }
+    }
+    wasDisabled.current = disabled;
+  }, [disabled, exiting]);
+  function paint(x) {
+    if (!card.current) return;
+    card.current.style.translate = `${x}px 0`;
+    card.current.style.opacity = String(Math.max(0.3, 1 - Math.abs(x) / 240));
+  }
+  function settle(velocity = 0) {
+    const state = motion.current;
+    stop.current?.();
+    state.target = 0;
+    state.velocity = velocity * 1e3;
+    stop.current = playSprings([state], () => paint(state.position));
+  }
+  function release(event) {
+    const gesture = active.current;
+    if (!gesture || gesture.id !== event.pointerId) return;
+    active.current = null;
+    if (gesture.axis !== "x") {
+      settle();
+      return;
+    }
+    const first = gesture.samples[0], last = gesture.samples.at(-1) ?? first;
+    const elapsed = last.time - first.time;
+    const velocity = elapsed > 0 && event.timeStamp - last.time <= 80 ? (last.x - first.x) / elapsed : 0;
+    const x = motion.current.position;
+    const committed = event.type === "pointerup" && (Math.abs(x) > 100 || Math.abs(velocity) > 0.11 && Math.sign(x) === Math.sign(velocity));
+    settle(velocity);
+    if (committed && !disabled) onDismiss();
+  }
+  return /* @__PURE__ */ jsx(
+    "div",
+    {
+      ref: card,
+      className: "yg-toast-swipe",
+      onPointerDown: (event) => {
+        if (disabled || active.current || !event.isPrimary || event.button !== 0 || event.target instanceof Element && event.target.closest("button, a, input, textarea, select, [contenteditable]:not([contenteditable='false'])")) return;
+        stop.current?.();
+        active.current = {
+          id: event.pointerId,
+          x: event.clientX,
+          y: event.clientY,
+          start: motion.current.position,
+          samples: [{ time: event.timeStamp, x: motion.current.position }]
+        };
+      },
+      onPointerMove: (event) => {
+        const gesture = active.current;
+        if (!gesture || gesture.id !== event.pointerId) return;
+        const dx = event.clientX - gesture.x, dy = event.clientY - gesture.y;
+        if (!gesture.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= 6) {
+          gesture.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+          if (gesture.axis === "x") event.currentTarget.setPointerCapture(event.pointerId);
+        }
+        if (gesture.axis !== "x") return;
+        snap(motion.current, gesture.start + dx);
+        paint(motion.current.position);
+        gesture.samples.push({ time: event.timeStamp, x: motion.current.position });
+        while (gesture.samples.length > 2 && event.timeStamp - gesture.samples[0].time > 80) gesture.samples.shift();
+      },
+      onPointerUp: release,
+      onPointerCancel: release,
+      onLostPointerCapture: release,
+      onPointerLeave: (event) => {
+        if (!event.currentTarget.hasPointerCapture(event.pointerId)) release(event);
+      },
+      children: /* @__PURE__ */ jsx(Toast, { message, onDismiss })
+    }
+  );
+}
 function ToastStack({
   items,
   onDismiss,
   label = "Notifications",
   presentation = "list",
-  defaultExpanded = false
+  defaultExpanded = false,
+  swipe = false
 }) {
   const [entries, setEntries] = useState(() => items.map((item) => ({ ...item, exiting: false })));
   const currentIds = useRef(new Set(items.map((item) => item.id)));
@@ -297,7 +397,7 @@ function ToastStack({
     if (presentation !== "stacked") return;
     priorPositions.current = positions;
   });
-  const renderEntry = (item) => /* @__PURE__ */ jsx(
+  const renderEntry = (item, obscured = false) => /* @__PURE__ */ jsx(
     "div",
     {
       "data-yg-toast-id": item.id,
@@ -307,7 +407,17 @@ function ToastStack({
       onAnimationEnd: (event) => {
         if (event.target === event.currentTarget && item.exiting) finish(item.id, item);
       },
-      children: /* @__PURE__ */ jsx(Toast, { message: item.message, onDismiss: () => {
+      children: swipe ? /* @__PURE__ */ jsx(
+        SwipeToast,
+        {
+          message: item.message,
+          disabled: item.exiting || obscured,
+          exiting: item.exiting,
+          onDismiss: () => {
+            if (!item.exiting) onDismiss(item.id);
+          }
+        }
+      ) : /* @__PURE__ */ jsx(Toast, { message: item.message, onDismiss: () => {
         if (!item.exiting) onDismiss(item.id);
       } })
     },
@@ -350,7 +460,7 @@ function ToastStack({
                   zIndex: entries.length - position.depth,
                   maxHeight: compact && position.depth > 0 ? `${firstHeight}px` : void 0
                 },
-                children: renderEntry(item)
+                children: renderEntry(item, compact && position.depth > 0)
               },
               item.id
             );
@@ -359,7 +469,7 @@ function ToastStack({
       )
     ] });
   }
-  return /* @__PURE__ */ jsx("section", { ref: root, className: "yg-stack", "aria-label": label, tabIndex: -1, children: entries.map(renderEntry) });
+  return /* @__PURE__ */ jsx("section", { ref: root, className: "yg-stack", "aria-label": label, tabIndex: -1, children: entries.map((item) => renderEntry(item)) });
 }
 function TableRow({ label, children }) {
   return /* @__PURE__ */ jsxs("dl", { className: "yg-value-row", children: [
@@ -480,29 +590,10 @@ function CodeBlock({
   language,
   onCopy
 }) {
-  const [result, setResult] = useState("Copy"), version = useRef(0);
-  useEffect(() => {
-    setResult("Copy");
-    return () => {
-      version.current++;
-    };
-  }, [code]);
-  async function copy() {
-    const current = ++version.current;
-    try {
-      await (onCopy ? onCopy(code) : navigator.clipboard.writeText(code));
-      if (current === version.current) setResult("Copied");
-    } catch {
-      if (current === version.current) setResult("Copy failed");
-    }
-  }
   return /* @__PURE__ */ jsxs("section", { className: "yg-code", "aria-label": language + " code", children: [
     /* @__PURE__ */ jsxs("header", { children: [
       /* @__PURE__ */ jsx("span", { children: language }),
-      /* @__PURE__ */ jsxs(Button, { size: "compact", emphasis: "quiet", onClick: copy, children: [
-        /* @__PURE__ */ jsx(Icon, { name: "copy" }),
-        /* @__PURE__ */ jsx("span", { "aria-live": "polite", children: result })
-      ] })
+      /* @__PURE__ */ jsx(CopyButton, { value: code, onCopy, presentation: "quiet", errorLabel: "Copy failed" })
     ] }),
     /* @__PURE__ */ jsx("pre", { tabIndex: 0, children: /* @__PURE__ */ jsx("code", { children: code }) })
   ] });

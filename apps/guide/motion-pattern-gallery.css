@@ -115,6 +115,12 @@
 .motion-index-toggle .yg-button-label,
 .motion-index-toggle .yg-button-content { display: flex; inline-size: 100%; gap: var(--yg-gap-inline); }
 .motion-pattern-main { min-inline-size: 0; }
+.motion-pattern-main > section[aria-label="Reusable component"] { min-inline-size: 0; }
+.motion-pattern-main > section[aria-label="Reusable component"] pre {
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
 .motion-pattern-intro {
   display: grid;
   gap: var(--yg-gap-inline);
@@ -474,25 +480,6 @@
 
 .motion-notice-example { overflow: clip; }
 .motion-notice-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--yg-gap-control); }
-.motion-notice-stack { --notice-height: 54px; position: relative; height: calc(var(--notice-height) + (var(--notice-count) - 1) * 10px); margin: 0; padding: 0; list-style: none; }
-.motion-notice-stack[data-expanded="true"] { height: calc(var(--notice-count) * (var(--notice-height) + 8px) - 8px); }
-.motion-notice-slot { position: absolute; inset: 0 0 auto; transform-origin: center top; transform: translateY(calc(var(--notice-depth) * (10px + var(--notice-height) * .05))) scale(calc(1 - var(--notice-depth) * .05)); z-index: calc(3 - var(--notice-depth)); }
-.motion-notice-stack[data-expanded="true"] .motion-notice-slot { transform: translateY(calc(var(--notice-depth) * (var(--notice-height) + 8px))); }
-.motion-notice-card { touch-action: pan-y; user-select: none; }
-.motion-notice-card .yg-toast {
-  box-sizing: border-box;
-  inline-size: 100%;
-  min-height: var(--notice-height);
-  padding-block: 0;
-  background: var(--yg-raised-surface);
-  color: var(--yg-text);
-}
-.motion-notice-card .yg-toast > span { min-inline-size: 0; overflow-wrap: anywhere; }
-.motion-notice-slot[inert] .yg-toast { background: var(--yg-field); }
-@media (prefers-reduced-motion: no-preference) {
-  .motion-notice-stack { transition: height 300ms cubic-bezier(.23, 1, .32, 1); }
-  .motion-notice-slot { transition: transform 300ms cubic-bezier(.23, 1, .32, 1); }
-}
 
 @media (forced-colors: none) {
   .yg-root .motion-pattern-stage .motion-pattern-sample

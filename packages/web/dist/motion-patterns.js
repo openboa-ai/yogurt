@@ -1,24 +1,26 @@
 "use client";
 "use client";
 import {
-  ActivityIsland,
   CartButton,
-  CopyButton,
   HoldButton,
-  LoadingSuccessButton,
-  SlideConfirm,
-  StorageMeter
-} from "./shared/chunk-NY3LGE3P.js";
+  SlideConfirm
+} from "./shared/chunk-5U366SGG.js";
 import {
   PromptAction,
   PromptEditor
 } from "./shared/chunk-DD5CG4T7.js";
 import {
   Command
-} from "./shared/chunk-4IUYJJMH.js";
+} from "./shared/chunk-7YBOZIXM.js";
 import {
   Slider
-} from "./shared/chunk-H3KKV7WK.js";
+} from "./shared/chunk-NWMV42J6.js";
+import {
+  ActivityIsland,
+  CopyButton,
+  LoadingSuccessButton,
+  StorageMeter
+} from "./shared/chunk-F4E3YYJ6.js";
 import {
   dist_exports7 as dist_exports
 } from "./shared/chunk-F374JVJP.js";
@@ -26,7 +28,7 @@ import "./shared/chunk-42W7U233.js";
 import {
   Checkbox,
   Textarea
-} from "./shared/chunk-JYPA2ETQ.js";
+} from "./shared/chunk-F5O3AF2Y.js";
 import "./shared/chunk-5GJUJT3P.js";
 import {
   advanceSprings,
@@ -126,9 +128,13 @@ function MentionPicker({ label, people, value, onChange }) {
   }
   useLayoutEffect(() => {
     const pending = followingSelection.current;
-    if (pending?.value !== value) return;
+    if (!pending) return;
+    if (pending.value !== value) {
+      if (pending.origin !== value) followingSelection.current = null;
+      return;
+    }
     followingSelection.current = null;
-    moveCaret(pending.caret);
+    if (input.current?.ownerDocument.activeElement === input.current) moveCaret(pending.caret);
   }, [value]);
   function select(person) {
     if (start < 0) return;
@@ -141,7 +147,13 @@ function MentionPicker({ label, people, value, onChange }) {
     setActive(0);
     if (next === value) moveCaret(nextCaret);
     else {
-      followingSelection.current = { value: next, caret: nextCaret };
+      followingSelection.current = {
+        value: next,
+        origin: value,
+        caret: nextCaret,
+        selectionStart: input.current?.selectionStart ?? selection,
+        selectionEnd: input.current?.selectionEnd ?? selection
+      };
       onChange(next);
     }
   }
@@ -165,8 +177,13 @@ function MentionPicker({ label, people, value, onChange }) {
             setFocused(true);
             setCaret(event.currentTarget.selectionStart);
           },
-          onBlur: () => setFocused(false),
+          onBlur: () => {
+            followingSelection.current = null;
+            setFocused(false);
+          },
           onSelect: (event) => {
+            const pending = followingSelection.current;
+            if (pending && (event.currentTarget.selectionStart !== pending.selectionStart || event.currentTarget.selectionEnd !== pending.selectionEnd)) followingSelection.current = null;
             setCaret(event.currentTarget.selectionStart);
             setActive(0);
           },

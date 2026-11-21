@@ -1,7 +1,7 @@
 "use client";
 import {
   Attachment
-} from "./chunk-QZZ3OCZT.js";
+} from "./chunk-LINP2RTD.js";
 import {
   PromptAction,
   PromptEditor

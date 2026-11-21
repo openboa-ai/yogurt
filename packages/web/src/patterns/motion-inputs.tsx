@@ -10,7 +10,9 @@ export function MentionPicker({ label, people, value, onChange }: {
 }) {
   const id = useId();
   const input = useRef<HTMLTextAreaElement>(null);
-  const followingSelection = useRef<{value: string; caret: number} | null>(null);
+  const followingSelection = useRef<{
+    value: string; origin: string; caret: number; selectionStart: number; selectionEnd: number;
+  } | null>(null);
   const marker = useRef<HTMLSpanElement>(null);
   const [edges] = useState(() => [spring(4, 620, 36), spring(44, 190, 19)]);
   const markerOpen = useRef(false);
@@ -82,9 +84,13 @@ export function MentionPicker({ label, people, value, onChange }: {
   }
   useLayoutEffect(() => {
     const pending = followingSelection.current;
-    if (pending?.value !== value) return;
+    if (!pending) return;
+    if (pending.value !== value) {
+      if (pending.origin !== value) followingSelection.current = null;
+      return;
+    }
     followingSelection.current = null;
-    moveCaret(pending.caret);
+    if (input.current?.ownerDocument.activeElement === input.current) moveCaret(pending.caret);
   }, [value]);
   function select(person: { label: string }) {
     if (start < 0) return;
@@ -97,7 +103,11 @@ export function MentionPicker({ label, people, value, onChange }: {
     setActive(0);
     if (next === value) moveCaret(nextCaret);
     else {
-      followingSelection.current = {value: next, caret: nextCaret};
+      followingSelection.current = {
+        value: next, origin: value, caret: nextCaret,
+        selectionStart: input.current?.selectionStart ?? selection,
+        selectionEnd: input.current?.selectionEnd ?? selection,
+      };
       onChange(next);
     }
   }
@@ -106,8 +116,13 @@ export function MentionPicker({ label, people, value, onChange }: {
     <div className="yg-mention-surface">
       <textarea id={id} ref={input} value={value} rows={2} placeholder="Write a comment" aria-describedby={`${id}-hint`} aria-autocomplete="list" aria-expanded={open} aria-controls={open ? `${id}-list` : undefined} aria-activedescendant={open ? `${id}-option-${index}` : undefined}
         onFocus={event => { setFocused(true); setCaret(event.currentTarget.selectionStart); }}
-        onBlur={() => setFocused(false)}
-        onSelect={event => { setCaret(event.currentTarget.selectionStart); setActive(0); }}
+        onBlur={() => { followingSelection.current = null; setFocused(false); }}
+        onSelect={event => {
+          const pending = followingSelection.current;
+          if (pending && (event.currentTarget.selectionStart !== pending.selectionStart ||
+            event.currentTarget.selectionEnd !== pending.selectionEnd)) followingSelection.current = null;
+          setCaret(event.currentTarget.selectionStart); setActive(0);
+        }}
         onChange={event => {
           followingSelection.current = null;
           setCaret(event.currentTarget.selectionStart);

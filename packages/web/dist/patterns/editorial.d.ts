@@ -63,7 +63,7 @@ export declare function Highlight({ children }: Content): import("react/jsx-runt
 export declare function Spinner({ label }: {
     label?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function ToastStack({ items, onDismiss, label, presentation, defaultExpanded, }: {
+export declare function ToastStack({ items, onDismiss, label, presentation, defaultExpanded, swipe, }: {
     items: {
         id: string;
         message: string;
@@ -72,6 +72,7 @@ export declare function ToastStack({ items, onDismiss, label, presentation, defa
     label?: string;
     presentation?: "list" | "stacked";
     defaultExpanded?: boolean;
+    swipe?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function TableRow({ label, children }: Content & {
     label: string;

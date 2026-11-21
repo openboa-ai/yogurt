@@ -215,23 +215,36 @@ const actions = {
   "notifications": async (root, page) => {
     await show(root, "Add notification", "Update 1 received.");
     await show(root, "Add notification", "Update 2 received.");
-    await click(root, "Show all");
-    const stack = root.locator(".motion-notice-stack");
-    await page.waitForFunction(() => document.querySelector(".motion-notice-stack").offsetHeight > 105);
-    const top = stack.locator(".motion-notice-card").first();
+    await show(root, "Add notification", "Update 3 received.");
+    await show(root, "Add notification", "Update 4 received.");
+    await click(root, "Show all 4");
+    const stack = root.locator(".yg-toast-stack-stage");
+    await page.waitForFunction(() => document.querySelector(".yg-toast-stack-stage").offsetHeight > 150);
+    const top = stack.locator(".yg-toast-swipe").first();
     const bounds = await top.boundingBox();
     await page.mouse.move(bounds.x + 16, bounds.y + 20);
     await page.mouse.down();
     await page.mouse.move(bounds.x + 145, bounds.y + 20, {steps: 8});
     await page.mouse.up();
-    await byText(root, "Update 2 received.").waitFor({state: "detached"});
+    await byText(root, "Update 4 received.").waitFor({state: "detached"});
     const remaining = byText(root, "Update 1 received.");
     await remaining.waitFor();
+    await byText(root, "Update 2 received.").waitFor();
+    await byText(root, "Update 3 received.").waitFor();
     const colors = await remaining.evaluate(node => ({
       foreground: getComputedStyle(node).color,
       background: getComputedStyle(node.closest(".yg-toast")).backgroundColor,
     }));
     assert.notEqual(colors.foreground, colors.background);
+    for (const id of [1, 2, 3]) {
+      const entry = byText(root, `Update ${id} received.`).locator('xpath=ancestor::*[@data-yg-toast-id]');
+      await entry.getByRole('button', {name:'Dismiss notification'}).click();
+      if (id === 3) {
+        // Keeping the shared stack mounted allows its last notice to exit.
+        await page.waitForFunction(() => document.querySelector('#notifications [data-yg-toast-id="3"][data-exiting]'));
+      }
+      await entry.waitFor({state:'detached'});
+    }
   },
   "number-stepper": async root => {await click(root,"Add guest");await root.locator(".yg-quantity-in").getByText("4").waitFor();},
   "otp": async (root, page) => {

@@ -38,6 +38,10 @@ interface FieldAttributes {
   "aria-describedby"?: string;
   "aria-invalid"?: true;
 }
+function describedBy(...values: (string | undefined | false)[]) {
+  const ids = values.flatMap(value => typeof value === "string" ? value.trim().split(/\s+/).filter(Boolean) : []);
+  return [...new Set(ids)].join(" ") || undefined;
+}
 export function Field({
   id,
   label,
@@ -194,8 +198,11 @@ export function TextField({
       {(binding) => (
         <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`, className)}>
           {motion === "spring" && (props.type ?? "text") === "text" && !Array.isArray(value) && !Array.isArray(defaultValue)
-            ? <SpringTextInput {...props} {...binding} value={value} defaultValue={defaultValue} />
+            ? <SpringTextInput {...props} {...binding} aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"])}
+              aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]} value={value} defaultValue={defaultValue} />
             : <SDKInput {...props} {...binding}
+            aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"])}
+            aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]}
             value={value == null ? undefined : String(value)}
             defaultValue={defaultValue == null ? undefined : String(defaultValue)}
             onValueChange={(next, details) => {
@@ -327,9 +334,9 @@ export function Textarea({
             {available && <span className="yg-ghost-suffix"><SuggestionLetters text={suffix} interval={8} cap={200} /></span>}
             {rolling && accepted && <span className="yg-ghost-accepted"><SuggestionLetters text={accepted.suffix} interval={16} cap={400} /></span>}
           </div>}
-          <SDKTextarea {...props} {...binding} rows={rows} controller={suggestion !== undefined ? completionController : undefined} aria-describedby={[
-            props["aria-describedby"], binding["aria-describedby"], available && `${binding.id}-suggestion`,
-          ].filter(Boolean).join(" ") || undefined} data-accepted={rolling || undefined}
+          <SDKTextarea {...props} {...binding} rows={rows} controller={suggestion !== undefined ? completionController : undefined}
+            aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"], available && `${binding.id}-suggestion`)}
+            aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]} data-accepted={rolling || undefined}
             value={value == null ? undefined : String(value)}
             defaultValue={defaultValue == null ? undefined : String(defaultValue)}
             onChange={suggestion === undefined ? props.onChange : event => {
@@ -413,6 +420,8 @@ export function Select({
           <select
             {...props}
             {...binding}
+            aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"])}
+            aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]}
             onPointerDown={event => {
               onPointerDown?.(event);
               if (!event.defaultPrevented) positionPicker(event.currentTarget);
@@ -568,6 +577,7 @@ export function Combobox({
   value,
   onValueChange,
   disabled,
+  name,
   help,
   error,
 }: Choices & Pick<FieldInfo, "help" | "error">) {
@@ -606,6 +616,7 @@ export function Combobox({
     <Field {...{ label, help, error }}>
       {(binding) => (
         <div className="yg-combo">
+          {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
           <input
             {...binding}
             disabled={disabled}

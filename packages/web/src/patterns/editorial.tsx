@@ -8,12 +8,15 @@ import {
   useState,
   type CSSProperties,
   type ComponentProps,
+  type PointerEvent,
   type ReactNode,
 } from "react";
 import { Direction as ReadingDirection } from "radix-ui";
 import { Heading, Icon, Stack, cx, type Tone } from "../foundation/foundation.js";
 import { Button, IconButton } from "../controls/actions.js";
 import { Toast } from "../controls/feedback.js";
+import { playSprings, snap, spring } from "../foundation/spring-motion.js";
+import { CopyButton } from "./motion-status.js";
 import type { Observation, Reading } from "../controls/data.js";
 
 type Content = { children: ReactNode };
@@ -207,18 +210,95 @@ export function Spinner({ label = "Loading" }: { label?: string }) {
     </span>
   );
 }
+type SwipeSample = { time: number; x: number };
+
+function SwipeToast({ message, disabled, exiting, onDismiss }: { message: string; disabled: boolean; exiting: boolean; onDismiss: () => void }) {
+  const card = useRef<HTMLDivElement>(null);
+  const motion = useRef(spring(0, 520, 2 * Math.sqrt(520)));
+  const stop = useRef<(() => void) | undefined>(undefined);
+  const active = useRef<{ id: number; x: number; y: number; start: number; axis?: "x" | "y"; samples: SwipeSample[] } | null>(null);
+  const wasDisabled = useRef(disabled);
+
+  useEffect(() => () => { active.current = null; stop.current?.(); }, []);
+  useLayoutEffect(() => {
+    if (disabled) {
+      active.current = null;
+      stop.current?.();
+    }
+    // A host-confirmed exit retains the last dragged position. Obscured or
+    // re-added notices instead return to a neutral, interactive position.
+    if ((disabled && !exiting) || (!disabled && wasDisabled.current)) {
+      snap(motion.current, 0);
+      if (card.current) { card.current.style.translate = "0px 0"; card.current.style.opacity = "1"; }
+    }
+    wasDisabled.current = disabled;
+  }, [disabled, exiting]);
+
+  function paint(x: number) {
+    if (!card.current) return;
+    card.current.style.translate = `${x}px 0`;
+    card.current.style.opacity = String(Math.max(.3, 1 - Math.abs(x) / 240));
+  }
+  function settle(velocity = 0) {
+    const state = motion.current;
+    stop.current?.();
+    state.target = 0;
+    state.velocity = velocity * 1000;
+    stop.current = playSprings([state], () => paint(state.position));
+  }
+  function release(event: PointerEvent<HTMLDivElement>) {
+    const gesture = active.current;
+    if (!gesture || gesture.id !== event.pointerId) return;
+    active.current = null;
+    if (gesture.axis !== "x") { settle(); return; }
+    const first = gesture.samples[0], last = gesture.samples.at(-1) ?? first;
+    const elapsed = last.time - first.time;
+    const velocity = elapsed > 0 && event.timeStamp - last.time <= 80 ? (last.x - first.x) / elapsed : 0;
+    const x = motion.current.position;
+    const committed = event.type === "pointerup" &&
+      (Math.abs(x) > 100 || Math.abs(velocity) > .11 && Math.sign(x) === Math.sign(velocity));
+    settle(velocity);
+    if (committed && !disabled) onDismiss();
+  }
+  return <div ref={card} className="yg-toast-swipe" onPointerDown={event => {
+    if (disabled || active.current || !event.isPrimary || event.button !== 0 ||
+      (event.target instanceof Element && event.target.closest("button, a, input, textarea, select, [contenteditable]:not([contenteditable='false'])"))) return;
+    stop.current?.();
+    active.current = { id: event.pointerId, x: event.clientX, y: event.clientY, start: motion.current.position,
+      samples: [{ time: event.timeStamp, x: motion.current.position }] };
+  }} onPointerMove={event => {
+    const gesture = active.current;
+    if (!gesture || gesture.id !== event.pointerId) return;
+    const dx = event.clientX - gesture.x, dy = event.clientY - gesture.y;
+    if (!gesture.axis && Math.max(Math.abs(dx), Math.abs(dy)) >= 6) {
+      gesture.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+      if (gesture.axis === "x") event.currentTarget.setPointerCapture(event.pointerId);
+    }
+    if (gesture.axis !== "x") return;
+    snap(motion.current, gesture.start + dx);
+    paint(motion.current.position);
+    gesture.samples.push({ time: event.timeStamp, x: motion.current.position });
+    while (gesture.samples.length > 2 && event.timeStamp - gesture.samples[0].time > 80) gesture.samples.shift();
+  }} onPointerUp={release} onPointerCancel={release} onLostPointerCapture={release}
+    onPointerLeave={event => { if (!event.currentTarget.hasPointerCapture(event.pointerId)) release(event); }}>
+    <Toast message={message} onDismiss={onDismiss} />
+  </div>;
+}
+
 export function ToastStack({
   items,
   onDismiss,
   label = "Notifications",
   presentation = "list",
   defaultExpanded = false,
+  swipe = false,
 }: {
   items: { id: string; message: string }[];
   onDismiss: (id: string) => void;
   label?: string;
   presentation?: "list" | "stacked";
   defaultExpanded?: boolean;
+  swipe?: boolean;
 }) {
   type Entry = { id: string; message: string; exiting: boolean };
   const [entries, setEntries] = useState<Entry[]>(() => items.map((item) => ({ ...item, exiting: false })));
@@ -363,11 +443,13 @@ export function ToastStack({
     if (presentation !== "stacked") return;
     priorPositions.current = positions;
   });
-  const renderEntry = (item: Entry) => (
+  const renderEntry = (item: Entry, obscured = false) => (
     <div key={item.id} data-yg-toast-id={item.id} data-exiting={item.exiting || undefined}
       aria-hidden={item.exiting || undefined} inert={item.exiting || undefined}
       onAnimationEnd={(event) => { if (event.target === event.currentTarget && item.exiting) finish(item.id, item); }}>
-      <Toast message={item.message} onDismiss={() => { if (!item.exiting) onDismiss(item.id); }} />
+      {swipe ? <SwipeToast message={item.message} disabled={item.exiting || obscured} exiting={item.exiting}
+        onDismiss={() => { if (!item.exiting) onDismiss(item.id); }} />
+        : <Toast message={item.message} onDismiss={() => { if (!item.exiting) onDismiss(item.id); }} />}
     </div>
   );
   if (presentation === "stacked") {
@@ -387,7 +469,7 @@ export function ToastStack({
             return <div key={item.id} className="yg-toast-stack-slot" data-behind={compact && position.depth > 0 || undefined}
               style={{ transform: `translateY(${position.y}px) scale(${position.scale})`, zIndex: entries.length - position.depth,
                 maxHeight: compact && position.depth > 0 ? `${firstHeight}px` : undefined }}>
-              {renderEntry(item)}
+              {renderEntry(item, compact && position.depth > 0)}
             </div>;
           })}
         </div>
@@ -396,7 +478,7 @@ export function ToastStack({
   }
   return (
     <section ref={root} className="yg-stack" aria-label={label} tabIndex={-1}>
-      {entries.map(renderEntry)}
+      {entries.map(item => renderEntry(item))}
     </section>
   );
 }
@@ -579,31 +661,11 @@ export function CodeBlock({
   language: string;
   onCopy?: (text: string) => Promise<void>;
 }) {
-  const [result, setResult] = useState("Copy"),
-    version = useRef(0);
-  useEffect(() => {
-    setResult("Copy");
-    return () => {
-      version.current++;
-    };
-  }, [code]);
-  async function copy() {
-    const current = ++version.current;
-    try {
-      await (onCopy ? onCopy(code) : navigator.clipboard.writeText(code));
-      if (current === version.current) setResult("Copied");
-    } catch {
-      if (current === version.current) setResult("Copy failed");
-    }
-  }
   return (
     <section className="yg-code" aria-label={language + " code"}>
       <header>
         <span>{language}</span>
-        <Button size="compact" emphasis="quiet" onClick={copy}>
-          <Icon name="copy" />
-          <span aria-live="polite">{result}</span>
-        </Button>
+        <CopyButton value={code} onCopy={onCopy} presentation="quiet" errorLabel="Copy failed" />
       </header>
       <pre tabIndex={0}>
         <code>{code}</code>

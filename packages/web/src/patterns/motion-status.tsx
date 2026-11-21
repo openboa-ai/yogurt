@@ -264,14 +264,30 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
   </button>;
 }
 
-export function CopyButton({ value }: { value: string }) {
+export function CopyButton({ value, onCopy, presentation = "standard", errorLabel = "Try again" }: {
+  value: string;
+  onCopy?: (text: string) => Promise<void>;
+  presentation?: "standard" | "quiet";
+  errorLabel?: string;
+}) {
   const [state, setState] = useState<ActionState>("idle");
   const [copied, setCopied] = useState(0);
-  const pending = useRef(false);
+  const request = useRef(0);
+  const pending = useRef<number | null>(null);
+  const mounted = useRef(false);
   const roll = useRef<HTMLSpanElement>(null);
   const ready = useRef<HTMLSpanElement>(null);
   const done = useRef<HTMLSpanElement>(null);
   const [motion] = useState(() => ({label: spring(0, 260, 20), icon: spring(0, 420, 18), width: spring(0, 300, 24)}));
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
+  useLayoutEffect(() => {
+    request.current++;
+    setState(pending.current === null ? "idle" : "pending");
+    return () => { request.current++; };
+  }, [value]);
   useLayoutEffect(() => {
     const label = state === "success" ? done.current : ready.current;
     const node = roll.current;
@@ -288,42 +304,49 @@ export function CopyButton({ value }: { value: string }) {
       });
     };
     let stop: (() => void) | undefined;
-    const resize = new ResizeObserver(sync);
-    resize.observe(label);
+    const resize = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(sync);
+    resize?.observe(label);
+    if (!resize) window.addEventListener("resize", sync);
     sync();
-    return () => { resize.disconnect(); stop?.(); };
-  }, [motion, state]);
+    return () => { resize?.disconnect(); if (!resize) window.removeEventListener("resize", sync); stop?.(); };
+  }, [motion, state, errorLabel]);
   useEffect(() => {
     if (state !== "success") return;
     const reset = setTimeout(() => setState("idle"), 1800);
     return () => clearTimeout(reset);
   }, [copied, state]);
   async function copy() {
-    if (pending.current) return;
-    pending.current = true;
-    setState(current => current === "success" ? current : "pending");
+    if (pending.current !== null) return;
+    const current = ++request.current;
+    pending.current = current;
+    setState("pending");
     try {
-      await navigator.clipboard.writeText(value);
-      setState("success");
-      setCopied(count => count + 1);
+      await (onCopy ? onCopy(value) : navigator.clipboard.writeText(value));
+      if (request.current === current) {
+        setState("success");
+        setCopied(count => count + 1);
+      }
     } catch {
-      setState("error");
+      if (request.current === current) setState("error");
     } finally {
-      pending.current = false;
+      if (pending.current === current) {
+        pending.current = null;
+        if (request.current !== current && mounted.current) setState("idle");
+      }
     }
   }
-  const actionLabel = state === "success" ? "Copied" : state === "error" ? "Try again" : "Copy";
+  const actionLabel = state === "success" ? "Copied" : state === "error" ? errorLabel : "Copy";
   return (
-    <div className="yg-copy-action">
-      <button className="yg-copy-button" type="button" aria-label={actionLabel} disabled={state === "pending"}
+    <div className="yg-copy-action" data-presentation={presentation}>
+      <button className="yg-copy-button" type="button" aria-label={actionLabel} aria-disabled={state === "pending" || undefined}
         data-outcome={state} onClick={copy}>
         <span className="yg-copy-icons" aria-hidden="true"><Icon name="copy" /><Icon name="check" /></span>
         <span ref={roll} className="yg-copy-roll" aria-hidden="true">
-          <span><span ref={ready}>{state === "error" ? "Try again" : "Copy"}</span><span ref={done}>Copied</span></span>
+          <span><span ref={ready}>{state === "error" ? errorLabel : "Copy"}</span><span ref={done}>Copied</span></span>
         </span>
       </button>
       <span role="status" className="yg-help">
-        {state === "error" ? "Clipboard unavailable. Select and copy the text." :
+        {state === "error" ? "Copy failed. Select and copy the text." :
           state === "success" ? "Copied to clipboard." : ""}
       </span>
     </div>

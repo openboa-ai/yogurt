@@ -219,8 +219,8 @@
 }
 
 @keyframes yg-picker-arrive {
-  from { opacity: 0; translate: 0 var(--yg-picker-offset); }
-  to { opacity: 1; translate: 0 0; }
+  from { opacity: .88; translate: 0 var(--yg-picker-offset); scale: .97 1; }
+  to { opacity: 1; translate: 0 0; scale: 1; }
 }
 
 /* Keep the editable combobox panel inside the field's available width. */
@@ -233,6 +233,9 @@
     animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
   }
   .yg-combo .yg-options [role="option"] {
+    transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
+  }
+  .yg-select[data-dropdown] select option {
     transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
   }
   .yg-flyout [role="menuitem"],
@@ -248,6 +251,12 @@
   .yg-combo > .yg-options:not([hidden]) { animation: none; }
   .yg-anchor > .yg-anchored-panel:not([hidden]) { animation: none; }
   .yg-root .yg-select[data-dropdown] > .yg-icon { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .yg-root .yg-select[data-dropdown]:where(:not([data-motion-baseline] *)) select:open::picker(select) {
+    animation: none;
+  }
 }
 
 .yg-slide.yg-carousel-viewport {

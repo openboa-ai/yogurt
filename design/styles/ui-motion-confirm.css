@@ -24,7 +24,8 @@
   inline-size: min(260px, 100%);
   block-size: 56px;
   border-radius: var(--boa-radius-round);
-  padding: 0 var(--yg-inset-regular) 0 36px;
+  padding: 0;
+  padding-inline: 36px var(--yg-inset-regular);
   color: var(--yg-muted);
   cursor: grab;
   touch-action: pan-y;
@@ -60,6 +61,9 @@
   opacity: min(1, var(--yg-confirm-progress, 0) * 8);
   transform: none;
 }
+.yg-slide-confirm:dir(rtl) .yg-confirm-fill {
+  clip-path: inset(0 0 0 calc(100% - var(--yg-thumb-offset) - 24px));
+}
 .yg-slide-confirm-handle {
   position: absolute;
   inset-inline-start: var(--yg-thumb-offset);
@@ -74,6 +78,7 @@
   pointer-events: none;
 }
 .yg-slide-confirm-handle .yg-icon { inline-size: 20px; block-size: 20px; }
+.yg-slide-confirm:dir(rtl):not([data-done]) .yg-slide-confirm-handle .yg-icon { transform: scaleX(-1); }
 .yg-hold-confirm[data-done] { background: var(--yg-text); color: var(--yg-canvas); }
 .yg-hold-confirm[data-done] .yg-confirm-fill { opacity: 0; }
 .yg-slide-confirm[data-done] .yg-confirm-fill {

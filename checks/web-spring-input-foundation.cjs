@@ -20,6 +20,10 @@ const fixture = buildSync({
         <InputGroup label="Uncontrolled spring" name="uncontrolled" defaultValue="Initial" motion="spring" />
         <TextField label="Secret" name="secret" type="password" motion="spring" defaultValue="secret" />
         <TextField label="Ordinary" name="ordinary" defaultValue="Normal" />
+        {['compact','regular','comfortable','spacious','touch'].map(size =>
+          <TextField key={'text-'+size} label={'Text '+size} size={size} defaultValue="Hello" motion="spring" />)}
+        {['compact','regular','comfortable','spacious','touch','featured'].map(size =>
+          <InputGroup key={'group-'+size} label={'Group '+size} size={size} defaultValue="Hello" motion="spring" />)}
         <output data-testid="spring-changes">{changes}</output>
         <output data-testid="spring-selects">{selects}</output>
       </form>;
@@ -74,6 +78,40 @@ const fixture = buildSync({
       assert.notEqual(await controlled.evaluate(el => getComputedStyle(el).color), "rgba(0, 0, 0, 0)");
       await page.emulateMedia({ forcedColors: "active" });
       assert.equal(await edit.locator(".yg-spring-window").evaluate(el => getComputedStyle(el).display), "none");
+      await page.emulateMedia({ reducedMotion: "no-preference", forcedColors: "none" });
+      await page.addStyleTag({ content: '#spring-input-fixture .yg-spring-glyph { animation: none !important; }' });
+      for (const label of ['Text compact','Text regular','Text comfortable','Text spacious','Text touch',
+        'Group compact','Group regular','Group comfortable','Group spacious','Group touch','Group featured']) {
+        const field = host.getByRole('textbox', { name: label, exact: true });
+        await field.focus();
+        await page.waitForFunction(name => {
+          const input = Array.from(document.querySelectorAll('#spring-input-fixture input')).find(el => Array.from(el.labels).some(label => label.textContent === name));
+          return input?.parentElement.hasAttribute('data-mirror');
+        }, label);
+        const alignment = await field.evaluate(input => {
+          const box = input.getBoundingClientRect();
+          const style = getComputedStyle(input);
+          const window = input.parentElement.querySelector('.yg-spring-window');
+          const glyph = window.querySelector('[data-glyph]');
+          const caret = window.querySelector('.yg-spring-caret');
+          const probe = document.createElement('span');
+          Object.assign(probe.style, { position: 'fixed', left: `${box.left}px`, top: `${box.top}px`, height: `${box.height}px`,
+            display: 'flex', alignItems: 'center', font: style.font, letterSpacing: style.letterSpacing, visibility: 'hidden', whiteSpace: 'pre' });
+          const sample = document.createElement('span'); sample.textContent = glyph.textContent; probe.append(sample); document.body.append(probe);
+          const actualRange = document.createRange(); actualRange.selectNodeContents(glyph);
+          const expectedRange = document.createRange(); expectedRange.selectNodeContents(sample);
+          const actual = actualRange.getBoundingClientRect(), expected = expectedRange.getBoundingClientRect(), cursor = caret.getBoundingClientRect();
+          probe.remove();
+          return { actualTop: actual.top, actualBottom: actual.bottom, expectedTop: expected.top, expectedBottom: expected.bottom,
+            caretTop: cursor.top, caretBottom: cursor.bottom, lineHeight: parseFloat(style.lineHeight) };
+        });
+        assert(Math.abs(alignment.actualTop - alignment.expectedTop) < 1.5 && Math.abs(alignment.actualBottom - alignment.expectedBottom) < 1.5,
+          `${label} mirror baseline must match native vertical centering: ${JSON.stringify(alignment)}`);
+        assert(Math.abs((alignment.caretTop + alignment.caretBottom - alignment.actualTop - alignment.actualBottom) / 2) < 3,
+          `${label} caret must align with the text: ${JSON.stringify(alignment)}`);
+        assert(alignment.caretBottom - alignment.caretTop <= alignment.lineHeight + 2,
+          `${label} caret must fit the text line: ${JSON.stringify(alignment)}`);
+      }
       await page.close();
     }
     console.log("Spring input native contract, selection, composition, reset and fallback verified at 320 and 1440 px.");

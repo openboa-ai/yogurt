@@ -385,6 +385,21 @@
   min-inline-size: 0;
   overflow-wrap: anywhere;
 }
+.yg-copy-action[data-presentation="quiet"] .yg-copy-button {
+  min-block-size: var(--yg-size-compact);
+  background: transparent;
+  color: var(--yg-muted);
+}
+.yg-copy-action[data-presentation="quiet"] .yg-copy-button:hover { background: var(--yg-hover); }
+.yg-copy-action[data-presentation="quiet"] [role="status"] {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.yg-copy-button:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 .yg-code pre {
   max-inline-size: 100%;
   overflow: auto;

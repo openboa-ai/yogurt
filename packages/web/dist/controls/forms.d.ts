@@ -73,5 +73,5 @@ export interface Choices {
     name?: string;
 }
 export declare function RadioGroup({ label, options, value, onValueChange, disabled, name, }: Choices): import("react/jsx-runtime").JSX.Element;
-export declare function Combobox({ label, options, value, onValueChange, disabled, help, error, }: Choices & Pick<FieldInfo, "help" | "error">): import("react/jsx-runtime").JSX.Element;
+export declare function Combobox({ label, options, value, onValueChange, disabled, name, help, error, }: Choices & Pick<FieldInfo, "help" | "error">): import("react/jsx-runtime").JSX.Element;
 export {};

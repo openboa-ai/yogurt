@@ -38,6 +38,10 @@ function HelpText(props) {
 function FieldError(props) {
   return /* @__PURE__ */ jsx("p", { ...props, className: cx("yg-error", props.className) });
 }
+function describedBy(...values) {
+  const ids = values.flatMap((value) => typeof value === "string" ? value.trim().split(/\s+/).filter(Boolean) : []);
+  return [...new Set(ids)].join(" ") || void 0;
+}
 function Field({
   id,
   label,
@@ -241,11 +245,23 @@ function TextField({
   size = "regular",
   ...props
 }) {
-  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsx(SDKInputGroup, { className: cx("yg-input", `yg-input-size-${size}`, className), children: motion === "spring" && (props.type ?? "text") === "text" && !Array.isArray(value) && !Array.isArray(defaultValue) ? /* @__PURE__ */ jsx(SpringTextInput, { ...props, ...binding, value, defaultValue }) : /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsx(SDKInputGroup, { className: cx("yg-input", `yg-input-size-${size}`, className), children: motion === "spring" && (props.type ?? "text") === "text" && !Array.isArray(value) && !Array.isArray(defaultValue) ? /* @__PURE__ */ jsx(
+    SpringTextInput,
+    {
+      ...props,
+      ...binding,
+      "aria-describedby": describedBy(props["aria-describedby"], binding["aria-describedby"]),
+      "aria-invalid": binding["aria-invalid"] ?? props["aria-invalid"],
+      value,
+      defaultValue
+    }
+  ) : /* @__PURE__ */ jsx(
     SDKInput,
     {
       ...props,
       ...binding,
+      "aria-describedby": describedBy(props["aria-describedby"], binding["aria-describedby"]),
+      "aria-invalid": binding["aria-invalid"] ?? props["aria-invalid"],
       value: value == null ? void 0 : String(value),
       defaultValue: defaultValue == null ? void 0 : String(defaultValue),
       onValueChange: (next, details) => {
@@ -374,11 +390,8 @@ function Textarea({
           ...binding,
           rows,
           controller: suggestion !== void 0 ? completionController : void 0,
-          "aria-describedby": [
-            props["aria-describedby"],
-            binding["aria-describedby"],
-            available && `${binding.id}-suggestion`
-          ].filter(Boolean).join(" ") || void 0,
+          "aria-describedby": describedBy(props["aria-describedby"], binding["aria-describedby"], available && `${binding.id}-suggestion`),
+          "aria-invalid": binding["aria-invalid"] ?? props["aria-invalid"],
           "data-accepted": rolling || void 0,
           value: value == null ? void 0 : String(value),
           defaultValue: defaultValue == null ? void 0 : String(defaultValue),
@@ -465,6 +478,8 @@ function Select({
       {
         ...props,
         ...binding,
+        "aria-describedby": describedBy(props["aria-describedby"], binding["aria-describedby"]),
+        "aria-invalid": binding["aria-invalid"] ?? props["aria-invalid"],
         onPointerDown: (event) => {
           onPointerDown?.(event);
           if (!event.defaultPrevented) positionPicker(event.currentTarget);
@@ -575,6 +590,7 @@ function Combobox({
   value,
   onValueChange,
   disabled,
+  name,
   help,
   error
 }) {
@@ -605,6 +621,7 @@ function Combobox({
   }
   const optionId = (id) => list + "-" + encodeURIComponent(id);
   return /* @__PURE__ */ jsx(Field, { ...{ label, help, error }, children: (binding) => /* @__PURE__ */ jsxs("div", { className: "yg-combo", children: [
+    name && /* @__PURE__ */ jsx("input", { type: "hidden", name, value, disabled }),
     /* @__PURE__ */ jsx(
       "input",
       {

@@ -288,14 +288,29 @@ function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, s
     }
   );
 }
-function CopyButton({ value }) {
+function CopyButton({ value, onCopy, presentation = "standard", errorLabel = "Try again" }) {
   const [state, setState] = useState("idle");
   const [copied, setCopied] = useState(0);
-  const pending = useRef(false);
+  const request = useRef(0);
+  const pending = useRef(null);
+  const mounted = useRef(false);
   const roll = useRef(null);
   const ready = useRef(null);
   const done = useRef(null);
   const [motion] = useState(() => ({ label: spring(0, 260, 20), icon: spring(0, 420, 18), width: spring(0, 300, 24) }));
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  useLayoutEffect(() => {
+    request.current++;
+    setState(pending.current === null ? "idle" : "pending");
+    return () => {
+      request.current++;
+    };
+  }, [value]);
   useLayoutEffect(() => {
     const label = state === "success" ? done.current : ready.current;
     const node = roll.current;
@@ -312,42 +327,50 @@ function CopyButton({ value }) {
       });
     };
     let stop;
-    const resize = new ResizeObserver(sync);
-    resize.observe(label);
+    const resize = typeof ResizeObserver === "undefined" ? void 0 : new ResizeObserver(sync);
+    resize?.observe(label);
+    if (!resize) window.addEventListener("resize", sync);
     sync();
     return () => {
-      resize.disconnect();
+      resize?.disconnect();
+      if (!resize) window.removeEventListener("resize", sync);
       stop?.();
     };
-  }, [motion, state]);
+  }, [motion, state, errorLabel]);
   useEffect(() => {
     if (state !== "success") return;
     const reset = setTimeout(() => setState("idle"), 1800);
     return () => clearTimeout(reset);
   }, [copied, state]);
   async function copy() {
-    if (pending.current) return;
-    pending.current = true;
-    setState((current) => current === "success" ? current : "pending");
+    if (pending.current !== null) return;
+    const current = ++request.current;
+    pending.current = current;
+    setState("pending");
     try {
-      await navigator.clipboard.writeText(value);
-      setState("success");
-      setCopied((count) => count + 1);
+      await (onCopy ? onCopy(value) : navigator.clipboard.writeText(value));
+      if (request.current === current) {
+        setState("success");
+        setCopied((count) => count + 1);
+      }
     } catch {
-      setState("error");
+      if (request.current === current) setState("error");
     } finally {
-      pending.current = false;
+      if (pending.current === current) {
+        pending.current = null;
+        if (request.current !== current && mounted.current) setState("idle");
+      }
     }
   }
-  const actionLabel = state === "success" ? "Copied" : state === "error" ? "Try again" : "Copy";
-  return /* @__PURE__ */ jsxs("div", { className: "yg-copy-action", children: [
+  const actionLabel = state === "success" ? "Copied" : state === "error" ? errorLabel : "Copy";
+  return /* @__PURE__ */ jsxs("div", { className: "yg-copy-action", "data-presentation": presentation, children: [
     /* @__PURE__ */ jsxs(
       "button",
       {
         className: "yg-copy-button",
         type: "button",
         "aria-label": actionLabel,
-        disabled: state === "pending",
+        "aria-disabled": state === "pending" || void 0,
         "data-outcome": state,
         onClick: copy,
         children: [
@@ -356,407 +379,19 @@ function CopyButton({ value }) {
             /* @__PURE__ */ jsx(Icon, { name: "check" })
           ] }),
           /* @__PURE__ */ jsx("span", { ref: roll, className: "yg-copy-roll", "aria-hidden": "true", children: /* @__PURE__ */ jsxs("span", { children: [
-            /* @__PURE__ */ jsx("span", { ref: ready, children: state === "error" ? "Try again" : "Copy" }),
+            /* @__PURE__ */ jsx("span", { ref: ready, children: state === "error" ? errorLabel : "Copy" }),
             /* @__PURE__ */ jsx("span", { ref: done, children: "Copied" })
           ] }) })
         ]
       }
     ),
-    /* @__PURE__ */ jsx("span", { role: "status", className: "yg-help", children: state === "error" ? "Clipboard unavailable. Select and copy the text." : state === "success" ? "Copied to clipboard." : "" })
+    /* @__PURE__ */ jsx("span", { role: "status", className: "yg-help", children: state === "error" ? "Copy failed. Select and copy the text." : state === "success" ? "Copied to clipboard." : "" })
   ] });
-}
-
-// packages/web/src/patterns/motion-confirm.tsx
-import { useEffect as useEffect2, useRef as useRef2, useState as useState2 } from "react";
-import { jsx as jsx2, jsxs as jsxs2 } from "react/jsx-runtime";
-function useConfirmation(onConfirm) {
-  const [done, setDone] = useState2(false);
-  const locked = useRef2(false);
-  const timer = useRef2(null);
-  useEffect2(() => () => {
-    if (timer.current) clearTimeout(timer.current);
-  }, []);
-  const confirm = () => {
-    if (locked.current) return;
-    locked.current = true;
-    setDone(true);
-    timer.current = setTimeout(() => {
-      locked.current = false;
-      setDone(false);
-    }, 1800);
-    onConfirm();
-  };
-  return { done, locked, confirm };
-}
-function HoldButton({ label, onConfirm }) {
-  const [progress, setProgress] = useState2(0);
-  const [armed, setArmed] = useState2(false);
-  const [holding, setHolding] = useState2(false);
-  const [showHolding, setShowHolding] = useState2(false);
-  const amount = useRef2(0);
-  const fill = useRef2(null);
-  const drain = useRef2(void 0);
-  const active = useRef2(null);
-  const frame = useRef2(null);
-  const callback = useRef2(onConfirm);
-  callback.current = onConfirm;
-  const { done, locked, confirm } = useConfirmation(() => callback.current());
-  const cancel = () => {
-    if (active.current === null) return;
-    const releasedAt = amount.current;
-    if (releasedAt > 0 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      drain.current = fill.current?.animate([
-        { transform: `scaleX(${releasedAt})` },
-        { transform: "scaleX(0)" }
-      ], { duration: releasedAt * 300, easing: "cubic-bezier(.23, 1, .32, 1)" });
-    }
-    active.current = null;
-    amount.current = 0;
-    setShowHolding(false);
-    if (frame.current !== null) cancelAnimationFrame(frame.current);
-    frame.current = null;
-    setHolding(false);
-    setProgress(0);
-  };
-  useEffect2(() => () => {
-    if (frame.current !== null) cancelAnimationFrame(frame.current);
-    drain.current?.cancel();
-  }, []);
-  const start = (event) => {
-    if (!event.isPrimary || event.button !== 0 || active.current !== null || locked.current) return;
-    drain.current?.cancel();
-    setArmed(false);
-    setHolding(true);
-    active.current = event.pointerId;
-    event.currentTarget.setPointerCapture(event.pointerId);
-    const started = performance.now();
-    const tick = (now) => {
-      if (active.current === null) return;
-      const elapsed = now - started;
-      const next = Math.min(1, elapsed / 1200);
-      amount.current = next;
-      setProgress(next);
-      if (elapsed >= 150) setShowHolding(true);
-      if (next === 1) {
-        active.current = null;
-        frame.current = null;
-        setHolding(false);
-        setShowHolding(false);
-        setProgress(0);
-        amount.current = 0;
-        confirm();
-      } else frame.current = requestAnimationFrame(tick);
-    };
-    frame.current = requestAnimationFrame(tick);
-  };
-  return /* @__PURE__ */ jsxs2(
-    "button",
-    {
-      type: "button",
-      "aria-label": armed ? `Confirm ${label}` : label,
-      className: "yg-hold-confirm",
-      "data-holding": holding || void 0,
-      "data-done": done || void 0,
-      style: { "--yg-confirm-progress": progress },
-      onPointerDown: start,
-      onPointerMove: (event) => {
-        if (active.current !== event.pointerId) return;
-        const rect = event.currentTarget.getBoundingClientRect();
-        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) cancel();
-      },
-      onPointerUp: cancel,
-      onPointerCancel: cancel,
-      onLostPointerCapture: cancel,
-      onBlur: () => {
-        cancel();
-        setArmed(false);
-      },
-      onKeyDown: (event) => {
-        if (event.key === "Escape") {
-          cancel();
-          setArmed(false);
-        }
-      },
-      onClick: (event) => {
-        if (event.detail !== 0 || locked.current) return;
-        if (armed) {
-          setArmed(false);
-          confirm();
-        } else setArmed(true);
-      },
-      children: [
-        /* @__PURE__ */ jsx2("span", { ref: fill, className: "yg-confirm-fill", "aria-hidden": "true" }),
-        /* @__PURE__ */ jsx2("span", { className: "yg-confirm-label", children: done ? /* @__PURE__ */ jsx2("svg", { className: "yg-hold-check", width: "16", height: "16", viewBox: "0 0 16 16", "aria-hidden": "true", children: /* @__PURE__ */ jsx2(
-          "path",
-          {
-            d: "m3.5 8.5 3 3 6-7",
-            fill: "none",
-            stroke: "currentColor",
-            strokeWidth: "2",
-            strokeLinecap: "round",
-            strokeLinejoin: "round",
-            pathLength: "1"
-          }
-        ) }) : armed ? `Confirm ${label}` : showHolding ? "Keep holding" : label }, done ? "complete" : showHolding ? "holding" : armed ? "armed" : "ready")
-      ]
-    }
-  );
-}
-function SlideConfirm({ label, onConfirm }) {
-  const [progress, setProgress] = useState2(0);
-  const [armed, setArmed] = useState2(false);
-  const [dragging, setDragging] = useState2(false);
-  const active = useRef2(null);
-  const value = useRef2(0);
-  const { done, locked, confirm } = useConfirmation(onConfirm);
-  const reset = () => {
-    active.current = null;
-    value.current = 0;
-    setProgress(0);
-    setDragging(false);
-  };
-  const update = (event) => {
-    const drag = active.current;
-    if (!drag || drag.id !== event.pointerId) return;
-    value.current = Math.max(0, Math.min(1, (event.clientX - drag.start) / drag.width));
-    drag.samples = drag.samples.filter((sample) => event.timeStamp - sample.time <= 80);
-    drag.samples.push({ x: event.clientX, time: event.timeStamp });
-    setProgress(value.current);
-  };
-  return /* @__PURE__ */ jsxs2(
-    "button",
-    {
-      type: "button",
-      "aria-label": armed ? `Confirm ${label}` : label,
-      className: "yg-slide-confirm",
-      "data-dragging": dragging || void 0,
-      "data-done": done || void 0,
-      style: { "--yg-confirm-progress": done ? 1 : progress },
-      onPointerDown: (event) => {
-        if (!event.isPrimary || event.button !== 0 || active.current || locked.current) return;
-        setArmed(false);
-        const handle = event.currentTarget.querySelector(".yg-slide-confirm-handle");
-        const bounds = handle?.getBoundingClientRect();
-        if (!bounds || event.clientX < bounds.left || event.clientX > bounds.right) return;
-        const width = event.currentTarget.clientWidth - bounds.width - 8;
-        if (width <= 0) return;
-        active.current = {
-          id: event.pointerId,
-          start: event.clientX,
-          width,
-          samples: [{ x: event.clientX, time: event.timeStamp }]
-        };
-        setDragging(true);
-        event.currentTarget.setPointerCapture(event.pointerId);
-      },
-      onPointerMove: update,
-      onPointerUp: (event) => {
-        const drag = active.current;
-        if (drag?.id !== event.pointerId) return;
-        update(event);
-        const first = drag.samples[0];
-        const elapsed = event.timeStamp - first.time;
-        const speed = elapsed > 0 ? (event.clientX - first.x) * 1e3 / elapsed : 0;
-        const complete = value.current >= 0.9 || value.current > 0.45 && speed > 900;
-        reset();
-        if (complete) confirm();
-      },
-      onPointerCancel: reset,
-      onLostPointerCapture: reset,
-      onBlur: () => {
-        reset();
-        setArmed(false);
-      },
-      onKeyDown: (event) => {
-        if (event.key === "Escape") {
-          reset();
-          setArmed(false);
-        }
-      },
-      onClick: (event) => {
-        if (event.detail !== 0 || locked.current) return;
-        if (armed) {
-          setArmed(false);
-          confirm();
-        } else setArmed(true);
-      },
-      children: [
-        /* @__PURE__ */ jsx2("span", { className: "yg-confirm-label", children: armed ? `Confirm ${label}` : label }),
-        /* @__PURE__ */ jsx2("span", { className: "yg-confirm-fill", "aria-hidden": "true", children: done ? "Confirmed" : label }),
-        /* @__PURE__ */ jsx2("span", { className: "yg-slide-confirm-handle", "aria-hidden": "true", children: /* @__PURE__ */ jsx2(Icon, { name: done ? "check" : "arrow" }) })
-      ]
-    }
-  );
-}
-
-// packages/web/src/patterns/motion-cart.tsx
-import { useEffect as useEffect3, useLayoutEffect as useLayoutEffect2, useRef as useRef3, useState as useState3 } from "react";
-import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
-var holdDelay = 380;
-var initialRepeat = 150;
-var minimumRepeat = 55;
-var limitNoticeDuration = 1600;
-function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "Add" }) {
-  const limit = Number.isFinite(max) ? Math.max(0, Math.floor(max)) : 99;
-  const count = Number.isFinite(quantity) ? Math.max(0, Math.min(limit, Math.floor(quantity))) : 0;
-  const previous = useRef3(count);
-  const goingDown = count < previous.current;
-  const lastCount = previous.current;
-  useLayoutEffect2(() => {
-    previous.current = count;
-  }, [count]);
-  const [showLimit, setShowLimit] = useState3(false);
-  const notice = useRef3(void 0);
-  const open = count > 0;
-  const reachedLimit = count >= limit;
-  const latest = useRef3({ count, limit, onQuantityChange });
-  latest.current = { count, limit, onQuantityChange };
-  const increase = useRef3(null);
-  const pointer = useRef3(void 0);
-  const timer = useRef3(void 0);
-  const skipClick = useRef3(false);
-  function stop() {
-    clearTimeout(timer.current);
-    pointer.current = void 0;
-  }
-  useEffect3(() => {
-    window.addEventListener("blur", stop);
-    return () => {
-      window.removeEventListener("blur", stop);
-      clearTimeout(notice.current);
-      stop();
-    };
-  }, []);
-  function change(direction, repeat) {
-    const { count: count2, limit: limit2, onQuantityChange: onQuantityChange2 } = latest.current;
-    const next = count2 + direction;
-    if (next > limit2) {
-      clearTimeout(notice.current);
-      setShowLimit(true);
-      notice.current = setTimeout(() => setShowLimit(false), limitNoticeDuration);
-      return false;
-    }
-    if (next < (repeat ? 1 : 0)) return false;
-    clearTimeout(notice.current);
-    setShowLimit(false);
-    if (next === 0) increase.current?.focus();
-    onQuantityChange2(next);
-    return true;
-  }
-  function start(event, direction) {
-    if (!event.isPrimary || event.button !== 0) return;
-    skipClick.current = false;
-    if (!open || pointer.current !== void 0) return;
-    pointer.current = event.pointerId;
-    event.currentTarget.setPointerCapture(event.pointerId);
-    let interval = initialRepeat;
-    function repeat() {
-      skipClick.current = true;
-      if (!change(direction, true)) return;
-      timer.current = setTimeout(repeat, interval);
-      interval = Math.max(minimumRepeat, interval * 0.82);
-    }
-    timer.current = setTimeout(repeat, holdDelay);
-  }
-  function stayInControl(event) {
-    if (pointer.current !== event.pointerId) return;
-    const { top, right, bottom, left } = event.currentTarget.getBoundingClientRect();
-    if (event.clientY < top || event.clientX > right || event.clientY > bottom || event.clientX < left) {
-      skipClick.current = true;
-      stop();
-    }
-  }
-  function end(event) {
-    if (pointer.current === event.pointerId) stop();
-  }
-  const pointerHandlers = {
-    onPointerMove: stayInControl,
-    onPointerUp: end,
-    onPointerCancel: end,
-    onLostPointerCapture: end
-  };
-  function activate(direction, detail) {
-    if (detail === 0 || !skipClick.current) change(direction, false);
-    skipClick.current = false;
-  }
-  return /* @__PURE__ */ jsxs3(
-    "div",
-    {
-      className: "yg-cart-control",
-      role: "group",
-      "aria-label": label,
-      "data-open": open,
-      onKeyDown: (event) => {
-        if (event.key === "Escape" && pointer.current !== void 0) {
-          skipClick.current = true;
-          stop();
-        }
-      },
-      onBlur: (event) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) stop();
-      },
-      children: [
-        /* @__PURE__ */ jsx3("span", { className: "yg-cart-limit", role: "status", children: showLimit && reachedLimit ? `Limit ${limit} per order` : null }),
-        /* @__PURE__ */ jsxs3("div", { className: "yg-cart-stepper", children: [
-          /* @__PURE__ */ jsx3(
-            "button",
-            {
-              type: "button",
-              className: "yg-cart-decrease",
-              hidden: !open,
-              "aria-label": count === 1 ? `Remove ${label}` : `Decrease quantity of ${label}`,
-              ...pointerHandlers,
-              onPointerDown: (event) => start(event, -1),
-              onClick: (event) => activate(-1, event.detail),
-              children: /* @__PURE__ */ jsx3(
-                "svg",
-                {
-                  className: "yg-icon",
-                  "aria-hidden": "true",
-                  viewBox: "0 0 24 24",
-                  fill: "none",
-                  stroke: "currentColor",
-                  strokeWidth: 1.7,
-                  strokeLinecap: "round",
-                  strokeLinejoin: "round",
-                  children: /* @__PURE__ */ jsx3("path", { d: count === 1 ? "M4 6h16M9 6V4h6v2m3 0-1 14H7L6 6m4 4v6m4-6v6" : "M5 12h14" })
-                }
-              )
-            }
-          ),
-          /* @__PURE__ */ jsx3("output", { className: "yg-cart-quantity", "aria-label": `Quantity of ${label}`, "data-quantity": count, hidden: !open, children: /* @__PURE__ */ jsxs3("span", { className: "yg-cart-roll", "data-direction": goingDown ? "down" : "up", children: [
-            lastCount !== count && lastCount > 0 && /* @__PURE__ */ jsx3("span", { className: "yg-cart-previous", "aria-hidden": "true", children: lastCount }),
-            /* @__PURE__ */ jsx3("span", { className: "yg-cart-current", children: count })
-          ] }, count) }),
-          /* @__PURE__ */ jsxs3(
-            "button",
-            {
-              ref: increase,
-              type: "button",
-              className: "yg-cart-increase",
-              "aria-disabled": reachedLimit || void 0,
-              "aria-label": open ? `Increase quantity of ${label}` : `${addLabel} ${label}`,
-              ...pointerHandlers,
-              onPointerDown: (event) => start(event, 1),
-              onClick: (event) => activate(1, event.detail),
-              children: [
-                !open && /* @__PURE__ */ jsx3("span", { children: addLabel }),
-                /* @__PURE__ */ jsx3(Icon, { name: "plus" })
-              ]
-            }
-          )
-        ] })
-      ]
-    }
-  );
 }
 
 export {
   StorageMeter,
   ActivityIsland,
   LoadingSuccessButton,
-  CopyButton,
-  HoldButton,
-  SlideConfirm,
-  CartButton
+  CopyButton
 };
