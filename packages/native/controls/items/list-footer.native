@@ -1,5 +1,5 @@
 <template name="yg-list-footer" args="label">
-  <row gap="8" cross="center">
+  <row gap="12" cross="center">
     <text size="sm" foreground="text_muted">{label}</text>
     <slot/>
   </row>

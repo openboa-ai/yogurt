@@ -1,7 +1,7 @@
 <template name="yg-search-field" args="label value">
   <column gap="6">
     <text size="sm">{label}</text>
-    <row gap="4">
+    <row gap="4" cross="center">
       <search-field grow="1" label="{label}" text="{value}" on-input="edit"/>
       <button variant="ghost" icon="x" label="Clear search" on-press="clear"/>
     </row>

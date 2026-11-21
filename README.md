@@ -33,7 +33,8 @@ For a local archive, see [SDK installation](docs/using-yogurt.md#install-the-loc
 | [Design sources](design/README.md) | Artwork, fonts, tokens and product language |
 | [Catalog](catalog/README.md) | Shared component and pattern IDs, contracts and target bindings |
 | [Packages](packages/README.md) | React, Native and editable composition recipes |
-| [Guide](apps/guide/README.md) | Authored pages, interactive examples and generated galleries |
+| [Web guide](apps/guide/README.md) | Authored pages, interactive examples and generated galleries |
+| [Native guide](apps/native-guide/README.md) | Local macOS component browser for development and inspection |
 | [Plugins](plugins/README.md) | Installable agent workflows |
 | [Examples](examples/README.md) | Complete screens and integration cases |
 | [Checks](checks/README.md) | Runtime verification and [agent evaluations](checks/evals/README.md) |
@@ -58,6 +59,14 @@ npm run guide:build
 npm run guide:preview
 npm run check:ui
 ```
+
+To inspect the Native components in a macOS app, install the pinned Native SDK and Zig versions, then run:
+
+```sh
+node apps/native-guide/scripts/run.mjs
+```
+
+See the [Native guide setup](apps/native-guide/README.md) for prerequisites and current coverage.
 
 Use the [verification guide](checks/README.md) to test an installed SDK in an independent project. The generated component galleries can also be opened directly from `apps/guide/generated/`.
 

@@ -1,0 +1,287 @@
+const std = @import("std");
+const sdk = @import("native_sdk");
+const runner = @import("runner");
+const gallery = @import("gallery-generated.zig");
+const navigation = @import("navigation.zig");
+const theme = @import("yogurt/theme.zig");
+const canvas = sdk.canvas;
+
+pub const panic = std.debug.FullPanic(sdk.debug.capturePanic);
+pub const Model = gallery.Model;
+pub const Msg = gallery.Msg;
+pub const AppUi = gallery.Ui;
+const app_name = "yogurt-native-guide";
+const title = "Yogurt components";
+const permissions = [_][]const u8{ sdk.security.permission_command, sdk.security.permission_view };
+const views = [_]sdk.ShellView{.{ .label = "main-canvas", .kind = .gpu_surface, .fill = true,
+    .role = title, .accessibility_label = title, .gpu_backend = .metal, .gpu_pixel_format = .bgra8_unorm,
+    .gpu_present_mode = .timer, .gpu_alpha_mode = .@"opaque", .gpu_color_space = .srgb, .gpu_vsync = true }};
+const windows = [_]sdk.ShellWindow{.{ .label = "main", .title = title, .width = 900, .height = 650, .views = &views }};
+
+pub fn initialModel() Model {
+    var model: Model = .{};
+    for (gallery.ids, 0..) |id, index| {
+        if (std.mem.eql(u8, id, "button")) {
+            model.gallery_selected = @intCast(index);
+            break;
+        }
+    }
+    return model;
+}
+
+fn registerProjectMark(m: *Model, fx: *sdk.Effects(Msg)) void {
+    if (fx.registerImageBytes(2000, @embedFile("yogurt-guide-openboa.png"))) |_| {
+        m.brand_picture = 2000;
+    } else |_| { m.brand_picture = 0; }
+    if (fx.registerImageBytes(2001, @embedFile("yogurt-guide-yogurt.png"))) |_| {
+        m.project_picture = 2001;
+        m.project_missing = false;
+    } else |_| { m.project_picture = 0; m.project_missing = true; }
+    if (fx.registerImageBytes(2002, @embedFile("yogurt-guide-sourdough.png"))) |_| {
+        m.sourdough_picture = 2002;
+        m.project_image = 2002;
+        m.sourdough_missing = false;
+    } else |_| { m.sourdough_picture = 0; m.project_image = 0; m.sourdough_missing = true; }
+    if (fx.registerImageBytes(2003, @embedFile("yogurt-guide-meatball.png"))) |_| {
+        m.meatball_picture = 2003;
+        m.meatball_missing = false;
+    } else |_| { m.meatball_picture = 0; m.meatball_missing = true; }
+}
+
+fn syncCount(m: *Model) void {
+    m.gallery_count_text = switch (m.gallery_count) { 0 => "0", 1 => "1", else => "2" };
+    m.at_first = m.gallery_count == 0;
+    m.at_last = m.gallery_count == 2;
+}
+
+fn syncPage(m: *Model) void {
+    m.gallery_page_one = m.gallery_page == 0;
+    m.gallery_page_two = !m.gallery_page_one;
+    m.gallery_page_text = if (m.gallery_page_one) "1 of 2" else "2 of 2";
+    m.month_label = if (m.gallery_page_one) "November 2026" else "December 2026";
+    m.days = if (m.gallery_page_one) &gallery.november_days else &gallery.december_days;
+    m.at_first = m.gallery_page_one;
+    m.at_last = m.gallery_page_two;
+}
+
+fn selectComponent(m: *Model, index: u32) void {
+    if (index >= gallery.names.len) return;
+    const dark = m.gallery_dark;
+    const show_list = m.gallery_list_open;
+    const brand_picture = m.brand_picture;
+    const project_picture = m.project_picture;
+    const sourdough_picture = m.sourdough_picture;
+    const meatball_picture = m.meatball_picture;
+    const project_missing = m.project_missing;
+    const sourdough_missing = m.sourdough_missing;
+    const meatball_missing = m.meatball_missing;
+    m.* = .{};
+    m.brand_picture = brand_picture;
+    m.project_picture = project_picture;
+    m.sourdough_picture = sourdough_picture;
+    m.project_image = sourdough_picture;
+    m.meatball_picture = meatball_picture;
+    m.project_missing = project_missing;
+    m.sourdough_missing = sourdough_missing;
+    m.meatball_missing = meatball_missing;
+    m.gallery_selected = index;
+    m.gallery_list_open = show_list;
+    m.gallery_dark = dark;
+    const id = gallery.ids[index];
+    if (std.mem.eql(u8, id, "action-menu") or std.mem.eql(u8, id, "context-menu") or
+        std.mem.eql(u8, id, "menubar") or std.mem.eql(u8, id, "date-picker")) m.is_open = false;
+}
+
+pub fn update(m: *Model, msg: Msg, _: *sdk.Effects(Msg)) void {
+    switch (msg) {
+        .gallery_select => |index| selectComponent(m, index),
+        .gallery_previous => if (m.gallery_selected > 0) selectComponent(m, m.gallery_selected - 1),
+        .gallery_next => if (m.gallery_selected + 1 < gallery.names.len) selectComponent(m, m.gallery_selected + 1),
+        .gallery_list => m.gallery_list_open = !m.gallery_list_open,
+        .gallery_appearance => m.gallery_dark = !m.gallery_dark,
+        .gallery_select_option => |id| {
+            if (id != 1 and id != 2) return;
+            m.gallery_first_selected = id == 1;
+            m.gallery_second_selected = id == 2;
+            const is_radio = std.mem.eql(u8, gallery.ids[m.gallery_selected], "radio-group");
+            m.gallery_status = if (is_radio)
+                (if (id == 1) "Daily selected" else "Weekly selected")
+            else
+                (if (id == 1) "Overview selected" else "Activity selected");
+        },
+        .gallery_toggle_option => |id| {
+            if (id == 1) {
+                m.gallery_first_checked = !m.gallery_first_checked;
+                m.gallery_status = if (m.gallery_first_checked) "Weekly digest selected" else "Weekly digest cleared";
+            } else if (id == 2) {
+                m.gallery_second_checked = !m.gallery_second_checked;
+                m.gallery_status = if (m.gallery_second_checked) "Product updates selected" else "Product updates cleared";
+            }
+        },
+        .toggle => {
+            m.enabled = !m.enabled;
+            m.is_open = m.enabled;
+            m.gallery_status = "setting changed";
+        },
+        .open_choices => {
+            const is_picker = std.mem.eql(u8, gallery.ids[m.gallery_selected], "select");
+            const next = if (is_picker) !m.gallery_picker_open else !m.is_open;
+            m.gallery_picker_open = next;
+            m.is_open = next;
+            m.enabled = next;
+            m.gallery_status = if (next) "Options opened" else "Options closed";
+        },
+        .open_menu => { m.is_open = true; m.gallery_status = "Menu opened"; },
+        .toggle_sidebar_group => {
+            m.sidebar_group_open = !m.sidebar_group_open;
+            m.gallery_status = if (m.sidebar_group_open) "Project views expanded" else "Project views collapsed";
+        },
+        .select_sidebar_item => |id| {
+            if (id == 0 or id > 2) return;
+            m.gallery_sidebar_choices[0].selected = id == 1;
+            m.gallery_sidebar_choices[1].selected = id == 2;
+            m.sidebar_destinations = &m.gallery_sidebar_choices;
+            m.gallery_status = if (id == 1) "Overview selected" else "Reviews selected";
+        },
+        .dismiss => { m.gallery_picker_open = false; m.is_open = false; m.enabled = false; m.gallery_status = "state updated"; },
+        .choose => |id| {
+            const selected_id = gallery.ids[m.gallery_selected];
+            if (std.mem.eql(u8, selected_id, "calendar") or std.mem.eql(u8, selected_id, "date-picker")) {
+                const count: usize = if (m.gallery_page_one) 30 else 31;
+                if (id == 0 or id > count) return;
+                m.gallery_days = gallery.december_days;
+                m.gallery_days[id - 1].selected = true;
+                m.days = m.gallery_days[0..count];
+                m.gallery_date_value = if (m.gallery_page_one) gallery.november_labels[id - 1] else gallery.december_labels[id - 1];
+                if (std.mem.eql(u8, selected_id, "date-picker")) m.is_open = false;
+                m.gallery_status = m.gallery_date_value;
+                return;
+            }
+            if (std.mem.eql(u8, selected_id, "toggle-group")) {
+                if (id == 0 or id > 2) return;
+                m.gallery_choices[0].selected = id == 1;
+                m.gallery_choices[1].selected = id == 2;
+                m.choices = &m.gallery_choices;
+                m.gallery_status = if (id == 1) "Yogurt selected" else "Meatball selected";
+                return;
+            }
+            if (id == 0 or id > 2) return;
+            m.gallery_choices[0].selected = id == 1;
+            m.gallery_choices[1].selected = id == 2;
+            m.choices = &m.gallery_choices;
+            m.gallery_editor = canvas.TextBuffer(1024).init(if (id == 1) "Yogurt" else "Meatball");
+            m.value = m.gallery_editor.text();
+            m.gallery_picker_open = false;
+            m.is_open = false;
+            m.enabled = false;
+            m.gallery_status = "state updated";
+        },
+        .adjust => |value| { m.amount = std.math.clamp(value, 0, 1); m.gallery_status = "value changed"; },
+        .edit => |event| {
+            m.gallery_editor.apply(event);
+            m.value = m.gallery_editor.text();
+            m.gallery_status = if (m.gallery_editor.truncated) "text limit reached" else "text changed";
+        },
+        .edit_first => |event| {
+            m.gallery_first_editor.apply(event);
+            m.first_value = m.gallery_first_editor.text();
+            m.gallery_status = if (m.gallery_first_editor.truncated) "text limit reached" else "text changed";
+        },
+        .edit_last => |event| {
+            m.gallery_last_editor.apply(event);
+            m.last_value = m.gallery_last_editor.text();
+            m.gallery_status = if (m.gallery_last_editor.truncated) "text limit reached" else "text changed";
+        },
+        .increment => if (m.gallery_count < 2) { m.gallery_count += 1; syncCount(m); m.gallery_status = "quantity changed"; },
+        .decrement => if (m.gallery_count > 0) { m.gallery_count -= 1; syncCount(m); m.gallery_status = "quantity changed"; },
+        .next_page => if (m.gallery_page < 1) { m.gallery_page += 1; syncPage(m); m.gallery_status = "Sample page changed; dates are illustrative"; },
+        .previous_page => if (m.gallery_page > 0) { m.gallery_page -= 1; syncPage(m); m.gallery_status = "Sample page changed; dates are illustrative"; },
+        .clear => { m.gallery_editor.clear(); m.value = m.gallery_editor.text(); m.gallery_status = "text cleared"; },
+        .activate => m.gallery_status = "Action received locally; no external effect",
+        else => m.gallery_status = "This action is not implemented in this guide",
+    }
+}
+
+pub fn tokens(m: *const Model) canvas.DesignTokens {
+    return theme.theme(m.gallery_dark, .neutral, false, false);
+}
+
+fn previewWidth(id: []const u8) f32 {
+    const wide = [_][]const u8{ "chart", "bar-chart", "table", "data-table", "table-row", "data-grid", "grid-list" };
+    for (wide) |item| if (std.mem.eql(u8, id, item)) return 560;
+    const compact = [_][]const u8{ "button", "icon-button", "toggle", "switch", "checkbox", "radio", "badge" };
+    for (compact) |item| if (std.mem.eql(u8, id, item)) return 240;
+    return 360;
+}
+
+fn compactPreview(id: []const u8) bool {
+    const compact = [_][]const u8{ "button", "icon-button", "toggle", "switch", "checkbox", "radio", "badge", "project-mark", "icon", "avatar" };
+    for (compact) |item| if (std.mem.eql(u8, id, item)) return true;
+    return false;
+}
+
+pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
+    const index: usize = if (m.gallery_selected < gallery.names.len) m.gallery_selected else 0;
+    const has_agent = std.mem.eql(u8, gallery.ids[index], "gaze") or std.mem.startsWith(u8, gallery.ids[index], "agent-");
+    const compact = compactPreview(gallery.ids[index]);
+    const preview = ui.scroll(.{ .grow = 1, .semantics = .{ .label = "Component preview" } }, .{
+        ui.column(.{ .padding = 24, .gap = 20 }, .{
+            ui.column(.{ .gap = 6 }, .{
+                ui.text(.{ .size = .sm, .style_tokens = .{ .foreground = .text_muted } }, gallery.families[index]),
+                ui.text(.{ .size = .display }, gallery.names[index]),
+                ui.text(.{ .wrap = true }, gallery.descriptions[index]),
+            }),
+            if (has_agent) ui.text(.{}, "Animation unavailable") else ui.column(.{}, .{}),
+            ui.text(.{ .size = .sm }, "Preview"),
+            ui.stack(.{ .style_tokens = .{ .background = .surface, .radius = .xl } }, .{
+                ui.column(.{ .height = 200 }, .{}),
+                ui.row(.{ .padding = 24, .height = if (compact) 200 else 0, .main = .center, .cross = .center }, .{
+                    ui.column(.{ .grow = 1, .max_width = previewWidth(gallery.ids[index]), .cross = if (compact) .center else .stretch }, .{
+                        gallery.specimen(ui, m),
+                    }),
+                }),
+            }),
+            if (std.mem.eql(u8, m.gallery_status, "Ready")) ui.column(.{}, .{}) else ui.text(.{ .wrap = true }, m.gallery_status),
+            ui.row(.{ .gap = 8 }, .{
+                ui.button(.{ .on_press = .gallery_previous, .disabled = index == 0, .variant = .secondary }, "Previous"),
+                ui.button(.{ .on_press = .gallery_next, .disabled = index + 1 >= gallery.names.len, .variant = .secondary }, "Next"),
+            }),
+        }),
+    });
+    const body = if (m.gallery_list_open) ui.row(.{ .grow = 1, .gap = 24 }, .{
+        navigation.sidebar(ui, m),
+        preview,
+    }) else preview;
+    return ui.column(.{ .grow = 1, .style_tokens = .{ .background = .background } }, .{
+        ui.row(.{ .padding = 16, .gap = 12, .cross = .center, .style_tokens = .{ .background = .background } }, .{
+            if (m.brand_picture != 0) ui.image(.{ .width = 28, .height = 28, .image = m.brand_picture, .semantics = .{ .label = "OpenBoa" } }) else ui.column(.{}, .{}),
+            ui.text(.{ .size = .heading }, "Yogurt"),
+            ui.text(.{}, "Components"),
+            ui.button(.{ .on_press = .gallery_list, .variant = .ghost }, if (m.gallery_list_open) "Hide list" else "Show list"),
+            ui.button(.{ .on_press = .gallery_appearance, .variant = .secondary }, "Change appearance"),
+        }),
+        body,
+    });
+}
+
+pub fn main(init: std.process.Init) !void {
+    const App = sdk.UiApp(Model, Msg);
+    const app = try App.create(std.heap.page_allocator, .{
+        .name = app_name, .scene = .{ .windows = &windows }, .canvas_label = "main-canvas",
+        .init_fx = registerProjectMark, .update_fx = update, .tokens_fn = tokens, .view = rootView,
+        .fonts = &.{
+            .{ .id = theme.font_id, .name = "Rethink Sans", .ttf = @embedFile("yogurt/rethink-sans.ttf") },
+            .{ .id = theme.button_font_id, .name = "Rethink Sans Medium", .ttf = @embedFile("yogurt/rethink-sans-medium.ttf") },
+        },
+    });
+    defer app.destroy();
+    app.model = initialModel();
+    try runner.runWithOptions(app.app(), .{
+        .app_name = app_name, .window_title = title, .bundle_id = "dev.openboa.yogurt.native-guide",
+        .icon_path = "assets/icon.png", .default_frame = sdk.geometry.RectF.init(0, 0, 900, 650),
+        .js_window_api = false,
+        .security = .{ .permissions = &permissions, .navigation = .{ .allowed_origins = &.{ "zero://inline", "zero://app" } } },
+    }, init);
+}
+
+test { _ = @import("gallery-tests.zig"); }

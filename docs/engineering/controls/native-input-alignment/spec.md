@@ -14,7 +14,7 @@ For select, select-picker, combobox and date-picker, display the supplied label 
 
 Display the existing radio-group and selection-list labels using the small label role and six-point gap, preserving each native group, list and host slot. Use the same label role for the calendar label, retaining month navigation, day selection and disabled states. Keep native checkbox, toggle, grouping and form interactions unchanged when the SDK offers no verified equivalent styling or motion.
 
-Use one SDK switch with its default geometry and motion, the supplied visible and accessible label, the host-owned checked state, and the existing `toggle` message. Do not add a separate pressable row or override the switch dimensions. The theme remains the source of shared visual roles.
+Use one SDK switch with its default geometry and motion, the supplied visible and accessible label, the host-owned checked state, and the existing `toggle` message. Its label uses the shared text color in both appearances; the thumb retains its existing switch foreground role. Do not add a separate pressable row or override the switch dimensions. The theme remains the source of shared visual roles.
 
 ## Evidence
 

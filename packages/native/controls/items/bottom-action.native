@@ -1,5 +1,5 @@
 <template name="yg-bottom-action" args="label=Actions">
   <row gap="8" padding="12" cross="center" role="group" label="{label}">
-  <slot/>
+    <slot/>
   </row>
 </template>

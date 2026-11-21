@@ -34,6 +34,7 @@ const args = {
 };
 const slots = {
   "action-menu": '<menu-item on-press="activate">Rename view</menu-item>',
+  tooltip: '<button on-press="activate">Review details</button>',
   tabs: '<toggle-button selected="true" on-toggle="toggle">Overview</toggle-button>',
   "segmented-control":
     '<segmented-control selected="true" on-press="activate">Overview</segmented-control>',

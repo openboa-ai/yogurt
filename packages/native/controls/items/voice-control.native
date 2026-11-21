@@ -3,8 +3,10 @@
     <text>{label}</text>
     <status-bar>{summary}</status-bar>
     <if test="{voice_active}">
-      <if test="{voice_can_mute}"><toggle-button selected="{voice_muted}" disabled="{voice_pending}" on-toggle="toggle_voice_mute">Mute</toggle-button></if>
-      <button variant="secondary" disabled="{voice_pending}" on-press="end_voice">End call</button>
+      <row gap="8" cross="center">
+        <if test="{voice_can_mute}"><toggle-button selected="{voice_muted}" disabled="{voice_pending}" on-toggle="toggle_voice_mute">Mute</toggle-button></if>
+        <button variant="secondary" disabled="{voice_pending}" on-press="end_voice">End call</button>
+      </row>
     </if>
     <else>
       <if test="{voice_can_start}"><button variant="secondary" disabled="{voice_pending}" on-press="start_voice">Start call</button></if>

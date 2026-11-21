@@ -1,10 +1,10 @@
 <template name="yg-sidebar-layout" args="label">
-  <row gap="16" label="{label}">
+  <row gap="16" cross="stretch" label="{label}">
     <slot/>
   </row>
 </template>
 <template name="yg-sidebar-panel" args="label">
-  <panel label="{label}" padding="10">
+  <panel label="{label}" padding="18">
     <column gap="12">
       <slot/>
     </column>
@@ -28,7 +28,7 @@
   </column>
 </template>
 <template name="yg-sidebar-items">
-  <list>
+  <list gap="2">
     <slot/>
   </list>
 </template>

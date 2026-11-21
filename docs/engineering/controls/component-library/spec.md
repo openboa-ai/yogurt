@@ -50,6 +50,12 @@ The owner also requested ready-made combinations following the individual compon
 
 The owner requested an unframed agent silhouette and coverage for agent-first and project-first workflows. Retain stable component IDs, existing consumers and OpenBoa's artwork, type and palette. Give a named agent's silhouette its own transparent presentation. Profile avatars can still use a circular crop. Use the same silhouette in lists, messages and the selected agent header. Keep the existing gaze states.
 
+Native transcript follow-up: the scroll container takes the available height rather than collapsing to zero. Preserve the caller's label and message slot, and permit the host to constrain the available viewport. Verify visible message content in a flexible parent and scrolling with content taller than a constrained viewport.
+
+Native sidebar follow-up: the project and agent lists reserve a visible minimum while growing with the host, rather than collapsing their scroll viewport. Nest project destinations inside their disclosure heading, preserve the existing messages and slots, and verify both the visible default list and overflow scrolling.
+
+Native typography resolves the existing display-size token as well as the body, action and heading tokens, so a display text uses the same 40 px scale as the web guide.
+
 | Surface | Required behavior |
 | --- | --- |
 | Agent workspace | Search the roster and select a stable agent ID. Show a named current agent, recent context, unread and attention states. Keep a usable reading pane with optional computer status and inspector. Expose watch, request control and return only through explicit host callbacks. At narrow widths provide a way to reopen the roster and close the inspector. |
