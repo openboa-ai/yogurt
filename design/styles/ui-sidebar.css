@@ -3,6 +3,7 @@
   min-inline-size: 0;
   min-block-size: 0;
   block-size: 100%;
+  gap: 0;
   grid-template-areas: "main";
   grid-template-columns: minmax(0, 1fr);
 }
@@ -12,17 +13,24 @@
 .yg-sidebar-layout[data-panel="rail"] {
   --yg-sidebar-track: calc(var(--yg-size-touch) + 2 * var(--boa-space-8));
 }
+.yg-sidebar-layout[data-compact="false"][data-panel="hidden"] {
+  --yg-sidebar-track: minmax(0, 0px);
+}
 .yg-sidebar-layout[data-panel="full"],
-.yg-sidebar-layout[data-panel="rail"] {
+.yg-sidebar-layout[data-panel="rail"],
+.yg-sidebar-layout[data-compact="false"][data-panel="hidden"] {
   grid-template-areas: "panel main";
   grid-template-columns: var(--yg-sidebar-track) minmax(0, 1fr);
 }
-.yg-sidebar-layout[data-edge="end"]:is([data-panel="full"], [data-panel="rail"]) {
+.yg-sidebar-layout[data-edge="end"]:is([data-panel="full"], [data-panel="rail"]),
+.yg-sidebar-layout[data-edge="end"][data-compact="false"][data-panel="hidden"] {
   grid-template-areas: "main panel";
   grid-template-columns: minmax(0, 1fr) var(--yg-sidebar-track);
 }
-.yg-sidebar-layout[data-panel="hidden"] > .yg-sidebar-panel {
-  display: none;
+.yg-sidebar-layout[data-compact="false"][data-panel="hidden"] > .yg-sidebar-panel {
+  overflow: clip;
+  padding-inline: 0;
+  opacity: 0;
 }
 .yg-sidebar-layout[data-variant="inset"]:is([data-panel="full"], [data-panel="rail"]) {
   gap: var(--boa-space-16);
@@ -170,8 +178,11 @@
 .yg-sidebar > nav[data-expanded="true"] { grid-template-rows: 1fr; opacity: 1; }
 .yg-sidebar-links { display: grid; min-block-size: 0; overflow: hidden; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-sidebar-layout[data-compact="false"][data-edge]:is([data-panel="full"], [data-panel="rail"]) {
-    transition: grid-template-columns var(--yg-motion-nav-divider);
+  .yg-sidebar-layout[data-compact="false"][data-edge] {
+    transition: grid-template-columns var(--yg-motion-nav-divider), gap var(--yg-motion-nav-divider);
+  }
+  .yg-sidebar-layout[data-compact="false"] > .yg-sidebar-panel {
+    transition: opacity var(--yg-motion-surface-focus), padding-inline var(--yg-motion-nav-divider);
   }
   .yg-sidebar-submenu-content,
   .yg-sidebar > nav {

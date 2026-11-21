@@ -1,4 +1,13 @@
 .yg-streaming-reply { white-space: pre-wrap; overflow-wrap: anywhere; font: var(--yg-font-body); }
+.yg-message > div:last-child, .yg-bubble { min-inline-size: 0; }
+:is(.yg-message > div:last-child, .yg-bubble) :where(img, video) {
+  max-inline-size: 100%;
+  block-size: auto;
+}
+:is(.yg-message > div:last-child, .yg-bubble) pre {
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
 .yg-streaming-cursor { display: inline-block; inline-size: .45em; block-size: 1em; margin-inline-start: .15em; vertical-align: -.12em; border-radius: var(--boa-radius-round); background: currentColor; animation: yg-streaming-pulse 1s ease-in-out infinite alternate; }
 .yg-ghost-field { display: grid; gap: var(--yg-gap-inline); min-inline-size: 0; }
 .yg-ghost-field label { font: var(--yg-font-label); }

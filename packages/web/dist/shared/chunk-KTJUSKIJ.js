@@ -35,6 +35,7 @@ function SidebarLayout({
   style
 }) {
   const root = useRef(null);
+  const panel = useRef(null);
   const dialog = useRef(null);
   const focusReturn = useRef(null);
   const controls = useId();
@@ -44,6 +45,13 @@ function SidebarLayout({
   const isCollapsed = collapse !== "none" && (collapsed ?? internalCollapsed);
   const rail = !compact && isCollapsed && collapse === "rail";
   const showOverlay = compact && drawer;
+  const panelHidden = !compact && isCollapsed && collapse === "hide";
+  useLayoutEffect(() => {
+    const frame = root.current;
+    if (!panelHidden || !frame || !panel.current?.contains(frame.ownerDocument.activeElement)) return;
+    const trigger = [...frame.querySelectorAll("button[aria-controls]")].find((button) => button.getAttribute("aria-controls") === controls && !panel.current?.contains(button));
+    trigger?.focus();
+  }, [controls, panelHidden]);
   useLayoutEffect(() => {
     const frame = root.current;
     if (!frame) return;
@@ -119,7 +127,18 @@ function SidebarLayout({
               navigation
             ]
           }
-        ) : /* @__PURE__ */ jsx("aside", { id: controls, className: "yg-sidebar-panel", "aria-label": label, children: navigation }),
+        ) : /* @__PURE__ */ jsx(
+          "aside",
+          {
+            ref: panel,
+            id: controls,
+            className: "yg-sidebar-panel",
+            "aria-label": label,
+            "aria-hidden": panelHidden || void 0,
+            inert: panelHidden || void 0,
+            children: navigation
+          }
+        ),
         /* @__PURE__ */ jsx("div", { className: "yg-sidebar-main", children })
       ]
     }

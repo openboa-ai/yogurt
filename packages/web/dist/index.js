@@ -21,7 +21,7 @@ import {
   SidebarLayout,
   SidebarSubmenu,
   SidebarTrigger
-} from "./shared/chunk-RAP2WR2B.js";
+} from "./shared/chunk-KTJUSKIJ.js";
 import {
   AgentRow,
   RuntimePanel

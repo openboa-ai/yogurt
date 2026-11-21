@@ -484,6 +484,9 @@
 }
 .yg-choice[data-disabled] label,
 .yg-radio label[data-disabled] { cursor: default; }
+.yg-choice > label,
+.yg-radio label { min-inline-size: 0; overflow-wrap: anywhere; }
+.yg-fieldset > legend { max-inline-size: 100%; overflow-wrap: anywhere; }
 @media (forced-colors: none) {
   .yg-input:has(:is(input, textarea):disabled):not(:has([aria-invalid="true"])) {
     background: var(--yg-surface);

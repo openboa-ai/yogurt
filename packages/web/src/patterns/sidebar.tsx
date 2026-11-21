@@ -55,6 +55,7 @@ export function SidebarLayout({
   style?: CSSProperties;
 }) {
   const root = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const focusReturn = useRef<HTMLButtonElement | null>(null);
   const controls = useId();
@@ -64,6 +65,15 @@ export function SidebarLayout({
   const isCollapsed = collapse !== "none" && (collapsed ?? internalCollapsed);
   const rail = !compact && isCollapsed && collapse === "rail";
   const showOverlay = compact && drawer;
+  const panelHidden = !compact && isCollapsed && collapse === "hide";
+
+  useLayoutEffect(() => {
+    const frame = root.current;
+    if (!panelHidden || !frame || !panel.current?.contains(frame.ownerDocument.activeElement)) return;
+    const trigger = [...frame.querySelectorAll<HTMLButtonElement>("button[aria-controls]")]
+      .find(button => button.getAttribute("aria-controls") === controls && !panel.current?.contains(button));
+    trigger?.focus();
+  }, [controls, panelHidden]);
 
   useLayoutEffect(() => {
     const frame = root.current;
@@ -132,7 +142,8 @@ export function SidebarLayout({
             </div>
             {navigation}
           </dialog>
-        ) : <aside id={controls} className="yg-sidebar-panel" aria-label={label}>{navigation}</aside>}
+        ) : <aside ref={panel} id={controls} className="yg-sidebar-panel" aria-label={label}
+          aria-hidden={panelHidden || undefined} inert={panelHidden || undefined}>{navigation}</aside>}
         <div className="yg-sidebar-main">{children}</div>
       </div>
     </SidebarContext.Provider>
