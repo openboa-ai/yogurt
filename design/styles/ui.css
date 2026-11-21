@@ -764,7 +764,7 @@
   flex-wrap: nowrap;
   gap: var(--yg-segment-option-gap);
   border-radius: var(--yg-segment-track-radius);
-  background: var(--yg-raised-surface);
+  background: var(--yg-field);
   padding: var(--yg-segment-track-padding);
   position: relative;
 }
@@ -782,8 +782,8 @@
   font: var(--yg-font-compact);
 }
 .yg-segment button[data-state="on"] {
-  background: var(--yg-inverse);
-  color: var(--yg-on-inverse);
+  background: var(--yg-hover);
+  color: var(--yg-text);
 }
 .yg-segment > button {
   min-block-size: var(--yg-segment-option-height);
@@ -844,7 +844,7 @@
 .yg-dialog::backdrop {
   background: color-mix(
     in srgb,
-    var(--boa-color-neutral-1000) 40%,
+    var(--yg-overlay-ink) var(--yg-overlay-scrim),
     transparent
   );
 }

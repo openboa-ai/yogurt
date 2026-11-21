@@ -71,7 +71,7 @@
   --yg-selection-y: var(--segmented-control-indicator-top, 0px);
   --yg-selection-width: var(--segmented-control-indicator-width, 0px);
   --yg-selection-height: var(--segmented-control-indicator-height, 0px);
-  background: var(--yg-inverse);
+  background: var(--yg-hover);
   border: 0;
   border-radius: var(--yg-segment-option-radius);
 }
@@ -94,14 +94,7 @@
   }
 }
 
-@supports (mix-blend-mode: difference) {
-  @media (forced-colors: none) {
-    .yg-segment:has(> .yg-selection-marker[data-ready][style*="--segmented-control-indicator-width"]) > button {
-      color: var(--boa-color-neutral-0);
-      mix-blend-mode: difference;
-    }
-  }
-}
+.yg-segment > button[data-state="on"] { color: var(--yg-text); }
 
 @media (forced-colors: active) {
   .yg-tabs [role="tab"][aria-selected="true"] {

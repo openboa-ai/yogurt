@@ -1,9 +1,11 @@
 <template name="yg-dialog" args="title">
-  <dialog label="{title}" on-dismiss="dismiss" padding="24">
-  <column gap="12">
-  <text size="heading">{title}</text>
-  <slot/>
-  <button variant="ghost" on-press="dismiss">Close</button>
-  </column>
+  <dialog label="{title}" on-dismiss="dismiss" width="400" padding="24">
+    <column gap="12">
+      <row gap="8" cross="center">
+        <text size="heading" grow="1" wrap="true">{title}</text>
+        <button variant="ghost" size="icon" icon="x" label="Close" on-press="dismiss"/>
+      </row>
+      <slot/>
+    </column>
   </dialog>
 </template>

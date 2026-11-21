@@ -350,6 +350,7 @@
 
 /* Generated from design/tokens/brand.json and design/tokens/ui.json. */
 .yg-root {
+  --yg-overlay-ink: light-dark(var(--boa-color-neutral-1000), var(--boa-color-neutral-1000));
   --yg-canvas: light-dark(var(--boa-color-neutral-0), var(--boa-color-neutral-975));
   --yg-surface: light-dark(var(--boa-color-neutral-50), var(--boa-color-neutral-900));
   --yg-field: light-dark(var(--boa-color-neutral-100), var(--boa-color-neutral-850));
@@ -408,10 +409,10 @@
   --yg-radius-menu: var(--boa-radius-panel);
   --yg-menu-row: var(--boa-control-height);
   --yg-layer-shift: var(--boa-space-4);
-  --yg-switch-width: 52px;
-  --yg-switch-height: 32px;
-  --yg-thumb-size: 26px;
-  --yg-track-inset: 3px;
+  --yg-switch-width: 44px;
+  --yg-switch-height: 24px;
+  --yg-thumb-size: 20px;
+  --yg-track-inset: 2px;
   --yg-radius-inset: var(--boa-radius-inset);
   --yg-radius-popover: var(--boa-radius-popover);
   --yg-radius-feature: var(--boa-radius-card);
@@ -475,6 +476,7 @@
   --yg-button-size-comfort: var(--boa-control-comfort);
   --yg-button-size-spacious: var(--boa-control-spacious);
   --yg-button-size-touch: var(--boa-control-touch);
+  --yg-overlay-scrim: 40%;
   --yg-press: 110ms;
   --yg-layer: 160ms;
   --yg-layer-exit: 110ms;
@@ -3622,7 +3624,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   --yg-selection-y: var(--segmented-control-indicator-top, 0px);
   --yg-selection-width: var(--segmented-control-indicator-width, 0px);
   --yg-selection-height: var(--segmented-control-indicator-height, 0px);
-  background: var(--yg-inverse);
+  background: var(--yg-hover);
   border: 0;
   border-radius: var(--yg-segment-option-radius);
 }
@@ -3645,14 +3647,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   }
 }
 
-@supports (mix-blend-mode: difference) {
-  @media (forced-colors: none) {
-    .yg-segment:has(> .yg-selection-marker[data-ready][style*="--segmented-control-indicator-width"]) > button {
-      color: var(--boa-color-neutral-0);
-      mix-blend-mode: difference;
-    }
-  }
-}
+.yg-segment > button[data-state="on"] { color: var(--yg-text); }
 
 @media (forced-colors: active) {
   .yg-tabs [role="tab"][aria-selected="true"] {
@@ -6291,7 +6286,7 @@ summary.yg-task-line:focus-visible {
   flex-wrap: nowrap;
   gap: var(--yg-segment-option-gap);
   border-radius: var(--yg-segment-track-radius);
-  background: var(--yg-raised-surface);
+  background: var(--yg-field);
   padding: var(--yg-segment-track-padding);
   position: relative;
 }
@@ -6309,8 +6304,8 @@ summary.yg-task-line:focus-visible {
   font: var(--yg-font-compact);
 }
 .yg-segment button[data-state="on"] {
-  background: var(--yg-inverse);
-  color: var(--yg-on-inverse);
+  background: var(--yg-hover);
+  color: var(--yg-text);
 }
 .yg-segment > button {
   min-block-size: var(--yg-segment-option-height);
@@ -6371,7 +6366,7 @@ summary.yg-task-line:focus-visible {
 .yg-dialog::backdrop {
   background: color-mix(
     in srgb,
-    var(--boa-color-neutral-1000) 40%,
+    var(--yg-overlay-ink) var(--yg-overlay-scrim),
     transparent
   );
 }

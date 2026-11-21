@@ -1,6 +1,6 @@
 <template name="yg-confirm-dialog" args="title consequence choice">
-  <dialog label="{title}" on-dismiss="dismiss">
-  <column gap="12" padding="16">
+  <dialog label="{title}" on-dismiss="dismiss" width="400" padding="24">
+  <column gap="12">
   <text size="heading">{title}</text>
   <text wrap="true" foreground="text_muted">{consequence}</text>
   <row gap="8" main="end" cross="center">

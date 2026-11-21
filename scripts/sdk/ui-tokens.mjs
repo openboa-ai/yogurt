@@ -37,6 +37,8 @@ for (const [k, v] of Object.entries(ui.geometry))
         : "var(--boa-" + v.replace(".", "-") + ")") +
       ";",
   );
+for (const [k, v] of Object.entries(ui.opacity))
+  css.push(`  --yg-${k}: ${v}%;`);
 for (const [k, v] of Object.entries(ui.motion))
   css.push("  --yg-" + k + ": " + v + "ms;");
 for (const [role, curve] of Object.entries(ui.easing))
@@ -122,6 +124,9 @@ const zig = [
   "}",
   ...Object.keys(ui.geometry).map(
     (k) => "pub const " + id(k) + ": f32 = " + dimension(k) + ";",
+  ),
+  ...Object.entries(ui.opacity).map(
+    ([k, v]) => "pub const " + id(k) + "_alpha: f32 = " + v / 100 + ";",
   ),
   ...Object.entries(ui.motion).map(
     ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v + ";",

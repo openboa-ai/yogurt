@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "roles": {
+    "overlay-ink": ["neutral.1000", "neutral.1000"],
     "canvas": [
       "neutral.0",
       "neutral.975"
@@ -217,10 +218,10 @@
     "radius-menu": "radius.panel",
     "menu-row": "control.height",
     "layer-shift": "space.4",
-    "switch-width": 52,
-    "switch-height": 32,
-    "thumb-size": 26,
-    "track-inset": 3,
+    "switch-width": 44,
+    "switch-height": 24,
+    "thumb-size": 20,
+    "track-inset": 2,
     "radius-inset": "radius.inset",
     "radius-popover": "radius.popover",
     "radius-feature": "radius.card",
@@ -284,6 +285,9 @@
     "button-size-comfort": "control.comfort",
     "button-size-spacious": "control.spacious",
     "button-size-touch": "control.touch"
+  },
+  "opacity": {
+    "overlay-scrim": 40
   },
   "motion": {
     "press": 110,

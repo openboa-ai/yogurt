@@ -48,6 +48,7 @@ for (const over of [{}, ...Object.values(ui.materials)]) {
   for (const [fg, bg] of [
     ["text", "canvas"],
     ["text", "field"],
+    ["text", "hover"],
     ["muted", "surface"],
     ["muted", "field"],
     ["on-action", "action"],

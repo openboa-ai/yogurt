@@ -1,5 +1,6 @@
 const std = @import("std");
 const gallery = @import("gallery-generated.zig");
+const ui_tokens = @import("yogurt/tokens.zig");
 
 /// The host owns the selected component; selecting a family selects its first item.
 pub fn sidebar(ui: *gallery.Ui, model: *const gallery.Model) gallery.Ui.Node {
@@ -20,6 +21,7 @@ pub fn sidebar(ui: *gallery.Ui, model: *const gallery.Model) gallery.Ui.Node {
         if (seen) continue;
         const expanded = std.mem.eql(u8, family, current_family);
         rows[count] = ui.listItem(.{
+            .height = ui_tokens.size_compact,
             .on_press = .{ .gallery_select = @intCast(first) },
             .icon = if (expanded) "chevron-down" else "chevron-right",
         }, family);
@@ -30,6 +32,7 @@ pub fn sidebar(ui: *gallery.Ui, model: *const gallery.Model) gallery.Ui.Node {
             rows[count] = ui.row(.{}, .{
                 ui.column(.{ .width = 32 }, .{}),
                 ui.listItem(.{
+                    .height = ui_tokens.size_compact,
                     .grow = 1,
                     .on_press = .{ .gallery_select = @intCast(position) },
                     .selected = position == selected,

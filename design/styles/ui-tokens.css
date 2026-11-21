@@ -1,5 +1,6 @@
 /* Generated from design/tokens/brand.json and design/tokens/ui.json. */
 .yg-root {
+  --yg-overlay-ink: light-dark(var(--boa-color-neutral-1000), var(--boa-color-neutral-1000));
   --yg-canvas: light-dark(var(--boa-color-neutral-0), var(--boa-color-neutral-975));
   --yg-surface: light-dark(var(--boa-color-neutral-50), var(--boa-color-neutral-900));
   --yg-field: light-dark(var(--boa-color-neutral-100), var(--boa-color-neutral-850));
@@ -58,10 +59,10 @@
   --yg-radius-menu: var(--boa-radius-panel);
   --yg-menu-row: var(--boa-control-height);
   --yg-layer-shift: var(--boa-space-4);
-  --yg-switch-width: 52px;
-  --yg-switch-height: 32px;
-  --yg-thumb-size: 26px;
-  --yg-track-inset: 3px;
+  --yg-switch-width: 44px;
+  --yg-switch-height: 24px;
+  --yg-thumb-size: 20px;
+  --yg-track-inset: 2px;
   --yg-radius-inset: var(--boa-radius-inset);
   --yg-radius-popover: var(--boa-radius-popover);
   --yg-radius-feature: var(--boa-radius-card);
@@ -125,6 +126,7 @@
   --yg-button-size-comfort: var(--boa-control-comfort);
   --yg-button-size-spacious: var(--boa-control-spacious);
   --yg-button-size-touch: var(--boa-control-touch);
+  --yg-overlay-scrim: 40%;
   --yg-press: 110ms;
   --yg-layer: 160ms;
   --yg-layer-exit: 110ms;

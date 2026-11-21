@@ -3,6 +3,7 @@ const canvas = @import("native_sdk").canvas;
 const C = canvas.Color;
 pub const Material = enum { neutral, paper, mist };
 pub const Roles = struct {
+    overlay_ink: C,
     canvas: C,
     surface: C,
     field: C,
@@ -41,6 +42,7 @@ pub const Roles = struct {
 pub fn roles(dark: bool, material: Material) Roles {
     return switch (material) {
         .neutral => if (dark) .{
+            .overlay_ink = C.rgb8(18, 18, 18),
             .canvas = C.rgb8(23, 23, 23),
             .surface = C.rgb8(38, 38, 38),
             .field = C.rgb8(48, 48, 48),
@@ -76,6 +78,7 @@ pub fn roles(dark: bool, material: Material) Roles {
             .accent = C.rgb8(225, 225, 225),
             .accent_soft = C.rgb8(48, 48, 48),
         } else .{
+            .overlay_ink = C.rgb8(18, 18, 18),
             .canvas = C.rgb8(252, 252, 252),
             .surface = C.rgb8(247, 247, 247),
             .field = C.rgb8(240, 240, 240),
@@ -112,6 +115,7 @@ pub fn roles(dark: bool, material: Material) Roles {
             .accent_soft = C.rgb8(240, 240, 240),
         },
         .paper => if (dark) .{
+            .overlay_ink = C.rgb8(18, 18, 18),
             .canvas = C.rgb8(25, 23, 20),
             .surface = C.rgb8(33, 30, 26),
             .field = C.rgb8(55, 50, 44),
@@ -147,6 +151,7 @@ pub fn roles(dark: bool, material: Material) Roles {
             .accent = C.rgb8(225, 225, 225),
             .accent_soft = C.rgb8(48, 48, 48),
         } else .{
+            .overlay_ink = C.rgb8(18, 18, 18),
             .canvas = C.rgb8(251, 249, 244),
             .surface = C.rgb8(247, 244, 239),
             .field = C.rgb8(239, 236, 229),
@@ -183,6 +188,7 @@ pub fn roles(dark: bool, material: Material) Roles {
             .accent_soft = C.rgb8(240, 240, 240),
         },
         .mist => if (dark) .{
+            .overlay_ink = C.rgb8(18, 18, 18),
             .canvas = C.rgb8(23, 29, 35),
             .surface = C.rgb8(28, 37, 44),
             .field = C.rgb8(47, 59, 68),
@@ -218,6 +224,7 @@ pub fn roles(dark: bool, material: Material) Roles {
             .accent = C.rgb8(225, 225, 225),
             .accent_soft = C.rgb8(48, 48, 48),
         } else .{
+            .overlay_ink = C.rgb8(18, 18, 18),
             .canvas = C.rgb8(247, 250, 252),
             .surface = C.rgb8(242, 246, 249),
             .field = C.rgb8(235, 238, 242),
@@ -279,10 +286,10 @@ pub const offset_layer: f32 = 6;
 pub const radius_menu: f32 = 12;
 pub const menu_row: f32 = 36;
 pub const layer_shift: f32 = 4;
-pub const switch_width: f32 = 52;
-pub const switch_height: f32 = 32;
-pub const thumb_size: f32 = 26;
-pub const track_inset: f32 = 3;
+pub const switch_width: f32 = 44;
+pub const switch_height: f32 = 24;
+pub const thumb_size: f32 = 20;
+pub const track_inset: f32 = 2;
 pub const radius_inset: f32 = 4;
 pub const radius_popover: f32 = 18;
 pub const radius_feature: f32 = 20;
@@ -346,6 +353,7 @@ pub const button_size_regular: f32 = 36;
 pub const button_size_comfort: f32 = 40;
 pub const button_size_spacious: f32 = 48;
 pub const button_size_touch: f32 = 44;
+pub const overlay_scrim_alpha: f32 = 0.4;
 pub const press_ms: u32 = 110;
 pub const layer_ms: u32 = 160;
 pub const layer_exit_ms: u32 = 110;

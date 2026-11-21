@@ -493,7 +493,7 @@ fn previewWidth(id: []const u8) f32 {
 }
 
 fn compactPreview(id: []const u8) bool {
-    const compact = [_][]const u8{ "button", "icon-button", "toggle", "switch", "checkbox", "radio", "badge", "project-mark", "icon", "avatar", "agent-avatar", "gaze" };
+    const compact = [_][]const u8{ "button", "icon-button", "toggle", "switch", "checkbox", "radio", "badge", "segmented-control", "project-mark", "icon", "avatar", "agent-avatar", "gaze" };
     for (compact) |item| if (std.mem.eql(u8, id, item)) return true;
     return false;
 }
