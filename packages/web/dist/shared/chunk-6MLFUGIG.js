@@ -18,6 +18,7 @@ import {
 // packages/web/src/controls/layers.tsx
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { Dialog as SDKDialog, DialogContent } from "@ui-sdk/react/dialog";
+import { Popover as SDKPopover, PopoverContent } from "@ui-sdk/react/popover";
 
 // packages/web/src/controls/action-menu-motion.ts
 function animateActionMenu(root) {
@@ -286,7 +287,7 @@ function Popover({
   useEffect(() => {
     if (open) content.current?.focus();
   }, [open]);
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(SDKPopover, { open, onOpenChange: setOpen, children: /* @__PURE__ */ jsxs(
     "div",
     {
       ref: outer,
@@ -314,21 +315,20 @@ function Popover({
             children: label
           }
         ),
-        open && /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsx(PopoverContent, { inline: true, ref: content, render: (props) => /* @__PURE__ */ jsx(
           "div",
           {
-            ref: content,
+            ...props,
             id,
             className: "yg-anchored-panel yg-popover",
             role: "region",
             "aria-label": label,
-            tabIndex: -1,
-            children
+            tabIndex: -1
           }
-        )
+        ), children })
       ]
     }
-  );
+  ) });
 }
 function Modal({
   open,

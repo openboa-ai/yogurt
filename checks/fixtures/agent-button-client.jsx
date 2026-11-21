@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Button, Checkbox, Dialog, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
+import { Button, Checkbox, Dialog, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 
 if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
@@ -18,7 +18,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent radio" && step.action === "setValue") ||
       (step.label === "Agent toggle" && step.action === "setPressed") ||
       (step.label === "Agent filters" && step.action === "setValue") ||
-      (step.label === "Fixture dialog" && step.action === "setOpen"),
+      (step.label === "Fixture dialog" && step.action === "setOpen") ||
+      (step.label === "Agent popover" && step.action === "setOpen"),
   });
 }
 
@@ -111,6 +112,8 @@ export default function AgentButtonFixture() {
         <ToggleGroup label="Agent filters" multiple items={options} value={filters} onValueChange={value => { setFilters(value); setFilterChanges(count => count + 1); }} />
         <ToggleGroup label="Denied filters" multiple items={options} value={deniedFilters} onValueChange={setDeniedFilters} />
         <ToggleGroup label="Single filter" items={options} value={single} onValueChange={setSingle} />
+        <Popover label="Agent popover"><input aria-label="Popover note" /></Popover>
+        <Popover label="Denied popover"><input aria-label="Denied popover note" /></Popover>
         <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
         <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
           <input aria-label="Draft" defaultValue="Original draft" />

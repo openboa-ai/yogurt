@@ -2,6 +2,7 @@
 import { words } from "../foundation/words.js";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Dialog as SDKDialog, DialogContent } from "@ui-sdk/react/dialog";
+import { Popover as SDKPopover, PopoverContent } from "@ui-sdk/react/popover";
 import { Icon, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
 import { animateActionMenu } from "./action-menu-motion.js";
@@ -195,6 +196,7 @@ export function Popover({
     if (open) content.current?.focus();
   }, [open]);
   return (
+    <SDKPopover open={open} onOpenChange={setOpen}>
     <div
       ref={outer}
       className="yg-anchor"
@@ -219,19 +221,13 @@ export function Popover({
       >
         {label}
       </Button>
-      {open && (
-        <div
-          ref={content}
-          id={id}
-          className="yg-anchored-panel yg-popover"
-          role="region"
-          aria-label={label}
-          tabIndex={-1}
-        >
-          {children}
-        </div>
-      )}
+      <PopoverContent inline ref={content} render={(props) => <div {...props}
+        id={id} className="yg-anchored-panel yg-popover" role="region"
+        aria-label={label} tabIndex={-1} />}>
+        {children}
+      </PopoverContent>
     </div>
+    </SDKPopover>
   );
 }
 export interface DialogProps {
