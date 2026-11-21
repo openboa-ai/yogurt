@@ -1,6 +1,7 @@
 "use client";
 import { words } from "../foundation/words.js";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Dialog as SDKDialog, DialogContent } from "@ui-sdk/react/dialog";
 import { Icon, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
 import { animateActionMenu } from "./action-menu-motion.js";
@@ -267,30 +268,11 @@ function Modal({
     };
   }, [open]);
   return (
-    <dialog
-      ref={ref}
-      aria-labelledby={id}
-      aria-describedby={description ? id + "-desc" : undefined}
-      className={
-        "yg-dialog" + (drawer ? " yg-drawer" : sheet ? " yg-sheet" : "")
-      }
-      onCancel={(e) => {
-        e.preventDefault();
-        onOpenChange(false);
-      }}
-      onClick={(e) => {
-        if (e.target === ref.current) {
-          const r = ref.current!.getBoundingClientRect();
-          if (
-            e.clientX < r.left ||
-            e.clientX > r.right ||
-            e.clientY < r.top ||
-            e.clientY > r.bottom
-          )
-            onOpenChange(false);
-        }
-      }}
-    >
+    <SDKDialog open={open} onOpenChange={onOpenChange}>
+    <DialogContent keepMounted inline render={<dialog ref={ref}
+      aria-labelledby={id} aria-describedby={description ? id + "-desc" : undefined}
+      className={"yg-dialog" + (drawer ? " yg-drawer" : sheet ? " yg-sheet" : "")}
+      onCancel={(e) => { e.preventDefault(); onOpenChange(false); }} />}>
       {drawer && (
         <div
           className="yg-drawer-grip"
@@ -338,7 +320,8 @@ function Modal({
         </p>
       )}
       {children}
-    </dialog>
+    </DialogContent>
+    </SDKDialog>
   );
 }
 export function Dialog(props: DialogProps) {

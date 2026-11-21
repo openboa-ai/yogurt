@@ -17,6 +17,7 @@ import {
 
 // packages/web/src/controls/layers.tsx
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { Dialog as SDKDialog, DialogContent } from "@ui-sdk/react/dialog";
 
 // packages/web/src/controls/action-menu-motion.ts
 function animateActionMenu(root) {
@@ -355,7 +356,7 @@ function Modal({
       if (fallback.current?.isConnected) fallback.current.focus();
     };
   }, [open]);
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(SDKDialog, { open, onOpenChange, children: /* @__PURE__ */ jsxs(DialogContent, { keepMounted: true, inline: true, render: /* @__PURE__ */ jsx(
     "dialog",
     {
       ref,
@@ -365,63 +366,55 @@ function Modal({
       onCancel: (e) => {
         e.preventDefault();
         onOpenChange(false);
-      },
-      onClick: (e) => {
-        if (e.target === ref.current) {
-          const r = ref.current.getBoundingClientRect();
-          if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)
-            onOpenChange(false);
-        }
-      },
-      children: [
-        drawer && /* @__PURE__ */ jsx(
-          "div",
-          {
-            className: "yg-drawer-grip",
-            "aria-hidden": "true",
-            onPointerDown: (event) => {
-              if (!event.isPrimary || event.button !== 0) return;
-              event.currentTarget.setPointerCapture(event.pointerId);
-              drag.current = { id: event.pointerId, origin: event.clientY };
-              ref.current?.setAttribute("data-dragging", "");
-            },
-            onPointerMove: (event) => {
-              const start = drag.current;
-              if (start?.id !== event.pointerId) return;
-              ref.current?.style.setProperty(
-                "--yg-drag-distance",
-                Math.max(0, event.clientY - start.origin) + "px"
-              );
-            },
-            onPointerUp: (event) => {
-              const start = drag.current;
-              if (start?.id !== event.pointerId) return;
-              if (event.clientY - start.origin >= 64) onOpenChange(false);
-              event.currentTarget.releasePointerCapture(event.pointerId);
-            },
-            onLostPointerCapture: () => {
-              drag.current = null;
-              ref.current?.removeAttribute("data-dragging");
-              ref.current?.style.removeProperty("--yg-drag-distance");
-            }
-          }
-        ),
-        /* @__PURE__ */ jsxs("div", { className: "yg-modal-header", children: [
-          /* @__PURE__ */ jsx("h2", { id, className: "yg-heading", children: title }),
-          /* @__PURE__ */ jsx(
-            IconButton,
-            {
-              icon: "close",
-              label: words["action.close"],
-              onClick: () => onOpenChange(false)
-            }
-          )
-        ] }),
-        description && /* @__PURE__ */ jsx("p", { id: id + "-desc", className: "yg-help", children: description }),
-        children
-      ]
+      }
     }
-  );
+  ), children: [
+    drawer && /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: "yg-drawer-grip",
+        "aria-hidden": "true",
+        onPointerDown: (event) => {
+          if (!event.isPrimary || event.button !== 0) return;
+          event.currentTarget.setPointerCapture(event.pointerId);
+          drag.current = { id: event.pointerId, origin: event.clientY };
+          ref.current?.setAttribute("data-dragging", "");
+        },
+        onPointerMove: (event) => {
+          const start = drag.current;
+          if (start?.id !== event.pointerId) return;
+          ref.current?.style.setProperty(
+            "--yg-drag-distance",
+            Math.max(0, event.clientY - start.origin) + "px"
+          );
+        },
+        onPointerUp: (event) => {
+          const start = drag.current;
+          if (start?.id !== event.pointerId) return;
+          if (event.clientY - start.origin >= 64) onOpenChange(false);
+          event.currentTarget.releasePointerCapture(event.pointerId);
+        },
+        onLostPointerCapture: () => {
+          drag.current = null;
+          ref.current?.removeAttribute("data-dragging");
+          ref.current?.style.removeProperty("--yg-drag-distance");
+        }
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "yg-modal-header", children: [
+      /* @__PURE__ */ jsx("h2", { id, className: "yg-heading", children: title }),
+      /* @__PURE__ */ jsx(
+        IconButton,
+        {
+          icon: "close",
+          label: words["action.close"],
+          onClick: () => onOpenChange(false)
+        }
+      )
+    ] }),
+    description && /* @__PURE__ */ jsx("p", { id: id + "-desc", className: "yg-help", children: description }),
+    children
+  ] }) });
 }
 function Dialog(props) {
   return /* @__PURE__ */ jsx(Modal, { ...props });

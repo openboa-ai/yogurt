@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Button, Checkbox, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
+import { Button, Checkbox, Dialog, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 
 if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
@@ -17,7 +17,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent tabs" && step.action === "setValue") ||
       (step.label === "Agent radio" && step.action === "setValue") ||
       (step.label === "Agent toggle" && step.action === "setPressed") ||
-      (step.label === "Agent filters" && step.action === "setValue"),
+      (step.label === "Agent filters" && step.action === "setValue") ||
+      (step.label === "Fixture dialog" && step.action === "setOpen"),
   });
 }
 
@@ -51,6 +52,10 @@ export default function AgentButtonFixture() {
   const [filterChanges, setFilterChanges] = useState(0);
   const [single, setSingle] = useState([]);
   const [formToggle, setFormToggle] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [modalChanges, setModalChanges] = useState(0);
+  const [nestedModal, setNestedModal] = useState(false);
+  const [nestedChanges, setNestedChanges] = useState(0);
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
   const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
   const actionRef = useRef(null);
@@ -106,6 +111,15 @@ export default function AgentButtonFixture() {
         <ToggleGroup label="Agent filters" multiple items={options} value={filters} onValueChange={value => { setFilters(value); setFilterChanges(count => count + 1); }} />
         <ToggleGroup label="Denied filters" multiple items={options} value={deniedFilters} onValueChange={setDeniedFilters} />
         <ToggleGroup label="Single filter" items={options} value={single} onValueChange={setSingle} />
+        <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
+        <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
+          <input aria-label="Draft" defaultValue="Original draft" />
+          <Button onClick={() => setNestedModal(true)}>Open nested dialog</Button>
+          <Dialog title="Nested dialog" open={nestedModal} onOpenChange={value => { setNestedModal(value); setNestedChanges(count => count + 1); }}>
+            <input aria-label="Nested input" />
+          </Dialog>
+          <Button onClick={() => setModal(false)}>Done</Button>
+        </Dialog>
         <form aria-label="Fixture form" onSubmit={event => { event.preventDefault(); setSubmits(value => value + 1); }}>
           <Checkbox label="Form checkbox" name="notes" value="include" defaultChecked />
           <Switch label="Form switch" name="enabled" value="yes" defaultChecked />
@@ -138,6 +152,8 @@ export default function AgentButtonFixture() {
         <output data-testid="denied-filter-value">{deniedFilters.join(",")}</output>
         <output data-testid="filter-changes">{filterChanges}</output>
         <output data-testid="single-value">{single.join(",")}</output>
+        <output data-testid="modal-changes">{modalChanges}</output>
+        <output data-testid="nested-changes">{nestedChanges}</output>
       </main>
     </Yogurt>
   );
