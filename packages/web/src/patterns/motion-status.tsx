@@ -3,7 +3,6 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Button } from "../controls/actions.js";
 import { Icon } from "../foundation/foundation.js";
-import { playSprings, snap, spring } from "../foundation/spring-motion.js";
 
 type StorageCategory = {
   id: string;
@@ -100,59 +99,22 @@ export function ActivityIsland({ label, summary, children, compact = false }: {
 }) {
   const id = useId();
   const [open, setOpen] = useState(false);
-  const capsule = useRef<HTMLElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
-  const [tracks] = useState(() => ({
-    width: spring(compact ? 184 : 244,380,24), height: spring(compact ? 36 : 44,300,22),
-    press: spring(1,520,18), copy: spring(0,260,28),
-  }));
-  useLayoutEffect(() => {
-    const visible = capsule.current, content = panel.current;
-    if (!visible || !content) return;
-    let stop: (() => void) | undefined;
-    const sync = () => {
-      const room = visible.parentElement?.clientWidth ?? 340;
-      const header = compact ? 36 : 44;
-      tracks.width.target = Math.min(room, open ? (compact ? 280 : 340) : (compact ? 184 : 244));
-      tracks.height.target = header + (open ? content.offsetHeight : 0);
-      tracks.height.stiffness = open ? 300 : 390;
-      tracks.copy.target = Number(open);
-      stop?.();
-      stop = playSprings(Object.values(tracks), () => {
-        const h = Math.max(header, tracks.height.position);
-        const give = Math.min(.05, Math.max(-.05, -tracks.height.velocity/7000));
-        visible.style.setProperty("--yg-island-w", `${tracks.width.position * (1+give)}px`);
-        visible.style.setProperty("--yg-island-h", `${h}px`);
-        visible.style.setProperty("--yg-island-radius", `${Math.min(32,h/2)}px`);
-        visible.style.setProperty("--yg-island-press", String(tracks.press.position));
-        visible.style.setProperty("--yg-island-copy", String(Math.min(1, Math.max(0, tracks.copy.position))));
-      });
-    };
-    sync();
-    let parentWidth = visible.parentElement?.clientWidth;
-    const changes = new ResizeObserver(entries => {
-      const width = visible.parentElement?.clientWidth;
-      if (width === parentWidth && entries.every(entry => entry.target !== content)) return;
-      parentWidth = width;
-      sync();
-    });
-    changes.observe(content);
-    if (visible.parentElement) changes.observe(visible.parentElement);
-    return () => { changes.disconnect(); stop?.(); };
-  }, [compact, open, tracks]);
+  const dimensions = {
+    "--yg-island-w": `min(100%, ${open ? (compact ? 280 : 340) : (compact ? 184 : 244)}px)`,
+    "--yg-island-h": open ? "auto" : `${compact ? 36 : 44}px`,
+    "--yg-island-radius": open ? "32px" : `${compact ? 18 : 22}px`,
+    "--yg-island-copy": Number(open),
+  } as CSSProperties;
   return (
-    <section ref={capsule} className="yg-activity-island" data-open={open} data-compact={compact || undefined}>
-      <button type="button" aria-expanded={open} aria-controls={id} onClick={() => {
-        tracks.press.velocity -= open ? 1 : 1.6;
-        setOpen(value => !value);
-      }}>
+    <section className="yg-activity-island" style={dimensions} data-open={open} data-compact={compact || undefined}>
+      <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen(value => !value)}>
         <Icon name="clock" />
         <span>{label}</span>
         <span className="yg-island-summary">{summary}</span>
         <Icon name="down" />
       </button>
       <div className="yg-island-reveal" id={id} inert={!open}>
-        <div className="yg-island-content" ref={panel}>{children}</div>
+        <div className="yg-island-content">{children}</div>
       </div>
     </section>
   );

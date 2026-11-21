@@ -1,9 +1,5 @@
 "use client";
 import {
-  playSprings,
-  spring
-} from "./chunk-V7PMO7T5.js";
-import {
   Disclosure
 } from "./chunk-Y34L4C5K.js";
 import {
@@ -424,57 +420,35 @@ function FanCards({ items }) {
   const [keyboard, setKeyboard] = useState3(false);
   const selected = items.find((item) => item.id === selectedId);
   const list = useRef3(null);
-  const [spread] = useState3(() => spring(0, 220, 18));
-  const tracks = useRef3(/* @__PURE__ */ new Map());
-  const kick = useRef3(null);
   useLayoutEffect2(() => {
     const root = list.current;
     if (!root || items.length > 3) return;
     const buttons = Array.from(root.querySelectorAll("button[data-card]"));
     const active = pointer || keyboard;
-    spread.target = Number(active);
-    const states = [spread];
-    const live = new Set(items.map((item) => item.id));
-    tracks.current.forEach((_, id) => {
-      if (!live.has(id)) tracks.current.delete(id);
-    });
     const rows = buttons.map((button, index) => {
       const id = button.dataset.card;
-      const tracksForCard = tracks.current.get(id) ?? { lift: spring(0, 420, 20), scale: spring(1, 420, 22) };
       const featured = highlight ?? selectedId ?? items[Math.floor(items.length / 2)]?.id;
       const hot = active && id === featured;
       button.toggleAttribute("data-front", id === featured);
-      tracksForCard.lift.target = hot ? -22 : 0;
-      tracksForCard.scale.target = hot ? 1.06 : 1;
-      if (id === kick.current) tracksForCard.lift.velocity = -260;
-      states.push(tracksForCard.lift, tracksForCard.scale);
-      tracks.current.set(id, tracksForCard);
       button.style.zIndex = id === featured ? "5" : index === 1 ? "3" : "2";
-      return { button, tracks: tracksForCard, index: index - (items.length - 1) / 2 };
+      return { button, hot, index: index - (items.length - 1) / 2 };
     });
-    kick.current = null;
     const render = () => {
       const width = root.offsetWidth;
       const compact = width <= 290;
       const room = Math.min(78, Math.max(10, (width - (compact ? 184 : 166)) / 2));
       const angle = compact ? 5 : 9;
-      rows.forEach(({ button, tracks: tracks2, index }) => {
-        const x = index * (6 + spread.position * (room - 6));
-        const y = Math.abs(index) * spread.position * 12 + tracks2.lift.position;
-        button.style.setProperty("--yg-fan-transform", `translate(calc(-50% + ${x}px), ${y}px) rotate(${index * (3 + spread.position * angle)}deg) scale(${tracks2.scale.position})`);
+      rows.forEach(({ button, hot, index }) => {
+        const x = index * (active ? room : 6);
+        const y = Math.abs(index) * (active ? 12 : 0) + (hot ? -22 : 0);
+        button.style.setProperty("--yg-fan-transform", `translate(calc(-50% + ${x}px), ${y}px) rotate(${index * (3 + (active ? angle : 0))}deg) scale(${hot ? 1.06 : 1})`);
       });
     };
-    let stop = playSprings(states, render);
-    const sizes = new ResizeObserver(() => {
-      stop();
-      stop = playSprings(states, render);
-    });
+    render();
+    const sizes = new ResizeObserver(render);
     sizes.observe(root);
-    return () => {
-      sizes.disconnect();
-      stop();
-    };
-  }, [highlight, items, keyboard, pointer, selectedId, spread]);
+    return () => sizes.disconnect();
+  }, [highlight, items, keyboard, pointer, selectedId]);
   return /* @__PURE__ */ jsxs3("div", { className: "yg-fan-cards", children: [
     /* @__PURE__ */ jsx3(
       "div",
@@ -505,10 +479,7 @@ function FanCards({ items }) {
                 setHighlight(item.id);
               }
             },
-            onClick: () => {
-              kick.current = item.id;
-              setSelectedId(item.id === selectedId ? null : item.id);
-            },
+            onClick: () => setSelectedId(item.id === selectedId ? null : item.id),
             children: [
               /* @__PURE__ */ jsx3("span", { className: "yg-fan-art", "aria-hidden": "true" }),
               /* @__PURE__ */ jsx3("span", { className: "yg-fan-index", "aria-hidden": "true", children: String(index + 1).padStart(2, "0") }),

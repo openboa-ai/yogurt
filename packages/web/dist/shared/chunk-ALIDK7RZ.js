@@ -8,64 +8,6 @@ import {
 
 // packages/web/src/patterns/motion-status.tsx
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
-
-// packages/web/src/foundation/spring-motion.ts
-function spring(position, stiffness, damping) {
-  return { position, velocity: 0, target: position, stiffness, damping };
-}
-function snap(s, position) {
-  s.position = s.target = position;
-  s.velocity = 0;
-}
-function advanceSprings(springs, elapsed) {
-  const delta = Math.min(Math.max(0, elapsed), 1 / 30) / 4;
-  let moving = false;
-  for (const s of springs) {
-    if (Math.abs(s.position - s.target) < 1e-3 && Math.abs(s.velocity) < 1e-3) {
-      snap(s, s.target);
-      continue;
-    }
-    for (let sample = 0; sample < 4; sample++) {
-      const acceleration = s.stiffness * (s.target - s.position) - s.damping * s.velocity;
-      s.velocity += acceleration * delta;
-      s.position += s.velocity * delta;
-    }
-    moving = true;
-  }
-  return moving;
-}
-function playSprings(springs, paint) {
-  const preference = matchMedia("(prefers-reduced-motion: reduce)");
-  let frame = 0;
-  let last = performance.now();
-  function step(time) {
-    const moving = advanceSprings(springs, (time - last) / 1e3);
-    last = time;
-    paint();
-    frame = moving ? requestAnimationFrame(step) : 0;
-  }
-  function settle() {
-    cancelAnimationFrame(frame);
-    frame = 0;
-    springs.forEach((state) => snap(state, state.target));
-    paint();
-  }
-  function change() {
-    if (preference.matches) settle();
-  }
-  if (preference.matches) settle();
-  else {
-    paint();
-    frame = requestAnimationFrame(step);
-  }
-  preference.addEventListener("change", change);
-  return () => {
-    cancelAnimationFrame(frame);
-    preference.removeEventListener("change", change);
-  };
-}
-
-// packages/web/src/patterns/motion-status.tsx
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 function StorageAmount({ value }) {
   const [whole, fraction] = String(value).split(".");
@@ -163,62 +105,20 @@ function StorageMeter({ label, used, capacity, unit, categories = [] }) {
 function ActivityIsland({ label, summary, children, compact = false }) {
   const id = useId();
   const [open, setOpen] = useState(false);
-  const capsule = useRef(null);
-  const panel = useRef(null);
-  const [tracks] = useState(() => ({
-    width: spring(compact ? 184 : 244, 380, 24),
-    height: spring(compact ? 36 : 44, 300, 22),
-    press: spring(1, 520, 18),
-    copy: spring(0, 260, 28)
-  }));
-  useLayoutEffect(() => {
-    const visible = capsule.current, content = panel.current;
-    if (!visible || !content) return;
-    let stop;
-    const sync = () => {
-      const room = visible.parentElement?.clientWidth ?? 340;
-      const header = compact ? 36 : 44;
-      tracks.width.target = Math.min(room, open ? compact ? 280 : 340 : compact ? 184 : 244);
-      tracks.height.target = header + (open ? content.offsetHeight : 0);
-      tracks.height.stiffness = open ? 300 : 390;
-      tracks.copy.target = Number(open);
-      stop?.();
-      stop = playSprings(Object.values(tracks), () => {
-        const h = Math.max(header, tracks.height.position);
-        const give = Math.min(0.05, Math.max(-0.05, -tracks.height.velocity / 7e3));
-        visible.style.setProperty("--yg-island-w", `${tracks.width.position * (1 + give)}px`);
-        visible.style.setProperty("--yg-island-h", `${h}px`);
-        visible.style.setProperty("--yg-island-radius", `${Math.min(32, h / 2)}px`);
-        visible.style.setProperty("--yg-island-press", String(tracks.press.position));
-        visible.style.setProperty("--yg-island-copy", String(Math.min(1, Math.max(0, tracks.copy.position))));
-      });
-    };
-    sync();
-    let parentWidth = visible.parentElement?.clientWidth;
-    const changes = new ResizeObserver((entries) => {
-      const width = visible.parentElement?.clientWidth;
-      if (width === parentWidth && entries.every((entry) => entry.target !== content)) return;
-      parentWidth = width;
-      sync();
-    });
-    changes.observe(content);
-    if (visible.parentElement) changes.observe(visible.parentElement);
-    return () => {
-      changes.disconnect();
-      stop?.();
-    };
-  }, [compact, open, tracks]);
-  return /* @__PURE__ */ jsxs("section", { ref: capsule, className: "yg-activity-island", "data-open": open, "data-compact": compact || void 0, children: [
-    /* @__PURE__ */ jsxs("button", { type: "button", "aria-expanded": open, "aria-controls": id, onClick: () => {
-      tracks.press.velocity -= open ? 1 : 1.6;
-      setOpen((value) => !value);
-    }, children: [
+  const dimensions = {
+    "--yg-island-w": `min(100%, ${open ? compact ? 280 : 340 : compact ? 184 : 244}px)`,
+    "--yg-island-h": open ? "auto" : `${compact ? 36 : 44}px`,
+    "--yg-island-radius": open ? "32px" : `${compact ? 18 : 22}px`,
+    "--yg-island-copy": Number(open)
+  };
+  return /* @__PURE__ */ jsxs("section", { className: "yg-activity-island", style: dimensions, "data-open": open, "data-compact": compact || void 0, children: [
+    /* @__PURE__ */ jsxs("button", { type: "button", "aria-expanded": open, "aria-controls": id, onClick: () => setOpen((value) => !value), children: [
       /* @__PURE__ */ jsx(Icon, { name: "clock" }),
       /* @__PURE__ */ jsx("span", { children: label }),
       /* @__PURE__ */ jsx("span", { className: "yg-island-summary", children: summary }),
       /* @__PURE__ */ jsx(Icon, { name: "down" })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: "yg-island-reveal", id, inert: !open, children: /* @__PURE__ */ jsx("div", { className: "yg-island-content", ref: panel, children }) })
+    /* @__PURE__ */ jsx("div", { className: "yg-island-reveal", id, inert: !open, children: /* @__PURE__ */ jsx("div", { className: "yg-island-content", children }) })
   ] });
 }
 function LoadingSuccessButton({ presentation, ...props }) {
@@ -388,6 +288,62 @@ function CopyButton({ value, onCopy, presentation = "standard", errorLabel = "Tr
     ),
     /* @__PURE__ */ jsx("span", { role: "status", className: "yg-help", children: state === "error" ? "Copy failed. Select and copy the text." : state === "success" ? "Copied to clipboard." : "" })
   ] });
+}
+
+// packages/web/src/foundation/spring-motion.ts
+function spring(position, stiffness, damping) {
+  return { position, velocity: 0, target: position, stiffness, damping };
+}
+function snap(s, position) {
+  s.position = s.target = position;
+  s.velocity = 0;
+}
+function advanceSprings(springs, elapsed) {
+  const delta = Math.min(Math.max(0, elapsed), 1 / 30) / 4;
+  let moving = false;
+  for (const s of springs) {
+    if (Math.abs(s.position - s.target) < 1e-3 && Math.abs(s.velocity) < 1e-3) {
+      snap(s, s.target);
+      continue;
+    }
+    for (let sample = 0; sample < 4; sample++) {
+      const acceleration = s.stiffness * (s.target - s.position) - s.damping * s.velocity;
+      s.velocity += acceleration * delta;
+      s.position += s.velocity * delta;
+    }
+    moving = true;
+  }
+  return moving;
+}
+function playSprings(springs, paint) {
+  const preference = matchMedia("(prefers-reduced-motion: reduce)");
+  let frame = 0;
+  let last = performance.now();
+  function step(time) {
+    const moving = advanceSprings(springs, (time - last) / 1e3);
+    last = time;
+    paint();
+    frame = moving ? requestAnimationFrame(step) : 0;
+  }
+  function settle() {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    springs.forEach((state) => snap(state, state.target));
+    paint();
+  }
+  function change() {
+    if (preference.matches) settle();
+  }
+  if (preference.matches) settle();
+  else {
+    paint();
+    frame = requestAnimationFrame(step);
+  }
+  preference.addEventListener("change", change);
+  return () => {
+    cancelAnimationFrame(frame);
+    preference.removeEventListener("change", change);
+  };
 }
 
 export {

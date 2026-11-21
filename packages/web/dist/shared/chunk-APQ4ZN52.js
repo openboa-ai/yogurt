@@ -3,7 +3,7 @@ import {
   advanceSprings,
   snap,
   spring
-} from "./chunk-V7PMO7T5.js";
+} from "./chunk-ALIDK7RZ.js";
 
 // packages/web/src/patterns/prompt-shared.tsx
 import { useCallback, useLayoutEffect, useRef } from "react";

@@ -6,5 +6,6 @@ Decorative component motion settles immediately in its final visible state. Feed
 
 Expanded card content and its visual state appear immediately when its native disclosure opens; closing and rapid toggles must not leave content hidden or introduce delayed updates.
 Statistic card values and chart points reflect the current supplied data immediately, including rapid updates and non-finite chart inputs.
+Fan card positions settle immediately while preserving pointer and keyboard selection and responsive resizing.
 
 Apply the decision across component styles and JavaScript-driven motion, while retaining non-motion styling. Verify representative controls and composed views at their resting and changed states, including loading, rapid interaction and reduced motion; check that no content stays hidden or waits for a removed animation. Validate Web builds and the Native integration separately and show the owner a preview before merge.
