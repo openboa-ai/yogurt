@@ -2,7 +2,7 @@
   <stack>
   <button variant="secondary" on-press="open_choices">{label}</button>
   <if test="{is_open}">
-  <popover anchor="below" on-dismiss="dismiss">
+  <popover anchor="below" on-dismiss="dismiss" padding="12">
   <slot/>
   </popover>
   </if>

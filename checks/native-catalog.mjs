@@ -66,7 +66,8 @@ for (const { id, native } of [...catalog, ...blocks]) {
   writeFileSync(dir + "/" + id + ".native", source);
   const keys = (source.match(/args="([^"]*)"/)?.[1] ?? "")
     .split(" ")
-    .filter(Boolean);
+    // Optional arguments are supplied by the template's own defaults.
+    .filter((key) => key && !key.includes("="));
   const attributes = keys
     .map((k) => {
       if (!args[k]) throw Error("Missing example arg " + k);

@@ -16,6 +16,9 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .yg-agent-row { transition: background-color var(--yg-press) var(--yg-settle); }
+  .yg-agent-row-state { transition: color var(--yg-motion-surface-focus); }
+  .yg-agent-row-new { animation: yg-pagination-arrive var(--yg-motion-pagination) both; }
+  .yg-runtime-preview { animation: yg-section-arrive var(--yg-change) var(--yg-settle) both; }
 }
 
 @media (hover: hover) {

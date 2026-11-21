@@ -1,6 +1,6 @@
 <template name="yg-toast" args="label">
-  <row gap="8" cross="center">
-  <text grow="1">{label}</text>
-  <button variant="ghost" label="Dismiss notification" icon="x" on-press="dismiss"/>
+  <row gap="12" padding="8" cross="center" background="text" radius="md">
+    <text grow="1" foreground="background">{label}</text>
+    <button variant="ghost" foreground="background" label="Dismiss notification" icon="x" on-press="dismiss"/>
   </row>
 </template>

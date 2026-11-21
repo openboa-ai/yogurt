@@ -1,6 +1,6 @@
 <template name="yg-sheet" args="title">
-  <sheet label="{title}" on-dismiss="dismiss">
-  <column gap="12" padding="16">
+  <sheet label="{title}" on-dismiss="dismiss" padding="24">
+  <column gap="12">
   <text size="heading">{title}</text>
   <slot/>
   <button variant="ghost" on-press="dismiss">Done</button>

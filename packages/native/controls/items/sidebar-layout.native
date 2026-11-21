@@ -4,7 +4,7 @@
   </row>
 </template>
 <template name="yg-sidebar-panel" args="label">
-  <panel label="{label}" padding="8">
+  <panel label="{label}" padding="10">
     <column gap="12">
       <slot/>
     </column>
@@ -33,7 +33,7 @@
   </list>
 </template>
 <template name="yg-sidebar-destination" args="label item_id selected">
-  <list-item label="{label}" selected="{selected}" on-press="select_sidebar_item:{item_id}" padding="8">
+  <list-item label="{label}" selected="{selected}" on-press="select_sidebar_item:{item_id}" padding="10">
     <slot/>
   </list-item>
 </template>

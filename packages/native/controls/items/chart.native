@@ -1,10 +1,10 @@
 <template name="yg-chart" args="label source">
   <column gap="8">
-  <text size="heading">{label}</text>
-  <chart label="{label}">
-  <series kind="line" values="{samples}" color="accent" label="{label}"/>
-  </chart>
-  <text size="sm">{source}</text>
-  <slot/>
+    <text size="heading">{label}</text>
+    <chart label="{label}" grid-lines="3" stroke-width="2">
+      <series kind="line" values="{samples}" color="text" label="{label}"/>
+    </chart>
+    <text size="sm" foreground="text_muted">{source}</text>
+    <slot/>
   </column>
 </template>

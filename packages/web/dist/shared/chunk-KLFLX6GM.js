@@ -280,9 +280,10 @@ function Tabs({
           if (!current || !event.currentTarget.contains(current) || !enabled.length || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
           const index = enabled.findIndex((item) => item.id === current.dataset.ygTabId);
           if (index < 0) return;
+          const step = getComputedStyle(event.currentTarget).direction === "rtl" ? -1 : 1;
           const next = {
-            ArrowRight: (index + 1) % enabled.length,
-            ArrowLeft: (index + enabled.length - 1) % enabled.length,
+            ArrowRight: (index + step + enabled.length) % enabled.length,
+            ArrowLeft: (index - step + enabled.length) % enabled.length,
             Home: 0,
             End: enabled.length - 1
           }[event.key];

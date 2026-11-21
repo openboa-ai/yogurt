@@ -2,9 +2,9 @@
   <column gap="8">
     <text size="heading">{label}</text>
     <chart label="{label}">
-      <series kind="bar" values="{samples}" color="accent" label="{label}"/>
+      <series kind="bar" values="{samples}" color="text" label="{label}"/>
     </chart>
-    <text size="sm">{source}</text>
+    <text size="sm" foreground="text_muted">{source}</text>
     <slot/>
   </column>
 </template>

@@ -10,7 +10,7 @@ ActionMenu has a partial Web transition: shared inline popup and button behavior
 
 A 2026-11-21 worktree snapshot passed the catalog gallery smoke check for **125 components and 14 blocks** across four browser/theme/viewport combinations (556 renders). It checked that examples rendered without page errors, page-level horizontal overflow or gallery alignment failures. This is not a design, motion, accessibility or product-use approval for every state. The snapshot was not recorded as an immutable revision; changes after it require rechecking.
 
-Of the 125 component IDs, **33** have the additional, explicitly linked focused Web checks below, and **92** have only the catalog-wide smoke observation in this conservative count. A focused check proves only the cases its file exercises; it does not establish complete design or motion quality, all Web hosts, accessibility or Native parity. Some components may have additional evidence not counted here until it is linked. The `Web observation` column labels these two evidence levels rather than completion. All 125 remain `Pending` for the full replacement criteria, including supported Native behavior and visual review.
+Of the 125 component IDs, **58** have the additional, explicitly linked focused Web checks below, and **67** have only the catalog-wide smoke observation in this conservative count. The initial 33 focused observations are from the worktree snapshot above; the later 25 use focused checks reported passing at `d55ed0b`. A focused check proves only the cases its file exercises; it does not establish complete design or motion quality, all Web hosts, accessibility or Native parity. Some components may have additional evidence not counted here until it is linked. The `Web observation` column labels these two evidence levels rather than completion. All 125 remain `Pending` for the full replacement criteria, including supported Native behavior and visual review.
 
 | Components | Focused Web evidence |
 | --- | --- |
@@ -39,6 +39,12 @@ Of the 125 component IDs, **33** have the additional, explicitly linked focused 
 | `textarea` | [web-ghost-textarea.cjs](../../../../checks/web-ghost-textarea.cjs) |
 | `segmented-control` | [web-segmented.cjs](../../../../checks/web-segmented.cjs) |
 | `action-menu` | [web-action-menu.cjs](../../../../checks/web-action-menu.cjs) |
+| `icon-button`, `sheet` | [web-action-layer-calibration.cjs](../../../../checks/web-action-layer-calibration.cjs) |
+| `breadcrumb`, `navigation-list`, `navbar`, `badge`, `count`, `status`, `legend`, `progress`, `notice`, `result`, `stepper` | [web-navigation-feedback-layout.cjs](../../../../checks/web-navigation-feedback-layout.cjs) |
+| `list`, `selection-list`, `grid-list`, `list-header`, `list-footer`, `radio-group`, `switch` | [web-collection-long-content.cjs](../../../../checks/web-collection-long-content.cjs) |
+| `message`, `transcript`, `bubble` | [web-conversation-media-layout.cjs](../../../../checks/web-conversation-media-layout.cjs) |
+| `popover` | [web-anchored-layers.cjs](../../../../checks/web-anchored-layers.cjs) |
+| `menubar` | [web-navigation-long-content.cjs](../../../../checks/web-navigation-long-content.cjs) |
 
 | Component | Family | Yogurt specimen | Web observation | State |
 | --- | --- | --- | --- | --- |
@@ -53,7 +59,7 @@ Of the 125 component IDs, **33** have the additional, explicitly linked focused 
 | `divider` | foundation | Family design | Smoke | Pending |
 | `scroll-area` | foundation | Family design | Smoke | Pending |
 | `button` | action | `copy-button`, `loading-to-success`, `hold-button`, `cart-button` | Focused | Pending |
-| `icon-button` | action | `copy-button`, `morph-tooltip` | Smoke | Pending |
+| `icon-button` | action | `copy-button`, `morph-tooltip` | Focused | Pending |
 | `button-group` | action | Family design | Smoke | Pending |
 | `bottom-action` | action | Family design | Smoke | Pending |
 | `field` | input | Family design | Smoke | Pending |
@@ -66,47 +72,47 @@ Of the 125 component IDs, **33** have the additional, explicitly linked focused 
 | `select` | input | `spring-dropdown` | Focused | Pending |
 | `combobox` | input | Family design | Focused | Pending |
 | `checkbox` | input | `checkbox-list` | Focused | Pending |
-| `radio-group` | input | Family design | Smoke | Pending |
-| `switch` | input | `toggle-switch`, `focus-mode` | Smoke | Pending |
+| `radio-group` | input | Family design | Focused | Pending |
+| `switch` | input | `toggle-switch`, `focus-mode` | Focused | Pending |
 | `link` | navigation | Family design | Smoke | Pending |
-| `breadcrumb` | navigation | Family design | Smoke | Pending |
-| `navigation-list` | navigation | Family design | Smoke | Pending |
+| `breadcrumb` | navigation | Family design | Focused | Pending |
+| `navigation-list` | navigation | Family design | Focused | Pending |
 | `tabs` | navigation | `tab-pill`, `smooth-tabs`, `bottom-bar` | Smoke | Pending |
 | `segmented-control` | navigation | `segmented-control`, `plan-switch` | Focused | Pending |
 | `pagination` | navigation | Family design | Focused | Pending |
 | `disclosure-row` | layer | Family design | Focused | Pending |
 | `action-menu` | layer | `dynamic-menu` | Focused | Pending |
-| `popover` | layer | Family design | Smoke | Pending |
+| `popover` | layer | Family design | Focused | Pending |
 | `dialog` | layer | Family design | Smoke | Pending |
 | `drawer` | layer | Family design | Smoke | Pending |
-| `sheet` | layer | Family design | Smoke | Pending |
+| `sheet` | layer | Family design | Focused | Pending |
 | `tooltip` | layer | `morph-tooltip` | Focused | Pending |
 | `filter-bar` | collection | Family design | Smoke | Pending |
-| `count` | collection | Family design | Smoke | Pending |
-| `list` | collection | Family design | Smoke | Pending |
+| `count` | collection | Family design | Focused | Pending |
+| `list` | collection | Family design | Focused | Pending |
 | `list-row` | collection | Family design | Focused | Pending |
-| `selection-list` | collection | Family design | Smoke | Pending |
+| `selection-list` | collection | Family design | Focused | Pending |
 | `empty-result` | collection | Family design | Smoke | Pending |
-| `badge` | feedback | Family design | Smoke | Pending |
-| `status` | feedback | Family design | Smoke | Pending |
-| `notice` | feedback | Family design | Smoke | Pending |
+| `badge` | feedback | Family design | Focused | Pending |
+| `status` | feedback | Family design | Focused | Pending |
+| `notice` | feedback | Family design | Focused | Pending |
 | `skeleton` | feedback | Family design | Focused | Pending |
-| `progress` | feedback | `step-progress`, `storage-meter` | Smoke | Pending |
+| `progress` | feedback | `step-progress`, `storage-meter` | Focused | Pending |
 | `toast` | feedback | Family design | Smoke | Pending |
-| `result` | feedback | Family design | Smoke | Pending |
+| `result` | feedback | Family design | Focused | Pending |
 | `record-facts` | data | Family design | Smoke | Pending |
 | `table` | data | Family design | Smoke | Pending |
 | `data-table` | data | Family design | Smoke | Pending |
 | `chart` | data | Family design | Focused | Pending |
-| `legend` | data | Family design | Smoke | Pending |
+| `legend` | data | Family design | Focused | Pending |
 | `confirm-dialog` | decision | Family design | Smoke | Pending |
 | `receipt` | decision | Family design | Smoke | Pending |
 | `project-mark` | conversation | Family design | Smoke | Pending |
 | `agent-avatar` | conversation | Family design | Smoke | Pending |
 | `gaze` | conversation | Family design | Smoke | Pending |
-| `message` | conversation | Family design | Smoke | Pending |
+| `message` | conversation | Family design | Focused | Pending |
 | `activity` | conversation | Family design | Smoke | Pending |
-| `transcript` | conversation | Family design | Smoke | Pending |
+| `transcript` | conversation | Family design | Focused | Pending |
 | `reading-anchor` | conversation | Family design | Smoke | Pending |
 | `aspect-ratio` | foundation | Family design | Smoke | Pending |
 | `direction` | foundation | Family design | Smoke | Pending |
@@ -116,9 +122,9 @@ Of the 125 component IDs, **33** have the additional, explicitly linked focused 
 | `elevation` | foundation | Family design | Smoke | Pending |
 | `kbd` | foundation | Family design | Smoke | Pending |
 | `post` | foundation | Family design | Focused | Pending |
-| `grid-list` | collection | Family design | Smoke | Pending |
-| `list-header` | collection | Family design | Smoke | Pending |
-| `list-footer` | collection | Family design | Smoke | Pending |
+| `grid-list` | collection | Family design | Focused | Pending |
+| `list-header` | collection | Family design | Focused | Pending |
+| `list-footer` | collection | Family design | Focused | Pending |
 | `top` | collection | Family design | Focused | Pending |
 | `bottom-info` | feedback | Family design | Smoke | Pending |
 | `highlight` | feedback | Family design | Smoke | Pending |
@@ -128,7 +134,7 @@ Of the 125 component IDs, **33** have the additional, explicitly linked focused 
 | `amount-top` | data | Family design | Smoke | Pending |
 | `bar-chart` | data | Family design | Focused | Pending |
 | `avatar` | conversation | Family design | Focused | Pending |
-| `bubble` | conversation | Family design | Smoke | Pending |
+| `bubble` | conversation | Family design | Focused | Pending |
 | `attachment` | conversation | Family design | Focused | Pending |
 | `marker` | conversation | Family design | Smoke | Pending |
 | `code-block` | conversation | Family design | Smoke | Pending |
@@ -148,12 +154,12 @@ Of the 125 component IDs, **33** have the additional, explicitly linked focused 
 | `context-menu` | layer | Family design | Smoke | Pending |
 | `hover-card` | layer | Family design | Smoke | Pending |
 | `command` | layer | `command-palette`, `command-button` | Smoke | Pending |
-| `menubar` | navigation | Family design | Smoke | Pending |
+| `menubar` | navigation | Family design | Focused | Pending |
 | `navigation-menu` | navigation | Family design | Smoke | Pending |
 | `sidebar` | navigation | Family design | Focused | Pending |
-| `navbar` | navigation | Family design | Smoke | Pending |
+| `navbar` | navigation | Family design | Focused | Pending |
 | `carousel` | navigation | Family design | Smoke | Pending |
-| `stepper` | navigation | `step-progress`, `agent-steps` | Smoke | Pending |
+| `stepper` | navigation | `step-progress`, `agent-steps` | Focused | Pending |
 | `resizable` | foundation | Family design | Smoke | Pending |
 | `calendar` | input | Family design | Focused | Pending |
 | `date-picker` | input | Family design | Focused | Pending |

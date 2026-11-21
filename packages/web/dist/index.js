@@ -99,7 +99,7 @@ import {
   Pagination,
   SegmentedControl,
   Tabs
-} from "./shared/chunk-RCVS7NNW.js";
+} from "./shared/chunk-KLFLX6GM.js";
 import {
   CartButton,
   HoldButton,
