@@ -1,3 +1,20 @@
+.yg-input > .yg-spring-edit { position: relative; flex: 1 1 0; min-inline-size: 0; }
+.yg-input .yg-spring-edit input, .yg-spring-window { box-sizing: border-box; inline-size: 100%; font: var(--yg-font-body); font-kerning: none; }
+.yg-input .yg-spring-edit input { width: 100%; }
+.yg-spring-window { display: none; position: absolute; inset: 0; overflow: clip; pointer-events: none; }
+.yg-spring-glyphs { position: absolute; inset: 0 auto 0 0; white-space: pre; }
+.yg-spring-glyph, .yg-spring-removed { display: inline-block; }
+.yg-spring-removed { position: absolute; animation: yg-spring-glyph-out 360ms var(--yg-settle) both; }
+.yg-spring-caret { position: absolute; inset: 3px auto 3px 0; inline-size: 2px; background: var(--yg-text); border-radius: 1px; visibility: hidden; }
+.yg-spring-caret[data-visible] { visibility: visible; }
+@media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+  .yg-spring-edit[data-mirror] .yg-spring-window { display: block; }
+  .yg-input .yg-spring-edit input[data-mirror] { color: transparent; caret-color: transparent; }
+  .yg-spring-glyph { animation: yg-spring-glyph-in var(--yg-motion-text-pop) both; animation-delay: var(--yg-glyph-delay); }
+}
+@keyframes yg-spring-glyph-in { from { opacity: 0; translate: 0 -12px; } }
+@keyframes yg-spring-glyph-out { to { opacity: 0; translate: 0 -14px; } }
+
 .yg-mention, .yg-file-drop-wrap {
   display: grid;
   gap: var(--yg-gap-inline);

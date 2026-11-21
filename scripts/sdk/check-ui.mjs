@@ -90,6 +90,24 @@ for (const entry of catalog) {
 }
 const blocks = json("catalog/blocks.json");
 const motion = json("catalog/motion.json");
+const motionComponents = json("catalog/motion-components.json");
+assert.equal(motionComponents.formatVersion, 1);
+const motionIds = new Set([...componentIds, ...blocks.map(item => item.id), ...json("catalog/patterns.json").patterns.map(item => item.id)]);
+const exportedMotion = await import(new URL("packages/web/dist/motion-patterns.js", root).href);
+const exportNames = Object.keys(exportedMotion).sort();
+assert.deepEqual(motionComponents.components.map(item => item.name).sort(), exportNames);
+for (const item of motionComponents.components) {
+  assert.match(item.id, /^motion-[a-z0-9]+(?:-[a-z0-9]+)*$/);
+  assert(!motionIds.has(item.id), item.id);
+  motionIds.add(item.id);
+  assert.equal(item.entry, "@openboa/yogurt/motion-patterns");
+  assert.equal(item.web, "available");
+  assert.equal(item.native, "unavailable");
+  assert(item.guidance.useWhen.trim() && item.guidance.avoid.trim() && item.guidance.verify.length, item.id);
+  assert.equal(typeof exportedMotion[item.name], "function", item.id);
+  const entry = json("registry/" + item.id + ".json");
+  assert.equal(entry.files[0].content, `"use client";\n\nexport { ${item.name} } from "${item.entry}";\n`);
+}
 assert.deepEqual(
   motion.map(({ id }) => id),
   [...catalog, ...blocks].map(({ id }) => id),

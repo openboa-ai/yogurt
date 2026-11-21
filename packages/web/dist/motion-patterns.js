@@ -10,26 +10,30 @@ import {
   StorageMeter
 } from "./shared/chunk-NY3LGE3P.js";
 import {
+  PromptAction,
+  PromptEditor
+} from "./shared/chunk-DD5CG4T7.js";
+import {
   Command
-} from "./shared/chunk-YQ7LMCB6.js";
+} from "./shared/chunk-4IUYJJMH.js";
 import {
   Slider
-} from "./shared/chunk-QTYVRUEC.js";
+} from "./shared/chunk-H3KKV7WK.js";
 import {
   dist_exports7 as dist_exports
 } from "./shared/chunk-F374JVJP.js";
-import "./shared/chunk-HIT5KGTJ.js";
+import "./shared/chunk-42W7U233.js";
+import {
+  Checkbox,
+  Textarea
+} from "./shared/chunk-JYPA2ETQ.js";
+import "./shared/chunk-5GJUJT3P.js";
 import {
   advanceSprings,
   playSprings,
   snap,
   spring
 } from "./shared/chunk-DRQJWO7S.js";
-import {
-  Checkbox,
-  Textarea
-} from "./shared/chunk-L7PYNK52.js";
-import "./shared/chunk-5GJUJT3P.js";
 import {
   Button
 } from "./shared/chunk-4IPCB3MM.js";
@@ -999,22 +1003,10 @@ function GhostSuggestion({ value, suggestion, onChange }) {
   ) });
 }
 function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
-  const editor = useRef5(null);
-  const measure = useRef5(null);
-  useLayoutEffect4(() => {
-    const target = editor.current;
-    const source = measure.current;
-    if (!target || !source) return;
-    const resize = () => target.style.setProperty("--yg-prompt-editor-height", `${Math.min(source.offsetHeight, 88)}px`);
-    const observer = new ResizeObserver(resize);
-    observer.observe(source);
-    resize();
-    return () => observer.disconnect();
-  }, []);
   return /* @__PURE__ */ jsxs5(
     "form",
     {
-      className: "yg-prompt-box",
+      className: "yg-prompt-box yg-prompt-shared",
       "aria-label": "Prompt",
       "aria-busy": busy || void 0,
       onSubmit: (event) => {
@@ -1026,42 +1018,23 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
           /* @__PURE__ */ jsx5("span", { className: "yg-prompt-indicator", "aria-hidden": "true" }),
           /* @__PURE__ */ jsx5("span", { children: "Thinking" })
         ] }) }) }) }),
-        /* @__PURE__ */ jsxs5("div", { className: "yg-prompt-editor", ref: editor, children: [
-          /* @__PURE__ */ jsxs5("span", { className: "yg-prompt-measure", ref: measure, "aria-hidden": "true", children: [
-            value,
-            " "
-          ] }),
-          /* @__PURE__ */ jsx5(
-            "textarea",
-            {
-              "aria-label": "Prompt",
-              placeholder: "Ask anything",
-              rows: 1,
-              value,
-              onChange: (event) => onChange(event.currentTarget.value),
-              onKeyDown: (event) => {
-                if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) return;
-                event.preventDefault();
-                if (!busy && value.trim()) event.currentTarget.form?.requestSubmit();
-              }
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsx5("div", { className: "yg-prompt-actions", children: /* @__PURE__ */ jsxs5(
-          "button",
+        /* @__PURE__ */ jsx5(
+          PromptEditor,
           {
-            className: "yg-prompt-action",
-            type: busy && onCancel ? "button" : "submit",
-            "aria-label": busy && onCancel ? "Stop" : "Send",
-            "data-busy": busy && onCancel ? true : void 0,
-            disabled: busy ? !onCancel : !value.trim(),
-            onClick: busy && onCancel ? onCancel : void 0,
-            children: [
-              /* @__PURE__ */ jsx5("span", { className: "yg-prompt-arrow", "aria-hidden": "true", children: /* @__PURE__ */ jsx5("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.4", strokeLinecap: "round", strokeLinejoin: "round", children: /* @__PURE__ */ jsx5("path", { d: "M12 19V5M6 11l6-6 6 6" }) }) }),
-              /* @__PURE__ */ jsx5("span", { className: "yg-prompt-stop", "aria-hidden": "true" })
-            ]
+            presentation: "prompt",
+            "aria-label": "Prompt",
+            placeholder: "Ask anything",
+            rows: 1,
+            value,
+            onChange: (event) => onChange(event.currentTarget.value),
+            onKeyDown: (event) => {
+              if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) return;
+              event.preventDefault();
+              if (!busy && value.trim()) event.currentTarget.form?.requestSubmit();
+            }
           }
-        ) })
+        ),
+        /* @__PURE__ */ jsx5("div", { className: "yg-prompt-actions", children: /* @__PURE__ */ jsx5(PromptAction, { presentation: "prompt", busy, ready: Boolean(value.trim()), onStop: onCancel }) })
       ]
     }
   );

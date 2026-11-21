@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-thinking-indicator",
+  "type": "registry:ui",
+  "title": "ThinkingIndicator",
+  "description": "Show an active thinking state.",
+  "files": [
+    {
+      "path": "ui/motion-thinking-indicator.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ThinkingIndicator } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

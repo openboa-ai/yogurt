@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-expand-card",
+  "type": "registry:ui",
+  "title": "ExpandCard",
+  "description": "Reveal supporting card details.",
+  "files": [
+    {
+      "path": "ui/motion-expand-card.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ExpandCard } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

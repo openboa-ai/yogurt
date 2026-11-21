@@ -16,6 +16,7 @@ import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkb
 import { RadioGroup as SDKRadio, Radio as SDKRadioItem, RadioIndicator } from "@ui-sdk/react/radio";
 import { Icon, type ControlSize, type Option, cx } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
+import { playSprings, snap, spring } from "../foundation/spring-motion.js";
 
 export function Label(props: ComponentProps<"label">) {
   return <label {...props} className={cx("yg-label", props.className)} />;
@@ -64,7 +65,118 @@ export function Field({
     </div>
   );
 }
-type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & { size?: ControlSize };
+type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & { size?: ControlSize; motion?: "spring" };
+
+type SpringGlyph = { id: number; text: string; delay: number };
+type RemovedSpringGlyph = SpringGlyph & { left: number };
+
+/** Optional visual response over a real native text input. */
+export function SpringTextInput({ value, defaultValue, onChange, onSelect, onScroll,
+  onFocus, onBlur, onCompositionStart, onCompositionEnd, ...props }: Omit<ComponentProps<"input">, "size">) {
+  const initial = String(value ?? defaultValue ?? "");
+  const nextId = useRef(0);
+  const input = useRef<HTMLInputElement>(null);
+  const layer = useRef<HTMLSpanElement>(null);
+  const caret = useRef<HTMLSpanElement>(null);
+  const [glyphs, setGlyphs] = useState<SpringGlyph[]>(() => initial.length <= 256 && /^[\x20-\x7e]*$/.test(initial)
+    ? Array.from(initial, text => ({ id: nextId.current++, text, delay: 0 })) : []);
+  const glyphRef = useRef(glyphs);
+  const [removed, setRemoved] = useState<RemovedSpringGlyph[]>([]);
+  const [selection, setSelection] = useState({ start: 0, end: 0, scroll: 0 });
+  const [focused, setFocused] = useState(false);
+  const [composing, setComposing] = useState(false);
+  const [caretMotion] = useState(() => spring(0, 700, 32));
+  const [text, setText] = useState(initial);
+  const textRef = useRef(initial);
+  // Keep complex scripts and long documents on the native renderer, which retains
+  // browser grapheme shaping and avoids an unbounded decorative DOM.
+  const compatible = /^[\x20-\x7e]*$/.test(text) && text.length <= 256;
+  const showMirror = focused && !composing && !props.disabled && !props.readOnly && compatible && selection.start === selection.end;
+
+  function follow(element: HTMLInputElement) {
+    setSelection({ start: element.selectionStart ?? 0, end: element.selectionEnd ?? 0, scroll: element.scrollLeft });
+  }
+  function sync(next: string, animate: boolean) {
+    const previous = glyphRef.current;
+    if (textRef.current === next) return;
+    textRef.current = next;
+    setText(next);
+    if (next.length > 256 || !/^[\x20-\x7e]*$/.test(next)) {
+      glyphRef.current = [];
+      setGlyphs([]);
+      setRemoved([]);
+      return;
+    }
+    const letters = Array.from(next);
+    let prefix = 0, suffix = 0;
+    while (prefix < letters.length && prefix < previous.length && letters[prefix] === previous[prefix].text) prefix++;
+    while (suffix < letters.length - prefix && suffix < previous.length - prefix &&
+      letters[letters.length - 1 - suffix] === previous[previous.length - 1 - suffix].text) suffix++;
+    if (animate && typeof matchMedia === "function" && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const nodes = layer.current?.querySelectorAll<HTMLElement>("[data-glyph]");
+      const deleted = previous.slice(prefix, previous.length - suffix).map((glyph, index) => ({ ...glyph, left: nodes?.[prefix + index]?.offsetLeft ?? 0 }));
+      if (deleted.length) setRemoved(items => [...items, ...deleted].slice(-256));
+    }
+    const added = letters.slice(prefix, letters.length - suffix).map((letter, index) => ({ id: nextId.current++, text: letter, delay: animate ? Math.min(index, 30) * 18 : 0 }));
+    const nextGlyphs = [...previous.slice(0, prefix), ...added, ...previous.slice(previous.length - suffix)];
+    glyphRef.current = nextGlyphs;
+    setGlyphs(nextGlyphs);
+  }
+  useLayoutEffect(() => {
+    if (input.current) sync(input.current.value, false);
+  });
+  useEffect(() => {
+    const element = input.current, form = element?.form;
+    if (!element || !form) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const reset = (event: Event) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => { if (!event.defaultPrevented && input.current === element) { sync(element.value, false); follow(element); } }, 0);
+    };
+    form.addEventListener("reset", reset);
+    return () => { form.removeEventListener("reset", reset); if (timer) clearTimeout(timer); };
+  }, [props.form]);
+  useEffect(() => {
+    if (!removed.length) return;
+    const timer = setTimeout(() => setRemoved([]), 500);
+    return () => clearTimeout(timer);
+  }, [removed]);
+  useLayoutEffect(() => {
+    const stripe = caret.current, content = layer.current;
+    if (!stripe || !content || !showMirror) return;
+    const nodes = content.querySelectorAll<HTMLElement>("[data-glyph]");
+    const index = Array.from(text.slice(0, selection.end)).length;
+    const last = nodes[nodes.length - 1];
+    caretMotion.target = nodes[index]?.offsetLeft ?? (last ? last.offsetLeft + last.offsetWidth : 0);
+    if (!focused || (typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches)) snap(caretMotion, caretMotion.target);
+    return playSprings([caretMotion], () => {
+      const stretch = Math.min(Math.abs(caretMotion.velocity) / 80, 7);
+      stripe.style.translate = `${caretMotion.position - (caretMotion.velocity > 0 ? stretch : 0)}px 0`;
+      stripe.style.inlineSize = `${2 + stretch}px`;
+    });
+  }, [caretMotion, focused, selection.end, showMirror, text]);
+  return <span className="yg-spring-edit motion-spring-field-edit" data-mirror={showMirror || undefined}>
+    <SDKInput {...props} value={value == null ? undefined : String(value)} defaultValue={defaultValue == null ? undefined : String(defaultValue)}
+      data-mirror={showMirror || undefined}
+      onChange={event => { sync(event.currentTarget.value, !composing); follow(event.currentTarget); onChange?.(event); }}
+      onFocus={event => { setFocused(true); follow(event.currentTarget); onFocus?.(event); }}
+      onBlur={event => { setFocused(false); onBlur?.(event); }}
+      onCompositionStart={event => { setComposing(true); onCompositionStart?.(event); }}
+      onCompositionEnd={event => { setComposing(false); sync(event.currentTarget.value, false); follow(event.currentTarget); onCompositionEnd?.(event); }}
+      onValueChange={(next, details) => { if (details.reason === "imperative" && props.maxLength !== undefined && props.maxLength >= 0 && next.length > props.maxLength) details.cancel(); }}
+      render={<input ref={input} onSelect={event => { follow(event.currentTarget); onSelect?.(event); }} onScroll={event => { follow(event.currentTarget); onScroll?.(event); }} />} />
+    <span className="yg-spring-window motion-spring-field-window" aria-hidden="true">
+      <span className="yg-spring-glyphs motion-spring-glyphs" ref={layer} style={{ translate: `${-selection.scroll}px 0` }}>
+        {compatible && glyphs.map(glyph => <span className="yg-spring-glyph motion-spring-glyph" data-glyph="" key={glyph.id}
+          style={{ "--yg-glyph-delay": `${glyph.delay}ms` } as React.CSSProperties}>{glyph.text}</span>)}
+        {removed.map(glyph => <span className="yg-spring-removed motion-spring-removed" key={glyph.id} style={{ left: glyph.left }}
+          onAnimationEnd={() => setRemoved(items => items.filter(item => item.id !== glyph.id))}>{glyph.text}</span>)}
+        <span className="yg-spring-caret motion-spring-caret" ref={caret} data-visible={showMirror || undefined} />
+      </span>
+    </span>
+  </span>;
+}
+
 export function TextField({
   id,
   label,
@@ -73,6 +185,7 @@ export function TextField({
   className,
   value,
   defaultValue,
+  motion,
   size = "regular",
   ...props
 }: InputProps) {
@@ -80,12 +193,14 @@ export function TextField({
     <Field {...{ id, label, help, error }}>
       {(binding) => (
         <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`, className)}>
-          <SDKInput {...props} {...binding}
+          {motion === "spring" && (props.type ?? "text") === "text" && !Array.isArray(value) && !Array.isArray(defaultValue)
+            ? <SpringTextInput {...props} {...binding} value={value} defaultValue={defaultValue} />
+            : <SDKInput {...props} {...binding}
             value={value == null ? undefined : String(value)}
             defaultValue={defaultValue == null ? undefined : String(defaultValue)}
             onValueChange={(next, details) => {
               if (details.reason === "imperative" && props.maxLength !== undefined && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
-            }} />
+            }} />}
         </SDKInputGroup>
       )}
     </Field>

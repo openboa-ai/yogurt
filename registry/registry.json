@@ -1962,6 +1962,412 @@
           "content": "\"use client\";\n\nimport { useState, type ReactNode } from \"react\";\nimport {\n  Badge, Heading, IconButton, Inline, ProjectMark, SearchField, SidebarContent,\n  SidebarFooter, SidebarGroup, SidebarHeader, SidebarItem, SidebarSubmenu, Text,\n  type Project,\n} from \"@openboa/yogurt\";\n\ntype Destination = { id: string; title: string; href?: string; unread?: number };\n\nexport function ProjectSidebar({\n  title, mark, sections, currentId, onSelect, onAdd, footer,\n}: {\n  title: string;\n  mark: Project;\n  sections: readonly { id: string; title: string; icon?: ReactNode; items: readonly Destination[] }[];\n  currentId?: string;\n  onSelect?: (id: string) => void;\n  onAdd?: () => void;\n  footer?: ReactNode;\n}) {\n  const [query, setQuery] = useState(\"\");\n  const term = query.trim().toLowerCase();\n  const visible = sections.map((section) => ({\n    ...section,\n    items: section.title.toLowerCase().includes(term) ? section.items :\n      section.items.filter((item) => item.title.toLowerCase().includes(term)),\n  })).filter((section) => section.items.length > 0);\n\n  return (\n    <>\n      <SidebarHeader compact={<ProjectMark project={mark} label=\"\" size={24} />}>\n        <Inline gap={8}><ProjectMark project={mark} label=\"\" size={24} /><Heading level={3}>{title}</Heading></Inline>\n      </SidebarHeader>\n      <SidebarHeader><SearchField label=\"Find a view\" value={query} onValueChange={setQuery} /></SidebarHeader>\n      <SidebarContent label={title + \" views\"}>\n        <SidebarGroup label=\"Workspace\" action={onAdd &&\n          <IconButton icon=\"plus\" size=\"compact\" label=\"Add project view\" onClick={onAdd} />}>\n          {visible.map((section) => (\n            <SidebarSubmenu key={section.id} label={section.title} icon={section.icon}\n              containsCurrent={section.items.some((item) => item.id === currentId)} defaultOpen>\n              {section.items.map((item) => (\n                <SidebarItem key={item.id} label={item.title} href={item.href}\n                  active={item.id === currentId} onSelect={onSelect && (() => onSelect(item.id))}\n                  badge={item.unread ? <Badge>{item.unread}</Badge> : undefined} />\n              ))}\n            </SidebarSubmenu>\n          ))}\n          {!visible.length && <Text variant=\"help\">{term ? \"No matching views.\" : \"No project views yet.\"}</Text>}\n        </SidebarGroup>\n      </SidebarContent>\n      {footer && <SidebarFooter>{footer}</SidebarFooter>}\n    </>\n  );\n}\n"
         }
       ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-mention-picker",
+      "type": "registry:ui",
+      "title": "MentionPicker",
+      "description": "Insert a selected person mention while editing a note.",
+      "files": [
+        {
+          "path": "ui/motion-mention-picker.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { MentionPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-file-drop",
+      "type": "registry:ui",
+      "title": "FileDrop",
+      "description": "Select or drop files for a host-managed upload.",
+      "files": [
+        {
+          "path": "ui/motion-file-drop.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { FileDrop } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-focus-picker",
+      "type": "registry:ui",
+      "title": "FocusPicker",
+      "description": "Choose one focus preference from named choices.",
+      "files": [
+        {
+          "path": "ui/motion-focus-picker.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { FocusPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-plan-switch",
+      "type": "registry:ui",
+      "title": "PlanSwitch",
+      "description": "Choose between described plan options.",
+      "files": [
+        {
+          "path": "ui/motion-plan-switch.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { PlanSwitch } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-letter-limit",
+      "type": "registry:ui",
+      "title": "LetterLimit",
+      "description": "Edit short text with a visible character limit.",
+      "files": [
+        {
+          "path": "ui/motion-letter-limit.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { LetterLimit } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-morph-tooltip",
+      "type": "registry:ui",
+      "title": "MorphTooltip",
+      "description": "Reveal a short contextual explanation.",
+      "files": [
+        {
+          "path": "ui/motion-morph-tooltip.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { MorphTooltip } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-spring-dropdown",
+      "type": "registry:ui",
+      "title": "SpringDropdown",
+      "description": "Select an option from an animated anchored list.",
+      "files": [
+        {
+          "path": "ui/motion-spring-dropdown.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { SpringDropdown } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-command-button",
+      "type": "registry:ui",
+      "title": "CommandButton",
+      "description": "Open and choose a named command.",
+      "files": [
+        {
+          "path": "ui/motion-command-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { CommandButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-morph-tooltip-bar",
+      "type": "registry:ui",
+      "title": "MorphTooltipBar",
+      "description": "Choose a named tool from a compact bar with animated detail.",
+      "files": [
+        {
+          "path": "ui/motion-morph-tooltip-bar.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { MorphTooltipBar } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-storage-meter",
+      "type": "registry:ui",
+      "title": "StorageMeter",
+      "description": "Show observed storage usage and optional categories.",
+      "files": [
+        {
+          "path": "ui/motion-storage-meter.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { StorageMeter } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-activity-island",
+      "type": "registry:ui",
+      "title": "ActivityIsland",
+      "description": "Reveal short activity details from a compact summary.",
+      "files": [
+        {
+          "path": "ui/motion-activity-island.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { ActivityIsland } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-loading-success-button",
+      "type": "registry:ui",
+      "title": "LoadingSuccessButton",
+      "description": "Show a host-reported action state.",
+      "files": [
+        {
+          "path": "ui/motion-loading-success-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { LoadingSuccessButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-copy-button",
+      "type": "registry:ui",
+      "title": "CopyButton",
+      "description": "Copy supplied text and report the observed result.",
+      "files": [
+        {
+          "path": "ui/motion-copy-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { CopyButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-streaming-reply",
+      "type": "registry:ui",
+      "title": "StreamingReply",
+      "description": "Present an incrementally arriving reply.",
+      "files": [
+        {
+          "path": "ui/motion-streaming-reply.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { StreamingReply } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-ghost-suggestion",
+      "type": "registry:ui",
+      "title": "GhostSuggestion",
+      "description": "Offer an inline text completion.",
+      "files": [
+        {
+          "path": "ui/motion-ghost-suggestion.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { GhostSuggestion } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-prompt-box",
+      "type": "registry:ui",
+      "title": "PromptBox",
+      "description": "Prepare and submit a short request.",
+      "files": [
+        {
+          "path": "ui/motion-prompt-box.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { PromptBox } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-thinking-indicator",
+      "type": "registry:ui",
+      "title": "ThinkingIndicator",
+      "description": "Show an active thinking state.",
+      "files": [
+        {
+          "path": "ui/motion-thinking-indicator.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { ThinkingIndicator } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-expand-card",
+      "type": "registry:ui",
+      "title": "ExpandCard",
+      "description": "Reveal supporting card details.",
+      "files": [
+        {
+          "path": "ui/motion-expand-card.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { ExpandCard } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-fan-cards",
+      "type": "registry:ui",
+      "title": "FanCards",
+      "description": "Browse a small stack of related cards.",
+      "files": [
+        {
+          "path": "ui/motion-fan-cards.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { FanCards } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-stat-card",
+      "type": "registry:ui",
+      "title": "StatCard",
+      "description": "Present a labeled metric with a small series.",
+      "files": [
+        {
+          "path": "ui/motion-stat-card.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { StatCard } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-profile-card",
+      "type": "registry:ui",
+      "title": "ProfileCard",
+      "description": "Present a named profile and related actions.",
+      "files": [
+        {
+          "path": "ui/motion-profile-card.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { ProfileCard } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-range-slider",
+      "type": "registry:ui",
+      "title": "RangeSlider",
+      "description": "Choose a bounded value or interval.",
+      "files": [
+        {
+          "path": "ui/motion-range-slider.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { RangeSlider } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-password-strength",
+      "type": "registry:ui",
+      "title": "PasswordStrength",
+      "description": "Show password entry and local strength guidance.",
+      "files": [
+        {
+          "path": "ui/motion-password-strength.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { PasswordStrength } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-checkbox-list",
+      "type": "registry:ui",
+      "title": "CheckboxList",
+      "description": "Choose several independent options.",
+      "files": [
+        {
+          "path": "ui/motion-checkbox-list.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { CheckboxList } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-detent-dial",
+      "type": "registry:ui",
+      "title": "DetentDial",
+      "description": "Choose one option along a discrete dial.",
+      "files": [
+        {
+          "path": "ui/motion-detent-dial.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { DetentDial } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-hold-button",
+      "type": "registry:ui",
+      "title": "HoldButton",
+      "description": "Require a deliberate hold before a host action.",
+      "files": [
+        {
+          "path": "ui/motion-hold-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { HoldButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-slide-confirm",
+      "type": "registry:ui",
+      "title": "SlideConfirm",
+      "description": "Request a deliberate slide or accessible equivalent.",
+      "files": [
+        {
+          "path": "ui/motion-slide-confirm.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { SlideConfirm } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-task-list",
+      "type": "registry:ui",
+      "title": "TaskList",
+      "description": "Show host-provided task states and details.",
+      "files": [
+        {
+          "path": "ui/motion-task-list.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { TaskList } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-cart-button",
+      "type": "registry:ui",
+      "title": "CartButton",
+      "description": "Adjust a host-owned quantity.",
+      "files": [
+        {
+          "path": "ui/motion-cart-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { CartButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
     }
   ]
 }

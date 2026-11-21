@@ -1,5 +1,6 @@
 "use client";
 import {
+  useCallback,
   useEffect,
   useId,
   useLayoutEffect,
@@ -210,10 +211,14 @@ export function ToastStack({
   items,
   onDismiss,
   label = "Notifications",
+  presentation = "list",
+  defaultExpanded = false,
 }: {
   items: { id: string; message: string }[];
   onDismiss: (id: string) => void;
   label?: string;
+  presentation?: "list" | "stacked";
+  defaultExpanded?: boolean;
 }) {
   type Entry = { id: string; message: string; exiting: boolean };
   const [entries, setEntries] = useState<Entry[]>(() => items.map((item) => ({ ...item, exiting: false })));
@@ -221,6 +226,19 @@ export function ToastStack({
   const currentEntries = useRef(entries);
   const root = useRef<HTMLElement>(null);
   const timers = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+  const collectionId = useId();
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const [heights, setHeights] = useState<Record<string, number>>({});
+  const [stackGap, setStackGap] = useState(8);
+  const priorPositions = useRef(new Map<string, { y: number; scale: number; depth: number }>());
+  const toggleNode = useRef<HTMLButtonElement | null>(null);
+  const restoreToggleFocus = useRef(false);
+  const setToggleNode = useCallback((node: HTMLButtonElement | null) => {
+    if (!node && toggleNode.current?.ownerDocument.activeElement === toggleNode.current) {
+      restoreToggleFocus.current = true;
+    }
+    toggleNode.current = node;
+  }, []);
   useLayoutEffect(() => {
     currentIds.current = new Set(items.map((item) => item.id));
     currentEntries.current = entries;
@@ -297,15 +315,88 @@ export function ToastStack({
       if (Number.isFinite(total)) timers.current.set(entry.id, setTimeout(() => finish(entry.id, entry), Math.max(0, total) + 100));
     }
   }, [entries]);
+  useLayoutEffect(() => {
+    if (presentation !== "stacked" || !root.current) return;
+    const nodes = [...root.current.querySelectorAll<HTMLElement>("[data-yg-toast-id]")];
+    const measure = () => {
+      const host = root.current;
+      if (!host) return;
+      const next = Object.fromEntries(nodes.map((node) => [node.dataset.ygToastId!, node.offsetHeight]));
+      setHeights((previous) => Object.keys(previous).length === Object.keys(next).length &&
+        Object.keys(next).every((key) => previous[key] === next[key]) ? previous : next);
+      const gap = parseFloat(getComputedStyle(host).rowGap);
+      if (Number.isFinite(gap)) setStackGap(gap);
+    };
+    measure();
+    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(measure);
+    nodes.forEach((node) => observer?.observe(node));
+    return () => observer?.disconnect();
+  }, [entries, presentation]);
+
+  const active = entries.filter((entry) => !entry.exiting);
+  const showToggle = presentation === "stacked" && active.length > 1;
+  useLayoutEffect(() => {
+    const host = root.current;
+    if (!restoreToggleFocus.current || !host) return;
+    restoreToggleFocus.current = false;
+    const focused = host.ownerDocument.activeElement;
+    if (focused && focused !== host.ownerDocument.body && focused.isConnected) return;
+    const remaining = [...host.querySelectorAll<HTMLElement>("[data-yg-toast-id]")]
+      .find((node) => currentIds.current.has(node.dataset.ygToastId ?? "") && !node.closest("[inert]"));
+    const target = remaining?.querySelector<HTMLButtonElement>("button:not(:disabled)") ?? host;
+    target.focus();
+    if (host.ownerDocument.activeElement !== target) host.focus();
+  }, [showToggle, presentation, active.length]);
+  const compact = presentation === "stacked" && !expanded && active.length > 1;
+  const firstHeight = heights[active[0]?.id] ?? 0;
+  let offset = 0;
+  const positions = new Map<string, { y: number; scale: number; depth: number }>();
+  active.forEach((entry, index) => {
+    const depth = Math.min(index, 2);
+    positions.set(entry.id, compact ? { y: depth * stackGap, scale: 1 - depth * .05, depth: index }
+      : { y: offset, scale: 1, depth: index });
+    offset += (heights[entry.id] ?? 0) + stackGap;
+  });
+  const stackHeight = compact ? firstHeight + Math.min(active.length - 1, 2) * stackGap
+    : Math.max(0, offset - stackGap);
+  useLayoutEffect(() => {
+    if (presentation !== "stacked") return;
+    priorPositions.current = positions;
+  });
+  const renderEntry = (item: Entry) => (
+    <div key={item.id} data-yg-toast-id={item.id} data-exiting={item.exiting || undefined}
+      aria-hidden={item.exiting || undefined} inert={item.exiting || undefined}
+      onAnimationEnd={(event) => { if (event.target === event.currentTarget && item.exiting) finish(item.id, item); }}>
+      <Toast message={item.message} onDismiss={() => { if (!item.exiting) onDismiss(item.id); }} />
+    </div>
+  );
+  if (presentation === "stacked") {
+    return (
+      <section ref={root} className="yg-stack yg-toast-stack" aria-label={label} tabIndex={-1}>
+        {showToggle && <Button ref={setToggleNode} emphasis="quiet" size="compact" aria-controls={collectionId}
+          aria-expanded={expanded} onClick={() => setExpanded((value) => !value)}>
+          {expanded ? "Show fewer" : `Show all ${active.length}`}
+        </Button>}
+        <div id={collectionId} className="yg-toast-stack-stage" data-expanded={!compact}
+          style={{ height: `${stackHeight}px` }} onFocusCapture={(event) => {
+            const entry = (event.target as HTMLElement).closest<HTMLElement>("[data-yg-toast-id]");
+            if (compact && entry && entry.dataset.ygToastId !== active[0]?.id) setExpanded(true);
+          }}>
+          {entries.map((item) => {
+            const position = positions.get(item.id) ?? priorPositions.current.get(item.id) ?? { y: 0, scale: 1, depth: 0 };
+            return <div key={item.id} className="yg-toast-stack-slot" data-behind={compact && position.depth > 0 || undefined}
+              style={{ transform: `translateY(${position.y}px) scale(${position.scale})`, zIndex: entries.length - position.depth,
+                maxHeight: compact && position.depth > 0 ? `${firstHeight}px` : undefined }}>
+              {renderEntry(item)}
+            </div>;
+          })}
+        </div>
+      </section>
+    );
+  }
   return (
     <section ref={root} className="yg-stack" aria-label={label} tabIndex={-1}>
-      {entries.map((item) => (
-        <div key={item.id} data-yg-toast-id={item.id} data-exiting={item.exiting || undefined}
-          aria-hidden={item.exiting || undefined} inert={item.exiting || undefined}
-          onAnimationEnd={(event) => { if (event.target === event.currentTarget && item.exiting) finish(item.id, item); }}>
-          <Toast message={item.message} onDismiss={() => { if (!item.exiting) onDismiss(item.id); }} />
-        </div>
-      ))}
+      {entries.map(renderEntry)}
     </section>
   );
 }

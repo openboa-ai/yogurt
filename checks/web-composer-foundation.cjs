@@ -31,7 +31,8 @@ const fixture = buildSync({
           }),
           React.createElement('output', { 'data-testid': 'composer-outcome' }, outcome),
           React.createElement('output', { 'data-testid': 'composer-sends' }, sends),
-          React.createElement('output', { 'data-testid': 'composer-stops' }, stops)
+          React.createElement('output', { 'data-testid': 'composer-stops' }, stops),
+          React.createElement('button', { type: 'button', 'data-testid': 'outside-focus', onClick: () => setPending(true) }, 'Outside action')
         );
       }
       const container = document.createElement('div');
@@ -85,22 +86,36 @@ async function assertLayout(form, selectors) {
         await input.waitFor();
         assert.equal(await send.isDisabled(), true);
         await assertLayout(form, ["textarea", ".yg-composer-footer", ".yg-composer-footer > .yg-composer-tools:last-child > button"]);
-
+        assert.equal(await input.evaluate(element => getComputedStyle(element).resize), "vertical");
         const initialColor = await form.evaluate(element => getComputedStyle(element).backgroundColor);
         await input.focus();
         assert.equal(await input.evaluate(element => element === document.activeElement), true);
         assert.equal(await form.evaluate(element => element.matches(":focus-within")), true);
         await page.waitForFunction(({ color }) => getComputedStyle(document.querySelector('#composer-fixture .yg-composer')).backgroundColor !== color, { color: initialColor });
+        await input.fill("A line of content\n".repeat(20));
+        await page.waitForFunction(() => {
+          const input = document.querySelector('#composer-fixture textarea');
+          return input && input.getBoundingClientRect().height >= 120;
+        });
+        assert((await input.boundingBox()).height <= 176.5, "editor growth must remain bounded");
+        await input.fill("");
+        await page.waitForFunction(() => {
+          const input = document.querySelector('#composer-fixture textarea');
+          return input && input.getBoundingClientRect().height <= 60;
+        });
+
         await input.fill("Ready to send");
         assert.equal(await send.isEnabled(), true);
         await attach.click();
         await form.getByText("Draft notes.md", { exact: true }).waitFor();
         await assertLayout(form, ["textarea", ".yg-attachment", ".yg-composer-footer", ".yg-composer-footer > .yg-composer-tools:last-child > button"]);
 
+        await send.focus();
         await send.click();
         assert.deepEqual(JSON.parse(await host.getByTestId("composer-outcome").textContent()), { text: "Ready to send", attachmentIds: ["draft"] });
         const stop = form.getByRole("button", { name: "Stop", exact: true });
         await stop.waitFor();
+        assert.equal(await stop.evaluate(element => element === document.activeElement), true, "focus follows the action when it changes");
         assert.equal(await form.getAttribute("aria-busy"), "true");
         assert.equal(await attach.isDisabled(), true);
         await assertLayout(form, ["textarea", ".yg-attachment", ".yg-composer-footer", ".yg-composer-footer > .yg-composer-tools:last-child > button"]);
@@ -132,6 +147,11 @@ async function assertLayout(form, selectors) {
         assert.equal(afterStop.outcome, "stopped");
         assert.equal(await form.getAttribute("aria-busy"), null);
         assert.equal(await send.isEnabled(), true);
+        const outside = host.getByTestId("outside-focus");
+        await outside.focus();
+        await outside.click();
+        await form.getByRole("button", { name: "Stop", exact: true }).waitFor();
+        assert.equal(await outside.evaluate(element => element === document.activeElement), true, "state changes must not steal focus from another control");
         await page.close();
       }
     }

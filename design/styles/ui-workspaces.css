@@ -38,6 +38,22 @@
   .yg-composer textarea:focus-visible { outline: var(--boa-stroke-focus) solid Highlight; }
 }
 .yg-composer textarea::placeholder { color: var(--yg-muted); }
+.yg-composer .yg-composer-editor {
+  block-size: auto;
+  margin-block-end: 0;
+}
+.yg-composer .yg-composer-editor .yg-prompt-measure,
+.yg-composer .yg-composer-editor textarea {
+  padding: var(--boa-space-4) var(--boa-space-4) var(--boa-space-4) 0;
+}
+.yg-composer .yg-composer-editor textarea {
+  block-size: var(--yg-prompt-editor-height, var(--yg-size-touch));
+  min-block-size: calc(2 * var(--boa-line-height-editor) + 2 * var(--boa-space-4));
+  max-block-size: 176px;
+  resize: vertical;
+  overflow-y: auto;
+}
+.yg-composer .yg-composer-editor .yg-prompt-measure { min-block-size: 0; }
 .yg-composer-sources {
   display: grid;
   gap: var(--boa-space-4);
@@ -54,7 +70,9 @@
 .yg-composer-footer { justify-content: space-between; }
 .yg-composer-footer > .yg-composer-tools:last-child { margin-inline-start: auto; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-composer[aria-busy="true"] .yg-composer-footer > .yg-composer-tools:last-child > .yg-button {
+  .yg-prompt-shared .yg-prompt-editor,
+  .yg-composer .yg-composer-editor textarea { transition: block-size var(--yg-motion-prompt-editor); }
+  .yg-composer .yg-shared-action {
     animation: yg-composer-action-arrive var(--yg-motion-prompt-action) both;
   }
   @keyframes yg-composer-action-arrive {
@@ -64,6 +82,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .yg-composer { transition: none; }
+  .yg-prompt-shared :is(.yg-prompt-editor, .yg-prompt-panel, .yg-prompt-action, .yg-prompt-arrow, .yg-prompt-stop),
+  .yg-composer .yg-composer-editor textarea { transition: none; animation: none; }
 }
 .yg-voice {
   padding: var(--boa-space-8);

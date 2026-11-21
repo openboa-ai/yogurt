@@ -14,7 +14,7 @@ import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/reac
 import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
 import { Radio as SDKRadio, RadioGroup as SDKRadioGroup } from "@ui-sdk/react/radio";
 import { Button, IconButton } from "./actions.js";
-import { Checkbox, Field } from "./forms.js";
+import { Checkbox, Field, SpringTextInput } from "./forms.js";
 import { cx, Icon, type ControlSize, type Option } from "../foundation/foundation.js";
 import { playSprings, snap, spring } from "../foundation/spring-motion.js";
 
@@ -27,6 +27,8 @@ export function InputGroup({
   error,
   id,
   size = "featured",
+  motion,
+  containerClassName,
   ...input
 }: Input & {
   label: string;
@@ -35,6 +37,8 @@ export function InputGroup({
   help?: string;
   error?: string;
   size?: ControlSize | "featured";
+  motion?: "spring";
+  containerClassName?: string;
 }) {
   const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") &&
     !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
@@ -42,9 +46,13 @@ export function InputGroup({
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <SDKInputGroup className={cx("yg-input yg-input-group", `yg-input-size-${size}`)}>
+        <SDKInputGroup className={cx("yg-input yg-input-group", `yg-input-size-${size}`, containerClassName)}>
           {leading}
-          {sharedInput ? <SDKInput {...sharedProps} {...binding}
+          {sharedInput && motion === "spring" && (input.type ?? "text") === "text"
+            ? <SpringTextInput {...input} {...binding} aria-invalid={binding["aria-invalid"] ?? input["aria-invalid"]} aria-describedby={[input["aria-describedby"], binding["aria-describedby"]].filter(Boolean).join(" ") || undefined} />
+            : sharedInput ? <SDKInput {...sharedProps} {...binding}
+            aria-invalid={binding["aria-invalid"] ?? input["aria-invalid"]}
+            aria-describedby={[input["aria-describedby"], binding["aria-describedby"]].filter(Boolean).join(" ") || undefined}
             render={onSelect ? <input onSelect={onSelect} /> : undefined}
             value={input.value == null ? undefined : String(input.value)}
             defaultValue={input.defaultValue == null ? undefined : String(input.defaultValue)}

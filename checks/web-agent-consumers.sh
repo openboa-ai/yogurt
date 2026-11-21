@@ -9,6 +9,7 @@ mkdir -p "$fixture/app"
 npm pack --pack-destination "$fixture" --silent > "$fixture/pack-name"
 archive="$(tail -1 "$fixture/pack-name")"
 node checks/resolve-native-guidance.mjs "$fixture/$archive"
+node checks/motion-native-discovery.mjs "$fixture/$archive"
 cat > "$fixture/package.json" <<'JSON'
 {"name":"yogurt-agent-consumer","private":true,"type":"module"}
 JSON
@@ -18,6 +19,7 @@ npm install --prefix "$fixture" --no-audit --no-fund --save-exact \
 }
 node "$fixture/node_modules/@openboa/yogurt/bin/yogurt.mjs" add button --target web --dir "$fixture" > "$fixture/registry-install.log" 2>&1
 printf '{}\n' > "$fixture/yogurt.config.json"
+node "$repo/checks/motion-component-discovery.mjs" "$fixture"
 node "$repo/checks/resolve-web-imports.mjs" "$fixture"
 cp checks/fixtures/agent-button-client.jsx "$fixture/app/fixture.jsx"
 cat > "$fixture/app/layout.jsx" <<'JS'

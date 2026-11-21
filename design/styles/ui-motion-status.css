@@ -5,6 +5,39 @@
   overflow-wrap: anywhere;
 }
 .yg-toast { box-sizing: border-box; }
+.yg-toast-stack {
+  min-block-size: 0;
+  max-block-size: 100%;
+}
+.yg-toast-stack:has(> button) { grid-template-rows: auto minmax(0, 1fr); }
+.yg-toast-stack > button { justify-self: start; }
+.yg-toast-stack-stage {
+  position: relative;
+  min-inline-size: 0;
+  min-block-size: 0;
+  max-block-size: 100%;
+  overflow: auto;
+}
+.yg-toast-stack-slot {
+  position: absolute;
+  inset: 0 0 auto;
+  min-inline-size: 0;
+  transform-origin: center top;
+}
+.yg-toast-stack-slot[data-behind] { overflow: hidden; pointer-events: none; }
+.yg-toast-stack-slot .yg-toast {
+  inline-size: 100%;
+  min-block-size: var(--yg-size-touch);
+  background: var(--yg-raised-surface);
+  color: var(--yg-text);
+}
+.yg-toast-stack-slot .yg-toast > span { min-inline-size: 0; overflow-wrap: anywhere; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-toast-stack-stage { transition: height var(--yg-motion-menu-height); }
+  .yg-toast-stack-slot { transition: transform var(--yg-motion-menu-height); }
+  .yg-toast-stack-stage:focus-within,
+  .yg-toast-stack-stage:focus-within .yg-toast-stack-slot { transition: none; }
+}
 @media (prefers-reduced-motion: no-preference) {
   [data-yg-toast-id][data-exiting] {
     pointer-events: none;

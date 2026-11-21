@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-activity-island",
+  "type": "registry:ui",
+  "title": "ActivityIsland",
+  "description": "Reveal short activity details from a compact summary.",
+  "files": [
+    {
+      "path": "ui/motion-activity-island.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ActivityIsland } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

@@ -17,6 +17,7 @@ import {
 
 // packages/web/src/patterns/editorial.tsx
 import {
+  useCallback,
   useEffect,
   useId,
   useLayoutEffect,
@@ -151,13 +152,28 @@ function Spinner({ label = "Loading" }) {
 function ToastStack({
   items,
   onDismiss,
-  label = "Notifications"
+  label = "Notifications",
+  presentation = "list",
+  defaultExpanded = false
 }) {
   const [entries, setEntries] = useState(() => items.map((item) => ({ ...item, exiting: false })));
   const currentIds = useRef(new Set(items.map((item) => item.id)));
   const currentEntries = useRef(entries);
   const root = useRef(null);
   const timers = useRef(/* @__PURE__ */ new Map());
+  const collectionId = useId();
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const [heights, setHeights] = useState({});
+  const [stackGap, setStackGap] = useState(8);
+  const priorPositions = useRef(/* @__PURE__ */ new Map());
+  const toggleNode = useRef(null);
+  const restoreToggleFocus = useRef(false);
+  const setToggleNode = useCallback((node) => {
+    if (!node && toggleNode.current?.ownerDocument.activeElement === toggleNode.current) {
+      restoreToggleFocus.current = true;
+    }
+    toggleNode.current = node;
+  }, []);
   useLayoutEffect(() => {
     currentIds.current = new Set(items.map((item) => item.id));
     currentEntries.current = entries;
@@ -178,12 +194,12 @@ function ToastStack({
         timers.current.delete(id);
       }
     }
-    const active = items.map((item) => {
+    const active2 = items.map((item) => {
       const existing = entries.find((entry) => entry.id === item.id && !entry.exiting && entry.message === item.message);
       return existing ?? { ...item, exiting: false };
     });
     const leaving = entries.filter((entry) => !ids.has(entry.id)).map((entry) => entry.exiting ? entry : { ...entry, exiting: true });
-    const next = [...active, ...leaving];
+    const next = [...active2, ...leaving];
     if (next.length === entries.length && next.every((entry, index) => entry.id === entries[index].id && entry.message === entries[index].message && entry.exiting === entries[index].exiting)) return;
     const focus = root.current?.ownerDocument.activeElement;
     const focusedEntry = focus instanceof Element ? focus.closest("[data-yg-toast-id]") : null;
@@ -238,7 +254,50 @@ function ToastStack({
       if (Number.isFinite(total)) timers.current.set(entry.id, setTimeout(() => finish(entry.id, entry), Math.max(0, total) + 100));
     }
   }, [entries]);
-  return /* @__PURE__ */ jsx("section", { ref: root, className: "yg-stack", "aria-label": label, tabIndex: -1, children: entries.map((item) => /* @__PURE__ */ jsx(
+  useLayoutEffect(() => {
+    if (presentation !== "stacked" || !root.current) return;
+    const nodes = [...root.current.querySelectorAll("[data-yg-toast-id]")];
+    const measure = () => {
+      const host = root.current;
+      if (!host) return;
+      const next = Object.fromEntries(nodes.map((node) => [node.dataset.ygToastId, node.offsetHeight]));
+      setHeights((previous) => Object.keys(previous).length === Object.keys(next).length && Object.keys(next).every((key) => previous[key] === next[key]) ? previous : next);
+      const gap = parseFloat(getComputedStyle(host).rowGap);
+      if (Number.isFinite(gap)) setStackGap(gap);
+    };
+    measure();
+    const observer = typeof ResizeObserver === "undefined" ? void 0 : new ResizeObserver(measure);
+    nodes.forEach((node) => observer?.observe(node));
+    return () => observer?.disconnect();
+  }, [entries, presentation]);
+  const active = entries.filter((entry) => !entry.exiting);
+  const showToggle = presentation === "stacked" && active.length > 1;
+  useLayoutEffect(() => {
+    const host = root.current;
+    if (!restoreToggleFocus.current || !host) return;
+    restoreToggleFocus.current = false;
+    const focused = host.ownerDocument.activeElement;
+    if (focused && focused !== host.ownerDocument.body && focused.isConnected) return;
+    const remaining = [...host.querySelectorAll("[data-yg-toast-id]")].find((node) => currentIds.current.has(node.dataset.ygToastId ?? "") && !node.closest("[inert]"));
+    const target = remaining?.querySelector("button:not(:disabled)") ?? host;
+    target.focus();
+    if (host.ownerDocument.activeElement !== target) host.focus();
+  }, [showToggle, presentation, active.length]);
+  const compact = presentation === "stacked" && !expanded && active.length > 1;
+  const firstHeight = heights[active[0]?.id] ?? 0;
+  let offset = 0;
+  const positions = /* @__PURE__ */ new Map();
+  active.forEach((entry, index) => {
+    const depth = Math.min(index, 2);
+    positions.set(entry.id, compact ? { y: depth * stackGap, scale: 1 - depth * 0.05, depth: index } : { y: offset, scale: 1, depth: index });
+    offset += (heights[entry.id] ?? 0) + stackGap;
+  });
+  const stackHeight = compact ? firstHeight + Math.min(active.length - 1, 2) * stackGap : Math.max(0, offset - stackGap);
+  useLayoutEffect(() => {
+    if (presentation !== "stacked") return;
+    priorPositions.current = positions;
+  });
+  const renderEntry = (item) => /* @__PURE__ */ jsx(
     "div",
     {
       "data-yg-toast-id": item.id,
@@ -253,7 +312,54 @@ function ToastStack({
       } })
     },
     item.id
-  )) });
+  );
+  if (presentation === "stacked") {
+    return /* @__PURE__ */ jsxs("section", { ref: root, className: "yg-stack yg-toast-stack", "aria-label": label, tabIndex: -1, children: [
+      showToggle && /* @__PURE__ */ jsx(
+        Button,
+        {
+          ref: setToggleNode,
+          emphasis: "quiet",
+          size: "compact",
+          "aria-controls": collectionId,
+          "aria-expanded": expanded,
+          onClick: () => setExpanded((value) => !value),
+          children: expanded ? "Show fewer" : `Show all ${active.length}`
+        }
+      ),
+      /* @__PURE__ */ jsx(
+        "div",
+        {
+          id: collectionId,
+          className: "yg-toast-stack-stage",
+          "data-expanded": !compact,
+          style: { height: `${stackHeight}px` },
+          onFocusCapture: (event) => {
+            const entry = event.target.closest("[data-yg-toast-id]");
+            if (compact && entry && entry.dataset.ygToastId !== active[0]?.id) setExpanded(true);
+          },
+          children: entries.map((item) => {
+            const position = positions.get(item.id) ?? priorPositions.current.get(item.id) ?? { y: 0, scale: 1, depth: 0 };
+            return /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "yg-toast-stack-slot",
+                "data-behind": compact && position.depth > 0 || void 0,
+                style: {
+                  transform: `translateY(${position.y}px) scale(${position.scale})`,
+                  zIndex: entries.length - position.depth,
+                  maxHeight: compact && position.depth > 0 ? `${firstHeight}px` : void 0
+                },
+                children: renderEntry(item)
+              },
+              item.id
+            );
+          })
+        }
+      )
+    ] });
+  }
+  return /* @__PURE__ */ jsx("section", { ref: root, className: "yg-stack", "aria-label": label, tabIndex: -1, children: entries.map(renderEntry) });
 }
 function TableRow({ label, children }) {
   return /* @__PURE__ */ jsxs("dl", { className: "yg-value-row", children: [

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-checkbox-list",
+  "type": "registry:ui",
+  "title": "CheckboxList",
+  "description": "Choose several independent options.",
+  "files": [
+    {
+      "path": "ui/motion-checkbox-list.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { CheckboxList } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

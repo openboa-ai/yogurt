@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-copy-button",
+  "type": "registry:ui",
+  "title": "CopyButton",
+  "description": "Copy supplied text and report the observed result.",
+  "files": [
+    {
+      "path": "ui/motion-copy-button.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { CopyButton } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

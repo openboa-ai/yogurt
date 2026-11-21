@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-focus-picker",
+  "type": "registry:ui",
+  "title": "FocusPicker",
+  "description": "Choose one focus preference from named choices.",
+  "files": [
+    {
+      "path": "ui/motion-focus-picker.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { FocusPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

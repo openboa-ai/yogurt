@@ -1,12 +1,12 @@
 "use client";
 import {
+  words
+} from "./chunk-5GJUJT3P.js";
+import {
   advanceSprings,
   snap,
   spring
 } from "./chunk-DRQJWO7S.js";
-import {
-  words
-} from "./chunk-5GJUJT3P.js";
 import {
   Button,
   IconButton

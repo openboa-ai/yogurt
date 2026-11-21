@@ -9,6 +9,8 @@ Use each returned component's `guidance` to select it, combine it and verify its
 
 On web, copy each component's `importStatement` exactly. Resolve every additional component before importing it. A shared `types` path is only for inspection: never combine names from different public entries into one import.
 
+Resolve reusable motion components by their installed `motion-` ID. An unavailable Native entry is not a Native implementation.
+
 For a decision that can lose its acknowledgement, query `pattern.review-decision pattern.track-request` together. Keep the original receipt ID with the submitted record and revision in host state that survives closing the detail view. Reopening the original record must recover that receipt. Opening another record must leave it hidden. Use the host's lookup to confirm the outcome.
 
 For that Web flow, start from the [tested decision example](../../references/examples/review-decision.web.tsx). Reuse its SDK imports, scope checks and recovery sequence. `Receipt` renders its state heading and, with `onLookup`, its check action; do not duplicate either. Replace the simulated ledger, sample records and endpoint bindings with the project's host operations.

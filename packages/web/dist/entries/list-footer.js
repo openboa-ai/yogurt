@@ -1,7 +1,7 @@
 "use client";
 import {
   ListFooter
-} from "../shared/chunk-5ED5JGLV.js";
+} from "../shared/chunk-QZZ3OCZT.js";
 import "../shared/chunk-QVZBBQIY.js";
 import "../shared/chunk-F374JVJP.js";
 import "../shared/chunk-4IPCB3MM.js";

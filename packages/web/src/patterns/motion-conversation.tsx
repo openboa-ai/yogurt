@@ -3,6 +3,7 @@
 import { useId, useLayoutEffect, useRef, useState } from "react";
 import { advanceSprings, playSprings, snap, spring } from "../foundation/spring-motion.js";
 import { Textarea } from "../controls/forms.js";
+import { PromptAction, PromptEditor } from "./prompt-shared.js";
 
 export function StreamingReply({ value, active = false }: { value: string; active?: boolean }) {
   const surface = useRef<HTMLDivElement>(null);
@@ -68,21 +69,7 @@ export function GhostSuggestion({ value, suggestion, onChange }: {
 export function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }: {
   value: string; onChange: (value: string) => void; onSubmit: () => void; busy?: boolean; onCancel?: () => void;
 }) {
-  const editor = useRef<HTMLDivElement>(null);
-  const measure = useRef<HTMLSpanElement>(null);
-
-  useLayoutEffect(() => {
-    const target = editor.current;
-    const source = measure.current;
-    if (!target || !source) return;
-    const resize = () => target.style.setProperty("--yg-prompt-editor-height", `${Math.min(source.offsetHeight, 88)}px`);
-    const observer = new ResizeObserver(resize);
-    observer.observe(source);
-    resize();
-    return () => observer.disconnect();
-  }, []);
-
-  return <form className="yg-prompt-box" aria-label="Prompt" aria-busy={busy || undefined}
+  return <form className="yg-prompt-box yg-prompt-shared" aria-label="Prompt" aria-busy={busy || undefined}
     onSubmit={(event) => { event.preventDefault(); if (!busy && value.trim()) onSubmit(); }}>
     <div className="yg-prompt-panel">
       <div className="yg-prompt-status-slot">
@@ -91,25 +78,15 @@ export function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }:
         </div>
       </div>
     </div>
-    <div className="yg-prompt-editor" ref={editor}>
-      <span className="yg-prompt-measure" ref={measure} aria-hidden="true">{value}{" "}</span>
-      <textarea aria-label="Prompt" placeholder="Ask anything" rows={1} value={value}
+      <PromptEditor presentation="prompt" aria-label="Prompt" placeholder="Ask anything" rows={1} value={value}
         onChange={event => onChange(event.currentTarget.value)}
         onKeyDown={event => {
           if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) return;
           event.preventDefault();
           if (!busy && value.trim()) event.currentTarget.form?.requestSubmit();
         }} />
-    </div>
     <div className="yg-prompt-actions">
-      <button className="yg-prompt-action" type={busy && onCancel ? "button" : "submit"}
-        aria-label={busy && onCancel ? "Stop" : "Send"} data-busy={busy && onCancel ? true : undefined}
-        disabled={busy ? !onCancel : !value.trim()} onClick={busy && onCancel ? onCancel : undefined}>
-        <span className="yg-prompt-arrow" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19V5M6 11l6-6 6 6" /></svg>
-        </span>
-        <span className="yg-prompt-stop" aria-hidden="true" />
-      </button>
+      <PromptAction presentation="prompt" busy={busy} ready={Boolean(value.trim())} onStop={onCancel} />
     </div>
   </form>;
 }

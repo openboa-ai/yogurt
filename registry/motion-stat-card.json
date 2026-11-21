@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-stat-card",
+  "type": "registry:ui",
+  "title": "StatCard",
+  "description": "Present a labeled metric with a small series.",
+  "files": [
+    {
+      "path": "ui/motion-stat-card.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { StatCard } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

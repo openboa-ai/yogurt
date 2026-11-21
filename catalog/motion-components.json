@@ -1,0 +1,557 @@
+{
+  "formatVersion": 1,
+  "components": [
+    {
+      "id": "motion-mention-picker",
+      "name": "MentionPicker",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Insert a selected person mention while editing a note.",
+        "avoid": "Do not invent people or send the note without host confirmation.",
+        "verify": [
+          "keyboard selection",
+          "empty results",
+          "caret"
+        ]
+      },
+      "examples": [
+        "mention-picker"
+      ]
+    },
+    {
+      "id": "motion-file-drop",
+      "name": "FileDrop",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Select or drop files for a host-managed upload.",
+        "avoid": "Do not imply that selection completed an upload.",
+        "verify": [
+          "file type",
+          "multiple files",
+          "upload progress"
+        ]
+      },
+      "examples": [
+        "file-drop"
+      ]
+    },
+    {
+      "id": "motion-focus-picker",
+      "name": "FocusPicker",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Choose one focus preference from named choices.",
+        "avoid": "Do not change notification delivery without host authorization.",
+        "verify": [
+          "selected",
+          "keyboard",
+          "option descriptions"
+        ]
+      },
+      "examples": [
+        "focus-options"
+      ]
+    },
+    {
+      "id": "motion-plan-switch",
+      "name": "PlanSwitch",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Choose between described plan options.",
+        "avoid": "Do not treat a selection as a purchase.",
+        "verify": [
+          "selected",
+          "keyboard",
+          "prices"
+        ]
+      },
+      "examples": [
+        "plan-options"
+      ]
+    },
+    {
+      "id": "motion-letter-limit",
+      "name": "LetterLimit",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Edit short text with a visible character limit.",
+        "avoid": "Do not imply a submitted value was saved.",
+        "verify": [
+          "limit",
+          "keyboard",
+          "submission"
+        ]
+      },
+      "examples": [
+        "letter-limit"
+      ]
+    },
+    {
+      "id": "motion-morph-tooltip",
+      "name": "MorphTooltip",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Reveal a short contextual explanation.",
+        "avoid": "Do not place essential information only in the tooltip.",
+        "verify": [
+          "focus",
+          "dismissal",
+          "reduced motion"
+        ]
+      },
+      "examples": []
+    },
+    {
+      "id": "motion-spring-dropdown",
+      "name": "SpringDropdown",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Select an option from an animated anchored list.",
+        "avoid": "Use a native form control when its form semantics are required.",
+        "verify": [
+          "selection",
+          "dismissal",
+          "keyboard"
+        ]
+      },
+      "examples": [
+        "spring-dropdown"
+      ]
+    },
+    {
+      "id": "motion-command-button",
+      "name": "CommandButton",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Open and choose a named command.",
+        "avoid": "Do not offer commands the host cannot execute.",
+        "verify": [
+          "selection",
+          "keyboard",
+          "dismissal"
+        ]
+      },
+      "examples": [
+        "command-button"
+      ]
+    },
+    {
+      "id": "motion-morph-tooltip-bar",
+      "name": "MorphTooltipBar",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Choose a named tool from a compact bar with animated detail.",
+        "avoid": "Do not rely on an icon alone for the tool name.",
+        "verify": [
+          "keyboard",
+          "selection",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "morph-tooltip"
+      ]
+    },
+    {
+      "id": "motion-storage-meter",
+      "name": "StorageMeter",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Show observed storage usage and optional categories.",
+        "avoid": "Do not imply an unavailable capacity is zero.",
+        "verify": [
+          "unknown capacity",
+          "categories",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "storage-meter"
+      ]
+    },
+    {
+      "id": "motion-activity-island",
+      "name": "ActivityIsland",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Reveal short activity details from a compact summary.",
+        "avoid": "Do not hide essential task information in the collapsed surface.",
+        "verify": [
+          "expanded",
+          "keyboard",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "activity-island"
+      ]
+    },
+    {
+      "id": "motion-loading-success-button",
+      "name": "LoadingSuccessButton",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Show a host-reported action state.",
+        "avoid": "Do not claim success before the host reports it.",
+        "verify": [
+          "pending",
+          "success",
+          "failure"
+        ]
+      },
+      "examples": [
+        "loading-to-success"
+      ]
+    },
+    {
+      "id": "motion-copy-button",
+      "name": "CopyButton",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Copy supplied text and report the observed result.",
+        "avoid": "Do not display success when copying fails.",
+        "verify": [
+          "clipboard permission",
+          "failure",
+          "keyboard"
+        ]
+      },
+      "examples": [
+        "copy-button"
+      ]
+    },
+    {
+      "id": "motion-streaming-reply",
+      "name": "StreamingReply",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Present an incrementally arriving reply.",
+        "avoid": "Do not imply a reply has finished while the host reports it active.",
+        "verify": [
+          "streaming",
+          "interruption",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "streaming-reply"
+      ]
+    },
+    {
+      "id": "motion-ghost-suggestion",
+      "name": "GhostSuggestion",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Offer an inline text completion.",
+        "avoid": "Do not accept without an explicit keyboard action.",
+        "verify": [
+          "selection",
+          "keyboard",
+          "composition"
+        ]
+      },
+      "examples": [
+        "ghost-suggestion"
+      ]
+    },
+    {
+      "id": "motion-prompt-box",
+      "name": "PromptBox",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Prepare and submit a short request.",
+        "avoid": "Do not send without explicit activation.",
+        "verify": [
+          "empty draft",
+          "pending",
+          "cancel"
+        ]
+      },
+      "examples": [
+        "prompt-box"
+      ]
+    },
+    {
+      "id": "motion-thinking-indicator",
+      "name": "ThinkingIndicator",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Show an active thinking state.",
+        "avoid": "Do not use animation as the only status information.",
+        "verify": [
+          "label",
+          "inactive",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "thinking"
+      ]
+    },
+    {
+      "id": "motion-expand-card",
+      "name": "ExpandCard",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Reveal supporting card details.",
+        "avoid": "Do not hide required information only in the expansion.",
+        "verify": [
+          "keyboard",
+          "expanded",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "expand-card"
+      ]
+    },
+    {
+      "id": "motion-fan-cards",
+      "name": "FanCards",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Browse a small stack of related cards.",
+        "avoid": "Do not use decorative depth to convey required ordering alone.",
+        "verify": [
+          "keyboard",
+          "narrow width",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "fan-cards"
+      ]
+    },
+    {
+      "id": "motion-stat-card",
+      "name": "StatCard",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Present a labeled metric with a small series.",
+        "avoid": "Do not imply that unobserved values are measured.",
+        "verify": [
+          "label",
+          "value",
+          "series"
+        ]
+      },
+      "examples": [
+        "stat-card"
+      ]
+    },
+    {
+      "id": "motion-profile-card",
+      "name": "ProfileCard",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Present a named profile and related actions.",
+        "avoid": "Do not show actions the host cannot perform.",
+        "verify": [
+          "name",
+          "actions",
+          "narrow width"
+        ]
+      },
+      "examples": [
+        "profile-card"
+      ]
+    },
+    {
+      "id": "motion-range-slider",
+      "name": "RangeSlider",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Choose a bounded value or interval.",
+        "avoid": "Use a precise input when small discrete differences matter.",
+        "verify": [
+          "bounds",
+          "keyboard",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "range-slider",
+        "elastic-slider"
+      ]
+    },
+    {
+      "id": "motion-password-strength",
+      "name": "PasswordStrength",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Show password entry and local strength guidance.",
+        "avoid": "Do not imply that a visual score guarantees security.",
+        "verify": [
+          "visibility",
+          "criteria",
+          "keyboard"
+        ]
+      },
+      "examples": [
+        "password-strength"
+      ]
+    },
+    {
+      "id": "motion-checkbox-list",
+      "name": "CheckboxList",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Choose several independent options.",
+        "avoid": "Use a single-choice control when only one selection is allowed.",
+        "verify": [
+          "selection",
+          "keyboard",
+          "count"
+        ]
+      },
+      "examples": [
+        "checkbox-list"
+      ]
+    },
+    {
+      "id": "motion-detent-dial",
+      "name": "DetentDial",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Choose one option along a discrete dial.",
+        "avoid": "Do not rely only on pointer dragging.",
+        "verify": [
+          "keyboard",
+          "selection",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "detent-dial"
+      ]
+    },
+    {
+      "id": "motion-hold-button",
+      "name": "HoldButton",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Require a deliberate hold before a host action.",
+        "avoid": "Do not equate the gesture with a confirmed service outcome.",
+        "verify": [
+          "cancel",
+          "keyboard",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "hold-button"
+      ]
+    },
+    {
+      "id": "motion-slide-confirm",
+      "name": "SlideConfirm",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Request a deliberate slide or accessible equivalent.",
+        "avoid": "Do not equate a completed gesture with a confirmed service outcome.",
+        "verify": [
+          "cancel",
+          "keyboard",
+          "reduced motion"
+        ]
+      },
+      "examples": [
+        "slide-confirm"
+      ]
+    },
+    {
+      "id": "motion-task-list",
+      "name": "TaskList",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Show host-provided task states and details.",
+        "avoid": "Do not report unobserved task completion; retry actions belong to the host.",
+        "verify": [
+          "queued",
+          "running",
+          "done",
+          "failed",
+          "expanded details"
+        ]
+      },
+      "examples": [
+        "task-list"
+      ]
+    },
+    {
+      "id": "motion-cart-button",
+      "name": "CartButton",
+      "entry": "@openboa/yogurt/motion-patterns",
+      "web": "available",
+      "native": "unavailable",
+      "guidance": {
+        "useWhen": "Adjust a host-owned quantity.",
+        "avoid": "Do not treat a quantity change as a completed purchase.",
+        "verify": [
+          "minimum",
+          "maximum",
+          "keyboard"
+        ]
+      },
+      "examples": [
+        "cart-button"
+      ]
+    }
+  ]
+}

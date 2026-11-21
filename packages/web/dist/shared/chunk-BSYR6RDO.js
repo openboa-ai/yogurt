@@ -1,10 +1,14 @@
 "use client";
 import {
   Attachment
-} from "./chunk-5ED5JGLV.js";
+} from "./chunk-QZZ3OCZT.js";
+import {
+  PromptAction,
+  PromptEditor
+} from "./chunk-DD5CG4T7.js";
 import {
   ActionMenu
-} from "./chunk-HIT5KGTJ.js";
+} from "./chunk-42W7U233.js";
 import {
   Button
 } from "./chunk-4IPCB3MM.js";
@@ -34,7 +38,7 @@ function Composer({
   return /* @__PURE__ */ jsxs(
     "form",
     {
-      className: "yg-composer",
+      className: "yg-composer yg-prompt-shared",
       "aria-label": label + " composer",
       "aria-busy": pending || void 0,
       onSubmit: (event) => {
@@ -52,8 +56,9 @@ function Composer({
           }
         ) }, item.id)) }),
         /* @__PURE__ */ jsx(
-          "textarea",
+          PromptEditor,
           {
+            presentation: "composer",
             id,
             "aria-label": label,
             "aria-describedby": error ? id + "-error" : void 0,
@@ -71,7 +76,16 @@ function Composer({
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "yg-composer-tools", children: [
             companion,
-            pending && onStop ? /* @__PURE__ */ jsx(Button, { emphasis: "soft", onClick: onStop, children: "Stop" }, "stop") : /* @__PURE__ */ jsx(Button, { type: "submit", disabled: !ready, pending, pendingLabel: "Sending", children: "Send" }, "send")
+            /* @__PURE__ */ jsx(
+              PromptAction,
+              {
+                presentation: "composer",
+                busy: pending,
+                ready,
+                onStop,
+                renderComposer: (button, stopping) => stopping ? /* @__PURE__ */ jsx(Button, { ref: button, className: "yg-shared-action", emphasis: "soft", onClick: onStop, children: "Stop" }, "stop") : /* @__PURE__ */ jsx(Button, { ref: button, className: "yg-shared-action", type: "submit", disabled: !ready, pending, pendingLabel: "Sending", children: "Send" }, "send")
+              }
+            )
           ] })
         ] })
       ]

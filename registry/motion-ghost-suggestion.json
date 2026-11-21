@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-ghost-suggestion",
+  "type": "registry:ui",
+  "title": "GhostSuggestion",
+  "description": "Offer an inline text completion.",
+  "files": [
+    {
+      "path": "ui/motion-ghost-suggestion.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { GhostSuggestion } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

@@ -17,6 +17,18 @@ const kit = fileURLToPath(new URL("../", import.meta.url)),
   args = process.argv.slice(2),
   catalog = JSON.parse(readFileSync(join(kit, "catalog/components.json")));
 const blocks = JSON.parse(readFileSync(join(kit, "catalog/blocks.json")));
+const motionFile = join(kit, "catalog/motion-components.json");
+const motion = existsSync(motionFile) ? JSON.parse(readFileSync(motionFile)).components : [];
+if (!Array.isArray(motion)) throw Error("Invalid motion component catalog.");
+const ids = new Set([...catalog, ...blocks].map(item => item.id));
+for (const item of motion) {
+  if (!/^motion-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id) || ids.has(item.id) ||
+      !/^[A-Z][A-Za-z0-9]*$/.test(item.name) || item.entry !== "@openboa/yogurt/motion-patterns" ||
+      item.web !== "available" || item.native !== "unavailable" || !item.guidance?.useWhen) {
+    throw Error("Invalid or duplicate motion component metadata.");
+  }
+  ids.add(item.id);
+}
 const usage =
   "yogurt check [--dir project] | yogurt list | yogurt add <component-or-block> --target web|native [--dir project]";
 function run() {
@@ -26,12 +38,13 @@ function run() {
     return;
   }
   if (args[0] === "list") {
-    for (const item of [...catalog, ...blocks])
-      console.log(item.id + "  " + item.description);
+    for (const item of [...catalog, ...blocks, ...motion])
+      console.log(item.id + "  " + (item.description ?? item.guidance.useWhen));
     return;
   }
   const block = blocks.find((e) => e.id === args[1]);
-  const item = block ?? catalog.find((e) => e.id === args[1]);
+  const motionItem = motion.find((e) => e.id === args[1]);
+  const item = block ?? catalog.find((e) => e.id === args[1]) ?? motionItem;
   if (args[0] !== "add" || !item) throw Error(usage);
   const flag = (name) => {
     const i = args.indexOf(name);
@@ -40,6 +53,7 @@ function run() {
   const target = flag("--target") ?? "web",
     project = resolve(flag("--dir") ?? ".");
   if (!["web", "native"].includes(target)) throw Error(usage);
+  if (target === "native" && motionItem) throw Error(`${motionItem.id} is not available for Native.`);
   const planned = [];
   const add = (dest, source) =>
     planned.push({ dest: resolve(project, dest), source });

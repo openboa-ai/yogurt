@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-hold-button",
+  "type": "registry:ui",
+  "title": "HoldButton",
+  "description": "Require a deliberate hold before a host action.",
+  "files": [
+    {
+      "path": "ui/motion-hold-button.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { HoldButton } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

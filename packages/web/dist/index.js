@@ -11,7 +11,7 @@ import {
 import {
   Composer,
   VoiceControl
-} from "./shared/chunk-72QLPC75.js";
+} from "./shared/chunk-BSYR6RDO.js";
 import {
   SidebarContent,
   SidebarFooter,
@@ -52,11 +52,11 @@ import {
   TableRow,
   ToastStack,
   Trace
-} from "./shared/chunk-5ED5JGLV.js";
+} from "./shared/chunk-QZZ3OCZT.js";
 import {
   ConfirmDialog,
   Receipt
-} from "./shared/chunk-7MZHUNNG.js";
+} from "./shared/chunk-ATMM5F5C.js";
 import {
   Activity,
   AgentAvatar,
@@ -82,7 +82,7 @@ import {
   List,
   ListRow,
   SelectionList
-} from "./shared/chunk-GWD2JCSB.js";
+} from "./shared/chunk-S6DI7TIT.js";
 import {
   Badge,
   Notice,
@@ -107,6 +107,7 @@ import {
   LoadingSuccessButton,
   SlideConfirm
 } from "./shared/chunk-NY3LGE3P.js";
+import "./shared/chunk-DD5CG4T7.js";
 import {
   Accordion,
   Calendar,
@@ -122,7 +123,7 @@ import {
   Resizable,
   Sidebar,
   Stepper
-} from "./shared/chunk-YQ7LMCB6.js";
+} from "./shared/chunk-4IUYJJMH.js";
 import {
   Agreement,
   Form,
@@ -135,7 +136,7 @@ import {
   SplitTextField,
   Toggle,
   ToggleGroup
-} from "./shared/chunk-QTYVRUEC.js";
+} from "./shared/chunk-H3KKV7WK.js";
 import "./shared/chunk-F374JVJP.js";
 import {
   ActionMenu,
@@ -145,8 +146,7 @@ import {
   Popover,
   Sheet,
   Tooltip
-} from "./shared/chunk-HIT5KGTJ.js";
-import "./shared/chunk-DRQJWO7S.js";
+} from "./shared/chunk-42W7U233.js";
 import {
   Checkbox,
   Combobox,
@@ -157,13 +157,15 @@ import {
   RadioGroup,
   SearchField,
   Select,
+  SpringTextInput,
   Switch,
   TextField,
   Textarea
-} from "./shared/chunk-L7PYNK52.js";
+} from "./shared/chunk-JYPA2ETQ.js";
 import {
   words
 } from "./shared/chunk-5GJUJT3P.js";
+import "./shared/chunk-DRQJWO7S.js";
 import {
   BottomAction,
   Button,
@@ -301,6 +303,7 @@ export {
   Slider,
   Spinner,
   SplitTextField,
+  SpringTextInput,
   Stack,
   Status,
   Stepper,

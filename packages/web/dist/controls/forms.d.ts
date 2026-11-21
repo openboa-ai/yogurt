@@ -20,8 +20,11 @@ export declare function Field({ id, label, help, error, labelEnd, children, }: F
 }): import("react/jsx-runtime").JSX.Element;
 type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & {
     size?: ControlSize;
+    motion?: "spring";
 };
-export declare function TextField({ id, label, help, error, className, value, defaultValue, size, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
+/** Optional visual response over a real native text input. */
+export declare function SpringTextInput({ value, defaultValue, onChange, onSelect, onScroll, onFocus, onBlur, onCompositionStart, onCompositionEnd, ...props }: Omit<ComponentProps<"input">, "size">): import("react/jsx-runtime").JSX.Element;
+export declare function TextField({ id, label, help, error, className, value, defaultValue, motion, size, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
 export declare function SearchField({ id, label, help, error, value, onValueChange, placeholder, disabled, name, onKeyDown, size, }: FieldInfo & {
     value: string;
     onValueChange: (value: string) => void;

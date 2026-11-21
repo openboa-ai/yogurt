@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-mention-picker",
+  "type": "registry:ui",
+  "title": "MentionPicker",
+  "description": "Insert a selected person mention while editing a note.",
+  "files": [
+    {
+      "path": "ui/motion-mention-picker.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { MentionPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

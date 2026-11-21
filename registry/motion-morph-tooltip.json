@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-morph-tooltip",
+  "type": "registry:ui",
+  "title": "MorphTooltip",
+  "description": "Reveal a short contextual explanation.",
+  "files": [
+    {
+      "path": "ui/motion-morph-tooltip.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { MorphTooltip } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

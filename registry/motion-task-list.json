@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-task-list",
+  "type": "registry:ui",
+  "title": "TaskList",
+  "description": "Show host-provided task states and details.",
+  "files": [
+    {
+      "path": "ui/motion-task-list.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { TaskList } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

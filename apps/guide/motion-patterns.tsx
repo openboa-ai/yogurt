@@ -17,6 +17,7 @@ import { extraUtilities } from "./examples/motion-extra-utilities";
 import { SpringInputExample } from "./examples/spring-field";
 import { NotificationStackExample } from "./examples/notification-stack";
 import { guideHref, locationId, navigateSection, sectionHref } from "./routing";
+import motionCatalog from "../../catalog/motion-components.json";
 
 const pages = [
   {id: "overview", label: "Overview"},
@@ -547,6 +548,7 @@ function Gallery() {
   const heading = useRef<HTMLHeadingElement>(null);
   const term = query.trim().toLowerCase();
   const current = patterns.find(pattern => pattern.id === selected);
+  const reusable = current && motionCatalog.components.find(item => item.examples.includes(current.id));
   const matches = demos.map(section => ({
     ...section,
     items: term ? section.items.filter(item =>
@@ -636,6 +638,13 @@ function Gallery() {
             aria-label={current.title} data-wide={current.wide || undefined}>
             <div className="motion-pattern-stage"><div className="motion-pattern-sample">{current.body}</div></div>
           </article>
+          {reusable && <section aria-label="Reusable component">
+            <h2>Use this component</h2>
+            <p>{reusable.guidance.useWhen}</p>
+            <pre><code>{`import { ${reusable.name} } from "${reusable.entry}";`}</code></pre>
+            <p>Web: available · Native: unavailable</p>
+            <p>{reusable.guidance.avoid}</p>
+          </section>}
           </> : <header className="motion-pattern-intro"><h1 ref={heading} tabIndex={-1}>Pattern not found</h1>
             <p>Choose a pattern from the index.</p></header>}
         </div>

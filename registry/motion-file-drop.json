@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-file-drop",
+  "type": "registry:ui",
+  "title": "FileDrop",
+  "description": "Select or drop files for a host-managed upload.",
+  "files": [
+    {
+      "path": "ui/motion-file-drop.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { FileDrop } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

@@ -3,6 +3,11 @@ import {
   words
 } from "./chunk-5GJUJT3P.js";
 import {
+  playSprings,
+  snap,
+  spring
+} from "./chunk-DRQJWO7S.js";
+import {
   IconButton
 } from "./chunk-4IPCB3MM.js";
 import {
@@ -58,6 +63,172 @@ function Field({
     error && /* @__PURE__ */ jsx(FieldError, { id: input + "-error", children: error })
   ] });
 }
+function SpringTextInput({
+  value,
+  defaultValue,
+  onChange,
+  onSelect,
+  onScroll,
+  onFocus,
+  onBlur,
+  onCompositionStart,
+  onCompositionEnd,
+  ...props
+}) {
+  const initial = String(value ?? defaultValue ?? "");
+  const nextId = useRef(0);
+  const input = useRef(null);
+  const layer = useRef(null);
+  const caret = useRef(null);
+  const [glyphs, setGlyphs] = useState(() => initial.length <= 256 && /^[\x20-\x7e]*$/.test(initial) ? Array.from(initial, (text2) => ({ id: nextId.current++, text: text2, delay: 0 })) : []);
+  const glyphRef = useRef(glyphs);
+  const [removed, setRemoved] = useState([]);
+  const [selection, setSelection] = useState({ start: 0, end: 0, scroll: 0 });
+  const [focused, setFocused] = useState(false);
+  const [composing, setComposing] = useState(false);
+  const [caretMotion] = useState(() => spring(0, 700, 32));
+  const [text, setText] = useState(initial);
+  const textRef = useRef(initial);
+  const compatible = /^[\x20-\x7e]*$/.test(text) && text.length <= 256;
+  const showMirror = focused && !composing && !props.disabled && !props.readOnly && compatible && selection.start === selection.end;
+  function follow(element) {
+    setSelection({ start: element.selectionStart ?? 0, end: element.selectionEnd ?? 0, scroll: element.scrollLeft });
+  }
+  function sync(next, animate) {
+    const previous = glyphRef.current;
+    if (textRef.current === next) return;
+    textRef.current = next;
+    setText(next);
+    if (next.length > 256 || !/^[\x20-\x7e]*$/.test(next)) {
+      glyphRef.current = [];
+      setGlyphs([]);
+      setRemoved([]);
+      return;
+    }
+    const letters = Array.from(next);
+    let prefix = 0, suffix = 0;
+    while (prefix < letters.length && prefix < previous.length && letters[prefix] === previous[prefix].text) prefix++;
+    while (suffix < letters.length - prefix && suffix < previous.length - prefix && letters[letters.length - 1 - suffix] === previous[previous.length - 1 - suffix].text) suffix++;
+    if (animate && typeof matchMedia === "function" && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const nodes = layer.current?.querySelectorAll("[data-glyph]");
+      const deleted = previous.slice(prefix, previous.length - suffix).map((glyph, index) => ({ ...glyph, left: nodes?.[prefix + index]?.offsetLeft ?? 0 }));
+      if (deleted.length) setRemoved((items) => [...items, ...deleted].slice(-256));
+    }
+    const added = letters.slice(prefix, letters.length - suffix).map((letter, index) => ({ id: nextId.current++, text: letter, delay: animate ? Math.min(index, 30) * 18 : 0 }));
+    const nextGlyphs = [...previous.slice(0, prefix), ...added, ...previous.slice(previous.length - suffix)];
+    glyphRef.current = nextGlyphs;
+    setGlyphs(nextGlyphs);
+  }
+  useLayoutEffect(() => {
+    if (input.current) sync(input.current.value, false);
+  });
+  useEffect(() => {
+    const element = input.current, form = element?.form;
+    if (!element || !form) return;
+    let timer;
+    const reset = (event) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!event.defaultPrevented && input.current === element) {
+          sync(element.value, false);
+          follow(element);
+        }
+      }, 0);
+    };
+    form.addEventListener("reset", reset);
+    return () => {
+      form.removeEventListener("reset", reset);
+      if (timer) clearTimeout(timer);
+    };
+  }, [props.form]);
+  useEffect(() => {
+    if (!removed.length) return;
+    const timer = setTimeout(() => setRemoved([]), 500);
+    return () => clearTimeout(timer);
+  }, [removed]);
+  useLayoutEffect(() => {
+    const stripe = caret.current, content = layer.current;
+    if (!stripe || !content || !showMirror) return;
+    const nodes = content.querySelectorAll("[data-glyph]");
+    const index = Array.from(text.slice(0, selection.end)).length;
+    const last = nodes[nodes.length - 1];
+    caretMotion.target = nodes[index]?.offsetLeft ?? (last ? last.offsetLeft + last.offsetWidth : 0);
+    if (!focused || typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches) snap(caretMotion, caretMotion.target);
+    return playSprings([caretMotion], () => {
+      const stretch = Math.min(Math.abs(caretMotion.velocity) / 80, 7);
+      stripe.style.translate = `${caretMotion.position - (caretMotion.velocity > 0 ? stretch : 0)}px 0`;
+      stripe.style.inlineSize = `${2 + stretch}px`;
+    });
+  }, [caretMotion, focused, selection.end, showMirror, text]);
+  return /* @__PURE__ */ jsxs("span", { className: "yg-spring-edit motion-spring-field-edit", "data-mirror": showMirror || void 0, children: [
+    /* @__PURE__ */ jsx(
+      SDKInput,
+      {
+        ...props,
+        value: value == null ? void 0 : String(value),
+        defaultValue: defaultValue == null ? void 0 : String(defaultValue),
+        "data-mirror": showMirror || void 0,
+        onChange: (event) => {
+          sync(event.currentTarget.value, !composing);
+          follow(event.currentTarget);
+          onChange?.(event);
+        },
+        onFocus: (event) => {
+          setFocused(true);
+          follow(event.currentTarget);
+          onFocus?.(event);
+        },
+        onBlur: (event) => {
+          setFocused(false);
+          onBlur?.(event);
+        },
+        onCompositionStart: (event) => {
+          setComposing(true);
+          onCompositionStart?.(event);
+        },
+        onCompositionEnd: (event) => {
+          setComposing(false);
+          sync(event.currentTarget.value, false);
+          follow(event.currentTarget);
+          onCompositionEnd?.(event);
+        },
+        onValueChange: (next, details) => {
+          if (details.reason === "imperative" && props.maxLength !== void 0 && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+        },
+        render: /* @__PURE__ */ jsx("input", { ref: input, onSelect: (event) => {
+          follow(event.currentTarget);
+          onSelect?.(event);
+        }, onScroll: (event) => {
+          follow(event.currentTarget);
+          onScroll?.(event);
+        } })
+      }
+    ),
+    /* @__PURE__ */ jsx("span", { className: "yg-spring-window motion-spring-field-window", "aria-hidden": "true", children: /* @__PURE__ */ jsxs("span", { className: "yg-spring-glyphs motion-spring-glyphs", ref: layer, style: { translate: `${-selection.scroll}px 0` }, children: [
+      compatible && glyphs.map((glyph) => /* @__PURE__ */ jsx(
+        "span",
+        {
+          className: "yg-spring-glyph motion-spring-glyph",
+          "data-glyph": "",
+          style: { "--yg-glyph-delay": `${glyph.delay}ms` },
+          children: glyph.text
+        },
+        glyph.id
+      )),
+      removed.map((glyph) => /* @__PURE__ */ jsx(
+        "span",
+        {
+          className: "yg-spring-removed motion-spring-removed",
+          style: { left: glyph.left },
+          onAnimationEnd: () => setRemoved((items) => items.filter((item) => item.id !== glyph.id)),
+          children: glyph.text
+        },
+        glyph.id
+      )),
+      /* @__PURE__ */ jsx("span", { className: "yg-spring-caret motion-spring-caret", ref: caret, "data-visible": showMirror || void 0 })
+    ] }) })
+  ] });
+}
 function TextField({
   id,
   label,
@@ -66,10 +237,11 @@ function TextField({
   className,
   value,
   defaultValue,
+  motion,
   size = "regular",
   ...props
 }) {
-  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsx(SDKInputGroup, { className: cx("yg-input", `yg-input-size-${size}`, className), children: /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsx(SDKInputGroup, { className: cx("yg-input", `yg-input-size-${size}`, className), children: motion === "spring" && (props.type ?? "text") === "text" && !Array.isArray(value) && !Array.isArray(defaultValue) ? /* @__PURE__ */ jsx(SpringTextInput, { ...props, ...binding, value, defaultValue }) : /* @__PURE__ */ jsx(
     SDKInput,
     {
       ...props,
@@ -509,6 +681,7 @@ export {
   HelpText,
   FieldError,
   Field,
+  SpringTextInput,
   TextField,
   SearchField,
   Textarea,

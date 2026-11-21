@@ -1,13 +1,14 @@
 "use client";
 import {
+  Checkbox,
+  Field,
+  SpringTextInput
+} from "./chunk-JYPA2ETQ.js";
+import {
   playSprings,
   snap,
   spring
 } from "./chunk-DRQJWO7S.js";
-import {
-  Checkbox,
-  Field
-} from "./chunk-L7PYNK52.js";
 import {
   Button,
   IconButton
@@ -38,17 +39,21 @@ function InputGroup({
   error,
   id,
   size = "featured",
+  motion,
+  containerClassName,
   ...input
 }) {
   const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") && !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
   const { onSelect, ...sharedProps } = input;
-  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs(SDKInputGroup, { className: cx("yg-input yg-input-group", `yg-input-size-${size}`), children: [
+  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs(SDKInputGroup, { className: cx("yg-input yg-input-group", `yg-input-size-${size}`, containerClassName), children: [
     leading,
-    sharedInput ? /* @__PURE__ */ jsx(
+    sharedInput && motion === "spring" && (input.type ?? "text") === "text" ? /* @__PURE__ */ jsx(SpringTextInput, { ...input, ...binding, "aria-invalid": binding["aria-invalid"] ?? input["aria-invalid"], "aria-describedby": [input["aria-describedby"], binding["aria-describedby"]].filter(Boolean).join(" ") || void 0 }) : sharedInput ? /* @__PURE__ */ jsx(
       SDKInput,
       {
         ...sharedProps,
         ...binding,
+        "aria-invalid": binding["aria-invalid"] ?? input["aria-invalid"],
+        "aria-describedby": [input["aria-describedby"], binding["aria-describedby"]].filter(Boolean).join(" ") || void 0,
         render: onSelect ? /* @__PURE__ */ jsx("input", { onSelect }) : void 0,
         value: input.value == null ? void 0 : String(input.value),
         defaultValue: input.defaultValue == null ? void 0 : String(input.defaultValue),

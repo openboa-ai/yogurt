@@ -34,6 +34,8 @@ export function SaveView({ onSave }: { onSave: () => void }) {
 
 For shadcn CLI, supply the local file `registry/button.json` to `shadcn add` after installing the pinned package. The resulting editable entry imports the same library component. `npx yogurt add` is the dependency-light alternative and refuses to replace edited files. Install and pin a new version through the consuming project’s own review.
 
+Reusable Web motion components are listed in the installed `catalog/motion-components.json` and demonstrated in the motion guide. For example, resolve `motion-task-list` or install its import wrapper with `npx yogurt add motion-task-list --target web`, then import `TaskList` from `@openboa/yogurt/motion-patterns`. These entries currently have no Native implementation. Their registry files are editable import wrappers; the implementation stays in the pinned package.
+
 ### Control sizes and action shapes
 
 Web `Button`, `TextField` and `SearchField` accept the same size names: `compact`, `regular`, `comfortable`, `spacious` and `touch`, corresponding to 30, 36, 40, 48 and 44 px. Use `controlSize` for the same visual choices on `Select`; its native `size` attribute retains its HTML meaning. Regular is the default. Choose the size for the context and provide at least a 44 px target for touch. Buttons support `shape="rounded"` and `shape="pill"`; filled, soft and quiet describe emphasis rather than size. The component guide demonstrates each option.

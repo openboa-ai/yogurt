@@ -4,6 +4,7 @@ import { useId, type ReactNode } from "react";
 import { Attachment } from "./editorial.js";
 import { ActionMenu } from "../controls/layers.js";
 import { Button } from "../controls/actions.js";
+import { PromptAction, PromptEditor } from "./prompt-shared.js";
 
 export interface DraftAttachment {
   id: string;
@@ -54,7 +55,7 @@ export function Composer({
   const ready = !pending && (text.length > 0 || attachments.length > 0)
     && attachments.every((item) => item.progress == null || item.progress >= 100);
   return (
-    <form className="yg-composer" aria-label={label + " composer"} aria-busy={pending || undefined}
+    <form className="yg-composer yg-prompt-shared" aria-label={label + " composer"} aria-busy={pending || undefined}
       onSubmit={(event) => {
         event.preventDefault();
         if (ready) onSend({ text, attachmentIds: attachments.map((item) => item.id) });
@@ -69,7 +70,7 @@ export function Composer({
           ))}
         </ul>
       )}
-      <textarea id={id} aria-label={label} aria-describedby={error ? id + "-error" : undefined}
+      <PromptEditor presentation="composer" id={id} aria-label={label} aria-describedby={error ? id + "-error" : undefined}
         placeholder={label} rows={2} value={value}
         onChange={(event) => onValueChange(event.currentTarget.value)} />
       {error && <span className="yg-field-error" id={id + "-error"} role="alert">{error}</span>}
@@ -84,9 +85,10 @@ export function Composer({
         </div>
         <div className="yg-composer-tools">
           {companion}
-          {pending && onStop
-            ? <Button key="stop" emphasis="soft" onClick={onStop}>Stop</Button>
-            : <Button key="send" type="submit" disabled={!ready} pending={pending} pendingLabel="Sending">Send</Button>}
+          <PromptAction presentation="composer" busy={pending} ready={ready} onStop={onStop}
+            renderComposer={(button, stopping) => stopping
+              ? <Button key="stop" ref={button} className="yg-shared-action" emphasis="soft" onClick={onStop}>Stop</Button>
+              : <Button key="send" ref={button} className="yg-shared-action" type="submit" disabled={!ready} pending={pending} pendingLabel="Sending">Send</Button>} />
         </div>
       </div>
     </form>

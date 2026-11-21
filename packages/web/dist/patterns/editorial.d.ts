@@ -63,13 +63,15 @@ export declare function Highlight({ children }: Content): import("react/jsx-runt
 export declare function Spinner({ label }: {
     label?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function ToastStack({ items, onDismiss, label, }: {
+export declare function ToastStack({ items, onDismiss, label, presentation, defaultExpanded, }: {
     items: {
         id: string;
         message: string;
     }[];
     onDismiss: (id: string) => void;
     label?: string;
+    presentation?: "list" | "stacked";
+    defaultExpanded?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function TableRow({ label, children }: Content & {
     label: string;

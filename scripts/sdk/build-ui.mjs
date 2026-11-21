@@ -20,6 +20,27 @@ await import("../agents/agent-family.mjs");
 const read = (p) => readFileSync(p, "utf8");
 const catalog = JSON.parse(read("catalog/components.json"));
 const blocks = JSON.parse(read("catalog/blocks.json"));
+const motionCatalog = JSON.parse(read("catalog/motion-components.json"));
+const motionComponents = motionCatalog.components;
+if (motionCatalog.formatVersion !== 1 || !Array.isArray(motionComponents)) throw Error("Invalid motion component catalog.");
+const usedIds = new Set([...catalog, ...blocks, ...JSON.parse(read("catalog/patterns.json")).patterns].map(item => item.id));
+const motionNames = new Set();
+const declarationSource = read("packages/web/src/patterns/motion-patterns.ts");
+const publicNames = new Set([...declarationSource.matchAll(/export \{ ([^}]+) \} from/g)]
+  .flatMap(match => match[1].split(",").map(name => name.trim()).filter(name => !name.startsWith("type "))));
+for (const item of motionComponents) {
+  if (!/^motion-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id) || usedIds.has(item.id) ||
+      !/^[A-Z][A-Za-z0-9]*$/.test(item.name) || motionNames.has(item.name) || !publicNames.has(item.name) ||
+      item.entry !== "@openboa/yogurt/motion-patterns" || item.web !== "available" || item.native !== "unavailable" ||
+      !item.guidance?.useWhen?.trim() || !item.guidance?.avoid?.trim() || !Array.isArray(item.guidance.verify) ||
+      !item.guidance.verify.length || !item.guidance.verify.every(value => typeof value === "string" && value.trim()) ||
+      !Array.isArray(item.examples) || !item.examples.every(value => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value))) {
+    throw Error("Invalid or duplicate motion component metadata: " + item.id);
+  }
+  usedIds.add(item.id);
+  motionNames.add(item.name);
+}
+if (publicNames.size !== motionNames.size) throw Error("The motion component catalog must cover each public export.");
 const src = "packages/web/src";
 const modulePaths = new Map();
 for (const owner of ["foundation", "controls", "identity", "patterns"]) {
@@ -107,6 +128,15 @@ for (const block of blocks) {
   };
   writeFileSync("registry/" + block.id + ".json", JSON.stringify(item, null, 2) + "\n");
 }
+for (const item of motionComponents) {
+  const content = '"use client";\n\nexport { ' + item.name + ' } from "' + item.entry + '";\n';
+  writeFileSync("registry/" + item.id + ".json", JSON.stringify({
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    name: item.id, type: "registry:ui", title: item.name,
+    description: item.guidance.useWhen,
+    files: [{ path: "ui/" + item.id + ".tsx", type: "registry:ui", content }],
+  }, null, 2) + "\n");
+}
 writeFileSync(
   "registry/registry.json",
   JSON.stringify(
@@ -114,7 +144,7 @@ writeFileSync(
       $schema: "https://ui.shadcn.com/schema/registry.json",
       name: "yogurt",
       homepage: "https://www.openboa.ai/",
-      items: [...catalog, ...blocks].map((e) => JSON.parse(read("registry/" + e.id + ".json"))),
+      items: [...catalog, ...blocks, ...motionComponents].map((e) => JSON.parse(read("registry/" + e.id + ".json"))),
     },
     null,
     2,
