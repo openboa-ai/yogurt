@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputOTP, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
+import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputOTP, NumericSpinner, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 import { Button as CopiedButton } from "../src/components/ui/button";
 
@@ -26,7 +26,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent menu" && step.action === "setOpen") ||
       (step.label === "Menu second" && step.action === "press") ||
       (step.label === "Agent hint" && step.action === "setOpen") ||
-      (step.label === "Agent code" && step.action === "setValue"),
+      (step.label === "Agent code" && step.action === "setValue") ||
+      (step.label === "Increase Agent quantity" && step.action === "press"),
   });
 }
 
@@ -70,6 +71,8 @@ export default function AgentButtonFixture() {
   const [code, setCode] = useState("");
   const [deniedCode, setDeniedCode] = useState("31");
   const [formCode, setFormCode] = useState("12");
+  const [quantity, setQuantity] = useState(1);
+  const [quantityCalls, setQuantityCalls] = useState(0);
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
   const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
   const sections = options.map(option => ({ id: option.id, title: option.label, disabled: option.disabled, content: <input aria-label={`Section ${option.id}`} defaultValue="Original" /> }));
@@ -140,6 +143,9 @@ export default function AgentButtonFixture() {
         <InputOTP label="Agent code" value={code} onValueChange={setCode} />
         <InputOTP label="Denied code" value={deniedCode} onValueChange={setDeniedCode} />
         <InputOTP label="Disabled code" value="" disabled onValueChange={() => {}} />
+        <NumericSpinner label="Agent quantity" value={quantity} min={0} max={7} step={2}
+          onValueChange={next => { setQuantity(next); setQuantityCalls(count => count + 1); }} />
+        <NumericSpinner label="Disabled quantity" value={1} disabled onValueChange={() => setQuantityCalls(count => count + 1)} />
         <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
         <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
           <input aria-label="Draft" defaultValue="Original draft" />
@@ -187,6 +193,8 @@ export default function AgentButtonFixture() {
         <output data-testid="nested-changes">{nestedChanges}</output>
         <output data-testid="menu-selection">{menuSelection}</output>
         <output data-testid="menu-calls">{menuCalls}</output>
+        <output data-testid="quantity-value">{quantity}</output>
+        <output data-testid="quantity-calls">{quantityCalls}</output>
       </main>
     </Yogurt>
   );

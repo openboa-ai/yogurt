@@ -76,7 +76,7 @@ Keep all colors on the same numbered palette. Neutral is the approved default. P
 
 The web Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle, ToggleGroup, Dialog, Sheet, Drawer, Popover and Accordion use the UI SDK behavior runtime with Yogurt's own presentation. An application that explicitly connects an agent must resolve its bridge and these controls to the same installed UI SDK core. Yogurt does not start a bridge or grant actions by rendering a component. The host owns access and effects. Other entries continue to use their existing behavior implementations while replacement is in progress. The built package retains third-party notices.
 
-Web ActionMenu uses shared inline popup and button behaviors with a Yogurt keyboard adapter. Web Tooltip uses shared inline popup state with a Yogurt activation adapter. Web InputOTP uses shared input behavior with an explicit secret mark and retains the Yogurt numeric and cursor adapter. They are not yet based on the complete shared menu, tooltip and one-time-code behaviors.
+Web ActionMenu uses shared inline popup and button behaviors with a Yogurt keyboard adapter. Web Tooltip uses shared inline popup state with a Yogurt activation adapter. Web InputOTP uses shared input behavior with an explicit secret mark and retains the Yogurt numeric and cursor adapter. NumericSpinner uses shared buttons with the existing Yogurt quantity adapter. They are not yet based on the complete shared menu, tooltip, one-time-code and numeric behaviors.
 
 ### Connect an agent to web controls
 

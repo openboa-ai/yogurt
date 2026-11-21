@@ -325,6 +325,20 @@ if (!urls.length) throw Error("Provide one or more running consumer URLs.");
       assert.equal(refusedCode.ok, false);
       assert.equal(await page.getByRole("textbox", { name: "Denied code" }).inputValue(), "31");
       assert.equal(await page.getByRole("textbox", { name: "Disabled code" }).isDisabled(), true);
+      const quantitySnapshot = await page.evaluate(() => window.yogurtFixtureAgent.snapshot());
+      assert(quantitySnapshot.find(item => item.label === "Increase Agent quantity")?.actions.includes("press"));
+      for (const expected of ["3", "5", "7"]) {
+        const increase = await page.evaluate(() => window.yogurtFixtureAgent.act({ steps: [{ ref: "Increase Agent quantity", action: "press" }] }));
+        assert.equal(increase.ok, true);
+        assert.equal(await page.getByTestId("quantity-value").textContent(), expected);
+      }
+      const atLimit = await page.evaluate(() => window.yogurtFixtureAgent.act({ steps: [{ ref: "Increase Agent quantity", action: "press" }] }));
+      assert.equal(atLimit.ok, false);
+      assert.equal(await page.getByTestId("quantity-calls").textContent(), "3");
+      await button("Decrease Agent quantity").click();
+      assert.equal(await page.getByTestId("quantity-value").textContent(), "5");
+      assert.equal(await page.getByTestId("quantity-calls").textContent(), "4");
+      assert.equal(await button("Increase Disabled quantity").isDisabled(), true);
       const dialogTrigger = button("Open fixture dialog");
       await dialogTrigger.click();
       const dialog = page.getByRole("dialog", { name: "Fixture dialog" });
