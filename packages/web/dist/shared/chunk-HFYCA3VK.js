@@ -1,11 +1,5 @@
 "use client";
 import {
-  dist_exports8 as dist_exports
-} from "./chunk-M625EGNB.js";
-import {
-  clsx_default
-} from "./chunk-6KAVIWHD.js";
-import {
   words
 } from "./chunk-5GJUJT3P.js";
 import {
@@ -18,7 +12,7 @@ import {
 
 // packages/web/src/controls/forms.tsx
 import {
-  useId as useId2,
+  useId,
   useRef,
   useState
 } from "react";
@@ -26,48 +20,7 @@ import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/in
 import { Textarea as SDKTextarea } from "@ui-sdk/react/textarea";
 import { Switch as SDKSwitch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkbox";
-
-// node_modules/@openai/apps-sdk-ui/dist/es/components/RadioGroup/RadioGroup.js
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import React, { createContext, use, useId, useMemo } from "react";
-
-// node_modules/@openai/apps-sdk-ui/dist/es/components/RadioGroup/RadioGroup.module.css
-var RadioGroup_default = { "RadioGroup": "yg-sdk-RadioGroup-RadioGroup", "RadioLabel": "yg-sdk-RadioGroup-RadioLabel", "RadioIndicatorWrapper": "yg-sdk-RadioGroup-RadioIndicatorWrapper", "RadioItem": "yg-sdk-RadioGroup-RadioItem", "RadioIndicator": "yg-sdk-RadioGroup-RadioIndicator" };
-
-// node_modules/@openai/apps-sdk-ui/dist/es/components/RadioGroup/RadioGroup.js
-var RadioGroupContext = createContext(null);
-var useRadioGroupContext = () => {
-  const context = use(RadioGroupContext);
-  if (!context) {
-    throw new Error("RadioGroup components must be wrapped in <RadioGroup />");
-  }
-  return context;
-};
-var RadioGroup = ({ onChange, children, className, direction = "row", disabled = false, ...restProps }) => {
-  const store = useMemo(() => ({
-    disabled,
-    direction
-  }), [disabled, direction]);
-  return _jsx(RadioGroupContext, { value: store, children: _jsx(dist_exports.Root, { className: clsx_default(RadioGroup_default.RadioGroup, className), "data-direction": direction, onValueChange: onChange, disabled, ...restProps, children }) });
-};
-var Item = ({ value, disabled: itemDisabled = false, required, children, className, block = false, ...restProps }) => {
-  const { disabled: groupDisabled } = useRadioGroupContext();
-  const disabled = groupDisabled || itemDisabled;
-  const id = useId();
-  const itemId = `${value}-${id}`;
-  return (
-    // Providing an extra wrapper enables `label` to be inline-flex, avoiding clickable whitespace
-    // when radio options are of varied lengths.
-    // NOTE: Important that this is `flex` to prevent the `inline-flex` label from extra, unintentional whitespace.
-    _jsx("div", { className: "flex", ...restProps, children: _jsxs("label", { htmlFor: itemId, className: clsx_default(RadioGroup_default.RadioLabel, className), "data-disabled": disabled ? "" : void 0, "data-block": block ? "" : void 0, onMouseDown: (event) => {
-      if (!event.defaultPrevented && event.detail > 1)
-        event.preventDefault();
-    }, children: [_jsx("div", { className: RadioGroup_default.RadioIndicatorWrapper, children: _jsx(dist_exports.Item, { id: itemId, value, disabled, required, className: RadioGroup_default.RadioItem, children: _jsx(dist_exports.Indicator, { className: RadioGroup_default.RadioIndicator }) }) }), children] }) })
-  );
-};
-RadioGroup.Item = Item;
-
-// packages/web/src/controls/forms.tsx
+import { RadioGroup as SDKRadio, Radio as SDKRadioItem, RadioIndicator } from "@ui-sdk/react/radio";
 import { jsx, jsxs } from "react/jsx-runtime";
 function Label(props) {
   return /* @__PURE__ */ jsx("label", { ...props, className: cx("yg-label", props.className) });
@@ -85,7 +38,7 @@ function Field({
   error,
   children
 }) {
-  const fallback = useId2();
+  const fallback = useId();
   const input = id ?? fallback;
   const description = [help && input + "-help", error && input + "-error"].filter(Boolean).join(" ") || void 0;
   return /* @__PURE__ */ jsxs("div", { className: "yg-field", children: [
@@ -248,7 +201,7 @@ function Switch({
   onCheckedChange,
   ...props
 }) {
-  const generatedId = useId2();
+  const generatedId = useId();
   const inputId = id ?? generatedId;
   const labelRef = useRef(null);
   const change = (checked) => {
@@ -285,7 +238,7 @@ function Checkbox({
   disabled,
   ...props
 }) {
-  const generatedId = useId2();
+  const generatedId = useId();
   const inputId = id ?? generatedId;
   return /* @__PURE__ */ jsxs("div", { className: cx("yg-choice yg-checkbox", className), "data-disabled": disabled || void 0, children: [
     /* @__PURE__ */ jsx(SDKCheckbox, { ...props, id: inputId, disabled, children: /* @__PURE__ */ jsx(CheckboxIndicator, { keepMounted: true, children: /* @__PURE__ */ jsxs("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", children: [
@@ -295,7 +248,7 @@ function Checkbox({
     /* @__PURE__ */ jsx("label", { htmlFor: inputId, children: /* @__PURE__ */ jsx("span", { children: label }) })
   ] });
 }
-function RadioGroup2({
+function RadioGroup({
   label,
   options,
   value,
@@ -306,16 +259,20 @@ function RadioGroup2({
   return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset", children: [
     /* @__PURE__ */ jsx("legend", { className: "yg-label", children: label }),
     /* @__PURE__ */ jsx(
-      RadioGroup,
+      SDKRadio,
       {
         className: "yg-radio",
         "aria-label": label,
-        direction: "col",
         value,
         name,
         disabled,
-        onChange: onValueChange,
-        children: options.map((o) => /* @__PURE__ */ jsx(RadioGroup.Item, { value: o.id, disabled: o.disabled, children: o.label }, o.id))
+        onValueChange: (next) => {
+          if (next !== null) onValueChange(next);
+        },
+        children: options.map((o) => /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("label", { "data-disabled": disabled || o.disabled ? "" : void 0, children: [
+          /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(SDKRadioItem, { value: o.id, disabled: o.disabled, children: /* @__PURE__ */ jsx(RadioIndicator, {}) }) }),
+          o.label
+        ] }) }, o.id))
       }
     )
   ] });
@@ -329,7 +286,7 @@ function Combobox({
   help,
   error
 }) {
-  const list = useId2();
+  const list = useId();
   const [query, setQuery] = useState(null);
   const [active, setActive] = useState(null);
   const open = query !== null && !disabled;
@@ -438,6 +395,6 @@ export {
   Select,
   Switch,
   Checkbox,
-  RadioGroup2 as RadioGroup,
+  RadioGroup,
   Combobox
 };

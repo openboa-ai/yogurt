@@ -2,6 +2,8 @@
 
 Each entry is pending until its normal package export, guide, registry and supported renderer have been replaced and verified. A specimen is a starting point for its geometry and behavior.
 
+The Web behavior runtime transition is in progress. Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle and ToggleGroup have Web implementation and installed-consumer evidence in their scoped control records. Their overall state remains pending until the corresponding registry and Native behavior, visual treatment and motion are qualified. Remaining entries have not been admitted as converted merely because their gallery tests pass.
+
 | Component | Family | Yogurt specimen | State |
 | --- | --- | --- | --- |
 | `yogurt` | foundation | Family design | Pending |

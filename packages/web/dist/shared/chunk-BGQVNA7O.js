@@ -1,7 +1,7 @@
 "use client";
 import {
   Attachment
-} from "./chunk-AGMFMXFJ.js";
+} from "./chunk-AOCR2E3S.js";
 import {
   ActionMenu
 } from "./chunk-UNUSCUEY.js";

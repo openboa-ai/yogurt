@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Button, Checkbox, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Yogurt } from "@openboa/yogurt";
+import { Button, Checkbox, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 
 if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
@@ -14,7 +14,10 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent search" && step.action === "setValue") ||
       (step.label === "Agent notes" && step.action === "setValue") ||
       (step.label === "Agent segment" && step.action === "setValue") ||
-      (step.label === "Agent tabs" && step.action === "setValue"),
+      (step.label === "Agent tabs" && step.action === "setValue") ||
+      (step.label === "Agent radio" && step.action === "setValue") ||
+      (step.label === "Agent toggle" && step.action === "setPressed") ||
+      (step.label === "Agent filters" && step.action === "setValue"),
   });
 }
 
@@ -38,6 +41,16 @@ export default function AgentButtonFixture() {
   const [tab, setTab] = useState("one");
   const [deniedTab, setDeniedTab] = useState("one");
   const [tabChanges, setTabChanges] = useState(0);
+  const [radio, setRadio] = useState("one");
+  const [deniedRadio, setDeniedRadio] = useState("one");
+  const [radioChanges, setRadioChanges] = useState(0);
+  const [toggled, setToggled] = useState(false);
+  const [toggleChanges, setToggleChanges] = useState(0);
+  const [filters, setFilters] = useState([]);
+  const [deniedFilters, setDeniedFilters] = useState([]);
+  const [filterChanges, setFilterChanges] = useState(0);
+  const [single, setSingle] = useState([]);
+  const [formToggle, setFormToggle] = useState(false);
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
   const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
   const actionRef = useRef(null);
@@ -85,11 +98,21 @@ export default function AgentButtonFixture() {
         <Tabs label="Denied tabs" items={tabs} value={deniedTab} onValueChange={setDeniedTab} />
         <Tabs label="Fallback tabs" items={tabs} value="missing" onValueChange={() => {}} />
         <Tabs label="Disabled tabs" items={tabs.map(item => ({...item, disabled: true}))} value="one" onValueChange={() => {}} />
+        <RadioGroup label="Agent radio" options={options} value={radio} onValueChange={value => { setRadio(value); setRadioChanges(count => count + 1); }} />
+        <RadioGroup label="Denied radio" options={options} value={deniedRadio} onValueChange={setDeniedRadio} />
+        <RadioGroup label="Disabled radio" options={options} value="one" disabled onValueChange={() => {}} />
+        <Toggle pressed={toggled} onPressedChange={value => { setToggled(value); setToggleChanges(count => count + 1); }}>Agent toggle</Toggle>
+        <Toggle pressed={false} disabled onPressedChange={() => {}}>Disabled toggle</Toggle>
+        <ToggleGroup label="Agent filters" multiple items={options} value={filters} onValueChange={value => { setFilters(value); setFilterChanges(count => count + 1); }} />
+        <ToggleGroup label="Denied filters" multiple items={options} value={deniedFilters} onValueChange={setDeniedFilters} />
+        <ToggleGroup label="Single filter" items={options} value={single} onValueChange={setSingle} />
         <form aria-label="Fixture form" onSubmit={event => { event.preventDefault(); setSubmits(value => value + 1); }}>
           <Checkbox label="Form checkbox" name="notes" value="include" defaultChecked />
           <Switch label="Form switch" name="enabled" value="yes" defaultChecked />
           <TextField label="Form text" name="title" defaultValue="Original" />
           <Textarea label="Form notes" name="description" defaultValue="Original note" />
+          <RadioGroup label="Form choice" name="choice" options={options} value={radio} onValueChange={setRadio} />
+          <Toggle pressed={formToggle} onPressedChange={setFormToggle}>Form toggle</Toggle>
           <Button type="submit">Submit form</Button>
           <Button onClick={hit}>Ordinary action</Button>
         </form>
@@ -107,6 +130,14 @@ export default function AgentButtonFixture() {
         <output data-testid="tab-value">{tab}</output>
         <output data-testid="denied-tab-value">{deniedTab}</output>
         <output data-testid="tab-changes">{tabChanges}</output>
+        <output data-testid="radio-value">{radio}</output>
+        <output data-testid="denied-radio-value">{deniedRadio}</output>
+        <output data-testid="radio-changes">{radioChanges}</output>
+        <output data-testid="toggle-changes">{toggleChanges}</output>
+        <output data-testid="filter-value">{filters.join(",")}</output>
+        <output data-testid="denied-filter-value">{deniedFilters.join(",")}</output>
+        <output data-testid="filter-changes">{filterChanges}</output>
+        <output data-testid="single-value">{single.join(",")}</output>
       </main>
     </Yogurt>
   );

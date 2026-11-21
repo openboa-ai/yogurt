@@ -7,10 +7,7 @@ import {
 import {
   Checkbox,
   Field
-} from "./chunk-IEW6SBWX.js";
-import {
-  dist_exports10 as dist_exports
-} from "./chunk-M625EGNB.js";
+} from "./chunk-HFYCA3VK.js";
 import {
   Button,
   IconButton
@@ -29,6 +26,7 @@ import {
   useRef,
   useState
 } from "react";
+import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
 import { jsx, jsxs } from "react/jsx-runtime";
 function InputGroup({
   label,
@@ -519,13 +517,17 @@ function Toggle({
   disabled
 }) {
   return /* @__PURE__ */ jsx(
-    Button,
+    SDKToggle,
     {
-      "aria-pressed": pressed,
-      emphasis: pressed ? "soft" : "quiet",
+      pressed,
+      onPressedChange,
+      className: "yg-button",
+      "data-emphasis": pressed ? "soft" : "quiet",
+      "data-tone": "neutral",
+      "data-control-size": "regular",
+      "data-shape": "rounded",
       disabled,
-      onClick: () => onPressedChange(!pressed),
-      children
+      children: /* @__PURE__ */ jsx("span", { className: "yg-button-inner", children: /* @__PURE__ */ jsx("span", { className: "yg-button-label", children: /* @__PURE__ */ jsx("span", { className: "yg-button-content", children }) }) })
     }
   );
 }
@@ -536,35 +538,59 @@ function ToggleGroup({
   onValueChange,
   multiple = false
 }) {
-  const children = items.map((i) => /* @__PURE__ */ jsx(
-    dist_exports.Item,
-    {
-      className: "yg-toggle-item",
-      value: i.id,
-      disabled: i.disabled,
-      children: i.label
-    },
-    i.id
-  ));
-  return multiple ? /* @__PURE__ */ jsx(
-    dist_exports.Root,
+  return /* @__PURE__ */ jsx(
+    SDKToggleGroup,
     {
       className: "yg-toggle-group",
       "aria-label": label,
-      type: "multiple",
-      value,
-      onValueChange,
-      children
-    }
-  ) : /* @__PURE__ */ jsx(
-    dist_exports.Root,
-    {
-      className: "yg-toggle-group",
-      "aria-label": label,
-      type: "single",
-      value: value[0] ?? "",
-      onValueChange: (v) => onValueChange(v ? [v] : []),
-      children
+      render: (props) => /* @__PURE__ */ jsx("div", { ...props, role: multiple ? "toolbar" : "radiogroup" }),
+      multiple,
+      deselectable: true,
+      value: multiple ? value : value.slice(0, 1),
+      onValueChange: (next) => {
+        if (next.some((id) => !value.includes(id) && !items.some((item) => item.id === id && !item.disabled))) return;
+        const selected = new Set(next);
+        onValueChange(multiple ? [...value.filter((id) => selected.has(id)), ...next.filter((id) => !value.includes(id))] : next);
+      },
+      onKeyDownCapture: (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        const current = event.target.closest("button[data-yg-toggle-id]");
+        const enabled = items.filter((item) => !item.disabled);
+        const index = enabled.findIndex((item) => item.id === current?.dataset.ygToggleId);
+        if (index < 0) return;
+        const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+        const next = {
+          ArrowRight: (index + (rtl ? -1 : 1) + enabled.length) % enabled.length,
+          ArrowLeft: (index + (rtl ? 1 : -1) + enabled.length) % enabled.length,
+          Home: 0,
+          End: enabled.length - 1
+        }[event.key];
+        if (next === void 0) return;
+        event.preventDefault();
+        [...event.currentTarget.querySelectorAll("button[data-yg-toggle-id]")].find((button) => button.dataset.ygToggleId === enabled[next].id)?.focus();
+      },
+      children: items.map((item) => /* @__PURE__ */ jsx(
+        SDKToggle,
+        {
+          value: item.id,
+          disabled: item.disabled,
+          className: "yg-toggle-item",
+          "data-yg-toggle-id": item.id,
+          render: (props, state) => /* @__PURE__ */ jsx(
+            "button",
+            {
+              ...props,
+              disabled: item.disabled,
+              role: multiple ? void 0 : "radio",
+              "aria-checked": multiple ? void 0 : state.pressed,
+              "aria-pressed": multiple ? state.pressed : void 0,
+              "data-state": state.pressed ? "on" : "off"
+            }
+          ),
+          children: item.label
+        },
+        item.id
+      ))
     }
   );
 }

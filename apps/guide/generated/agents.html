@@ -902,7 +902,7 @@
 }
 .yg-checkbox
   [role="checkbox"]:is([data-state="checked"], [data-state="indeterminate"], [data-checked], [data-indeterminate]),
-.yg-radio [role="radio"][data-state="checked"] {
+.yg-radio [role="radio"]:is([data-state="checked"], [data-checked]) {
   background: var(--yg-inverse);
   border-color: var(--yg-inverse);
 }

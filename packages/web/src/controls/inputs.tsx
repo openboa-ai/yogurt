@@ -10,7 +10,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { ToggleGroup as RadixGroup } from "radix-ui";
+import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
 import { Button, IconButton } from "./actions.js";
 import { Checkbox, Field } from "./forms.js";
 import { cx, Icon, type Option } from "../foundation/foundation.js";
@@ -575,14 +575,18 @@ export function Toggle({
   disabled?: boolean;
 }) {
   return (
-    <Button
-      aria-pressed={pressed}
-      emphasis={pressed ? "soft" : "quiet"}
+    <SDKToggle
+      pressed={pressed}
+      onPressedChange={onPressedChange}
+      className="yg-button"
+      data-emphasis={pressed ? "soft" : "quiet"}
+      data-tone="neutral"
+      data-control-size="regular"
+      data-shape="rounded"
       disabled={disabled}
-      onClick={() => onPressedChange(!pressed)}
     >
-      {children}
-    </Button>
+      <span className="yg-button-inner"><span className="yg-button-label"><span className="yg-button-content">{children}</span></span></span>
+    </SDKToggle>
   );
 }
 export function ToggleGroup({
@@ -598,35 +602,42 @@ export function ToggleGroup({
   onValueChange: (ids: string[]) => void;
   multiple?: boolean;
 }) {
-  const children = items.map((i) => (
-    <RadixGroup.Item
-      className="yg-toggle-item"
-      key={i.id}
-      value={i.id}
-      disabled={i.disabled}
-    >
-      {i.label}
-    </RadixGroup.Item>
-  ));
-  return multiple ? (
-    <RadixGroup.Root
+  return (
+    <SDKToggleGroup
       className="yg-toggle-group"
       aria-label={label}
-      type="multiple"
-      value={value}
-      onValueChange={onValueChange}
+      render={(props) => <div {...props} role={multiple ? "toolbar" : "radiogroup"} />}
+      multiple={multiple}
+      deselectable
+      value={multiple ? value : value.slice(0, 1)}
+      onValueChange={(next) => {
+        if (next.some((id) => !value.includes(id) && !items.some((item) => item.id === id && !item.disabled))) return;
+        const selected = new Set(next);
+        onValueChange(multiple ? [...value.filter((id) => selected.has(id)), ...next.filter((id) => !value.includes(id))] : next);
+      }}
+      onKeyDownCapture={(event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        const current = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-yg-toggle-id]");
+        const enabled = items.filter((item) => !item.disabled);
+        const index = enabled.findIndex((item) => item.id === current?.dataset.ygToggleId);
+        if (index < 0) return;
+        const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+        const next = ({ ArrowRight: (index + (rtl ? -1 : 1) + enabled.length) % enabled.length,
+          ArrowLeft: (index + (rtl ? 1 : -1) + enabled.length) % enabled.length,
+          Home: 0, End: enabled.length - 1 } as Record<string, number | undefined>)[event.key];
+        if (next === undefined) return;
+        event.preventDefault();
+        [...event.currentTarget.querySelectorAll<HTMLButtonElement>("button[data-yg-toggle-id]")]
+          .find((button) => button.dataset.ygToggleId === enabled[next].id)?.focus();
+      }}
     >
-      {children}
-    </RadixGroup.Root>
-  ) : (
-    <RadixGroup.Root
-      className="yg-toggle-group"
-      aria-label={label}
-      type="single"
-      value={value[0] ?? ""}
-      onValueChange={(v) => onValueChange(v ? [v] : [])}
-    >
-      {children}
-    </RadixGroup.Root>
+      {items.map((item) => <SDKToggle key={item.id} value={item.id} disabled={item.disabled}
+        className="yg-toggle-item" data-yg-toggle-id={item.id}
+        render={(props, state) => <button {...props} disabled={item.disabled}
+          role={multiple ? undefined : "radio"} aria-checked={multiple ? undefined : state.pressed}
+          aria-pressed={multiple ? state.pressed : undefined} data-state={state.pressed ? "on" : "off"} />}>
+        {item.label}
+      </SDKToggle>)}
+    </SDKToggleGroup>
   );
 }

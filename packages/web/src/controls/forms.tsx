@@ -11,7 +11,7 @@ import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/in
 import { Textarea as SDKTextarea } from "@ui-sdk/react/textarea";
 import { Switch as SDKSwitch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkbox";
-import { RadioGroup as SDKRadio } from "@openai/apps-sdk-ui/components/RadioGroup";
+import { RadioGroup as SDKRadio, Radio as SDKRadioItem, RadioIndicator } from "@ui-sdk/react/radio";
 import { Icon, type ControlSize, type Option, cx } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
 
@@ -327,16 +327,16 @@ export function RadioGroup({
       <SDKRadio
         className="yg-radio"
         aria-label={label}
-        direction="col"
         value={value}
         name={name}
         disabled={disabled}
-        onChange={onValueChange}
+        onValueChange={(next) => { if (next !== null) onValueChange(next); }}
       >
         {options.map((o) => (
-          <SDKRadio.Item key={o.id} value={o.id} disabled={o.disabled}>
+          <div key={o.id}><label data-disabled={disabled || o.disabled ? "" : undefined}>
+            <div><SDKRadioItem value={o.id} disabled={o.disabled}><RadioIndicator /></SDKRadioItem></div>
             {o.label}
-          </SDKRadio.Item>
+          </label></div>
         ))}
       </SDKRadio>
     </fieldset>

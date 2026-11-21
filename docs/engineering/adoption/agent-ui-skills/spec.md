@@ -13,4 +13,4 @@ The owner approved updating and evaluating the Yogurt skills as part of the comp
 
 ## Evidence
 
-Validate skill frontmatter and existing deterministic evaluation tests. Exercise a synthetic installed Web fixture for agent control and denial independently from a model. Any model-driven activation, cost optimization, Native runtime or production effect remains unobserved until its own run is recorded.
+Validate skill frontmatter and existing deterministic evaluation tests. Exercise a synthetic installed Web fixture for agent control and denial independently from a model. Record model-driven activation separately from reliable routing across the evaluation set, cost optimization, Native runtime and production effects.
