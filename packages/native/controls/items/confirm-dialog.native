@@ -2,8 +2,8 @@
   <dialog label="{title}" on-dismiss="dismiss">
   <column gap="12" padding="16">
   <text size="heading">{title}</text>
-  <text>{consequence}</text>
-  <row gap="8">
+  <text wrap="true" foreground="text_muted">{consequence}</text>
+  <row gap="8" main="end" cross="center">
   <button variant="ghost" on-press="dismiss">Cancel</button>
   <button disabled="{unavailable}" variant="destructive" on-press="confirm_current">{choice}</button>
   </row>

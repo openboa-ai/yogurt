@@ -1,6 +1,6 @@
 <template name="yg-calendar" args="label">
   <column gap="8">
-    <text size="heading">{label}</text>
+    <text size="sm">{label}</text>
     <column gap="8">
       <row gap="8" cross="center">
         <button variant="ghost" on-press="previous_page">Previous</button>
