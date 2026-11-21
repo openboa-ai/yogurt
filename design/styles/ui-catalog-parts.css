@@ -361,12 +361,22 @@
   margin: 0;
 }
 .yg-code header {
+  flex-wrap: wrap;
   color: var(--yg-muted);
   font: var(--yg-font-help);
 }
+.yg-code header > span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
 .yg-code pre {
+  max-inline-size: 100%;
   overflow: auto;
   text-align: start;
+}
+.yg-message {
+  min-inline-size: 0;
+  grid-template-columns: minmax(0, 1fr);
 }
 .yg-code code {
   font: var(--yg-font-body);

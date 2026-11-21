@@ -985,12 +985,22 @@
   margin: 0;
 }
 .yg-code header {
+  flex-wrap: wrap;
   color: var(--yg-muted);
   font: var(--yg-font-help);
 }
+.yg-code header > span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
 .yg-code pre {
+  max-inline-size: 100%;
   overflow: auto;
   text-align: start;
+}
+.yg-message {
+  min-inline-size: 0;
+  grid-template-columns: minmax(0, 1fr);
 }
 .yg-code code {
   font: var(--yg-font-body);
@@ -3134,13 +3144,31 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   }
   .yg-root .yg-select[data-dropdown]:where(:not([data-motion-baseline] *)) select:open::picker(select) {
     transform-origin: var(--yg-picker-origin);
-    animation: yg-picker-arrive var(--yg-panel) var(--yg-arrive);
+    animation: yg-picker-arrive var(--yg-motion-picker-lift);
   }
 }
 
 @keyframes yg-picker-arrive {
-  from { translate: 0 var(--yg-picker-offset); }
-  to { translate: 0 0; }
+  from { opacity: 0; translate: 0 var(--yg-picker-offset); }
+  to { opacity: 1; translate: 0 0; }
+}
+
+/* Keep the editable combobox panel inside the field's available width. */
+.yg-combo > .yg-options { box-sizing: border-box; }
+@media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+  .yg-combo > .yg-options:not([hidden]) {
+    animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
+  }
+  .yg-combo .yg-options [role="option"] {
+    transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
+  }
+  .yg-root .yg-select[data-dropdown] > .yg-icon {
+    transition: rotate var(--yg-motion-picker-slide);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yg-combo > .yg-options:not([hidden]) { animation: none; }
+  .yg-root .yg-select[data-dropdown] > .yg-icon { transition: none; }
 }
 
 .yg-slide.yg-carousel-viewport {
