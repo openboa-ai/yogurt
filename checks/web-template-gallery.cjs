@@ -4,23 +4,50 @@ const { chromium } = require("playwright-core");
 const origin = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
 
 async function checkGallery(browser, width) {
-  const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: "light" });
+  const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: width >= 1000 ? "light" : "dark" });
   page.setDefaultTimeout(6000);
   const errors = [];
   page.on("pageerror", error => errors.push(error.message));
   try {
     await page.goto(origin + "/templates");
-    await page.getByRole("heading", { name: "Compose a screen", exact: true }).waitFor();
-    const links = await page.locator("a[href^='/templates/']").evaluateAll(links => links.map(link => link.pathname));
-    const paths = [...new Set(links)];
-    assert.equal(paths.length, 30, "every template or study is reachable from the directory");
-    for (const path of paths) {
-      await page.goto(origin + path);
-      await page.locator(".template-stage").waitFor();
-      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), path + " overflows");
-    }
-
+    await page.getByRole("heading", { name: "Templates", exact: true }).waitFor();
+    const categories = ["forms", "records", "metrics", "states", "foundations"];
+    const links = await page.locator("main a[href^='/templates/']").evaluateAll(links => links.map(link => link.pathname));
+    assert.deepEqual(links, [...categories, "compose", "type", "chart"].map(id => "/templates/" + id));
     const stage = page.locator(".template-stage");
+    let recipes = 0;
+    for (const category of categories) {
+      await page.goto(origin + "/templates/" + category);
+      const picker = page.getByRole("combobox", { name: "Example" });
+      await picker.waitFor();
+      const examples = await picker.locator("option").evaluateAll(options => options.map(option => ({ id: option.value, name: option.textContent })));
+      for (const { id, name } of examples) {
+        await picker.selectOption(id);
+        await stage.getByRole("heading", { name, exact: true }).first().waitFor();
+        assert(await stage.locator(".yg-card").first().locator(":scope > :last-child > *").count(), id + " has no content");
+        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), id + " overflows");
+      }
+      recipes += examples.length;
+    }
+    assert.equal(recipes, 63);
+
+    await page.goto(origin + "/templates/invite");
+    await stage.getByRole("textbox", { name: "Work email" }).fill("alex@example.test");
+    await stage.getByRole("combobox", { name: "Access" }).selectOption("Viewer");
+    await stage.getByRole("button", { name: "Send invitation" }).click();
+    await stage.getByText("Invitation prepared.").waitFor();
+    await page.getByRole("button", { name: "Reset preview" }).click();
+    assert.equal(await stage.getByRole("textbox", { name: "Work email" }).inputValue(), "");
+
+    await page.goto(origin + "/templates/faq");
+    await stage.getByRole("button", { name: "Who can see my drafts?" }).focus();
+    await page.keyboard.press("Enter");
+    await stage.getByText("Drafts stay private until you share them with the workspace.").waitFor();
+
+    await page.goto(origin + "/templates/access");
+    await stage.getByRole("textbox", { name: "Verification code" }).fill("123456");
+    await stage.getByText("Sample access verified.").waitFor();
+
     await page.goto(origin + "/templates/compose");
     await stage.getByRole("combobox", { name: "Density" }).selectOption("compact");
     await stage.locator('.yg-card[data-density="compact"]').waitFor();
@@ -82,7 +109,7 @@ async function checkGallery(browser, width) {
     await stage.getByRole("button", { name: "Send", exact: true }).click();
     await stage.getByText(/Sample response:/).waitFor();
     assert.deepEqual(errors, []);
-    console.log(width + "px: 30 previews and workspace interactions passed.");
+    console.log(width + "px: 63 compositions, studies and workspace interactions passed.");
   } finally {
     await page.close();
   }

@@ -63,3 +63,29 @@
   .template-account[data-layout="split"], .template-account[data-layout="framed"] { grid-template-columns: minmax(0, 1fr); }
   .template-account-main { padding: var(--yg-gap-panel); }
 }
+.template-index-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+  max-inline-size: 70rem;
+  gap: var(--yg-gap-panel);
+}
+.template-index-grid > .yg-card { min-inline-size: 0; }
+.template-studies-links, .template-component-links {
+  flex-wrap: wrap;
+  gap: var(--yg-gap-inline);
+}
+.template-family-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--yg-gap-inline);
+}
+.template-family-controls > .yg-field { inline-size: min(100%, 22rem); }
+.template-recipe-preview {
+  max-inline-size: 52rem;
+  padding: 0;
+  background: transparent;
+}
+.template-recipe-preview > .yg-card { background: var(--yg-surface); }
+.template-recipe-preview[data-family="forms"] { max-inline-size: 34rem; }
+.template-cover { align-items: center; }

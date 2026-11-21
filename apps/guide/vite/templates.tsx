@@ -8,6 +8,8 @@ import { dashboard, galleryGroups, studies } from "../examples/templates/catalog
 import { DashboardPreview } from "../examples/templates/dashboard";
 import { NavigationPreview } from "../examples/templates/navigation";
 import { ComposeStudy, ChartStudy, TypeStudy } from "../examples/templates/studies";
+import { recipeFamilies } from "../examples/templates/recipes";
+import { TemplateFamily, TemplateIndex } from "./template-directory";
 import "./templates.css";
 
 const paths = (id: string) => "/templates/" + id;
@@ -28,8 +30,11 @@ const related = {
   } as Record<string, string[]>,
 };
 
-export default function Templates({ id = "compose", appearance }: { id?: string; appearance: "light" | "dark" }) {
+export default function Templates({ id = "", appearance }: { id?: string; appearance: "light" | "dark" }) {
   const [reset, setReset] = useState(0);
+  if (!id) return <TemplateIndex />;
+  const family = recipeFamilies.find(group => group.id === id || group.recipes.some(recipe => recipe.id === id));
+  if (family) return <TemplateFamily family={family} initialId={id} appearance={appearance} />;
   const entry = groups.find(item => item.id === id);
   if (!entry) return <main className="guide-templates">
     <PageHeader title="Template not found" action={<Link href="/templates">Browse templates</Link>} />
@@ -42,9 +47,10 @@ export default function Templates({ id = "compose", appearance }: { id?: string;
   return <main className="guide-templates">
     <SidebarLayout label="Template directory" variant="flat" width="13rem" compactAt={810}
       navigation={<SidebarContent label="Template directory">
-        {[galleryGroups.at(-1)!, ...galleryGroups.slice(0, -1)].map(group => <SidebarGroup key={group.label} label={group.label}>
-          {group.items.map(item => <SidebarItem key={item.id} label={item.title} active={item.id === id} href={paths(item.id)} />)}
-        </SidebarGroup>)}
+        <SidebarGroup label="Templates">
+          <SidebarItem label="All templates" href="/templates" />
+          {studies.map(item => <SidebarItem key={item.id} label={item.title} active={item.id === id} href={paths(item.id)} />)}
+        </SidebarGroup>
       </SidebarContent>}>
       <Stack gap={24} className="template-detail">
         <PageHeader title={entry.title} detail={entry.detail} eyebrow={group.label} />
