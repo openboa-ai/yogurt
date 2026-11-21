@@ -1,5 +1,5 @@
 <template name="yg-voice-control" args="label summary">
-  <column gap="8">
+  <column gap="8" background="surface" radius="md" padding="8">
     <text>{label}</text>
     <status-bar>{summary}</status-bar>
     <if test="{voice_active}">

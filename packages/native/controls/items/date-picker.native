@@ -1,5 +1,7 @@
 <template name="yg-date-picker" args="label value">
-  <stack>
+  <column gap="6">
+    <text size="sm">{label}</text>
+    <stack>
     <select label="{label}" text="{value}" on-press="open_choices"/>
     <if test="{is_open}">
       <card>
@@ -17,5 +19,6 @@
         </column>
       </card>
     </if>
-  </stack>
+    </stack>
+  </column>
 </template>

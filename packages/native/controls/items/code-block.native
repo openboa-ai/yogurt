@@ -1,7 +1,9 @@
 <template name="yg-code-block" args="label content language">
-  <column gap="8">
-    <text size="sm">{language}</text>
+  <column gap="8" padding="12" background="surface_subtle" radius="md">
+    <row gap="12" cross="center">
+      <text size="sm" foreground="text_muted">{language}</text>
+      <button variant="ghost" on-press="copy">Copy</button>
+    </row>
     <code label="{label}" source="{content}" language="plain" wrap="false"/>
-    <button variant="ghost" on-press="copy">Copy</button>
   </column>
 </template>
