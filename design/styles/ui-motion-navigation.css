@@ -105,54 +105,6 @@
   --yg-sidebar-track: minmax(0, calc(var(--yg-size-touch) + 2 * var(--boa-space-8)));
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .yg-menu-bar > button, .yg-navigation-menu li > button {
-    transition: background-color var(--yg-motion-surface-focus), color var(--yg-motion-surface-focus);
-  }
-  .yg-navigation-menu li > button > .yg-icon { transition: rotate var(--yg-motion-card-detail); }
-  .yg-selection-marker[data-slide] {
-    transition: translate var(--yg-travel) var(--yg-settle), width var(--yg-travel) var(--yg-settle);
-  }
-  .yg-tabs:not([data-motion-baseline] *, .motion-bottom-bar *) .yg-selection-marker {
-    --yg-selection-left: var(--yg-selection-x);
-    --yg-selection-right: calc(var(--yg-selection-x) + var(--yg-selection-width));
-    translate: var(--yg-selection-left) var(--yg-selection-y);
-    width: max(0px, calc(var(--yg-selection-right) - var(--yg-selection-left)));
-  }
-  .yg-tabs:not([data-motion-baseline] *, .motion-bottom-bar *) .yg-selection-marker[data-slide] {
-    transition: --yg-selection-left var(--yg-motion-selection-lead), --yg-selection-right var(--yg-motion-selection-tail);
-  }
-  .yg-tabs:not([data-motion-baseline] *, .motion-bottom-bar *) .yg-selection-marker[data-slide][data-forward] {
-    transition: --yg-selection-left var(--yg-motion-selection-tail), --yg-selection-right var(--yg-motion-selection-lead);
-  }
-  .yg-segment:not([data-motion-baseline] *) .yg-selection-marker[data-slide] {
-    transition: translate var(--yg-motion-nav-divider), width var(--yg-motion-nav-divider);
-  }
-  .yg-tabs [role="tabpanel"]:not([hidden]) {
-    animation: yg-section-arrive var(--yg-change) var(--yg-settle);
-  }
-  .yg-sidebar-layout[data-compact="false"]:is([data-panel="full"], [data-panel="rail"]) {
-    transition: grid-template-columns var(--yg-travel) var(--yg-settle);
-  }
-  .yg-sidebar-drawer[open] {
-    --yg-sidebar-enter-x: calc(-1 * var(--boa-space-16));
-    animation: yg-sidebar-enter var(--yg-panel) var(--yg-arrive);
-  }
-  .yg-sidebar-layout[data-edge="end"]:dir(ltr) .yg-sidebar-drawer[open],
-  .yg-sidebar-layout[data-edge="start"]:dir(rtl) .yg-sidebar-drawer[open] {
-    --yg-sidebar-enter-x: var(--boa-space-16);
-  }
-}
-
-@keyframes yg-sidebar-enter {
-  from { translate: var(--yg-sidebar-enter-x) 0; }
-}
-
-
-@keyframes yg-section-arrive {
-  from { translate: 0 var(--boa-space-4); }
-}
-
 /* The pill is the shared resting and selected presentation. */
 .yg-tabs[data-presentation="pill"] [role="tablist"] {
   box-sizing: border-box;

@@ -84,19 +84,6 @@
     background: color-mix(in srgb, currentColor 12%, transparent);
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-cart-roll:has(.yg-cart-previous) .yg-cart-current {
-    animation: yg-cart-count 240ms var(--yg-cart-ease) both;
-  }
-  .yg-cart-previous {
-    display: block;
-    animation: yg-cart-count-out 240ms var(--yg-cart-ease) both;
-  }
-  .yg-cart-decrease .yg-icon, .yg-cart-increase > span {
-    animation: yg-cart-label 200ms var(--yg-cart-ease);
-  }
-  .yg-cart-limit:not(:empty) { animation: yg-cart-count var(--yg-change) var(--yg-cart-ease); }
-}
 @keyframes yg-cart-count {
   from { opacity: 0; translate: 0 var(--yg-cart-count-offset, 12px); }
 }

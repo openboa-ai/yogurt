@@ -70,44 +70,6 @@
 .yg-spring-check { flex: none; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-text); }
 .yg-spring-check path { stroke-dasharray: 22; stroke-dashoffset: 22; }
 .yg-spring-option[data-state="checked"] .yg-spring-check path { stroke-dashoffset: 0; }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-spring-dropdown { translate: 0 var(--yg-picker-lift-now, 0px); }
-  .yg-spring-trigger { scale: var(--yg-picker-press-now, 1); }
-  .yg-spring-chevron, .yg-spring-trigger[data-state="open"] .yg-spring-chevron {
-    transform: rotate(var(--yg-picker-chevron-now, 0deg));
-  }
-  .yg-spring-menu {
-    --yg-picker-hidden: calc((1 - var(--yg-picker-open, 0)) * 100%);
-    position: relative; isolation: isolate; overflow: visible; background: transparent;
-    clip-path: inset(0 0 var(--yg-picker-hidden) round var(--yg-radius-popover));
-    opacity: var(--yg-picker-opacity, 0);
-    scale: calc(.9 + .1 * var(--yg-picker-open, 0)) 1;
-  }
-  .yg-spring-menu[data-side="top"] { clip-path: inset(var(--yg-picker-hidden) 0 0 round var(--yg-radius-popover)); }
-  .yg-spring-menu::before {
-    content: ""; position: absolute; inset: 0 0 -6%; z-index: -1;
-    background: var(--yg-field); pointer-events: none;
-  }
-  .yg-spring-menu[data-side="top"]::before { inset: -6% 0 0; }
-  .yg-spring-menu[data-state="closed"] { pointer-events: none; animation: yg-spring-exit-presence 500ms linear both; }
-  .yg-spring-option {
-    opacity: clamp(0, var(--yg-picker-row, 0), 1);
-    translate: 0 calc((var(--yg-picker-row, 0) - 1) * 14px);
-  }
-  .yg-spring-value-roll[data-incoming] {
-    opacity: clamp(0, var(--yg-picker-roll-in, 1), 1);
-    translate: 0 calc((1 - var(--yg-picker-roll-in, 1)) * 20px);
-  }
-  .yg-spring-value-roll[data-outgoing] {
-    visibility: visible; opacity: clamp(0, calc(1 - var(--yg-picker-roll-in, 1)), 1);
-    translate: 0 calc(-20px * var(--yg-picker-roll-in, 1));
-    pointer-events: none;
-  }
-}
-@keyframes yg-spring-exit-presence {
-  from { visibility: visible; }
-  to { visibility: hidden; }
-}
 .yg-command-button .yg-button:hover { background: var(--yg-hover); }
 .yg-command-button .yg-button:active { transform: scale(.98); }
 @media (prefers-reduced-motion: reduce) {

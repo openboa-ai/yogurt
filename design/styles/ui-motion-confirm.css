@@ -89,9 +89,6 @@
 }
 .yg-slide-confirm[data-done] .yg-slide-confirm-handle { color: var(--yg-success); }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-hold-confirm:is([data-holding], [data-done]) .yg-confirm-label { animation: yg-hold-label 200ms cubic-bezier(.23, 1, .32, 1) both; }
-  .yg-hold-check path { stroke-dasharray: 1; animation: yg-hold-draw 300ms 100ms cubic-bezier(.23, 1, .32, 1) both; }
-  .yg-slide-confirm[data-done] .yg-slide-confirm-handle svg { animation: yg-confirm-check 260ms var(--yg-arrive); }
 }
 @keyframes yg-hold-label { from { opacity: 0; translate: 0 10px; filter: blur(2px); } }
 @keyframes yg-hold-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }

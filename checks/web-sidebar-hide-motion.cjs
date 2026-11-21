@@ -36,12 +36,7 @@ const bundle = buildSync({stdin:{resolveDir:process.cwd(),loader:'jsx',contents:
       assert.equal(await panel.getAttribute('aria-hidden'),'true');
       assert.equal(await panel.evaluate(node => node.inert),true);
       assert.equal(await host.getByRole('button',{name:'Overview'}).count(),0);
-      if (reducedMotion === 'no-preference') {
-        assert.match(await layout.evaluate(node => getComputedStyle(node).transitionProperty),/grid-template-columns/);
-        await page.waitForTimeout(40);
-        const middle=(await panel.boundingBox()).width;
-        assert(middle > 0 && middle < width, `closing should interpolate width, saw ${middle}`);
-      } else assert.equal(await layout.evaluate(node => getComputedStyle(node).transitionDuration),'0s');
+      assert((await panel.boundingBox()).width < 1, 'hidden panel releases its layout width');
       await host.getByRole('button',{name:'Expand navigation'}).click();
       assert.equal(await layout.getAttribute('data-panel'),'full');
       assert.equal(await panel.evaluate(node => node.inert),false);

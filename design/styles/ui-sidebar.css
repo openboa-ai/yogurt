@@ -150,14 +150,6 @@
 .yg-sidebar-chevron {
   margin-inline-start: auto;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-sidebar-item {
-    transition: background-color var(--yg-motion-surface-focus), color var(--yg-motion-surface-focus);
-  }
-  .yg-sidebar-chevron {
-    transition: rotate var(--yg-motion-card-detail);
-  }
-}
 .yg-sidebar-item[aria-expanded="true"] .yg-sidebar-chevron {
   rotate: 180deg;
 }
@@ -177,18 +169,6 @@
 }
 .yg-sidebar > nav[data-expanded="true"] { grid-template-rows: 1fr; opacity: 1; }
 .yg-sidebar-links { display: grid; min-block-size: 0; overflow: hidden; }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-sidebar-layout[data-compact="false"][data-edge] {
-    transition: grid-template-columns var(--yg-motion-nav-divider), gap var(--yg-motion-nav-divider);
-  }
-  .yg-sidebar-layout[data-compact="false"] > .yg-sidebar-panel {
-    transition: opacity var(--yg-motion-surface-focus), padding-inline var(--yg-motion-nav-divider);
-  }
-  .yg-sidebar-submenu-content,
-  .yg-sidebar > nav {
-    transition: grid-template-rows var(--yg-motion-menu-height), opacity var(--yg-motion-surface-focus);
-  }
-}
 .yg-sidebar-layout[data-panel="rail"] .yg-sidebar-item {
   justify-content: center;
   padding-inline: 0;
