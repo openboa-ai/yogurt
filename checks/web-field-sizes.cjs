@@ -18,6 +18,21 @@ const assert = require("node:assert/strict");
         await input.fill(label);
         assert.equal(await input.inputValue(), label);
       }
+      await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#input-group");
+      const groups = page.locator(".variation .specimen");
+      for (const [label, height] of Object.entries({ Compact: 30, Regular: 36, Comfortable: 40, Spacious: 48, Touch: 44, Featured: 52 })) {
+        const input = groups.getByRole("textbox", { name: label, exact: true });
+        await input.waitFor();
+        const wrapper = input.locator("xpath=..");
+        assert.equal(Math.round((await wrapper.boundingBox()).height), height, label);
+        await input.fill("docs");
+        assert.equal(await input.inputValue(), "docs");
+      }
+      const featured = groups.getByRole("textbox", {name:"Featured"}).locator("xpath=..");
+      assert.equal(await featured.evaluate(node => getComputedStyle(node).borderTopLeftRadius), "20px");
+      await page.emulateMedia({reducedMotion:"reduce"});
+      assert.equal(await featured.evaluate(node => getComputedStyle(node).transitionDuration), "0s");
+      await page.emulateMedia({reducedMotion:"no-preference"});
       await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#search-field");
       const searches = page.locator(".variation .specimen");
       for (const [label, height] of Object.entries({ Compact: 30, Regular: 36, Comfortable: 40, Spacious: 48, Touch: 44 })) {
@@ -46,6 +61,6 @@ const assert = require("node:assert/strict");
       assert.deepEqual(await multiple.evaluate(el => Array.from(el.selectedOptions, o => o.value)), ["sourdough", "yogurt"]);
       await page.close();
     }
-    console.log("Five text, search and select sizes verified at 320 and 1440 px.");
+    console.log("Text, input-group, search and select sizes verified at 320 and 1440 px.");
   } finally { await browser.close(); }
 })().catch((error) => { console.error(error); process.exitCode = 1; });

@@ -78,8 +78,11 @@ export function TextField({
       {(binding) => (
         <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`, className)}>
           <SDKInput {...props} {...binding}
-            value={value === undefined ? undefined : String(value)}
-            defaultValue={defaultValue === undefined ? undefined : String(defaultValue)} />
+            value={value == null ? undefined : String(value)}
+            defaultValue={defaultValue == null ? undefined : String(defaultValue)}
+            onValueChange={(next, details) => {
+              if (details.reason === "imperative" && props.maxLength !== undefined && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+            }} />
         </SDKInputGroup>
       )}
     </Field>
@@ -150,8 +153,11 @@ export function Textarea({
       {(binding) => (
         <SDKInputGroup className={cx("yg-input yg-textarea", className)}>
           <SDKTextarea {...props} {...binding} rows={rows}
-            value={value === undefined ? undefined : String(value)}
-            defaultValue={defaultValue === undefined ? undefined : String(defaultValue)}
+            value={value == null ? undefined : String(value)}
+            defaultValue={defaultValue == null ? undefined : String(defaultValue)}
+            onValueChange={(next, details) => {
+              if (details.reason === "imperative" && props.maxLength !== undefined && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+            }}
             render={onSubmit ? <textarea onSubmit={onSubmit} /> : undefined} />
         </SDKInputGroup>
       )}

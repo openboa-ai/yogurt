@@ -9,6 +9,16 @@ const manifest = json("catalog/brand.json"),
   ui = json(manifest.sources.roles),
   catalog = json(manifest.sources.components),
   terms = json(manifest.sources.words).terms;
+const webTokens = readFileSync("design/styles/ui-tokens.css", "utf8");
+const nativeTokens = readFileSync("packages/native/controls/tokens.zig", "utf8");
+for (const [name, profile] of Object.entries(ui.motionProfiles ?? {})) {
+  assert(Number.isSafeInteger(profile.duration) && profile.duration > 0, name);
+  assert(Object.hasOwn(ui.easing, profile.fallback), name);
+  assert(Array.isArray(profile.samples) && profile.samples.length >= 2 && profile.samples.every(Number.isFinite), name);
+  assert(webTokens.includes(`--yg-motion-${name}: ${profile.duration}ms var(--yg-${profile.fallback});`), name);
+  assert(webTokens.includes(`--yg-motion-${name}: ${profile.duration}ms linear(${profile.samples.join(", ")});`), name);
+  assert(nativeTokens.includes(`pub const ${name.replaceAll("-", "_")}_ms: u32 = ${profile.duration};`), name);
+}
 for (const path of [
   ...Object.values(manifest.sources),
   ...["symbol", "lockup", "wordmark"].map((k) => manifest.signature[k]),

@@ -96,6 +96,7 @@ const variants = new Set([
   "inline",
   "grid",
   "text-field",
+  "input-group",
   "textarea",
   "search-field",
   "select",

@@ -7,7 +7,7 @@ import {
 import {
   Checkbox,
   Field
-} from "./chunk-HFYCA3VK.js";
+} from "./chunk-GUM6KUXU.js";
 import {
   Button,
   IconButton
@@ -27,7 +27,7 @@ import {
   useState
 } from "react";
 import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
-import { Input as SDKInput } from "@ui-sdk/react/input";
+import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
 import { jsx, jsxs } from "react/jsx-runtime";
 function InputGroup({
   label,
@@ -36,11 +36,24 @@ function InputGroup({
   help,
   error,
   id,
+  size = "featured",
   ...input
 }) {
-  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs("span", { className: "yg-input yg-input-group", children: [
+  const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") && !input.onSelect && !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
+  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs(SDKInputGroup, { className: cx("yg-input yg-input-group", `yg-input-size-${size}`), children: [
     leading,
-    /* @__PURE__ */ jsx("input", { ...input, ...binding }),
+    sharedInput ? /* @__PURE__ */ jsx(
+      SDKInput,
+      {
+        ...input,
+        ...binding,
+        value: input.value == null ? void 0 : String(input.value),
+        defaultValue: input.defaultValue == null ? void 0 : String(input.defaultValue),
+        onValueChange: (next, details) => {
+          if (details.reason === "imperative" && input.maxLength !== void 0 && input.maxLength >= 0 && next.length > input.maxLength) details.cancel();
+        }
+      }
+    ) : /* @__PURE__ */ jsx("input", { ...input, ...binding }),
     trailing
   ] }) });
 }
@@ -191,15 +204,10 @@ function SplitTextField({
           maxLength: p.maxLength,
           inputMode: p.inputMode,
           onValueChange: (next, details) => {
-            if (p.maxLength !== void 0 && p.maxLength >= 0 && next.length > p.maxLength) details.cancel();
+            if (details.reason === "imperative" && p.maxLength !== void 0 && p.maxLength >= 0 && next.length > p.maxLength) details.cancel();
           },
           onChange: (e) => {
-            const next = e.currentTarget.value;
-            if (p.maxLength !== void 0 && p.maxLength >= 0 && next.length > p.maxLength) {
-              e.currentTarget.value = p.value;
-              return;
-            }
-            onValueChange(p.id, next);
+            onValueChange(p.id, e.currentTarget.value);
           }
         }
       )

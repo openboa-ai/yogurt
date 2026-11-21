@@ -11,10 +11,10 @@ import {
   type ReactNode,
 } from "react";
 import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
-import { Input as SDKInput } from "@ui-sdk/react/input";
+import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
 import { Button, IconButton } from "./actions.js";
 import { Checkbox, Field } from "./forms.js";
-import { cx, Icon, type Option } from "../foundation/foundation.js";
+import { cx, Icon, type ControlSize, type Option } from "../foundation/foundation.js";
 import { playSprings, snap, spring } from "../foundation/spring-motion.js";
 
 type Input = Omit<ComponentProps<"input">, "size" | "prefix">;
@@ -25,6 +25,7 @@ export function InputGroup({
   help,
   error,
   id,
+  size = "featured",
   ...input
 }: Input & {
   label: string;
@@ -32,15 +33,23 @@ export function InputGroup({
   trailing?: ReactNode;
   help?: string;
   error?: string;
+  size?: ControlSize | "featured";
 }) {
+  const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") &&
+    !input.onSelect && !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <span className="yg-input yg-input-group">
+        <SDKInputGroup className={cx("yg-input yg-input-group", `yg-input-size-${size}`)}>
           {leading}
-          <input {...input} {...binding} />
+          {sharedInput ? <SDKInput {...input} {...binding}
+            value={input.value == null ? undefined : String(input.value)}
+            defaultValue={input.defaultValue == null ? undefined : String(input.defaultValue)}
+            onValueChange={(next, details) => {
+              if (details.reason === "imperative" && input.maxLength !== undefined && input.maxLength >= 0 && next.length > input.maxLength) details.cancel();
+            }} /> : <input {...input} {...binding} />}
           {trailing}
-        </span>
+        </SDKInputGroup>
       )}
     </Field>
   );
@@ -207,15 +216,10 @@ export function SplitTextField({
               maxLength={p.maxLength}
               inputMode={p.inputMode}
               onValueChange={(next, details) => {
-                if (p.maxLength !== undefined && p.maxLength >= 0 && next.length > p.maxLength) details.cancel();
+                if (details.reason === "imperative" && p.maxLength !== undefined && p.maxLength >= 0 && next.length > p.maxLength) details.cancel();
               }}
               onChange={(e) => {
-                const next = e.currentTarget.value;
-                if (p.maxLength !== undefined && p.maxLength >= 0 && next.length > p.maxLength) {
-                  e.currentTarget.value = p.value;
-                  return;
-                }
-                onValueChange(p.id, next);
+                onValueChange(p.id, e.currentTarget.value);
               }}
             />
           </span>

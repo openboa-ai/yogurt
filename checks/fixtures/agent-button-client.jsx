@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputOTP, NumericSpinner, Popover, Progress, RadioGroup, SearchField, SegmentedControl, SplitTextField, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
+import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputGroup, InputOTP, NumericSpinner, Popover, Progress, RadioGroup, SearchField, SegmentedControl, SplitTextField, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 import { Button as CopiedButton } from "../src/components/ui/button";
 
@@ -13,6 +13,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent checkbox" && step.action === "setChecked") ||
       (step.label === "Agent switch" && step.action === "setChecked") ||
       (step.label === "Agent title" && step.action === "setValue") ||
+      (step.label === "Agent limited title" && step.action === "setValue") ||
+      (step.label === "Agent limited notes" && step.action === "setValue") ||
       (step.label === "Agent search" && step.action === "setValue") ||
       (step.label === "Agent notes" && step.action === "setValue") ||
       (step.label === "Agent segment" && step.action === "setValue") ||
@@ -28,7 +30,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent hint" && step.action === "setOpen") ||
       (step.label === "Agent code" && step.action === "setValue") ||
       (step.label === "Increase Agent quantity" && step.action === "press") ||
-      (step.label === "Agent team" && step.action === "setValue"),
+      (step.label === "Agent team" && step.action === "setValue") ||
+      (step.label === "Agent path" && step.action === "setValue"),
   });
 }
 
@@ -42,6 +45,11 @@ export default function AgentButtonFixture() {
   const [switchChanges, setSwitchChanges] = useState(0);
   const [title, setTitle] = useState("Apollo");
   const [titleChanges, setTitleChanges] = useState(0);
+  const [limitedTitle, setLimitedTitle] = useState("one");
+  const [limitedTitleChanges, setLimitedTitleChanges] = useState(0);
+  const [limitedNotes, setLimitedNotes] = useState("one");
+  const [limitedNotesChanges, setLimitedNotesChanges] = useState(0);
+  const [legacyTitle, setLegacyTitle] = useState("legacy");
   const [search, setSearch] = useState("Initial");
   const [searchChanges, setSearchChanges] = useState(0);
   const [notes, setNotes] = useState("Original note");
@@ -77,6 +85,10 @@ export default function AgentButtonFixture() {
   const [split, setSplit] = useState({ team: "AB", record: "12" });
   const [splitCalls, setSplitCalls] = useState(0);
   const [splitLast, setSplitLast] = useState("");
+  const [path, setPath] = useState("abc");
+  const [pathChanges, setPathChanges] = useState(0);
+  const [pathAction, setPathAction] = useState(0);
+  const [selectionCalls, setSelectionCalls] = useState(0);
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
   const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
   const sections = options.map(option => ({ id: option.id, title: option.label, disabled: option.disabled, content: <input aria-label={`Section ${option.id}`} defaultValue="Original" /> }));
@@ -156,6 +168,18 @@ export default function AgentButtonFixture() {
         <Progress label="Default progress maximum" value={25} max={Number.NaN} />
         <SplitTextField label="Agent reference" parts={[{id:"team",label:"Agent team",value:split.team,maxLength:3}, {id:"record",label:"Agent record",value:split.record,maxLength:4,inputMode:"numeric"}]}
           onValueChange={(id, value) => { setSplit(current => ({ ...current, [id]: value })); setSplitCalls(count => count + 1); setSplitLast(id); }} />
+        <TextField label="Agent limited title" value={limitedTitle} maxLength={3}
+          onChange={event => { setLimitedTitle(event.currentTarget.value); setLimitedTitleChanges(count => count + 1); }} />
+        <Textarea label="Agent limited notes" value={limitedNotes} maxLength={3}
+          onChange={event => { setLimitedNotes(event.currentTarget.value); setLimitedNotesChanges(count => count + 1); }} />
+        <TextField label="Legacy title" value={legacyTitle} maxLength={3} onChange={event => setLegacyTitle(event.currentTarget.value)} />
+        <InputGroup label="Agent path" help="Three characters" value={path} maxLength={3} leading={<span>/projects/</span>}
+          onChange={event => { setPath(event.currentTarget.value); setPathChanges(count => count + 1); }}
+          trailing={<Button onClick={() => setPathAction(count => count + 1)}>Path action</Button>} />
+        <InputGroup label="Denied group" defaultValue="private" />
+        <InputGroup label="Secret group" type="password" defaultValue="fixture-secret" />
+        <InputGroup label="Numeric group" type="number" defaultValue="42" />
+        <InputGroup label="Selection group" defaultValue="selected" onSelect={() => setSelectionCalls(count => count + 1)} />
         <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
         <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
           <input aria-label="Draft" defaultValue="Original draft" />
@@ -173,6 +197,7 @@ export default function AgentButtonFixture() {
           <RadioGroup label="Form choice" name="choice" options={options} value={radio} onValueChange={setRadio} />
           <Toggle pressed={formToggle} onPressedChange={setFormToggle}>Form toggle</Toggle>
           <InputOTP label="Form code" name="code" value={formCode} onValueChange={setFormCode} />
+          <InputGroup label="Form group" name="group" defaultValue="original group" />
           <Button type="submit">Submit form</Button>
           <Button onClick={hit}>Ordinary action</Button>
         </form>
@@ -207,6 +232,11 @@ export default function AgentButtonFixture() {
         <output data-testid="quantity-calls">{quantityCalls}</output>
         <output data-testid="split-calls">{splitCalls}</output>
         <output data-testid="split-last">{splitLast}</output>
+        <output data-testid="path-changes">{pathChanges}</output>
+        <output data-testid="limited-title-changes">{limitedTitleChanges}</output>
+        <output data-testid="limited-notes-changes">{limitedNotesChanges}</output>
+        <output data-testid="path-action">{pathAction}</output>
+        <output data-testid="selection-calls">{selectionCalls}</output>
       </main>
     </Yogurt>
   );

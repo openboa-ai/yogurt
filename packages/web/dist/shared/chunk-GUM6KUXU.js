@@ -68,8 +68,11 @@ function TextField({
     {
       ...props,
       ...binding,
-      value: value === void 0 ? void 0 : String(value),
-      defaultValue: defaultValue === void 0 ? void 0 : String(defaultValue)
+      value: value == null ? void 0 : String(value),
+      defaultValue: defaultValue == null ? void 0 : String(defaultValue),
+      onValueChange: (next, details) => {
+        if (details.reason === "imperative" && props.maxLength !== void 0 && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+      }
     }
   ) }) });
 }
@@ -135,8 +138,11 @@ function Textarea({
       ...props,
       ...binding,
       rows,
-      value: value === void 0 ? void 0 : String(value),
-      defaultValue: defaultValue === void 0 ? void 0 : String(defaultValue),
+      value: value == null ? void 0 : String(value),
+      defaultValue: defaultValue == null ? void 0 : String(defaultValue),
+      onValueChange: (next, details) => {
+        if (details.reason === "imperative" && props.maxLength !== void 0 && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+      },
       render: onSubmit ? /* @__PURE__ */ jsx("textarea", { onSubmit }) : void 0
     }
   ) }) });

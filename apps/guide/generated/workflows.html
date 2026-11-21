@@ -414,6 +414,12 @@
   --yg-size-row: var(--boa-control-row);
   --yg-size-spacious: var(--boa-control-spacious);
   --yg-size-featured: var(--boa-control-featured);
+  --yg-field-featured-height: var(--boa-control-featured);
+  --yg-field-featured-radius: var(--boa-radius-card);
+  --yg-field-featured-gap: var(--boa-space-8);
+  --yg-field-featured-inset-start: var(--boa-space-16);
+  --yg-field-featured-inset-end: var(--boa-space-10);
+  --yg-field-featured-inset-block: var(--boa-space-8);
   --yg-glyph-small: var(--boa-space-14);
   --yg-glyph-large: var(--boa-space-20);
   --yg-inset-row: var(--boa-space-14);
@@ -470,41 +476,6 @@
   --yg-settle: cubic-bezier(.2, 0, 0, 1);
   --yg-arrive: cubic-bezier(.23, 1, .32, 1);
   --yg-selection: cubic-bezier(.2, .76, .26, 1.08);
-  --yg-lift-shadow: 0 1px 3px color-mix(in srgb, var(--boa-color-neutral-1000) 8%, transparent);
-  --yg-float-shadow: 0 1px 3px color-mix(in srgb, var(--boa-color-neutral-1000) 9%, transparent), 0 8px 24px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent);
-  --yg-panel-shadow: 0 12px 36px color-mix(in srgb, var(--boa-color-neutral-1000) 18%, transparent);
-  --yg-font-action: var(--boa-role-weight-ui) 0.875rem/1.25rem var(--boa-font-family);
-  --yg-font-body: var(--boa-role-weight-body) 0.875rem/1.25rem var(--boa-font-family);
-  --yg-font-compact: var(--boa-role-weight-ui) 0.8125rem/1.125rem var(--boa-font-family);
-  --yg-font-label: var(--boa-role-weight-ui) 0.8125rem/1.125rem var(--boa-font-family);
-  --yg-font-help: var(--boa-role-weight-body) 0.8125rem/1.125rem var(--boa-font-family);
-  --yg-font-meta: var(--boa-weight-regular) 0.75rem/1rem var(--boa-font-family);
-  --yg-font-heading: var(--boa-role-weight-heading) 1.25rem/1.625rem var(--boa-font-family);
-  --yg-font-display: var(--boa-role-weight-heading) 2.5rem/2.75rem var(--boa-font-family);
-  --yg-font-touch: var(--boa-weight-regular) 1rem/1.5rem var(--boa-font-family);
-  --yg-font-editor: var(--boa-role-weight-body) 0.9375rem/1.375rem var(--boa-font-family);
-  --yg-font-reading: var(--boa-role-weight-body) 1rem/1.5rem var(--boa-font-family);
-  --yg-font-section: var(--boa-role-weight-heading) 1.5rem/1.875rem var(--boa-font-family);
-  --yg-font-value: var(--boa-role-weight-value) 2.125rem/2.5rem var(--boa-font-family);
-}
-.yg-root[data-material="paper"] {
-  --yg-canvas: light-dark(var(--boa-color-paper-25), var(--boa-color-paper-975));
-  --yg-surface: light-dark(var(--boa-color-paper-50), var(--boa-color-paper-950));
-  --yg-field: light-dark(var(--boa-color-paper-100), var(--boa-color-paper-850));
-  --yg-hover: light-dark(var(--boa-color-paper-200), var(--boa-color-paper-800));
-  --yg-text: light-dark(var(--boa-color-paper-950), var(--boa-color-paper-50));
-  --yg-muted: light-dark(var(--boa-color-paper-700), var(--boa-color-paper-300));
-}
-.yg-root[data-material="mist"] {
-  --yg-canvas: light-dark(var(--boa-color-mist-25), var(--boa-color-mist-975));
-  --yg-surface: light-dark(var(--boa-color-mist-50), var(--boa-color-mist-950));
-  --yg-field: light-dark(var(--boa-color-mist-100), var(--boa-color-mist-850));
-  --yg-hover: light-dark(var(--boa-color-mist-200), var(--boa-color-mist-800));
-  --yg-text: light-dark(var(--boa-color-mist-950), var(--boa-color-mist-50));
-  --yg-muted: light-dark(var(--boa-color-mist-700), var(--boa-color-mist-300));
-}
-
-.yg-root {
   --yg-motion-menu-height: 470ms var(--yg-settle);
   --yg-motion-exposure: 400ms var(--yg-settle);
   --yg-motion-wheel: 560ms var(--yg-settle);
@@ -557,8 +528,24 @@
   --yg-motion-island-expand: 410ms var(--yg-settle);
   --yg-motion-step-fill: 620ms var(--yg-settle);
   --yg-motion-success-label: 375ms var(--yg-settle);
+  --yg-motion-surface-focus: 360ms var(--yg-settle);
+  --yg-lift-shadow: 0 1px 3px color-mix(in srgb, var(--boa-color-neutral-1000) 8%, transparent);
+  --yg-float-shadow: 0 1px 3px color-mix(in srgb, var(--boa-color-neutral-1000) 9%, transparent), 0 8px 24px color-mix(in srgb, var(--boa-color-neutral-1000) 12%, transparent);
+  --yg-panel-shadow: 0 12px 36px color-mix(in srgb, var(--boa-color-neutral-1000) 18%, transparent);
+  --yg-font-action: var(--boa-role-weight-ui) 0.875rem/1.25rem var(--boa-font-family);
+  --yg-font-body: var(--boa-role-weight-body) 0.875rem/1.25rem var(--boa-font-family);
+  --yg-font-compact: var(--boa-role-weight-ui) 0.8125rem/1.125rem var(--boa-font-family);
+  --yg-font-label: var(--boa-role-weight-ui) 0.8125rem/1.125rem var(--boa-font-family);
+  --yg-font-help: var(--boa-role-weight-body) 0.8125rem/1.125rem var(--boa-font-family);
+  --yg-font-meta: var(--boa-weight-regular) 0.75rem/1rem var(--boa-font-family);
+  --yg-font-heading: var(--boa-role-weight-heading) 1.25rem/1.625rem var(--boa-font-family);
+  --yg-font-display: var(--boa-role-weight-heading) 2.5rem/2.75rem var(--boa-font-family);
+  --yg-font-touch: var(--boa-weight-regular) 1rem/1.5rem var(--boa-font-family);
+  --yg-font-editor: var(--boa-role-weight-body) 0.9375rem/1.375rem var(--boa-font-family);
+  --yg-font-reading: var(--boa-role-weight-body) 1rem/1.5rem var(--boa-font-family);
+  --yg-font-section: var(--boa-role-weight-heading) 1.5rem/1.875rem var(--boa-font-family);
+  --yg-font-value: var(--boa-role-weight-value) 2.125rem/2.5rem var(--boa-font-family);
 }
-
 @supports (animation-timing-function: linear(0, 1)) {
   .yg-root {
     --yg-motion-menu-height: 470ms linear(0, 0.107, 0.312, 0.531, 0.718, 0.857, 0.95, 1.003, 1.029, 1.036, 1.034, 1.027, 1.019, 1.011, 1.006, 1);
@@ -583,15 +570,6 @@
     --yg-motion-selection-lead: 280ms linear(0, 0.09, 0.271, 0.466, 0.639, 0.774, 0.871, 0.933, 0.975, 0.997, 1.009, 1.012, 1.012, 1.01, 1.008, 1);
     --yg-motion-selection-tail: 545ms linear(0, 0.092, 0.284, 0.495, 0.681, 0.821, 0.922, 0.985, 1.018, 1.032, 1.034, 1.029, 1.022, 1.015, 1.009, 1);
     --yg-motion-bottom-label: 420ms linear(0, 0.097, 0.293, 0.504, 0.688, 0.823, 0.919, 0.979, 1.011, 1.024, 1.027, 1.023, 1.018, 1.012, 1.008, 1);
-    --yg-motion-card-open: 480ms linear(0, 0.103, 0.308, 0.538, 0.737, 0.884, 0.977, 1.03, 1.051, 1.053, 1.044, 1.032, 1.02, 1.011, 1.004, 1);
-    --yg-motion-card-fan: 490ms linear(0, 0.097, 0.314, 0.549, 0.757, 0.919, 1.02, 1.073, 1.089, 1.083, 1.064, 1.043, 1.024, 1.009, 0.999, 1);
-    --yg-motion-card-lift: 385ms linear(0, 0.123, 0.376, 0.666, 0.911, 1.07, 1.154, 1.17, 1.143, 1.096, 1.049, 1.01, 0.984, 0.973, 0.971, 1);
-    --yg-motion-card-detail: 435ms linear(0, 0.106, 0.328, 0.569, 0.768, 0.92, 1.014, 1.061, 1.074, 1.067, 1.051, 1.034, 1.018, 1.007, 0.999, 1);
-    --yg-motion-text-pop: 475ms linear(0, 0.215, 0.663, 1.055, 1.275, 1.295, 1.194, 1.054, 0.951, 0.907, 0.918, 0.956, 0.997, 1.022, 1.029, 1);
-    --yg-motion-tooltip-arrive: 370ms linear(0, 0.105, 0.302, 0.518, 0.699, 0.829, 0.92, 0.975, 1.002, 1.015, 1.018, 1.016, 1.013, 1.009, 1.005, 1);
-    --yg-motion-island-expand: 410ms linear(0, 0.093, 0.293, 0.527, 0.728, 0.883, 0.986, 1.047, 1.071, 1.072, 1.061, 1.044, 1.028, 1.015, 1.005, 1);
-    --yg-motion-step-fill: 620ms linear(0, 0.105, 0.302, 0.506, 0.676, 0.798, 0.884, 0.939, 0.971, 0.989, 0.998, 1.002, 1.003, 1.003, 1.003, 1);
-    --yg-motion-success-label: 375ms linear(0, 0.102, 0.305, 0.521, 0.706, 0.843, 0.934, 0.988, 1.016, 1.026, 1.026, 1.021, 1.016, 1.01, 1.006, 1);
     --yg-motion-picker-opacity: 360ms linear(0, 0.101, 0.287, 0.48, 0.644, 0.771, 0.861, 0.921, 0.959, 0.982, 0.994, 1.001, 1.003, 1.004, 1.003, 1);
     --yg-motion-picker-lift: 460ms linear(0, 0.109, 0.316, 0.531, 0.712, 0.847, 0.935, 0.988, 1.014, 1.024, 1.024, 1.02, 1.015, 1.01, 1.006, 1);
     --yg-motion-picker-row: 390ms linear(0, 0.086, 0.269, 0.476, 0.664, 0.815, 0.922, 0.991, 1.029, 1.045, 1.047, 1.04, 1.031, 1.022, 1.013, 1);
@@ -613,8 +591,36 @@
     --yg-motion-task-check: 650ms linear(0, 0.1, 0.286, 0.478, 0.636, 0.759, 0.846, 0.904, 0.943, 0.967, 0.982, 0.99, 0.995, 0.998, 0.999, 1);
     --yg-motion-checklist-strike: 550ms linear(0, 0.086, 0.264, 0.464, 0.637, 0.775, 0.874, 0.94, 0.982, 1.004, 1.014, 1.016, 1.015, 1.012, 1.009, 1);
     --yg-motion-file-press: 460ms linear(0, 0.168, 0.545, 0.923, 1.2, 1.312, 1.288, 1.184, 1.056, 0.958, 0.907, 0.902, 0.93, 0.97, 1.005, 1);
+    --yg-motion-card-open: 480ms linear(0, 0.103, 0.308, 0.538, 0.737, 0.884, 0.977, 1.03, 1.051, 1.053, 1.044, 1.032, 1.02, 1.011, 1.004, 1);
+    --yg-motion-card-fan: 490ms linear(0, 0.097, 0.314, 0.549, 0.757, 0.919, 1.02, 1.073, 1.089, 1.083, 1.064, 1.043, 1.024, 1.009, 0.999, 1);
+    --yg-motion-card-lift: 385ms linear(0, 0.123, 0.376, 0.666, 0.911, 1.07, 1.154, 1.17, 1.143, 1.096, 1.049, 1.01, 0.984, 0.973, 0.971, 1);
+    --yg-motion-card-detail: 435ms linear(0, 0.106, 0.328, 0.569, 0.768, 0.92, 1.014, 1.061, 1.074, 1.067, 1.051, 1.034, 1.018, 1.007, 0.999, 1);
+    --yg-motion-text-pop: 475ms linear(0, 0.215, 0.663, 1.055, 1.275, 1.295, 1.194, 1.054, 0.951, 0.907, 0.918, 0.956, 0.997, 1.022, 1.029, 1);
+    --yg-motion-tooltip-arrive: 370ms linear(0, 0.105, 0.302, 0.518, 0.699, 0.829, 0.92, 0.975, 1.002, 1.015, 1.018, 1.016, 1.013, 1.009, 1.005, 1);
+    --yg-motion-island-expand: 410ms linear(0, 0.093, 0.293, 0.527, 0.728, 0.883, 0.986, 1.047, 1.071, 1.072, 1.061, 1.044, 1.028, 1.015, 1.005, 1);
+    --yg-motion-step-fill: 620ms linear(0, 0.105, 0.302, 0.506, 0.676, 0.798, 0.884, 0.939, 0.971, 0.989, 0.998, 1.002, 1.003, 1.003, 1.003, 1);
+    --yg-motion-success-label: 375ms linear(0, 0.102, 0.305, 0.521, 0.706, 0.843, 0.934, 0.988, 1.016, 1.026, 1.026, 1.021, 1.016, 1.01, 1.006, 1);
+    --yg-motion-surface-focus: 360ms linear(0, 0.101, 0.287, 0.48, 0.644, 0.771, 0.861, 0.921, 0.959, 0.982, 0.994, 1.001, 1.003, 1.004, 1.003, 1);
   }
 }
+.yg-root[data-material="paper"] {
+  --yg-canvas: light-dark(var(--boa-color-paper-25), var(--boa-color-paper-975));
+  --yg-surface: light-dark(var(--boa-color-paper-50), var(--boa-color-paper-950));
+  --yg-field: light-dark(var(--boa-color-paper-100), var(--boa-color-paper-850));
+  --yg-hover: light-dark(var(--boa-color-paper-200), var(--boa-color-paper-800));
+  --yg-text: light-dark(var(--boa-color-paper-950), var(--boa-color-paper-50));
+  --yg-muted: light-dark(var(--boa-color-paper-700), var(--boa-color-paper-300));
+}
+.yg-root[data-material="mist"] {
+  --yg-canvas: light-dark(var(--boa-color-mist-25), var(--boa-color-mist-975));
+  --yg-surface: light-dark(var(--boa-color-mist-50), var(--boa-color-mist-950));
+  --yg-field: light-dark(var(--boa-color-mist-100), var(--boa-color-mist-850));
+  --yg-hover: light-dark(var(--boa-color-mist-200), var(--boa-color-mist-800));
+  --yg-text: light-dark(var(--boa-color-mist-950), var(--boa-color-mist-50));
+  --yg-muted: light-dark(var(--boa-color-mist-700), var(--boa-color-mist-300));
+}
+
+/* Motion profiles are generated in ui-tokens.css from design/tokens/ui.json. */
 
 /* Extended component anatomy. All color roles follow the nearest Yogurt. */
 .yg-bottom-action[data-fixed] {
@@ -945,6 +951,24 @@
 }
 .yg-input-group {
   gap: var(--boa-space-8);
+}
+.yg-input-group.yg-input-size-featured {
+  --yg-input-height: var(--yg-field-featured-height);
+  gap: var(--yg-field-featured-gap);
+  border-radius: var(--yg-field-featured-radius);
+  padding-block: var(--yg-field-featured-inset-block);
+  padding-inline: var(--yg-field-featured-inset-start) var(--yg-field-featured-inset-end);
+}
+.yg-input-group.yg-input-size-featured input {
+  min-height: calc(var(--yg-field-featured-height) - 2 * var(--yg-field-featured-inset-block));
+}
+.yg-input-group.yg-input-size-featured:focus-within:not(:has([aria-invalid="true"])) {
+  background: var(--yg-hover);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-input-group.yg-input-size-featured {
+    transition: background-color var(--yg-motion-surface-focus);
+  }
 }
 .yg-input-group > :not(input) {
   flex: none;

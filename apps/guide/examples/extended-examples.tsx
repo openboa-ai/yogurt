@@ -310,6 +310,14 @@ export function ExtendedExample({
         />
       );
     case "input-group":
+      if (variation) return (
+        <Y.Stack gap={12}>
+          {(["compact", "regular", "comfortable", "spacious", "touch", "featured"] as const).map((size) => (
+            <Y.InputGroup key={size} size={size} label={size[0].toUpperCase() + size.slice(1)}
+              placeholder="release-notes" leading={<span className="yg-help">/projects/</span>} />
+          ))}
+        </Y.Stack>
+      );
       return (
         <Y.InputGroup
           label="Project path"

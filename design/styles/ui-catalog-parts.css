@@ -328,6 +328,24 @@
 .yg-input-group {
   gap: var(--boa-space-8);
 }
+.yg-input-group.yg-input-size-featured {
+  --yg-input-height: var(--yg-field-featured-height);
+  gap: var(--yg-field-featured-gap);
+  border-radius: var(--yg-field-featured-radius);
+  padding-block: var(--yg-field-featured-inset-block);
+  padding-inline: var(--yg-field-featured-inset-start) var(--yg-field-featured-inset-end);
+}
+.yg-input-group.yg-input-size-featured input {
+  min-height: calc(var(--yg-field-featured-height) - 2 * var(--yg-field-featured-inset-block));
+}
+.yg-input-group.yg-input-size-featured:focus-within:not(:has([aria-invalid="true"])) {
+  background: var(--yg-hover);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-input-group.yg-input-size-featured {
+    transition: background-color var(--yg-motion-surface-focus);
+  }
+}
 .yg-input-group > :not(input) {
   flex: none;
 }

@@ -1,12 +1,13 @@
 import { type ComponentProps, type ReactNode } from "react";
-import { type Option } from "../foundation/foundation.js";
+import { type ControlSize, type Option } from "../foundation/foundation.js";
 type Input = Omit<ComponentProps<"input">, "size" | "prefix">;
-export declare function InputGroup({ label, leading, trailing, help, error, id, ...input }: Input & {
+export declare function InputGroup({ label, leading, trailing, help, error, id, size, ...input }: Input & {
     label: string;
     leading?: ReactNode;
     trailing?: ReactNode;
     help?: string;
     error?: string;
+    size?: ControlSize | "featured";
 }): import("react/jsx-runtime").JSX.Element;
 export declare function InputOTP({ label, length, value, onValueChange, name, disabled, verified, help, error, }: {
     label: string;
