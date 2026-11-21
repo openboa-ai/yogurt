@@ -70,6 +70,12 @@
 .yg-rating label:has(input:active) > span {
   transform: translateY(1px);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-rating label[data-filled] > span { animation: yg-rating-pop var(--yg-motion-rating-pop); }
+}
+@keyframes yg-rating-pop {
+  from { scale: .7; }
+}
 
 .yg-range input:not(:disabled):active {
   accent-color: var(--yg-inverse-press);

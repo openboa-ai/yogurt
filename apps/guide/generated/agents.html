@@ -887,8 +887,15 @@
   place-items: center;
 }
 .yg-checkbox [role="checkbox"] {
-  border-radius: var(--yg-radius-inset);
+  position: relative;
+  flex: none;
+  width: var(--yg-checkbox-size);
+  height: var(--yg-checkbox-size);
+  border: 0;
+  border-radius: var(--yg-checkbox-radius);
+  background: var(--yg-field);
 }
+.yg-checkbox [role="checkbox"]::before { content: ""; position: absolute; inset: -10px; }
 .yg-radio [role="radio"] {
   border-radius: 50%;
 }
@@ -899,10 +906,10 @@
   border-color: var(--yg-inverse);
 }
 .yg-checkbox [data-state="checked"] > span {
-  width: 9px;
-  height: 5px;
-  border-left: 1.7px solid var(--yg-on-inverse);
-  border-bottom: 1.7px solid var(--yg-on-inverse);
+  width: 10px;
+  height: 6px;
+  border-left: 2px solid var(--yg-on-inverse);
+  border-bottom: 2px solid var(--yg-on-inverse);
   transform: translateY(-1px) rotate(-45deg);
 }
 .yg-checkbox [data-state="indeterminate"] > span {
@@ -942,7 +949,7 @@
   color: var(--yg-text);
   border-radius: var(--yg-radius-panel);
   padding: var(--yg-inset-layer);
-  box-shadow: inset 0 0 0 1px var(--yg-surface-edge), var(--yg-float-shadow);
+  box-shadow: var(--yg-float-shadow);
   --yg-enter-y: calc(-1 * var(--boa-space-8));
   transform-origin: top left;
   animation: yg-enter var(--yg-travel) var(--yg-arrive);
@@ -1197,20 +1204,17 @@
 .yg-row {
   display: flex;
   align-items: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-list-row-gap);
   color: var(--yg-text);
   font: var(--yg-font-body);
   text-decoration: none;
   background: transparent;
   border: 0;
   width: 100%;
-  min-height: var(--yg-size-regular);
-  padding: var(--boa-space-6) var(--yg-inset-compact);
+  min-height: var(--yg-list-row-height);
+  padding: var(--boa-space-6) var(--yg-list-row-inset);
   border-radius: var(--yg-radius-control);
   text-align: start;
-}
-@media (pointer: coarse) {
-  :is(a, button).yg-row { min-height: var(--yg-size-touch); }
 }
 .yg-row[aria-current="true"] {
   background: var(--yg-field);
@@ -1504,6 +1508,16 @@
   }
 }
 @media (forced-colors: active) {
+  .yg-checkbox [role="checkbox"] {
+    border: 1px solid ButtonText;
+    background: Canvas;
+  }
+  .yg-checkbox [role="checkbox"]:is([data-state="checked"], [data-state="indeterminate"]) {
+    border-color: Highlight;
+    background: Highlight;
+  }
+  .yg-checkbox [data-state="checked"] > span { border-color: HighlightText; }
+  .yg-checkbox [data-state="indeterminate"] > span { background: HighlightText; }
   :is(.yg-input, .yg-select):focus-within,
   .yg-standalone:focus-visible {
     outline: var(--boa-stroke-focus) solid Highlight;

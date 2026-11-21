@@ -299,7 +299,7 @@ const catalog = [
             path: path.join(process.env.YOGURT_CAPTURE_DIR, "calendar.png"),
           });
         ink.push("Component and block interactions");
-        const lookup = page.getByRole("textbox", { name: "Find a component" });
+        const lookup = page.getByRole("searchbox", { name: "Find a component" });
         for (const [query, name] of [
           ["Keypad", "Keypad"],
           ["IconButton", "IconButton"],

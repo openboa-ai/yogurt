@@ -206,6 +206,7 @@ function Slider({
   disabled
 }) {
   const id = useId();
+  const fill = max > min ? Math.max(0, Math.min(100, (value - min) / (max - min) * 100)) : 0;
   return /* @__PURE__ */ jsxs("div", { className: "yg-range", children: [
     /* @__PURE__ */ jsxs("div", { children: [
       /* @__PURE__ */ jsx("label", { htmlFor: id, className: "yg-label", children: label }),
@@ -224,6 +225,7 @@ function Slider({
         step,
         value,
         disabled,
+        style: { "--yg-range-fill": `${fill}%` },
         "aria-valuetext": unit ? value + unit : void 0,
         onChange: (e) => onValueChange(e.target.valueAsNumber)
       }
@@ -240,25 +242,38 @@ function NumericSpinner({
   disabled
 }) {
   const increment = Math.max(1, Math.floor(step) || 1);
+  const previous = useRef(value);
+  const last = previous.current;
+  useLayoutEffect(() => {
+    previous.current = value;
+  }, [value]);
   return /* @__PURE__ */ jsxs("div", { className: "yg-quantity", role: "group", "aria-label": label, children: [
     /* @__PURE__ */ jsx("span", { className: "yg-label", children: label }),
     /* @__PURE__ */ jsxs("div", { children: [
       /* @__PURE__ */ jsx(
         Button,
         {
-          emphasis: "quiet",
+          emphasis: "soft",
+          shape: "pill",
+          size: "comfortable",
           "aria-label": "Decrease " + label,
           disabled: disabled || value <= min,
           onClick: () => onValueChange(Math.max(min, value - increment)),
           children: "\u2212"
         }
       ),
-      /* @__PURE__ */ jsx("output", { "aria-label": label, "aria-live": "polite", children: value }),
+      /* @__PURE__ */ jsxs("output", { "aria-label": label, "aria-live": "polite", "data-decreasing": value < last || void 0, children: [
+        last !== value && /* @__PURE__ */ jsx("span", { className: "yg-quantity-out", "aria-hidden": "true", children: last }, `old-${value}`),
+        /* @__PURE__ */ jsx("span", { className: last !== value ? "yg-quantity-in" : void 0, children: value }, value)
+      ] }),
       /* @__PURE__ */ jsx(
         IconButton,
         {
           icon: "plus",
           label: "Increase " + label,
+          emphasis: "soft",
+          shape: "pill",
+          size: "comfortable",
           disabled: disabled || value >= max,
           onClick: () => onValueChange(Math.min(max, value + increment))
         }
@@ -292,7 +307,7 @@ function Rating({
           onChange: () => onValueChange(i + 1)
         }
       ),
-      /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: "\u2605" })
+      /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: i < value ? "\u2605" : "\u2606" })
     ] }, i)) })
   ] });
 }

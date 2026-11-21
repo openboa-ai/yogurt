@@ -20,10 +20,24 @@ The first reviewable slice replaces the default tabs and segmented control with 
 
 The everyday action has filled, soft and quiet emphasis, compact, regular, comfortable, spacious and touch sizes, and neutral, brand and danger tones. The height roles resolve to 30, 36, 40, 48 and 44 px respectively and are shared across renderers. A control-radius shape is the default for standard actions. A pill shape is available for the compact copy, quantity and prominent action language. Icon actions keep an accessible name and their own hit area. Pending state retains its accessible label and blocks repeated activation.
 
-Use dedicated controls where the action has its own lifecycle: copying reports the clipboard result, a confirmation holds or slides before committing, quantity changes are controlled by the caller, and a save action exposes pending, success and error. These controls keep their own typed behavior instead of overloading a generic click. Surface all of them in the library guide with working local examples, then make their distribution and renderer coverage explicit.
+Use dedicated controls where the action has its own lifecycle: copying reports the clipboard result, a confirmation holds or slides before committing, quantity changes are controlled by the caller, and a save action exposes pending, success and error. These controls keep their own typed behavior instead of overloading a generic click. Keep the basic button page focused on button variants and sizes; link to the dedicated interactive examples by purpose, and make distribution and renderer coverage explicit.
 
 The default switch uses a 52 × 32 px track with a 26 px thumb and a 3 px inset. Preserve controlled and uncontrolled use, keyboard activation and immediate state callbacks. The native template retains its existing native switch until its rendering is separately qualified.
 
 Text fields, search fields and single-choice select controls use the same compact, regular, comfortable, spacious and touch height roles as actions. Their labels, validation, input attributes, controlled values and accessible descriptions remain attached to the actual input. The regular size remains the default. Select preserves the native `size` and `multiple` attributes separately from the visual `controlSize` choice. Each size is demonstrated and tested at narrow and wide widths.
 
 Cards use a shared 24 px corner and 18 px regular inset. Compact and spacious density choices use 12 px and 24 px insets without changing the caller's content or action. The ordinary card and the existing metric and profile cards consume these same roles. Cards remain fluid in their container and do not gain a perimeter outline.
+
+The single-value slider shares the motion specimen's four-pixel track and 28 px circular thumb, with a 44 px interaction area. Its filled section follows the controlled value and reading direction. Preserve its native input, min, max, step, disabled state, keyboard behavior and accessible value text; forced colors retain platform control appearance.
+
+The basic checkbox shares a 24 px mark and 8 px corner with the checklist. Use a filled surface instead of an ordinary perimeter border, preserve checked and indeterminate states, and keep a 44 px pointer target and visible keyboard and forced-color focus.
+
+An editable rating uses filled and outlined star marks with the same visual scale and selection feedback as the interactive rating. Keep the radio group, accessible names, maximum count, keyboard selection and read-only text contract; reduce motion when requested.
+
+The numeric spinner has two circular 40 px actions, a fixed-width rolling value and a borderless card surface. Preserve its label, disabled and range boundaries, integer stepping, callback and live value announcement. A value change rolls in the direction of the change and settles immediately under reduced motion.
+
+Layered menus, attachments and carousel slides use surface contrast or elevation for their ordinary boundary instead of an inset perimeter line. Retain forced-color and keyboard-focus indicators.
+
+List rows use a 48 px minimum height and 12 px content gap. Their text, leading and trailing slots remain flexible and wrap when needed; links and actions retain their original behavior and current state. Noninteractive rows do not become buttons.
+
+The component guide itself uses the shared search field and action controls for navigation. Preserve search, category disclosure, focus, links and narrow-screen access. The guide may supply layout-specific styling, but must not duplicate interactive control behavior.

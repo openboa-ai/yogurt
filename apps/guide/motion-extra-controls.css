@@ -49,9 +49,9 @@
 .motion-stepper > div:first-child { display: grid; gap: var(--yg-gap-tight); }
 .motion-stepper small { color: var(--yg-muted); }
 .motion-stepper-actions { display: flex; align-items: center; }
-.motion-stepper-actions button { display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--yg-field); color: var(--yg-text); font: inherit; font-size: 20px; cursor: pointer; }
+.motion-stepper-actions button { display: grid; place-items: center; width: var(--yg-quantity-action-size); height: var(--yg-quantity-action-size); border: 0; border-radius: 50%; background: var(--yg-field); color: var(--yg-text); font: inherit; font-size: 20px; cursor: pointer; }
 .motion-stepper-actions button:disabled { opacity: .4; cursor: default; }
-.motion-stepper-actions output { display: grid; place-items: center; width: 40px; height: 32px; overflow: hidden; font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.motion-stepper-actions output { display: grid; place-items: center; width: var(--yg-quantity-value-width); height: 32px; overflow: hidden; font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .motion-stepper-actions output span { display: block; }
 .motion-scrubber-bar { position: relative; height: 36px; overflow: hidden; border-radius: var(--yg-radius-control); background: var(--yg-field); cursor: pointer; touch-action: none; user-select: none; }
 .motion-scrubber-fill, .motion-scrubber-ticks, .motion-scrubber-handle { position: absolute; pointer-events: none; }

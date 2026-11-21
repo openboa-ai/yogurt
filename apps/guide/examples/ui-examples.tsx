@@ -42,9 +42,7 @@ export function Example({
     [count, setCount] = useState(1),
     [pending, setPending] = useState(false),
     [note, setNote] = useState(""),
-    [confirmed, setConfirmed] = useState(false),
-    [buttonQuantity, setButtonQuantity] = useState(0),
-    [buttonResult, setButtonResult] = useState<"idle" | "pending" | "success">("idle");
+    [confirmed, setConfirmed] = useState(false);
   const lock = useRef(false),
     timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined),
     field = useRef<HTMLInputElement>(null);
@@ -228,23 +226,6 @@ export function Example({
               <Y.Button size="spacious" shape="pill" onClick={() => setNote("Spacious action selected.")}>Spacious</Y.Button>
               <Y.Button size="touch" emphasis="soft" onClick={() => setNote("Touch action selected.")}>Touch</Y.Button>
             </Y.Inline>
-            <Y.Inline gap={8}>
-              <Y.CopyButton value="Review notes" />
-              <Y.CartButton label="Review kit" quantity={buttonQuantity} onQuantityChange={setButtonQuantity} />
-            </Y.Inline>
-            <Y.Inline gap={8}>
-              <Y.HoldButton label="Hold to confirm" onConfirm={() => setNote("Confirmed.")} />
-              <Y.SlideConfirm label="Slide to confirm" onConfirm={() => setNote("Confirmed.")} />
-            </Y.Inline>
-            <Y.LoadingSuccessButton label="Save changes" pendingLabel="Saving" successLabel="Saved"
-              errorLabel="Try again" state={buttonResult} presentation="morphing" onAction={() => {
-                if (buttonResult !== "idle") return;
-                setButtonResult("pending");
-                timer.current = setTimeout(() => {
-                  setButtonResult("success");
-                  timer.current = setTimeout(() => setButtonResult("idle"), 1800);
-                }, 1200);
-              }} />
           </Y.Stack>}
           {status}
         </Y.Stack>

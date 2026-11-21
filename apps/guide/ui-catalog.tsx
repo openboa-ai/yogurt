@@ -8,6 +8,8 @@ import {
   Icon,
   Heading,
   SegmentedControl,
+  SearchField,
+  Link,
   type Material,
 } from "@openboa/yogurt";
 import catalog from "../../catalog/components.json";
@@ -210,20 +212,20 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
           <span>Yogurt</span>
         </div>
         <nav className="catalog-top" aria-label="Yogurt guide">
-          <button
+          <Button emphasis="quiet" size="compact"
             aria-current={id !== "brand" ? "page" : undefined}
             onClick={() => go("button")}
           >
             Components
-          </button>
-          <button
+          </Button>
+          <Button emphasis="quiet" size="compact"
             aria-current={id === "brand" ? "page" : undefined}
             onClick={() => go("brand")}
           >
             Brand &amp; tokens
-          </button>
-          <a href="motion-patterns.html">Motion</a>
-          <a href="workflows.html">Workflows</a>
+          </Button>
+          <Link href="motion-patterns.html">Motion</Link>
+          <Link href="workflows.html">Workflows</Link>
         </nav>
         <div className="header-actions">
           <IconButton
@@ -243,20 +245,8 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
       <div className="catalog-body">
         <aside ref={navigation} data-open={menu} aria-label="Components">
           <div className="catalog-search">
-            <Icon name="search" />
-            <input
-              aria-label="Find a component"
-              placeholder="Find a component"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {search && (
-              <IconButton
-                label="Clear component search"
-                icon="close"
-                onClick={() => setSearch("")}
-              />
-            )}
+            <SearchField label="Find a component" placeholder="Find a component"
+              value={search} onValueChange={setSearch} />
           </div>
           <nav aria-label="Component index">
             {families.map((f) => {
@@ -265,7 +255,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
               const open = !!search || expanded.includes(f);
               return (
                 <div className="nav-family" key={f}>
-                  <button
+                  <Button emphasis="quiet" size="compact"
                     type="button"
                     aria-expanded={open}
                     onClick={() =>
@@ -276,10 +266,10 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                   >
                     {f}
                     <Icon name={open ? "down" : "next"} />
-                  </button>
+                  </Button>
                   {open &&
                     rows.map((e) => (
-                      <a
+                      <Link
                         key={e.id}
                         href={"#" + e.id}
                         aria-current={e.id === id ? "page" : undefined}
@@ -289,7 +279,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                         }}
                       >
                         {e.name}
-                      </a>
+                      </Link>
                     ))}
                 </div>
               );
@@ -338,13 +328,13 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
               </Yogurt>
               <div className="preview-caption">
                 <span>{tokenLabel}</span>
-                <button
+                <Button emphasis="quiet" size="compact"
                   type="button"
                   onClick={() => setCompare(!compare)}
                   aria-expanded={compare}
                 >
                   {compare ? "Hide surfaces" : "Compare surfaces"}
-                </button>
+                </Button>
               </div>
               {compare && (
                 <div className="surface-comparison">
@@ -384,14 +374,27 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                   </Yogurt>
                 </section>
               )}
+              {id === "button" && (
+                <section className="related-actions">
+                  <Heading>Related actions</Heading>
+                  <p className="yg-help">Use a dedicated action when the interaction has its own state.</p>
+                  <div>
+                    <Link href="motion-patterns.html#copy-button">Copy</Link>
+                    <Link href="motion-patterns.html#cart-button">Quantity</Link>
+                    <Link href="motion-patterns.html#hold-button">Hold to confirm</Link>
+                    <Link href="motion-patterns.html#slide-confirm">Slide to confirm</Link>
+                    <Link href="motion-patterns.html#loading-to-success">Loading result</Link>
+                  </div>
+                </section>
+              )}
               <section className="install-code">
-                <button
+                <Button emphasis="quiet" size="compact"
                   aria-expanded={showCode}
                   onClick={() => setShowCode(!showCode)}
                 >
                   Use in a project
                   <Icon name={showCode ? "down" : "next"} />
-                </button>
+                </Button>
                 {showCode && (
                   <div>
                     <p className="yg-help">

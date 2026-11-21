@@ -231,6 +231,7 @@ export function Slider({
   disabled?: boolean;
 }) {
   const id = useId();
+  const fill = max > min ? Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100)) : 0;
   return (
     <div className="yg-range">
       <div>
@@ -250,6 +251,7 @@ export function Slider({
         step={step}
         value={value}
         disabled={disabled}
+        style={{ "--yg-range-fill": `${fill}%` } as CSSProperties}
         aria-valuetext={unit ? value + unit : undefined}
         onChange={(e) => onValueChange(e.target.valueAsNumber)}
       />
@@ -274,24 +276,33 @@ export function NumericSpinner({
   disabled?: boolean;
 }) {
   const increment = Math.max(1, Math.floor(step) || 1);
+  const previous = useRef(value);
+  const last = previous.current;
+  useLayoutEffect(() => { previous.current = value; }, [value]);
   return (
     <div className="yg-quantity" role="group" aria-label={label}>
       <span className="yg-label">{label}</span>
       <div>
         <Button
-          emphasis="quiet"
+          emphasis="soft"
+          shape="pill"
+          size="comfortable"
           aria-label={"Decrease " + label}
           disabled={disabled || value <= min}
           onClick={() => onValueChange(Math.max(min, value - increment))}
         >
           −
         </Button>
-        <output aria-label={label} aria-live="polite">
-          {value}
+        <output aria-label={label} aria-live="polite" data-decreasing={value < last || undefined}>
+          {last !== value && <span key={`old-${value}`} className="yg-quantity-out" aria-hidden="true">{last}</span>}
+          <span key={value} className={last !== value ? "yg-quantity-in" : undefined}>{value}</span>
         </output>
         <IconButton
           icon="plus"
           label={"Increase " + label}
+          emphasis="soft"
+          shape="pill"
+          size="comfortable"
           disabled={disabled || value >= max}
           onClick={() => onValueChange(Math.min(max, value + increment))}
         />
@@ -331,7 +342,7 @@ export function Rating({
               checked={value === i + 1}
               onChange={() => onValueChange(i + 1)}
             />
-            <span aria-hidden="true">★</span>
+            <span aria-hidden="true">{i < value ? "★" : "☆"}</span>
           </label>
         ))}
       </div>
