@@ -15,6 +15,7 @@ The replacement is in progress. The inventory is not a completion claim.
 - Trace spacing, disclosure feedback and Progress value motion also use shared roles. Catalog and browser interaction checks passed; visual and intermediate-frame review of these two controls remains open.
 - Post spacing, long chart values, portrait and landscape avatar cropping, image fallback and the attachment open target were checked at 320 and 1440 px. The tests exercise browser layout and interaction; they do not establish full design approval.
 - DatePicker selection, dismissal, selected hover and reduced motion were exercised in a browser. After adjusting the touch layout, date buttons measured 44 × 44 px at 320 and 1440 px with an emulated coarse pointer. A standalone calendar scrolls horizontally when its container is narrower than seven touch targets; actual device and visual review remain open.
+- Keypad input, keyboard interaction, simulated touch, reduced motion and forced colors were checked at narrow and wide widths. Disabled-state styling was exercised via the native control; the component's disabled prop was not independently tested.
 - The existing web gallery interaction suite exercises 78 examples at 320, 768 and 1440 px. It detects runtime failures, but it is not evidence of complete visual equivalence for all component states.
 - The token generator produces CSS and Zig dimensions from the shared source. A generated value does not establish a native rendering or interaction.
 

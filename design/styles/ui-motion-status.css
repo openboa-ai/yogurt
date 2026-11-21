@@ -5,6 +5,12 @@
   overflow-wrap: anywhere;
 }
 .yg-toast { box-sizing: border-box; }
+.yg-notice > div {
+  display: grid;
+  align-content: start;
+  gap: var(--yg-gap-control);
+}
+.yg-notice > div > .yg-button { justify-self: start; }
 
 .yg-storage-meter {
   inline-size: min(300px, 100%);

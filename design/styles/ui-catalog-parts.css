@@ -651,6 +651,23 @@
   background: var(--yg-field);
   padding-inline: 0;
 }
+@media (forced-colors: none) {
+  .yg-key-row button:disabled {
+    color: var(--yg-muted);
+    opacity: .55;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+  .yg-key-row button {
+    box-shadow: inset 0 0 transparent;
+    transition: background-color var(--yg-press) linear,
+      box-shadow var(--yg-press) var(--yg-settle);
+  }
+  .yg-key-row button:active:not(:disabled) {
+    box-shadow: inset 0 2px color-mix(in srgb, var(--boa-color-neutral-950) 28%, transparent);
+    transition-duration: 0ms;
+  }
+}
 .yg-key-actions {
   justify-content: flex-end;
 }
