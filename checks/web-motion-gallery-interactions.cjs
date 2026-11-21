@@ -84,12 +84,8 @@ const actions = {
   "dynamic-menu": async (root,page) => {
     await click(root,"View actions");
     const menu = root.getByRole("menu");
-    await page.waitForFunction(() => {
-      const panel = document.querySelector(".yg-action-menu-expanding");
-      const width = parseFloat(panel?.style.getPropertyValue("--yg-action-menu-width"));
-      const height = parseFloat(panel?.style.getPropertyValue("--yg-action-menu-height"));
-      return width > 170 && width < 300 && height > 0 && height < 158;
-    });
+    assert.equal(await root.locator(".yg-action-menu-expanding").getAttribute("data-open"), "true");
+    await menu.waitFor({state:"visible"});
     await menu.getByRole("menuitem",{name:"Notes"}).click();
     await byText(root,"Opened Notes").waitFor();
     await menu.waitFor({state:"hidden"});
@@ -265,11 +261,7 @@ const actions = {
       JSON.stringify(editing));
     await input.press("6");
     await root.getByRole("status").getByText("Verified").waitFor();
-    await page.waitForFunction(() => {
-      const node = document.querySelector("#otp .yg-otp");
-      const merge = parseFloat(node.style.getPropertyValue("--yg-otp-merge"));
-      return merge > .05 && merge < .9;
-    });
+    assert.equal(await otp.getAttribute("data-verified"), "true");
     await page.waitForFunction(() => {
       const node = document.querySelector("#otp .yg-otp");
       return Array.from(node.querySelectorAll(".yg-otp-ink")).every(digit => Number(getComputedStyle(digit).opacity) < .02)

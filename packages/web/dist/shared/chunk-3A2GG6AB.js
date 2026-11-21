@@ -404,30 +404,12 @@ import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
 function ExpandCard({ title, children }) {
   const card = useRef3(null);
   const [open, setOpen] = useState3(false);
-  const [motion] = useState3(() => ({ shape: spring(0, 240, 21), copy: spring(0, 260, 28) }));
   useLayoutEffect2(() => {
     const root = card.current;
     if (!root) return;
-    motion.shape.target = Number(open);
-    if (!open) motion.copy.target = 0;
-    const paint = () => {
-      root.style.setProperty("--yg-card-expansion", String(motion.shape.position));
-      root.style.setProperty("--yg-card-content", String(motion.copy.position));
-    };
-    const states = Object.values(motion);
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (open && reduced) motion.copy.target = 1;
-    let stop = playSprings(states, paint);
-    const reveal = open && !reduced ? setTimeout(() => {
-      motion.copy.target = 1;
-      stop();
-      stop = playSprings(states, paint);
-    }, 160) : void 0;
-    return () => {
-      clearTimeout(reveal);
-      stop();
-    };
-  }, [motion, open]);
+    root.style.setProperty("--yg-card-expansion", String(Number(open)));
+    root.style.setProperty("--yg-card-content", String(Number(open)));
+  }, [open]);
   return /* @__PURE__ */ jsxs3("details", { ref: card, className: "yg-expand-card", onToggle: (event) => setOpen(event.currentTarget.open), children: [
     /* @__PURE__ */ jsxs3("summary", { children: [
       /* @__PURE__ */ jsx3("span", { className: "yg-expand-art", "aria-hidden": "true" }),

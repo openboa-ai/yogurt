@@ -1,9 +1,8 @@
 "use client";
 
-import { useId, useLayoutEffect, useRef, useState } from "react";
+import { useId, useState, type CSSProperties } from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 import { Command } from "../controls/advanced.js";
-import { animateSpringPicker } from "./spring-picker-motion.js";
 
 /** A contextual note that can be revealed with a pointer or keyboard focus. */
 export function MorphTooltip({ label, detail }: { label: string; detail: string }) {
@@ -40,52 +39,21 @@ export function SpringDropdown({ label, value, onChange, options }: {
 }) {
   const id = useId();
   const [portal, setPortal] = useState<HTMLDivElement | null>(null);
-  const dismissTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const keepSelectionVisible = useRef(false);
-  const motion = useRef<ReturnType<typeof animateSpringPicker> | null>(null);
   const [open, setOpen] = useState(false);
   const selected = options.find(option => option.id === value);
-  const [roll, setRoll] = useState({value, previous: undefined as string | undefined});
-  if (roll.value !== value) setRoll({value, previous: roll.value});
-  const previous = options.find(option => option.id === roll.previous);
-  useLayoutEffect(() => {
-    if (!portal) return;
-    const controller = animateSpringPicker(portal);
-    motion.current = controller;
-    return () => { controller.dispose(); motion.current = null; };
-  }, [portal]);
-  useLayoutEffect(() => () => clearTimeout(dismissTimer.current), []);
+  const settledStyle = {
+    "--yg-picker-open": 1,
+    "--yg-picker-opacity": 1,
+    "--yg-picker-row": 1,
+    "--yg-picker-chevron-now": open ? "180deg" : "0deg",
+  } as CSSProperties;
 
-  function changeOpen(open: boolean) {
-    if (!open && keepSelectionVisible.current) {
-      keepSelectionVisible.current = false;
-      return;
-    }
-    clearTimeout(dismissTimer.current);
-    setOpen(open);
-    if (open) motion.current?.press(.965);
-  }
-
-  function select(next: string) {
-    if (open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      motion.current?.press(.955);
-      keepSelectionVisible.current = true;
-      clearTimeout(dismissTimer.current);
-      dismissTimer.current = setTimeout(() => setOpen(false), 240);
-    }
-    onChange(next);
-  }
-
-  return <div ref={setPortal} className="yg-spring-dropdown" data-open={open} data-value={value}>
+  return <div ref={setPortal} className="yg-spring-dropdown" data-open={open} data-value={value} style={settledStyle}>
     <label id={id} className="yg-spring-label">{label}</label>
-    <SelectPrimitive.Root value={value} onValueChange={select} open={open} onOpenChange={changeOpen}>
+    <SelectPrimitive.Root value={value} onValueChange={onChange} open={open} onOpenChange={setOpen}>
       <SelectPrimitive.Trigger className="yg-spring-trigger" aria-labelledby={id}>
         <span className="yg-spring-value">
-          {previous && <span key={`previous-${value}`} className="yg-spring-value-roll" data-outgoing aria-hidden="true">
-            <span className="yg-spring-symbol" data-marker={previous.marker} />
-            <span className="yg-spring-value-label">{previous.label}</span>
-          </span>}
-          <span key={value} className="yg-spring-value-roll" data-incoming={previous ? "" : undefined}>
+          <span key={value} className="yg-spring-value-roll">
             <span className="yg-spring-symbol" data-marker={selected?.marker} aria-hidden="true" />
             <span className="yg-spring-value-label">
               <SelectPrimitive.Value placeholder="Choose an option" />
@@ -100,9 +68,8 @@ export function SpringDropdown({ label, value, onChange, options }: {
         </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal container={portal}>
-        <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={8} collisionPadding={16}>
+        <SelectPrimitive.Content className="yg-spring-menu" style={{ animation: "none" }} position="popper" sideOffset={8} collisionPadding={16}>
           <SelectPrimitive.Viewport className="yg-spring-viewport">
-            <span className="yg-spring-highlight" aria-hidden="true" />
             {options.map(option => <SelectPrimitive.Item key={option.id} value={option.id} className="yg-spring-option">
               <span className="yg-spring-symbol" data-marker={option.marker} aria-hidden="true" />
               <SelectPrimitive.ItemText>{option.label}</SelectPrimitive.ItemText>

@@ -7,27 +7,12 @@ import { advanceSprings, playSprings, snap, spring } from "../foundation/spring-
 export function ExpandCard({ title, children }: { title: string; children: ReactNode }) {
   const card = useRef<HTMLDetailsElement>(null);
   const [open, setOpen] = useState(false);
-  const [motion] = useState(() => ({shape: spring(0,240,21), copy: spring(0,260,28)}));
   useLayoutEffect(() => {
     const root = card.current;
     if (!root) return;
-    motion.shape.target = Number(open);
-    if (!open) motion.copy.target = 0;
-    const paint = () => {
-      root.style.setProperty("--yg-card-expansion", String(motion.shape.position));
-      root.style.setProperty("--yg-card-content", String(motion.copy.position));
-    };
-    const states = Object.values(motion);
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (open && reduced) motion.copy.target = 1;
-    let stop = playSprings(states, paint);
-    const reveal = open && !reduced ? setTimeout(() => {
-      motion.copy.target = 1;
-      stop();
-      stop = playSprings(states, paint);
-    }, 160) : undefined;
-    return () => { clearTimeout(reveal); stop(); };
-  }, [motion, open]);
+    root.style.setProperty("--yg-card-expansion", String(Number(open)));
+    root.style.setProperty("--yg-card-content", String(Number(open)));
+  }, [open]);
   return (
     <details ref={card} className="yg-expand-card" onToggle={event => setOpen(event.currentTarget.open)}>
       <summary><span className="yg-expand-art" aria-hidden="true" /><span className="yg-expand-title">{title}</span><span className="yg-card-disclosure"><Icon name="plus" /></span></summary>

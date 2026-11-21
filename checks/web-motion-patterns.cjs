@@ -161,52 +161,29 @@ async function run(browser) {
     const dropdown = await demo("spring-dropdown");
     const view = dropdown.getByRole("combobox", {name:"Work status"});
     const trigger = dropdown.locator(".yg-spring-trigger");
-    const reveal = dropdown.evaluate(node => new Promise(resolve => {
-      let observed = false;
-      let overshot = false;
-      const deadline = performance.now() + 1200;
-      const sample = () => {
-        const menu = node.querySelector(".yg-spring-menu[data-state='open']");
-        if (menu) {
-          const style = getComputedStyle(menu);
-          const height = Number(style.getPropertyValue("--yg-picker-open"));
-          const opacity = Number(style.opacity);
-          const rows = menu.querySelectorAll("[role='option']");
-          const staggered = Number(getComputedStyle(rows[0]).opacity) > Number(getComputedStyle(rows[3]).opacity);
-          observed ||= height > 0 && height < 1 && opacity > 0 && opacity < 1 && staggered;
-          overshot ||= height > 1.015;
-        }
-        if ((observed && overshot) || performance.now() > deadline) resolve({observed, overshot});
-        else requestAnimationFrame(sample);
-      };
-      requestAnimationFrame(sample);
-    }));
     await view.press("Space");
     const options = page.getByRole("listbox");
     await options.waitFor();
-    assert.deepEqual(await reveal, {observed: true, overshot: true},
-      "The gallery animates opacity and row stagger independently of the menu height overshoot");
+    assert.equal(await trigger.getAttribute("aria-expanded"), "true");
     await page.keyboard.press("ArrowDown");
-    await page.waitForFunction(() => {
-      const row = document.querySelector(".yg-spring-option[data-highlighted]");
-      const highlight = document.querySelector(".yg-spring-highlight[data-ready]");
-      return row && highlight &&
-        Math.abs(parseFloat(highlight.style.getPropertyValue("--yg-spring-active-y")) - row.offsetTop) < .25;
-    });
     await page.waitForFunction(() => document.activeElement?.textContent.includes("In review"));
     await page.keyboard.press("Escape");
     await options.waitFor({state:"hidden"});
     await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
+    assert.equal(await view.getAttribute("aria-expanded"), "false");
     await view.click();
     const review = options.getByRole("option", {name:"In review"});
     await review.click();
     assert.match(await trigger.textContent(), /In review/);
-    assert.equal(await trigger.getAttribute("aria-expanded"), "true", "Selection draws its check before folding the menu");
-    await page.waitForFunction(() => {
-      const check = document.querySelector('.yg-spring-option[data-state="checked"] .yg-spring-check path');
-      const offset = check ? parseFloat(getComputedStyle(check).strokeDashoffset) : 0;
-      return offset > 0 && offset < 22;
-    });
+    await options.waitFor({state:"hidden"});
+    await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
+    assert.equal(await view.getAttribute("aria-expanded"), "false");
+    await view.click();
+    const selectedReview = options.getByRole("option", {name:"In review"});
+    assert.equal(await selectedReview.getAttribute("data-state"), "checked");
+    assert.equal(await selectedReview.locator(".yg-spring-check path").evaluate(node =>
+      parseFloat(getComputedStyle(node).strokeDashoffset)), 0);
+    await page.keyboard.press("Escape");
     await options.waitFor({state:"hidden"});
     await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
 
@@ -541,7 +518,7 @@ async function checkColorRoles(browser, colorScheme) {
     await expectRole(currentMarker, "signal-warning");
     await view.click();
     await neutral(page.getByRole("listbox"));
-    await neutral(page.locator(".yg-spring-highlight[data-ready]"));
+    await neutral(page.locator(".yg-spring-option[data-highlighted]"));
     const review = page.getByRole("option", {name: "In review"});
     await expectRole(review.locator(".yg-spring-symbol"), "action");
     await review.click();

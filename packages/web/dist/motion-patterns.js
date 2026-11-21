@@ -8,7 +8,7 @@ import {
   ProfileCard,
   SlideConfirm,
   StatCard
-} from "./shared/chunk-LJWZZF4Y.js";
+} from "./shared/chunk-3A2GG6AB.js";
 import {
   MentionOptions,
   PromptAction,
@@ -311,185 +311,7 @@ function LetterLimit({ label, value, onChange, limit, placeholder, onSubmit }) {
 }
 
 // packages/web/src/patterns/motion-layers.tsx
-import { useId as useId3, useLayoutEffect, useRef as useRef3, useState as useState3 } from "react";
-
-// packages/web/src/patterns/spring-picker-motion.ts
-var clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
-function animateSpringPicker(root) {
-  const preference = matchMedia("(prefers-reduced-motion: reduce)");
-  const height = spring(0, 300, 23), lift = spring(0, 260, 24);
-  const chevron = spring(0, 300, 18), alpha = spring(0, 400, 34);
-  const press = spring(1, 500, 18), roll = spring(1, 340, 26);
-  const top = spring(6, 620, 36), bottom = spring(50, 620, 36), highlightAlpha = spring(0, 400, 32);
-  const springs = [height, lift, chevron, alpha, press, roll, top, bottom, highlightAlpha];
-  let menu = null;
-  let marker = null;
-  let rows = [], runningSprings = springs;
-  let active = -1, maxHeight = 0;
-  let open = false, now = 0, frame = 0, value = root.dataset.value;
-  function paint() {
-    const fraction = maxHeight > 0 ? height.position / maxHeight : 0;
-    root.style.setProperty("--yg-picker-lift-now", `${lift.position}px`);
-    root.style.setProperty("--yg-picker-chevron-now", `${chevron.position * 180}deg`);
-    root.style.setProperty("--yg-picker-press-now", String(press.position));
-    root.style.setProperty("--yg-picker-roll-in", String(roll.position));
-    if (!menu) return;
-    menu.style.setProperty("--yg-picker-open", String(clamp(fraction, 0, 1.06)));
-    menu.style.setProperty("--yg-picker-opacity", String(clamp(alpha.position)));
-    rows.forEach(({ element, path, amount, check }) => {
-      element.style.setProperty("--yg-picker-row", String(amount.position));
-      if (path) path.style.strokeDashoffset = `${22 * (1 - clamp(check.position))}px`;
-    });
-    if (!marker) return;
-    const y = clamp(Math.min(top.position, bottom.position - 16), 6, Math.max(6, maxHeight - 22));
-    const end = clamp(bottom.position, y + 16, Math.max(y + 16, maxHeight - 6));
-    marker.style.setProperty("--yg-spring-active-y", `${y}px`);
-    marker.style.setProperty("--yg-spring-active-height", `${end - y}px`);
-    marker.style.setProperty("--yg-spring-opacity", String(clamp(highlightAlpha.position)));
-  }
-  function tick(timestamp) {
-    frame = 0;
-    const elapsed = now ? (timestamp - now) / 1e3 : 0;
-    now = timestamp;
-    let waiting = false;
-    rows.forEach((row) => {
-      if (row.due === Infinity) return;
-      if (timestamp < row.due) waiting = true;
-      else {
-        row.amount.target = Number(open);
-        row.due = Infinity;
-      }
-    });
-    const moving = advanceSprings(runningSprings, elapsed);
-    paint();
-    if (waiting || moving) frame = requestAnimationFrame(tick);
-    else now = 0;
-  }
-  function play() {
-    if (preference.matches || frame) return;
-    now = performance.now();
-    frame = requestAnimationFrame(tick);
-  }
-  function highlight(index, immediately) {
-    const row = rows[index]?.element;
-    if (!row || index === active && !immediately) return;
-    const y = row.offsetTop, end = y + row.offsetHeight;
-    if (immediately || active < 0) {
-      snap(top, y);
-      snap(bottom, end);
-    } else {
-      const leading = index > active ? bottom : top;
-      const trailing = index > active ? top : bottom;
-      leading.stiffness = 620;
-      leading.damping = 36;
-      trailing.stiffness = 200;
-      trailing.damping = 20;
-      top.target = y;
-      bottom.target = end;
-    }
-    active = index;
-    highlightAlpha.target = 1;
-    marker?.setAttribute("data-ready", "");
-  }
-  function update() {
-    const list = root.querySelector(".yg-spring-menu");
-    const trigger = root.querySelector(".yg-spring-trigger");
-    const next = root.dataset.open === "true";
-    let selected = -1;
-    if (list !== menu) {
-      if (menu) size.unobserve(menu);
-      menu = list;
-      if (menu) size.observe(menu);
-      marker = list?.querySelector(".yg-spring-highlight") ?? null;
-      active = -1;
-    }
-    if (list) {
-      const elements = Array.from(list.querySelectorAll(".yg-spring-option"));
-      const oldRows = new Map(rows.map((row) => [row.element, row]));
-      selected = elements.findIndex((row) => row.dataset.state === "checked");
-      rows = elements.map((element, index) => {
-        const existing = oldRows.get(element);
-        const checked = Number(index === selected);
-        const row = existing ?? {
-          element,
-          path: element.querySelector(".yg-spring-check path"),
-          amount: spring(open && !next ? 1 : 0, 300, 24),
-          check: spring(checked, 260, 26),
-          due: next ? performance.now() + 50 + index * 45 : Infinity
-        };
-        row.check.target = checked;
-        return row;
-      });
-      maxHeight = list.offsetHeight;
-    } else {
-      rows = [];
-    }
-    runningSprings = [...springs, ...rows.flatMap((row) => [row.amount, row.check])];
-    if (value !== root.dataset.value) {
-      value = root.dataset.value;
-      snap(roll, 0);
-      roll.target = 1;
-    }
-    if (next !== open) {
-      open = next;
-      const time = performance.now();
-      rows.forEach((row, index) => {
-        row.due = time + (open ? 50 + index * 45 : (rows.length - 1 - index) * 20);
-      });
-      if (open) highlight(Math.max(0, selected), true);
-      else {
-        active = -1;
-        highlightAlpha.target = 0;
-      }
-    }
-    const shown = open && !!list;
-    height.target = shown ? maxHeight : 0;
-    alpha.target = chevron.target = Number(shown);
-    const room = Math.max(0, (trigger?.getBoundingClientRect().top ?? 0) - lift.position - 16);
-    lift.target = shown && list?.dataset.side === "bottom" ? -Math.min(room, (8 + maxHeight) / 2) : 0;
-    if (shown) {
-      const hovered = rows.findIndex((row) => row.element.hasAttribute("data-highlighted"));
-      highlight(hovered >= 0 ? hovered : active >= 0 ? active : Math.max(0, selected), active < 0);
-    }
-    if (preference.matches) {
-      cancelAnimationFrame(frame);
-      frame = now = 0;
-      springs.forEach((s) => snap(s, s.target));
-      rows.forEach((row) => {
-        snap(row.amount, Number(open));
-        snap(row.check, row.check.target);
-      });
-    }
-    paint();
-    play();
-  }
-  const changes = new MutationObserver(update);
-  const size = new ResizeObserver(update);
-  changes.observe(root, {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    attributeFilter: ["data-open", "data-value", "data-side", "data-state", "data-highlighted"]
-  });
-  preference.addEventListener("change", update);
-  update();
-  return {
-    press(scale) {
-      if (preference.matches) return;
-      press.position = scale;
-      paint();
-      play();
-    },
-    dispose() {
-      changes.disconnect();
-      size.disconnect();
-      preference.removeEventListener("change", update);
-      cancelAnimationFrame(frame);
-    }
-  };
-}
-
-// packages/web/src/patterns/motion-layers.tsx
+import { useId as useId3, useState as useState3 } from "react";
 import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
 function MorphTooltip({ label, detail }) {
   const id = useId3();
@@ -532,56 +354,22 @@ function MorphTooltip({ label, detail }) {
 function SpringDropdown({ label, value, onChange, options }) {
   const id = useId3();
   const [portal, setPortal] = useState3(null);
-  const dismissTimer = useRef3(void 0);
-  const keepSelectionVisible = useRef3(false);
-  const motion = useRef3(null);
   const [open, setOpen] = useState3(false);
   const selected = options.find((option) => option.id === value);
-  const [roll, setRoll] = useState3({ value, previous: void 0 });
-  if (roll.value !== value) setRoll({ value, previous: roll.value });
-  const previous = options.find((option) => option.id === roll.previous);
-  useLayoutEffect(() => {
-    if (!portal) return;
-    const controller = animateSpringPicker(portal);
-    motion.current = controller;
-    return () => {
-      controller.dispose();
-      motion.current = null;
-    };
-  }, [portal]);
-  useLayoutEffect(() => () => clearTimeout(dismissTimer.current), []);
-  function changeOpen(open2) {
-    if (!open2 && keepSelectionVisible.current) {
-      keepSelectionVisible.current = false;
-      return;
-    }
-    clearTimeout(dismissTimer.current);
-    setOpen(open2);
-    if (open2) motion.current?.press(0.965);
-  }
-  function select(next) {
-    if (open && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      motion.current?.press(0.955);
-      keepSelectionVisible.current = true;
-      clearTimeout(dismissTimer.current);
-      dismissTimer.current = setTimeout(() => setOpen(false), 240);
-    }
-    onChange(next);
-  }
-  return /* @__PURE__ */ jsxs3("div", { ref: setPortal, className: "yg-spring-dropdown", "data-open": open, "data-value": value, children: [
+  const settledStyle = {
+    "--yg-picker-open": 1,
+    "--yg-picker-opacity": 1,
+    "--yg-picker-row": 1,
+    "--yg-picker-chevron-now": open ? "180deg" : "0deg"
+  };
+  return /* @__PURE__ */ jsxs3("div", { ref: setPortal, className: "yg-spring-dropdown", "data-open": open, "data-value": value, style: settledStyle, children: [
     /* @__PURE__ */ jsx3("label", { id, className: "yg-spring-label", children: label }),
-    /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: select, open, onOpenChange: changeOpen, children: [
+    /* @__PURE__ */ jsxs3(dist_exports.Root, { value, onValueChange: onChange, open, onOpenChange: setOpen, children: [
       /* @__PURE__ */ jsxs3(dist_exports.Trigger, { className: "yg-spring-trigger", "aria-labelledby": id, children: [
-        /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value", children: [
-          previous && /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-outgoing": true, "aria-hidden": "true", children: [
-            /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": previous.marker }),
-            /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: previous.label })
-          ] }, `previous-${value}`),
-          /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", "data-incoming": previous ? "" : void 0, children: [
-            /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": selected?.marker, "aria-hidden": "true" }),
-            /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) })
-          ] }, value)
-        ] }),
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-value", children: /* @__PURE__ */ jsxs3("span", { className: "yg-spring-value-roll", children: [
+          /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": selected?.marker, "aria-hidden": "true" }),
+          /* @__PURE__ */ jsx3("span", { className: "yg-spring-value-label", children: /* @__PURE__ */ jsx3(dist_exports.Value, { placeholder: "Choose an option" }) })
+        ] }, value) }),
         /* @__PURE__ */ jsx3(dist_exports.Icon, { asChild: true, children: /* @__PURE__ */ jsx3(
           "svg",
           {
@@ -597,27 +385,24 @@ function SpringDropdown({ label, value, onChange, options }) {
           }
         ) })
       ] }),
-      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, collisionPadding: 16, children: /* @__PURE__ */ jsxs3(dist_exports.Viewport, { className: "yg-spring-viewport", children: [
-        /* @__PURE__ */ jsx3("span", { className: "yg-spring-highlight", "aria-hidden": "true" }),
-        options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
-          /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
-          /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
-          /* @__PURE__ */ jsx3(
-            "svg",
-            {
-              className: "yg-spring-check",
-              viewBox: "0 0 24 24",
-              fill: "none",
-              stroke: "currentColor",
-              strokeWidth: "2.2",
-              strokeLinecap: "round",
-              strokeLinejoin: "round",
-              "aria-hidden": "true",
-              children: /* @__PURE__ */ jsx3("path", { d: "m5 12.5 4.5 4.5L19 7.5", pathLength: "22" })
-            }
-          )
-        ] }, option.id))
-      ] }) }) })
+      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", style: { animation: "none" }, position: "popper", sideOffset: 8, collisionPadding: 16, children: /* @__PURE__ */ jsx3(dist_exports.Viewport, { className: "yg-spring-viewport", children: options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
+        /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
+        /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
+        /* @__PURE__ */ jsx3(
+          "svg",
+          {
+            className: "yg-spring-check",
+            viewBox: "0 0 24 24",
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: "2.2",
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            "aria-hidden": "true",
+            children: /* @__PURE__ */ jsx3("path", { d: "m5 12.5 4.5 4.5L19 7.5", pathLength: "22" })
+          }
+        )
+      ] }, option.id)) }) }) })
     ] })
   ] });
 }
@@ -626,15 +411,15 @@ function CommandButton({ label, items, onSelect }) {
 }
 
 // packages/web/src/patterns/tooltip-bar.tsx
-import { useEffect as useEffect2, useId as useId4, useLayoutEffect as useLayoutEffect2, useRef as useRef4, useState as useState4 } from "react";
+import { useEffect as useEffect2, useId as useId4, useLayoutEffect, useRef as useRef3, useState as useState4 } from "react";
 import { jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
 var unit = (value) => Math.min(1, Math.max(0, value));
 function MorphTooltipBar({ label, tools, value, onChange }) {
   const id = useId4();
-  const bar = useRef4(null);
-  const hide = useRef4(void 0);
+  const bar = useRef3(null);
+  const hide = useRef3(void 0);
   const [active, setActive] = useState4(null);
-  const lastActive = useRef4(null);
+  const lastActive = useRef3(null);
   const [dial] = useState4(() => ({
     tipLeft: spring(0, 620, 36),
     tipRight: spring(0, 620, 36),
@@ -645,7 +430,7 @@ function MorphTooltipBar({ label, tools, value, onChange }) {
     labels: /* @__PURE__ */ new Map()
   }));
   useEffect2(() => () => clearTimeout(hide.current), []);
-  useLayoutEffect2(() => {
+  useLayoutEffect(() => {
     const root = bar.current;
     if (!root) return;
     const buttons = Array.from(root.querySelectorAll("button[data-tool]"));
@@ -791,17 +576,17 @@ function MorphTooltipBar({ label, tools, value, onChange }) {
 }
 
 // packages/web/src/patterns/motion-conversation.tsx
-import { useId as useId5, useLayoutEffect as useLayoutEffect3, useRef as useRef5, useState as useState5 } from "react";
+import { useId as useId5, useLayoutEffect as useLayoutEffect2, useRef as useRef4, useState as useState5 } from "react";
 import { Fragment, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 function StreamingReply({ value, active = false }) {
-  const surface = useRef5(null);
-  const reply = useRef5(null);
-  const wait = useRef5(null);
-  const wasActive = useRef5(active);
-  const mounted = useRef5(false);
+  const surface = useRef4(null);
+  const reply = useRef4(null);
+  const wait = useRef4(null);
+  const wasActive = useRef4(active);
+  const mounted = useRef4(false);
   const [motion] = useState5(() => ({ width: spring(0, 260, 26), height: spring(40, 260, 26), waiting: spring(1, 300, 30) }));
   const streaming = active || wasActive.current;
-  useLayoutEffect3(() => {
+  useLayoutEffect2(() => {
     const box = surface.current, words = reply.current, thinking = wait.current;
     if (!box || !words || !thinking) return;
     let stop;
@@ -894,8 +679,8 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
 }
 function ThinkingIndicator({ label = "Thinking", active = true }) {
   const filter = useId5();
-  const node = useRef5(null);
-  useLayoutEffect3(() => {
+  const node = useRef4(null);
+  useLayoutEffect2(() => {
     if (!active || !node.current) return;
     const dots = Array.from(node.current.querySelectorAll("i"));
     const axes = dots.map(() => spring(0, 420, 14));
@@ -948,12 +733,12 @@ function ThinkingIndicator({ label = "Thinking", active = true }) {
 }
 
 // packages/web/src/patterns/motion-stepped.tsx
-import { useId as useId7, useLayoutEffect as useLayoutEffect5, useRef as useRef7, useState as useState6 } from "react";
+import { useId as useId7, useLayoutEffect as useLayoutEffect4, useRef as useRef6, useState as useState6 } from "react";
 
 // packages/web/src/patterns/elastic-range.tsx
-import { useId as useId6, useLayoutEffect as useLayoutEffect4, useRef as useRef6 } from "react";
+import { useId as useId6, useLayoutEffect as useLayoutEffect3, useRef as useRef5 } from "react";
 import { jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
-var clamp2 = (n, min, max) => Math.min(max, Math.max(min, n));
+var clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 var radius = 12;
 function animateRange(element, initial) {
   const preference = matchMedia("(prefers-reduced-motion: reduce)");
@@ -965,14 +750,14 @@ function animateRange(element, initial) {
   function paint() {
     const stretch = 1 + Math.min(Math.abs(thumb.velocity) / 2400, 0.4);
     element.style.setProperty("--yg-elastic-thumb", `${thumb.position}px`);
-    element.style.setProperty("--yg-elastic-fill", `${clamp2(thumb.position, 0, width) * clamp2((thumb.position - radius) / radius, 0, 1)}px`);
+    element.style.setProperty("--yg-elastic-fill", `${clamp(thumb.position, 0, width) * clamp((thumb.position - radius) / radius, 0, 1)}px`);
     element.style.setProperty("--yg-elastic-stretch", String(stretch * press.position));
     element.style.setProperty("--yg-elastic-squash", String(press.position / stretch));
     element.style.setProperty("--yg-elastic-drop-x", `${dropX.position}px`);
     element.style.setProperty("--yg-elastic-drop-y", `${dropY.position}px`);
     element.style.setProperty("--yg-elastic-drop-scale", String(dropScale.position));
-    element.style.setProperty("--yg-elastic-tilt", `${clamp2((dropX.position - thumb.position) * 0.9, -28, 28)}deg`);
-    element.style.setProperty("--yg-elastic-label-opacity", String(clamp2((dropScale.position - 0.7) / 0.25, 0, 1)));
+    element.style.setProperty("--yg-elastic-tilt", `${clamp((dropX.position - thumb.position) * 0.9, -28, 28)}deg`);
+    element.style.setProperty("--yg-elastic-label-opacity", String(clamp((dropScale.position - 0.7) / 0.25, 0, 1)));
   }
   function tick(time) {
     dropX.target = thumb.position;
@@ -1020,7 +805,7 @@ function animateRange(element, initial) {
       thumb.stiffness = 900;
       thumb.damping = 50;
       const limit = Math.max(radius, width - radius);
-      const edge = clamp2(raw, radius, limit);
+      const edge = clamp(raw, radius, limit);
       const off = raw - edge;
       thumb.target = edge + Math.sign(off) * 18 * (1 - 1 / (Math.abs(off) * 0.55 / 18 + 1));
       wake();
@@ -1047,13 +832,13 @@ function animateRange(element, initial) {
 }
 function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
   const id = useId6(), filter = useId6();
-  const rail = useRef6(null), hit = useRef6(null);
-  const motion = useRef6(null);
-  const drag = useRef6(null);
-  const hover = useRef6(false), focused = useRef6(false);
-  const ratio = max > min ? clamp2((value - min) / (max - min), 0, 1) : 0;
-  const valueOnMount = useRef6(ratio);
-  useLayoutEffect4(() => {
+  const rail = useRef5(null), hit = useRef5(null);
+  const motion = useRef5(null);
+  const drag = useRef5(null);
+  const hover = useRef5(false), focused = useRef5(false);
+  const ratio = max > min ? clamp((value - min) / (max - min), 0, 1) : 0;
+  const valueOnMount = useRef5(ratio);
+  useLayoutEffect3(() => {
     if (!rail.current) return;
     const controller = animateRange(rail.current, valueOnMount.current);
     motion.current = controller;
@@ -1062,7 +847,7 @@ function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
       motion.current = null;
     };
   }, []);
-  useLayoutEffect4(() => {
+  useLayoutEffect3(() => {
     motion.current?.controlled(ratio, drag.current !== null);
   }, [ratio]);
   function sync() {
@@ -1072,9 +857,9 @@ function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
     const rect = event.currentTarget.getBoundingClientRect();
     const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
     const raw = rtl ? rect.right - event.clientX : event.clientX - rect.left;
-    const next = clamp2((raw - radius) / Math.max(1, rect.width - radius * 2), 0, 1);
+    const next = clamp((raw - radius) / Math.max(1, rect.width - radius * 2), 0, 1);
     const increment = Number.isFinite(step) && step > 0 ? step : 1;
-    const value2 = clamp2(min + Math.round((max - min) * next / increment) * increment, min, max);
+    const value2 = clamp(min + Math.round((max - min) * next / increment) * increment, min, max);
     motion.current?.drag(next, raw);
     onChange(Number(value2.toFixed(10)));
   }
@@ -1088,7 +873,7 @@ function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
     const offsets = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1, PageUp: 2, PageDown: -2 };
     if (!(event.key in offsets) && event.key !== "Home" && event.key !== "End") return;
     event.preventDefault();
-    const next = event.key === "Home" ? min : event.key === "End" ? max : clamp2(value + offsets[event.key] * step, min, max);
+    const next = event.key === "Home" ? min : event.key === "End" ? max : clamp(value + offsets[event.key] * step, min, max);
     focused.current = true;
     sync();
     onChange(Number(next.toFixed(10)));
@@ -1188,8 +973,8 @@ function RangeSlider({
   minThumbGap = 0
 }) {
   const id = useId7();
-  const interval = useRef7(null);
-  const activeDrag = useRef7(null);
+  const interval = useRef6(null);
+  const activeDrag = useRef6(null);
   const [trackWidth, setTrackWidth] = useState6(0);
   const percent = (number) => max > min ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
   const first = percent(value);
@@ -1199,7 +984,7 @@ function RangeSlider({
     end: spring(last, 260, 24),
     merge: spring(0, 300, 26)
   }));
-  useLayoutEffect5(() => {
+  useLayoutEffect4(() => {
     const rail = interval.current;
     const root = rail?.parentElement;
     if (!rail || !root) return;
@@ -1427,9 +1212,9 @@ function PasswordStrength({ value, onChange }) {
   const [shown, setShown] = useState6(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
-  const meter = useRef7(null);
+  const meter = useRef6(null);
   const [bars] = useState6(() => Array.from({ length: 4 }, () => spring(0, 260, 24)));
-  useLayoutEffect5(() => {
+  useLayoutEffect4(() => {
     const fill = Array.from(meter.current?.querySelectorAll("i") ?? []);
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let stop;
