@@ -1,11 +1,10 @@
 "use client";
-import { useLayoutEffect, useRef, type ComponentProps, type ReactNode } from "react";
-import { SegmentedControl as SDKSegment, SegmentedControlItem } from "@ui-sdk/react/segmented-control";
-import { Tabs as SDKTabs, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
+import { type ComponentProps, type ReactNode } from "react";
+import { SegmentedControl as SDKSegment, SegmentedControlItem, SegmentedControlIndicator } from "@ui-sdk/react/segmented-control";
+import { Tabs as SDKTabs, TabsList, TabsPanel, TabsTab, TabsIndicator } from "@ui-sdk/react/tabs";
 import { Button } from "./actions.js";
 import { type Choices } from "./forms.js";
 import { cx, Icon, type IconName } from "../foundation/foundation.js";
-import { animateTabMarker } from "./tab-motion.js";
 
 export function Link(props: ComponentProps<"a"> & { href: string }) {
   return <a {...props} className={cx("yg-link", props.className)} />;
@@ -63,79 +62,6 @@ export function NavigationList({
   );
 }
 
-function SelectionMarker({ selector, presentation }: { selector: string; presentation?: "pill" | "dock" }) {
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useLayoutEffect(() => {
-    const marker = ref.current;
-    const group = marker?.parentElement;
-    if (!marker || !group) return;
-    if (presentation) return animateTabMarker(marker, group, presentation);
-
-    let previous: {
-      button: HTMLButtonElement;
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    } | undefined;
-    const measure = (allowSlide: boolean) => {
-      const button = group.querySelector<HTMLButtonElement>(selector);
-      if (!button?.offsetWidth || !button.offsetHeight) {
-        marker.removeAttribute("data-ready");
-        marker.removeAttribute("data-slide");
-        previous = undefined;
-        return;
-      }
-
-      const { offsetLeft: x, offsetTop: y, offsetWidth: width, offsetHeight: height } = button;
-      if (previous?.button === button && previous.x === x && previous.y === y &&
-          previous.width === width && previous.height === height) return;
-
-      // A move on the same row follows selection. Reflow and row changes settle immediately.
-      const switched = allowSlide && previous?.button !== button;
-      const labelMoving = previous?.button === button && marker.hasAttribute("data-slide") &&
-        Boolean(button.querySelector(".yg-tab-label")?.getAnimations().length);
-      const canSlide = previous?.y === y && (switched || labelMoving);
-      if (canSlide && switched && previous) marker.toggleAttribute("data-forward", x >= previous.x);
-      marker.toggleAttribute("data-slide", Boolean(canSlide));
-      marker.style.setProperty("--yg-selection-x", `${x}px`);
-      marker.style.setProperty("--yg-selection-y", `${y}px`);
-      marker.style.setProperty("--yg-selection-width", `${width}px`);
-      marker.style.setProperty("--yg-selection-height", `${height}px`);
-      marker.setAttribute("data-ready", "");
-      previous = { button, x, y, width, height };
-    };
-
-    const sizes = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => measure(false));
-    const observeSizes = () => {
-      if (!sizes) return;
-      sizes.disconnect();
-      sizes.observe(group);
-      group.querySelectorAll(":scope > button").forEach((button) => sizes.observe(button));
-    };
-    const changes = new MutationObserver((records) => {
-      if (records.some((record) => record.type === "childList")) observeSizes();
-      measure(true);
-    });
-    changes.observe(group, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ["aria-selected", "data-state", "dir"],
-    });
-    observeSizes();
-    measure(false);
-
-    return () => {
-      sizes?.disconnect();
-      changes.disconnect();
-    };
-  }, [presentation, selector]);
-
-  return <span ref={ref} className="yg-selection-marker" aria-hidden="true" />;
-}
-
 export function SegmentedControl({
   label,
   options,
@@ -154,7 +80,7 @@ export function SegmentedControl({
         if (v) onValueChange(v);
       }}
     >
-      <SelectionMarker selector=':scope > button[data-state="on"]' />
+      <SegmentedControlIndicator className="yg-selection-marker" data-ready="" aria-hidden="true" />
       {options.map((o) => (
         <SegmentedControlItem key={o.id} value={o.id} disabled={o.disabled}
           render={(props, state) => <button {...props} data-state={state.checked ? "on" : "off"} />}>
@@ -199,7 +125,7 @@ export function Tabs({
           .find((tab) => tab.dataset.ygTabId === id)?.focus();
         onValueChange(id);
       }}>
-        <SelectionMarker selector=':scope > button[aria-selected="true"]' presentation={presentation} />
+        <TabsIndicator className="yg-selection-marker" data-ready="" aria-hidden="true" />
         {items.map((o) => (
           <TabsTab key={o.id} value={o.id} disabled={o.disabled} data-yg-tab-id={o.id}
             onClick={() => { if (o.id === selected) onValueChange(o.id); }}

@@ -28,6 +28,8 @@ Preserve current public IDs, import paths, props, callback signatures and access
 - Restore the proposed caret at most once after the host commits the exact proposed replacement, and only if the same textarea remains focused and no later edit, caret move, blur or conflicting value has invalidated it. Host rejection cannot be presented as a committed selection; delayed acceptance cannot steal focus or apply an old caret to unrelated content. A later identical string after an intervening conflicting value is not proof that an old proposal was accepted.
 - Consume only the synchronously supplied list and perform no fetch. Add no query-notification or asynchronous search API in this scope. Recompute the active item against each current host list; do not infer identity from list order or display labels.
 
+Selecting an option dismisses the current token’s popup immediately, including while the host decision is deferred. The host still owns the draft and can accept, reject or replace it; later editing or token movement may open suggestions again. This prevents the pending list from intercepting unrelated actions without treating the proposal as committed.
+
 ## Presentation and accessibility
 
 Use the current shared surfaces, typography, spacing, motion roles and the existing mention list rather than adding a separate theme or ordinary outline. Keep the input, status, popup and actions within their host at 320px and wider; long drafts and candidate labels remain readable. A list may render outside a clipping ancestor only through an explicitly supported positioning and focus strategy.

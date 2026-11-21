@@ -104,10 +104,6 @@
   outline-offset: -2px;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-card-disclosure, .yg-fan-cards-list button {
-    transition: rotate var(--yg-travel) var(--yg-settle), translate var(--yg-travel) var(--yg-settle),
-      background-color var(--yg-travel) var(--yg-settle);
-  }
   .yg-fan-cards-list button[aria-pressed="true"] { translate: 0 -4px; }
   .yg-expand-card[open] .yg-expand-card-body, .yg-fan-detail, .yg-stat-value {
     animation: yg-card-arrive var(--yg-change) var(--yg-settle);
@@ -184,10 +180,6 @@
   .yg-fan-cards-list:not([data-many]) button { width: 134px; height: 180px; }
   .yg-fan-cards-list:not([data-many]) button:not([data-front]) :is(.yg-fan-index, .yg-fan-label) { opacity: 0; }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-fan-cards-list:not([data-many]) button { transition: background-color var(--yg-change); }
-}
 @media (prefers-reduced-motion: reduce) {
   .yg-expand-card-body { opacity: 1; translate: none; }
 }
-@media (prefers-reduced-motion: reduce) { .yg-fan-cards-list:not([data-many]) button { transition: none; } }

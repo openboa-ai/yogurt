@@ -36,12 +36,6 @@
   opacity: 0;
 }
 
-.yg-input,
-.yg-select,
-.yg-standalone {
-  transition: background-color var(--yg-motion-surface-focus);
-}
-
 .yg-pagination-value { display: inline-block; font-variant-numeric: tabular-nums; }
 .yg-root :is(.yg-badge, .yg-count, .yg-status, .yg-legend) {
   min-inline-size: 0;
@@ -50,41 +44,13 @@
 }
 .yg-progress > span { min-inline-size: 0; flex-wrap: wrap; overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-pagination-value { animation: yg-pagination-arrive var(--yg-motion-pagination) both; }
   @keyframes yg-pagination-arrive {
     from { opacity: .72; translate: 0 var(--boa-space-4); }
     to { opacity: 1; translate: 0 0; }
   }
 }
 
-.yg-switch [role="switch"] {
-  transition: background-color var(--yg-motion-switch-travel);
-}
-
-.yg-switch [role="switch"] > span {
-  transition:
-    transform var(--yg-motion-switch-travel),
-    background-color var(--yg-motion-switch-travel);
-}
-
-.yg-radio [role="radio"],
-.yg-toggle-item,
-.yg-rating label,
-.yg-otp-slots > span {
-  transition:
-    background-color var(--yg-change, var(--yg-travel)) var(--yg-settle),
-    color var(--yg-change, var(--yg-travel)) var(--yg-settle);
-}
-
-.yg-checkbox [role="checkbox"] {
-  transition: background-color var(--yg-motion-surface-focus),
-    transform var(--yg-motion-switch-travel);
-}
-
 @media (prefers-reduced-motion: no-preference) {
-  .yg-radio [role="radio"] > span {
-    transition: opacity var(--yg-motion-prompt-action), scale var(--yg-motion-prompt-action);
-  }
   .yg-radio [role="radio"] > span:is([data-starting-style], [data-ending-style]) {
     opacity: 0;
     scale: .6;
@@ -92,15 +58,11 @@
   .yg-checkbox-mixed {
     stroke-dasharray: 10;
     stroke-dashoffset: 10;
-    transition: stroke-dashoffset var(--yg-motion-task-check);
+
   }
   .yg-checkbox :is([data-state="indeterminate"], [data-indeterminate]) .yg-checkbox-mixed {
     stroke-dashoffset: 0;
   }
-  .yg-input:not(.yg-input-group):has(> input[type="search"]) > .yg-icon-button {
-    animation: yg-search-clear-arrive var(--yg-motion-prompt-action) both;
-  }
-  .yg-field > .yg-error { animation: yg-field-error-arrive var(--yg-motion-surface-focus) both; }
   @keyframes yg-search-clear-arrive {
     from { opacity: .65; scale: .86; }
     to { opacity: 1; scale: 1; }
@@ -108,10 +70,6 @@
   @keyframes yg-field-error-arrive {
     from { opacity: .8; translate: 0 var(--boa-space-2); }
     to { opacity: 1; translate: 0 0; }
-  }
-  .yg-toggle-item {
-    transition: background-color var(--yg-motion-picker-highlight),
-      color var(--yg-motion-picker-highlight), transform var(--yg-motion-prompt-action);
   }
   .yg-toggle-item:active:not(:disabled, [aria-disabled="true"]) {
     transform: scale(.97);
@@ -148,7 +106,7 @@
   background: var(--yg-inverse);
   transform: scaleX(var(--yg-progress-completion, 0));
   transform-origin: left center;
-  transition: transform var(--yg-change, var(--yg-travel)) var(--yg-settle);
+
 }
 
 .yg-progress-track:dir(rtl) > span {
@@ -173,10 +131,6 @@
   to { transform: translateX(-200%); }
 }
 
-.yg-toast {
-  animation: yg-toast-arrive var(--yg-change, var(--yg-travel)) var(--yg-settle);
-}
-
 @keyframes yg-toast-arrive {
   from {
     translate: 0 var(--boa-space-8);
@@ -198,19 +152,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .yg-input,
-  .yg-select,
-  .yg-standalone,
-  .yg-switch [role="switch"],
-  .yg-switch [role="switch"] > span,
-  .yg-checkbox [role="checkbox"],
-  .yg-radio [role="radio"],
-  .yg-toggle-item,
-  .yg-rating label,
-  .yg-otp-slots > span,
-  .yg-progress-track > span {
-    transition: none;
-  }
 
   .yg-progress progress:not([value]) + .yg-progress-track > span {
     margin-inline: auto;
@@ -225,8 +166,7 @@
 
 .yg-root .yg-button:where(:not([data-motion-baseline] *)) {
   box-shadow: inset 0 0 transparent;
-  transition: background-color var(--yg-press) linear,
-    box-shadow var(--yg-press) var(--yg-settle);
+
 }
 .yg-root .yg-button:where(:not([data-motion-baseline] *)):active:not(:disabled, [aria-disabled="true"]) {
   box-shadow: inset 0 2px color-mix(in srgb, var(--boa-color-neutral-950) 28%, transparent);
@@ -247,7 +187,7 @@
   }
   .yg-root .yg-select[data-dropdown]:where(:not([data-motion-baseline] *)) select:open::picker(select) {
     transform-origin: var(--yg-picker-origin);
-    animation: yg-picker-arrive var(--yg-motion-picker-lift);
+
   }
 }
 
@@ -258,32 +198,9 @@
 
 /* Keep the editable combobox panel inside the field's available width. */
 .yg-combo > .yg-options { box-sizing: border-box; }
-@media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
-  .yg-combo > .yg-options:not([hidden]) {
-    animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
-  }
-  .yg-anchor > .yg-anchored-panel:not([hidden]) {
-    animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
-  }
-  .yg-combo .yg-options [role="option"] {
-    transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
-  }
-  .yg-select[data-dropdown] select option {
-    transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
-  }
-  .yg-flyout [role="menuitem"],
-  .yg-flyout a,
-  .yg-command-list [role="option"] {
-    transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
-  }
-  .yg-root .yg-select[data-dropdown] > .yg-icon {
-    transition: rotate var(--yg-motion-picker-slide);
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .yg-combo > .yg-options:not([hidden]) { animation: none; }
   .yg-anchor > .yg-anchored-panel:not([hidden]) { animation: none; }
-  .yg-root .yg-select[data-dropdown] > .yg-icon { transition: none; }
 }
 
 @media (forced-colors: active) {
@@ -302,7 +219,7 @@
   --yg-carousel-direction: -1;
   display: flex;
   translate: calc(var(--yg-carousel-page) * var(--yg-carousel-direction) * 100% + var(--yg-carousel-drag));
-  transition: translate var(--yg-change) var(--yg-settle);
+
 }
 .yg-carousel-strip:dir(rtl) { --yg-carousel-direction: 1; }
 .yg-carousel-strip > div {
@@ -313,15 +230,10 @@
 .yg-carousel-card {
   scale: calc(1 - .075 * var(--yg-carousel-distance));
   translate: 0 calc(var(--boa-space-8) * var(--yg-carousel-distance));
-  transition: scale var(--yg-change) var(--yg-settle), translate var(--yg-change) var(--yg-settle);
-}
-.yg-carousel-strip[data-dragging],
-.yg-carousel-strip[data-dragging] .yg-carousel-card {
-  transition: none;
+
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .yg-carousel-strip, .yg-carousel-card { transition: none; }
   .yg-carousel-card { scale: 1; translate: none; }
   .yg-root .yg-select[data-dropdown]:where(:not([data-motion-baseline] *)) select:open::picker(select) {
     animation: none;
@@ -329,45 +241,18 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .yg-button[aria-busy="true"] .yg-button-pending {
-    animation: yg-result-arrive var(--yg-travel) var(--yg-arrive) both;
-  }
-
-  :is(.yg-input, .yg-select):has(:is(input, textarea, select)[aria-invalid="true"]) {
-    animation: yg-field-invalid var(--yg-change) var(--yg-settle);
-  }
-
-  :is(.yg-notice, .yg-result) {
-    animation: yg-result-arrive var(--yg-change) var(--yg-arrive) both;
-  }
 
   .yg-skeleton span { animation: yg-skeleton-breathe calc(2 * var(--yg-busy)) var(--yg-settle) infinite alternate; }
 
-  :is(.yg-status, .yg-badge)[data-tone] {
-    transition: color var(--yg-press) var(--yg-settle),
-      background-color var(--yg-press) var(--yg-settle);
-  }
-
-  :is(.yg-row, .yg-workspace-row-body, .yg-agent-row, .yg-nav-list a, .yg-attachment,
-      .yg-sidebar-item-row a, .yg-sidebar-item-row button, .yg-table-sort,
-      .yg-options [role="option"], .yg-anchored-panel [role="menuitem"]) {
-    transition: background-color var(--yg-press) var(--yg-settle),
-      border-color var(--yg-press) var(--yg-settle);
-  }
-
-  .yg-disclosure[open] > div {
-    animation: yg-result-arrive var(--yg-travel) var(--yg-settle) both;
-  }
-
   .yg-flyout[data-state="open"] {
     transform-origin: var(--radix-popper-transform-origin, top center);
-    animation: yg-floating-arrive var(--yg-motion-picker-lift);
+
   }
 
   .yg-accordion-content {
     height: var(--accordion-panel-height);
     overflow: clip;
-    transition: height var(--yg-motion-picker-slide), opacity var(--yg-motion-surface-focus);
+
   }
   .yg-accordion-content:is([data-starting-style], [data-ending-style]) {
     height: 0;
@@ -384,7 +269,7 @@
     .yg-disclosure::details-content {
       block-size: 0;
       overflow: clip;
-      transition: block-size var(--yg-motion-picker-slide), content-visibility var(--yg-panel) allow-discrete;
+
     }
     .yg-disclosure[open]::details-content { block-size: auto; }
   }
@@ -404,13 +289,6 @@
 @keyframes yg-floating-arrive {
   from { opacity: 0; translate: 0 calc(-1 * var(--boa-space-4)); scale: .98; }
   to { opacity: 1; translate: 0 0; scale: 1; }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .yg-bar-track i {
-    transition: inline-size var(--yg-motion-storage-fill),
-      inset-inline-start var(--yg-motion-storage-fill);
-  }
 }
 
 /* Keep one native input, with stable digit metrics while its slots join. */
@@ -443,7 +321,7 @@
   line-height: 1;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
-  transition: none;
+
 }
 .yg-otp-slots > span::before {
   content: "";

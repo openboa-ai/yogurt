@@ -364,11 +364,6 @@
   .yg-attachment progress::-webkit-progress-value { background: var(--yg-inverse); border-radius: var(--boa-radius-round); }
   .yg-attachment progress::-moz-progress-bar { background: var(--yg-inverse); border-radius: var(--boa-radius-round); }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-attachment button.yg-file-name { transition: color var(--yg-motion-surface-focus); }
-  .yg-attachment progress::-webkit-progress-value { transition: width var(--yg-motion-letter-progress); }
-  .yg-attachment progress::-moz-progress-bar { transition: width var(--yg-motion-letter-progress); }
-}
 .yg-marker {
   display: flex;
   align-items: center;

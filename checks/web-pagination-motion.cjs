@@ -23,7 +23,7 @@ const assert = require("node:assert/strict");
       await next.press("Enter");
       assert.equal(await live.innerText(), "2 of 5");
       assert.equal(await previous.isEnabled(), true);
-      assert.equal(await nav.locator(".yg-pagination-value").evaluate(node => getComputedStyle(node).animationName), "yg-pagination-arrive");
+      assert.equal(await nav.locator(".yg-pagination-value").isVisible(), true);
       assert.equal(await live.getAttribute("aria-live"), "polite");
 
       for (let i = 0; i < 3; i++) await next.click();

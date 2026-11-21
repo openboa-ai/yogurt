@@ -176,9 +176,7 @@
   letter-spacing: var(--boa-tracking-label);
   text-align: center;
   overflow-wrap: anywhere;
-  transition: background-color var(--yg-press) var(--yg-settle),
-    color var(--yg-change) var(--yg-settle),
-    box-shadow var(--yg-press) var(--yg-settle);
+
 }
 .yg-button[data-control-size="compact"] {
   min-block-size: var(--yg-button-size-compact);
@@ -232,7 +230,7 @@
 }
 .yg-button-label {
   min-inline-size: 0;
-  transition: transform var(--yg-press) var(--yg-settle);
+
 }
 .yg-button:active:not(:disabled, [aria-disabled="true"]) .yg-button-label {
   transform: translateY(1px);
@@ -310,7 +308,7 @@
   border: 0;
   border-radius: var(--yg-radius-control);
   padding: 0 var(--yg-inset-regular);
-  transition: background-color var(--yg-layer) var(--yg-settle);
+
 }
 :is(.yg-input, .yg-select):focus-within,
 .yg-standalone:focus-visible {
@@ -389,9 +387,6 @@
   }
   .yg-select[data-dropdown] select::picker-icon {
     display: none;
-  }
-  .yg-select[data-dropdown] > .yg-icon {
-    transition: rotate var(--yg-layer) var(--yg-settle);
   }
   .yg-select[data-dropdown] select:open + .yg-icon {
     rotate: 180deg;
@@ -494,7 +489,7 @@
   border: 0;
   border-radius: var(--boa-radius-round);
   background: var(--yg-off);
-  transition: background-color var(--yg-travel) var(--yg-settle);
+
 }
 .yg-switch [role="switch"]::before {
   content: "";
@@ -510,8 +505,7 @@
   height: var(--yg-thumb-size);
   background: var(--yg-thumb);
   border-radius: 50%;
-  transition: transform var(--yg-travel) var(--yg-settle),
-    background-color var(--yg-travel) var(--yg-settle);
+
 }
 .yg-switch [role="switch"]:is([data-state="checked"], [data-checked]) {
   background: var(--yg-signal-positive);
@@ -525,10 +519,9 @@
   transform: translateX(calc(-1 * var(--yg-thumb-travel)));
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-switch [role="switch"] { transition: background-color var(--yg-motion-switch-travel); }
   .yg-switch [role="switch"] > span {
     transform-origin: left center;
-    transition: transform var(--yg-motion-switch-travel), background-color var(--yg-motion-switch-travel);
+
   }
   .yg-switch [role="switch"]:is([data-state="checked"], [data-checked]) > span,
   .yg-switch [role="switch"]:not([data-state="checked"], [data-checked]):dir(rtl) > span {
@@ -580,10 +573,7 @@
 .yg-checkbox :is([data-state="checked"], [data-checked]) .yg-checkbox-check { stroke-dashoffset: 0; }
 .yg-checkbox :is([data-state="indeterminate"], [data-indeterminate]) .yg-checkbox-mixed { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-checkbox [role="checkbox"] { transition: background-color var(--yg-change) var(--yg-settle), transform var(--yg-travel) var(--yg-arrive); }
   .yg-checkbox [role="checkbox"]:active:not(:disabled) { transform: scale(.85); }
-  .yg-checkbox-check { transition: stroke-dashoffset var(--yg-motion-task-check); }
-  .yg-checkbox :is([data-state="checked"], [data-checked]) .yg-checkbox-check { transition-delay: 80ms; }
 }
 .yg-radio [role="radio"] > span {
   width: 6px;
@@ -677,7 +667,7 @@
   opacity: 1;
   visibility: visible;
   transform: translate(calc(-50% + var(--yg-tip-shift, 0px)), 0) scale(1);
-  transition-delay: 0s;
+
 }
 .yg-tip[data-side="below"] {
   inset-block-start: calc(100% + var(--boa-space-12));
@@ -685,13 +675,6 @@
   transform-origin: 50% -40%;
 }
 .yg-tip[data-side="below"]::after { top: -4px; bottom: auto; }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-tip {
-    transition: opacity var(--yg-motion-tooltip-arrive), transform var(--yg-motion-card-detail),
-      visibility 0s linear 435ms;
-  }
-  .yg-tip[data-open="true"] { transition-delay: 0s; }
-}
 @keyframes yg-enter {
   from {
     translate: var(--yg-enter-x, 0) var(--yg-enter-y, 0);
@@ -824,9 +807,6 @@
 }
 .yg-disclosure summary::-webkit-details-marker {
   display: none;
-}
-.yg-disclosure summary svg {
-  transition: transform var(--yg-travel) var(--yg-settle);
 }
 .yg-disclosure[open] summary svg {
   transform: rotate(180deg);
@@ -1045,7 +1025,7 @@
 }
 .yg-progress progress::-webkit-progress-value {
   background: var(--yg-inverse);
-  transition: width var(--yg-travel) var(--yg-settle);
+
 }
 .yg-progress progress::-moz-progress-bar {
   background: var(--yg-inverse);

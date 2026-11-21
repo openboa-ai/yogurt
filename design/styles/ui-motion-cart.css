@@ -85,10 +85,6 @@
   }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-cart-stepper {
-    transition: inline-size var(--yg-expand) var(--yg-cart-ease), color var(--yg-change) var(--yg-cart-ease),
-      background-color var(--yg-change) var(--yg-cart-ease);
-  }
   .yg-cart-roll:has(.yg-cart-previous) .yg-cart-current {
     animation: yg-cart-count 240ms var(--yg-cart-ease) both;
   }

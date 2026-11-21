@@ -20,7 +20,6 @@
   border-radius: var(--yg-radius-control);
   background: var(--yg-field);
   color: var(--yg-inverse);
-  transition: background-color var(--yg-change) var(--yg-settle);
 }
 .yg-work-event[data-state="running"] .yg-work-event-icon {
   background: var(--yg-field);

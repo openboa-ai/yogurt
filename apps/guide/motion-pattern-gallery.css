@@ -383,7 +383,7 @@
   color: var(--yg-on-inverse);
 }
 @media (forced-colors: none) {
-  .motion-pill-tabs .yg-tabs [role="tablist"]:has(> .yg-selection-marker[data-ready]) > [aria-selected="true"] {
+  .motion-pill-tabs .yg-tabs [role="tablist"]:has(> .yg-selection-marker[data-ready][style*="--active-tab-width"]) > [aria-selected="true"] {
     background: transparent;
   }
 }
@@ -450,7 +450,7 @@
   }
 }
 @media (forced-colors: none) {
-  .motion-bottom-bar .yg-tabs [role="tablist"]:not(:has(> .yg-selection-marker[data-ready])) > [aria-selected="true"] {
+  .motion-bottom-bar .yg-tabs [role="tablist"]:not(:has(> .yg-selection-marker[data-ready][style*="--active-tab-width"])) > [aria-selected="true"] {
     background: var(--yg-hover);
   }
 }

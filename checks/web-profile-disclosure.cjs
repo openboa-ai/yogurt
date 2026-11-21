@@ -50,9 +50,8 @@ loader:{'.css':'empty','.module.css':'empty'} }).outputFiles[0].text;
       await summary.focus(); await summary.press('Enter');
       assert.equal(await details.evaluate(node => node.open), true);
       await card.getByText('Reviews long documents and provides detailed observations to the team.').waitFor({state:'visible'});
-      if (await page.evaluate(() => CSS.supports('interpolate-size','allow-keywords'))) {
-        assert.match(await details.evaluate(node => getComputedStyle(node, '::details-content').transitionProperty), /block-size/);
-      }
+      const description = card.getByText('Reviews long documents and provides detailed observations to the team.');
+      assert.equal(await description.isVisible(), true);
       await summary.press('Enter'); await summary.press('Enter');
       assert.equal(await details.evaluate(node => node.open), true, 'rapid reversal keeps the last state');
       assert.equal(await summary.evaluate(node => node === document.activeElement), true);
@@ -60,11 +59,13 @@ loader:{'.css':'empty','.module.css':'empty'} }).outputFiles[0].text;
       await card.getByRole('button',{name:'Open profile'}).click();
       assert.equal(await page.evaluate(() => window.profileActions), 1);
       await page.emulateMedia({reducedMotion:'reduce'});
-      if (await page.evaluate(() => CSS.supports('interpolate-size','allow-keywords'))) {
-        assert.equal(await details.evaluate(node => getComputedStyle(node, '::details-content').transitionDuration), '0s');
-      }
       await summary.click();
       assert.equal(await details.evaluate(node => node.open), false);
+      assert.equal(await description.isVisible(), false);
+      await summary.focus(); await summary.press('Space');
+      assert.equal(await details.evaluate(node => node.open), true);
+      assert.equal(await description.isVisible(), true);
+      assert.equal(await summary.evaluate(node => node === document.activeElement), true);
       await page.close();
     }
     console.log('Profile disclosure exports, keyboard reversal, host actions, widths and reduced motion verified.');

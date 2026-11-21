@@ -237,8 +237,7 @@ async function run(browser) {
     assert.equal(rightInset, 3, "The checked thumb remains inside the track");
     await wifi.press("Space");
     assert.equal(await wifi.getAttribute("aria-checked"), "false");
-    assert(await wifi.locator("span").first().evaluate(node =>
-      node.getAnimations().some(animation => animation.id === "yg-switch-stretch")));
+    assert.equal(await wifi.evaluate(node => node === document.activeElement), true);
     await wifi.press("Space");
     assert.equal(await wifi.getAttribute("aria-checked"), "true");
 

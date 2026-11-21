@@ -155,18 +155,13 @@
 .yg-file-drop-status:empty { display: none; }
 @media (pointer: coarse) { .yg-mention-layer { --yg-mention-row: var(--yg-size-touch); } .yg-mention textarea { font: var(--yg-font-touch); } }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-mention-layer { transition: block-size var(--yg-motion-storage-disclose), opacity var(--yg-motion-picker-opacity); }
   .yg-mention-layer[data-open="true"] button {
     animation: yg-mention-row var(--yg-motion-picker-row) both;
     animation-delay: calc(min(var(--yg-mention-index), 5) * 25ms);
   }
-  .yg-file-drop { transition: background-color var(--yg-travel) var(--yg-settle); }
-  .yg-file-drop-mark, .yg-file-drop-progress { transition: opacity var(--yg-motion-picker-opacity), translate var(--yg-motion-picker-slide); }
   .yg-file-drop:is([data-processing], [data-accepted]) .yg-file-drop-mark { translate: 0 -12px; }
   .yg-file-drop[data-processing] .yg-file-drop-core { animation: yg-file-gulp var(--yg-motion-file-press); }
   .yg-file-drop[data-accepted] .yg-file-drop-core { animation: yg-file-done var(--yg-motion-file-press); }
-  .yg-file-drop-check { transition: opacity var(--yg-motion-picker-opacity); }
-  .yg-file-drop-check path { transition: stroke-dashoffset var(--yg-motion-file-check); }
   .yg-file-drop-copy strong { animation: yg-file-caption var(--yg-motion-picker-slide); }
 }
 @keyframes yg-mention-row { from { opacity: 0; translate: 0 -8px; } }
@@ -177,7 +172,6 @@
 .yg-mention-list-heading span { font-variant-numeric: tabular-nums; }
 
 @media (prefers-reduced-motion: no-preference) {
-  .yg-file-drop-core { transition: transform var(--yg-motion-file-press), background-color var(--yg-motion-storage-lift); }
   .yg-file-drop[data-dragging] .yg-file-drop-core { transform: scale(1.06); }
 }
 
@@ -188,7 +182,5 @@
 .yg-mention-list { box-sizing: border-box; }
 .yg-mention-list button { box-sizing: border-box; gap: 10px; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-mention-list button { transition: background-color 160ms var(--yg-settle); }
-  .yg-mention-list button > span { transition: transform 160ms var(--yg-settle), background-color 160ms var(--yg-settle); }
   .yg-mention-list button[aria-selected="true"] > span { transform: scale(1.08); }
 }

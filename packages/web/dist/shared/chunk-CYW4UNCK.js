@@ -3,7 +3,7 @@ import {
   advanceSprings,
   snap,
   spring
-} from "./chunk-DRQJWO7S.js";
+} from "./chunk-LWILOQUT.js";
 
 // packages/web/src/patterns/prompt-shared.tsx
 import { useCallback, useLayoutEffect, useRef } from "react";
@@ -204,7 +204,7 @@ function useMention({ people, value, onChange, collapsedOnly = false }) {
     const space = suffix && /^\s/.test(suffix) ? "" : " ";
     const nextCaret = start + replacement.length + space.length;
     const next = value.slice(0, start) + replacement + space + suffix;
-    setDismissed(null);
+    setDismissed(tokenKey);
     setActiveId(null);
     if (next === value) moveCaret(nextCaret);
     else {

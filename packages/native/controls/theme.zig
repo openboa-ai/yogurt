@@ -22,6 +22,9 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
             .sheet = .{ .radius = ui.radius_sheet },
             .switch_control = .{ .background = r.off, .active_background = r.signal_positive, .foreground = r.thumb, .active_foreground = r.on_signal_positive },
             .progress = .{ .background = r.field, .active_background = r.inverse },
+            .badge = .{ .background = r.field, .foreground = r.muted, .radius = ui.radius_small, .stroke_width = 0 },
+            .skeleton = .{ .radius = ui.radius_small },
+            .separator = .{ .background = r.hover },
             .button_primary = .{ .background = r.inverse, .hover_background = r.inverse_hover, .pressed_background = r.inverse_press, .foreground = r.on_inverse, .radius = ui.radius_control, .disabled_background = r.hover, .disabled_foreground = r.muted },
             .button_secondary = .{ .background = r.field, .foreground = r.text, .hover_background = r.hover, .radius = ui.radius_control, .stroke_width = 0 },
             .input = .{ .background = r.field, .foreground = r.text, .radius = ui.radius_control, .stroke_width = 0 },
@@ -33,6 +36,7 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
     });
     if (high_contrast) {
         result.colors.text_muted = r.text;
+        result.controls.badge.foreground = r.text;
         result.controls.card.stroke_width = 1;
         result.controls.panel.stroke_width = 1;
         result.controls.popover.stroke_width = 1;

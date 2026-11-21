@@ -51,7 +51,17 @@
   border: 1px solid transparent;
   pointer-events: none;
 }
+.yg-tabs .yg-selection-marker {
+  --yg-selection-x: var(--active-tab-left, 0px);
+  --yg-selection-y: var(--active-tab-top, 0px);
+  --yg-selection-width: var(--active-tab-width, 0px);
+  --yg-selection-height: var(--active-tab-height, 0px);
+}
 .yg-segment > .yg-selection-marker {
+  --yg-selection-x: var(--segmented-control-indicator-left, 0px);
+  --yg-selection-y: var(--segmented-control-indicator-top, 0px);
+  --yg-selection-width: var(--segmented-control-indicator-width, 0px);
+  --yg-selection-height: var(--segmented-control-indicator-height, 0px);
   background: var(--yg-inverse);
   border: 0;
   border-radius: var(--yg-segment-option-radius);
@@ -69,15 +79,15 @@
   .yg-selection-marker[data-ready] {
     display: block;
   }
-  .yg-tabs [role="tablist"]:has(> .yg-selection-marker[data-ready]) > [aria-selected="true"],
-  .yg-segment:has(> .yg-selection-marker[data-ready]) > button[data-state="on"] {
+  .yg-tabs [role="tablist"]:has(> .yg-selection-marker[data-ready][style*="--active-tab-width"]) > [aria-selected="true"],
+  .yg-segment:has(> .yg-selection-marker[data-ready][style*="--segmented-control-indicator-width"]) > button[data-state="on"] {
     background: transparent;
   }
 }
 
 @supports (mix-blend-mode: difference) {
   @media (forced-colors: none) {
-    .yg-segment:has(> .yg-selection-marker[data-ready]) > button {
+    .yg-segment:has(> .yg-selection-marker[data-ready][style*="--segmented-control-indicator-width"]) > button {
       color: var(--boa-color-neutral-0);
       mix-blend-mode: difference;
     }
@@ -174,7 +184,7 @@
   background: var(--yg-inverse);
 }
 @media (forced-colors: none) {
-  .yg-tabs[data-presentation="pill"] [role="tablist"]:has(> .yg-selection-marker[data-ready]) > [aria-selected="true"] {
+  .yg-tabs[data-presentation="pill"] [role="tablist"]:has(> .yg-selection-marker[data-ready][style*="--active-tab-width"]) > [aria-selected="true"] {
     background: transparent;
   }
 }

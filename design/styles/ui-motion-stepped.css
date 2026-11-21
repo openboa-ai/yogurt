@@ -47,7 +47,7 @@
 .yg-motion-password label, .yg-motion-dial > label { font-weight: 600; }
 .yg-motion-password > input { box-sizing: border-box; inline-size: 100%; padding: var(--yg-inset-regular); border: 1px solid var(--yg-off); border-radius: var(--yg-radius-control); background: var(--yg-field); color: inherit; font: inherit; }
 .yg-motion-password-meter { display: flex; gap: var(--yg-gap-tight); }
-.yg-motion-password-meter span { flex: 1; height: 4px; border-radius: var(--yg-radius-inset); background: var(--yg-field); transition: background-color var(--yg-change, var(--yg-change)); }
+.yg-motion-password-meter span { flex: 1; height: 4px; border-radius: var(--yg-radius-inset); background: var(--yg-field);  }
 .yg-motion-password-meter span[data-active] { background: var(--yg-inverse); }
 .yg-motion-password-checks { font-size: .85em; color: var(--yg-muted); }
 .yg-motion-password-checks ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: var(--yg-gap-tight); }
@@ -59,12 +59,11 @@
 .yg-motion-checklist-item input { accent-color: var(--yg-inverse); }
 .yg-motion-dial { justify-items: center; }
 .yg-motion-dial-face { position: relative; display: grid; place-items: center; inline-size: 144px; aspect-ratio: 1; border: 1px solid var(--yg-off); border-radius: 50%; background: var(--yg-field); box-shadow: inset 0 0 0 8px var(--yg-surface, transparent); }
-.yg-motion-dial-marker { position: absolute; inset: 8px; border-radius: 50%; transform: rotate(var(--yg-dial-angle)); transition: transform var(--yg-change, var(--yg-change)) var(--yg-settle, ease); }
+.yg-motion-dial-marker { position: absolute; inset: 8px; border-radius: 50%; transform: rotate(var(--yg-dial-angle));  }
 .yg-motion-dial-marker::before { content: ""; position: absolute; inset-block-start: 0; inset-inline-start: calc(50% - 2px); inline-size: 4px; block-size: 13px; border-radius: var(--yg-radius-inset); background: var(--yg-inverse); }
 .yg-motion-dial-value { max-inline-size: 90px; text-align: center; font-weight: 600; }
 .yg-motion-dial-options { inline-size: 100%; flex-wrap: wrap; }
 .yg-motion-dial-options [data-selected] { color: var(--yg-text, inherit); font-weight: 600; }
-@media (prefers-reduced-motion: reduce) { .yg-motion-password-meter span, .yg-motion-dial-marker { transition: none; } }
 
 .yg-motion-password > input { padding: var(--yg-inset-regular) var(--yg-inset-row); border-color: var(--yg-surface-edge); background: color-mix(in srgb, var(--yg-surface) 78%, var(--yg-field)); }
 .yg-motion-password > input:focus-visible { outline: 2px solid var(--yg-inverse); outline-offset: 2px; }
@@ -106,13 +105,10 @@
 .yg-motion-password-eye { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border: 0; border-radius: 12px; background: transparent; color: var(--yg-muted); cursor: pointer; }
 .yg-motion-password-eye:focus-visible { outline: 2px solid var(--yg-inverse); }
 .yg-motion-password-eye svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.9; }
-.yg-motion-password-slash { stroke-dasharray: 22; stroke-dashoffset: 0; transition: stroke-dashoffset var(--yg-change) var(--yg-settle); }
+.yg-motion-password-slash { stroke-dasharray: 22; stroke-dashoffset: 0;  }
 .yg-motion-password-eye[aria-pressed="true"] .yg-motion-password-slash { stroke-dashoffset: 22; }
 .yg-motion-password-eye circle { transform-origin: 12px 12px; scale: .5; }
 .yg-motion-password-eye[aria-pressed="true"] circle { scale: 1; }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-motion-password-eye circle { transition: scale var(--yg-motion-picker-slide); }
-}
 .yg-motion-password-meter { gap: 6px; margin-top: 12px; }
 .yg-motion-password-meter span { height: 5px; overflow: hidden; border-radius: 3px; background: var(--yg-field); }
 .yg-motion-password-meter i {
@@ -135,10 +131,6 @@
   .yg-motion-password-checks { display: grid; gap: 3px; }
   .yg-motion-password-checks > [id] { text-align: start; }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-motion-password-meter i { transition: background-color var(--yg-change); }
-  .yg-motion-password-checks strong { animation: yg-password-score 220ms var(--yg-arrive) both; }
-}
 @keyframes yg-password-score { from { opacity: 0; translate: 0 6px; } }
 .yg-motion-checklist { box-sizing: border-box; width: min(320px, 100%); gap: 0; padding: 14px 16px 8px; border-radius: 24px; background: var(--yg-surface); }
 .yg-motion-checklist legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -147,16 +139,13 @@
 .yg-motion-checklist-heading span { color: var(--yg-muted); font-size: 12px; }
 .yg-motion-checklist-heading b { color: var(--yg-text); font-variant-numeric: tabular-nums; }
 .yg-motion-checklist-item, .yg-motion-checklist-item:has(input:checked) { position: relative; min-height: var(--yg-list-row-height); gap: var(--yg-list-row-gap); padding: 0; border: 0; border-radius: 0; background: transparent; }
-.yg-motion-checklist-item > label { position: relative; flex: 1; display: flex; align-items: center; min-height: var(--yg-list-row-height); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--yg-change); }
+.yg-motion-checklist-item > label { position: relative; flex: 1; display: flex; align-items: center; min-height: var(--yg-list-row-height); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;  }
 .yg-motion-checklist-item > label > span { position: relative; overflow: hidden; text-overflow: ellipsis; }
-.yg-motion-checklist-item > label > span::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--yg-change) var(--yg-settle); }
+.yg-motion-checklist-item > label > span::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left;  }
 .yg-motion-checklist-item:has([role="checkbox"]:is([data-state="checked"], [data-checked])) > label { color: var(--yg-muted); }
 .yg-motion-checklist-item:has([role="checkbox"]:is([data-state="checked"], [data-checked])) > label > span::after {
   transform: scaleX(1);
-  transition: transform var(--yg-motion-checklist-strike) 110ms;
-}
-@media (prefers-reduced-motion: reduce) {
-  .yg-motion-password-slash, .yg-motion-password-meter i, .yg-motion-checklist-item > label, .yg-motion-checklist-item > label > span::after { transition: none !important; }
+
 }
 
 .yg-motion-range[data-interval] { background: var(--yg-raised-surface); }
@@ -228,12 +217,6 @@
 .yg-motion-range-area[data-spring] > :is([data-tip="start"], [data-tip="end"]) {
   opacity: calc(1 - var(--yg-tip-merge, 0)); scale: calc(1 - .2 * var(--yg-tip-merge, 0));
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-motion-range[data-interval] .yg-motion-range-tip {
-    transition: opacity var(--yg-change) var(--yg-settle), scale var(--yg-panel) var(--yg-selection);
-  }
-  .yg-motion-range[data-interval] .yg-motion-range-area[data-spring] .yg-motion-range-tip { transition: none; }
-}
 .yg-step-track { position: relative; display: grid; block-size: 4px; margin-block-end: var(--boa-space-12); border-radius: 4px; background: var(--yg-field); }
 .yg-step-track progress { position: absolute; opacity: 0; inline-size: 100%; block-size: 100%; }
 .yg-step-track > span { inline-size: calc(var(--yg-step-progress) * 100%); border-radius: inherit; background: var(--yg-signal-positive); }
@@ -257,13 +240,6 @@
 @media (forced-colors: active) {
   .yg-step-track { forced-color-adjust: none; background: GrayText; }
   .yg-step-track > span { background: Highlight; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .yg-step-track > span { transition: inline-size var(--yg-motion-step-fill); }
-  .yg-step-number, .yg-step-number > span { transition: background-color var(--yg-motion-picker-lift), color var(--yg-motion-picker-lift), opacity var(--yg-motion-picker-lift); }
-  .yg-step-number svg path { transition: stroke-dashoffset var(--yg-motion-step-check); }
-  .yg-stepper [data-complete] .yg-step-number svg path { transition-delay: 120ms; }
-  .yg-stepper [aria-current] .yg-step-number { animation: yg-step-current var(--yg-motion-stepper-spin); }
 }
 @keyframes yg-step-current { from { scale: .7; } }
 .yg-elastic-range {

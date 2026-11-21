@@ -105,7 +105,7 @@ export function useMention({ people, value, onChange, collapsedOnly = false }: {
     const space = suffix && /^\s/.test(suffix) ? "" : " ";
     const nextCaret = start + replacement.length + space.length;
     const next = value.slice(0, start) + replacement + space + suffix;
-    setDismissed(null); setActiveId(null);
+    setDismissed(tokenKey); setActiveId(null);
     if (next === value) moveCaret(nextCaret);
     else {
       followingSelection.current = {

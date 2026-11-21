@@ -15,32 +15,34 @@ const { chromium } = require("playwright-core");
       const trigger = root.getByRole("button", { name: "View actions" });
       await trigger.click();
       await page.waitForFunction(() => document.querySelector(".yg-action-menu-expanding")?.dataset.open === "true");
-      if (reducedMotion === "no-preference") {
-        await page.waitForFunction(() => {
-          const root = document.querySelector(".yg-action-menu-expanding");
-          const height = parseFloat(root.style.getPropertyValue("--yg-action-menu-height"));
-          return height > 1 && height < 150;
-        });
-        await trigger.click();
-        await page.waitForFunction(() => document.querySelector(".yg-action-menu-expanding")?.dataset.open === "false");
-        await trigger.click();
-      }
-      await page.waitForFunction(() => {
-        const root = document.querySelector(".yg-action-menu-expanding");
-        return root?.dataset.open === "true" &&
-          Math.abs(parseFloat(root.style.getPropertyValue("--yg-action-menu-height")) - 158) < 0.1 &&
-          [...root.querySelectorAll(".yg-action-menu-options button")].every(button =>
-            Math.abs(parseFloat(button.style.getPropertyValue("--yg-action-menu-row")) - 1) < 0.01);
-      });
       const menu = root.getByRole("menu", { name: "View actions" });
+      await menu.waitFor({ state: "visible" });
       assert.equal(await menu.getByRole("menuitem").count(), 3);
+      for (const item of await menu.getByRole("menuitem").all()) {
+        assert.equal(await item.isVisible(), true);
+        const box = await item.boundingBox();
+        assert(box && box.width > 0 && box.height >= 44, "menu items retain a visible hit target");
+      }
+      await trigger.click();
+      assert.equal(await root.getAttribute("data-open"), "false");
+      assert.equal(await root.locator('[role="menu"]').evaluate(node => node.inert), true);
+      await trigger.press("ArrowDown");
+      assert.equal(await root.getAttribute("data-open"), "true");
+      await menu.getByRole("menuitem").first().waitFor({ state: "visible" });
+      await page.waitForFunction(() => document.activeElement?.getAttribute("role") === "menuitem");
+      await page.keyboard.press("Escape");
+      assert.equal(await root.getAttribute("data-open"), "false");
+      assert.equal(await trigger.evaluate(node => node === document.activeElement), true, "Escape restores trigger focus");
+      await trigger.click();
+      await menu.waitFor({ state: "visible" });
       await menu.getByRole("menuitem", { name: "Notes" }).click();
       await page.waitForFunction(() => document.querySelector(".yg-action-menu-expanding")?.dataset.open === "false");
       assert.match(await page.locator(".motion-pattern-article").textContent(), /Notes/);
+      assert.equal(await trigger.evaluate(node => node === document.activeElement), true, "selection restores trigger focus");
       assert.deepEqual(errors, []);
       await page.close();
     }
-    console.log("Action menu spring reversal and reduced motion verified.");
+    console.log("Action menu visibility, keyboard focus, selection and reduced motion verified.");
   } finally {
     await browser.close();
   }

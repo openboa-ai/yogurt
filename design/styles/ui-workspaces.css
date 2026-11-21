@@ -6,7 +6,6 @@
   border: 0;
   border-radius: var(--yg-radius-sheet);
   background: var(--yg-raised-surface);
-  transition: background-color var(--yg-motion-surface-focus);
 }
 .yg-composer:focus-within {
   background: var(--yg-focus-surface);
@@ -70,15 +69,7 @@
 .yg-composer-footer { justify-content: space-between; }
 .yg-composer-footer > .yg-composer-tools:last-child { margin-inline-start: auto; }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-prompt-shared .yg-prompt-editor,
-  .yg-composer .yg-composer-editor textarea { transition: block-size var(--yg-motion-prompt-editor); }
-  .yg-composer .yg-shared-action {
-    animation: yg-composer-action-arrive var(--yg-motion-prompt-action) both;
-  }
-  @keyframes yg-composer-action-arrive {
-    from { opacity: 0; transform: scale(.94); }
-    to { opacity: 1; transform: scale(1); }
-  }
+  .yg-prompt-shared .yg-prompt-editor { transition: block-size var(--yg-motion-prompt-editor); }
 }
 @media (prefers-reduced-motion: reduce) {
   .yg-composer { transition: none; }
@@ -92,7 +83,6 @@
 }
 .yg-voice-state {
   font: var(--yg-font-action);
-  transition: color var(--yg-change) var(--yg-settle);
 }
 .yg-voice[data-state=recording] .yg-voice-state { color: var(--yg-danger); }
 .yg-workspace-bar { justify-content: space-between; }

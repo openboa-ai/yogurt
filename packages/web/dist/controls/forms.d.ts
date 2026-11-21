@@ -22,8 +22,8 @@ type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & {
     size?: ControlSize;
     motion?: "spring";
 };
-/** Optional visual response over a real native text input. */
-export declare function SpringTextInput({ value, defaultValue, onChange, onSelect, onScroll, onFocus, onBlur, onCompositionStart, onCompositionEnd, ...props }: Omit<ComponentProps<"input">, "size">): import("react/jsx-runtime").JSX.Element;
+/** Compatibility entry for text inputs using the default SDK interaction. */
+export declare function SpringTextInput({ value, defaultValue, onSelect, ...props }: Omit<ComponentProps<"input">, "size">): import("react/jsx-runtime").JSX.Element;
 export declare function TextField({ id, label, help, error, className, value, defaultValue, motion, size, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
 export declare function SearchField({ id, label, help, error, value, onValueChange, placeholder, disabled, name, onKeyDown, size, }: FieldInfo & {
     value: string;

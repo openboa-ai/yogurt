@@ -3,7 +3,6 @@ import {
   useEffect,
   useId,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
   type ComponentProps,
@@ -16,7 +15,6 @@ import { Radio as SDKRadio, RadioGroup as SDKRadioGroup } from "@ui-sdk/react/ra
 import { Button, IconButton } from "./actions.js";
 import { Checkbox, Field, SpringTextInput } from "./forms.js";
 import { cx, Icon, type ControlSize, type Option } from "../foundation/foundation.js";
-import { playSprings, snap, spring } from "../foundation/spring-motion.js";
 
 type Input = Omit<ComponentProps<"input">, "size" | "prefix">;
 export function InputGroup({
@@ -66,20 +64,7 @@ export function InputGroup({
   );
 }
 function OtpDigit({ value }: { value: string }) {
-  const digit = useRef<HTMLSpanElement>(null);
-  useLayoutEffect(() => {
-    const node = digit.current;
-    if (!node) return;
-    const lift = spring(-14, 520, 16);
-    const opacity = spring(0, 400, 28);
-    lift.target = 0;
-    opacity.target = 1;
-    return playSprings([lift, opacity], () => {
-      node.style.translate = `0 ${lift.position}px`;
-      node.style.opacity = String(Math.max(0, Math.min(1, opacity.position)));
-    });
-  }, [value]);
-  return <span ref={digit} className="yg-otp-digit">{value}</span>;
+  return <span className="yg-otp-digit">{value}</span>;
 }
 
 export function InputOTP({
@@ -106,59 +91,15 @@ export function InputOTP({
   const count = Math.max(1, Math.min(12, Math.trunc(length) || 6));
   const [cursor, setCursor] = useState(0);
   const confirmed = verified && value.length >= count;
-  const surface = useRef<HTMLDivElement>(null);
-  const [motion] = useState(() => ({merge: spring(0, 260, 24), confirm: spring(0, 220, 28)}));
-  useLayoutEffect(() => {
-    const node = surface.current;
-    if (!node) return;
-    const media = matchMedia("(prefers-reduced-motion: reduce)");
-    const axes = [motion.merge, motion.confirm];
-    let stop: (() => void) | undefined;
-    let mergeTimer: ReturnType<typeof setTimeout> | undefined;
-    let revealTimer: ReturnType<typeof setTimeout> | undefined;
-    function paint() {
-      node?.style.setProperty("--yg-otp-merge", String(Math.max(0, Math.min(1, motion.merge.position))));
-      node?.style.setProperty("--yg-otp-confirm", String(Math.max(0, Math.min(1, motion.confirm.position))));
-    }
-    function play() {
-      stop?.();
-      stop = playSprings(axes, paint);
-    }
-    function settleImmediately() {
-      if (!media.matches) return;
-      clearTimeout(mergeTimer);
-      clearTimeout(revealTimer);
-      stop?.();
-      axes.forEach(axis => snap(axis, Number(confirmed)));
-      paint();
-    }
-    if (media.matches) {
-      settleImmediately();
-    } else if (confirmed) {
-      mergeTimer = setTimeout(() => {motion.merge.target = 1; play();}, 250);
-      revealTimer = setTimeout(() => {motion.confirm.target = 1; play();}, 550);
-    } else {
-      axes.forEach(axis => {axis.target = 0;});
-      if (axes.some(axis => axis.position !== 0)) play();
-    }
-    media.addEventListener("change", settleImmediately);
-    return () => {
-      stop?.();
-      clearTimeout(mergeTimer);
-      clearTimeout(revealTimer);
-      media.removeEventListener("change", settleImmediately);
-    };
-  }, [confirmed, motion]);
   return (
     <Field {...{ label, help, error }}>
       {(binding) => (
         <div
-          ref={surface}
           className="yg-otp"
           data-complete={value.length >= count || undefined}
           data-verified={confirmed || undefined}
           data-disabled={disabled || undefined}
-          style={{ "--yg-digits": count } as CSSProperties}
+          style={{ "--yg-digits": count, "--yg-otp-merge": Number(confirmed), "--yg-otp-confirm": Number(confirmed) } as CSSProperties}
         >
           <SDKInput
             {...binding}
@@ -383,57 +324,7 @@ export function Rating({
   const id = useId(),
     count = Math.max(1, Math.min(10, Math.floor(max) || 5));
   const [hovered, setHovered] = useState(0);
-  const root = useRef<HTMLFieldSetElement>(null);
-  const [roller] = useState(() => spring(0, 260, 22));
-  const stars = useMemo(() => Array.from({ length: count }, () => ({
-    fill: spring(0, 300, 24), press: spring(1, 520, 13),
-  })), [count]);
   const shown = Math.max(0, Math.min(count, hovered || value));
-  const editable = Boolean(onValueChange);
-  useLayoutEffect(() => {
-    const node = root.current;
-    if (!node) return;
-    const glyphs = Array.from(node.querySelectorAll<SVGSVGElement>(".yg-rating svg"));
-    const springs = [roller, ...stars.flatMap(star => [star.fill, star.press])];
-    roller.target = shown;
-    const preference = matchMedia("(prefers-reduced-motion: reduce)");
-    const reduced = preference.matches;
-    let stop: (() => void) | undefined;
-    const render = () => {
-      node.style.setProperty("--yg-rating-shown", String(roller.position));
-      stars.forEach((star, index) => {
-        const alpha = Math.min(1, Math.max(0, star.fill.position));
-        glyphs[index]?.style.setProperty("--yg-star-fill", `${alpha * 100}%`);
-        glyphs[index]?.style.setProperty("--yg-star-scale", String(star.press.position));
-      });
-    };
-    const timers = stars.map((star, index) => {
-      const on = index < shown;
-      const light = () => {
-        if (on && star.fill.target !== 1 && !reduced) {
-          star.press.position = .7;
-          star.press.velocity = 7;
-        }
-        star.fill.target = Number(on);
-      };
-      if (!on || reduced || index === 0) { light(); return undefined; }
-      return setTimeout(() => { light(); stop?.(); stop = playSprings(springs, render); }, index * 50);
-    });
-    stop = playSprings(springs, render);
-    const settle = () => {
-      if (!preference.matches) return;
-      timers.forEach(clearTimeout);
-      stop?.();
-      snap(roller, shown);
-      stars.forEach((star, index) => {
-        snap(star.fill, Number(index < shown));
-        snap(star.press, 1);
-      });
-      render();
-    };
-    preference.addEventListener("change", settle);
-    return () => { preference.removeEventListener("change", settle); timers.forEach(clearTimeout); stop?.(); };
-  }, [shown, stars, roller, editable]);
   if (!onValueChange)
     return (
       <span className="yg-score" aria-label={label}>
@@ -441,7 +332,7 @@ export function Rating({
       </span>
     );
   return (
-    <fieldset className="yg-fieldset" ref={root}>
+    <fieldset className="yg-fieldset" style={{ "--yg-rating-shown": shown } as CSSProperties}>
       <legend className="yg-label">{label}</legend>
       <SDKRadioGroup className="yg-rating" aria-label={label} name={id} value={String(value)}
         onValueChange={(next, details) => {
@@ -462,7 +353,7 @@ export function Rating({
               value={String(i + 1)}
               aria-label={i + 1 + " of " + count}
             />
-            <svg viewBox="0 0 24 24" aria-hidden="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true" style={{ "--yg-star-fill": i < shown ? "100%" : "0%" } as CSSProperties}>
               <path d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z" />
             </svg>
           </label>

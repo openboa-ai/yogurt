@@ -6,7 +6,6 @@ import { Popover as SDKPopover, PopoverContent } from "@ui-sdk/react/popover";
 import { Button as SDKButton } from "@ui-sdk/react/button";
 import { Icon, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
-import { animateActionMenu } from "./action-menu-motion.js";
 
 export function Disclosure({
   label,
@@ -140,9 +139,6 @@ export function ActionMenu({
     if (restore) trigger.current?.focus();
   }
   useOutside(area, () => close(), open);
-  useLayoutEffect(() => {
-    if (expanding && area.current) return animateActionMenu(area.current);
-  }, [expanding]);
   useEffect(() => {
     if (open) {
       const node =

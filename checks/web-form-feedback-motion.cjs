@@ -46,8 +46,7 @@ const fixture = buildSync({
       await search.fill('notes');
       const clear=host.getByRole('button',{name:'Clear search records',exact:true});
       await clear.waitFor();
-      const clearAnimation=await clear.evaluate(node=>getComputedStyle(node).animationName);
-      assert.equal(clearAnimation,reducedMotion==='reduce'?'none':'yg-search-clear-arrive');
+      assert.equal(await clear.isVisible(), true);
       await clear.click();
       assert.equal(await search.inputValue(),'');
 
@@ -57,21 +56,22 @@ const fixture = buildSync({
       const title=host.getByRole('textbox',{name:'Title',exact:true});
       assert.equal(await title.getAttribute('aria-invalid'),'true');
       assert((await title.getAttribute('aria-describedby')).includes(await error.getAttribute('id')));
-      assert.equal(await error.evaluate(node=>getComputedStyle(node).animationName),reducedMotion==='reduce'?'none':'yg-field-error-arrive');
+      assert.equal(await error.isVisible(), true);
 
       await host.getByRole('button',{name:'Toggle mixed',exact:true}).click();
       const checkbox=host.getByRole('checkbox',{name:'Include records',exact:true});
       assert.equal(await checkbox.getAttribute('aria-checked'),'mixed');
       const mixed=host.locator('.yg-checkbox-mixed');
       assert.equal(await mixed.evaluate(node=>getComputedStyle(node).opacity),'1');
-      assert.equal(await mixed.evaluate(node=>parseFloat(getComputedStyle(node).transitionDuration)>0),reducedMotion==='no-preference');
+      await host.getByRole('button',{name:'Toggle mixed',exact:true}).click();
+      assert.equal(await checkbox.getAttribute('aria-checked'),'false');
 
       const second=host.getByRole('radio',{name:'Second',exact:true});
       await second.click();
       assert.equal(await second.getAttribute('aria-checked'),'true');
       const dot=second.locator(':scope > span');
       await dot.waitFor();
-      assert.equal(await dot.evaluate(node=>parseFloat(getComputedStyle(node).transitionDuration)>0),reducedMotion==='no-preference');
+      assert.equal(await dot.isVisible(), true);
       await page.close();
     }
     console.log('Radio, indeterminate checkbox, search clear and error feedback verified.');
