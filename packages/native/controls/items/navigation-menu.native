@@ -1,8 +1,10 @@
 <template name="yg-navigation-menu" args="label">
   <column gap="8">
     <text>{label}</text>
-    <for each="choices" key="id" as="item">
-      <button variant="ghost" disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</button>
-    </for>
+    <column gap="2">
+      <for each="choices" key="id" as="item">
+        <button variant="ghost" disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</button>
+      </for>
+    </column>
   </column>
 </template>

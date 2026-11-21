@@ -2,7 +2,7 @@
   <column gap="8">
     <button variant="ghost" on-press="toggle">{label}</button>
     <if test="{is_open}">
-      <list>
+      <list gap="2">
         <for each="choices" key="id" as="item">
           <list-item on-press="choose:{item.id}">{item.title}</list-item>
         </for>

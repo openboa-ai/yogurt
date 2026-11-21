@@ -1,6 +1,6 @@
 <template name="yg-menubar" args="label">
   <column gap="8">
-    <row label="{label}" gap="4">
+    <row label="{label}" gap="2" cross="center">
       <for each="menus" key="id" as="item">
         <button variant="ghost" on-press="open_menu:{item.id}">{item.title}</button>
       </for>

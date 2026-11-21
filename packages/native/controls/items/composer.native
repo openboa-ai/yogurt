@@ -1,5 +1,5 @@
 <template name="yg-composer" args="label value">
-  <column gap="8">
+  <column background="surface" radius="lg" padding="12" gap="8">
     <for each="composer_attachments" key="id" as="item">
       <row gap="8" cross="center">
         <text grow="1">{item.title}</text>
@@ -7,11 +7,11 @@
       </row>
     </for>
     <textarea label="{label}" text="{value}" on-input="draft_changed"/>
-    <column gap="8">
+    <row gap="8" cross="center">
       <if test="{composer_can_attach}"><button variant="ghost" on-press="choose_attachment">Attach a file</button></if>
       <if test="{composer_can_choose_tool}"><button variant="ghost" on-press="choose_tool">Choose tool</button></if>
       <if test="{composer_pending}"><if test="{composer_can_stop}"><button variant="secondary" on-press="stop_response">Stop response</button></if></if>
       <else><button disabled="{composer_send_disabled}" on-press="send_message">Send</button></else>
-    </column>
+    </row>
   </column>
 </template>

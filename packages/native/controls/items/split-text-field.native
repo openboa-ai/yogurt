@@ -1,6 +1,6 @@
 <template name="yg-split-text-field" args="label">
-  <column gap="8">
-    <text>{label}</text>
+  <column gap="6">
+    <text size="sm">{label}</text>
     <row gap="8">
       <text-field label="{first_label}" text="{first_value}" on-input="edit_first"/>
       <text-field label="{last_label}" text="{last_value}" on-input="edit_last"/>

@@ -1,7 +1,7 @@
 <template name="yg-navbar" args="label">
   <row gap="8" cross="center">
-    <button variant="ghost" on-press="navigate">Back</button>
-    <text size="heading">{label}</text>
+    <button variant="ghost" size="icon" icon="chevron-left" label="Back" on-press="navigate"></button>
+    <text>{label}</text>
     <slot/>
   </row>
 </template>
