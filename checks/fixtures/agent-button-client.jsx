@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Button, Checkbox, Dialog, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
+import { Accordion, Button, Checkbox, Dialog, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 
 if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
@@ -19,7 +19,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent toggle" && step.action === "setPressed") ||
       (step.label === "Agent filters" && step.action === "setValue") ||
       (step.label === "Fixture dialog" && step.action === "setOpen") ||
-      (step.label === "Agent popover" && step.action === "setOpen"),
+      (step.label === "Agent popover" && step.action === "setOpen") ||
+      (step.label === "Agent accordion" && step.action === "setValue"),
   });
 }
 
@@ -59,6 +60,7 @@ export default function AgentButtonFixture() {
   const [nestedChanges, setNestedChanges] = useState(0);
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
   const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
+  const sections = options.map(option => ({ id: option.id, title: option.label, disabled: option.disabled, content: <input aria-label={`Section ${option.id}`} defaultValue="Original" /> }));
   const actionRef = useRef(null);
   const hit = () => setCalls(value => value + 1);
   return (
@@ -114,6 +116,9 @@ export default function AgentButtonFixture() {
         <ToggleGroup label="Single filter" items={options} value={single} onValueChange={setSingle} />
         <Popover label="Agent popover"><input aria-label="Popover note" /></Popover>
         <Popover label="Denied popover"><input aria-label="Denied popover note" /></Popover>
+        <Accordion label="Agent accordion" items={sections} />
+        <Accordion label="Multiple accordion" items={sections} multiple />
+        <Accordion label="Denied accordion" items={sections} />
         <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
         <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
           <input aria-label="Draft" defaultValue="Original draft" />

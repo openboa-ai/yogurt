@@ -4,9 +4,8 @@ import {
   dist_exports3 as dist_exports2,
   dist_exports4 as dist_exports3,
   dist_exports5 as dist_exports4,
-  dist_exports6 as dist_exports5,
-  dist_exports7 as dist_exports6
-} from "./chunk-6N7YZY36.js";
+  dist_exports6 as dist_exports5
+} from "./chunk-F374JVJP.js";
 import {
   Dialog
 } from "./chunk-6MLFUGIG.js";
@@ -34,6 +33,7 @@ import {
   useRef as useRef4,
   useState as useState4
 } from "react";
+import { Accordion as SDKAccordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionPanel } from "@ui-sdk/react/accordion";
 
 // node_modules/@date-fns/tz/tzName/index.js
 function tzName(timeZone, date, format2 = "long") {
@@ -6359,21 +6359,60 @@ function Accordion({
   items,
   multiple = false
 }) {
-  const children = items.map((i) => /* @__PURE__ */ jsxs(dist_exports.Item, { value: i.id, disabled: i.disabled, children: [
-    /* @__PURE__ */ jsx(dist_exports.Header, { children: /* @__PURE__ */ jsxs(dist_exports.Trigger, { children: [
-      i.title,
-      /* @__PURE__ */ jsx(Icon, { name: "down" })
-    ] }) }),
-    /* @__PURE__ */ jsx(dist_exports.Content, { className: "yg-accordion-content", children: i.content })
-  ] }, i.id));
-  return multiple ? /* @__PURE__ */ jsx(dist_exports.Root, { type: "multiple", className: "yg-accordion", "aria-label": label, children }) : /* @__PURE__ */ jsx(
-    dist_exports.Root,
+  const [openItems, setOpenItems] = useState4([]);
+  return /* @__PURE__ */ jsx(
+    SDKAccordion,
     {
-      type: "single",
+      multiple,
       collapsible: true,
       className: "yg-accordion",
       "aria-label": label,
-      children
+      value: openItems,
+      onValueChange: (next, details) => {
+        if (next.some((id) => !openItems.includes(id) && !items.some((item) => item.id === id && !item.disabled))) {
+          details.cancel();
+          return;
+        }
+        setOpenItems(next);
+      },
+      onKeyDownCapture: (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        const current = event.target.closest("button[data-yg-accordion-id]");
+        if (current?.closest(".yg-accordion") !== event.currentTarget) return;
+        const enabled2 = items.filter((item) => !item.disabled);
+        const index = enabled2.findIndex((item) => item.id === current?.dataset.ygAccordionId);
+        if (index < 0) return;
+        const next = {
+          ArrowDown: (index + 1) % enabled2.length,
+          ArrowUp: (index + enabled2.length - 1) % enabled2.length,
+          Home: 0,
+          End: enabled2.length - 1
+        }[event.key];
+        if (next === void 0) return;
+        event.preventDefault();
+        [...event.currentTarget.querySelectorAll("button[data-yg-accordion-id]")].find((button) => button.dataset.ygAccordionId === enabled2[next].id)?.focus();
+      },
+      children: items.map((item) => /* @__PURE__ */ jsxs(AccordionItem, { value: item.id, disabled: item.disabled, children: [
+        /* @__PURE__ */ jsx(AccordionHeader, { children: /* @__PURE__ */ jsxs(
+          AccordionTrigger,
+          {
+            "data-yg-accordion-id": item.id,
+            render: (props2, state) => /* @__PURE__ */ jsx("button", { ...props2, disabled: state.disabled, "data-state": state.open ? "open" : "closed" }),
+            children: [
+              item.title,
+              /* @__PURE__ */ jsx(Icon, { name: "down" })
+            ]
+          }
+        ) }),
+        /* @__PURE__ */ jsx(
+          AccordionPanel,
+          {
+            className: "yg-accordion-content",
+            render: (props2, state) => /* @__PURE__ */ jsx("div", { ...props2, "data-state": state.open ? "open" : "closed" }),
+            children: (state) => state.open ? item.content : null
+          }
+        )
+      ] }, item.id))
     }
   );
 }
@@ -6383,8 +6422,8 @@ function ContextMenu({
   onSelect,
   children
 }) {
-  return /* @__PURE__ */ jsxs(dist_exports2.Root, { children: [
-    /* @__PURE__ */ jsx(dist_exports2.Trigger, { asChild: true, children: /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs(dist_exports.Root, { children: [
+    /* @__PURE__ */ jsx(dist_exports.Trigger, { asChild: true, children: /* @__PURE__ */ jsx(
       "div",
       {
         className: "yg-context-target",
@@ -6408,8 +6447,8 @@ function ContextMenu({
         children
       }
     ) }),
-    /* @__PURE__ */ jsx(dist_exports2.Content, { className: "yg-flyout", "aria-label": label, children: items.map((i) => /* @__PURE__ */ jsx(
-      dist_exports2.Item,
+    /* @__PURE__ */ jsx(dist_exports.Content, { className: "yg-flyout", "aria-label": label, children: items.map((i) => /* @__PURE__ */ jsx(
+      dist_exports.Item,
       {
         disabled: i.disabled,
         onSelect: () => onSelect(i.id),
@@ -6424,8 +6463,8 @@ function HoverCard({
   children
 }) {
   const [open, setOpen] = useState4(false), id = useId2();
-  return /* @__PURE__ */ jsxs(dist_exports3.Root, { open, onOpenChange: setOpen, openDelay: 150, closeDelay: 120, children: [
-    /* @__PURE__ */ jsx(dist_exports3.Trigger, { asChild: true, children: /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs(dist_exports2.Root, { open, onOpenChange: setOpen, openDelay: 150, closeDelay: 120, children: [
+    /* @__PURE__ */ jsx(dist_exports2.Trigger, { asChild: true, children: /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
@@ -6440,7 +6479,7 @@ function HoverCard({
       }
     ) }),
     /* @__PURE__ */ jsx(
-      dist_exports3.Content,
+      dist_exports2.Content,
       {
         id,
         className: "yg-flyout yg-hover-content",
@@ -6616,17 +6655,17 @@ function Menubar({
   menus,
   onSelect
 }) {
-  return /* @__PURE__ */ jsx(dist_exports4.Root, { className: "yg-menu-bar", "aria-label": label, children: menus.map((m) => /* @__PURE__ */ jsxs(dist_exports4.Menu, { value: m.id, children: [
-    /* @__PURE__ */ jsx(dist_exports4.Trigger, { children: m.label }),
+  return /* @__PURE__ */ jsx(dist_exports3.Root, { className: "yg-menu-bar", "aria-label": label, children: menus.map((m) => /* @__PURE__ */ jsxs(dist_exports3.Menu, { value: m.id, children: [
+    /* @__PURE__ */ jsx(dist_exports3.Trigger, { children: m.label }),
     /* @__PURE__ */ jsx(
-      dist_exports4.Content,
+      dist_exports3.Content,
       {
         className: "yg-flyout",
         sideOffset: 4,
         align: "start",
         "aria-label": m.label,
         children: m.items.map((i) => /* @__PURE__ */ jsx(
-          dist_exports4.Item,
+          dist_exports3.Item,
           {
             disabled: i.disabled,
             onSelect: () => onSelect(i.id),
@@ -6642,12 +6681,12 @@ function NavigationMenu({
   label,
   groups
 }) {
-  return /* @__PURE__ */ jsx(dist_exports5.Root, { className: "yg-navigation-menu", "aria-label": label, children: /* @__PURE__ */ jsx(dist_exports5.List, { children: groups.map((group) => /* @__PURE__ */ jsxs(dist_exports5.Item, { children: [
-    /* @__PURE__ */ jsxs(dist_exports5.Trigger, { children: [
+  return /* @__PURE__ */ jsx(dist_exports4.Root, { className: "yg-navigation-menu", "aria-label": label, children: /* @__PURE__ */ jsx(dist_exports4.List, { children: groups.map((group) => /* @__PURE__ */ jsxs(dist_exports4.Item, { children: [
+    /* @__PURE__ */ jsxs(dist_exports4.Trigger, { children: [
       group.label,
       /* @__PURE__ */ jsx(Icon, { name: "down" })
     ] }),
-    /* @__PURE__ */ jsx(dist_exports5.Content, { className: "yg-flyout", children: group.links.map((l) => /* @__PURE__ */ jsx(dist_exports5.Link, { href: l.href, children: l.label }, l.id)) })
+    /* @__PURE__ */ jsx(dist_exports4.Content, { className: "yg-flyout", children: group.links.map((l) => /* @__PURE__ */ jsx(dist_exports4.Link, { href: l.href, children: l.label }, l.id)) })
   ] }, group.id)) }) });
 }
 function Sidebar({
@@ -6946,13 +6985,13 @@ function DatePicker(props2) {
   const [open, setOpen] = useState4(false), id = useId2();
   return /* @__PURE__ */ jsxs("div", { className: "yg-field", children: [
     /* @__PURE__ */ jsx("label", { htmlFor: id, className: "yg-label", children: props2.label }),
-    /* @__PURE__ */ jsxs(dist_exports6.Root, { open, onOpenChange: setOpen, children: [
-      /* @__PURE__ */ jsxs(dist_exports6.Trigger, { id, className: "yg-date-trigger", children: [
+    /* @__PURE__ */ jsxs(dist_exports5.Root, { open, onOpenChange: setOpen, children: [
+      /* @__PURE__ */ jsxs(dist_exports5.Trigger, { id, className: "yg-date-trigger", children: [
         props2.value ?? "Choose a date",
         /* @__PURE__ */ jsx(Icon, { name: "down" })
       ] }),
       /* @__PURE__ */ jsx(
-        dist_exports6.Content,
+        dist_exports5.Content,
         {
           "aria-label": props2.label,
           className: "yg-flyout yg-date-popup",

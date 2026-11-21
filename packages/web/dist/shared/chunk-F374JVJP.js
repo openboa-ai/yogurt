@@ -29,33 +29,110 @@ function useDirection(localDir) {
 }
 __name(useDirection, "useDirection");
 
-// node_modules/@radix-ui/react-accordion/dist/index.mjs
-var dist_exports2 = {};
-__export(dist_exports2, {
-  Accordion: () => Accordion,
-  AccordionContent: () => AccordionContent,
-  AccordionHeader: () => AccordionHeader,
-  AccordionItem: () => AccordionItem,
-  AccordionTrigger: () => AccordionTrigger,
-  Content: () => AccordionContent,
-  Header: () => AccordionHeader,
-  Item: () => AccordionItem,
-  Root: () => Accordion,
-  Trigger: () => AccordionTrigger,
-  createAccordionScope: () => createAccordionScope
+// node_modules/@radix-ui/react-context-menu/dist/index.mjs
+var dist_exports5 = {};
+__export(dist_exports5, {
+  Arrow: () => ContextMenuArrow,
+  CheckboxItem: () => ContextMenuCheckboxItem,
+  Content: () => ContextMenuContent,
+  ContextMenu: () => ContextMenu,
+  ContextMenuArrow: () => ContextMenuArrow,
+  ContextMenuCheckboxItem: () => ContextMenuCheckboxItem,
+  ContextMenuContent: () => ContextMenuContent,
+  ContextMenuGroup: () => ContextMenuGroup,
+  ContextMenuItem: () => ContextMenuItem,
+  ContextMenuItemIndicator: () => ContextMenuItemIndicator,
+  ContextMenuLabel: () => ContextMenuLabel,
+  ContextMenuPortal: () => ContextMenuPortal,
+  ContextMenuRadioGroup: () => ContextMenuRadioGroup,
+  ContextMenuRadioItem: () => ContextMenuRadioItem,
+  ContextMenuSeparator: () => ContextMenuSeparator,
+  ContextMenuSub: () => ContextMenuSub,
+  ContextMenuSubContent: () => ContextMenuSubContent,
+  ContextMenuSubTrigger: () => ContextMenuSubTrigger,
+  ContextMenuTrigger: () => ContextMenuTrigger,
+  Group: () => ContextMenuGroup,
+  Item: () => ContextMenuItem,
+  ItemIndicator: () => ContextMenuItemIndicator,
+  Label: () => ContextMenuLabel,
+  Portal: () => ContextMenuPortal,
+  RadioGroup: () => ContextMenuRadioGroup,
+  RadioItem: () => ContextMenuRadioItem,
+  Root: () => ContextMenu,
+  Separator: () => ContextMenuSeparator,
+  Sub: () => ContextMenuSub,
+  SubContent: () => ContextMenuSubContent,
+  SubTrigger: () => ContextMenuSubTrigger,
+  Trigger: () => ContextMenuTrigger,
+  createContextMenuScope: () => createContextMenuScope
 });
-import * as React13 from "react";
+import * as React35 from "react";
+
+// node_modules/@radix-ui/primitive/dist/internal/is-development.false.mjs
+var IS_DEVELOPMENT = false;
+
+// node_modules/@radix-ui/primitive/dist/index.mjs
+var __defProp2 = Object.defineProperty;
+var __name2 = (target, value) => __defProp2(target, "name", { value, configurable: true });
+var canUseDOM = !!(typeof window !== "undefined" && window.document && window.document.createElement);
+function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
+  return /* @__PURE__ */ __name2(function handleEvent(event) {
+    originalEventHandler?.(event);
+    if (checkForDefaultPrevented === false || !event || !event.defaultPrevented) {
+      return ourEventHandler?.(event);
+    }
+  }, "handleEvent");
+}
+__name2(composeEventHandlers, "composeEventHandlers");
+function getOwnerWindow(element) {
+  if (!canUseDOM) {
+    throw new Error("Cannot access window outside of the DOM");
+  }
+  return element?.ownerDocument?.defaultView ?? window;
+}
+__name2(getOwnerWindow, "getOwnerWindow");
+function getOwnerDocument(element) {
+  if (!canUseDOM) {
+    throw new Error("Cannot access document outside of the DOM");
+  }
+  return element?.ownerDocument ?? document;
+}
+__name2(getOwnerDocument, "getOwnerDocument");
+function getActiveElement(node, activeDescendant = false) {
+  const { activeElement } = getOwnerDocument(node);
+  if (!activeElement?.nodeName) {
+    return null;
+  }
+  if (isFrame(activeElement) && activeElement.contentDocument) {
+    return getActiveElement(activeElement.contentDocument.body, activeDescendant);
+  }
+  if (activeDescendant) {
+    const id = activeElement.getAttribute("aria-activedescendant");
+    if (id) {
+      const element = getOwnerDocument(activeElement).getElementById(id);
+      if (element) {
+        return element;
+      }
+    }
+  }
+  return activeElement;
+}
+__name2(getActiveElement, "getActiveElement");
+function isFrame(element) {
+  return element.tagName === "IFRAME";
+}
+__name2(isFrame, "isFrame");
 
 // node_modules/@radix-ui/react-context/dist/index.mjs
 import * as React2 from "react";
 import { jsx as jsx2 } from "react/jsx-runtime";
-var __defProp2 = Object.defineProperty;
-var __name2 = (target, value) => __defProp2(target, "name", { value, configurable: true });
+var __defProp3 = Object.defineProperty;
+var __name3 = (target, value) => __defProp3(target, "name", { value, configurable: true });
 // @__NO_SIDE_EFFECTS__
 function createContext22(rootComponentName, defaultContext) {
   const Context = React2.createContext(defaultContext);
   Context.displayName = rootComponentName + "Context";
-  const Provider = /* @__PURE__ */ __name2((props) => {
+  const Provider = /* @__PURE__ */ __name3((props) => {
     const { children, ...context } = props;
     const value = React2.useMemo(() => context, Object.values(context));
     return /* @__PURE__ */ jsx2(Context.Provider, { value, children });
@@ -69,10 +146,10 @@ function createContext22(rootComponentName, defaultContext) {
     if (optional) return void 0;
     throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
   }
-  __name2(useContext22, "useContext");
+  __name3(useContext22, "useContext");
   return [Provider, useContext22];
 }
-__name2(createContext22, "createContext");
+__name3(createContext22, "createContext");
 // @__NO_SIDE_EFFECTS__
 function createContextScope(scopeName, createContextScopeDeps = []) {
   let defaultContexts = [];
@@ -81,7 +158,7 @@ function createContextScope(scopeName, createContextScopeDeps = []) {
     BaseContext.displayName = rootComponentName + "Context";
     const index2 = defaultContexts.length;
     defaultContexts = [...defaultContexts, defaultContext];
-    const Provider = /* @__PURE__ */ __name2((props) => {
+    const Provider = /* @__PURE__ */ __name3((props) => {
       const { scope, children, ...context } = props;
       const Context = scope?.[scopeName]?.[index2] || BaseContext;
       const value = React2.useMemo(() => context, Object.values(context));
@@ -97,15 +174,15 @@ function createContextScope(scopeName, createContextScopeDeps = []) {
       if (optional) return void 0;
       throw new Error(`\`${consumerName}\` must be used within \`${rootComponentName}\``);
     }
-    __name2(useContext22, "useContext");
+    __name3(useContext22, "useContext");
     return [Provider, useContext22];
   }
-  __name2(createContext32, "createContext");
-  const createScope = /* @__PURE__ */ __name2(() => {
+  __name3(createContext32, "createContext");
+  const createScope = /* @__PURE__ */ __name3(() => {
     const scopeContexts = defaultContexts.map((defaultContext) => {
       return React2.createContext(defaultContext);
     });
-    return /* @__PURE__ */ __name2(function useScope(scope) {
+    return /* @__PURE__ */ __name3(function useScope(scope) {
       const contexts = scope?.[scopeName] || scopeContexts;
       return React2.useMemo(
         () => ({ [`__scope${scopeName}`]: { ...scope, [scopeName]: contexts } }),
@@ -116,16 +193,16 @@ function createContextScope(scopeName, createContextScopeDeps = []) {
   createScope.scopeName = scopeName;
   return [createContext32, composeContextScopes(createScope, ...createContextScopeDeps)];
 }
-__name2(createContextScope, "createContextScope");
+__name3(createContextScope, "createContextScope");
 function composeContextScopes(...scopes) {
   const baseScope = scopes[0];
   if (scopes.length === 1) return baseScope;
-  const createScope = /* @__PURE__ */ __name2(() => {
+  const createScope = /* @__PURE__ */ __name3(() => {
     const scopeHooks = scopes.map((createScope2) => ({
       useScope: createScope2(),
       scopeName: createScope2.scopeName
     }));
-    return /* @__PURE__ */ __name2(function useComposedScopes(overrideScopes) {
+    return /* @__PURE__ */ __name3(function useComposedScopes(overrideScopes) {
       const nextScopes = scopeHooks.reduce((nextScopes2, { useScope, scopeName }) => {
         const scopeProps = useScope(overrideScopes);
         const currentScope = scopeProps[`__scope${scopeName}`];
@@ -137,15 +214,19 @@ function composeContextScopes(...scopes) {
   createScope.scopeName = baseScope.scopeName;
   return createScope;
 }
-__name2(composeContextScopes, "composeContextScopes");
+__name3(composeContextScopes, "composeContextScopes");
 
-// node_modules/@radix-ui/react-collection/dist/index.mjs
-import * as React6 from "react";
+// node_modules/@radix-ui/react-primitive/dist/index.mjs
+import * as React5 from "react";
+import * as ReactDOM from "react-dom";
+
+// node_modules/@radix-ui/react-slot/dist/index.mjs
+import * as React4 from "react";
 
 // node_modules/@radix-ui/react-compose-refs/dist/index.mjs
 import * as React3 from "react";
-var __defProp3 = Object.defineProperty;
-var __name3 = (target, value) => __defProp3(target, "name", { value, configurable: true });
+var __defProp4 = Object.defineProperty;
+var __name4 = (target, value) => __defProp4(target, "name", { value, configurable: true });
 function setRef(ref, value) {
   if (typeof ref === "function") {
     return ref(value);
@@ -153,7 +234,7 @@ function setRef(ref, value) {
     ref.current = value;
   }
 }
-__name3(setRef, "setRef");
+__name4(setRef, "setRef");
 function composeRefs(...refs) {
   return (node) => {
     let hasCleanup = false;
@@ -178,16 +259,15 @@ function composeRefs(...refs) {
     }
   };
 }
-__name3(composeRefs, "composeRefs");
+__name4(composeRefs, "composeRefs");
 function useComposedRefs(...refs) {
   return React3.useCallback(composeRefs(...refs), refs);
 }
-__name3(useComposedRefs, "useComposedRefs");
+__name4(useComposedRefs, "useComposedRefs");
 
 // node_modules/@radix-ui/react-slot/dist/index.mjs
-import * as React4 from "react";
-var __defProp4 = Object.defineProperty;
-var __name4 = (target, value) => __defProp4(target, "name", { value, configurable: true });
+var __defProp5 = Object.defineProperty;
+var __name5 = (target, value) => __defProp5(target, "name", { value, configurable: true });
 // @__NO_SIDE_EFFECTS__
 function createSlot(ownerName) {
   const Slot22 = React4.forwardRef((props, forwardedRef) => {
@@ -240,17 +320,17 @@ function createSlot(ownerName) {
   Slot22.displayName = `${ownerName}.Slot`;
   return Slot22;
 }
-__name4(createSlot, "createSlot");
+__name5(createSlot, "createSlot");
 var SLOTTABLE_IDENTIFIER = /* @__PURE__ */ Symbol.for("radix.slottable");
 // @__NO_SIDE_EFFECTS__
 function createSlottable(ownerName) {
-  const Slottable2 = /* @__PURE__ */ __name4((props) => "child" in props ? props.children(props.child) : props.children, "Slottable");
+  const Slottable2 = /* @__PURE__ */ __name5((props) => "child" in props ? props.children(props.child) : props.children, "Slottable");
   Slottable2.displayName = `${ownerName}.Slottable`;
   Slottable2.__radixId = SLOTTABLE_IDENTIFIER;
   return Slottable2;
 }
-__name4(createSlottable, "createSlottable");
-var getSlottableElementFromSlottable = /* @__PURE__ */ __name4((slottable, child) => {
+__name5(createSlottable, "createSlottable");
+var getSlottableElementFromSlottable = /* @__PURE__ */ __name5((slottable, child) => {
   if ("child" in slottable.props) {
     if (!React4.isValidElement(child)) return null;
     return React4.cloneElement(child, void 0, slottable.props.children(child.props.children));
@@ -283,7 +363,7 @@ function mergeProps(slotProps, childProps) {
   }
   return { ...slotProps, ...overrideProps };
 }
-__name4(mergeProps, "mergeProps");
+__name5(mergeProps, "mergeProps");
 function getElementRef(element) {
   let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
   let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
@@ -297,20 +377,20 @@ function getElementRef(element) {
   }
   return element.props.ref || element.ref;
 }
-__name4(getElementRef, "getElementRef");
+__name5(getElementRef, "getElementRef");
 function isSlottable(child) {
   return React4.isValidElement(child) && typeof child.type === "function" && "__radixId" in child.type && child.type.__radixId === SLOTTABLE_IDENTIFIER;
 }
-__name4(isSlottable, "isSlottable");
+__name5(isSlottable, "isSlottable");
 var REACT_LAZY_TYPE = /* @__PURE__ */ Symbol.for("react.lazy");
 function isLazyComponent(element) {
   return element != null && typeof element === "object" && "$$typeof" in element && element.$$typeof === REACT_LAZY_TYPE && "_payload" in element && isPromiseLike(element._payload);
 }
-__name4(isLazyComponent, "isLazyComponent");
+__name5(isLazyComponent, "isLazyComponent");
 function isPromiseLike(value) {
   return typeof value === "object" && value !== null && "then" in value;
 }
-__name4(isPromiseLike, "isPromiseLike");
+__name5(isPromiseLike, "isPromiseLike");
 function useUnwrappedLazy(value) {
   let unwrapped = value;
   while (isLazyComponent(unwrapped) && typeof use === "function") {
@@ -318,7 +398,7 @@ function useUnwrappedLazy(value) {
   }
   return unwrapped;
 }
-__name4(useUnwrappedLazy, "useUnwrappedLazy");
+__name5(useUnwrappedLazy, "useUnwrappedLazy");
 function concatAriaDescribedby(...values) {
   const ids = /* @__PURE__ */ new Set();
   for (const value of values) {
@@ -329,74 +409,119 @@ function concatAriaDescribedby(...values) {
   }
   return ids.size > 0 ? Array.from(ids).join(" ") : void 0;
 }
-__name4(concatAriaDescribedby, "concatAriaDescribedby");
-var createSlotError = /* @__PURE__ */ __name4((ownerName) => {
+__name5(concatAriaDescribedby, "concatAriaDescribedby");
+var createSlotError = /* @__PURE__ */ __name5((ownerName) => {
   return `${ownerName} failed to slot onto its children. Expected a single React element child or \`Slottable\`.`;
 }, "createSlotError");
-var createSlottableError = /* @__PURE__ */ __name4((ownerName) => {
+var createSlottableError = /* @__PURE__ */ __name5((ownerName) => {
   return `${ownerName} failed to slot onto its \`Slottable\`. Expected \`Slottable\` to receive a single React element child.`;
 }, "createSlottableError");
 var use = React4[" use ".trim().toString()];
 
-// node_modules/@radix-ui/react-collection/dist/index.mjs
+// node_modules/@radix-ui/react-primitive/dist/index.mjs
 import { jsx as jsx3 } from "react/jsx-runtime";
+var __defProp6 = Object.defineProperty;
+var __name6 = (target, value) => __defProp6(target, "name", { value, configurable: true });
+var NODES = [
+  "a",
+  "button",
+  "div",
+  "form",
+  "h2",
+  "h3",
+  "img",
+  "input",
+  "label",
+  "li",
+  "nav",
+  "ol",
+  "p",
+  "select",
+  "span",
+  "svg",
+  "ul"
+];
+var Primitive = NODES.reduce((primitive, node) => {
+  const Slot4 = createSlot(`Primitive.${node}`);
+  const Node2 = React5.forwardRef((props, forwardedRef) => {
+    const { asChild, ...primitiveProps } = props;
+    const Comp = asChild ? Slot4 : node;
+    if (typeof window !== "undefined") {
+      window[/* @__PURE__ */ Symbol.for("radix-ui")] = true;
+    }
+    return /* @__PURE__ */ jsx3(Comp, { ...primitiveProps, ref: forwardedRef });
+  });
+  Node2.displayName = `Primitive.${node}`;
+  return { ...primitive, [node]: Node2 };
+}, {});
+function dispatchDiscreteCustomEvent(target, event) {
+  if (target) ReactDOM.flushSync(() => target.dispatchEvent(event));
+}
+__name6(dispatchDiscreteCustomEvent, "dispatchDiscreteCustomEvent");
+
+// node_modules/@radix-ui/react-menu/dist/index.mjs
+import * as React34 from "react";
+
+// node_modules/@radix-ui/react-collection/dist/index.mjs
+import * as React7 from "react";
+import { jsx as jsx4 } from "react/jsx-runtime";
 import * as React22 from "react";
 
 // node_modules/@radix-ui/react-use-layout-effect/dist/index.mjs
-import * as React5 from "react";
-var useLayoutEffect2 = globalThis?.document ? React5.useLayoutEffect : () => {
+import * as React6 from "react";
+var useLayoutEffect2 = globalThis?.document ? React6.useLayoutEffect : () => {
 };
 
 // node_modules/@radix-ui/react-collection/dist/index.mjs
 import { jsx as jsx22 } from "react/jsx-runtime";
-var __defProp5 = Object.defineProperty;
-var __name5 = (target, value) => __defProp5(target, "name", { value, configurable: true });
+var __defProp7 = Object.defineProperty;
+var __name7 = (target, value) => __defProp7(target, "name", { value, configurable: true });
 // @__NO_SIDE_EFFECTS__
 function createCollection(name) {
   const PROVIDER_NAME = name + "CollectionProvider";
-  const [createCollectionContext, createCollectionScope7] = createContextScope(PROVIDER_NAME);
+  const [createCollectionContext, createCollectionScope6] = createContextScope(PROVIDER_NAME);
   const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(
     PROVIDER_NAME,
     { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
   );
-  const CollectionProvider = /* @__PURE__ */ __name5((props) => {
+  const CollectionProvider = /* @__PURE__ */ __name7((props) => {
     const { scope, children } = props;
-    const ref = React6.useRef(null);
-    const itemMap = React6.useRef(/* @__PURE__ */ new Map()).current;
-    return /* @__PURE__ */ jsx3(CollectionProviderImpl, { scope, itemMap, collectionRef: ref, children });
+    const ref = React7.useRef(null);
+    const itemMap = React7.useRef(/* @__PURE__ */ new Map()).current;
+    return /* @__PURE__ */ jsx4(CollectionProviderImpl, { scope, itemMap, collectionRef: ref, children });
   }, "CollectionProvider");
   CollectionProvider.displayName = PROVIDER_NAME;
   const COLLECTION_SLOT_NAME = name + "CollectionSlot";
   const CollectionSlotImpl = createSlot(COLLECTION_SLOT_NAME);
-  const CollectionSlot = React6.forwardRef(
+  const CollectionSlot = React7.forwardRef(
     (props, forwardedRef) => {
       const { scope, children } = props;
       const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
       const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
-      return /* @__PURE__ */ jsx3(CollectionSlotImpl, { ref: composedRefs, children });
+      return /* @__PURE__ */ jsx4(CollectionSlotImpl, { ref: composedRefs, children });
     }
   );
   CollectionSlot.displayName = COLLECTION_SLOT_NAME;
   const ITEM_SLOT_NAME = name + "CollectionItemSlot";
   const ITEM_DATA_ATTR = "data-radix-collection-item";
   const CollectionItemSlotImpl = createSlot(ITEM_SLOT_NAME);
-  const CollectionItemSlot = React6.forwardRef(
+  const CollectionItemSlot = React7.forwardRef(
     (props, forwardedRef) => {
       const { scope, children, ...itemData } = props;
-      const ref = React6.useRef(null);
+      const ref = React7.useRef(null);
       const composedRefs = useComposedRefs(forwardedRef, ref);
       const context = useCollectionContext(ITEM_SLOT_NAME, scope);
-      React6.useEffect(() => {
+      React7.useEffect(() => {
         context.itemMap.set(ref, { ref, ...itemData });
         return () => void context.itemMap.delete(ref);
       });
-      return /* @__PURE__ */ jsx3(CollectionItemSlotImpl, { ...{ [ITEM_DATA_ATTR]: "" }, ref: composedRefs, children });
+      return /* @__PURE__ */ jsx4(CollectionItemSlotImpl, { ...{ [ITEM_DATA_ATTR]: "" }, ref: composedRefs, children });
     }
   );
   CollectionItemSlot.displayName = ITEM_SLOT_NAME;
   function useCollection6(scope) {
     const context = useCollectionContext(name + "CollectionConsumer", scope);
-    const getItems = React6.useCallback(() => {
+    const getItems = React7.useCallback(() => {
       const collectionNode = context.collectionRef.current;
       if (!collectionNode) return [];
       const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
@@ -408,18 +533,18 @@ function createCollection(name) {
     }, [context.collectionRef, context.itemMap]);
     return getItems;
   }
-  __name5(useCollection6, "useCollection");
+  __name7(useCollection6, "useCollection");
   return [
     { Provider: CollectionProvider, Slot: CollectionSlot, ItemSlot: CollectionItemSlot },
     useCollection6,
-    createCollectionScope7
+    createCollectionScope6
   ];
 }
-__name5(createCollection, "createCollection");
+__name7(createCollection, "createCollection");
 var __instanciated = /* @__PURE__ */ new WeakMap();
 var OrderedDict = class _OrderedDict extends Map {
   static {
-    __name5(this, "OrderedDict");
+    __name7(this, "OrderedDict");
   }
   #keys;
   constructor(entries) {
@@ -725,36 +850,36 @@ function at(array, index2) {
   const actualIndex = toSafeIndex(array, index2);
   return actualIndex === -1 ? void 0 : array[actualIndex];
 }
-__name5(at, "at");
+__name7(at, "at");
 function toSafeIndex(array, index2) {
   const length = array.length;
   const relativeIndex = toSafeInteger(index2);
   const actualIndex = relativeIndex >= 0 ? relativeIndex : length + relativeIndex;
   return actualIndex < 0 || actualIndex >= length ? -1 : actualIndex;
 }
-__name5(toSafeIndex, "toSafeIndex");
+__name7(toSafeIndex, "toSafeIndex");
 function toSafeInteger(number) {
   return number !== number || number === 0 ? 0 : Math.trunc(number);
 }
-__name5(toSafeInteger, "toSafeInteger");
+__name7(toSafeInteger, "toSafeInteger");
 // @__NO_SIDE_EFFECTS__
 function createCollection2(name) {
   const PROVIDER_NAME = name + "CollectionProvider";
-  const [createCollectionContext, createCollectionScope7] = createContextScope(PROVIDER_NAME);
+  const [createCollectionContext, createCollectionScope6] = createContextScope(PROVIDER_NAME);
   const [CollectionStableContextProvider, useStableCollectionContext] = createCollectionContext(PROVIDER_NAME);
   CollectionStableContextProvider.displayName = name + "CollectionStableContextProvider";
   const [CollectionStatefulContextProvider, useStatefulCollectionContext] = createCollectionContext(PROVIDER_NAME);
   CollectionStatefulContextProvider.displayName = name + "CollectionStatefulContextProvider";
-  const CollectionProvider = /* @__PURE__ */ __name5(({ state, ...props }) => {
+  const CollectionProvider = /* @__PURE__ */ __name7(({ state, ...props }) => {
     return state ? /* @__PURE__ */ jsx22(CollectionProviderImpl, { ...props, state }) : /* @__PURE__ */ jsx22(CollectionInit, { ...props });
   }, "CollectionProvider");
   CollectionProvider.displayName = PROVIDER_NAME;
-  const CollectionInit = /* @__PURE__ */ __name5((props) => {
+  const CollectionInit = /* @__PURE__ */ __name7((props) => {
     const state = useInitCollection();
     return /* @__PURE__ */ jsx22(CollectionProviderImpl, { ...props, state });
   }, "CollectionInit");
   CollectionInit.displayName = name + "CollectionInit";
-  const CollectionProviderImpl = /* @__PURE__ */ __name5((props) => {
+  const CollectionProviderImpl = /* @__PURE__ */ __name7((props) => {
     const { scope, children, state } = props;
     const ref = React22.useRef(null);
     const [collectionElement, setCollectionElement] = React22.useState(
@@ -903,21 +1028,21 @@ function createCollection2(name) {
   function useInitCollection() {
     return React22.useState(new OrderedDict());
   }
-  __name5(useInitCollection, "useInitCollection");
+  __name7(useInitCollection, "useInitCollection");
   function useCollection6(scope) {
     const { collection } = useStatefulCollectionContext(name + "CollectionConsumer", scope);
     return collection;
   }
-  __name5(useCollection6, "useCollection");
-  function useGetCollection2(scope) {
+  __name7(useCollection6, "useCollection");
+  function useGetCollection(scope) {
     const { getCollection } = useStableCollectionContext(name + "CollectionConsumer", scope);
     return getCollection;
   }
-  __name5(useGetCollection2, "useGetCollection");
+  __name7(useGetCollection, "useGetCollection");
   const functions = {
-    createCollectionScope: createCollectionScope7,
+    createCollectionScope: createCollectionScope6,
     useCollection: useCollection6,
-    useGetCollection: useGetCollection2,
+    useGetCollection,
     useInitCollection
   };
   return [
@@ -925,7 +1050,7 @@ function createCollection2(name) {
     functions
   ];
 }
-__name5(createCollection2, "createCollection");
+__name7(createCollection2, "createCollection");
 function shallowEqual(a, b) {
   if (a === b) return true;
   if (typeof a !== "object" || typeof b !== "object") return false;
@@ -939,11 +1064,11 @@ function shallowEqual(a, b) {
   }
   return true;
 }
-__name5(shallowEqual, "shallowEqual");
+__name7(shallowEqual, "shallowEqual");
 function isElementPreceding(a, b) {
   return !!(b.compareDocumentPosition(a) & Node.DOCUMENT_POSITION_PRECEDING);
 }
-__name5(isElementPreceding, "isElementPreceding");
+__name7(isElementPreceding, "isElementPreceding");
 function isInDocumentOrder(dict) {
   let previous;
   for (const element of dict.keys()) {
@@ -957,11 +1082,11 @@ function isInDocumentOrder(dict) {
   }
   return true;
 }
-__name5(isInDocumentOrder, "isInDocumentOrder");
+__name7(isInDocumentOrder, "isInDocumentOrder");
 function sortByDocumentPosition(a, b) {
   return !a[1].element || !b[1].element ? 0 : isElementPreceding(a[1].element, b[1].element) ? -1 : 1;
 }
-__name5(sortByDocumentPosition, "sortByDocumentPosition");
+__name7(sortByDocumentPosition, "sortByDocumentPosition");
 function getChildListObserver(callback) {
   const observer = new MutationObserver((mutationsList) => {
     for (const mutation of mutationsList) {
@@ -973,970 +1098,20 @@ function getChildListObserver(callback) {
   });
   return observer;
 }
-__name5(getChildListObserver, "getChildListObserver");
-
-// node_modules/@radix-ui/primitive/dist/index.mjs
-var __defProp6 = Object.defineProperty;
-var __name6 = (target, value) => __defProp6(target, "name", { value, configurable: true });
-var canUseDOM = !!(typeof window !== "undefined" && window.document && window.document.createElement);
-function composeEventHandlers(originalEventHandler, ourEventHandler, { checkForDefaultPrevented = true } = {}) {
-  return /* @__PURE__ */ __name6(function handleEvent(event) {
-    originalEventHandler?.(event);
-    if (checkForDefaultPrevented === false || !event || !event.defaultPrevented) {
-      return ourEventHandler?.(event);
-    }
-  }, "handleEvent");
-}
-__name6(composeEventHandlers, "composeEventHandlers");
-function getOwnerWindow(element) {
-  if (!canUseDOM) {
-    throw new Error("Cannot access window outside of the DOM");
-  }
-  return element?.ownerDocument?.defaultView ?? window;
-}
-__name6(getOwnerWindow, "getOwnerWindow");
-function getOwnerDocument(element) {
-  if (!canUseDOM) {
-    throw new Error("Cannot access document outside of the DOM");
-  }
-  return element?.ownerDocument ?? document;
-}
-__name6(getOwnerDocument, "getOwnerDocument");
-function getActiveElement(node, activeDescendant = false) {
-  const { activeElement } = getOwnerDocument(node);
-  if (!activeElement?.nodeName) {
-    return null;
-  }
-  if (isFrame(activeElement) && activeElement.contentDocument) {
-    return getActiveElement(activeElement.contentDocument.body, activeDescendant);
-  }
-  if (activeDescendant) {
-    const id = activeElement.getAttribute("aria-activedescendant");
-    if (id) {
-      const element = getOwnerDocument(activeElement).getElementById(id);
-      if (element) {
-        return element;
-      }
-    }
-  }
-  return activeElement;
-}
-__name6(getActiveElement, "getActiveElement");
-function isFrame(element) {
-  return element.tagName === "IFRAME";
-}
-__name6(isFrame, "isFrame");
-
-// node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
-import * as React8 from "react";
-
-// node_modules/@radix-ui/primitive/dist/internal/is-development.false.mjs
-var IS_DEVELOPMENT = false;
-
-// node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
-import * as React23 from "react";
-
-// node_modules/@radix-ui/react-use-effect-event/dist/index.mjs
-import * as React7 from "react";
-var __defProp7 = Object.defineProperty;
-var __name7 = (target, value) => __defProp7(target, "name", { value, configurable: true });
-var useReactEffectEvent = React7[" useEffectEvent ".trim().toString()];
-var useReactInsertionEffect = React7[" useInsertionEffect ".trim().toString()];
-function useEffectEvent(callback) {
-  if (typeof useReactEffectEvent === "function") {
-    return useReactEffectEvent(callback);
-  }
-  const ref = React7.useRef(() => {
-    throw new Error("Cannot call an event handler while rendering.");
-  });
-  if (typeof useReactInsertionEffect === "function") {
-    useReactInsertionEffect(() => {
-      ref.current = callback;
-    });
-  } else {
-    useLayoutEffect2(() => {
-      ref.current = callback;
-    });
-  }
-  return React7.useMemo(() => ((...args) => ref.current?.(...args)), []);
-}
-__name7(useEffectEvent, "useEffectEvent");
-
-// node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
-var __defProp8 = Object.defineProperty;
-var __name8 = (target, value) => __defProp8(target, "name", { value, configurable: true });
-var useInsertionEffect = React8[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
-function useControllableState({
-  prop,
-  defaultProp,
-  onChange = /* @__PURE__ */ __name8(() => {
-  }, "onChange"),
-  caller
-}) {
-  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
-    defaultProp,
-    onChange
-  });
-  const isControlled = prop !== void 0;
-  const value = isControlled ? prop : uncontrolledProp;
-  if (IS_DEVELOPMENT) {
-    const isControlledRef = React8.useRef(prop !== void 0);
-    React8.useEffect(() => {
-      const wasControlled = isControlledRef.current;
-      if (wasControlled !== isControlled) {
-        const from = wasControlled ? "controlled" : "uncontrolled";
-        const to = isControlled ? "controlled" : "uncontrolled";
-        console.warn(
-          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
-        );
-      }
-      isControlledRef.current = isControlled;
-    }, [isControlled, caller]);
-  }
-  const setValue = React8.useCallback(
-    (nextValue) => {
-      if (isControlled) {
-        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
-        if (value2 !== prop) {
-          onChangeRef.current?.(value2);
-        }
-      } else {
-        setUncontrolledProp(nextValue);
-      }
-    },
-    [isControlled, prop, setUncontrolledProp, onChangeRef]
-  );
-  return [value, setValue];
-}
-__name8(useControllableState, "useControllableState");
-function useUncontrolledState({
-  defaultProp,
-  onChange
-}) {
-  const [value, setValue] = React8.useState(defaultProp);
-  const prevValueRef = React8.useRef(value);
-  const onChangeRef = React8.useRef(onChange);
-  useInsertionEffect(() => {
-    onChangeRef.current = onChange;
-  }, [onChange]);
-  React8.useEffect(() => {
-    if (prevValueRef.current !== value) {
-      onChangeRef.current?.(value);
-      prevValueRef.current = value;
-    }
-  }, [value, prevValueRef]);
-  return [value, setValue, onChangeRef];
-}
-__name8(useUncontrolledState, "useUncontrolledState");
-function isFunction(value) {
-  return typeof value === "function";
-}
-__name8(isFunction, "isFunction");
-var SYNC_STATE = /* @__PURE__ */ Symbol("RADIX:SYNC_STATE");
-function useControllableStateReducer(reducer, userArgs, initialArg, init) {
-  const { prop: controlledState, defaultProp, onChange: onChangeProp, caller } = userArgs;
-  const isControlled = controlledState !== void 0;
-  const onChange = useEffectEvent(onChangeProp);
-  if (IS_DEVELOPMENT) {
-    const isControlledRef = React23.useRef(controlledState !== void 0);
-    React23.useEffect(() => {
-      const wasControlled = isControlledRef.current;
-      if (wasControlled !== isControlled) {
-        const from = wasControlled ? "controlled" : "uncontrolled";
-        const to = isControlled ? "controlled" : "uncontrolled";
-        console.warn(
-          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
-        );
-      }
-      isControlledRef.current = isControlled;
-    }, [isControlled, caller]);
-  }
-  const args = [{ ...initialArg, state: defaultProp }];
-  if (init) {
-    args.push(init);
-  }
-  const [internalState, dispatch] = React23.useReducer(
-    (state2, action) => {
-      if (action.type === SYNC_STATE) {
-        return { ...state2, state: action.state };
-      }
-      const next = reducer(state2, action);
-      if (isControlled && !Object.is(next.state, state2.state)) {
-        onChange(next.state);
-      }
-      return next;
-    },
-    ...args
-  );
-  const uncontrolledState = internalState.state;
-  const prevValueRef = React23.useRef(uncontrolledState);
-  React23.useEffect(() => {
-    if (prevValueRef.current !== uncontrolledState) {
-      prevValueRef.current = uncontrolledState;
-      if (!isControlled) {
-        onChange(uncontrolledState);
-      }
-    }
-  }, [uncontrolledState, prevValueRef, isControlled]);
-  const state = React23.useMemo(() => {
-    const isControlled2 = controlledState !== void 0;
-    if (isControlled2) {
-      return { ...internalState, state: controlledState };
-    }
-    return internalState;
-  }, [internalState, controlledState]);
-  React23.useEffect(() => {
-    if (isControlled && !Object.is(controlledState, internalState.state)) {
-      dispatch({ type: SYNC_STATE, state: controlledState });
-    }
-  }, [controlledState, internalState.state, isControlled]);
-  return [state, dispatch];
-}
-__name8(useControllableStateReducer, "useControllableStateReducer");
-
-// node_modules/@radix-ui/react-primitive/dist/index.mjs
-import * as React9 from "react";
-import * as ReactDOM from "react-dom";
-import { jsx as jsx4 } from "react/jsx-runtime";
-var __defProp9 = Object.defineProperty;
-var __name9 = (target, value) => __defProp9(target, "name", { value, configurable: true });
-var NODES = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "select",
-  "span",
-  "svg",
-  "ul"
-];
-var Primitive = NODES.reduce((primitive, node) => {
-  const Slot4 = createSlot(`Primitive.${node}`);
-  const Node2 = React9.forwardRef((props, forwardedRef) => {
-    const { asChild, ...primitiveProps } = props;
-    const Comp = asChild ? Slot4 : node;
-    if (typeof window !== "undefined") {
-      window[/* @__PURE__ */ Symbol.for("radix-ui")] = true;
-    }
-    return /* @__PURE__ */ jsx4(Comp, { ...primitiveProps, ref: forwardedRef });
-  });
-  Node2.displayName = `Primitive.${node}`;
-  return { ...primitive, [node]: Node2 };
-}, {});
-function dispatchDiscreteCustomEvent(target, event) {
-  if (target) ReactDOM.flushSync(() => target.dispatchEvent(event));
-}
-__name9(dispatchDiscreteCustomEvent, "dispatchDiscreteCustomEvent");
-
-// node_modules/@radix-ui/react-collapsible/dist/index.mjs
-import * as React12 from "react";
-
-// node_modules/@radix-ui/react-presence/dist/index.mjs
-import * as React24 from "react";
-import * as React10 from "react";
-var __defProp10 = Object.defineProperty;
-var __name10 = (target, value) => __defProp10(target, "name", { value, configurable: true });
-function useStateMachine(initialState, machine) {
-  return React10.useReducer((state, event) => {
-    const nextState = machine[state][event];
-    return nextState ?? state;
-  }, initialState);
-}
-__name10(useStateMachine, "useStateMachine");
-var Presence = /* @__PURE__ */ __name10((props) => {
-  const { present, children } = props;
-  const presence = usePresence(present);
-  const child = typeof children === "function" ? children({ present: presence.isPresent }) : React24.Children.only(children);
-  const ref = useStableComposedRefs(presence.ref, getElementRef2(child));
-  const forceMount = typeof children === "function";
-  return forceMount || presence.isPresent ? React24.cloneElement(child, { ref }) : null;
-}, "Presence");
-function usePresence(present) {
-  const [node, setNode] = React24.useState();
-  const stylesRef = React24.useRef(null);
-  const prevPresentRef = React24.useRef(present);
-  const prevAnimationNameRef = React24.useRef("none");
-  const mountAnimationNameRef = React24.useRef(void 0);
-  const initialState = present ? "mounted" : "unmounted";
-  const [state, send] = useStateMachine(initialState, {
-    mounted: {
-      UNMOUNT: "unmounted",
-      ANIMATION_OUT: "unmountSuspended"
-    },
-    unmountSuspended: {
-      MOUNT: "mounted",
-      ANIMATION_END: "unmounted"
-    },
-    unmounted: {
-      MOUNT: "mounted"
-    }
-  });
-  React24.useEffect(() => {
-    if (state === "mounted") {
-      prevAnimationNameRef.current = mountAnimationNameRef.current ?? getAnimationName(stylesRef.current);
-      mountAnimationNameRef.current = void 0;
-    } else {
-      prevAnimationNameRef.current = "none";
-    }
-  }, [state]);
-  useLayoutEffect2(() => {
-    const styles = stylesRef.current;
-    const wasPresent = prevPresentRef.current;
-    const hasPresentChanged = wasPresent !== present;
-    if (hasPresentChanged) {
-      const prevAnimationName = prevAnimationNameRef.current;
-      const currentAnimationName = getAnimationName(styles);
-      if (present) {
-        mountAnimationNameRef.current = currentAnimationName;
-        send("MOUNT");
-      } else if (currentAnimationName === "none" || styles?.display === "none") {
-        send("UNMOUNT");
-      } else {
-        const isAnimating = prevAnimationName !== currentAnimationName;
-        if (wasPresent && isAnimating) {
-          send("ANIMATION_OUT");
-        } else {
-          send("UNMOUNT");
-        }
-      }
-      prevPresentRef.current = present;
-    }
-  }, [present, send]);
-  useLayoutEffect2(() => {
-    if (node) {
-      let timeoutId;
-      const ownerWindow = node.ownerDocument.defaultView ?? window;
-      const handleAnimationEnd = /* @__PURE__ */ __name10((event) => {
-        const currentAnimationName = getAnimationName(stylesRef.current);
-        const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
-        if (event.target === node && isCurrentAnimation) {
-          send("ANIMATION_END");
-          if (!prevPresentRef.current) {
-            const currentFillMode = node.style.animationFillMode;
-            node.style.animationFillMode = "forwards";
-            timeoutId = ownerWindow.setTimeout(() => {
-              if (node.style.animationFillMode === "forwards") {
-                node.style.animationFillMode = currentFillMode;
-              }
-            });
-          }
-        }
-      }, "handleAnimationEnd");
-      const handleAnimationStart = /* @__PURE__ */ __name10((event) => {
-        if (event.target === node) {
-          prevAnimationNameRef.current = getAnimationName(stylesRef.current);
-        }
-      }, "handleAnimationStart");
-      node.addEventListener("animationstart", handleAnimationStart);
-      node.addEventListener("animationcancel", handleAnimationEnd);
-      node.addEventListener("animationend", handleAnimationEnd);
-      return () => {
-        ownerWindow.clearTimeout(timeoutId);
-        node.removeEventListener("animationstart", handleAnimationStart);
-        node.removeEventListener("animationcancel", handleAnimationEnd);
-        node.removeEventListener("animationend", handleAnimationEnd);
-      };
-    } else {
-      send("ANIMATION_END");
-    }
-  }, [node, send]);
-  return {
-    isPresent: ["mounted", "unmountSuspended"].includes(state),
-    ref: React24.useCallback((node2) => {
-      if (node2) {
-        const styles = getComputedStyle(node2);
-        stylesRef.current = styles;
-        mountAnimationNameRef.current = getAnimationName(styles);
-      } else {
-        stylesRef.current = null;
-      }
-      setNode(node2);
-    }, [])
-  };
-}
-__name10(usePresence, "usePresence");
-function setRef2(ref, value) {
-  if (typeof ref === "function") {
-    return ref(value);
-  } else if (ref !== null && ref !== void 0) {
-    ref.current = value;
-  }
-}
-__name10(setRef2, "setRef");
-function useStableComposedRefs(...refs) {
-  const refsRef = React24.useRef(refs);
-  refsRef.current = refs;
-  return React24.useCallback((node) => {
-    const currentRefs = refsRef.current;
-    let hasCleanup = false;
-    const cleanups = currentRefs.map((ref) => {
-      const cleanup = setRef2(ref, node);
-      if (!hasCleanup && typeof cleanup === "function") {
-        hasCleanup = true;
-      }
-      return cleanup;
-    });
-    if (hasCleanup) {
-      return () => {
-        for (let i = 0; i < cleanups.length; i++) {
-          const cleanup = cleanups[i];
-          if (typeof cleanup === "function") {
-            cleanup();
-          } else {
-            setRef2(currentRefs[i], null);
-          }
-        }
-      };
-    }
-  }, []);
-}
-__name10(useStableComposedRefs, "useStableComposedRefs");
-function getAnimationName(styles) {
-  return styles?.animationName || "none";
-}
-__name10(getAnimationName, "getAnimationName");
-function getElementRef2(element) {
-  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
-  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.ref;
-  }
-  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
-  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.props.ref;
-  }
-  return element.props.ref || element.ref;
-}
-__name10(getElementRef2, "getElementRef");
-
-// node_modules/@radix-ui/react-id/dist/index.mjs
-import * as React11 from "react";
-var __defProp11 = Object.defineProperty;
-var __name11 = (target, value) => __defProp11(target, "name", { value, configurable: true });
-var useReactId = React11[" useId ".trim().toString()] || (() => void 0);
-var count = 0;
-function useId(deterministicId) {
-  const [id, setId] = React11.useState(useReactId());
-  useLayoutEffect2(() => {
-    if (!deterministicId) setId((reactId) => reactId ?? String(count++));
-  }, [deterministicId]);
-  return deterministicId || (id ? `radix-${id}` : "");
-}
-__name11(useId, "useId");
-
-// node_modules/@radix-ui/react-collapsible/dist/index.mjs
-import { jsx as jsx5 } from "react/jsx-runtime";
-var __defProp12 = Object.defineProperty;
-var __name12 = (target, value) => __defProp12(target, "name", { value, configurable: true });
-var COLLAPSIBLE_NAME = "Collapsible";
-var [createCollapsibleContext, createCollapsibleScope] = createContextScope(COLLAPSIBLE_NAME);
-var [CollapsibleProvider, useCollapsibleContext] = createCollapsibleContext(COLLAPSIBLE_NAME);
-var Collapsible = /* @__PURE__ */ React12.forwardRef(
-  /* @__PURE__ */ __name12(function Collapsible2(props, forwardedRef) {
-    const {
-      __scopeCollapsible,
-      open: openProp,
-      defaultOpen,
-      disabled,
-      onOpenChange,
-      ...collapsibleProps
-    } = props;
-    const [open, setOpen] = useControllableState({
-      prop: openProp,
-      defaultProp: defaultOpen ?? false,
-      onChange: onOpenChange,
-      caller: COLLAPSIBLE_NAME
-    });
-    return /* @__PURE__ */ jsx5(
-      CollapsibleProvider,
-      {
-        scope: __scopeCollapsible,
-        disabled,
-        contentId: useId(),
-        open,
-        onOpenToggle: React12.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
-        children: /* @__PURE__ */ jsx5(
-          Primitive.div,
-          {
-            "data-state": getState(open),
-            "data-disabled": disabled ? "" : void 0,
-            ...collapsibleProps,
-            ref: forwardedRef
-          }
-        )
-      }
-    );
-  }, "Collapsible")
-);
-var TRIGGER_NAME = "CollapsibleTrigger";
-var CollapsibleTrigger = /* @__PURE__ */ React12.forwardRef(
-  // blank line to reduce diff noise
-  /* @__PURE__ */ __name12(function CollapsibleTrigger2(props, forwardedRef) {
-    const { __scopeCollapsible, ...triggerProps } = props;
-    const context = useCollapsibleContext(TRIGGER_NAME, __scopeCollapsible);
-    return /* @__PURE__ */ jsx5(
-      Primitive.button,
-      {
-        type: "button",
-        "aria-controls": context.open ? context.contentId : void 0,
-        "aria-expanded": context.open || false,
-        "data-state": getState(context.open),
-        "data-disabled": context.disabled ? "" : void 0,
-        disabled: context.disabled,
-        ...triggerProps,
-        ref: forwardedRef,
-        onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
-      }
-    );
-  }, "CollapsibleTrigger")
-);
-var CONTENT_NAME = "CollapsibleContent";
-var CollapsibleContent = /* @__PURE__ */ React12.forwardRef(
-  // blank line to reduce diff noise
-  /* @__PURE__ */ __name12(function CollapsibleContent2(props, forwardedRef) {
-    const { forceMount, ...contentProps } = props;
-    const context = useCollapsibleContext(CONTENT_NAME, props.__scopeCollapsible);
-    return /* @__PURE__ */ jsx5(Presence, { present: forceMount || context.open, children: ({ present }) => /* @__PURE__ */ jsx5(CollapsibleContentImpl, { ...contentProps, ref: forwardedRef, present }) });
-  }, "CollapsibleContent")
-);
-var CollapsibleContentImpl = /* @__PURE__ */ React12.forwardRef(/* @__PURE__ */ __name12(function CollapsibleContentImpl2(props, forwardedRef) {
-  const { __scopeCollapsible, present, children, ...contentProps } = props;
-  const context = useCollapsibleContext(CONTENT_NAME, __scopeCollapsible);
-  const [isPresent, setIsPresent] = React12.useState(present);
-  const ref = React12.useRef(null);
-  const composedRefs = useComposedRefs(forwardedRef, ref);
-  const heightRef = React12.useRef(0);
-  const height = heightRef.current;
-  const widthRef = React12.useRef(0);
-  const width = widthRef.current;
-  const isOpen = context.open || isPresent;
-  const isMountAnimationPreventedRef = React12.useRef(isOpen);
-  const originalStylesRef = React12.useRef(void 0);
-  React12.useEffect(() => {
-    const rAF = requestAnimationFrame(() => isMountAnimationPreventedRef.current = false);
-    return () => cancelAnimationFrame(rAF);
-  }, []);
-  useLayoutEffect2(() => {
-    const node = ref.current;
-    if (node) {
-      originalStylesRef.current = originalStylesRef.current || {
-        transitionDuration: node.style.transitionDuration,
-        animationName: node.style.animationName
-      };
-      node.style.transitionDuration = "0s";
-      node.style.animationName = "none";
-      const rect = node.getBoundingClientRect();
-      heightRef.current = rect.height;
-      widthRef.current = rect.width;
-      if (!isMountAnimationPreventedRef.current) {
-        node.style.transitionDuration = originalStylesRef.current.transitionDuration;
-        node.style.animationName = originalStylesRef.current.animationName;
-      }
-      setIsPresent(present);
-    }
-  }, [context.open, present]);
-  return /* @__PURE__ */ jsx5(
-    Primitive.div,
-    {
-      "data-state": getState(context.open),
-      "data-disabled": context.disabled ? "" : void 0,
-      id: context.contentId,
-      hidden: !isOpen,
-      ...contentProps,
-      ref: composedRefs,
-      style: {
-        [`--radix-collapsible-content-height`]: height ? `${height}px` : void 0,
-        [`--radix-collapsible-content-width`]: width ? `${width}px` : void 0,
-        ...props.style
-      },
-      children: isOpen && children
-    }
-  );
-}, "CollapsibleContentImpl"));
-function getState(open) {
-  return open ? "open" : "closed";
-}
-__name12(getState, "getState");
-
-// node_modules/@radix-ui/react-accordion/dist/index.mjs
-import { jsx as jsx6 } from "react/jsx-runtime";
-var __defProp13 = Object.defineProperty;
-var __name13 = (target, value) => __defProp13(target, "name", { value, configurable: true });
-var AccordionType = {
-  Single: "single",
-  Multiple: "multiple"
-};
-var Orientation = {
-  Vertical: "vertical",
-  Horizontal: "horizontal"
-};
-var Direction2 = {
-  LTR: "ltr",
-  RTL: "rtl"
-};
-var ACCORDION_NAME = "Accordion";
-var ACCORDION_KEYS = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
-var [Collection, { useGetCollection, createCollectionScope }] = createCollection2(ACCORDION_NAME);
-var [createAccordionContext, createAccordionScope] = createContextScope(ACCORDION_NAME, [
-  createCollectionScope,
-  createCollapsibleScope
-]);
-var useCollapsibleScope = createCollapsibleScope();
-var Accordion = /* @__PURE__ */ React13.forwardRef(
-  // blank line to reduce diff noise
-  /* @__PURE__ */ __name13(function Accordion2(props, forwardedRef) {
-    const { type, ...accordionProps } = props;
-    const singleProps = accordionProps;
-    const multipleProps = accordionProps;
-    return /* @__PURE__ */ jsx6(Collection.Provider, { scope: props.__scopeAccordion, children: type === AccordionType.Multiple ? /* @__PURE__ */ jsx6(AccordionImplMultiple, { ...multipleProps, ref: forwardedRef }) : /* @__PURE__ */ jsx6(AccordionImplSingle, { ...singleProps, ref: forwardedRef }) });
-  }, "Accordion")
-);
-var [AccordionValueProvider, useAccordionValueContext] = createAccordionContext(ACCORDION_NAME);
-var [AccordionCollapsibleProvider, useAccordionCollapsibleContext] = createAccordionContext(
-  ACCORDION_NAME,
-  { collapsible: false }
-);
-var AccordionImplSingle = /* @__PURE__ */ React13.forwardRef(
-  // blank line to reduce diff noise
-  /* @__PURE__ */ __name13(function AccordionImplSingle2(props, forwardedRef) {
-    const {
-      value: valueProp,
-      defaultValue,
-      onValueChange = /* @__PURE__ */ __name13(() => {
-      }, "onValueChange"),
-      collapsible = false,
-      ...accordionSingleProps
-    } = props;
-    const [value, setValue] = useControllableState({
-      prop: valueProp,
-      defaultProp: defaultValue ?? "",
-      onChange: onValueChange,
-      caller: ACCORDION_NAME
-    });
-    return /* @__PURE__ */ jsx6(
-      AccordionValueProvider,
-      {
-        scope: props.__scopeAccordion,
-        value: React13.useMemo(() => value ? [value] : [], [value]),
-        onItemOpen: setValue,
-        onItemClose: React13.useCallback(() => collapsible && setValue(""), [collapsible, setValue]),
-        children: /* @__PURE__ */ jsx6(AccordionCollapsibleProvider, { scope: props.__scopeAccordion, collapsible, children: /* @__PURE__ */ jsx6(AccordionImpl, { ...accordionSingleProps, ref: forwardedRef }) })
-      }
-    );
-  }, "AccordionImplSingle")
-);
-var AccordionImplMultiple = /* @__PURE__ */ React13.forwardRef(/* @__PURE__ */ __name13(function AccordionImplMultiple2(props, forwardedRef) {
-  const {
-    value: valueProp,
-    defaultValue,
-    onValueChange = /* @__PURE__ */ __name13(() => {
-    }, "onValueChange"),
-    ...accordionMultipleProps
-  } = props;
-  const [value, setValue] = useControllableState({
-    prop: valueProp,
-    defaultProp: defaultValue ?? [],
-    onChange: onValueChange,
-    caller: ACCORDION_NAME
-  });
-  const handleItemOpen = React13.useCallback(
-    (itemValue) => setValue((prevValue = []) => [...prevValue, itemValue]),
-    [setValue]
-  );
-  const handleItemClose = React13.useCallback(
-    (itemValue) => setValue((prevValue = []) => prevValue.filter((value2) => value2 !== itemValue)),
-    [setValue]
-  );
-  return /* @__PURE__ */ jsx6(
-    AccordionValueProvider,
-    {
-      scope: props.__scopeAccordion,
-      value,
-      onItemOpen: handleItemOpen,
-      onItemClose: handleItemClose,
-      children: /* @__PURE__ */ jsx6(AccordionCollapsibleProvider, { scope: props.__scopeAccordion, collapsible: true, children: /* @__PURE__ */ jsx6(AccordionImpl, { ...accordionMultipleProps, ref: forwardedRef }) })
-    }
-  );
-}, "AccordionImplMultiple"));
-var [AccordionImplProvider, useAccordionContext] = createAccordionContext(ACCORDION_NAME);
-var AccordionImpl = /* @__PURE__ */ React13.forwardRef(
-  /* @__PURE__ */ __name13(function AccordionImpl2(props, forwardedRef) {
-    const {
-      __scopeAccordion,
-      disabled,
-      dir,
-      orientation = Orientation.Vertical,
-      ...accordionProps
-    } = props;
-    const accordionRef = React13.useRef(null);
-    const composedRefs = useComposedRefs(accordionRef, forwardedRef);
-    const getCollection = useGetCollection(__scopeAccordion);
-    const direction = useDirection(dir);
-    const isDirectionLTR = direction === Direction2.LTR;
-    const handleKeyDown = composeEventHandlers(props.onKeyDown, (event) => {
-      if (!ACCORDION_KEYS.includes(event.key)) {
-        return;
-      }
-      const collection = getCollection();
-      const target = event.target;
-      const triggerCollection = collection.filter(([, item]) => !item.element.disabled);
-      const triggerIndex = triggerCollection.findIndex(([, item]) => item.element === target);
-      const triggerCount = triggerCollection.size;
-      if (triggerIndex === -1) {
-        return;
-      }
-      event.preventDefault();
-      let nextIndex = triggerIndex;
-      const homeIndex = 0;
-      const endIndex = triggerCount - 1;
-      const moveNext = /* @__PURE__ */ __name13(() => {
-        nextIndex = triggerIndex + 1;
-        if (nextIndex > endIndex) {
-          nextIndex = homeIndex;
-        }
-      }, "moveNext");
-      const movePrev = /* @__PURE__ */ __name13(() => {
-        nextIndex = triggerIndex - 1;
-        if (nextIndex < homeIndex) {
-          nextIndex = endIndex;
-        }
-      }, "movePrev");
-      switch (event.key) {
-        case "Home":
-          nextIndex = homeIndex;
-          break;
-        case "End":
-          nextIndex = endIndex;
-          break;
-        case "ArrowRight":
-          if (orientation === Orientation.Horizontal) {
-            if (isDirectionLTR) {
-              moveNext();
-            } else {
-              movePrev();
-            }
-          }
-          break;
-        case "ArrowDown":
-          if (orientation === Orientation.Vertical) {
-            moveNext();
-          }
-          break;
-        case "ArrowLeft":
-          if (orientation === Orientation.Horizontal) {
-            if (isDirectionLTR) {
-              movePrev();
-            } else {
-              moveNext();
-            }
-          }
-          break;
-        case "ArrowUp":
-          if (orientation === Orientation.Vertical) {
-            movePrev();
-          }
-          break;
-      }
-      const clampedIndex = nextIndex % triggerCount;
-      triggerCollection.at(clampedIndex)?.element.focus();
-    });
-    return /* @__PURE__ */ jsx6(
-      AccordionImplProvider,
-      {
-        scope: __scopeAccordion,
-        disabled,
-        direction: dir,
-        orientation,
-        children: /* @__PURE__ */ jsx6(Collection.Slot, { scope: __scopeAccordion, children: /* @__PURE__ */ jsx6(
-          Primitive.div,
-          {
-            ...accordionProps,
-            "data-orientation": orientation,
-            ref: composedRefs,
-            onKeyDown: disabled ? void 0 : handleKeyDown
-          }
-        ) })
-      }
-    );
-  }, "AccordionImpl")
-);
-var ITEM_NAME = "AccordionItem";
-var [AccordionItemProvider, useAccordionItemContext] = createAccordionContext(ITEM_NAME);
-var AccordionItem = /* @__PURE__ */ React13.forwardRef(
-  /* @__PURE__ */ __name13(function AccordionItem2(props, forwardedRef) {
-    const { __scopeAccordion, value, ...accordionItemProps } = props;
-    const accordionContext = useAccordionContext(ITEM_NAME, __scopeAccordion);
-    const valueContext = useAccordionValueContext(ITEM_NAME, __scopeAccordion);
-    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
-    const triggerId = useId();
-    const open = value && valueContext.value.includes(value) || false;
-    const disabled = accordionContext.disabled || props.disabled;
-    return /* @__PURE__ */ jsx6(
-      AccordionItemProvider,
-      {
-        scope: __scopeAccordion,
-        open,
-        disabled,
-        triggerId,
-        children: /* @__PURE__ */ jsx6(
-          Collapsible,
-          {
-            "data-orientation": accordionContext.orientation,
-            "data-state": getState2(open),
-            ...collapsibleScope,
-            ...accordionItemProps,
-            ref: forwardedRef,
-            disabled,
-            open,
-            onOpenChange: (open2) => {
-              if (open2) {
-                valueContext.onItemOpen(value);
-              } else {
-                valueContext.onItemClose(value);
-              }
-            }
-          }
-        )
-      }
-    );
-  }, "AccordionItem")
-);
-var HEADER_NAME = "AccordionHeader";
-var AccordionHeader = /* @__PURE__ */ React13.forwardRef(
-  // blank line to reduce diff noise
-  /* @__PURE__ */ __name13(function AccordionHeader2(props, forwardedRef) {
-    const { __scopeAccordion, ...headerProps } = props;
-    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
-    const itemContext = useAccordionItemContext(HEADER_NAME, __scopeAccordion);
-    return /* @__PURE__ */ jsx6(
-      Primitive.h3,
-      {
-        "data-orientation": accordionContext.orientation,
-        "data-state": getState2(itemContext.open),
-        "data-disabled": itemContext.disabled ? "" : void 0,
-        ...headerProps,
-        ref: forwardedRef
-      }
-    );
-  }, "AccordionHeader")
-);
-var TRIGGER_NAME2 = "AccordionTrigger";
-var AccordionTrigger = /* @__PURE__ */ React13.forwardRef(
-  // blank line to reduce diff noise
-  /* @__PURE__ */ __name13(function AccordionTrigger2(props, forwardedRef) {
-    const { __scopeAccordion, ...triggerProps } = props;
-    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
-    const itemContext = useAccordionItemContext(TRIGGER_NAME2, __scopeAccordion);
-    const collapsibleContext = useAccordionCollapsibleContext(TRIGGER_NAME2, __scopeAccordion);
-    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
-    return /* @__PURE__ */ jsx6(Collection.ItemSlot, { scope: __scopeAccordion, children: /* @__PURE__ */ jsx6(
-      CollapsibleTrigger,
-      {
-        "aria-disabled": itemContext.open && !collapsibleContext.collapsible || void 0,
-        "data-orientation": accordionContext.orientation,
-        id: itemContext.triggerId,
-        ...collapsibleScope,
-        ...triggerProps,
-        ref: forwardedRef
-      }
-    ) });
-  }, "AccordionTrigger")
-);
-var CONTENT_NAME2 = "AccordionContent";
-var AccordionContent = /* @__PURE__ */ React13.forwardRef(
-  // blank line to reduce diff noise
-  /* @__PURE__ */ __name13(function AccordionContent2(props, forwardedRef) {
-    const { __scopeAccordion, ...contentProps } = props;
-    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
-    const itemContext = useAccordionItemContext(CONTENT_NAME2, __scopeAccordion);
-    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
-    return /* @__PURE__ */ jsx6(
-      CollapsibleContent,
-      {
-        role: "region",
-        "aria-labelledby": itemContext.triggerId,
-        "data-orientation": accordionContext.orientation,
-        ...collapsibleScope,
-        ...contentProps,
-        ref: forwardedRef,
-        style: {
-          "--radix-accordion-content-height": "var(--radix-collapsible-content-height)",
-          "--radix-accordion-content-width": "var(--radix-collapsible-content-width)",
-          ...props.style
-        }
-      }
-    );
-  }, "AccordionContent")
-);
-function getState2(open) {
-  return open ? "open" : "closed";
-}
-__name13(getState2, "getState");
-
-// node_modules/@radix-ui/react-context-menu/dist/index.mjs
-var dist_exports7 = {};
-__export(dist_exports7, {
-  Arrow: () => ContextMenuArrow,
-  CheckboxItem: () => ContextMenuCheckboxItem,
-  Content: () => ContextMenuContent,
-  ContextMenu: () => ContextMenu,
-  ContextMenuArrow: () => ContextMenuArrow,
-  ContextMenuCheckboxItem: () => ContextMenuCheckboxItem,
-  ContextMenuContent: () => ContextMenuContent,
-  ContextMenuGroup: () => ContextMenuGroup,
-  ContextMenuItem: () => ContextMenuItem,
-  ContextMenuItemIndicator: () => ContextMenuItemIndicator,
-  ContextMenuLabel: () => ContextMenuLabel,
-  ContextMenuPortal: () => ContextMenuPortal,
-  ContextMenuRadioGroup: () => ContextMenuRadioGroup,
-  ContextMenuRadioItem: () => ContextMenuRadioItem,
-  ContextMenuSeparator: () => ContextMenuSeparator,
-  ContextMenuSub: () => ContextMenuSub,
-  ContextMenuSubContent: () => ContextMenuSubContent,
-  ContextMenuSubTrigger: () => ContextMenuSubTrigger,
-  ContextMenuTrigger: () => ContextMenuTrigger,
-  Group: () => ContextMenuGroup,
-  Item: () => ContextMenuItem,
-  ItemIndicator: () => ContextMenuItemIndicator,
-  Label: () => ContextMenuLabel,
-  Portal: () => ContextMenuPortal,
-  RadioGroup: () => ContextMenuRadioGroup,
-  RadioItem: () => ContextMenuRadioItem,
-  Root: () => ContextMenu,
-  Separator: () => ContextMenuSeparator,
-  Sub: () => ContextMenuSub,
-  SubContent: () => ContextMenuSubContent,
-  SubTrigger: () => ContextMenuSubTrigger,
-  Trigger: () => ContextMenuTrigger,
-  createContextMenuScope: () => createContextMenuScope
-});
-import * as React37 from "react";
-
-// node_modules/@radix-ui/react-menu/dist/index.mjs
-import * as React36 from "react";
+__name7(getChildListObserver, "getChildListObserver");
 
 // node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs
-import * as React15 from "react";
+import * as React9 from "react";
 
 // node_modules/@radix-ui/react-use-callback-ref/dist/index.mjs
-import * as React14 from "react";
-var __defProp14 = Object.defineProperty;
-var __name14 = (target, value) => __defProp14(target, "name", { value, configurable: true });
-var useReactInsertionEffect2 = React14[" useInsertionEffect ".trim().toString()];
+import * as React8 from "react";
+var __defProp8 = Object.defineProperty;
+var __name8 = (target, value) => __defProp8(target, "name", { value, configurable: true });
+var useReactInsertionEffect = React8[" useInsertionEffect ".trim().toString()];
 function useCallbackRef(callback) {
-  const callbackRef = React14.useRef(callback);
-  if (typeof useReactInsertionEffect2 === "function") {
-    useReactInsertionEffect2(() => {
+  const callbackRef = React8.useRef(callback);
+  if (typeof useReactInsertionEffect === "function") {
+    useReactInsertionEffect(() => {
       callbackRef.current = callback;
     });
   } else {
@@ -1944,19 +1119,19 @@ function useCallbackRef(callback) {
       callbackRef.current = callback;
     });
   }
-  return React14.useMemo(() => ((...args) => callbackRef.current?.(...args)), []);
+  return React8.useMemo(() => ((...args) => callbackRef.current?.(...args)), []);
 }
-__name14(useCallbackRef, "useCallbackRef");
+__name8(useCallbackRef, "useCallbackRef");
 
 // node_modules/@radix-ui/react-dismissable-layer/dist/index.mjs
-import { jsx as jsx7 } from "react/jsx-runtime";
-var __defProp15 = Object.defineProperty;
-var __name15 = (target, value) => __defProp15(target, "name", { value, configurable: true });
+import { jsx as jsx5 } from "react/jsx-runtime";
+var __defProp9 = Object.defineProperty;
+var __name9 = (target, value) => __defProp9(target, "name", { value, configurable: true });
 var CONTEXT_UPDATE = "dismissableLayer.update";
 var POINTER_DOWN_OUTSIDE = "dismissableLayer.pointerDownOutside";
 var FOCUS_OUTSIDE = "dismissableLayer.focusOutside";
 var originalBodyPointerEvents;
-var DismissableLayerContext = React15.createContext({
+var DismissableLayerContext = React9.createContext({
   layers: /* @__PURE__ */ new Set(),
   layersWithOutsidePointerEventsDisabled: /* @__PURE__ */ new Set(),
   branches: /* @__PURE__ */ new Set(),
@@ -1967,9 +1142,9 @@ var DismissableLayerContext = React15.createContext({
   // See https://github.com/radix-ui/primitives/issues/3346
   dismissableSurfaces: /* @__PURE__ */ new Set()
 });
-var DismissableLayer = /* @__PURE__ */ React15.forwardRef(
+var DismissableLayer = /* @__PURE__ */ React9.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name15(function DismissableLayer2(props, forwardedRef) {
+  /* @__PURE__ */ __name9(function DismissableLayer2(props, forwardedRef) {
     const {
       disableOutsidePointerEvents = false,
       deferPointerDownOutside = false,
@@ -1980,10 +1155,10 @@ var DismissableLayer = /* @__PURE__ */ React15.forwardRef(
       onDismiss,
       ...layerProps
     } = props;
-    const context = React15.useContext(DismissableLayerContext);
-    const [node, setNode] = React15.useState(null);
+    const context = React9.useContext(DismissableLayerContext);
+    const [node, setNode] = React9.useState(null);
     const ownerDocument = node?.ownerDocument ?? globalThis?.document;
-    const [, force] = React15.useState({});
+    const [, force] = React9.useState({});
     const composedRefs = useComposedRefs(forwardedRef, setNode);
     const layers = Array.from(context.layers);
     const [highestLayerWithOutsidePointerEventsDisabled] = [
@@ -1993,7 +1168,7 @@ var DismissableLayer = /* @__PURE__ */ React15.forwardRef(
     const index2 = node ? layers.indexOf(node) : -1;
     const isBodyPointerEventsDisabled = context.layersWithOutsidePointerEventsDisabled.size > 0;
     const isPointerEventsEnabled = index2 >= highestLayerWithOutsidePointerEventsDisabledIndex;
-    const isDeferredPointerDownOutsideRef = React15.useRef(false);
+    const isDeferredPointerDownOutsideRef = React9.useRef(false);
     const pointerDownOutside = usePointerDownOutside(
       (event) => {
         onPointerDownOutside?.(event);
@@ -2005,7 +1180,7 @@ var DismissableLayer = /* @__PURE__ */ React15.forwardRef(
         deferPointerDownOutside,
         isDeferredPointerDownOutsideRef,
         dismissableSurfaces: context.dismissableSurfaces,
-        shouldHandlePointerDownOutside: React15.useCallback(
+        shouldHandlePointerDownOutside: React9.useCallback(
           (target) => {
             if (!(target instanceof Node)) {
               return false;
@@ -2041,14 +1216,14 @@ var DismissableLayer = /* @__PURE__ */ React15.forwardRef(
         onDismiss();
       }
     });
-    React15.useEffect(() => {
+    React9.useEffect(() => {
       if (!isHighestLayer) {
         return;
       }
       ownerDocument.addEventListener("keydown", handleKeyDown, { capture: true });
       return () => ownerDocument.removeEventListener("keydown", handleKeyDown, { capture: true });
     }, [ownerDocument, isHighestLayer, handleKeyDown]);
-    React15.useEffect(() => {
+    React9.useEffect(() => {
       if (!node) return;
       if (disableOutsidePointerEvents) {
         if (context.layersWithOutsidePointerEventsDisabled.size === 0) {
@@ -2068,7 +1243,7 @@ var DismissableLayer = /* @__PURE__ */ React15.forwardRef(
         }
       };
     }, [node, ownerDocument, disableOutsidePointerEvents, context]);
-    React15.useEffect(() => {
+    React9.useEffect(() => {
       return () => {
         if (!node) return;
         context.layers.delete(node);
@@ -2076,12 +1251,12 @@ var DismissableLayer = /* @__PURE__ */ React15.forwardRef(
         dispatchUpdate();
       };
     }, [node, context]);
-    React15.useEffect(() => {
-      const handleUpdate = /* @__PURE__ */ __name15(() => force({}), "handleUpdate");
+    React9.useEffect(() => {
+      const handleUpdate = /* @__PURE__ */ __name9(() => force({}), "handleUpdate");
       document.addEventListener(CONTEXT_UPDATE, handleUpdate);
       return () => document.removeEventListener(CONTEXT_UPDATE, handleUpdate);
     }, []);
-    return /* @__PURE__ */ jsx7(
+    return /* @__PURE__ */ jsx5(
       Primitive.div,
       {
         ...layerProps,
@@ -2101,9 +1276,9 @@ var DismissableLayer = /* @__PURE__ */ React15.forwardRef(
   }, "DismissableLayer")
 );
 function useDismissableLayerSurface() {
-  const context = React15.useContext(DismissableLayerContext);
-  const [node, setNode] = React15.useState(null);
-  React15.useEffect(() => {
+  const context = React9.useContext(DismissableLayerContext);
+  const [node, setNode] = React9.useState(null);
+  React9.useEffect(() => {
     if (!node) {
       return;
     }
@@ -2114,8 +1289,8 @@ function useDismissableLayerSurface() {
   }, [node, context.dismissableSurfaces]);
   return setNode;
 }
-__name15(useDismissableLayerSurface, "useDismissableLayerSurface");
-var IS_TRUE = /* @__PURE__ */ __name15(() => true, "IS_TRUE");
+__name9(useDismissableLayerSurface, "useDismissableLayerSurface");
+var IS_TRUE = /* @__PURE__ */ __name9(() => true, "IS_TRUE");
 function usePointerDownOutside(onPointerDownOutside, args) {
   const {
     ownerDocument = globalThis?.document,
@@ -2125,22 +1300,22 @@ function usePointerDownOutside(onPointerDownOutside, args) {
     shouldHandlePointerDownOutside = IS_TRUE
   } = args;
   const handlePointerDownOutside = useCallbackRef(onPointerDownOutside);
-  const isPointerInsideReactTreeRef = React15.useRef(false);
-  const isPointerDownOutsideRef = React15.useRef(false);
-  const interceptedOutsideInteractionEventsRef = React15.useRef(/* @__PURE__ */ new Map());
-  const handleClickRef = React15.useRef(() => {
+  const isPointerInsideReactTreeRef = React9.useRef(false);
+  const isPointerDownOutsideRef = React9.useRef(false);
+  const interceptedOutsideInteractionEventsRef = React9.useRef(/* @__PURE__ */ new Map());
+  const handleClickRef = React9.useRef(() => {
   });
-  React15.useEffect(() => {
+  React9.useEffect(() => {
     function resetOutsideInteraction() {
       isPointerDownOutsideRef.current = false;
       isDeferredPointerDownOutsideRef.current = false;
       interceptedOutsideInteractionEventsRef.current.clear();
     }
-    __name15(resetOutsideInteraction, "resetOutsideInteraction");
+    __name9(resetOutsideInteraction, "resetOutsideInteraction");
     function isOutsideInteractionIntercepted() {
       return Array.from(interceptedOutsideInteractionEventsRef.current.values()).some(Boolean);
     }
-    __name15(isOutsideInteractionIntercepted, "isOutsideInteractionIntercepted");
+    __name9(isOutsideInteractionIntercepted, "isOutsideInteractionIntercepted");
     function handleInteractionCapture(event) {
       if (!isPointerDownOutsideRef.current) {
         return;
@@ -2158,14 +1333,14 @@ function usePointerDownOutside(onPointerDownOutside, args) {
         }, 0);
       }
     }
-    __name15(handleInteractionCapture, "handleInteractionCapture");
+    __name9(handleInteractionCapture, "handleInteractionCapture");
     function handleInteractionBubble(event) {
       if (isPointerDownOutsideRef.current) {
         interceptedOutsideInteractionEventsRef.current.set(event.type, false);
       }
     }
-    __name15(handleInteractionBubble, "handleInteractionBubble");
-    const handlePointerDown = /* @__PURE__ */ __name15((event) => {
+    __name9(handleInteractionBubble, "handleInteractionBubble");
+    const handlePointerDown = /* @__PURE__ */ __name9((event) => {
       if (event.target && !isPointerInsideReactTreeRef.current) {
         let handleAndDispatchPointerDownOutsideEvent2 = function() {
           ownerDocument.removeEventListener("click", handleClickRef.current);
@@ -2181,7 +1356,7 @@ function usePointerDownOutside(onPointerDownOutside, args) {
           }
         };
         var handleAndDispatchPointerDownOutsideEvent = handleAndDispatchPointerDownOutsideEvent2;
-        __name15(handleAndDispatchPointerDownOutsideEvent2, "handleAndDispatchPointerDownOutsideEvent");
+        __name9(handleAndDispatchPointerDownOutsideEvent2, "handleAndDispatchPointerDownOutsideEvent");
         if (!shouldHandlePointerDownOutside(event.target)) {
           ownerDocument.removeEventListener("click", handleClickRef.current);
           resetOutsideInteraction();
@@ -2239,15 +1414,15 @@ function usePointerDownOutside(onPointerDownOutside, args) {
   ]);
   return {
     // ensures we check React component tree (not just DOM tree)
-    onPointerDownCapture: /* @__PURE__ */ __name15(() => isPointerInsideReactTreeRef.current = true, "onPointerDownCapture")
+    onPointerDownCapture: /* @__PURE__ */ __name9(() => isPointerInsideReactTreeRef.current = true, "onPointerDownCapture")
   };
 }
-__name15(usePointerDownOutside, "usePointerDownOutside");
+__name9(usePointerDownOutside, "usePointerDownOutside");
 function useFocusOutside(onFocusOutside, ownerDocument = globalThis?.document) {
   const handleFocusOutside = useCallbackRef(onFocusOutside);
-  const isFocusInsideReactTreeRef = React15.useRef(false);
-  React15.useEffect(() => {
-    const handleFocus = /* @__PURE__ */ __name15((event) => {
+  const isFocusInsideReactTreeRef = React9.useRef(false);
+  React9.useEffect(() => {
+    const handleFocus = /* @__PURE__ */ __name9((event) => {
       if (event.target && !isFocusInsideReactTreeRef.current) {
         const eventDetail = { originalEvent: event };
         handleAndDispatchCustomEvent(FOCUS_OUTSIDE, handleFocusOutside, eventDetail, {
@@ -2259,16 +1434,16 @@ function useFocusOutside(onFocusOutside, ownerDocument = globalThis?.document) {
     return () => ownerDocument.removeEventListener("focusin", handleFocus);
   }, [ownerDocument, handleFocusOutside]);
   return {
-    onFocusCapture: /* @__PURE__ */ __name15(() => isFocusInsideReactTreeRef.current = true, "onFocusCapture"),
-    onBlurCapture: /* @__PURE__ */ __name15(() => isFocusInsideReactTreeRef.current = false, "onBlurCapture")
+    onFocusCapture: /* @__PURE__ */ __name9(() => isFocusInsideReactTreeRef.current = true, "onFocusCapture"),
+    onBlurCapture: /* @__PURE__ */ __name9(() => isFocusInsideReactTreeRef.current = false, "onBlurCapture")
   };
 }
-__name15(useFocusOutside, "useFocusOutside");
+__name9(useFocusOutside, "useFocusOutside");
 function dispatchUpdate() {
   const event = new CustomEvent(CONTEXT_UPDATE);
   document.dispatchEvent(event);
 }
-__name15(dispatchUpdate, "dispatchUpdate");
+__name9(dispatchUpdate, "dispatchUpdate");
 function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
   const target = detail.originalEvent.target;
   const event = new CustomEvent(name, { bubbles: false, cancelable: true, detail });
@@ -2279,21 +1454,21 @@ function handleAndDispatchCustomEvent(name, handler, detail, { discrete }) {
     target.dispatchEvent(event);
   }
 }
-__name15(handleAndDispatchCustomEvent, "handleAndDispatchCustomEvent");
+__name9(handleAndDispatchCustomEvent, "handleAndDispatchCustomEvent");
 
 // node_modules/@radix-ui/react-focus-guards/dist/index.mjs
-import * as React16 from "react";
-var __defProp16 = Object.defineProperty;
-var __name16 = (target, value) => __defProp16(target, "name", { value, configurable: true });
-var count2 = 0;
+import * as React10 from "react";
+var __defProp10 = Object.defineProperty;
+var __name10 = (target, value) => __defProp10(target, "name", { value, configurable: true });
+var count = 0;
 var guards = null;
 function FocusGuards(props) {
   useFocusGuards();
   return props.children;
 }
-__name16(FocusGuards, "FocusGuards");
+__name10(FocusGuards, "FocusGuards");
 function useFocusGuards() {
-  React16.useEffect(() => {
+  React10.useEffect(() => {
     if (!guards) {
       guards = { start: createFocusGuard(), end: createFocusGuard() };
     }
@@ -2304,18 +1479,18 @@ function useFocusGuards() {
     if (document.body.lastElementChild !== end) {
       document.body.insertAdjacentElement("beforeend", end);
     }
-    count2++;
+    count++;
     return () => {
-      if (count2 === 1) {
+      if (count === 1) {
         guards?.start.remove();
         guards?.end.remove();
         guards = null;
       }
-      count2 = Math.max(0, count2 - 1);
+      count = Math.max(0, count - 1);
     };
   }, []);
 }
-__name16(useFocusGuards, "useFocusGuards");
+__name10(useFocusGuards, "useFocusGuards");
 function createFocusGuard() {
   const element = document.createElement("span");
   element.setAttribute("data-radix-focus-guard", "");
@@ -2326,18 +1501,18 @@ function createFocusGuard() {
   element.style.pointerEvents = "none";
   return element;
 }
-__name16(createFocusGuard, "createFocusGuard");
+__name10(createFocusGuard, "createFocusGuard");
 
 // node_modules/@radix-ui/react-focus-scope/dist/index.mjs
-import * as React17 from "react";
-import { jsx as jsx8 } from "react/jsx-runtime";
-var __defProp17 = Object.defineProperty;
-var __name17 = (target, value) => __defProp17(target, "name", { value, configurable: true });
+import * as React11 from "react";
+import { jsx as jsx6 } from "react/jsx-runtime";
+var __defProp11 = Object.defineProperty;
+var __name11 = (target, value) => __defProp11(target, "name", { value, configurable: true });
 var AUTOFOCUS_ON_MOUNT = "focusScope.autoFocusOnMount";
 var AUTOFOCUS_ON_UNMOUNT = "focusScope.autoFocusOnUnmount";
 var EVENT_OPTIONS = { bubbles: false, cancelable: true };
-var FocusScope = /* @__PURE__ */ React17.forwardRef(
-  /* @__PURE__ */ __name17(function FocusScope2(props, forwardedRef) {
+var FocusScope = /* @__PURE__ */ React11.forwardRef(
+  /* @__PURE__ */ __name11(function FocusScope2(props, forwardedRef) {
     const {
       loop = false,
       trapped = false,
@@ -2346,16 +1521,16 @@ var FocusScope = /* @__PURE__ */ React17.forwardRef(
       onUnmountAutoFocus: onUnmountAutoFocusProp,
       ...scopeProps
     } = props;
-    const [container, setContainer] = React17.useState(null);
+    const [container, setContainer] = React11.useState(null);
     const onMountAutoFocus = useCallbackRef(onMountAutoFocusProp);
     const onUnmountAutoFocus = useCallbackRef(onUnmountAutoFocusProp);
-    const lastFocusedElementRef = React17.useRef(null);
+    const lastFocusedElementRef = React11.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, setContainer);
-    const branchesRef = React17.useRef(branches);
-    React17.useEffect(() => {
+    const branchesRef = React11.useRef(branches);
+    React11.useEffect(() => {
       branchesRef.current = branches;
     });
-    const isTargetInScope = React17.useCallback(
+    const isTargetInScope = React11.useCallback(
       (target) => {
         if (!target) return false;
         if (container?.contains(target)) return true;
@@ -2363,7 +1538,7 @@ var FocusScope = /* @__PURE__ */ React17.forwardRef(
       },
       [container]
     );
-    const focusScope = React17.useRef({
+    const focusScope = React11.useRef({
       paused: false,
       pause() {
         this.paused = true;
@@ -2372,7 +1547,7 @@ var FocusScope = /* @__PURE__ */ React17.forwardRef(
         this.paused = false;
       }
     }).current;
-    React17.useEffect(() => {
+    React11.useEffect(() => {
       if (trapped) {
         let handleFocusIn2 = function(event) {
           if (focusScope.paused || !container) return;
@@ -2397,9 +1572,9 @@ var FocusScope = /* @__PURE__ */ React17.forwardRef(
           }
         };
         var handleFocusIn = handleFocusIn2, handleFocusOut = handleFocusOut2, handleMutations = handleMutations2;
-        __name17(handleFocusIn2, "handleFocusIn");
-        __name17(handleFocusOut2, "handleFocusOut");
-        __name17(handleMutations2, "handleMutations");
+        __name11(handleFocusIn2, "handleFocusIn");
+        __name11(handleFocusOut2, "handleFocusOut");
+        __name11(handleMutations2, "handleMutations");
         document.addEventListener("focusin", handleFocusIn2);
         document.addEventListener("focusout", handleFocusOut2);
         const mutationObserver = new MutationObserver(handleMutations2);
@@ -2411,7 +1586,7 @@ var FocusScope = /* @__PURE__ */ React17.forwardRef(
         };
       }
     }, [trapped, container, focusScope.paused, isTargetInScope]);
-    React17.useEffect(() => {
+    React11.useEffect(() => {
       if (container) {
         focusScopesStack.add(focusScope);
         const previouslyFocusedElement = document.activeElement;
@@ -2444,7 +1619,7 @@ var FocusScope = /* @__PURE__ */ React17.forwardRef(
         };
       }
     }, [container, onMountAutoFocus, onUnmountAutoFocus, focusScope]);
-    const handleKeyDown = React17.useCallback(
+    const handleKeyDown = React11.useCallback(
       (event) => {
         if (!loop && !trapped) return;
         if (focusScope.paused) return;
@@ -2469,38 +1644,38 @@ var FocusScope = /* @__PURE__ */ React17.forwardRef(
       },
       [loop, trapped, focusScope.paused]
     );
-    return /* @__PURE__ */ jsx8(Primitive.div, { tabIndex: -1, ...scopeProps, ref: composedRefs, onKeyDown: handleKeyDown });
+    return /* @__PURE__ */ jsx6(Primitive.div, { tabIndex: -1, ...scopeProps, ref: composedRefs, onKeyDown: handleKeyDown });
   }, "FocusScope")
 );
-var FocusScopeBranchContext = React17.createContext(null);
+var FocusScopeBranchContext = React11.createContext(null);
 function FocusScopeBranchProvider({ registry, children }) {
   if (!registry) {
     return children;
   }
-  return /* @__PURE__ */ jsx8(FocusScopeBranchContext.Provider, { value: registry, children });
+  return /* @__PURE__ */ jsx6(FocusScopeBranchContext.Provider, { value: registry, children });
 }
-__name17(FocusScopeBranchProvider, "FocusScopeBranchProvider");
+__name11(FocusScopeBranchProvider, "FocusScopeBranchProvider");
 function useFocusScopeBranchRegistry() {
-  const [nodes, setNodes] = React17.useState([]);
-  const registry = React17.useMemo(
+  const [nodes, setNodes] = React11.useState([]);
+  const registry = React11.useMemo(
     () => ({
-      add: /* @__PURE__ */ __name17((node) => setNodes((prev) => prev.includes(node) ? prev : [...prev, node]), "add"),
-      remove: /* @__PURE__ */ __name17((node) => setNodes((prev) => prev.filter((current) => current !== node)), "remove")
+      add: /* @__PURE__ */ __name11((node) => setNodes((prev) => prev.includes(node) ? prev : [...prev, node]), "add"),
+      remove: /* @__PURE__ */ __name11((node) => setNodes((prev) => prev.filter((current) => current !== node)), "remove")
     }),
     []
   );
   return { nodes, registry };
 }
-__name17(useFocusScopeBranchRegistry, "useFocusScopeBranchRegistry");
+__name11(useFocusScopeBranchRegistry, "useFocusScopeBranchRegistry");
 function useFocusScopeBranch(node) {
-  const registry = React17.useContext(FocusScopeBranchContext);
-  React17.useEffect(() => {
+  const registry = React11.useContext(FocusScopeBranchContext);
+  React11.useEffect(() => {
     if (!node || !registry) return;
     registry.add(node);
     return () => registry.remove(node);
   }, [node, registry]);
 }
-__name17(useFocusScopeBranch, "useFocusScopeBranch");
+__name11(useFocusScopeBranch, "useFocusScopeBranch");
 function focusFirst(candidates, { select = false } = {}) {
   const previouslyFocusedElement = document.activeElement;
   for (const candidate of candidates) {
@@ -2508,19 +1683,19 @@ function focusFirst(candidates, { select = false } = {}) {
     if (document.activeElement !== previouslyFocusedElement) return;
   }
 }
-__name17(focusFirst, "focusFirst");
+__name11(focusFirst, "focusFirst");
 function getTabbableEdges(container) {
   const candidates = getTabbableCandidates(container);
   const first = findVisible(candidates, container);
   const last = findVisible(candidates.reverse(), container);
   return [first, last];
 }
-__name17(getTabbableEdges, "getTabbableEdges");
+__name11(getTabbableEdges, "getTabbableEdges");
 function getTabbableCandidates(container) {
   const nodes = [];
   const document2 = container.ownerDocument;
   const walker = document2.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, {
-    acceptNode: /* @__PURE__ */ __name17((node) => {
+    acceptNode: /* @__PURE__ */ __name11((node) => {
       const isHiddenInput = node.tagName === "INPUT" && node.type === "hidden";
       if (node.disabled || node.hidden || isHiddenInput) {
         return NodeFilter.FILTER_SKIP;
@@ -2533,7 +1708,7 @@ function getTabbableCandidates(container) {
   }
   return nodes;
 }
-__name17(getTabbableCandidates, "getTabbableCandidates");
+__name11(getTabbableCandidates, "getTabbableCandidates");
 function findVisible(elements, container) {
   const canUseCheckVisibility = typeof container.checkVisibility === "function" && container.checkVisibility({ checkVisibilityCSS: true });
   for (const element of elements) {
@@ -2543,7 +1718,7 @@ function findVisible(elements, container) {
     }
   }
 }
-__name17(findVisible, "findVisible");
+__name11(findVisible, "findVisible");
 function isHidden(node, { upTo }) {
   if (getComputedStyle(node).visibility === "hidden") return true;
   while (node) {
@@ -2553,11 +1728,11 @@ function isHidden(node, { upTo }) {
   }
   return false;
 }
-__name17(isHidden, "isHidden");
+__name11(isHidden, "isHidden");
 function isSelectableInput(element) {
   return element.tagName === "INPUT" && typeof element.select === "function";
 }
-__name17(isSelectableInput, "isSelectableInput");
+__name11(isSelectableInput, "isSelectableInput");
 function focus(element, { select = false } = {}) {
   if (element && element.focus) {
     const ownerDocument = element.ownerDocument ?? document;
@@ -2567,7 +1742,7 @@ function focus(element, { select = false } = {}) {
       element.select();
   }
 }
-__name17(focus, "focus");
+__name11(focus, "focus");
 var focusScopesStack = createFocusScopesStack();
 function createFocusScopesStack() {
   let stack = [];
@@ -2586,7 +1761,7 @@ function createFocusScopesStack() {
     }
   };
 }
-__name17(createFocusScopesStack, "createFocusScopesStack");
+__name11(createFocusScopesStack, "createFocusScopesStack");
 function arrayRemove(array, item) {
   const updatedArray = [...array];
   const index2 = updatedArray.indexOf(item);
@@ -2595,14 +1770,29 @@ function arrayRemove(array, item) {
   }
   return updatedArray;
 }
-__name17(arrayRemove, "arrayRemove");
+__name11(arrayRemove, "arrayRemove");
 function removeLinks(items) {
   return items.filter((item) => item.tagName !== "A");
 }
-__name17(removeLinks, "removeLinks");
+__name11(removeLinks, "removeLinks");
+
+// node_modules/@radix-ui/react-id/dist/index.mjs
+import * as React12 from "react";
+var __defProp12 = Object.defineProperty;
+var __name12 = (target, value) => __defProp12(target, "name", { value, configurable: true });
+var useReactId = React12[" useId ".trim().toString()] || (() => void 0);
+var count2 = 0;
+function useId(deterministicId) {
+  const [id, setId] = React12.useState(useReactId());
+  useLayoutEffect2(() => {
+    if (!deterministicId) setId((reactId) => reactId ?? String(count2++));
+  }, [deterministicId]);
+  return deterministicId || (id ? `radix-${id}` : "");
+}
+__name12(useId, "useId");
 
 // node_modules/@radix-ui/react-popper/dist/index.mjs
-import * as React21 from "react";
+import * as React16 from "react";
 
 // node_modules/@floating-ui/utils/dist/floating-ui.utils.mjs
 var sides = ["top", "right", "bottom", "left"];
@@ -4197,7 +3387,7 @@ var computePosition2 = (reference, floating, options2) => {
 };
 
 // node_modules/@floating-ui/react-dom/dist/floating-ui.react-dom.mjs
-import * as React18 from "react";
+import * as React13 from "react";
 import { useLayoutEffect as useLayoutEffect3 } from "react";
 import * as ReactDOM2 from "react-dom";
 var isClient = typeof document !== "undefined";
@@ -4263,7 +3453,7 @@ function roundByDPR(element, value) {
   return Math.round(value * dpr) / dpr;
 }
 function useLatestRef(value) {
-  const ref = React18.useRef(value);
+  const ref = React13.useRef(value);
   index(() => {
     ref.current = value;
   });
@@ -4286,7 +3476,7 @@ function useFloating(options2) {
     whileElementsMounted,
     open
   } = options2;
-  const [data, setData] = React18.useState({
+  const [data, setData] = React13.useState({
     x: 0,
     y: 0,
     strategy,
@@ -4294,19 +3484,19 @@ function useFloating(options2) {
     middlewareData: {},
     isPositioned: false
   });
-  const [latestMiddleware, setLatestMiddleware] = React18.useState(middleware);
+  const [latestMiddleware, setLatestMiddleware] = React13.useState(middleware);
   if (!deepEqual(latestMiddleware, middleware)) {
     setLatestMiddleware(middleware);
   }
-  const [_reference, _setReference] = React18.useState(null);
-  const [_floating, _setFloating] = React18.useState(null);
-  const setReference = React18.useCallback((node) => {
+  const [_reference, _setReference] = React13.useState(null);
+  const [_floating, _setFloating] = React13.useState(null);
+  const setReference = React13.useCallback((node) => {
     if (node !== referenceRef.current) {
       referenceRef.current = node;
       _setReference(node);
     }
   }, []);
-  const setFloating = React18.useCallback((node) => {
+  const setFloating = React13.useCallback((node) => {
     if (node !== floatingRef.current) {
       floatingRef.current = node;
       _setFloating(node);
@@ -4314,14 +3504,14 @@ function useFloating(options2) {
   }, []);
   const referenceEl = externalReference || _reference;
   const floatingEl = externalFloating || _floating;
-  const referenceRef = React18.useRef(null);
-  const floatingRef = React18.useRef(null);
-  const dataRef = React18.useRef(data);
+  const referenceRef = React13.useRef(null);
+  const floatingRef = React13.useRef(null);
+  const dataRef = React13.useRef(data);
   const hasWhileElementsMounted = whileElementsMounted != null;
   const whileElementsMountedRef = useLatestRef(whileElementsMounted);
   const platformRef = useLatestRef(platform2);
   const openRef = useLatestRef(open);
-  const update = React18.useCallback(() => {
+  const update = React13.useCallback(() => {
     if (!referenceRef.current || !floatingRef.current) {
       return;
     }
@@ -4359,7 +3549,7 @@ function useFloating(options2) {
       }));
     }
   }, [open]);
-  const isMountedRef = React18.useRef(false);
+  const isMountedRef = React13.useRef(false);
   index(() => {
     isMountedRef.current = true;
     return () => {
@@ -4376,17 +3566,17 @@ function useFloating(options2) {
       update();
     }
   }, [referenceEl, floatingEl, update, whileElementsMountedRef, hasWhileElementsMounted]);
-  const refs = React18.useMemo(() => ({
+  const refs = React13.useMemo(() => ({
     reference: referenceRef,
     floating: floatingRef,
     setReference,
     setFloating
   }), [setReference, setFloating]);
-  const elements = React18.useMemo(() => ({
+  const elements = React13.useMemo(() => ({
     reference: referenceEl,
     floating: floatingEl
   }), [referenceEl, floatingEl]);
-  const floatingStyles = React18.useMemo(() => {
+  const floatingStyles = React13.useMemo(() => {
     const initialStyles = {
       position: strategy,
       left: 0,
@@ -4412,7 +3602,7 @@ function useFloating(options2) {
       top: y
     };
   }, [strategy, transform, elements.floating, data.x, data.y]);
-  return React18.useMemo(() => ({
+  return React13.useMemo(() => ({
     ...data,
     update,
     refs,
@@ -4508,14 +3698,14 @@ var arrow3 = (options2, deps) => {
 };
 
 // node_modules/@radix-ui/react-arrow/dist/index.mjs
-import * as React19 from "react";
-import { jsx as jsx9 } from "react/jsx-runtime";
-var __defProp18 = Object.defineProperty;
-var __name18 = (target, value) => __defProp18(target, "name", { value, configurable: true });
-var Arrow = /* @__PURE__ */ React19.forwardRef(
-  /* @__PURE__ */ __name18(function Arrow2(props, forwardedRef) {
+import * as React14 from "react";
+import { jsx as jsx7 } from "react/jsx-runtime";
+var __defProp13 = Object.defineProperty;
+var __name13 = (target, value) => __defProp13(target, "name", { value, configurable: true });
+var Arrow = /* @__PURE__ */ React14.forwardRef(
+  /* @__PURE__ */ __name13(function Arrow2(props, forwardedRef) {
     const { children, width = 10, height = 5, ...arrowProps } = props;
-    return /* @__PURE__ */ jsx9(
+    return /* @__PURE__ */ jsx7(
       Primitive.svg,
       {
         ...arrowProps,
@@ -4524,18 +3714,18 @@ var Arrow = /* @__PURE__ */ React19.forwardRef(
         height,
         viewBox: "0 0 30 10",
         preserveAspectRatio: "none",
-        children: props.asChild ? children : /* @__PURE__ */ jsx9("polygon", { points: "0,0 30,0 15,10" })
+        children: props.asChild ? children : /* @__PURE__ */ jsx7("polygon", { points: "0,0 30,0 15,10" })
       }
     );
   }, "Arrow")
 );
 
 // node_modules/@radix-ui/react-use-size/dist/index.mjs
-import * as React20 from "react";
-var __defProp19 = Object.defineProperty;
-var __name19 = (target, value) => __defProp19(target, "name", { value, configurable: true });
+import * as React15 from "react";
+var __defProp14 = Object.defineProperty;
+var __name14 = (target, value) => __defProp14(target, "name", { value, configurable: true });
 function useSize(element) {
-  const [size4, setSize] = React20.useState(void 0);
+  const [size4, setSize] = React15.useState(void 0);
   useLayoutEffect2(() => {
     if (element) {
       setSize({ width: element.offsetWidth, height: element.offsetHeight });
@@ -4575,12 +3765,12 @@ function useSize(element) {
   }, [element]);
   return size4;
 }
-__name19(useSize, "useSize");
+__name14(useSize, "useSize");
 
 // node_modules/@radix-ui/react-popper/dist/index.mjs
-import { jsx as jsx10 } from "react/jsx-runtime";
-var __defProp20 = Object.defineProperty;
-var __name20 = (target, value) => __defProp20(target, "name", { value, configurable: true });
+import { jsx as jsx8 } from "react/jsx-runtime";
+var __defProp15 = Object.defineProperty;
+var __name15 = (target, value) => __defProp15(target, "name", { value, configurable: true });
 var Sticky = {
   Partial: "partial",
   Always: "always"
@@ -4592,11 +3782,11 @@ var UpdatePositionStrategy = {
 var POPPER_NAME = "Popper";
 var [createPopperContext, createPopperScope] = createContextScope(POPPER_NAME);
 var [PopperProvider, usePopperContext] = createPopperContext(POPPER_NAME);
-var Popper = /* @__PURE__ */ __name20((props) => {
+var Popper = /* @__PURE__ */ __name15((props) => {
   const { __scopePopper, children } = props;
-  const [anchor, setAnchor] = React21.useState(null);
-  const [placementState, setPlacementState] = React21.useState(void 0);
-  return /* @__PURE__ */ jsx10(
+  const [anchor, setAnchor] = React16.useState(null);
+  const [placementState, setPlacementState] = React16.useState(void 0);
+  return /* @__PURE__ */ jsx8(
     PopperProvider,
     {
       scope: __scopePopper,
@@ -4609,13 +3799,13 @@ var Popper = /* @__PURE__ */ __name20((props) => {
   );
 }, "Popper");
 var ANCHOR_NAME = "PopperAnchor";
-var PopperAnchor = /* @__PURE__ */ React21.forwardRef(
-  /* @__PURE__ */ __name20(function PopperAnchor2(props, forwardedRef) {
+var PopperAnchor = /* @__PURE__ */ React16.forwardRef(
+  /* @__PURE__ */ __name15(function PopperAnchor2(props, forwardedRef) {
     const { __scopePopper, virtualRef, ...anchorProps } = props;
     const context = usePopperContext(ANCHOR_NAME, __scopePopper);
-    const ref = React21.useRef(null);
+    const ref = React16.useRef(null);
     const onAnchorChange = context.onAnchorChange;
-    const callbackRef = React21.useCallback(
+    const callbackRef = React16.useCallback(
       (node) => {
         ref.current = node;
         if (node) {
@@ -4625,8 +3815,8 @@ var PopperAnchor = /* @__PURE__ */ React21.forwardRef(
       [onAnchorChange]
     );
     const composedRefs = useComposedRefs(forwardedRef, callbackRef);
-    const anchorRef = React21.useRef(null);
-    React21.useEffect(() => {
+    const anchorRef = React16.useRef(null);
+    React16.useEffect(() => {
       if (!virtualRef) {
         return;
       }
@@ -4639,7 +3829,7 @@ var PopperAnchor = /* @__PURE__ */ React21.forwardRef(
     const sideAndAlign = context.placementState && getSideAndAlignFromPlacement(context.placementState);
     const placedSide = sideAndAlign?.[0];
     const placedAlign = sideAndAlign?.[1];
-    return virtualRef ? null : /* @__PURE__ */ jsx10(
+    return virtualRef ? null : /* @__PURE__ */ jsx8(
       Primitive.div,
       {
         "data-radix-popper-side": placedSide,
@@ -4650,10 +3840,10 @@ var PopperAnchor = /* @__PURE__ */ React21.forwardRef(
     );
   }, "PopperAnchor")
 );
-var CONTENT_NAME3 = "PopperContent";
-var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME3);
-var PopperContent = /* @__PURE__ */ React21.forwardRef(
-  /* @__PURE__ */ __name20(function PopperContent2(props, forwardedRef) {
+var CONTENT_NAME = "PopperContent";
+var [PopperContentProvider, useContentContext] = createPopperContext(CONTENT_NAME);
+var PopperContent = /* @__PURE__ */ React16.forwardRef(
+  /* @__PURE__ */ __name15(function PopperContent2(props, forwardedRef) {
     const {
       __scopePopper,
       side = "bottom",
@@ -4670,10 +3860,10 @@ var PopperContent = /* @__PURE__ */ React21.forwardRef(
       onPlaced,
       ...contentProps
     } = props;
-    const context = usePopperContext(CONTENT_NAME3, __scopePopper);
-    const [content, setContent] = React21.useState(null);
+    const context = usePopperContext(CONTENT_NAME, __scopePopper);
+    const [content, setContent] = React16.useState(null);
     const composedRefs = useComposedRefs(forwardedRef, setContent);
-    const [arrow4, setArrow] = React21.useState(null);
+    const [arrow4, setArrow] = React16.useState(null);
     const arrowSize = useSize(arrow4);
     const arrowWidth = arrowSize?.width ?? 0;
     const arrowHeight = arrowSize?.height ?? 0;
@@ -4691,7 +3881,7 @@ var PopperContent = /* @__PURE__ */ React21.forwardRef(
       // default to `fixed` strategy so users don't have to pick and we also avoid focus scroll issues
       strategy: "fixed",
       placement: desiredPlacement,
-      whileElementsMounted: /* @__PURE__ */ __name20((...args) => {
+      whileElementsMounted: /* @__PURE__ */ __name15((...args) => {
         const cleanup = autoUpdate(...args, {
           animationFrame: updatePositionStrategy === UpdatePositionStrategy.Always
         });
@@ -4713,7 +3903,7 @@ var PopperContent = /* @__PURE__ */ React21.forwardRef(
         avoidCollisions && flip3({ ...detectOverflowOptions }),
         size3({
           ...detectOverflowOptions,
-          apply: /* @__PURE__ */ __name20(({ elements, rects, availableWidth, availableHeight }) => {
+          apply: /* @__PURE__ */ __name15(({ elements, rects, availableWidth, availableHeight }) => {
             const { width: anchorWidth, height: anchorHeight } = rects.reference;
             const contentStyle = elements.floating.style;
             contentStyle.setProperty("--radix-popper-available-width", `${availableWidth}px`);
@@ -4759,11 +3949,11 @@ var PopperContent = /* @__PURE__ */ React21.forwardRef(
     const arrowX = middlewareData.arrow?.x;
     const arrowY = middlewareData.arrow?.y;
     const cannotCenterArrow = middlewareData.arrow?.centerOffset !== 0;
-    const [contentZIndex, setContentZIndex] = React21.useState();
+    const [contentZIndex, setContentZIndex] = React16.useState();
     useLayoutEffect2(() => {
       if (content) setContentZIndex(window.getComputedStyle(content).zIndex);
     }, [content]);
-    return /* @__PURE__ */ jsx10(
+    return /* @__PURE__ */ jsx8(
       "div",
       {
         ref: refs.setFloating,
@@ -4787,7 +3977,7 @@ var PopperContent = /* @__PURE__ */ React21.forwardRef(
           }
         },
         dir: props.dir,
-        children: /* @__PURE__ */ jsx10(
+        children: /* @__PURE__ */ jsx8(
           PopperContentProvider,
           {
             scope: __scopePopper,
@@ -4797,7 +3987,7 @@ var PopperContent = /* @__PURE__ */ React21.forwardRef(
             arrowX,
             arrowY,
             shouldHideArrow: cannotCenterArrow,
-            children: /* @__PURE__ */ jsx10(
+            children: /* @__PURE__ */ jsx8(
               Primitive.div,
               {
                 "data-side": placedSide,
@@ -4826,8 +4016,8 @@ var OPPOSITE_SIDE = {
   bottom: "top",
   left: "right"
 };
-var PopperArrow = /* @__PURE__ */ React21.forwardRef(
-  /* @__PURE__ */ __name20(function PopperArrow2(props, forwardedRef) {
+var PopperArrow = /* @__PURE__ */ React16.forwardRef(
+  /* @__PURE__ */ __name15(function PopperArrow2(props, forwardedRef) {
     const { __scopePopper, ...arrowProps } = props;
     const contentContext = useContentContext(ARROW_NAME, __scopePopper);
     const baseSide = OPPOSITE_SIDE[contentContext.placedSide];
@@ -4835,7 +4025,7 @@ var PopperArrow = /* @__PURE__ */ React21.forwardRef(
       // we have to use an extra wrapper because `ResizeObserver` (used by `useSize`)
       // doesn't report size as we'd expect on SVG elements.
       // it reports their bounding box which is effectively the largest path inside the SVG.
-      /* @__PURE__ */ jsx10(
+      /* @__PURE__ */ jsx8(
         "span",
         {
           ref: contentContext.onArrowChange,
@@ -4858,7 +4048,7 @@ var PopperArrow = /* @__PURE__ */ React21.forwardRef(
             }[contentContext.placedSide],
             visibility: contentContext.shouldHideArrow ? "hidden" : void 0
           },
-          children: /* @__PURE__ */ jsx10(
+          children: /* @__PURE__ */ jsx8(
             Arrow,
             {
               ...arrowProps,
@@ -4878,8 +4068,8 @@ var PopperArrow = /* @__PURE__ */ React21.forwardRef(
 function isNotNull(value) {
   return value !== null;
 }
-__name20(isNotNull, "isNotNull");
-var transformOrigin = /* @__PURE__ */ __name20((options2) => ({
+__name15(isNotNull, "isNotNull");
+var transformOrigin = /* @__PURE__ */ __name15((options2) => ({
   name: "transformOrigin",
   options: options2,
   fn(data) {
@@ -4914,36 +4104,377 @@ function getSideAndAlignFromPlacement(placement) {
   const [side, align = "center"] = placement.split("-");
   return [side, align];
 }
-__name20(getSideAndAlignFromPlacement, "getSideAndAlignFromPlacement");
+__name15(getSideAndAlignFromPlacement, "getSideAndAlignFromPlacement");
 
 // node_modules/@radix-ui/react-portal/dist/index.mjs
-import * as React25 from "react";
+import * as React17 from "react";
 import * as ReactDOM3 from "react-dom";
-import { jsx as jsx11 } from "react/jsx-runtime";
-var __defProp21 = Object.defineProperty;
-var __name21 = (target, value) => __defProp21(target, "name", { value, configurable: true });
-var Portal = /* @__PURE__ */ React25.forwardRef(
-  /* @__PURE__ */ __name21(function Portal2(props, forwardedRef) {
+import { jsx as jsx9 } from "react/jsx-runtime";
+var __defProp16 = Object.defineProperty;
+var __name16 = (target, value) => __defProp16(target, "name", { value, configurable: true });
+var Portal = /* @__PURE__ */ React17.forwardRef(
+  /* @__PURE__ */ __name16(function Portal2(props, forwardedRef) {
     const { container: containerProp, ...portalProps } = props;
-    const [mounted, setMounted] = React25.useState(false);
+    const [mounted, setMounted] = React17.useState(false);
     useLayoutEffect2(() => setMounted(true), []);
     const container = containerProp || mounted && globalThis?.document?.body;
-    return container ? ReactDOM3.createPortal(/* @__PURE__ */ jsx11(Primitive.div, { ...portalProps, ref: forwardedRef }), container) : null;
+    return container ? ReactDOM3.createPortal(/* @__PURE__ */ jsx9(Primitive.div, { ...portalProps, ref: forwardedRef }), container) : null;
   }, "Portal")
 );
 
+// node_modules/@radix-ui/react-presence/dist/index.mjs
+import * as React23 from "react";
+import * as React18 from "react";
+var __defProp17 = Object.defineProperty;
+var __name17 = (target, value) => __defProp17(target, "name", { value, configurable: true });
+function useStateMachine(initialState, machine) {
+  return React18.useReducer((state, event) => {
+    const nextState = machine[state][event];
+    return nextState ?? state;
+  }, initialState);
+}
+__name17(useStateMachine, "useStateMachine");
+var Presence = /* @__PURE__ */ __name17((props) => {
+  const { present, children } = props;
+  const presence = usePresence(present);
+  const child = typeof children === "function" ? children({ present: presence.isPresent }) : React23.Children.only(children);
+  const ref = useStableComposedRefs(presence.ref, getElementRef2(child));
+  const forceMount = typeof children === "function";
+  return forceMount || presence.isPresent ? React23.cloneElement(child, { ref }) : null;
+}, "Presence");
+function usePresence(present) {
+  const [node, setNode] = React23.useState();
+  const stylesRef = React23.useRef(null);
+  const prevPresentRef = React23.useRef(present);
+  const prevAnimationNameRef = React23.useRef("none");
+  const mountAnimationNameRef = React23.useRef(void 0);
+  const initialState = present ? "mounted" : "unmounted";
+  const [state, send] = useStateMachine(initialState, {
+    mounted: {
+      UNMOUNT: "unmounted",
+      ANIMATION_OUT: "unmountSuspended"
+    },
+    unmountSuspended: {
+      MOUNT: "mounted",
+      ANIMATION_END: "unmounted"
+    },
+    unmounted: {
+      MOUNT: "mounted"
+    }
+  });
+  React23.useEffect(() => {
+    if (state === "mounted") {
+      prevAnimationNameRef.current = mountAnimationNameRef.current ?? getAnimationName(stylesRef.current);
+      mountAnimationNameRef.current = void 0;
+    } else {
+      prevAnimationNameRef.current = "none";
+    }
+  }, [state]);
+  useLayoutEffect2(() => {
+    const styles = stylesRef.current;
+    const wasPresent = prevPresentRef.current;
+    const hasPresentChanged = wasPresent !== present;
+    if (hasPresentChanged) {
+      const prevAnimationName = prevAnimationNameRef.current;
+      const currentAnimationName = getAnimationName(styles);
+      if (present) {
+        mountAnimationNameRef.current = currentAnimationName;
+        send("MOUNT");
+      } else if (currentAnimationName === "none" || styles?.display === "none") {
+        send("UNMOUNT");
+      } else {
+        const isAnimating = prevAnimationName !== currentAnimationName;
+        if (wasPresent && isAnimating) {
+          send("ANIMATION_OUT");
+        } else {
+          send("UNMOUNT");
+        }
+      }
+      prevPresentRef.current = present;
+    }
+  }, [present, send]);
+  useLayoutEffect2(() => {
+    if (node) {
+      let timeoutId;
+      const ownerWindow = node.ownerDocument.defaultView ?? window;
+      const handleAnimationEnd = /* @__PURE__ */ __name17((event) => {
+        const currentAnimationName = getAnimationName(stylesRef.current);
+        const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
+        if (event.target === node && isCurrentAnimation) {
+          send("ANIMATION_END");
+          if (!prevPresentRef.current) {
+            const currentFillMode = node.style.animationFillMode;
+            node.style.animationFillMode = "forwards";
+            timeoutId = ownerWindow.setTimeout(() => {
+              if (node.style.animationFillMode === "forwards") {
+                node.style.animationFillMode = currentFillMode;
+              }
+            });
+          }
+        }
+      }, "handleAnimationEnd");
+      const handleAnimationStart = /* @__PURE__ */ __name17((event) => {
+        if (event.target === node) {
+          prevAnimationNameRef.current = getAnimationName(stylesRef.current);
+        }
+      }, "handleAnimationStart");
+      node.addEventListener("animationstart", handleAnimationStart);
+      node.addEventListener("animationcancel", handleAnimationEnd);
+      node.addEventListener("animationend", handleAnimationEnd);
+      return () => {
+        ownerWindow.clearTimeout(timeoutId);
+        node.removeEventListener("animationstart", handleAnimationStart);
+        node.removeEventListener("animationcancel", handleAnimationEnd);
+        node.removeEventListener("animationend", handleAnimationEnd);
+      };
+    } else {
+      send("ANIMATION_END");
+    }
+  }, [node, send]);
+  return {
+    isPresent: ["mounted", "unmountSuspended"].includes(state),
+    ref: React23.useCallback((node2) => {
+      if (node2) {
+        const styles = getComputedStyle(node2);
+        stylesRef.current = styles;
+        mountAnimationNameRef.current = getAnimationName(styles);
+      } else {
+        stylesRef.current = null;
+      }
+      setNode(node2);
+    }, [])
+  };
+}
+__name17(usePresence, "usePresence");
+function setRef2(ref, value) {
+  if (typeof ref === "function") {
+    return ref(value);
+  } else if (ref !== null && ref !== void 0) {
+    ref.current = value;
+  }
+}
+__name17(setRef2, "setRef");
+function useStableComposedRefs(...refs) {
+  const refsRef = React23.useRef(refs);
+  refsRef.current = refs;
+  return React23.useCallback((node) => {
+    const currentRefs = refsRef.current;
+    let hasCleanup = false;
+    const cleanups = currentRefs.map((ref) => {
+      const cleanup = setRef2(ref, node);
+      if (!hasCleanup && typeof cleanup === "function") {
+        hasCleanup = true;
+      }
+      return cleanup;
+    });
+    if (hasCleanup) {
+      return () => {
+        for (let i = 0; i < cleanups.length; i++) {
+          const cleanup = cleanups[i];
+          if (typeof cleanup === "function") {
+            cleanup();
+          } else {
+            setRef2(currentRefs[i], null);
+          }
+        }
+      };
+    }
+  }, []);
+}
+__name17(useStableComposedRefs, "useStableComposedRefs");
+function getAnimationName(styles) {
+  return styles?.animationName || "none";
+}
+__name17(getAnimationName, "getAnimationName");
+function getElementRef2(element) {
+  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
+  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.ref;
+  }
+  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
+  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
+  if (mayWarn) {
+    return element.props.ref;
+  }
+  return element.props.ref || element.ref;
+}
+__name17(getElementRef2, "getElementRef");
+
 // node_modules/@radix-ui/react-roving-focus/dist/index.mjs
-import * as React28 from "react";
+import * as React26 from "react";
+
+// node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
+import * as React20 from "react";
+import * as React24 from "react";
+
+// node_modules/@radix-ui/react-use-effect-event/dist/index.mjs
+import * as React19 from "react";
+var __defProp18 = Object.defineProperty;
+var __name18 = (target, value) => __defProp18(target, "name", { value, configurable: true });
+var useReactEffectEvent = React19[" useEffectEvent ".trim().toString()];
+var useReactInsertionEffect2 = React19[" useInsertionEffect ".trim().toString()];
+function useEffectEvent(callback) {
+  if (typeof useReactEffectEvent === "function") {
+    return useReactEffectEvent(callback);
+  }
+  const ref = React19.useRef(() => {
+    throw new Error("Cannot call an event handler while rendering.");
+  });
+  if (typeof useReactInsertionEffect2 === "function") {
+    useReactInsertionEffect2(() => {
+      ref.current = callback;
+    });
+  } else {
+    useLayoutEffect2(() => {
+      ref.current = callback;
+    });
+  }
+  return React19.useMemo(() => ((...args) => ref.current?.(...args)), []);
+}
+__name18(useEffectEvent, "useEffectEvent");
+
+// node_modules/@radix-ui/react-use-controllable-state/dist/index.mjs
+var __defProp19 = Object.defineProperty;
+var __name19 = (target, value) => __defProp19(target, "name", { value, configurable: true });
+var useInsertionEffect = React20[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
+function useControllableState({
+  prop,
+  defaultProp,
+  onChange = /* @__PURE__ */ __name19(() => {
+  }, "onChange"),
+  caller
+}) {
+  const [uncontrolledProp, setUncontrolledProp, onChangeRef] = useUncontrolledState({
+    defaultProp,
+    onChange
+  });
+  const isControlled = prop !== void 0;
+  const value = isControlled ? prop : uncontrolledProp;
+  if (IS_DEVELOPMENT) {
+    const isControlledRef = React20.useRef(prop !== void 0);
+    React20.useEffect(() => {
+      const wasControlled = isControlledRef.current;
+      if (wasControlled !== isControlled) {
+        const from = wasControlled ? "controlled" : "uncontrolled";
+        const to = isControlled ? "controlled" : "uncontrolled";
+        console.warn(
+          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+        );
+      }
+      isControlledRef.current = isControlled;
+    }, [isControlled, caller]);
+  }
+  const setValue = React20.useCallback(
+    (nextValue) => {
+      if (isControlled) {
+        const value2 = isFunction(nextValue) ? nextValue(prop) : nextValue;
+        if (value2 !== prop) {
+          onChangeRef.current?.(value2);
+        }
+      } else {
+        setUncontrolledProp(nextValue);
+      }
+    },
+    [isControlled, prop, setUncontrolledProp, onChangeRef]
+  );
+  return [value, setValue];
+}
+__name19(useControllableState, "useControllableState");
+function useUncontrolledState({
+  defaultProp,
+  onChange
+}) {
+  const [value, setValue] = React20.useState(defaultProp);
+  const prevValueRef = React20.useRef(value);
+  const onChangeRef = React20.useRef(onChange);
+  useInsertionEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
+  React20.useEffect(() => {
+    if (prevValueRef.current !== value) {
+      onChangeRef.current?.(value);
+      prevValueRef.current = value;
+    }
+  }, [value, prevValueRef]);
+  return [value, setValue, onChangeRef];
+}
+__name19(useUncontrolledState, "useUncontrolledState");
+function isFunction(value) {
+  return typeof value === "function";
+}
+__name19(isFunction, "isFunction");
+var SYNC_STATE = /* @__PURE__ */ Symbol("RADIX:SYNC_STATE");
+function useControllableStateReducer(reducer, userArgs, initialArg, init) {
+  const { prop: controlledState, defaultProp, onChange: onChangeProp, caller } = userArgs;
+  const isControlled = controlledState !== void 0;
+  const onChange = useEffectEvent(onChangeProp);
+  if (IS_DEVELOPMENT) {
+    const isControlledRef = React24.useRef(controlledState !== void 0);
+    React24.useEffect(() => {
+      const wasControlled = isControlledRef.current;
+      if (wasControlled !== isControlled) {
+        const from = wasControlled ? "controlled" : "uncontrolled";
+        const to = isControlled ? "controlled" : "uncontrolled";
+        console.warn(
+          `${caller} is changing from ${from} to ${to}. Components should not switch from controlled to uncontrolled (or vice versa). Decide between using a controlled or uncontrolled value for the lifetime of the component.`
+        );
+      }
+      isControlledRef.current = isControlled;
+    }, [isControlled, caller]);
+  }
+  const args = [{ ...initialArg, state: defaultProp }];
+  if (init) {
+    args.push(init);
+  }
+  const [internalState, dispatch] = React24.useReducer(
+    (state2, action) => {
+      if (action.type === SYNC_STATE) {
+        return { ...state2, state: action.state };
+      }
+      const next = reducer(state2, action);
+      if (isControlled && !Object.is(next.state, state2.state)) {
+        onChange(next.state);
+      }
+      return next;
+    },
+    ...args
+  );
+  const uncontrolledState = internalState.state;
+  const prevValueRef = React24.useRef(uncontrolledState);
+  React24.useEffect(() => {
+    if (prevValueRef.current !== uncontrolledState) {
+      prevValueRef.current = uncontrolledState;
+      if (!isControlled) {
+        onChange(uncontrolledState);
+      }
+    }
+  }, [uncontrolledState, prevValueRef, isControlled]);
+  const state = React24.useMemo(() => {
+    const isControlled2 = controlledState !== void 0;
+    if (isControlled2) {
+      return { ...internalState, state: controlledState };
+    }
+    return internalState;
+  }, [internalState, controlledState]);
+  React24.useEffect(() => {
+    if (isControlled && !Object.is(controlledState, internalState.state)) {
+      dispatch({ type: SYNC_STATE, state: controlledState });
+    }
+  }, [controlledState, internalState.state, isControlled]);
+  return [state, dispatch];
+}
+__name19(useControllableStateReducer, "useControllableStateReducer");
 
 // node_modules/@radix-ui/react-use-is-hydrated/dist/index.mjs
-import * as React26 from "react";
-import * as React27 from "react";
-var __defProp22 = Object.defineProperty;
-var __name22 = (target, value) => __defProp22(target, "name", { value, configurable: true });
+import * as React25 from "react";
+import * as React21 from "react";
+var __defProp20 = Object.defineProperty;
+var __name20 = (target, value) => __defProp20(target, "name", { value, configurable: true });
 var _isHydrated = false;
 function useIsHydrated() {
-  const [isHydrated, setIsHydrated] = React27.useState(_isHydrated);
-  React27.useEffect(() => {
+  const [isHydrated, setIsHydrated] = React21.useState(_isHydrated);
+  React21.useEffect(() => {
     if (!_isHydrated) {
       _isHydrated = true;
       setIsHydrated(true);
@@ -4951,13 +4482,13 @@ function useIsHydrated() {
   }, []);
   return isHydrated;
 }
-__name22(useIsHydrated, "useIsHydrated");
-var useReactSyncExternalStore = React26[" useSyncExternalStore ".trim().toString()];
+__name20(useIsHydrated, "useIsHydrated");
+var useReactSyncExternalStore = React25[" useSyncExternalStore ".trim().toString()];
 function subscribe() {
   return () => {
   };
 }
-__name22(subscribe, "subscribe");
+__name20(subscribe, "subscribe");
 function useIsHydratedModern() {
   return useReactSyncExternalStore(
     subscribe,
@@ -4965,37 +4496,37 @@ function useIsHydratedModern() {
     () => false
   );
 }
-__name22(useIsHydratedModern, "useIsHydratedModern");
+__name20(useIsHydratedModern, "useIsHydratedModern");
 var useIsHydrated2 = typeof useReactSyncExternalStore === "function" ? useIsHydratedModern : useIsHydrated;
 
 // node_modules/@radix-ui/react-roving-focus/dist/index.mjs
-import { jsx as jsx12 } from "react/jsx-runtime";
-var __defProp23 = Object.defineProperty;
-var __name23 = (target, value) => __defProp23(target, "name", { value, configurable: true });
+import { jsx as jsx10 } from "react/jsx-runtime";
+var __defProp21 = Object.defineProperty;
+var __name21 = (target, value) => __defProp21(target, "name", { value, configurable: true });
 var ENTRY_FOCUS = "rovingFocusGroup.onEntryFocus";
 var EVENT_OPTIONS2 = { bubbles: false, cancelable: true };
 var GROUP_NAME = "RovingFocusGroup";
-var [Collection2, useCollection, createCollectionScope2] = createCollection(GROUP_NAME);
+var [Collection, useCollection, createCollectionScope] = createCollection(GROUP_NAME);
 var [createRovingFocusGroupContext, createRovingFocusGroupScope] = createContextScope(
   GROUP_NAME,
-  [createCollectionScope2]
+  [createCollectionScope]
 );
-var Orientation2 = {
+var Orientation = {
   Vertical: "vertical",
   Horizontal: "horizontal"
 };
-var Direction3 = {
+var Direction2 = {
   LTR: "ltr",
   RTL: "rtl"
 };
 var [RovingFocusProvider, useRovingFocusContext] = createRovingFocusGroupContext(GROUP_NAME);
-var RovingFocusGroup = /* @__PURE__ */ React28.forwardRef(
+var RovingFocusGroup = /* @__PURE__ */ React26.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name23(function RovingFocusGroup2(props, forwardedRef) {
-    return /* @__PURE__ */ jsx12(Collection2.Provider, { scope: props.__scopeRovingFocusGroup, children: /* @__PURE__ */ jsx12(Collection2.Slot, { scope: props.__scopeRovingFocusGroup, children: /* @__PURE__ */ jsx12(RovingFocusGroupImpl, { ...props, ref: forwardedRef }) }) });
+  /* @__PURE__ */ __name21(function RovingFocusGroup2(props, forwardedRef) {
+    return /* @__PURE__ */ jsx10(Collection.Provider, { scope: props.__scopeRovingFocusGroup, children: /* @__PURE__ */ jsx10(Collection.Slot, { scope: props.__scopeRovingFocusGroup, children: /* @__PURE__ */ jsx10(RovingFocusGroupImpl, { ...props, ref: forwardedRef }) }) });
   }, "RovingFocusGroup")
 );
-var RovingFocusGroupImpl = /* @__PURE__ */ React28.forwardRef(/* @__PURE__ */ __name23(function RovingFocusGroupImpl2(props, forwardedRef) {
+var RovingFocusGroupImpl = /* @__PURE__ */ React26.forwardRef(/* @__PURE__ */ __name21(function RovingFocusGroupImpl2(props, forwardedRef) {
   const {
     __scopeRovingFocusGroup,
     orientation,
@@ -5008,7 +4539,7 @@ var RovingFocusGroupImpl = /* @__PURE__ */ React28.forwardRef(/* @__PURE__ */ __
     preventScrollOnEntryFocus = false,
     ...groupProps
   } = props;
-  const ref = React28.useRef(null);
+  const ref = React26.useRef(null);
   const composedRefs = useComposedRefs(forwardedRef, ref);
   const direction = useDirection(dir);
   const [currentTabStopId, setCurrentTabStopId] = useControllableState({
@@ -5017,19 +4548,19 @@ var RovingFocusGroupImpl = /* @__PURE__ */ React28.forwardRef(/* @__PURE__ */ __
     onChange: onCurrentTabStopIdChange,
     caller: GROUP_NAME
   });
-  const [isTabbingBackOut, setIsTabbingBackOut] = React28.useState(false);
+  const [isTabbingBackOut, setIsTabbingBackOut] = React26.useState(false);
   const handleEntryFocus = useCallbackRef(onEntryFocus);
   const getItems = useCollection(__scopeRovingFocusGroup);
-  const isClickFocusRef = React28.useRef(false);
-  const [focusableItemsCount, setFocusableItemsCount] = React28.useState(0);
-  React28.useEffect(() => {
+  const isClickFocusRef = React26.useRef(false);
+  const [focusableItemsCount, setFocusableItemsCount] = React26.useState(0);
+  React26.useEffect(() => {
     const node = ref.current;
     if (node) {
       node.addEventListener(ENTRY_FOCUS, handleEntryFocus);
       return () => node.removeEventListener(ENTRY_FOCUS, handleEntryFocus);
     }
   }, [handleEntryFocus]);
-  return /* @__PURE__ */ jsx12(
+  return /* @__PURE__ */ jsx10(
     RovingFocusProvider,
     {
       scope: __scopeRovingFocusGroup,
@@ -5037,20 +4568,20 @@ var RovingFocusGroupImpl = /* @__PURE__ */ React28.forwardRef(/* @__PURE__ */ __
       dir: direction,
       loop,
       currentTabStopId,
-      onItemFocus: React28.useCallback(
+      onItemFocus: React26.useCallback(
         (tabStopId) => setCurrentTabStopId(tabStopId),
         [setCurrentTabStopId]
       ),
-      onItemShiftTab: React28.useCallback(() => setIsTabbingBackOut(true), []),
-      onFocusableItemAdd: React28.useCallback(
+      onItemShiftTab: React26.useCallback(() => setIsTabbingBackOut(true), []),
+      onFocusableItemAdd: React26.useCallback(
         () => setFocusableItemsCount((prevCount) => prevCount + 1),
         []
       ),
-      onFocusableItemRemove: React28.useCallback(
+      onFocusableItemRemove: React26.useCallback(
         () => setFocusableItemsCount((prevCount) => prevCount - 1),
         []
       ),
-      children: /* @__PURE__ */ jsx12(
+      children: /* @__PURE__ */ jsx10(
         Primitive.div,
         {
           tabIndex: isTabbingBackOut || focusableItemsCount === 0 ? -1 : 0,
@@ -5085,10 +4616,10 @@ var RovingFocusGroupImpl = /* @__PURE__ */ React28.forwardRef(/* @__PURE__ */ __
     }
   );
 }, "RovingFocusGroupImpl"));
-var ITEM_NAME2 = "RovingFocusGroupItem";
-var RovingFocusGroupItem = /* @__PURE__ */ React28.forwardRef(
+var ITEM_NAME = "RovingFocusGroupItem";
+var RovingFocusGroupItem = /* @__PURE__ */ React26.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name23(function RovingFocusGroupItem2(props, forwardedRef) {
+  /* @__PURE__ */ __name21(function RovingFocusGroupItem2(props, forwardedRef) {
     const {
       __scopeRovingFocusGroup,
       focusable = true,
@@ -5099,7 +4630,7 @@ var RovingFocusGroupItem = /* @__PURE__ */ React28.forwardRef(
     } = props;
     const autoId = useId();
     const id = tabStopId || autoId;
-    const context = useRovingFocusContext(ITEM_NAME2, __scopeRovingFocusGroup);
+    const context = useRovingFocusContext(ITEM_NAME, __scopeRovingFocusGroup);
     const isCurrentTabStop = context.currentTabStopId === id;
     const getItems = useCollection(__scopeRovingFocusGroup);
     const { onFocusableItemAdd, onFocusableItemRemove, currentTabStopId } = context;
@@ -5111,21 +4642,21 @@ var RovingFocusGroupItem = /* @__PURE__ */ React28.forwardRef(
       onFocusableItemAdd();
       return () => onFocusableItemRemove();
     }, [isHydrated, focusable, onFocusableItemAdd, onFocusableItemRemove]);
-    React28.useEffect(() => {
+    React26.useEffect(() => {
       if (isHydrated || !focusable) {
         return;
       }
       onFocusableItemAdd();
       return () => onFocusableItemRemove();
     }, [isHydrated, focusable, onFocusableItemAdd, onFocusableItemRemove]);
-    return /* @__PURE__ */ jsx12(
-      Collection2.ItemSlot,
+    return /* @__PURE__ */ jsx10(
+      Collection.ItemSlot,
       {
         scope: __scopeRovingFocusGroup,
         id,
         focusable,
         active,
-        children: /* @__PURE__ */ jsx12(
+        children: /* @__PURE__ */ jsx10(
           Primitive.span,
           {
             tabIndex: isCurrentTabStop ? 0 : -1,
@@ -5176,21 +4707,21 @@ var MAP_KEY_TO_FOCUS_INTENT = {
   End: "last"
 };
 function getDirectionAwareKey(key, dir) {
-  if (dir !== Direction3.RTL) return key;
+  if (dir !== Direction2.RTL) return key;
   return key === "ArrowLeft" ? "ArrowRight" : key === "ArrowRight" ? "ArrowLeft" : key;
 }
-__name23(getDirectionAwareKey, "getDirectionAwareKey");
+__name21(getDirectionAwareKey, "getDirectionAwareKey");
 function getFocusIntent(event, orientation, dir) {
   const key = getDirectionAwareKey(event.key, dir);
-  if (orientation === Orientation2.Vertical && ["ArrowLeft", "ArrowRight"].includes(key)) {
+  if (orientation === Orientation.Vertical && ["ArrowLeft", "ArrowRight"].includes(key)) {
     return void 0;
   }
-  if (orientation === Orientation2.Horizontal && ["ArrowUp", "ArrowDown"].includes(key)) {
+  if (orientation === Orientation.Horizontal && ["ArrowUp", "ArrowDown"].includes(key)) {
     return void 0;
   }
   return MAP_KEY_TO_FOCUS_INTENT[key];
 }
-__name23(getFocusIntent, "getFocusIntent");
+__name21(getFocusIntent, "getFocusIntent");
 function focusFirst2(candidates, preventScroll = false) {
   const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement;
   for (const candidate of candidates) {
@@ -5199,11 +4730,11 @@ function focusFirst2(candidates, preventScroll = false) {
     if (document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
   }
 }
-__name23(focusFirst2, "focusFirst");
+__name21(focusFirst2, "focusFirst");
 function wrapArray(array, startIndex) {
   return array.map((_, index2) => array[(startIndex + index2) % array.length]);
 }
-__name23(wrapArray, "wrapArray");
+__name21(wrapArray, "wrapArray");
 
 // node_modules/aria-hidden/dist/es2015/index.js
 var getDefaultParent = function(originalTarget) {
@@ -5359,10 +4890,10 @@ function __spreadArray(to, from, pack) {
 }
 
 // node_modules/react-remove-scroll/dist/es2015/Combination.js
-import * as React35 from "react";
+import * as React33 from "react";
 
 // node_modules/react-remove-scroll/dist/es2015/UI.js
-import * as React31 from "react";
+import * as React29 from "react";
 
 // node_modules/react-remove-scroll-bar/dist/es2015/constants.js
 var zeroRightClassName = "right-scroll-bar-position";
@@ -5381,9 +4912,9 @@ function assignRef(ref, value) {
 }
 
 // node_modules/use-callback-ref/dist/es2015/useRef.js
-import { useState as useState14 } from "react";
+import { useState as useState13 } from "react";
 function useCallbackRef2(initialValue, callback) {
-  var ref = useState14(function() {
+  var ref = useState13(function() {
     return {
       // value
       value: initialValue,
@@ -5409,8 +4940,8 @@ function useCallbackRef2(initialValue, callback) {
 }
 
 // node_modules/use-callback-ref/dist/es2015/useMergeRef.js
-import * as React29 from "react";
-var useIsomorphicLayoutEffect = typeof window !== "undefined" ? React29.useLayoutEffect : React29.useEffect;
+import * as React27 from "react";
+var useIsomorphicLayoutEffect = typeof window !== "undefined" ? React27.useLayoutEffect : React27.useEffect;
 var currentValues = /* @__PURE__ */ new WeakMap();
 function useMergeRefs(refs, defaultValue) {
   var callbackRef = useCallbackRef2(defaultValue || null, function(newValue) {
@@ -5527,7 +5058,7 @@ function createSidecarMedium(options2) {
 }
 
 // node_modules/use-sidecar/dist/es2015/exports.js
-import * as React30 from "react";
+import * as React28 from "react";
 var SideCar = function(_a) {
   var sideCar = _a.sideCar, rest = __rest(_a, ["sideCar"]);
   if (!sideCar) {
@@ -5537,7 +5068,7 @@ var SideCar = function(_a) {
   if (!Target) {
     throw new Error("Sidecar medium not found");
   }
-  return React30.createElement(Target, __assign({}, rest));
+  return React28.createElement(Target, __assign({}, rest));
 };
 SideCar.isSideCarExport = true;
 function exportSidecar(medium, exported) {
@@ -5552,9 +5083,9 @@ var effectCar = createSidecarMedium();
 var nothing = function() {
   return;
 };
-var RemoveScroll = React31.forwardRef(function(props, parentRef) {
-  var ref = React31.useRef(null);
-  var _a = React31.useState({
+var RemoveScroll = React29.forwardRef(function(props, parentRef) {
+  var ref = React29.useRef(null);
+  var _a = React29.useState({
     onScrollCapture: nothing,
     onWheelCapture: nothing,
     onTouchMoveCapture: nothing
@@ -5563,11 +5094,11 @@ var RemoveScroll = React31.forwardRef(function(props, parentRef) {
   var SideCar2 = sideCar;
   var containerRef = useMergeRefs([ref, parentRef]);
   var containerProps = __assign(__assign({}, rest), callbacks);
-  return React31.createElement(
-    React31.Fragment,
+  return React29.createElement(
+    React29.Fragment,
     null,
-    enabled && React31.createElement(SideCar2, { sideCar: effectCar, removeScrollBar, shards, noRelative, noIsolation, inert, setCallbacks, allowPinchZoom: !!allowPinchZoom, lockRef: ref, gapMode }),
-    forwardProps ? React31.cloneElement(React31.Children.only(children), __assign(__assign({}, containerProps), { ref: containerRef })) : React31.createElement(Container, __assign({}, containerProps, { className, ref: containerRef }), children)
+    enabled && React29.createElement(SideCar2, { sideCar: effectCar, removeScrollBar, shards, noRelative, noIsolation, inert, setCallbacks, allowPinchZoom: !!allowPinchZoom, lockRef: ref, gapMode }),
+    forwardProps ? React29.cloneElement(React29.Children.only(children), __assign(__assign({}, containerProps), { ref: containerRef })) : React29.createElement(Container, __assign({}, containerProps, { className, ref: containerRef }), children)
   );
 });
 RemoveScroll.defaultProps = {
@@ -5581,13 +5112,13 @@ RemoveScroll.classNames = {
 };
 
 // node_modules/react-remove-scroll/dist/es2015/SideEffect.js
-import * as React34 from "react";
+import * as React32 from "react";
 
 // node_modules/react-remove-scroll-bar/dist/es2015/component.js
-import * as React33 from "react";
+import * as React31 from "react";
 
 // node_modules/react-style-singleton/dist/es2015/hook.js
-import * as React32 from "react";
+import * as React30 from "react";
 
 // node_modules/get-nonce/dist/es2015/index.js
 var currentNonce;
@@ -5651,7 +5182,7 @@ var stylesheetSingleton = function() {
 var styleHookSingleton = function() {
   var sheet = stylesheetSingleton();
   return function(styles, isDynamic) {
-    React32.useEffect(function() {
+    React30.useEffect(function() {
       sheet.add(styles);
       return function() {
         sheet.remove();
@@ -5725,7 +5256,7 @@ var getCurrentUseCounter = function() {
   return isFinite(counter) ? counter : 0;
 };
 var useLockAttribute = function() {
-  React33.useEffect(function() {
+  React31.useEffect(function() {
     document.body.setAttribute(lockAttribute, (getCurrentUseCounter() + 1).toString());
     return function() {
       var newCounter = getCurrentUseCounter() - 1;
@@ -5740,10 +5271,10 @@ var useLockAttribute = function() {
 var RemoveScrollBar = function(_a) {
   var noRelative = _a.noRelative, noImportant = _a.noImportant, _b = _a.gapMode, gapMode = _b === void 0 ? "margin" : _b;
   useLockAttribute();
-  var gap = React33.useMemo(function() {
+  var gap = React31.useMemo(function() {
     return getGapWidth(gapMode);
   }, [gapMode]);
-  return React33.createElement(Style, { styles: getStyles(gap, !noRelative, gapMode, !noImportant ? "!important" : "") });
+  return React31.createElement(Style, { styles: getStyles(gap, !noRelative, gapMode, !noImportant ? "!important" : "") });
 };
 
 // node_modules/react-remove-scroll/dist/es2015/aggresiveCapture.js
@@ -5884,16 +5415,16 @@ var generateStyle = function(id) {
 var idCounter = 0;
 var lockStack = [];
 function RemoveScrollSideCar(props) {
-  var shouldPreventQueue = React34.useRef([]);
-  var touchStartRef = React34.useRef([0, 0]);
-  var activeAxis = React34.useRef();
-  var id = React34.useState(idCounter++)[0];
-  var Style2 = React34.useState(styleSingleton)[0];
-  var lastProps = React34.useRef(props);
-  React34.useEffect(function() {
+  var shouldPreventQueue = React32.useRef([]);
+  var touchStartRef = React32.useRef([0, 0]);
+  var activeAxis = React32.useRef();
+  var id = React32.useState(idCounter++)[0];
+  var Style2 = React32.useState(styleSingleton)[0];
+  var lastProps = React32.useRef(props);
+  React32.useEffect(function() {
     lastProps.current = props;
   }, [props]);
-  React34.useEffect(function() {
+  React32.useEffect(function() {
     if (props.inert) {
       document.body.classList.add("block-interactivity-".concat(id));
       var allow_1 = __spreadArray([props.lockRef.current], (props.shards || []).map(extractRef), true).filter(Boolean);
@@ -5909,7 +5440,7 @@ function RemoveScrollSideCar(props) {
     }
     return;
   }, [props.inert, props.lockRef.current, props.shards]);
-  var shouldCancelEvent = React34.useCallback(function(event, parent) {
+  var shouldCancelEvent = React32.useCallback(function(event, parent) {
     if ("touches" in event && event.touches.length === 2 || event.type === "wheel" && event.ctrlKey) {
       return !lastProps.current.allowPinchZoom;
     }
@@ -5951,7 +5482,7 @@ function RemoveScrollSideCar(props) {
     var cancelingAxis = activeAxis.current || currentAxis;
     return handleScroll(cancelingAxis, parent, event, cancelingAxis === "h" ? deltaX : deltaY, true);
   }, []);
-  var shouldPrevent = React34.useCallback(function(_event) {
+  var shouldPrevent = React32.useCallback(function(_event) {
     var event = _event;
     if (!lockStack.length || lockStack[lockStack.length - 1] !== Style2) {
       return;
@@ -5978,7 +5509,7 @@ function RemoveScrollSideCar(props) {
       }
     }
   }, []);
-  var shouldCancel = React34.useCallback(function(name, delta, target, should) {
+  var shouldCancel = React32.useCallback(function(name, delta, target, should) {
     var event = { name, delta, target, should, shadowParent: getOutermostShadowParent(target) };
     shouldPreventQueue.current.push(event);
     setTimeout(function() {
@@ -5987,17 +5518,17 @@ function RemoveScrollSideCar(props) {
       });
     }, 1);
   }, []);
-  var scrollTouchStart = React34.useCallback(function(event) {
+  var scrollTouchStart = React32.useCallback(function(event) {
     touchStartRef.current = getTouchXY(event);
     activeAxis.current = void 0;
   }, []);
-  var scrollWheel = React34.useCallback(function(event) {
+  var scrollWheel = React32.useCallback(function(event) {
     shouldCancel(event.type, getDeltaXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
   }, []);
-  var scrollTouchMove = React34.useCallback(function(event) {
+  var scrollTouchMove = React32.useCallback(function(event) {
     shouldCancel(event.type, getTouchXY(event), event.target, shouldCancelEvent(event, props.lockRef.current));
   }, []);
-  React34.useEffect(function() {
+  React32.useEffect(function() {
     lockStack.push(Style2);
     props.setCallbacks({
       onScrollCapture: scrollWheel,
@@ -6017,11 +5548,11 @@ function RemoveScrollSideCar(props) {
     };
   }, []);
   var removeScrollBar = props.removeScrollBar, inert = props.inert;
-  return React34.createElement(
-    React34.Fragment,
+  return React32.createElement(
+    React32.Fragment,
     null,
-    inert ? React34.createElement(Style2, { styles: generateStyle(id) }) : null,
-    removeScrollBar ? React34.createElement(RemoveScrollBar, { noRelative: props.noRelative, gapMode: props.gapMode }) : null
+    inert ? React32.createElement(Style2, { styles: generateStyle(id) }) : null,
+    removeScrollBar ? React32.createElement(RemoveScrollBar, { noRelative: props.noRelative, gapMode: props.gapMode }) : null
   );
 }
 function getOutermostShadowParent(node) {
@@ -6040,17 +5571,17 @@ function getOutermostShadowParent(node) {
 var sidecar_default = exportSidecar(effectCar, RemoveScrollSideCar);
 
 // node_modules/react-remove-scroll/dist/es2015/Combination.js
-var ReactRemoveScroll = React35.forwardRef(function(props, ref) {
-  return React35.createElement(RemoveScroll, __assign({}, props, { ref, sideCar: sidecar_default }));
+var ReactRemoveScroll = React33.forwardRef(function(props, ref) {
+  return React33.createElement(RemoveScroll, __assign({}, props, { ref, sideCar: sidecar_default }));
 });
 ReactRemoveScroll.classNames = RemoveScroll.classNames;
 var Combination_default = ReactRemoveScroll;
 
 // node_modules/@radix-ui/react-menu/dist/index.mjs
-import { jsx as jsx13 } from "react/jsx-runtime";
-var __defProp24 = Object.defineProperty;
-var __name24 = (target, value) => __defProp24(target, "name", { value, configurable: true });
-var Direction4 = {
+import { jsx as jsx11 } from "react/jsx-runtime";
+var __defProp22 = Object.defineProperty;
+var __name22 = (target, value) => __defProp22(target, "name", { value, configurable: true });
+var Direction3 = {
   LTR: "ltr",
   RTL: "rtl"
 };
@@ -6067,9 +5598,9 @@ var SUB_CLOSE_KEYS = {
   rtl: ["ArrowRight"]
 };
 var MENU_NAME = "Menu";
-var [Collection3, useCollection2, createCollectionScope3] = createCollection(MENU_NAME);
+var [Collection2, useCollection2, createCollectionScope2] = createCollection(MENU_NAME);
 var [createMenuContext, createMenuScope] = createContextScope(MENU_NAME, [
-  createCollectionScope3,
+  createCollectionScope2,
   createPopperScope,
   createRovingFocusGroupScope
 ]);
@@ -6077,20 +5608,20 @@ var usePopperScope = createPopperScope();
 var useRovingFocusGroupScope = createRovingFocusGroupScope();
 var [MenuProvider, useMenuContext] = createMenuContext(MENU_NAME);
 var [MenuRootProvider, useMenuRootContext] = createMenuContext(MENU_NAME);
-var Menu = /* @__PURE__ */ __name24((props) => {
+var Menu = /* @__PURE__ */ __name22((props) => {
   const { __scopeMenu, open = false, children, dir, onOpenChange, modal = true } = props;
   const popperScope = usePopperScope(__scopeMenu);
-  const [content, setContent] = React36.useState(null);
-  const isUsingKeyboardRef = React36.useRef(false);
+  const [content, setContent] = React34.useState(null);
+  const isUsingKeyboardRef = React34.useRef(false);
   const handleOpenChange = useCallbackRef(onOpenChange);
   const direction = useDirection(dir);
-  React36.useEffect(() => {
-    const handleKeyDown = /* @__PURE__ */ __name24(() => {
+  React34.useEffect(() => {
+    const handleKeyDown = /* @__PURE__ */ __name22(() => {
       isUsingKeyboardRef.current = true;
       document.addEventListener("pointerdown", handlePointer, { capture: true, once: true });
       document.addEventListener("pointermove", handlePointer, { capture: true, once: true });
     }, "handleKeyDown");
-    const handlePointer = /* @__PURE__ */ __name24(() => isUsingKeyboardRef.current = false, "handlePointer");
+    const handlePointer = /* @__PURE__ */ __name22(() => isUsingKeyboardRef.current = false, "handlePointer");
     document.addEventListener("keydown", handleKeyDown, { capture: true });
     return () => {
       document.removeEventListener("keydown", handleKeyDown, { capture: true });
@@ -6098,15 +5629,15 @@ var Menu = /* @__PURE__ */ __name24((props) => {
       document.removeEventListener("pointermove", handlePointer, { capture: true });
     };
   }, []);
-  React36.useEffect(() => {
+  React34.useEffect(() => {
     if (!open) {
       return;
     }
-    const handleBlur = /* @__PURE__ */ __name24(() => handleOpenChange(false), "handleBlur");
+    const handleBlur = /* @__PURE__ */ __name22(() => handleOpenChange(false), "handleBlur");
     window.addEventListener("blur", handleBlur);
     return () => window.removeEventListener("blur", handleBlur);
   }, [open, handleOpenChange]);
-  return /* @__PURE__ */ jsx13(Popper, { ...popperScope, children: /* @__PURE__ */ jsx13(
+  return /* @__PURE__ */ jsx11(Popper, { ...popperScope, children: /* @__PURE__ */ jsx11(
     MenuProvider,
     {
       scope: __scopeMenu,
@@ -6114,11 +5645,11 @@ var Menu = /* @__PURE__ */ __name24((props) => {
       onOpenChange: handleOpenChange,
       content,
       onContentChange: setContent,
-      children: /* @__PURE__ */ jsx13(
+      children: /* @__PURE__ */ jsx11(
         MenuRootProvider,
         {
           scope: __scopeMenu,
-          onClose: React36.useCallback(() => handleOpenChange(false), [handleOpenChange]),
+          onClose: React34.useCallback(() => handleOpenChange(false), [handleOpenChange]),
           isUsingKeyboardRef,
           dir: direction,
           modal,
@@ -6128,44 +5659,44 @@ var Menu = /* @__PURE__ */ __name24((props) => {
     }
   ) });
 }, "Menu");
-var MenuAnchor = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuAnchor2(props, forwardedRef) {
+var MenuAnchor = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuAnchor2(props, forwardedRef) {
     const { __scopeMenu, ...anchorProps } = props;
     const popperScope = usePopperScope(__scopeMenu);
-    return /* @__PURE__ */ jsx13(PopperAnchor, { ...popperScope, ...anchorProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx11(PopperAnchor, { ...popperScope, ...anchorProps, ref: forwardedRef });
   }, "MenuAnchor")
 );
 var PORTAL_NAME = "MenuPortal";
 var [PortalProvider, usePortalContext] = createMenuContext(PORTAL_NAME, {
   forceMount: void 0
 });
-var MenuPortal = /* @__PURE__ */ __name24((props) => {
+var MenuPortal = /* @__PURE__ */ __name22((props) => {
   const { __scopeMenu, forceMount, children, container } = props;
   const context = useMenuContext(PORTAL_NAME, __scopeMenu);
-  return /* @__PURE__ */ jsx13(PortalProvider, { scope: __scopeMenu, forceMount, children: /* @__PURE__ */ jsx13(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx13(Portal, { asChild: true, container, children }) }) });
+  return /* @__PURE__ */ jsx11(PortalProvider, { scope: __scopeMenu, forceMount, children: /* @__PURE__ */ jsx11(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx11(Portal, { asChild: true, container, children }) }) });
 }, "MenuPortal");
-var CONTENT_NAME4 = "MenuContent";
-var [MenuContentProvider, useMenuContentContext] = createMenuContext(CONTENT_NAME4);
-var MenuContent = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuContent2(props, forwardedRef) {
-    const portalContext = usePortalContext(CONTENT_NAME4, props.__scopeMenu);
+var CONTENT_NAME2 = "MenuContent";
+var [MenuContentProvider, useMenuContentContext] = createMenuContext(CONTENT_NAME2);
+var MenuContent = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuContent2(props, forwardedRef) {
+    const portalContext = usePortalContext(CONTENT_NAME2, props.__scopeMenu);
     const { forceMount = portalContext.forceMount, ...contentProps } = props;
-    const context = useMenuContext(CONTENT_NAME4, props.__scopeMenu);
-    const rootContext = useMenuRootContext(CONTENT_NAME4, props.__scopeMenu);
-    return /* @__PURE__ */ jsx13(Collection3.Provider, { scope: props.__scopeMenu, children: /* @__PURE__ */ jsx13(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx13(Collection3.Slot, { scope: props.__scopeMenu, children: rootContext.modal ? /* @__PURE__ */ jsx13(MenuRootContentModal, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx13(MenuRootContentNonModal, { ...contentProps, ref: forwardedRef }) }) }) });
+    const context = useMenuContext(CONTENT_NAME2, props.__scopeMenu);
+    const rootContext = useMenuRootContext(CONTENT_NAME2, props.__scopeMenu);
+    return /* @__PURE__ */ jsx11(Collection2.Provider, { scope: props.__scopeMenu, children: /* @__PURE__ */ jsx11(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx11(Collection2.Slot, { scope: props.__scopeMenu, children: rootContext.modal ? /* @__PURE__ */ jsx11(MenuRootContentModal, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx11(MenuRootContentNonModal, { ...contentProps, ref: forwardedRef }) }) }) });
   }, "MenuContent")
 );
-var MenuRootContentModal = /* @__PURE__ */ React36.forwardRef(
+var MenuRootContentModal = /* @__PURE__ */ React34.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name24(function MenuRootContentModal2(props, forwardedRef) {
-    const context = useMenuContext(CONTENT_NAME4, props.__scopeMenu);
-    const ref = React36.useRef(null);
+  /* @__PURE__ */ __name22(function MenuRootContentModal2(props, forwardedRef) {
+    const context = useMenuContext(CONTENT_NAME2, props.__scopeMenu);
+    const ref = React34.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, ref);
-    React36.useEffect(() => {
+    React34.useEffect(() => {
       const content = ref.current;
       if (content) return hideOthers(content);
     }, []);
-    return /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(
       MenuContentImpl,
       {
         ...props,
@@ -6183,9 +5714,9 @@ var MenuRootContentModal = /* @__PURE__ */ React36.forwardRef(
     );
   }, "MenuRootContentModal")
 );
-var MenuRootContentNonModal = /* @__PURE__ */ React36.forwardRef(/* @__PURE__ */ __name24(function MenuRootContentNonModal2(props, forwardedRef) {
-  const context = useMenuContext(CONTENT_NAME4, props.__scopeMenu);
-  return /* @__PURE__ */ jsx13(
+var MenuRootContentNonModal = /* @__PURE__ */ React34.forwardRef(/* @__PURE__ */ __name22(function MenuRootContentNonModal2(props, forwardedRef) {
+  const context = useMenuContext(CONTENT_NAME2, props.__scopeMenu);
+  return /* @__PURE__ */ jsx11(
     MenuContentImpl,
     {
       ...props,
@@ -6198,9 +5729,9 @@ var MenuRootContentNonModal = /* @__PURE__ */ React36.forwardRef(/* @__PURE__ */
   );
 }, "MenuRootContentNonModal"));
 var Slot = createSlot("MenuContent.ScrollLock");
-var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
+var MenuContentImpl = /* @__PURE__ */ React34.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name24(function MenuContentImpl2(props, forwardedRef) {
+  /* @__PURE__ */ __name22(function MenuContentImpl2(props, forwardedRef) {
     const {
       __scopeMenu,
       loop = false,
@@ -6217,14 +5748,14 @@ var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
       disableOutsideScroll,
       ...contentProps
     } = props;
-    const context = useMenuContext(CONTENT_NAME4, __scopeMenu);
-    const rootContext = useMenuRootContext(CONTENT_NAME4, __scopeMenu);
+    const context = useMenuContext(CONTENT_NAME2, __scopeMenu);
+    const rootContext = useMenuRootContext(CONTENT_NAME2, __scopeMenu);
     const popperScope = usePopperScope(__scopeMenu);
     const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeMenu);
     const getItems = useCollection2(__scopeMenu);
-    const [currentItemId, setCurrentItemId] = React36.useState(null);
-    const contentRef = React36.useRef(null);
-    const [branchNode, setBranchNode] = React36.useState(null);
+    const [currentItemId, setCurrentItemId] = React34.useState(null);
+    const contentRef = React34.useRef(null);
+    const [branchNode, setBranchNode] = React34.useState(null);
     useFocusScopeBranch(branchNode);
     const { nodes: branchNodes, registry: branchRegistry } = useFocusScopeBranchRegistry();
     const isModal = Boolean(trapFocus || disableOutsideScroll);
@@ -6234,23 +5765,23 @@ var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
       context.onContentChange,
       setBranchNode
     );
-    const timerRef = React36.useRef(0);
-    const searchRef = React36.useRef("");
-    const pointerGraceTimerRef = React36.useRef(0);
-    const pointerGraceIntentRef = React36.useRef(null);
-    const pointerDirRef = React36.useRef("right");
-    const lastPointerXRef = React36.useRef(0);
-    const shards = React36.useMemo(
+    const timerRef = React34.useRef(0);
+    const searchRef = React34.useRef("");
+    const pointerGraceTimerRef = React34.useRef(0);
+    const pointerGraceIntentRef = React34.useRef(null);
+    const pointerDirRef = React34.useRef("right");
+    const lastPointerXRef = React34.useRef(0);
+    const shards = React34.useMemo(
       () => disableOutsideScroll ? [contentRef, ...branchNodes.map((node) => ({ current: node }))] : [],
       [contentRef, branchNodes, disableOutsideScroll]
     );
-    const ScrollLockWrapper = disableOutsideScroll ? Combination_default : React36.Fragment;
+    const ScrollLockWrapper = disableOutsideScroll ? Combination_default : React34.Fragment;
     const scrollLockWrapperProps = disableOutsideScroll ? {
       as: Slot,
       allowPinchZoom: true,
       shards
     } : void 0;
-    const handleTypeaheadSearch = /* @__PURE__ */ __name24((key) => {
+    const handleTypeaheadSearch = /* @__PURE__ */ __name22((key) => {
       const search = searchRef.current + key;
       const items = getItems().filter((item) => !item.disabled);
       const currentItem = document.activeElement;
@@ -6263,32 +5794,32 @@ var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
         window.clearTimeout(timerRef.current);
         if (value !== "") timerRef.current = window.setTimeout(() => updateSearch(""), 1e3);
       }
-      __name24(updateSearch, "updateSearch");
+      __name22(updateSearch, "updateSearch");
       updateSearch(search);
       if (newItem) {
         setTimeout(() => newItem.focus());
       }
     }, "handleTypeaheadSearch");
-    React36.useEffect(() => {
+    React34.useEffect(() => {
       return () => window.clearTimeout(timerRef.current);
     }, []);
     useFocusGuards();
-    const isPointerMovingToSubmenu = React36.useCallback((event) => {
+    const isPointerMovingToSubmenu = React34.useCallback((event) => {
       const isMovingTowards = pointerDirRef.current === pointerGraceIntentRef.current?.side;
       return isMovingTowards && isPointerInGraceArea(event, pointerGraceIntentRef.current?.area);
     }, []);
-    return /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(
       MenuContentProvider,
       {
         scope: __scopeMenu,
         searchRef,
-        onItemEnter: React36.useCallback(
+        onItemEnter: React34.useCallback(
           (event) => {
             if (isPointerMovingToSubmenu(event)) event.preventDefault();
           },
           [isPointerMovingToSubmenu]
         ),
-        onItemLeave: React36.useCallback(
+        onItemLeave: React34.useCallback(
           (event) => {
             if (isPointerMovingToSubmenu(event)) return;
             contentRef.current?.focus();
@@ -6296,17 +5827,17 @@ var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
           },
           [isPointerMovingToSubmenu]
         ),
-        onTriggerLeave: React36.useCallback(
+        onTriggerLeave: React34.useCallback(
           (event) => {
             if (isPointerMovingToSubmenu(event)) event.preventDefault();
           },
           [isPointerMovingToSubmenu]
         ),
         pointerGraceTimerRef,
-        onPointerGraceIntentChange: React36.useCallback((intent) => {
+        onPointerGraceIntentChange: React34.useCallback((intent) => {
           pointerGraceIntentRef.current = intent;
         }, []),
-        children: /* @__PURE__ */ jsx13(FocusScopeBranchProvider, { registry: isModal ? branchRegistry : null, children: /* @__PURE__ */ jsx13(ScrollLockWrapper, { ...scrollLockWrapperProps, children: /* @__PURE__ */ jsx13(
+        children: /* @__PURE__ */ jsx11(FocusScopeBranchProvider, { registry: isModal ? branchRegistry : null, children: /* @__PURE__ */ jsx11(ScrollLockWrapper, { ...scrollLockWrapperProps, children: /* @__PURE__ */ jsx11(
           FocusScope,
           {
             asChild: true,
@@ -6317,7 +5848,7 @@ var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
               contentRef.current?.focus({ preventScroll: true });
             }),
             onUnmountAutoFocus: onCloseAutoFocus,
-            children: /* @__PURE__ */ jsx13(
+            children: /* @__PURE__ */ jsx11(
               DismissableLayer,
               {
                 asChild: true,
@@ -6327,7 +5858,7 @@ var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
                 onFocusOutside,
                 onInteractOutside,
                 onDismiss,
-                children: /* @__PURE__ */ jsx13(
+                children: /* @__PURE__ */ jsx11(
                   RovingFocusGroup,
                   {
                     asChild: true,
@@ -6341,7 +5872,7 @@ var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
                       if (!rootContext.isUsingKeyboardRef.current) event.preventDefault();
                     }),
                     preventScrollOnEntryFocus: true,
-                    children: /* @__PURE__ */ jsx13(
+                    children: /* @__PURE__ */ jsx11(
                       PopperContent,
                       {
                         role: "menu",
@@ -6401,30 +5932,30 @@ var MenuContentImpl = /* @__PURE__ */ React36.forwardRef(
     );
   }, "MenuContentImpl")
 );
-var MenuGroup = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuGroup2(props, forwardedRef) {
+var MenuGroup = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuGroup2(props, forwardedRef) {
     const { __scopeMenu, ...groupProps } = props;
-    return /* @__PURE__ */ jsx13(Primitive.div, { role: "group", ...groupProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx11(Primitive.div, { role: "group", ...groupProps, ref: forwardedRef });
   }, "MenuGroup")
 );
-var MenuLabel = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuLabel2(props, forwardedRef) {
+var MenuLabel = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuLabel2(props, forwardedRef) {
     const { __scopeMenu, ...labelProps } = props;
-    return /* @__PURE__ */ jsx13(Primitive.div, { ...labelProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx11(Primitive.div, { ...labelProps, ref: forwardedRef });
   }, "MenuLabel")
 );
-var ITEM_NAME3 = "MenuItem";
+var ITEM_NAME2 = "MenuItem";
 var ITEM_SELECT = "menu.itemSelect";
-var MenuItem = /* @__PURE__ */ React36.forwardRef(
+var MenuItem = /* @__PURE__ */ React34.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name24(function MenuItem2(props, forwardedRef) {
+  /* @__PURE__ */ __name22(function MenuItem2(props, forwardedRef) {
     const { disabled = false, onSelect, ...itemProps } = props;
-    const ref = React36.useRef(null);
-    const rootContext = useMenuRootContext(ITEM_NAME3, props.__scopeMenu);
-    const contentContext = useMenuContentContext(ITEM_NAME3, props.__scopeMenu);
+    const ref = React34.useRef(null);
+    const rootContext = useMenuRootContext(ITEM_NAME2, props.__scopeMenu);
+    const contentContext = useMenuContentContext(ITEM_NAME2, props.__scopeMenu);
     const composedRefs = useComposedRefs(forwardedRef, ref);
-    const isPointerDownRef = React36.useRef(false);
-    const handleSelect = /* @__PURE__ */ __name24(() => {
+    const isPointerDownRef = React34.useRef(false);
+    const handleSelect = /* @__PURE__ */ __name22(() => {
       const menuItem = ref.current;
       if (!disabled && menuItem) {
         const itemSelectEvent = new CustomEvent(ITEM_SELECT, { bubbles: true, cancelable: true });
@@ -6437,7 +5968,7 @@ var MenuItem = /* @__PURE__ */ React36.forwardRef(
         }
       }
     }, "handleSelect");
-    return /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(
       MenuItemImpl,
       {
         ...itemProps,
@@ -6468,28 +5999,28 @@ var MenuItem = /* @__PURE__ */ React36.forwardRef(
     );
   }, "MenuItem")
 );
-var MenuItemImpl = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuItemImpl2(props, forwardedRef) {
+var MenuItemImpl = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuItemImpl2(props, forwardedRef) {
     const { __scopeMenu, disabled = false, textValue, ...itemProps } = props;
-    const contentContext = useMenuContentContext(ITEM_NAME3, __scopeMenu);
+    const contentContext = useMenuContentContext(ITEM_NAME2, __scopeMenu);
     const rovingFocusGroupScope = useRovingFocusGroupScope(__scopeMenu);
-    const ref = React36.useRef(null);
+    const ref = React34.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, ref);
-    const [isFocused, setIsFocused] = React36.useState(false);
-    const [textContent, setTextContent] = React36.useState("");
-    React36.useEffect(() => {
+    const [isFocused, setIsFocused] = React34.useState(false);
+    const [textContent, setTextContent] = React34.useState("");
+    React34.useEffect(() => {
       const menuItem = ref.current;
       if (menuItem) {
         setTextContent((menuItem.textContent ?? "").trim());
       }
     }, [itemProps.children]);
-    return /* @__PURE__ */ jsx13(
-      Collection3.ItemSlot,
+    return /* @__PURE__ */ jsx11(
+      Collection2.ItemSlot,
       {
         scope: __scopeMenu,
         disabled,
         textValue: textValue ?? textContent,
-        children: /* @__PURE__ */ jsx13(RovingFocusGroupItem, { asChild: true, ...rovingFocusGroupScope, focusable: !disabled, children: /* @__PURE__ */ jsx13(
+        children: /* @__PURE__ */ jsx11(RovingFocusGroupItem, { asChild: true, ...rovingFocusGroupScope, focusable: !disabled, children: /* @__PURE__ */ jsx11(
           Primitive.div,
           {
             role: "menuitem",
@@ -6524,11 +6055,11 @@ var MenuItemImpl = /* @__PURE__ */ React36.forwardRef(
     );
   }, "MenuItemImpl")
 );
-var MenuCheckboxItem = /* @__PURE__ */ React36.forwardRef(
+var MenuCheckboxItem = /* @__PURE__ */ React34.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name24(function MenuCheckboxItem2(props, forwardedRef) {
+  /* @__PURE__ */ __name22(function MenuCheckboxItem2(props, forwardedRef) {
     const { checked = false, onCheckedChange, ...checkboxItemProps } = props;
-    return /* @__PURE__ */ jsx13(ItemIndicatorProvider, { scope: props.__scopeMenu, checked, children: /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(ItemIndicatorProvider, { scope: props.__scopeMenu, checked, children: /* @__PURE__ */ jsx11(
       MenuItem,
       {
         role: "menuitemcheckbox",
@@ -6548,23 +6079,23 @@ var MenuCheckboxItem = /* @__PURE__ */ React36.forwardRef(
 var RADIO_GROUP_NAME = "MenuRadioGroup";
 var [RadioGroupProvider, useRadioGroupContext] = createMenuContext(
   RADIO_GROUP_NAME,
-  { value: void 0, onValueChange: /* @__PURE__ */ __name24(() => {
+  { value: void 0, onValueChange: /* @__PURE__ */ __name22(() => {
   }, "onValueChange") }
 );
-var MenuRadioGroup = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuRadioGroup2(props, forwardedRef) {
+var MenuRadioGroup = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuRadioGroup2(props, forwardedRef) {
     const { value, onValueChange, ...groupProps } = props;
     const handleValueChange = useCallbackRef(onValueChange);
-    return /* @__PURE__ */ jsx13(RadioGroupProvider, { scope: props.__scopeMenu, value, onValueChange: handleValueChange, children: /* @__PURE__ */ jsx13(MenuGroup, { ...groupProps, ref: forwardedRef }) });
+    return /* @__PURE__ */ jsx11(RadioGroupProvider, { scope: props.__scopeMenu, value, onValueChange: handleValueChange, children: /* @__PURE__ */ jsx11(MenuGroup, { ...groupProps, ref: forwardedRef }) });
   }, "MenuRadioGroup")
 );
 var RADIO_ITEM_NAME = "MenuRadioItem";
-var MenuRadioItem = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuRadioItem2(props, forwardedRef) {
+var MenuRadioItem = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuRadioItem2(props, forwardedRef) {
     const { value, ...radioItemProps } = props;
     const context = useRadioGroupContext(RADIO_ITEM_NAME, props.__scopeMenu);
     const checked = value === context.value;
-    return /* @__PURE__ */ jsx13(ItemIndicatorProvider, { scope: props.__scopeMenu, checked, children: /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(ItemIndicatorProvider, { scope: props.__scopeMenu, checked, children: /* @__PURE__ */ jsx11(
       MenuItem,
       {
         role: "menuitemradio",
@@ -6586,16 +6117,16 @@ var [ItemIndicatorProvider, useItemIndicatorContext] = createMenuContext(
   ITEM_INDICATOR_NAME,
   { checked: false }
 );
-var MenuItemIndicator = /* @__PURE__ */ React36.forwardRef(
+var MenuItemIndicator = /* @__PURE__ */ React34.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name24(function MenuItemIndicator2(props, forwardedRef) {
+  /* @__PURE__ */ __name22(function MenuItemIndicator2(props, forwardedRef) {
     const { __scopeMenu, forceMount, ...itemIndicatorProps } = props;
     const indicatorContext = useItemIndicatorContext(ITEM_INDICATOR_NAME, __scopeMenu);
-    return /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(
       Presence,
       {
         present: forceMount || isIndeterminate(indicatorContext.checked) || indicatorContext.checked === true,
-        children: /* @__PURE__ */ jsx13(
+        children: /* @__PURE__ */ jsx11(
           Primitive.span,
           {
             ...itemIndicatorProps,
@@ -6607,10 +6138,10 @@ var MenuItemIndicator = /* @__PURE__ */ React36.forwardRef(
     );
   }, "MenuItemIndicator")
 );
-var MenuSeparator = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuSeparator2(props, forwardedRef) {
+var MenuSeparator = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuSeparator2(props, forwardedRef) {
     const { __scopeMenu, ...separatorProps } = props;
-    return /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(
       Primitive.div,
       {
         role: "separator",
@@ -6621,27 +6152,27 @@ var MenuSeparator = /* @__PURE__ */ React36.forwardRef(
     );
   }, "MenuSeparator")
 );
-var MenuArrow = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuArrow2(props, forwardedRef) {
+var MenuArrow = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuArrow2(props, forwardedRef) {
     const { __scopeMenu, ...arrowProps } = props;
     const popperScope = usePopperScope(__scopeMenu);
-    return /* @__PURE__ */ jsx13(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx11(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef });
   }, "MenuArrow")
 );
 var SUB_NAME = "MenuSub";
 var [MenuSubProvider, useMenuSubContext] = createMenuContext(SUB_NAME);
-var MenuSub = /* @__PURE__ */ __name24((props) => {
+var MenuSub = /* @__PURE__ */ __name22((props) => {
   const { __scopeMenu, children, open = false, onOpenChange } = props;
   const parentMenuContext = useMenuContext(SUB_NAME, __scopeMenu);
   const popperScope = usePopperScope(__scopeMenu);
-  const [trigger, setTrigger] = React36.useState(null);
-  const [content, setContent] = React36.useState(null);
+  const [trigger, setTrigger] = React34.useState(null);
+  const [content, setContent] = React34.useState(null);
   const handleOpenChange = useCallbackRef(onOpenChange);
-  React36.useEffect(() => {
+  React34.useEffect(() => {
     if (parentMenuContext.open === false) handleOpenChange(false);
     return () => handleOpenChange(false);
   }, [parentMenuContext.open, handleOpenChange]);
-  return /* @__PURE__ */ jsx13(Popper, { ...popperScope, children: /* @__PURE__ */ jsx13(
+  return /* @__PURE__ */ jsx11(Popper, { ...popperScope, children: /* @__PURE__ */ jsx11(
     MenuProvider,
     {
       scope: __scopeMenu,
@@ -6649,7 +6180,7 @@ var MenuSub = /* @__PURE__ */ __name24((props) => {
       onOpenChange: handleOpenChange,
       content,
       onContentChange: setContent,
-      children: /* @__PURE__ */ jsx13(
+      children: /* @__PURE__ */ jsx11(
         MenuSubProvider,
         {
           scope: __scopeMenu,
@@ -6664,21 +6195,21 @@ var MenuSub = /* @__PURE__ */ __name24((props) => {
   ) });
 }, "MenuSub");
 var SUB_TRIGGER_NAME = "MenuSubTrigger";
-var MenuSubTrigger = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuSubTrigger2(props, forwardedRef) {
+var MenuSubTrigger = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuSubTrigger2(props, forwardedRef) {
     const context = useMenuContext(SUB_TRIGGER_NAME, props.__scopeMenu);
     const rootContext = useMenuRootContext(SUB_TRIGGER_NAME, props.__scopeMenu);
     const subContext = useMenuSubContext(SUB_TRIGGER_NAME, props.__scopeMenu);
     const contentContext = useMenuContentContext(SUB_TRIGGER_NAME, props.__scopeMenu);
-    const openTimerRef = React36.useRef(null);
+    const openTimerRef = React34.useRef(null);
     const { pointerGraceTimerRef, onPointerGraceIntentChange } = contentContext;
     const scope = { __scopeMenu: props.__scopeMenu };
-    const clearOpenTimer = React36.useCallback(() => {
+    const clearOpenTimer = React34.useCallback(() => {
       if (openTimerRef.current) window.clearTimeout(openTimerRef.current);
       openTimerRef.current = null;
     }, []);
-    React36.useEffect(() => clearOpenTimer, [clearOpenTimer]);
-    React36.useEffect(() => {
+    React34.useEffect(() => clearOpenTimer, [clearOpenTimer]);
+    React34.useEffect(() => {
       const pointerGraceTimer = pointerGraceTimerRef.current;
       return () => {
         window.clearTimeout(pointerGraceTimer);
@@ -6686,7 +6217,7 @@ var MenuSubTrigger = /* @__PURE__ */ React36.forwardRef(
       };
     }, [pointerGraceTimerRef, onPointerGraceIntentChange]);
     const composedRefs = useComposedRefs(forwardedRef, subContext.onTriggerChange);
-    return /* @__PURE__ */ jsx13(MenuAnchor, { asChild: true, ...scope, children: /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(MenuAnchor, { asChild: true, ...scope, children: /* @__PURE__ */ jsx11(
       MenuItemImpl,
       {
         id: subContext.triggerId,
@@ -6770,16 +6301,16 @@ var MenuSubTrigger = /* @__PURE__ */ React36.forwardRef(
   }, "MenuSubTrigger")
 );
 var SUB_CONTENT_NAME = "MenuSubContent";
-var MenuSubContent = /* @__PURE__ */ React36.forwardRef(
-  /* @__PURE__ */ __name24(function MenuSubContent2(props, forwardedRef) {
-    const portalContext = usePortalContext(CONTENT_NAME4, props.__scopeMenu);
+var MenuSubContent = /* @__PURE__ */ React34.forwardRef(
+  /* @__PURE__ */ __name22(function MenuSubContent2(props, forwardedRef) {
+    const portalContext = usePortalContext(CONTENT_NAME2, props.__scopeMenu);
     const { forceMount = portalContext.forceMount, align = "start", ...subContentProps } = props;
-    const context = useMenuContext(CONTENT_NAME4, props.__scopeMenu);
-    const rootContext = useMenuRootContext(CONTENT_NAME4, props.__scopeMenu);
+    const context = useMenuContext(CONTENT_NAME2, props.__scopeMenu);
+    const rootContext = useMenuRootContext(CONTENT_NAME2, props.__scopeMenu);
     const subContext = useMenuSubContext(SUB_CONTENT_NAME, props.__scopeMenu);
-    const ref = React36.useRef(null);
+    const ref = React34.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, ref);
-    return /* @__PURE__ */ jsx13(Collection3.Provider, { scope: props.__scopeMenu, children: /* @__PURE__ */ jsx13(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx13(Collection3.Slot, { scope: props.__scopeMenu, children: /* @__PURE__ */ jsx13(
+    return /* @__PURE__ */ jsx11(Collection2.Provider, { scope: props.__scopeMenu, children: /* @__PURE__ */ jsx11(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx11(Collection2.Slot, { scope: props.__scopeMenu, children: /* @__PURE__ */ jsx11(
       MenuContentImpl,
       {
         id: subContext.contentId,
@@ -6787,7 +6318,7 @@ var MenuSubContent = /* @__PURE__ */ React36.forwardRef(
         ...subContentProps,
         ref: composedRefs,
         align,
-        side: rootContext.dir === Direction4.RTL ? "left" : "right",
+        side: rootContext.dir === Direction3.RTL ? "left" : "right",
         disableOutsidePointerEvents: false,
         disableOutsideScroll: false,
         trapFocus: false,
@@ -6819,15 +6350,15 @@ var MenuSubContent = /* @__PURE__ */ React36.forwardRef(
 function getOpenState(open) {
   return open ? "open" : "closed";
 }
-__name24(getOpenState, "getOpenState");
+__name22(getOpenState, "getOpenState");
 function isIndeterminate(checked) {
   return checked === "indeterminate";
 }
-__name24(isIndeterminate, "isIndeterminate");
+__name22(isIndeterminate, "isIndeterminate");
 function getCheckedState(checked) {
   return isIndeterminate(checked) ? "indeterminate" : checked ? "checked" : "unchecked";
 }
-__name24(getCheckedState, "getCheckedState");
+__name22(getCheckedState, "getCheckedState");
 function focusFirst3(candidates) {
   const PREVIOUSLY_FOCUSED_ELEMENT = document.activeElement;
   for (const candidate of candidates) {
@@ -6836,11 +6367,11 @@ function focusFirst3(candidates) {
     if (document.activeElement !== PREVIOUSLY_FOCUSED_ELEMENT) return;
   }
 }
-__name24(focusFirst3, "focusFirst");
+__name22(focusFirst3, "focusFirst");
 function wrapArray2(array, startIndex) {
   return array.map((_, index2) => array[(startIndex + index2) % array.length]);
 }
-__name24(wrapArray2, "wrapArray");
+__name22(wrapArray2, "wrapArray");
 function getNextMatch(values, search, currentMatch) {
   const isRepeated = search.length > 1 && Array.from(search).every((char) => char === search[0]);
   const normalizedSearch = isRepeated ? search[0] : search;
@@ -6853,7 +6384,7 @@ function getNextMatch(values, search, currentMatch) {
   );
   return nextMatch !== currentMatch ? nextMatch : void 0;
 }
-__name24(getNextMatch, "getNextMatch");
+__name22(getNextMatch, "getNextMatch");
 function isPointInPolygon(point, polygon) {
   const { x, y } = point;
   let inside = false;
@@ -6869,34 +6400,34 @@ function isPointInPolygon(point, polygon) {
   }
   return inside;
 }
-__name24(isPointInPolygon, "isPointInPolygon");
+__name22(isPointInPolygon, "isPointInPolygon");
 function isPointerInGraceArea(event, area) {
   if (!area) return false;
   const cursorPos = { x: event.clientX, y: event.clientY };
   return isPointInPolygon(cursorPos, area);
 }
-__name24(isPointerInGraceArea, "isPointerInGraceArea");
+__name22(isPointerInGraceArea, "isPointerInGraceArea");
 function whenMouse(handler) {
   return (event) => event.pointerType === "mouse" ? handler(event) : void 0;
 }
-__name24(whenMouse, "whenMouse");
+__name22(whenMouse, "whenMouse");
 
 // node_modules/@radix-ui/react-context-menu/dist/index.mjs
-import { Fragment as Fragment5, jsx as jsx14, jsxs } from "react/jsx-runtime";
-var __defProp25 = Object.defineProperty;
-var __name25 = (target, value) => __defProp25(target, "name", { value, configurable: true });
+import { Fragment as Fragment5, jsx as jsx12, jsxs } from "react/jsx-runtime";
+var __defProp23 = Object.defineProperty;
+var __name23 = (target, value) => __defProp23(target, "name", { value, configurable: true });
 var CONTEXT_MENU_NAME = "ContextMenu";
 var [createContextMenuContext, createContextMenuScope] = createContextScope(CONTEXT_MENU_NAME, [
   createMenuScope
 ]);
 var useMenuScope = createMenuScope();
 var [ContextMenuProvider, useContextMenuContext] = createContextMenuContext(CONTEXT_MENU_NAME);
-var ContextMenu = /* @__PURE__ */ __name25((props) => {
+var ContextMenu = /* @__PURE__ */ __name23((props) => {
   const { __scopeContextMenu, children, onOpenChange, open: openProp, dir, modal = true } = props;
-  const hasInteractedRef = React37.useRef(false);
+  const hasInteractedRef = React35.useRef(false);
   if (IS_DEVELOPMENT) {
-    const hasWarnedRef = React37.useRef(false);
-    React37.useEffect(() => {
+    const hasWarnedRef = React35.useRef(false);
+    React35.useEffect(() => {
       if (openProp === true && !hasInteractedRef.current && !hasWarnedRef.current) {
         hasWarnedRef.current = true;
         console.warn(
@@ -6912,7 +6443,7 @@ var ContextMenu = /* @__PURE__ */ __name25((props) => {
     caller: CONTEXT_MENU_NAME
   });
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(
+  return /* @__PURE__ */ jsx12(
     ContextMenuProvider,
     {
       scope: __scopeContextMenu,
@@ -6920,41 +6451,41 @@ var ContextMenu = /* @__PURE__ */ __name25((props) => {
       onOpenChange: setOpen,
       modal,
       hasInteractedRef,
-      children: /* @__PURE__ */ jsx14(Menu, { ...menuScope, dir, open, onOpenChange: setOpen, modal, children })
+      children: /* @__PURE__ */ jsx12(Menu, { ...menuScope, dir, open, onOpenChange: setOpen, modal, children })
     }
   );
 }, "ContextMenu");
-var TRIGGER_NAME3 = "ContextMenuTrigger";
-var ContextMenuTrigger = /* @__PURE__ */ React37.forwardRef(
+var TRIGGER_NAME = "ContextMenuTrigger";
+var ContextMenuTrigger = /* @__PURE__ */ React35.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name25(function ContextMenuTrigger2(props, forwardedRef) {
+  /* @__PURE__ */ __name23(function ContextMenuTrigger2(props, forwardedRef) {
     const { __scopeContextMenu, disabled = false, ...triggerProps } = props;
-    const context = useContextMenuContext(TRIGGER_NAME3, __scopeContextMenu);
+    const context = useContextMenuContext(TRIGGER_NAME, __scopeContextMenu);
     const menuScope = useMenuScope(__scopeContextMenu);
-    const [point, setPoint] = React37.useState({ x: 0, y: 0 });
-    const virtualRef = React37.useMemo(
+    const [point, setPoint] = React35.useState({ x: 0, y: 0 });
+    const virtualRef = React35.useMemo(
       () => ({
         current: {
-          getBoundingClientRect: /* @__PURE__ */ __name25(() => DOMRect.fromRect({ width: 0, height: 0, ...point }), "getBoundingClientRect")
+          getBoundingClientRect: /* @__PURE__ */ __name23(() => DOMRect.fromRect({ width: 0, height: 0, ...point }), "getBoundingClientRect")
         }
       }),
       [point]
     );
-    const longPressTimerRef = React37.useRef(0);
-    const clearLongPress = React37.useCallback(
+    const longPressTimerRef = React35.useRef(0);
+    const clearLongPress = React35.useCallback(
       () => window.clearTimeout(longPressTimerRef.current),
       []
     );
-    const handleOpen = /* @__PURE__ */ __name25((event) => {
+    const handleOpen = /* @__PURE__ */ __name23((event) => {
       context.hasInteractedRef.current = true;
       setPoint({ x: event.clientX, y: event.clientY });
       context.onOpenChange(true);
     }, "handleOpen");
-    React37.useEffect(() => clearLongPress, [clearLongPress]);
-    React37.useEffect(() => void (disabled && clearLongPress()), [disabled, clearLongPress]);
+    React35.useEffect(() => clearLongPress, [clearLongPress]);
+    React35.useEffect(() => void (disabled && clearLongPress()), [disabled, clearLongPress]);
     return /* @__PURE__ */ jsxs(Fragment5, { children: [
-      /* @__PURE__ */ jsx14(MenuAnchor, { ...menuScope, virtualRef }),
-      /* @__PURE__ */ jsx14(
+      /* @__PURE__ */ jsx12(MenuAnchor, { ...menuScope, virtualRef }),
+      /* @__PURE__ */ jsx12(
         Primitive.span,
         {
           "data-state": context.open ? "open" : "closed",
@@ -6985,20 +6516,20 @@ var ContextMenuTrigger = /* @__PURE__ */ React37.forwardRef(
     ] });
   }, "ContextMenuTrigger")
 );
-var ContextMenuPortal = /* @__PURE__ */ __name25((props) => {
+var ContextMenuPortal = /* @__PURE__ */ __name23((props) => {
   const { __scopeContextMenu, ...portalProps } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(MenuPortal, { ...menuScope, ...portalProps });
+  return /* @__PURE__ */ jsx12(MenuPortal, { ...menuScope, ...portalProps });
 }, "ContextMenuPortal");
-var CONTENT_NAME5 = "ContextMenuContent";
-var ContextMenuContent = /* @__PURE__ */ React37.forwardRef(
+var CONTENT_NAME3 = "ContextMenuContent";
+var ContextMenuContent = /* @__PURE__ */ React35.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name25(function ContextMenuContent2(props, forwardedRef) {
+  /* @__PURE__ */ __name23(function ContextMenuContent2(props, forwardedRef) {
     const { __scopeContextMenu, ...contentProps } = props;
-    const context = useContextMenuContext(CONTENT_NAME5, __scopeContextMenu);
+    const context = useContextMenuContext(CONTENT_NAME3, __scopeContextMenu);
     const menuScope = useMenuScope(__scopeContextMenu);
-    const hasInteractedOutsideRef = React37.useRef(false);
-    return /* @__PURE__ */ jsx14(
+    const hasInteractedOutsideRef = React35.useRef(false);
+    return /* @__PURE__ */ jsx12(
       MenuContent,
       {
         ...menuScope,
@@ -7033,65 +6564,65 @@ var ContextMenuContent = /* @__PURE__ */ React37.forwardRef(
     );
   }, "ContextMenuContent")
 );
-var ContextMenuGroup = /* @__PURE__ */ React37.forwardRef(
+var ContextMenuGroup = /* @__PURE__ */ React35.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name25(function ContextMenuGroup2(props, forwardedRef) {
+  /* @__PURE__ */ __name23(function ContextMenuGroup2(props, forwardedRef) {
     const { __scopeContextMenu, ...groupProps } = props;
     const menuScope = useMenuScope(__scopeContextMenu);
-    return /* @__PURE__ */ jsx14(MenuGroup, { ...menuScope, ...groupProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx12(MenuGroup, { ...menuScope, ...groupProps, ref: forwardedRef });
   }, "ContextMenuGroup")
 );
-var ContextMenuLabel = /* @__PURE__ */ React37.forwardRef(
+var ContextMenuLabel = /* @__PURE__ */ React35.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name25(function ContextMenuLabel2(props, forwardedRef) {
+  /* @__PURE__ */ __name23(function ContextMenuLabel2(props, forwardedRef) {
     const { __scopeContextMenu, ...labelProps } = props;
     const menuScope = useMenuScope(__scopeContextMenu);
-    return /* @__PURE__ */ jsx14(MenuLabel, { ...menuScope, ...labelProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx12(MenuLabel, { ...menuScope, ...labelProps, ref: forwardedRef });
   }, "ContextMenuLabel")
 );
-var ContextMenuItem = /* @__PURE__ */ React37.forwardRef(
+var ContextMenuItem = /* @__PURE__ */ React35.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name25(function ContextMenuItem2(props, forwardedRef) {
+  /* @__PURE__ */ __name23(function ContextMenuItem2(props, forwardedRef) {
     const { __scopeContextMenu, ...itemProps } = props;
     const menuScope = useMenuScope(__scopeContextMenu);
-    return /* @__PURE__ */ jsx14(MenuItem, { ...menuScope, ...itemProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx12(MenuItem, { ...menuScope, ...itemProps, ref: forwardedRef });
   }, "ContextMenuItem")
 );
-var ContextMenuCheckboxItem = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ __name25(function ContextMenuCheckboxItem2(props, forwardedRef) {
+var ContextMenuCheckboxItem = /* @__PURE__ */ React35.forwardRef(/* @__PURE__ */ __name23(function ContextMenuCheckboxItem2(props, forwardedRef) {
   const { __scopeContextMenu, ...checkboxItemProps } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(MenuCheckboxItem, { ...menuScope, ...checkboxItemProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx12(MenuCheckboxItem, { ...menuScope, ...checkboxItemProps, ref: forwardedRef });
 }, "ContextMenuCheckboxItem"));
-var ContextMenuRadioGroup = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ __name25(function ContextMenuRadioGroup2(props, forwardedRef) {
+var ContextMenuRadioGroup = /* @__PURE__ */ React35.forwardRef(/* @__PURE__ */ __name23(function ContextMenuRadioGroup2(props, forwardedRef) {
   const { __scopeContextMenu, ...radioGroupProps } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(MenuRadioGroup, { ...menuScope, ...radioGroupProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx12(MenuRadioGroup, { ...menuScope, ...radioGroupProps, ref: forwardedRef });
 }, "ContextMenuRadioGroup"));
-var ContextMenuRadioItem = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ __name25(function ContextMenuRadioItem2(props, forwardedRef) {
+var ContextMenuRadioItem = /* @__PURE__ */ React35.forwardRef(/* @__PURE__ */ __name23(function ContextMenuRadioItem2(props, forwardedRef) {
   const { __scopeContextMenu, ...radioItemProps } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(MenuRadioItem, { ...menuScope, ...radioItemProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx12(MenuRadioItem, { ...menuScope, ...radioItemProps, ref: forwardedRef });
 }, "ContextMenuRadioItem"));
-var ContextMenuItemIndicator = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ __name25(function ContextMenuItemIndicator2(props, forwardedRef) {
+var ContextMenuItemIndicator = /* @__PURE__ */ React35.forwardRef(/* @__PURE__ */ __name23(function ContextMenuItemIndicator2(props, forwardedRef) {
   const { __scopeContextMenu, ...itemIndicatorProps } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(MenuItemIndicator, { ...menuScope, ...itemIndicatorProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx12(MenuItemIndicator, { ...menuScope, ...itemIndicatorProps, ref: forwardedRef });
 }, "ContextMenuItemIndicator"));
-var ContextMenuSeparator = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ __name25(function ContextMenuSeparator2(props, forwardedRef) {
+var ContextMenuSeparator = /* @__PURE__ */ React35.forwardRef(/* @__PURE__ */ __name23(function ContextMenuSeparator2(props, forwardedRef) {
   const { __scopeContextMenu, ...separatorProps } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(MenuSeparator, { ...menuScope, ...separatorProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx12(MenuSeparator, { ...menuScope, ...separatorProps, ref: forwardedRef });
 }, "ContextMenuSeparator"));
-var ContextMenuArrow = /* @__PURE__ */ React37.forwardRef(
+var ContextMenuArrow = /* @__PURE__ */ React35.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name25(function ContextMenuArrow2(props, forwardedRef) {
+  /* @__PURE__ */ __name23(function ContextMenuArrow2(props, forwardedRef) {
     const { __scopeContextMenu, ...arrowProps } = props;
     const menuScope = useMenuScope(__scopeContextMenu);
-    return /* @__PURE__ */ jsx14(MenuArrow, { ...menuScope, ...arrowProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx12(MenuArrow, { ...menuScope, ...arrowProps, ref: forwardedRef });
   }, "ContextMenuArrow")
 );
 var SUB_NAME2 = "ContextMenuSub";
-var ContextMenuSub = /* @__PURE__ */ __name25((props) => {
+var ContextMenuSub = /* @__PURE__ */ __name23((props) => {
   const { __scopeContextMenu, children, onOpenChange, open: openProp, defaultOpen } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
   const [open, setOpen] = useControllableState({
@@ -7100,17 +6631,17 @@ var ContextMenuSub = /* @__PURE__ */ __name25((props) => {
     onChange: onOpenChange,
     caller: SUB_NAME2
   });
-  return /* @__PURE__ */ jsx14(MenuSub, { ...menuScope, open, onOpenChange: setOpen, children });
+  return /* @__PURE__ */ jsx12(MenuSub, { ...menuScope, open, onOpenChange: setOpen, children });
 }, "ContextMenuSub");
-var ContextMenuSubTrigger = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ __name25(function ContextMenuSubTrigger2(props, forwardedRef) {
+var ContextMenuSubTrigger = /* @__PURE__ */ React35.forwardRef(/* @__PURE__ */ __name23(function ContextMenuSubTrigger2(props, forwardedRef) {
   const { __scopeContextMenu, ...triggerItemProps } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(MenuSubTrigger, { ...menuScope, ...triggerItemProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx12(MenuSubTrigger, { ...menuScope, ...triggerItemProps, ref: forwardedRef });
 }, "ContextMenuSubTrigger"));
-var ContextMenuSubContent = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ __name25(function ContextMenuSubContent2(props, forwardedRef) {
+var ContextMenuSubContent = /* @__PURE__ */ React35.forwardRef(/* @__PURE__ */ __name23(function ContextMenuSubContent2(props, forwardedRef) {
   const { __scopeContextMenu, ...subContentProps } = props;
   const menuScope = useMenuScope(__scopeContextMenu);
-  return /* @__PURE__ */ jsx14(
+  return /* @__PURE__ */ jsx12(
     MenuSubContent,
     {
       ...menuScope,
@@ -7133,11 +6664,11 @@ var ContextMenuSubContent = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ _
 function whenTouchOrPen(handler) {
   return (event) => event.pointerType !== "mouse" ? handler(event) : void 0;
 }
-__name25(whenTouchOrPen, "whenTouchOrPen");
+__name23(whenTouchOrPen, "whenTouchOrPen");
 
 // node_modules/@radix-ui/react-hover-card/dist/index.mjs
-var dist_exports9 = {};
-__export(dist_exports9, {
+var dist_exports7 = {};
+__export(dist_exports7, {
   Arrow: () => HoverCardArrow,
   Content: () => HoverCardContent,
   HoverCard: () => HoverCard,
@@ -7150,10 +6681,10 @@ __export(dist_exports9, {
   Trigger: () => HoverCardTrigger,
   createHoverCardScope: () => createHoverCardScope
 });
-import * as React38 from "react";
-import { jsx as jsx15 } from "react/jsx-runtime";
-var __defProp26 = Object.defineProperty;
-var __name26 = (target, value) => __defProp26(target, "name", { value, configurable: true });
+import * as React36 from "react";
+import { jsx as jsx13 } from "react/jsx-runtime";
+var __defProp24 = Object.defineProperty;
+var __name24 = (target, value) => __defProp24(target, "name", { value, configurable: true });
 var originalBodyUserSelect;
 var HOVERCARD_NAME = "HoverCard";
 var [createHoverCardContext, createHoverCardScope] = createContextScope(HOVERCARD_NAME, [
@@ -7161,7 +6692,7 @@ var [createHoverCardContext, createHoverCardScope] = createContextScope(HOVERCAR
 ]);
 var usePopperScope2 = createPopperScope();
 var [HoverCardProvider, useHoverCardContext] = createHoverCardContext(HOVERCARD_NAME);
-var HoverCard = /* @__PURE__ */ __name26((props) => {
+var HoverCard = /* @__PURE__ */ __name24((props) => {
   const {
     __scopeHoverCard,
     children,
@@ -7172,34 +6703,34 @@ var HoverCard = /* @__PURE__ */ __name26((props) => {
     closeDelay = 300
   } = props;
   const popperScope = usePopperScope2(__scopeHoverCard);
-  const openTimerRef = React38.useRef(0);
-  const closeTimerRef = React38.useRef(0);
-  const hasSelectionRef = React38.useRef(false);
-  const isPointerDownOnContentRef = React38.useRef(false);
+  const openTimerRef = React36.useRef(0);
+  const closeTimerRef = React36.useRef(0);
+  const hasSelectionRef = React36.useRef(false);
+  const isPointerDownOnContentRef = React36.useRef(false);
   const [open, setOpen] = useControllableState({
     prop: openProp,
     defaultProp: defaultOpen ?? false,
     onChange: onOpenChange,
     caller: HOVERCARD_NAME
   });
-  const handleOpen = React38.useCallback(() => {
+  const handleOpen = React36.useCallback(() => {
     clearTimeout(closeTimerRef.current);
     openTimerRef.current = window.setTimeout(() => setOpen(true), openDelay);
   }, [openDelay, setOpen]);
-  const handleClose = React38.useCallback(() => {
+  const handleClose = React36.useCallback(() => {
     clearTimeout(openTimerRef.current);
     if (!hasSelectionRef.current && !isPointerDownOnContentRef.current) {
       closeTimerRef.current = window.setTimeout(() => setOpen(false), closeDelay);
     }
   }, [closeDelay, setOpen]);
-  const handleDismiss = React38.useCallback(() => setOpen(false), [setOpen]);
-  React38.useEffect(() => {
+  const handleDismiss = React36.useCallback(() => setOpen(false), [setOpen]);
+  React36.useEffect(() => {
     return () => {
       clearTimeout(openTimerRef.current);
       clearTimeout(closeTimerRef.current);
     };
   }, []);
-  return /* @__PURE__ */ jsx15(
+  return /* @__PURE__ */ jsx13(
     HoverCardProvider,
     {
       scope: __scopeHoverCard,
@@ -7210,18 +6741,18 @@ var HoverCard = /* @__PURE__ */ __name26((props) => {
       onDismiss: handleDismiss,
       hasSelectionRef,
       isPointerDownOnContentRef,
-      children: /* @__PURE__ */ jsx15(Popper, { ...popperScope, children })
+      children: /* @__PURE__ */ jsx13(Popper, { ...popperScope, children })
     }
   );
 }, "HoverCard");
-var TRIGGER_NAME4 = "HoverCardTrigger";
-var HoverCardTrigger = /* @__PURE__ */ React38.forwardRef(
+var TRIGGER_NAME2 = "HoverCardTrigger";
+var HoverCardTrigger = /* @__PURE__ */ React36.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name26(function HoverCardTrigger2(props, forwardedRef) {
+  /* @__PURE__ */ __name24(function HoverCardTrigger2(props, forwardedRef) {
     const { __scopeHoverCard, ...triggerProps } = props;
-    const context = useHoverCardContext(TRIGGER_NAME4, __scopeHoverCard);
+    const context = useHoverCardContext(TRIGGER_NAME2, __scopeHoverCard);
     const popperScope = usePopperScope2(__scopeHoverCard);
-    return /* @__PURE__ */ jsx15(PopperAnchor, { asChild: true, ...popperScope, children: /* @__PURE__ */ jsx15(
+    return /* @__PURE__ */ jsx13(PopperAnchor, { asChild: true, ...popperScope, children: /* @__PURE__ */ jsx13(
       Primitive.a,
       {
         "data-state": context.open ? "open" : "closed",
@@ -7240,19 +6771,19 @@ var PORTAL_NAME2 = "HoverCardPortal";
 var [PortalProvider2, usePortalContext2] = createHoverCardContext(PORTAL_NAME2, {
   forceMount: void 0
 });
-var HoverCardPortal = /* @__PURE__ */ __name26((props) => {
+var HoverCardPortal = /* @__PURE__ */ __name24((props) => {
   const { __scopeHoverCard, forceMount, children, container } = props;
   const context = useHoverCardContext(PORTAL_NAME2, __scopeHoverCard);
-  return /* @__PURE__ */ jsx15(PortalProvider2, { scope: __scopeHoverCard, forceMount, children: /* @__PURE__ */ jsx15(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx15(Portal, { asChild: true, container, children }) }) });
+  return /* @__PURE__ */ jsx13(PortalProvider2, { scope: __scopeHoverCard, forceMount, children: /* @__PURE__ */ jsx13(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx13(Portal, { asChild: true, container, children }) }) });
 }, "HoverCardPortal");
-var CONTENT_NAME6 = "HoverCardContent";
-var HoverCardContent = /* @__PURE__ */ React38.forwardRef(
+var CONTENT_NAME4 = "HoverCardContent";
+var HoverCardContent = /* @__PURE__ */ React36.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name26(function HoverCardContent2(props, forwardedRef) {
-    const portalContext = usePortalContext2(CONTENT_NAME6, props.__scopeHoverCard);
+  /* @__PURE__ */ __name24(function HoverCardContent2(props, forwardedRef) {
+    const portalContext = usePortalContext2(CONTENT_NAME4, props.__scopeHoverCard);
     const { forceMount = portalContext.forceMount, ...contentProps } = props;
-    const context = useHoverCardContext(CONTENT_NAME6, props.__scopeHoverCard);
-    return /* @__PURE__ */ jsx15(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx15(
+    const context = useHoverCardContext(CONTENT_NAME4, props.__scopeHoverCard);
+    return /* @__PURE__ */ jsx13(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx13(
       HoverCardContentImpl,
       {
         "data-state": context.open ? "open" : "closed",
@@ -7264,7 +6795,7 @@ var HoverCardContent = /* @__PURE__ */ React38.forwardRef(
     ) });
   }, "HoverCardContent")
 );
-var HoverCardContentImpl = /* @__PURE__ */ React38.forwardRef(/* @__PURE__ */ __name26(function HoverCardContentImpl2(props, forwardedRef) {
+var HoverCardContentImpl = /* @__PURE__ */ React36.forwardRef(/* @__PURE__ */ __name24(function HoverCardContentImpl2(props, forwardedRef) {
   const {
     __scopeHoverCard,
     onEscapeKeyDown,
@@ -7273,14 +6804,14 @@ var HoverCardContentImpl = /* @__PURE__ */ React38.forwardRef(/* @__PURE__ */ __
     onInteractOutside,
     ...contentProps
   } = props;
-  const context = useHoverCardContext(CONTENT_NAME6, __scopeHoverCard);
+  const context = useHoverCardContext(CONTENT_NAME4, __scopeHoverCard);
   const popperScope = usePopperScope2(__scopeHoverCard);
-  const ref = React38.useRef(null);
-  const [branchNode, setBranchNode] = React38.useState(null);
+  const ref = React36.useRef(null);
+  const [branchNode, setBranchNode] = React36.useState(null);
   const composedRefs = useComposedRefs(forwardedRef, ref, setBranchNode);
   useFocusScopeBranch(branchNode);
-  const [containSelection, setContainSelection] = React38.useState(false);
-  React38.useEffect(() => {
+  const [containSelection, setContainSelection] = React36.useState(false);
+  React36.useEffect(() => {
     if (containSelection) {
       const body = document.body;
       originalBodyUserSelect = body.style.userSelect || body.style.webkitUserSelect;
@@ -7292,9 +6823,9 @@ var HoverCardContentImpl = /* @__PURE__ */ React38.forwardRef(/* @__PURE__ */ __
       };
     }
   }, [containSelection]);
-  React38.useEffect(() => {
+  React36.useEffect(() => {
     if (ref.current) {
-      const handlePointerUp = /* @__PURE__ */ __name26(() => {
+      const handlePointerUp = /* @__PURE__ */ __name24(() => {
         setContainSelection(false);
         context.isPointerDownOnContentRef.current = false;
         setTimeout(() => {
@@ -7310,13 +6841,13 @@ var HoverCardContentImpl = /* @__PURE__ */ React38.forwardRef(/* @__PURE__ */ __
       };
     }
   }, [context.isPointerDownOnContentRef, context.hasSelectionRef]);
-  React38.useEffect(() => {
+  React36.useEffect(() => {
     if (ref.current) {
       const tabbables = getTabbableNodes(ref.current);
       tabbables.forEach((tabbable) => tabbable.setAttribute("tabindex", "-1"));
     }
   });
-  return /* @__PURE__ */ jsx15(
+  return /* @__PURE__ */ jsx13(
     DismissableLayer,
     {
       asChild: true,
@@ -7328,7 +6859,7 @@ var HoverCardContentImpl = /* @__PURE__ */ React38.forwardRef(/* @__PURE__ */ __
         event.preventDefault();
       }),
       onDismiss: context.onDismiss,
-      children: /* @__PURE__ */ jsx15(
+      children: /* @__PURE__ */ jsx13(
         PopperContent,
         {
           ...popperScope,
@@ -7360,32 +6891,32 @@ var HoverCardContentImpl = /* @__PURE__ */ React38.forwardRef(/* @__PURE__ */ __
     }
   );
 }, "HoverCardContentImpl"));
-var HoverCardArrow = /* @__PURE__ */ React38.forwardRef(
-  /* @__PURE__ */ __name26(function HoverCardArrow2(props, forwardedRef) {
+var HoverCardArrow = /* @__PURE__ */ React36.forwardRef(
+  /* @__PURE__ */ __name24(function HoverCardArrow2(props, forwardedRef) {
     const { __scopeHoverCard, ...arrowProps } = props;
     const popperScope = usePopperScope2(__scopeHoverCard);
-    return /* @__PURE__ */ jsx15(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx13(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef });
   }, "HoverCardArrow")
 );
 function excludeTouch(eventHandler) {
   return (event) => event.pointerType === "touch" ? void 0 : eventHandler();
 }
-__name26(excludeTouch, "excludeTouch");
+__name24(excludeTouch, "excludeTouch");
 function getTabbableNodes(container) {
   const nodes = [];
   const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, {
-    acceptNode: /* @__PURE__ */ __name26((node) => {
+    acceptNode: /* @__PURE__ */ __name24((node) => {
       return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
     }, "acceptNode")
   });
   while (walker.nextNode()) nodes.push(walker.currentNode);
   return nodes;
 }
-__name26(getTabbableNodes, "getTabbableNodes");
+__name24(getTabbableNodes, "getTabbableNodes");
 
 // node_modules/@radix-ui/react-menubar/dist/index.mjs
-var dist_exports10 = {};
-__export(dist_exports10, {
+var dist_exports8 = {};
+__export(dist_exports8, {
   Arrow: () => MenubarArrow,
   CheckboxItem: () => MenubarCheckboxItem,
   Content: () => MenubarContent,
@@ -7422,26 +6953,26 @@ __export(dist_exports10, {
   Trigger: () => MenubarTrigger,
   createMenubarScope: () => createMenubarScope
 });
-import * as React39 from "react";
-import { jsx as jsx16 } from "react/jsx-runtime";
-var __defProp27 = Object.defineProperty;
-var __name27 = (target, value) => __defProp27(target, "name", { value, configurable: true });
-var Direction5 = {
+import * as React37 from "react";
+import { jsx as jsx14 } from "react/jsx-runtime";
+var __defProp25 = Object.defineProperty;
+var __name25 = (target, value) => __defProp25(target, "name", { value, configurable: true });
+var Direction4 = {
   LTR: "ltr",
   RTL: "rtl"
 };
 var MENUBAR_NAME = "Menubar";
-var [Collection4, useCollection3, createCollectionScope4] = createCollection(MENUBAR_NAME);
+var [Collection3, useCollection3, createCollectionScope3] = createCollection(MENUBAR_NAME);
 var [createMenubarContext, createMenubarScope] = createContextScope(MENUBAR_NAME, [
-  createCollectionScope4,
+  createCollectionScope3,
   createRovingFocusGroupScope
 ]);
 var useMenuScope2 = createMenuScope();
 var useRovingFocusGroupScope2 = createRovingFocusGroupScope();
 var [MenubarContextProvider, useMenubarContext] = createMenubarContext(MENUBAR_NAME);
-var Menubar = /* @__PURE__ */ React39.forwardRef(
+var Menubar = /* @__PURE__ */ React37.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name27(function Menubar2(props, forwardedRef) {
+  /* @__PURE__ */ __name25(function Menubar2(props, forwardedRef) {
     const {
       __scopeMenubar,
       value: valueProp,
@@ -7459,21 +6990,21 @@ var Menubar = /* @__PURE__ */ React39.forwardRef(
       defaultProp: defaultValue ?? "",
       caller: MENUBAR_NAME
     });
-    const [currentTabStopId, setCurrentTabStopId] = React39.useState(null);
-    return /* @__PURE__ */ jsx16(
+    const [currentTabStopId, setCurrentTabStopId] = React37.useState(null);
+    return /* @__PURE__ */ jsx14(
       MenubarContextProvider,
       {
         scope: __scopeMenubar,
         value,
-        onMenuOpen: React39.useCallback(
+        onMenuOpen: React37.useCallback(
           (value2) => {
             setValue(value2);
             setCurrentTabStopId(value2);
           },
           [setValue]
         ),
-        onMenuClose: React39.useCallback(() => setValue(""), [setValue]),
-        onMenuToggle: React39.useCallback(
+        onMenuClose: React37.useCallback(() => setValue(""), [setValue]),
+        onMenuToggle: React37.useCallback(
           (value2) => {
             setValue((prevValue) => prevValue ? "" : value2);
             setCurrentTabStopId(value2);
@@ -7482,7 +7013,7 @@ var Menubar = /* @__PURE__ */ React39.forwardRef(
         ),
         dir: direction,
         loop,
-        children: /* @__PURE__ */ jsx16(Collection4.Provider, { scope: __scopeMenubar, children: /* @__PURE__ */ jsx16(Collection4.Slot, { scope: __scopeMenubar, children: /* @__PURE__ */ jsx16(
+        children: /* @__PURE__ */ jsx14(Collection3.Provider, { scope: __scopeMenubar, children: /* @__PURE__ */ jsx14(Collection3.Slot, { scope: __scopeMenubar, children: /* @__PURE__ */ jsx14(
           RovingFocusGroup,
           {
             asChild: true,
@@ -7492,7 +7023,7 @@ var Menubar = /* @__PURE__ */ React39.forwardRef(
             dir: direction,
             currentTabStopId,
             onCurrentTabStopIdChange: setCurrentTabStopId,
-            children: /* @__PURE__ */ jsx16(Primitive.div, { role: "menubar", ...menubarProps, ref: forwardedRef })
+            children: /* @__PURE__ */ jsx14(Primitive.div, { role: "menubar", ...menubarProps, ref: forwardedRef })
           }
         ) }) })
       }
@@ -7501,19 +7032,19 @@ var Menubar = /* @__PURE__ */ React39.forwardRef(
 );
 var MENU_NAME2 = "MenubarMenu";
 var [MenubarMenuProvider, useMenubarMenuContext] = createMenubarContext(MENU_NAME2);
-var MenubarMenu = /* @__PURE__ */ __name27((props) => {
+var MenubarMenu = /* @__PURE__ */ __name25((props) => {
   const { __scopeMenubar, value: valueProp, ...menuProps } = props;
   const autoValue = useId();
   const value = valueProp || autoValue || "LEGACY_REACT_AUTO_VALUE";
   const context = useMenubarContext(MENU_NAME2, __scopeMenubar);
   const menuScope = useMenuScope2(__scopeMenubar);
-  const triggerRef = React39.useRef(null);
-  const wasKeyboardTriggerOpenRef = React39.useRef(false);
+  const triggerRef = React37.useRef(null);
+  const wasKeyboardTriggerOpenRef = React37.useRef(false);
   const open = context.value === value;
-  React39.useEffect(() => {
+  React37.useEffect(() => {
     if (!open) wasKeyboardTriggerOpenRef.current = false;
   }, [open]);
-  return /* @__PURE__ */ jsx16(
+  return /* @__PURE__ */ jsx14(
     MenubarMenuProvider,
     {
       scope: __scopeMenubar,
@@ -7522,7 +7053,7 @@ var MenubarMenu = /* @__PURE__ */ __name27((props) => {
       triggerRef,
       contentId: useId(),
       wasKeyboardTriggerOpenRef,
-      children: /* @__PURE__ */ jsx16(
+      children: /* @__PURE__ */ jsx14(
         Menu,
         {
           ...menuScope,
@@ -7538,26 +7069,26 @@ var MenubarMenu = /* @__PURE__ */ __name27((props) => {
     }
   );
 }, "MenubarMenu");
-var TRIGGER_NAME5 = "MenubarTrigger";
-var MenubarTrigger = /* @__PURE__ */ React39.forwardRef(
-  /* @__PURE__ */ __name27(function MenubarTrigger2(props, forwardedRef) {
+var TRIGGER_NAME3 = "MenubarTrigger";
+var MenubarTrigger = /* @__PURE__ */ React37.forwardRef(
+  /* @__PURE__ */ __name25(function MenubarTrigger2(props, forwardedRef) {
     const { __scopeMenubar, disabled = false, ...triggerProps } = props;
     const rovingFocusGroupScope = useRovingFocusGroupScope2(__scopeMenubar);
     const menuScope = useMenuScope2(__scopeMenubar);
-    const context = useMenubarContext(TRIGGER_NAME5, __scopeMenubar);
-    const menuContext = useMenubarMenuContext(TRIGGER_NAME5, __scopeMenubar);
-    const ref = React39.useRef(null);
+    const context = useMenubarContext(TRIGGER_NAME3, __scopeMenubar);
+    const menuContext = useMenubarMenuContext(TRIGGER_NAME3, __scopeMenubar);
+    const ref = React37.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, ref, menuContext.triggerRef);
-    const [isFocused, setIsFocused] = React39.useState(false);
+    const [isFocused, setIsFocused] = React37.useState(false);
     const open = context.value === menuContext.value;
-    return /* @__PURE__ */ jsx16(Collection4.ItemSlot, { scope: __scopeMenubar, value: menuContext.value, disabled, children: /* @__PURE__ */ jsx16(
+    return /* @__PURE__ */ jsx14(Collection3.ItemSlot, { scope: __scopeMenubar, value: menuContext.value, disabled, children: /* @__PURE__ */ jsx14(
       RovingFocusGroupItem,
       {
         asChild: true,
         ...rovingFocusGroupScope,
         focusable: !disabled,
         tabStopId: menuContext.value,
-        children: /* @__PURE__ */ jsx16(MenuAnchor, { asChild: true, ...menuScope, children: /* @__PURE__ */ jsx16(
+        children: /* @__PURE__ */ jsx14(MenuAnchor, { asChild: true, ...menuScope, children: /* @__PURE__ */ jsx14(
           Primitive.button,
           {
             type: "button",
@@ -7602,21 +7133,21 @@ var MenubarTrigger = /* @__PURE__ */ React39.forwardRef(
     ) });
   }, "MenubarTrigger")
 );
-var MenubarPortal = /* @__PURE__ */ __name27((props) => {
+var MenubarPortal = /* @__PURE__ */ __name25((props) => {
   const { __scopeMenubar, ...portalProps } = props;
   const menuScope = useMenuScope2(__scopeMenubar);
-  return /* @__PURE__ */ jsx16(MenuPortal, { ...menuScope, ...portalProps });
+  return /* @__PURE__ */ jsx14(MenuPortal, { ...menuScope, ...portalProps });
 }, "MenubarPortal");
-var CONTENT_NAME7 = "MenubarContent";
-var MenubarContent = /* @__PURE__ */ React39.forwardRef(
-  /* @__PURE__ */ __name27(function MenubarContent2(props, forwardedRef) {
+var CONTENT_NAME5 = "MenubarContent";
+var MenubarContent = /* @__PURE__ */ React37.forwardRef(
+  /* @__PURE__ */ __name25(function MenubarContent2(props, forwardedRef) {
     const { __scopeMenubar, align = "start", ...contentProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    const context = useMenubarContext(CONTENT_NAME7, __scopeMenubar);
-    const menuContext = useMenubarMenuContext(CONTENT_NAME7, __scopeMenubar);
+    const context = useMenubarContext(CONTENT_NAME5, __scopeMenubar);
+    const menuContext = useMenubarMenuContext(CONTENT_NAME5, __scopeMenubar);
     const getItems = useCollection3(__scopeMenubar);
-    const hasInteractedOutsideRef = React39.useRef(false);
-    return /* @__PURE__ */ jsx16(
+    const hasInteractedOutsideRef = React37.useRef(false);
+    return /* @__PURE__ */ jsx14(
       MenuContent,
       {
         id: menuContext.contentId,
@@ -7652,7 +7183,7 @@ var MenubarContent = /* @__PURE__ */ React39.forwardRef(
               const target = event.target;
               const targetIsSubTrigger = target.hasAttribute("data-radix-menubar-subtrigger");
               const isKeyDownInsideSubMenu = target.closest("[data-radix-menubar-content]") !== event.currentTarget;
-              const prevMenuKey = context.dir === Direction5.RTL ? "ArrowRight" : "ArrowLeft";
+              const prevMenuKey = context.dir === Direction4.RTL ? "ArrowRight" : "ArrowLeft";
               const isPrevKey = prevMenuKey === event.key;
               const isNextKey = !isPrevKey;
               if (isNextKey && targetIsSubTrigger) return;
@@ -7683,73 +7214,73 @@ var MenubarContent = /* @__PURE__ */ React39.forwardRef(
     );
   }, "MenubarContent")
 );
-var MenubarGroup = /* @__PURE__ */ React39.forwardRef(
-  /* @__PURE__ */ __name27(function MenubarGroup2(props, forwardedRef) {
+var MenubarGroup = /* @__PURE__ */ React37.forwardRef(
+  /* @__PURE__ */ __name25(function MenubarGroup2(props, forwardedRef) {
     const { __scopeMenubar, ...groupProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(MenuGroup, { ...menuScope, ...groupProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx14(MenuGroup, { ...menuScope, ...groupProps, ref: forwardedRef });
   }, "MenubarGroup")
 );
-var MenubarLabel = /* @__PURE__ */ React39.forwardRef(
-  /* @__PURE__ */ __name27(function MenubarLabel2(props, forwardedRef) {
+var MenubarLabel = /* @__PURE__ */ React37.forwardRef(
+  /* @__PURE__ */ __name25(function MenubarLabel2(props, forwardedRef) {
     const { __scopeMenubar, ...labelProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(MenuLabel, { ...menuScope, ...labelProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx14(MenuLabel, { ...menuScope, ...labelProps, ref: forwardedRef });
   }, "MenubarLabel")
 );
-var MenubarItem = /* @__PURE__ */ React39.forwardRef(
-  /* @__PURE__ */ __name27(function MenubarItem2(props, forwardedRef) {
+var MenubarItem = /* @__PURE__ */ React37.forwardRef(
+  /* @__PURE__ */ __name25(function MenubarItem2(props, forwardedRef) {
     const { __scopeMenubar, ...itemProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(MenuItem, { ...menuScope, ...itemProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx14(MenuItem, { ...menuScope, ...itemProps, ref: forwardedRef });
   }, "MenubarItem")
 );
-var MenubarCheckboxItem = /* @__PURE__ */ React39.forwardRef(
+var MenubarCheckboxItem = /* @__PURE__ */ React37.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name27(function MenubarCheckboxItem2(props, forwardedRef) {
+  /* @__PURE__ */ __name25(function MenubarCheckboxItem2(props, forwardedRef) {
     const { __scopeMenubar, ...checkboxItemProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(MenuCheckboxItem, { ...menuScope, ...checkboxItemProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx14(MenuCheckboxItem, { ...menuScope, ...checkboxItemProps, ref: forwardedRef });
   }, "MenubarCheckboxItem")
 );
-var MenubarRadioGroup = /* @__PURE__ */ React39.forwardRef(
+var MenubarRadioGroup = /* @__PURE__ */ React37.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name27(function MenubarRadioGroup2(props, forwardedRef) {
+  /* @__PURE__ */ __name25(function MenubarRadioGroup2(props, forwardedRef) {
     const { __scopeMenubar, ...radioGroupProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(MenuRadioGroup, { ...menuScope, ...radioGroupProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx14(MenuRadioGroup, { ...menuScope, ...radioGroupProps, ref: forwardedRef });
   }, "MenubarRadioGroup")
 );
-var MenubarRadioItem = /* @__PURE__ */ React39.forwardRef(
+var MenubarRadioItem = /* @__PURE__ */ React37.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name27(function MenubarRadioItem2(props, forwardedRef) {
+  /* @__PURE__ */ __name25(function MenubarRadioItem2(props, forwardedRef) {
     const { __scopeMenubar, ...radioItemProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(MenuRadioItem, { ...menuScope, ...radioItemProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx14(MenuRadioItem, { ...menuScope, ...radioItemProps, ref: forwardedRef });
   }, "MenubarRadioItem")
 );
-var MenubarItemIndicator = /* @__PURE__ */ React39.forwardRef(/* @__PURE__ */ __name27(function MenubarItemIndicator2(props, forwardedRef) {
+var MenubarItemIndicator = /* @__PURE__ */ React37.forwardRef(/* @__PURE__ */ __name25(function MenubarItemIndicator2(props, forwardedRef) {
   const { __scopeMenubar, ...itemIndicatorProps } = props;
   const menuScope = useMenuScope2(__scopeMenubar);
-  return /* @__PURE__ */ jsx16(MenuItemIndicator, { ...menuScope, ...itemIndicatorProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx14(MenuItemIndicator, { ...menuScope, ...itemIndicatorProps, ref: forwardedRef });
 }, "MenubarItemIndicator"));
-var MenubarSeparator = /* @__PURE__ */ React39.forwardRef(
+var MenubarSeparator = /* @__PURE__ */ React37.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name27(function MenubarSeparator2(props, forwardedRef) {
+  /* @__PURE__ */ __name25(function MenubarSeparator2(props, forwardedRef) {
     const { __scopeMenubar, ...separatorProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(MenuSeparator, { ...menuScope, ...separatorProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx14(MenuSeparator, { ...menuScope, ...separatorProps, ref: forwardedRef });
   }, "MenubarSeparator")
 );
-var MenubarArrow = /* @__PURE__ */ React39.forwardRef(
-  /* @__PURE__ */ __name27(function MenubarArrow2(props, forwardedRef) {
+var MenubarArrow = /* @__PURE__ */ React37.forwardRef(
+  /* @__PURE__ */ __name25(function MenubarArrow2(props, forwardedRef) {
     const { __scopeMenubar, ...arrowProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(MenuArrow, { ...menuScope, ...arrowProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx14(MenuArrow, { ...menuScope, ...arrowProps, ref: forwardedRef });
   }, "MenubarArrow")
 );
 var SUB_NAME3 = "MenubarSub";
-var MenubarSub = /* @__PURE__ */ __name27((props) => {
+var MenubarSub = /* @__PURE__ */ __name25((props) => {
   const { __scopeMenubar, children, open: openProp, onOpenChange, defaultOpen } = props;
   const menuScope = useMenuScope2(__scopeMenubar);
   const [open, setOpen] = useControllableState({
@@ -7758,14 +7289,14 @@ var MenubarSub = /* @__PURE__ */ __name27((props) => {
     onChange: onOpenChange,
     caller: SUB_NAME3
   });
-  return /* @__PURE__ */ jsx16(MenuSub, { ...menuScope, open, onOpenChange: setOpen, children });
+  return /* @__PURE__ */ jsx14(MenuSub, { ...menuScope, open, onOpenChange: setOpen, children });
 }, "MenubarSub");
-var MenubarSubTrigger = /* @__PURE__ */ React39.forwardRef(
+var MenubarSubTrigger = /* @__PURE__ */ React37.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name27(function MenubarSubTrigger2(props, forwardedRef) {
+  /* @__PURE__ */ __name25(function MenubarSubTrigger2(props, forwardedRef) {
     const { __scopeMenubar, ...subTriggerProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(
+    return /* @__PURE__ */ jsx14(
       MenuSubTrigger,
       {
         "data-radix-menubar-subtrigger": "",
@@ -7776,12 +7307,12 @@ var MenubarSubTrigger = /* @__PURE__ */ React39.forwardRef(
     );
   }, "MenubarSubTrigger")
 );
-var MenubarSubContent = /* @__PURE__ */ React39.forwardRef(
+var MenubarSubContent = /* @__PURE__ */ React37.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name27(function MenubarSubContent2(props, forwardedRef) {
+  /* @__PURE__ */ __name25(function MenubarSubContent2(props, forwardedRef) {
     const { __scopeMenubar, ...subContentProps } = props;
     const menuScope = useMenuScope2(__scopeMenubar);
-    return /* @__PURE__ */ jsx16(
+    return /* @__PURE__ */ jsx14(
       MenuSubContent,
       {
         ...menuScope,
@@ -7806,11 +7337,11 @@ var MenubarSubContent = /* @__PURE__ */ React39.forwardRef(
 function wrapArray3(array, startIndex) {
   return array.map((_, index2) => array[(startIndex + index2) % array.length]);
 }
-__name27(wrapArray3, "wrapArray");
+__name25(wrapArray3, "wrapArray");
 
 // node_modules/@radix-ui/react-navigation-menu/dist/index.mjs
-var dist_exports11 = {};
-__export(dist_exports11, {
+var dist_exports9 = {};
+__export(dist_exports9, {
   Content: () => NavigationMenuContent,
   Indicator: () => NavigationMenuIndicator,
   Item: () => NavigationMenuItem,
@@ -7831,16 +7362,16 @@ __export(dist_exports11, {
   Viewport: () => NavigationMenuViewport,
   createNavigationMenuScope: () => createNavigationMenuScope
 });
-import * as React42 from "react";
+import * as React40 from "react";
 import * as ReactDOM4 from "react-dom";
 
 // node_modules/@radix-ui/react-use-previous/dist/index.mjs
-import * as React40 from "react";
-var __defProp28 = Object.defineProperty;
-var __name28 = (target, value) => __defProp28(target, "name", { value, configurable: true });
+import * as React38 from "react";
+var __defProp26 = Object.defineProperty;
+var __name26 = (target, value) => __defProp26(target, "name", { value, configurable: true });
 function usePrevious(value) {
-  const ref = React40.useRef({ value, previous: value });
-  return React40.useMemo(() => {
+  const ref = React38.useRef({ value, previous: value });
+  return React38.useMemo(() => {
     if (ref.current.value !== value) {
       ref.current.previous = ref.current.value;
       ref.current.value = value;
@@ -7848,13 +7379,13 @@ function usePrevious(value) {
     return ref.current.previous;
   }, [value]);
 }
-__name28(usePrevious, "usePrevious");
+__name26(usePrevious, "usePrevious");
 
 // node_modules/@radix-ui/react-visually-hidden/dist/index.mjs
-import * as React41 from "react";
-import { jsx as jsx17 } from "react/jsx-runtime";
-var __defProp29 = Object.defineProperty;
-var __name29 = (target, value) => __defProp29(target, "name", { value, configurable: true });
+import * as React39 from "react";
+import { jsx as jsx15 } from "react/jsx-runtime";
+var __defProp27 = Object.defineProperty;
+var __name27 = (target, value) => __defProp27(target, "name", { value, configurable: true });
 var VISUALLY_HIDDEN_STYLES = Object.freeze({
   // See: https://github.com/twbs/bootstrap/blob/main/scss/mixins/_visually-hidden.scss
   position: "absolute",
@@ -7868,9 +7399,9 @@ var VISUALLY_HIDDEN_STYLES = Object.freeze({
   whiteSpace: "nowrap",
   wordWrap: "normal"
 });
-var VisuallyHidden = /* @__PURE__ */ React41.forwardRef(
-  /* @__PURE__ */ __name29(function VisuallyHidden2(props, forwardedRef) {
-    return /* @__PURE__ */ jsx17(
+var VisuallyHidden = /* @__PURE__ */ React39.forwardRef(
+  /* @__PURE__ */ __name27(function VisuallyHidden2(props, forwardedRef) {
+    return /* @__PURE__ */ jsx15(
       Primitive.span,
       {
         ...props,
@@ -7882,32 +7413,32 @@ var VisuallyHidden = /* @__PURE__ */ React41.forwardRef(
 );
 
 // node_modules/@radix-ui/react-navigation-menu/dist/index.mjs
-import { Fragment as Fragment6, jsx as jsx18, jsxs as jsxs2 } from "react/jsx-runtime";
-var __defProp30 = Object.defineProperty;
-var __name30 = (target, value) => __defProp30(target, "name", { value, configurable: true });
+import { Fragment as Fragment6, jsx as jsx16, jsxs as jsxs2 } from "react/jsx-runtime";
+var __defProp28 = Object.defineProperty;
+var __name28 = (target, value) => __defProp28(target, "name", { value, configurable: true });
 var ActivationMode = {
   Automatic: "automatic",
   Manual: "manual"
 };
-var Orientation3 = {
+var Orientation2 = {
   Vertical: "vertical",
   Horizontal: "horizontal"
 };
-var Direction6 = {
+var Direction5 = {
   LTR: "ltr",
   RTL: "rtl"
 };
 var NAVIGATION_MENU_NAME = "NavigationMenu";
-var [Collection5, useCollection4, createCollectionScope5] = createCollection(NAVIGATION_MENU_NAME);
+var [Collection4, useCollection4, createCollectionScope4] = createCollection(NAVIGATION_MENU_NAME);
 var [FocusGroupCollection, useFocusGroupCollection, createFocusGroupCollectionScope] = createCollection(NAVIGATION_MENU_NAME);
 var [createNavigationMenuContext, createNavigationMenuScope] = createContextScope(
   NAVIGATION_MENU_NAME,
-  [createCollectionScope5, createFocusGroupCollectionScope]
+  [createCollectionScope4, createFocusGroupCollectionScope]
 );
 var [NavigationMenuProviderImpl, useNavigationMenuContext] = createNavigationMenuContext(NAVIGATION_MENU_NAME);
 var [ViewportContentProvider, useViewportContentContext] = createNavigationMenuContext(NAVIGATION_MENU_NAME);
-var NavigationMenu = /* @__PURE__ */ React42.forwardRef(
-  /* @__PURE__ */ __name30(function NavigationMenu2(props, forwardedRef) {
+var NavigationMenu = /* @__PURE__ */ React40.forwardRef(
+  /* @__PURE__ */ __name28(function NavigationMenu2(props, forwardedRef) {
     const {
       __scopeNavigationMenu,
       value: valueProp,
@@ -7915,21 +7446,21 @@ var NavigationMenu = /* @__PURE__ */ React42.forwardRef(
       defaultValue,
       delayDuration = 200,
       skipDelayDuration = 300,
-      orientation = Orientation3.Horizontal,
+      orientation = Orientation2.Horizontal,
       dir,
       activationMode = ActivationMode.Automatic,
       ...NavigationMenuProps
     } = props;
-    const [navigationMenu, setNavigationMenu] = React42.useState(null);
+    const [navigationMenu, setNavigationMenu] = React40.useState(null);
     const composedRef = useComposedRefs(forwardedRef, setNavigationMenu);
     const direction = useDirection(dir);
-    const openTimerRef = React42.useRef(0);
-    const closeTimerRef = React42.useRef(0);
-    const skipDelayTimerRef = React42.useRef(0);
-    const [isOpenDelayed, setIsOpenDelayed] = React42.useState(true);
+    const openTimerRef = React40.useRef(0);
+    const closeTimerRef = React40.useRef(0);
+    const skipDelayTimerRef = React40.useRef(0);
+    const [isOpenDelayed, setIsOpenDelayed] = React40.useState(true);
     const [value, setValue] = useControllableState({
       prop: valueProp,
-      onChange: /* @__PURE__ */ __name30((value2) => {
+      onChange: /* @__PURE__ */ __name28((value2) => {
         const isOpen = value2 !== "";
         const hasSkipDelayDuration = skipDelayDuration > 0;
         if (isOpen) {
@@ -7947,18 +7478,18 @@ var NavigationMenu = /* @__PURE__ */ React42.forwardRef(
       defaultProp: defaultValue ?? "",
       caller: NAVIGATION_MENU_NAME
     });
-    const startCloseTimer = React42.useCallback(() => {
+    const startCloseTimer = React40.useCallback(() => {
       window.clearTimeout(closeTimerRef.current);
       closeTimerRef.current = window.setTimeout(() => setValue(""), 150);
     }, [setValue]);
-    const handleOpen = React42.useCallback(
+    const handleOpen = React40.useCallback(
       (itemValue) => {
         window.clearTimeout(closeTimerRef.current);
         setValue(itemValue);
       },
       [setValue]
     );
-    const handleDelayedOpen = React42.useCallback(
+    const handleDelayedOpen = React40.useCallback(
       (itemValue) => {
         const isOpenItem = value === itemValue;
         if (isOpenItem) {
@@ -7972,14 +7503,14 @@ var NavigationMenu = /* @__PURE__ */ React42.forwardRef(
       },
       [value, setValue, delayDuration]
     );
-    React42.useEffect(() => {
+    React40.useEffect(() => {
       return () => {
         window.clearTimeout(openTimerRef.current);
         window.clearTimeout(closeTimerRef.current);
         window.clearTimeout(skipDelayTimerRef.current);
       };
     }, []);
-    return /* @__PURE__ */ jsx18(
+    return /* @__PURE__ */ jsx16(
       NavigationMenuProvider,
       {
         scope: __scopeNavigationMenu,
@@ -8019,7 +7550,7 @@ var NavigationMenu = /* @__PURE__ */ React42.forwardRef(
           setValue((prevValue) => prevValue === itemValue ? "" : itemValue);
         },
         onItemDismiss: () => setValue(""),
-        children: /* @__PURE__ */ jsx18(
+        children: /* @__PURE__ */ jsx16(
           Primitive.nav,
           {
             "aria-label": "Main",
@@ -8034,15 +7565,15 @@ var NavigationMenu = /* @__PURE__ */ React42.forwardRef(
   }, "NavigationMenu")
 );
 var SUB_NAME4 = "NavigationMenuSub";
-var NavigationMenuSub = /* @__PURE__ */ React42.forwardRef(
+var NavigationMenuSub = /* @__PURE__ */ React40.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name30(function NavigationMenuSub2(props, forwardedRef) {
+  /* @__PURE__ */ __name28(function NavigationMenuSub2(props, forwardedRef) {
     const {
       __scopeNavigationMenu,
       value: valueProp,
       onValueChange,
       defaultValue,
-      orientation = Orientation3.Horizontal,
+      orientation = Orientation2.Horizontal,
       activationMode: activationModeProp,
       disableToggle = true,
       ...subProps
@@ -8055,7 +7586,7 @@ var NavigationMenuSub = /* @__PURE__ */ React42.forwardRef(
       defaultProp: defaultValue ?? "",
       caller: SUB_NAME4
     });
-    return /* @__PURE__ */ jsx18(
+    return /* @__PURE__ */ jsx16(
       NavigationMenuProvider,
       {
         scope: __scopeNavigationMenu,
@@ -8074,12 +7605,12 @@ var NavigationMenuSub = /* @__PURE__ */ React42.forwardRef(
           setValue((prevValue) => disableToggle || prevValue !== itemValue ? itemValue : "");
         },
         onItemDismiss: () => setValue(""),
-        children: /* @__PURE__ */ jsx18(Primitive.div, { "data-orientation": orientation, ...subProps, ref: forwardedRef })
+        children: /* @__PURE__ */ jsx16(Primitive.div, { "data-orientation": orientation, ...subProps, ref: forwardedRef })
       }
     );
   }, "NavigationMenuSub")
 );
-var NavigationMenuProvider = /* @__PURE__ */ __name30((props) => {
+var NavigationMenuProvider = /* @__PURE__ */ __name28((props) => {
   const {
     scope,
     isRootMenu,
@@ -8096,10 +7627,10 @@ var NavigationMenuProvider = /* @__PURE__ */ __name30((props) => {
     onContentEnter,
     onContentLeave
   } = props;
-  const [viewport, setViewport] = React42.useState(null);
-  const [viewportContent, setViewportContent] = React42.useState(/* @__PURE__ */ new Map());
-  const [indicatorTrack, setIndicatorTrack] = React42.useState(null);
-  return /* @__PURE__ */ jsx18(
+  const [viewport, setViewport] = React40.useState(null);
+  const [viewportContent, setViewportContent] = React40.useState(/* @__PURE__ */ new Map());
+  const [indicatorTrack, setIndicatorTrack] = React40.useState(null);
+  return /* @__PURE__ */ jsx16(
     NavigationMenuProviderImpl,
     {
       scope,
@@ -8121,61 +7652,61 @@ var NavigationMenuProvider = /* @__PURE__ */ __name30((props) => {
       onContentLeave: useCallbackRef(onContentLeave),
       onItemSelect: useCallbackRef(onItemSelect),
       onItemDismiss: useCallbackRef(onItemDismiss),
-      onViewportContentChange: React42.useCallback((contentValue, contentData) => {
+      onViewportContentChange: React40.useCallback((contentValue, contentData) => {
         setViewportContent((prevContent) => {
           prevContent.set(contentValue, contentData);
           return new Map(prevContent);
         });
       }, []),
-      onViewportContentRemove: React42.useCallback((contentValue) => {
+      onViewportContentRemove: React40.useCallback((contentValue) => {
         setViewportContent((prevContent) => {
           if (!prevContent.has(contentValue)) return prevContent;
           prevContent.delete(contentValue);
           return new Map(prevContent);
         });
       }, []),
-      children: /* @__PURE__ */ jsx18(Collection5.Provider, { scope, children: /* @__PURE__ */ jsx18(ViewportContentProvider, { scope, items: viewportContent, children }) })
+      children: /* @__PURE__ */ jsx16(Collection4.Provider, { scope, children: /* @__PURE__ */ jsx16(ViewportContentProvider, { scope, items: viewportContent, children }) })
     }
   );
 }, "NavigationMenuProvider");
 var LIST_NAME = "NavigationMenuList";
-var NavigationMenuList = /* @__PURE__ */ React42.forwardRef(
+var NavigationMenuList = /* @__PURE__ */ React40.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name30(function NavigationMenuList2(props, forwardedRef) {
+  /* @__PURE__ */ __name28(function NavigationMenuList2(props, forwardedRef) {
     const { __scopeNavigationMenu, ...listProps } = props;
     const context = useNavigationMenuContext(LIST_NAME, __scopeNavigationMenu);
-    const list = /* @__PURE__ */ jsx18(Primitive.ul, { "data-orientation": context.orientation, ...listProps, ref: forwardedRef });
-    return /* @__PURE__ */ jsx18(Primitive.div, { style: { position: "relative" }, ref: context.onIndicatorTrackChange, children: /* @__PURE__ */ jsx18(Collection5.Slot, { scope: __scopeNavigationMenu, children: context.isRootMenu ? /* @__PURE__ */ jsx18(FocusGroup, { asChild: true, children: list }) : list }) });
+    const list = /* @__PURE__ */ jsx16(Primitive.ul, { "data-orientation": context.orientation, ...listProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx16(Primitive.div, { style: { position: "relative" }, ref: context.onIndicatorTrackChange, children: /* @__PURE__ */ jsx16(Collection4.Slot, { scope: __scopeNavigationMenu, children: context.isRootMenu ? /* @__PURE__ */ jsx16(FocusGroup, { asChild: true, children: list }) : list }) });
   }, "NavigationMenuList")
 );
-var ITEM_NAME4 = "NavigationMenuItem";
-var [NavigationMenuItemContextProvider, useNavigationMenuItemContext] = createNavigationMenuContext(ITEM_NAME4);
-var NavigationMenuItem = /* @__PURE__ */ React42.forwardRef(
+var ITEM_NAME3 = "NavigationMenuItem";
+var [NavigationMenuItemContextProvider, useNavigationMenuItemContext] = createNavigationMenuContext(ITEM_NAME3);
+var NavigationMenuItem = /* @__PURE__ */ React40.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name30(function NavigationMenuItem2(props, forwardedRef) {
+  /* @__PURE__ */ __name28(function NavigationMenuItem2(props, forwardedRef) {
     const { __scopeNavigationMenu, value: valueProp, ...itemProps } = props;
     const autoValue = useId();
     const value = valueProp || autoValue || "LEGACY_REACT_AUTO_VALUE";
-    const contentRef = React42.useRef(null);
-    const triggerRef = React42.useRef(null);
-    const focusProxyRef = React42.useRef(null);
-    const restoreContentTabOrderRef = React42.useRef(() => {
+    const contentRef = React40.useRef(null);
+    const triggerRef = React40.useRef(null);
+    const focusProxyRef = React40.useRef(null);
+    const restoreContentTabOrderRef = React40.useRef(() => {
     });
-    const wasEscapeCloseRef = React42.useRef(false);
-    const handleContentEntry = React42.useCallback((side = "start") => {
+    const wasEscapeCloseRef = React40.useRef(false);
+    const handleContentEntry = React40.useCallback((side = "start") => {
       if (contentRef.current) {
         restoreContentTabOrderRef.current();
         const candidates = getTabbableCandidates2(contentRef.current);
         if (candidates.length) focusFirst4(side === "start" ? candidates : candidates.reverse());
       }
     }, []);
-    const handleContentExit = React42.useCallback(() => {
+    const handleContentExit = React40.useCallback(() => {
       if (contentRef.current) {
         const candidates = getTabbableCandidates2(contentRef.current);
         if (candidates.length) restoreContentTabOrderRef.current = removeFromTabOrder(candidates);
       }
     }, []);
-    return /* @__PURE__ */ jsx18(
+    return /* @__PURE__ */ jsx16(
       NavigationMenuItemContextProvider,
       {
         scope: __scopeNavigationMenu,
@@ -8188,25 +7719,25 @@ var NavigationMenuItem = /* @__PURE__ */ React42.forwardRef(
         onFocusProxyEnter: handleContentEntry,
         onRootContentClose: handleContentExit,
         onContentFocusOutside: handleContentExit,
-        children: /* @__PURE__ */ jsx18(Primitive.li, { ...itemProps, ref: forwardedRef })
+        children: /* @__PURE__ */ jsx16(Primitive.li, { ...itemProps, ref: forwardedRef })
       }
     );
   }, "NavigationMenuItem")
 );
-var TRIGGER_NAME6 = "NavigationMenuTrigger";
-var NavigationMenuTrigger = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name30(function NavigationMenuTrigger2(props, forwardedRef) {
+var TRIGGER_NAME4 = "NavigationMenuTrigger";
+var NavigationMenuTrigger = /* @__PURE__ */ React40.forwardRef(/* @__PURE__ */ __name28(function NavigationMenuTrigger2(props, forwardedRef) {
   const { __scopeNavigationMenu, disabled, ...triggerProps } = props;
-  const context = useNavigationMenuContext(TRIGGER_NAME6, props.__scopeNavigationMenu);
-  const itemContext = useNavigationMenuItemContext(TRIGGER_NAME6, props.__scopeNavigationMenu);
-  const ref = React42.useRef(null);
+  const context = useNavigationMenuContext(TRIGGER_NAME4, props.__scopeNavigationMenu);
+  const itemContext = useNavigationMenuItemContext(TRIGGER_NAME4, props.__scopeNavigationMenu);
+  const ref = React40.useRef(null);
   const composedRefs = useComposedRefs(ref, itemContext.triggerRef, forwardedRef);
   const triggerId = makeTriggerId(context.baseId, itemContext.value);
   const contentId = makeContentId(context.baseId, itemContext.value);
-  const hasPointerMoveOpenedRef = React42.useRef(false);
-  const wasClickCloseRef = React42.useRef(false);
+  const hasPointerMoveOpenedRef = React40.useRef(false);
+  const wasClickCloseRef = React40.useRef(false);
   const open = itemContext.value === context.value;
   return /* @__PURE__ */ jsxs2(Fragment6, { children: [
-    /* @__PURE__ */ jsx18(Collection5.ItemSlot, { scope: __scopeNavigationMenu, value: itemContext.value, children: /* @__PURE__ */ jsx18(FocusGroupItem, { asChild: true, children: /* @__PURE__ */ jsx18(
+    /* @__PURE__ */ jsx16(Collection4.ItemSlot, { scope: __scopeNavigationMenu, value: itemContext.value, children: /* @__PURE__ */ jsx16(FocusGroupItem, { asChild: true, children: /* @__PURE__ */ jsx16(
       Primitive.button,
       {
         id: triggerId,
@@ -8243,7 +7774,7 @@ var NavigationMenuTrigger = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ _
           wasClickCloseRef.current = open;
         }),
         onKeyDown: composeEventHandlers(props.onKeyDown, (event) => {
-          const verticalEntryKey = context.dir === Direction6.RTL ? "ArrowLeft" : "ArrowRight";
+          const verticalEntryKey = context.dir === Direction5.RTL ? "ArrowLeft" : "ArrowRight";
           const entryKey = { horizontal: "ArrowDown", vertical: verticalEntryKey }[context.orientation];
           if (open && event.key === entryKey) {
             itemContext.onEntryKeyDown();
@@ -8253,7 +7784,7 @@ var NavigationMenuTrigger = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ _
       }
     ) }) }),
     open && /* @__PURE__ */ jsxs2(Fragment6, { children: [
-      /* @__PURE__ */ jsx18(
+      /* @__PURE__ */ jsx16(
         VisuallyHidden,
         {
           "aria-hidden": true,
@@ -8270,16 +7801,16 @@ var NavigationMenuTrigger = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ _
           }
         }
       ),
-      context.viewport && /* @__PURE__ */ jsx18("span", { "aria-owns": contentId })
+      context.viewport && /* @__PURE__ */ jsx16("span", { "aria-owns": contentId })
     ] })
   ] });
 }, "NavigationMenuTrigger"));
 var LINK_SELECT = "navigationMenu.linkSelect";
-var NavigationMenuLink = /* @__PURE__ */ React42.forwardRef(
+var NavigationMenuLink = /* @__PURE__ */ React40.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name30(function NavigationMenuLink2(props, forwardedRef) {
+  /* @__PURE__ */ __name28(function NavigationMenuLink2(props, forwardedRef) {
     const { __scopeNavigationMenu, active, onSelect, ...linkProps } = props;
-    return /* @__PURE__ */ jsx18(FocusGroupItem, { asChild: true, children: /* @__PURE__ */ jsx18(
+    return /* @__PURE__ */ jsx16(FocusGroupItem, { asChild: true, children: /* @__PURE__ */ jsx16(
       Primitive.a,
       {
         "data-active": active ? "" : void 0,
@@ -8311,31 +7842,31 @@ var NavigationMenuLink = /* @__PURE__ */ React42.forwardRef(
   }, "NavigationMenuLink")
 );
 var INDICATOR_NAME = "NavigationMenuIndicator";
-var NavigationMenuIndicator = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name30(function NavigationMenuIndicator2(props, forwardedRef) {
+var NavigationMenuIndicator = /* @__PURE__ */ React40.forwardRef(/* @__PURE__ */ __name28(function NavigationMenuIndicator2(props, forwardedRef) {
   const { forceMount, ...indicatorProps } = props;
   const context = useNavigationMenuContext(INDICATOR_NAME, props.__scopeNavigationMenu);
   const isVisible = Boolean(context.value);
   return context.indicatorTrack ? ReactDOM4.createPortal(
-    /* @__PURE__ */ jsx18(Presence, { present: forceMount || isVisible, children: /* @__PURE__ */ jsx18(NavigationMenuIndicatorImpl, { ...indicatorProps, ref: forwardedRef }) }),
+    /* @__PURE__ */ jsx16(Presence, { present: forceMount || isVisible, children: /* @__PURE__ */ jsx16(NavigationMenuIndicatorImpl, { ...indicatorProps, ref: forwardedRef }) }),
     context.indicatorTrack
   ) : null;
 }, "NavigationMenuIndicator"));
-var NavigationMenuIndicatorImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name30(function NavigationMenuIndicatorImpl2(props, forwardedRef) {
+var NavigationMenuIndicatorImpl = /* @__PURE__ */ React40.forwardRef(/* @__PURE__ */ __name28(function NavigationMenuIndicatorImpl2(props, forwardedRef) {
   const { __scopeNavigationMenu, ...indicatorProps } = props;
   const context = useNavigationMenuContext(INDICATOR_NAME, __scopeNavigationMenu);
   const getItems = useCollection4(__scopeNavigationMenu);
-  const [activeTrigger, setActiveTrigger] = React42.useState(
+  const [activeTrigger, setActiveTrigger] = React40.useState(
     null
   );
-  const [position, setPosition] = React42.useState(null);
-  const isHorizontal = context.orientation === Orientation3.Horizontal;
+  const [position, setPosition] = React40.useState(null);
+  const isHorizontal = context.orientation === Orientation2.Horizontal;
   const isVisible = Boolean(context.value);
-  React42.useEffect(() => {
+  React40.useEffect(() => {
     const items = getItems();
     const triggerNode = items.find((item) => item.value === context.value)?.ref.current;
     if (triggerNode) setActiveTrigger(triggerNode);
   }, [getItems, context.value]);
-  const handlePositionChange = /* @__PURE__ */ __name30(() => {
+  const handlePositionChange = /* @__PURE__ */ __name28(() => {
     if (activeTrigger) {
       setPosition({
         size: isHorizontal ? activeTrigger.offsetWidth : activeTrigger.offsetHeight,
@@ -8345,7 +7876,7 @@ var NavigationMenuIndicatorImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE_
   }, "handlePositionChange");
   useResizeObserver(activeTrigger, handlePositionChange);
   useResizeObserver(context.indicatorTrack, handlePositionChange);
-  return position ? /* @__PURE__ */ jsx18(
+  return position ? /* @__PURE__ */ jsx16(
     Primitive.div,
     {
       "aria-hidden": true,
@@ -8371,11 +7902,11 @@ var NavigationMenuIndicatorImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE_
     }
   ) : null;
 }, "NavigationMenuIndicatorImpl"));
-var CONTENT_NAME8 = "NavigationMenuContent";
-var NavigationMenuContent = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name30(function NavigationMenuContent2(props, forwardedRef) {
+var CONTENT_NAME6 = "NavigationMenuContent";
+var NavigationMenuContent = /* @__PURE__ */ React40.forwardRef(/* @__PURE__ */ __name28(function NavigationMenuContent2(props, forwardedRef) {
   const { forceMount, ...contentProps } = props;
-  const context = useNavigationMenuContext(CONTENT_NAME8, props.__scopeNavigationMenu);
-  const itemContext = useNavigationMenuItemContext(CONTENT_NAME8, props.__scopeNavigationMenu);
+  const context = useNavigationMenuContext(CONTENT_NAME6, props.__scopeNavigationMenu);
+  const itemContext = useNavigationMenuItemContext(CONTENT_NAME6, props.__scopeNavigationMenu);
   const composedRefs = useComposedRefs(itemContext.contentRef, forwardedRef);
   const open = itemContext.value === context.value;
   const openState = getOpenState2(open);
@@ -8388,7 +7919,7 @@ var NavigationMenuContent = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ _
     onRootContentClose: itemContext.onRootContentClose,
     ...contentProps
   };
-  return !context.viewport ? /* @__PURE__ */ jsx18(Presence, { present: forceMount || open, children: /* @__PURE__ */ jsx18(
+  return !context.viewport ? /* @__PURE__ */ jsx16(Presence, { present: forceMount || open, children: /* @__PURE__ */ jsx16(
     NavigationMenuContentImpl,
     {
       "data-state": openState,
@@ -8405,7 +7936,7 @@ var NavigationMenuContent = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ _
         ...commonProps.style
       }
     }
-  ) }) : /* @__PURE__ */ jsx18(
+  ) }) : /* @__PURE__ */ jsx16(
     ViewportContentMounter,
     {
       "data-state": openState,
@@ -8415,8 +7946,8 @@ var NavigationMenuContent = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ _
     }
   );
 }, "NavigationMenuContent"));
-var ViewportContentMounter = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name30(function ViewportContentMounter2(props, forwardedRef) {
-  const context = useNavigationMenuContext(CONTENT_NAME8, props.__scopeNavigationMenu);
+var ViewportContentMounter = /* @__PURE__ */ React40.forwardRef(/* @__PURE__ */ __name28(function ViewportContentMounter2(props, forwardedRef) {
+  const context = useNavigationMenuContext(CONTENT_NAME6, props.__scopeNavigationMenu);
   const { onViewportContentChange, onViewportContentRemove } = context;
   useLayoutEffect2(() => {
     onViewportContentChange(props.value, {
@@ -8430,7 +7961,7 @@ var ViewportContentMounter = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ 
   return null;
 }, "ViewportContentMounter"));
 var ROOT_CONTENT_DISMISS = "navigationMenu.rootContentDismiss";
-var NavigationMenuContentImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name30(function NavigationMenuContentImpl2(props, forwardedRef) {
+var NavigationMenuContentImpl = /* @__PURE__ */ React40.forwardRef(/* @__PURE__ */ __name28(function NavigationMenuContentImpl2(props, forwardedRef) {
   const {
     __scopeNavigationMenu,
     value,
@@ -8441,18 +7972,18 @@ var NavigationMenuContentImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ 
     onContentFocusOutside,
     ...contentProps
   } = props;
-  const context = useNavigationMenuContext(CONTENT_NAME8, __scopeNavigationMenu);
-  const ref = React42.useRef(null);
+  const context = useNavigationMenuContext(CONTENT_NAME6, __scopeNavigationMenu);
+  const ref = React40.useRef(null);
   const composedRefs = useComposedRefs(ref, forwardedRef);
   const triggerId = makeTriggerId(context.baseId, value);
   const contentId = makeContentId(context.baseId, value);
   const getItems = useCollection4(__scopeNavigationMenu);
-  const prevMotionAttributeRef = React42.useRef(null);
+  const prevMotionAttributeRef = React40.useRef(null);
   const { onItemDismiss } = context;
-  React42.useEffect(() => {
+  React40.useEffect(() => {
     const content = ref.current;
     if (context.isRootMenu && content) {
-      const handleClose = /* @__PURE__ */ __name30(() => {
+      const handleClose = /* @__PURE__ */ __name28(() => {
         onItemDismiss();
         onRootContentClose();
         if (content.contains(document.activeElement)) triggerRef.current?.focus();
@@ -8461,10 +7992,10 @@ var NavigationMenuContentImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ 
       return () => content.removeEventListener(ROOT_CONTENT_DISMISS, handleClose);
     }
   }, [context.isRootMenu, props.value, triggerRef, onItemDismiss, onRootContentClose]);
-  const motionAttribute = React42.useMemo(() => {
+  const motionAttribute = React40.useMemo(() => {
     const items = getItems();
     const values = items.map((item) => item.value);
-    if (context.dir === Direction6.RTL) values.reverse();
+    if (context.dir === Direction5.RTL) values.reverse();
     const index2 = values.indexOf(context.value);
     const prevIndex = values.indexOf(context.previousValue);
     const isSelected = value === context.value;
@@ -8480,7 +8011,7 @@ var NavigationMenuContentImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ 
     prevMotionAttributeRef.current = attribute;
     return attribute;
   }, [context.previousValue, context.value, context.dir, getItems, value]);
-  return /* @__PURE__ */ jsx18(FocusGroup, { asChild: true, children: /* @__PURE__ */ jsx18(
+  return /* @__PURE__ */ jsx16(FocusGroup, { asChild: true, children: /* @__PURE__ */ jsx16(
     DismissableLayer,
     {
       id: contentId,
@@ -8537,27 +8068,27 @@ var NavigationMenuContentImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ 
 }, "NavigationMenuContentImpl"));
 var VIEWPORT_NAME = "NavigationMenuViewport";
 var Slottable = createSlottable(VIEWPORT_NAME);
-var NavigationMenuViewport = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name30(function NavigationMenuViewport2(props, forwardedRef) {
+var NavigationMenuViewport = /* @__PURE__ */ React40.forwardRef(/* @__PURE__ */ __name28(function NavigationMenuViewport2(props, forwardedRef) {
   const { forceMount, ...viewportProps } = props;
   const context = useNavigationMenuContext(VIEWPORT_NAME, props.__scopeNavigationMenu);
   const open = Boolean(context.value);
-  return /* @__PURE__ */ jsx18(Presence, { present: forceMount || open, children: /* @__PURE__ */ jsx18(NavigationMenuViewportImpl, { ...viewportProps, ref: forwardedRef }) });
+  return /* @__PURE__ */ jsx16(Presence, { present: forceMount || open, children: /* @__PURE__ */ jsx16(NavigationMenuViewportImpl, { ...viewportProps, ref: forwardedRef }) });
 }, "NavigationMenuViewport"));
-var NavigationMenuViewportImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name30(function NavigationMenuViewportImpl2(props, forwardedRef) {
+var NavigationMenuViewportImpl = /* @__PURE__ */ React40.forwardRef(/* @__PURE__ */ __name28(function NavigationMenuViewportImpl2(props, forwardedRef) {
   const { __scopeNavigationMenu, children, ...viewportImplProps } = props;
   const context = useNavigationMenuContext(VIEWPORT_NAME, __scopeNavigationMenu);
   const composedRefs = useComposedRefs(forwardedRef, context.onViewportChange);
   const viewportContentContext = useViewportContentContext(
-    CONTENT_NAME8,
+    CONTENT_NAME6,
     props.__scopeNavigationMenu
   );
-  const [size4, setSize] = React42.useState(null);
-  const [content, setContent] = React42.useState(null);
+  const [size4, setSize] = React40.useState(null);
+  const [content, setContent] = React40.useState(null);
   const viewportWidth = size4 ? size4?.width + "px" : void 0;
   const viewportHeight = size4 ? size4?.height + "px" : void 0;
   const open = Boolean(context.value);
   const activeContentValue = open ? context.value : context.previousValue;
-  const handleSizeChange = /* @__PURE__ */ __name30(() => {
+  const handleSizeChange = /* @__PURE__ */ __name28(() => {
     if (content) setSize({ width: content.offsetWidth, height: content.offsetHeight });
   }, "handleSizeChange");
   useResizeObserver(content, handleSizeChange);
@@ -8578,10 +8109,10 @@ var NavigationMenuViewportImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__
       onPointerEnter: composeEventHandlers(props.onPointerEnter, context.onContentEnter),
       onPointerLeave: composeEventHandlers(props.onPointerLeave, whenMouse2(context.onContentLeave)),
       children: [
-        /* @__PURE__ */ jsx18(Slottable, { children }),
+        /* @__PURE__ */ jsx16(Slottable, { children }),
         Array.from(viewportContentContext.items).map(([value, { ref, forceMount, ...props2 }]) => {
           const isActive = activeContentValue === value;
-          return /* @__PURE__ */ jsx18(Presence, { present: forceMount || isActive, children: /* @__PURE__ */ jsx18(
+          return /* @__PURE__ */ jsx16(Presence, { present: forceMount || isActive, children: /* @__PURE__ */ jsx16(
             NavigationMenuViewportItem,
             {
               ...props2,
@@ -8595,13 +8126,13 @@ var NavigationMenuViewportImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__
     }
   );
 }, "NavigationMenuViewportImpl"));
-var NavigationMenuViewportItem = /* @__PURE__ */ __name30(({
+var NavigationMenuViewportItem = /* @__PURE__ */ __name28(({
   contentRef,
   isActive,
   onActiveContentChange,
   ...props
 }) => {
-  const handleContentChange = React42.useCallback(
+  const handleContentChange = React40.useCallback(
     (node) => {
       if (isActive && node) {
         onActiveContentChange(node);
@@ -8610,24 +8141,24 @@ var NavigationMenuViewportItem = /* @__PURE__ */ __name30(({
     [isActive, onActiveContentChange]
   );
   const composedRefs = useComposedRefs(contentRef, handleContentChange);
-  return /* @__PURE__ */ jsx18(NavigationMenuContentImpl, { ...props, ref: composedRefs });
+  return /* @__PURE__ */ jsx16(NavigationMenuContentImpl, { ...props, ref: composedRefs });
 }, "NavigationMenuViewportItem");
 var FOCUS_GROUP_NAME = "FocusGroup";
-var FocusGroup = /* @__PURE__ */ React42.forwardRef(
-  /* @__PURE__ */ __name30(function FocusGroup2(props, forwardedRef) {
+var FocusGroup = /* @__PURE__ */ React40.forwardRef(
+  /* @__PURE__ */ __name28(function FocusGroup2(props, forwardedRef) {
     const { __scopeNavigationMenu, ...groupProps } = props;
     const context = useNavigationMenuContext(FOCUS_GROUP_NAME, __scopeNavigationMenu);
-    return /* @__PURE__ */ jsx18(FocusGroupCollection.Provider, { scope: __scopeNavigationMenu, children: /* @__PURE__ */ jsx18(FocusGroupCollection.Slot, { scope: __scopeNavigationMenu, children: /* @__PURE__ */ jsx18(Primitive.div, { dir: context.dir, ...groupProps, ref: forwardedRef }) }) });
+    return /* @__PURE__ */ jsx16(FocusGroupCollection.Provider, { scope: __scopeNavigationMenu, children: /* @__PURE__ */ jsx16(FocusGroupCollection.Slot, { scope: __scopeNavigationMenu, children: /* @__PURE__ */ jsx16(Primitive.div, { dir: context.dir, ...groupProps, ref: forwardedRef }) }) });
   }, "FocusGroup")
 );
 var ARROW_KEYS = ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"];
 var FOCUS_GROUP_ITEM_NAME = "FocusGroupItem";
-var FocusGroupItem = /* @__PURE__ */ React42.forwardRef(
-  /* @__PURE__ */ __name30(function FocusGroupItem2(props, forwardedRef) {
+var FocusGroupItem = /* @__PURE__ */ React40.forwardRef(
+  /* @__PURE__ */ __name28(function FocusGroupItem2(props, forwardedRef) {
     const { __scopeNavigationMenu, ...groupProps } = props;
     const getItems = useFocusGroupCollection(__scopeNavigationMenu);
     const context = useNavigationMenuContext(FOCUS_GROUP_ITEM_NAME, __scopeNavigationMenu);
-    return /* @__PURE__ */ jsx18(FocusGroupCollection.ItemSlot, { scope: __scopeNavigationMenu, children: /* @__PURE__ */ jsx18(
+    return /* @__PURE__ */ jsx16(FocusGroupCollection.ItemSlot, { scope: __scopeNavigationMenu, children: /* @__PURE__ */ jsx16(
       Primitive.button,
       {
         ...groupProps,
@@ -8636,7 +8167,7 @@ var FocusGroupItem = /* @__PURE__ */ React42.forwardRef(
           const isFocusNavigationKey = ["Home", "End", ...ARROW_KEYS].includes(event.key);
           if (isFocusNavigationKey) {
             let candidateNodes = getItems().map((item) => item.ref.current);
-            const prevItemKey = context.dir === Direction6.RTL ? "ArrowRight" : "ArrowLeft";
+            const prevItemKey = context.dir === Direction5.RTL ? "ArrowRight" : "ArrowLeft";
             const prevKeys = [prevItemKey, "ArrowUp", "End"];
             if (prevKeys.includes(event.key)) candidateNodes.reverse();
             if (ARROW_KEYS.includes(event.key)) {
@@ -8654,7 +8185,7 @@ var FocusGroupItem = /* @__PURE__ */ React42.forwardRef(
 function getTabbableCandidates2(container) {
   const nodes = [];
   const walker = document.createTreeWalker(container, NodeFilter.SHOW_ELEMENT, {
-    acceptNode: /* @__PURE__ */ __name30((node) => {
+    acceptNode: /* @__PURE__ */ __name28((node) => {
       const isHiddenInput = node.tagName === "INPUT" && node.type === "hidden";
       if (node.disabled || node.hidden || isHiddenInput) return NodeFilter.FILTER_SKIP;
       return node.tabIndex >= 0 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
@@ -8663,7 +8194,7 @@ function getTabbableCandidates2(container) {
   while (walker.nextNode()) nodes.push(walker.currentNode);
   return nodes;
 }
-__name30(getTabbableCandidates2, "getTabbableCandidates");
+__name28(getTabbableCandidates2, "getTabbableCandidates");
 function focusFirst4(candidates) {
   const previouslyFocusedElement = document.activeElement;
   return candidates.some((candidate) => {
@@ -8672,7 +8203,7 @@ function focusFirst4(candidates) {
     return document.activeElement !== previouslyFocusedElement;
   });
 }
-__name30(focusFirst4, "focusFirst");
+__name28(focusFirst4, "focusFirst");
 function removeFromTabOrder(candidates) {
   candidates.forEach((candidate) => {
     candidate.dataset.tabindex = candidate.getAttribute("tabindex") || "";
@@ -8685,7 +8216,7 @@ function removeFromTabOrder(candidates) {
     });
   };
 }
-__name30(removeFromTabOrder, "removeFromTabOrder");
+__name28(removeFromTabOrder, "removeFromTabOrder");
 function useResizeObserver(element, onResize) {
   const handleResize = useCallbackRef(onResize);
   useLayoutEffect2(() => {
@@ -8703,27 +8234,27 @@ function useResizeObserver(element, onResize) {
     }
   }, [element, handleResize]);
 }
-__name30(useResizeObserver, "useResizeObserver");
+__name28(useResizeObserver, "useResizeObserver");
 function getOpenState2(open) {
   return open ? "open" : "closed";
 }
-__name30(getOpenState2, "getOpenState");
+__name28(getOpenState2, "getOpenState");
 function makeTriggerId(baseId, value) {
   return `${baseId}-trigger-${value}`;
 }
-__name30(makeTriggerId, "makeTriggerId");
+__name28(makeTriggerId, "makeTriggerId");
 function makeContentId(baseId, value) {
   return `${baseId}-content-${value}`;
 }
-__name30(makeContentId, "makeContentId");
+__name28(makeContentId, "makeContentId");
 function whenMouse2(handler) {
   return (event) => event.pointerType === "mouse" ? handler(event) : void 0;
 }
-__name30(whenMouse2, "whenMouse");
+__name28(whenMouse2, "whenMouse");
 
 // node_modules/@radix-ui/react-popover/dist/index.mjs
-var dist_exports13 = {};
-__export(dist_exports13, {
+var dist_exports11 = {};
+__export(dist_exports11, {
   Anchor: () => PopoverAnchor,
   Arrow: () => PopoverArrow,
   Close: () => PopoverClose,
@@ -8744,17 +8275,17 @@ __export(dist_exports13, {
   Trigger: () => PopoverTrigger,
   createPopoverScope: () => createPopoverScope
 });
-import * as React43 from "react";
-import { jsx as jsx19 } from "react/jsx-runtime";
-var __defProp31 = Object.defineProperty;
-var __name31 = (target, value) => __defProp31(target, "name", { value, configurable: true });
+import * as React41 from "react";
+import { jsx as jsx17 } from "react/jsx-runtime";
+var __defProp29 = Object.defineProperty;
+var __name29 = (target, value) => __defProp29(target, "name", { value, configurable: true });
 var POPOVER_NAME = "Popover";
 var [createPopoverContext, createPopoverScope] = createContextScope(POPOVER_NAME, [
   createPopperScope
 ]);
 var usePopperScope3 = createPopperScope();
 var [PopoverProvider, usePopoverContext] = createPopoverContext(POPOVER_NAME);
-var Popover = /* @__PURE__ */ __name31((props) => {
+var Popover = /* @__PURE__ */ __name29((props) => {
   const {
     __scopePopover,
     children,
@@ -8764,17 +8295,17 @@ var Popover = /* @__PURE__ */ __name31((props) => {
     modal = false
   } = props;
   const popperScope = usePopperScope3(__scopePopover);
-  const triggerRef = React43.useRef(null);
-  const [hasCustomAnchor, setHasCustomAnchor] = React43.useState(false);
-  const [titleCount, setTitleCount] = React43.useState(0);
-  const [descriptionCount, setDescriptionCount] = React43.useState(0);
+  const triggerRef = React41.useRef(null);
+  const [hasCustomAnchor, setHasCustomAnchor] = React41.useState(false);
+  const [titleCount, setTitleCount] = React41.useState(0);
+  const [descriptionCount, setDescriptionCount] = React41.useState(0);
   const [open, setOpen] = useControllableState({
     prop: openProp,
     defaultProp: defaultOpen ?? false,
     onChange: onOpenChange,
     caller: POPOVER_NAME
   });
-  return /* @__PURE__ */ jsx19(Popper, { ...popperScope, children: /* @__PURE__ */ jsx19(
+  return /* @__PURE__ */ jsx17(Popper, { ...popperScope, children: /* @__PURE__ */ jsx17(
     PopoverProvider,
     {
       scope: __scopePopover,
@@ -8788,94 +8319,94 @@ var Popover = /* @__PURE__ */ __name31((props) => {
       triggerRef,
       open,
       onOpenChange: setOpen,
-      onOpenToggle: React43.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
+      onOpenToggle: React41.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
       hasCustomAnchor,
-      onCustomAnchorAdd: React43.useCallback(() => setHasCustomAnchor(true), []),
-      onCustomAnchorRemove: React43.useCallback(() => setHasCustomAnchor(false), []),
+      onCustomAnchorAdd: React41.useCallback(() => setHasCustomAnchor(true), []),
+      onCustomAnchorRemove: React41.useCallback(() => setHasCustomAnchor(false), []),
       modal,
       children
     }
   ) });
 }, "Popover");
 var ANCHOR_NAME2 = "PopoverAnchor";
-var PopoverAnchor = /* @__PURE__ */ React43.forwardRef(
-  /* @__PURE__ */ __name31(function PopoverAnchor2(props, forwardedRef) {
+var PopoverAnchor = /* @__PURE__ */ React41.forwardRef(
+  /* @__PURE__ */ __name29(function PopoverAnchor2(props, forwardedRef) {
     const { __scopePopover, ...anchorProps } = props;
     const context = usePopoverContext(ANCHOR_NAME2, __scopePopover);
     const popperScope = usePopperScope3(__scopePopover);
     const { onCustomAnchorAdd, onCustomAnchorRemove } = context;
-    React43.useEffect(() => {
+    React41.useEffect(() => {
       onCustomAnchorAdd();
       return () => onCustomAnchorRemove();
     }, [onCustomAnchorAdd, onCustomAnchorRemove]);
-    return /* @__PURE__ */ jsx19(PopperAnchor, { ...popperScope, ...anchorProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx17(PopperAnchor, { ...popperScope, ...anchorProps, ref: forwardedRef });
   }, "PopoverAnchor")
 );
-var TRIGGER_NAME7 = "PopoverTrigger";
-var PopoverTrigger = /* @__PURE__ */ React43.forwardRef(
-  /* @__PURE__ */ __name31(function PopoverTrigger2(props, forwardedRef) {
+var TRIGGER_NAME5 = "PopoverTrigger";
+var PopoverTrigger = /* @__PURE__ */ React41.forwardRef(
+  /* @__PURE__ */ __name29(function PopoverTrigger2(props, forwardedRef) {
     const { __scopePopover, ...triggerProps } = props;
-    const context = usePopoverContext(TRIGGER_NAME7, __scopePopover);
+    const context = usePopoverContext(TRIGGER_NAME5, __scopePopover);
     const popperScope = usePopperScope3(__scopePopover);
     const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
-    const trigger = /* @__PURE__ */ jsx19(
+    const trigger = /* @__PURE__ */ jsx17(
       Primitive.button,
       {
         type: "button",
         "aria-haspopup": "dialog",
         "aria-expanded": context.open,
         "aria-controls": context.open ? context.contentId : void 0,
-        "data-state": getState3(context.open),
+        "data-state": getState(context.open),
         ...triggerProps,
         ref: composedTriggerRef,
         onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
       }
     );
-    return context.hasCustomAnchor ? trigger : /* @__PURE__ */ jsx19(PopperAnchor, { asChild: true, ...popperScope, children: trigger });
+    return context.hasCustomAnchor ? trigger : /* @__PURE__ */ jsx17(PopperAnchor, { asChild: true, ...popperScope, children: trigger });
   }, "PopoverTrigger")
 );
 var PORTAL_NAME3 = "PopoverPortal";
 var [PortalProvider3, usePortalContext3] = createPopoverContext(PORTAL_NAME3, {
   forceMount: void 0
 });
-var PopoverPortal = /* @__PURE__ */ __name31((props) => {
+var PopoverPortal = /* @__PURE__ */ __name29((props) => {
   const { __scopePopover, forceMount, children, container } = props;
   const context = usePopoverContext(PORTAL_NAME3, __scopePopover);
-  return /* @__PURE__ */ jsx19(PortalProvider3, { scope: __scopePopover, forceMount, children: /* @__PURE__ */ jsx19(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx19(Portal, { asChild: true, container, children }) }) });
+  return /* @__PURE__ */ jsx17(PortalProvider3, { scope: __scopePopover, forceMount, children: /* @__PURE__ */ jsx17(Presence, { present: forceMount || context.open, children: /* @__PURE__ */ jsx17(Portal, { asChild: true, container, children }) }) });
 }, "PopoverPortal");
-var CONTENT_NAME9 = "PopoverContent";
-var PopoverContent = /* @__PURE__ */ React43.forwardRef(
+var CONTENT_NAME7 = "PopoverContent";
+var PopoverContent = /* @__PURE__ */ React41.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name31(function PopoverContent2(props, forwardedRef) {
-    const portalContext = usePortalContext3(CONTENT_NAME9, props.__scopePopover);
+  /* @__PURE__ */ __name29(function PopoverContent2(props, forwardedRef) {
+    const portalContext = usePortalContext3(CONTENT_NAME7, props.__scopePopover);
     const { forceMount = portalContext.forceMount, ...contentProps } = props;
-    const context = usePopoverContext(CONTENT_NAME9, props.__scopePopover);
-    return /* @__PURE__ */ jsx19(Presence, { present: forceMount || context.open, children: context.modal ? /* @__PURE__ */ jsx19(PopoverContentModal, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx19(PopoverContentNonModal, { ...contentProps, ref: forwardedRef }) });
+    const context = usePopoverContext(CONTENT_NAME7, props.__scopePopover);
+    return /* @__PURE__ */ jsx17(Presence, { present: forceMount || context.open, children: context.modal ? /* @__PURE__ */ jsx17(PopoverContentModal, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx17(PopoverContentNonModal, { ...contentProps, ref: forwardedRef }) });
   }, "PopoverContent")
 );
 var Slot2 = createSlot("PopoverContent.RemoveScroll");
-var PopoverContentModal = /* @__PURE__ */ React43.forwardRef(
+var PopoverContentModal = /* @__PURE__ */ React41.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name31(function PopoverContentModal2(props, forwardedRef) {
-    const context = usePopoverContext(CONTENT_NAME9, props.__scopePopover);
-    const contentRef = React43.useRef(null);
+  /* @__PURE__ */ __name29(function PopoverContentModal2(props, forwardedRef) {
+    const context = usePopoverContext(CONTENT_NAME7, props.__scopePopover);
+    const contentRef = React41.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, contentRef);
-    const isRightClickOutsideRef = React43.useRef(false);
+    const isRightClickOutsideRef = React41.useRef(false);
     const { nodes: branchNodes, registry: branchRegistry } = useFocusScopeBranchRegistry();
-    React43.useEffect(() => {
+    React41.useEffect(() => {
       const content = contentRef.current;
       if (content) return hideOthers(content);
     }, []);
-    return /* @__PURE__ */ jsx19(
+    return /* @__PURE__ */ jsx17(
       Combination_default,
       {
         as: Slot2,
         allowPinchZoom: true,
-        shards: React43.useMemo(
+        shards: React41.useMemo(
           () => [contentRef, ...branchNodes.map((node) => ({ current: node }))],
           [contentRef, branchNodes]
         ),
-        children: /* @__PURE__ */ jsx19(
+        children: /* @__PURE__ */ jsx17(
           PopoverContentImpl,
           {
             ...props,
@@ -8909,13 +8440,13 @@ var PopoverContentModal = /* @__PURE__ */ React43.forwardRef(
     );
   }, "PopoverContentModal")
 );
-var PopoverContentNonModal = /* @__PURE__ */ React43.forwardRef(
+var PopoverContentNonModal = /* @__PURE__ */ React41.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name31(function PopoverContentNonModal2(props, forwardedRef) {
-    const context = usePopoverContext(CONTENT_NAME9, props.__scopePopover);
-    const hasInteractedOutsideRef = React43.useRef(false);
-    const hasPointerDownOutsideRef = React43.useRef(false);
-    return /* @__PURE__ */ jsx19(
+  /* @__PURE__ */ __name29(function PopoverContentNonModal2(props, forwardedRef) {
+    const context = usePopoverContext(CONTENT_NAME7, props.__scopePopover);
+    const hasInteractedOutsideRef = React41.useRef(false);
+    const hasPointerDownOutsideRef = React41.useRef(false);
+    return /* @__PURE__ */ jsx17(
       PopoverContentImpl,
       {
         ...props,
@@ -8950,9 +8481,9 @@ var PopoverContentNonModal = /* @__PURE__ */ React43.forwardRef(
     );
   }, "PopoverContentNonModal")
 );
-var PopoverContentImpl = /* @__PURE__ */ React43.forwardRef(
+var PopoverContentImpl = /* @__PURE__ */ React41.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name31(function PopoverContentImpl2(props, forwardedRef) {
+  /* @__PURE__ */ __name29(function PopoverContentImpl2(props, forwardedRef) {
     const {
       __scopePopover,
       trapFocus,
@@ -8968,13 +8499,13 @@ var PopoverContentImpl = /* @__PURE__ */ React43.forwardRef(
       branchRegistry,
       ...contentProps
     } = props;
-    const context = usePopoverContext(CONTENT_NAME9, __scopePopover);
+    const context = usePopoverContext(CONTENT_NAME7, __scopePopover);
     const popperScope = usePopperScope3(__scopePopover);
-    const [contentNode, setContentNode] = React43.useState(null);
+    const [contentNode, setContentNode] = React41.useState(null);
     const composedRefs = useComposedRefs(forwardedRef, setContentNode);
     useFocusScopeBranch(contentNode);
     useFocusGuards();
-    return /* @__PURE__ */ jsx19(FocusScopeBranchProvider, { registry: branchRegistry, children: /* @__PURE__ */ jsx19(
+    return /* @__PURE__ */ jsx17(FocusScopeBranchProvider, { registry: branchRegistry, children: /* @__PURE__ */ jsx17(
       FocusScope,
       {
         asChild: true,
@@ -8983,7 +8514,7 @@ var PopoverContentImpl = /* @__PURE__ */ React43.forwardRef(
         branches: branchNodes,
         onMountAutoFocus: onOpenAutoFocus,
         onUnmountAutoFocus: onCloseAutoFocus,
-        children: /* @__PURE__ */ jsx19(
+        children: /* @__PURE__ */ jsx17(
           DismissableLayer,
           {
             asChild: true,
@@ -8994,10 +8525,10 @@ var PopoverContentImpl = /* @__PURE__ */ React43.forwardRef(
             onFocusOutside,
             onDismiss: () => context.onOpenChange(false),
             deferPointerDownOutside: true,
-            children: /* @__PURE__ */ jsx19(
+            children: /* @__PURE__ */ jsx17(
               PopperContent,
               {
-                "data-state": getState3(context.open),
+                "data-state": getState(context.open),
                 role: "dialog",
                 id: context.contentId,
                 "aria-labelledby": context.titlePresent ? context.titleId : void 0,
@@ -9024,8 +8555,8 @@ var PopoverContentImpl = /* @__PURE__ */ React43.forwardRef(
     ) });
   }, "PopoverContentImpl")
 );
-var PopoverTitle = /* @__PURE__ */ React43.forwardRef(
-  /* @__PURE__ */ __name31(function PopoverTitle2(props, forwardedRef) {
+var PopoverTitle = /* @__PURE__ */ React41.forwardRef(
+  /* @__PURE__ */ __name29(function PopoverTitle2(props, forwardedRef) {
     const { __scopePopover, ...titleProps } = props;
     const context = usePopoverContext("PopoverTitle", __scopePopover);
     const { setTitleCount } = context;
@@ -9033,10 +8564,10 @@ var PopoverTitle = /* @__PURE__ */ React43.forwardRef(
       setTitleCount((count3) => count3 + 1);
       return () => setTitleCount((count3) => count3 - 1);
     }, [setTitleCount]);
-    return /* @__PURE__ */ jsx19(Primitive.h2, { id: context.titleId, ...titleProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx17(Primitive.h2, { id: context.titleId, ...titleProps, ref: forwardedRef });
   }, "PopoverTitle")
 );
-var PopoverDescription = /* @__PURE__ */ React43.forwardRef(/* @__PURE__ */ __name31(function PopoverDescription2(props, forwardedRef) {
+var PopoverDescription = /* @__PURE__ */ React41.forwardRef(/* @__PURE__ */ __name29(function PopoverDescription2(props, forwardedRef) {
   const { __scopePopover, ...descriptionProps } = props;
   const context = usePopoverContext("PopoverDescription", __scopePopover);
   const { setDescriptionCount } = context;
@@ -9044,14 +8575,14 @@ var PopoverDescription = /* @__PURE__ */ React43.forwardRef(/* @__PURE__ */ __na
     setDescriptionCount((count3) => count3 + 1);
     return () => setDescriptionCount((count3) => count3 - 1);
   }, [setDescriptionCount]);
-  return /* @__PURE__ */ jsx19(Primitive.p, { id: context.descriptionId, ...descriptionProps, ref: forwardedRef });
+  return /* @__PURE__ */ jsx17(Primitive.p, { id: context.descriptionId, ...descriptionProps, ref: forwardedRef });
 }, "PopoverDescription"));
 var CLOSE_NAME = "PopoverClose";
-var PopoverClose = /* @__PURE__ */ React43.forwardRef(
-  /* @__PURE__ */ __name31(function PopoverClose2(props, forwardedRef) {
+var PopoverClose = /* @__PURE__ */ React41.forwardRef(
+  /* @__PURE__ */ __name29(function PopoverClose2(props, forwardedRef) {
     const { __scopePopover, ...closeProps } = props;
     const context = usePopoverContext(CLOSE_NAME, __scopePopover);
-    return /* @__PURE__ */ jsx19(
+    return /* @__PURE__ */ jsx17(
       Primitive.button,
       {
         type: "button",
@@ -9062,17 +8593,17 @@ var PopoverClose = /* @__PURE__ */ React43.forwardRef(
     );
   }, "PopoverClose")
 );
-var PopoverArrow = /* @__PURE__ */ React43.forwardRef(
-  /* @__PURE__ */ __name31(function PopoverArrow2(props, forwardedRef) {
+var PopoverArrow = /* @__PURE__ */ React41.forwardRef(
+  /* @__PURE__ */ __name29(function PopoverArrow2(props, forwardedRef) {
     const { __scopePopover, ...arrowProps } = props;
     const popperScope = usePopperScope3(__scopePopover);
-    return /* @__PURE__ */ jsx19(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx17(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef });
   }, "PopoverArrow")
 );
-function getState3(open) {
+function getState(open) {
   return open ? "open" : "closed";
 }
-__name31(getState3, "getState");
+__name29(getState, "getState");
 function concatAriaDescribedby2(...values) {
   const ids = /* @__PURE__ */ new Set();
   for (const value of values) {
@@ -9083,11 +8614,11 @@ function concatAriaDescribedby2(...values) {
   }
   return ids.size > 0 ? Array.from(ids).join(" ") : void 0;
 }
-__name31(concatAriaDescribedby2, "concatAriaDescribedby");
+__name29(concatAriaDescribedby2, "concatAriaDescribedby");
 
 // node_modules/@radix-ui/react-select/dist/index.mjs
-var dist_exports14 = {};
-__export(dist_exports14, {
+var dist_exports12 = {};
+__export(dist_exports12, {
   Arrow: () => SelectArrow,
   Content: () => SelectContent,
   Group: () => SelectGroup,
@@ -9126,35 +8657,35 @@ __export(dist_exports14, {
   unstable_SelectBubbleInput: () => SelectBubbleInput,
   unstable_SelectProvider: () => SelectProvider
 });
-import * as React44 from "react";
+import * as React42 from "react";
 import * as ReactDOM5 from "react-dom";
 
 // node_modules/@radix-ui/number/dist/index.mjs
-var __defProp32 = Object.defineProperty;
-var __name32 = (target, value) => __defProp32(target, "name", { value, configurable: true });
+var __defProp30 = Object.defineProperty;
+var __name30 = (target, value) => __defProp30(target, "name", { value, configurable: true });
 function clamp2(value, [min2, max2]) {
   return Math.min(max2, Math.max(min2, value));
 }
-__name32(clamp2, "clamp");
+__name30(clamp2, "clamp");
 
 // node_modules/@radix-ui/react-select/dist/index.mjs
-import { Fragment as Fragment22, jsx as jsx20, jsxs as jsxs3 } from "react/jsx-runtime";
-var __defProp33 = Object.defineProperty;
-var __name33 = (target, value) => __defProp33(target, "name", { value, configurable: true });
+import { Fragment as Fragment22, jsx as jsx18, jsxs as jsxs3 } from "react/jsx-runtime";
+var __defProp31 = Object.defineProperty;
+var __name31 = (target, value) => __defProp31(target, "name", { value, configurable: true });
 var Position = {
   ItemAligned: "item-aligned",
   Popper: "popper"
 };
-var Direction7 = {
+var Direction6 = {
   LTR: "ltr",
   RTL: "rtl"
 };
 var OPEN_KEYS = [" ", "Enter", "ArrowUp", "ArrowDown"];
 var SELECTION_KEYS2 = [" ", "Enter"];
 var SELECT_NAME = "Select";
-var [Collection6, useCollection5, createCollectionScope6] = createCollection(SELECT_NAME);
+var [Collection5, useCollection5, createCollectionScope5] = createCollection(SELECT_NAME);
 var [createSelectContext, createSelectScope] = createContextScope(SELECT_NAME, [
-  createCollectionScope6,
+  createCollectionScope5,
   createPopperScope
 ]);
 var usePopperScope4 = createPopperScope();
@@ -9180,9 +8711,9 @@ function SelectProvider(props) {
     internal_do_not_use_render
   } = props;
   const popperScope = usePopperScope4(__scopeSelect);
-  const [trigger, setTrigger] = React44.useState(null);
-  const [valueNode, setValueNode] = React44.useState(null);
-  const [valueNodeHasChildren, setValueNodeHasChildren] = React44.useState(false);
+  const [trigger, setTrigger] = React42.useState(null);
+  const [valueNode, setValueNode] = React42.useState(null);
+  const [valueNodeHasChildren, setValueNodeHasChildren] = React42.useState(false);
   const direction = useDirection(dir);
   const [open, setOpen] = useControllableState({
     prop: openProp,
@@ -9196,33 +8727,33 @@ function SelectProvider(props) {
     onChange: onValueChange,
     caller: SELECT_NAME
   });
-  const triggerPointerDownPosRef = React44.useRef(null);
-  const hasConsumerStoppedPropagationRef = React44.useRef(false);
-  const [userSelection, setUserSelection] = React44.useState(null);
-  const handleUserSelect = /* @__PURE__ */ __name33((nextValue) => {
+  const triggerPointerDownPosRef = React42.useRef(null);
+  const hasConsumerStoppedPropagationRef = React42.useRef(false);
+  const [userSelection, setUserSelection] = React42.useState(null);
+  const handleUserSelect = /* @__PURE__ */ __name31((nextValue) => {
     setUserSelection({
       value: nextValue,
       hasConsumerStoppedPropagation: hasConsumerStoppedPropagationRef.current
     });
     setValue(nextValue);
   }, "handleUserSelect");
-  const initialValueRef = React44.useRef(value);
-  React44.useEffect(() => {
+  const initialValueRef = React42.useRef(value);
+  React42.useEffect(() => {
     const associatedForm = form ? trigger?.ownerDocument.getElementById(form) : trigger?.form;
     if (associatedForm instanceof HTMLFormElement) {
-      const reset = /* @__PURE__ */ __name33(() => setValue(initialValueRef.current), "reset");
+      const reset = /* @__PURE__ */ __name31(() => setValue(initialValueRef.current), "reset");
       associatedForm.addEventListener("reset", reset);
       return () => associatedForm.removeEventListener("reset", reset);
     }
   }, [form, trigger, setValue]);
   const isFormControl = trigger ? !!form || !!trigger.closest("form") : true;
-  const [nativeOptionsSet, setNativeOptionsSet] = React44.useState(/* @__PURE__ */ new Set());
+  const [nativeOptionsSet, setNativeOptionsSet] = React42.useState(/* @__PURE__ */ new Set());
   const contentId = useId();
   const nativeSelectKey = Array.from(nativeOptionsSet).map((option) => option.props.value).join(";");
-  const handleNativeOptionAdd = React44.useCallback((option) => {
+  const handleNativeOptionAdd = React42.useCallback((option) => {
     setNativeOptionsSet((prev) => new Set(prev).add(option));
   }, []);
-  const handleNativeOptionRemove = React44.useCallback((option) => {
+  const handleNativeOptionRemove = React42.useCallback((option) => {
     setNativeOptionsSet((prev) => {
       const optionsSet = new Set(prev);
       optionsSet.delete(option);
@@ -9255,7 +8786,7 @@ function SelectProvider(props) {
     nativeSelectKey,
     isFormControl
   };
-  return /* @__PURE__ */ jsx20(Popper, { ...popperScope, children: /* @__PURE__ */ jsx20(SelectProviderImpl, { scope: __scopeSelect, ...context, children: /* @__PURE__ */ jsx20(Collection6.Provider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx20(
+  return /* @__PURE__ */ jsx18(Popper, { ...popperScope, children: /* @__PURE__ */ jsx18(SelectProviderImpl, { scope: __scopeSelect, ...context, children: /* @__PURE__ */ jsx18(Collection5.Provider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx18(
     SelectNativeOptionsProvider,
     {
       scope: __scopeSelect,
@@ -9265,17 +8796,17 @@ function SelectProvider(props) {
     }
   ) }) }) });
 }
-__name33(SelectProvider, "SelectProvider");
-var Select = /* @__PURE__ */ __name33((props) => {
+__name31(SelectProvider, "SelectProvider");
+var Select = /* @__PURE__ */ __name31((props) => {
   const { __scopeSelect, children, ...providerProps } = props;
-  return /* @__PURE__ */ jsx20(
+  return /* @__PURE__ */ jsx18(
     SelectProvider,
     {
       __scopeSelect,
       ...providerProps,
       internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxs3(Fragment22, { children: [
         children,
-        isFormControl ? /* @__PURE__ */ jsx20(
+        isFormControl ? /* @__PURE__ */ jsx18(
           SelectBubbleInput,
           {
             __scopeSelect
@@ -9285,16 +8816,16 @@ var Select = /* @__PURE__ */ __name33((props) => {
     }
   );
 }, "Select");
-var TRIGGER_NAME8 = "SelectTrigger";
-var SelectTrigger = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectTrigger2(props, forwardedRef) {
+var TRIGGER_NAME6 = "SelectTrigger";
+var SelectTrigger = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectTrigger2(props, forwardedRef) {
     const { __scopeSelect, disabled = false, ...triggerProps } = props;
     const popperScope = usePopperScope4(__scopeSelect);
-    const context = useSelectContext(TRIGGER_NAME8, __scopeSelect);
+    const context = useSelectContext(TRIGGER_NAME6, __scopeSelect);
     const isDisabled = context.disabled || disabled;
     const composedRefs = useComposedRefs(forwardedRef, context.onTriggerChange);
     const getItems = useCollection5(__scopeSelect);
-    const pointerTypeRef = React44.useRef("touch");
+    const pointerTypeRef = React42.useRef("touch");
     const [searchRef, handleTypeaheadSearch, resetTypeahead] = useTypeaheadSearch((search) => {
       const enabledItems = getItems().filter((item) => !item.disabled);
       const currentItem = enabledItems.find((item) => item.value === context.value);
@@ -9303,7 +8834,7 @@ var SelectTrigger = /* @__PURE__ */ React44.forwardRef(
         context.onUserSelect(nextItem.value);
       }
     });
-    const handleOpen = /* @__PURE__ */ __name33((pointerEvent) => {
+    const handleOpen = /* @__PURE__ */ __name31((pointerEvent) => {
       if (!isDisabled) {
         context.onOpenChange(true);
         resetTypeahead();
@@ -9315,7 +8846,7 @@ var SelectTrigger = /* @__PURE__ */ React44.forwardRef(
         };
       }
     }, "handleOpen");
-    return /* @__PURE__ */ jsx20(PopperAnchor, { asChild: true, ...popperScope, children: /* @__PURE__ */ jsx20(
+    return /* @__PURE__ */ jsx18(PopperAnchor, { asChild: true, ...popperScope, children: /* @__PURE__ */ jsx18(
       Primitive.button,
       {
         type: "button",
@@ -9366,8 +8897,8 @@ var SelectTrigger = /* @__PURE__ */ React44.forwardRef(
   }, "SelectTrigger")
 );
 var VALUE_NAME = "SelectValue";
-var SelectValue = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectValue2(props, forwardedRef) {
+var SelectValue = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectValue2(props, forwardedRef) {
     const { __scopeSelect, className, style, children, placeholder = "", ...valueProps } = props;
     const context = useSelectContext(VALUE_NAME, __scopeSelect);
     const { onValueNodeHasChildrenChange } = context;
@@ -9377,59 +8908,59 @@ var SelectValue = /* @__PURE__ */ React44.forwardRef(
       onValueNodeHasChildrenChange(hasChildren);
     }, [onValueNodeHasChildrenChange, hasChildren]);
     const showPlaceholder = shouldShowPlaceholder(context.value);
-    return /* @__PURE__ */ jsx20(
+    return /* @__PURE__ */ jsx18(
       Primitive.span,
       {
         ...valueProps,
         asChild: showPlaceholder ? false : valueProps.asChild,
         ref: composedRefs,
         style: { pointerEvents: "none" },
-        children: /* @__PURE__ */ jsx20(React44.Fragment, { children: showPlaceholder ? placeholder : children }, showPlaceholder ? "placeholder" : "value")
+        children: /* @__PURE__ */ jsx18(React42.Fragment, { children: showPlaceholder ? placeholder : children }, showPlaceholder ? "placeholder" : "value")
       }
     );
   }, "SelectValue")
 );
-var SelectIcon = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectIcon2(props, forwardedRef) {
+var SelectIcon = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectIcon2(props, forwardedRef) {
     const { __scopeSelect, children, ...iconProps } = props;
-    return /* @__PURE__ */ jsx20(Primitive.span, { "aria-hidden": true, ...iconProps, ref: forwardedRef, children: children || "\u25BC" });
+    return /* @__PURE__ */ jsx18(Primitive.span, { "aria-hidden": true, ...iconProps, ref: forwardedRef, children: children || "\u25BC" });
   }, "SelectIcon")
 );
 var PORTAL_NAME4 = "SelectPortal";
 var [PortalProvider4, usePortalContext4] = createSelectContext(PORTAL_NAME4, {
   forceMount: void 0
 });
-var SelectPortal = /* @__PURE__ */ __name33((props) => {
+var SelectPortal = /* @__PURE__ */ __name31((props) => {
   const { __scopeSelect, forceMount, ...portalProps } = props;
-  return /* @__PURE__ */ jsx20(PortalProvider4, { scope: props.__scopeSelect, forceMount, children: /* @__PURE__ */ jsx20(Portal, { asChild: true, ...portalProps }) });
+  return /* @__PURE__ */ jsx18(PortalProvider4, { scope: props.__scopeSelect, forceMount, children: /* @__PURE__ */ jsx18(Portal, { asChild: true, ...portalProps }) });
 }, "SelectPortal");
-var CONTENT_NAME10 = "SelectContent";
-var SelectContent = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectContent2(props, forwardedRef) {
-    const portalContext = usePortalContext4(CONTENT_NAME10, props.__scopeSelect);
+var CONTENT_NAME8 = "SelectContent";
+var SelectContent = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectContent2(props, forwardedRef) {
+    const portalContext = usePortalContext4(CONTENT_NAME8, props.__scopeSelect);
     const { forceMount = portalContext.forceMount, ...contentProps } = props;
-    const context = useSelectContext(CONTENT_NAME10, props.__scopeSelect);
-    const [fragment, setFragment] = React44.useState();
+    const context = useSelectContext(CONTENT_NAME8, props.__scopeSelect);
+    const [fragment, setFragment] = React42.useState();
     useLayoutEffect2(() => {
       setFragment(new DocumentFragment());
     }, []);
-    return /* @__PURE__ */ jsx20(Presence, { present: forceMount || context.open, children: ({ present }) => present ? /* @__PURE__ */ jsx20(SelectContentImpl, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx20(SelectContentFragment, { ...contentProps, fragment }) });
+    return /* @__PURE__ */ jsx18(Presence, { present: forceMount || context.open, children: ({ present }) => present ? /* @__PURE__ */ jsx18(SelectContentImpl, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsx18(SelectContentFragment, { ...contentProps, fragment }) });
   }, "SelectContent")
 );
-var SelectContentFragment = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectContentFragment2(props, forwardedRef) {
+var SelectContentFragment = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name31(function SelectContentFragment2(props, forwardedRef) {
   const { __scopeSelect, children, fragment } = props;
   if (!fragment) return null;
   return ReactDOM5.createPortal(
-    /* @__PURE__ */ jsx20(SelectContentProvider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx20(Collection6.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx20("div", { ref: forwardedRef, children }) }) }),
+    /* @__PURE__ */ jsx18(SelectContentProvider, { scope: __scopeSelect, children: /* @__PURE__ */ jsx18(Collection5.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx18("div", { ref: forwardedRef, children }) }) }),
     fragment
   );
 }, "SelectContentFragment"));
 var CONTENT_MARGIN = 10;
-var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME10);
+var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTENT_NAME8);
 var Slot3 = createSlot("SelectContent.RemoveScroll");
-var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
+var SelectContentImpl = /* @__PURE__ */ React42.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name33(function SelectContentImpl2(props, forwardedRef) {
+  /* @__PURE__ */ __name31(function SelectContentImpl2(props, forwardedRef) {
     const { __scopeSelect } = props;
     const {
       position = Position.ItemAligned,
@@ -9451,24 +8982,24 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
       //
       ...contentProps
     } = props;
-    const context = useSelectContext(CONTENT_NAME10, __scopeSelect);
-    const [content, setContent] = React44.useState(null);
-    const [viewport, setViewport] = React44.useState(null);
+    const context = useSelectContext(CONTENT_NAME8, __scopeSelect);
+    const [content, setContent] = React42.useState(null);
+    const [viewport, setViewport] = React42.useState(null);
     const composedRefs = useComposedRefs(forwardedRef, setContent);
-    const [selectedItem, setSelectedItem] = React44.useState(null);
-    const [selectedItemText, setSelectedItemText] = React44.useState(
+    const [selectedItem, setSelectedItem] = React42.useState(null);
+    const [selectedItemText, setSelectedItemText] = React42.useState(
       null
     );
     const getItems = useCollection5(__scopeSelect);
-    const [isPositioned, setIsPositioned] = React44.useState(false);
-    const firstValidItemFoundRef = React44.useRef(false);
-    const firstItemFoundRef = React44.useRef(false);
-    const firstItemTextFoundRef = React44.useRef(false);
-    React44.useEffect(() => {
+    const [isPositioned, setIsPositioned] = React42.useState(false);
+    const firstValidItemFoundRef = React42.useRef(false);
+    const firstItemFoundRef = React42.useRef(false);
+    const firstItemTextFoundRef = React42.useRef(false);
+    React42.useEffect(() => {
       if (content) return hideOthers(content);
     }, [content]);
     useFocusGuards();
-    const focusFirst5 = React44.useCallback(
+    const focusFirst5 = React42.useCallback(
       (candidates) => {
         const [firstItem, ...restItems] = getItems().map((item) => item.ref.current);
         const [lastItem] = restItems.slice(-1);
@@ -9484,26 +9015,26 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
       },
       [getItems, viewport]
     );
-    const focusSelectedItem = React44.useCallback(
+    const focusSelectedItem = React42.useCallback(
       () => focusFirst5([selectedItem, content]),
       [focusFirst5, selectedItem, content]
     );
-    React44.useEffect(() => {
+    React42.useEffect(() => {
       if (isPositioned) {
         focusSelectedItem();
       }
     }, [isPositioned, focusSelectedItem]);
     const { onOpenChange, triggerPointerDownPosRef } = context;
-    React44.useEffect(() => {
+    React42.useEffect(() => {
       if (content) {
         let pointerMoveDelta = { x: 0, y: 0 };
-        const handlePointerMove = /* @__PURE__ */ __name33((event) => {
+        const handlePointerMove = /* @__PURE__ */ __name31((event) => {
           pointerMoveDelta = {
             x: Math.abs(Math.round(event.pageX) - (triggerPointerDownPosRef.current?.x ?? 0)),
             y: Math.abs(Math.round(event.pageY) - (triggerPointerDownPosRef.current?.y ?? 0))
           };
         }, "handlePointerMove");
-        const handlePointerUp = /* @__PURE__ */ __name33((event) => {
+        const handlePointerUp = /* @__PURE__ */ __name31((event) => {
           if (pointerMoveDelta.x <= 10 && pointerMoveDelta.y <= 10) {
             event.preventDefault();
           } else {
@@ -9524,8 +9055,8 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
         };
       }
     }, [content, onOpenChange, triggerPointerDownPosRef]);
-    React44.useEffect(() => {
-      const close = /* @__PURE__ */ __name33(() => onOpenChange(false), "close");
+    React42.useEffect(() => {
+      const close = /* @__PURE__ */ __name31(() => onOpenChange(false), "close");
       window.addEventListener("blur", close);
       window.addEventListener("resize", close);
       return () => {
@@ -9541,7 +9072,7 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
         setTimeout(() => nextItem.ref.current?.focus());
       }
     });
-    const itemRefCallback = React44.useCallback(
+    const itemRefCallback = React42.useCallback(
       (node, value, disabled) => {
         const isFirstItem = !firstItemFoundRef.current;
         if (isFirstItem) firstItemFoundRef.current = true;
@@ -9556,8 +9087,8 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
       },
       [context.value]
     );
-    const handleItemLeave = React44.useCallback(() => content?.focus(), [content]);
-    const itemTextRefCallback = React44.useCallback(
+    const handleItemLeave = React42.useCallback(() => content?.focus(), [content]);
+    const itemTextRefCallback = React42.useCallback(
       (node, value, disabled) => {
         if (!node) return;
         const isFirstItem = !firstItemTextFoundRef.current;
@@ -9585,7 +9116,7 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
       hideWhenDetached,
       avoidCollisions
     } : {};
-    return /* @__PURE__ */ jsx20(
+    return /* @__PURE__ */ jsx18(
       SelectContentProvider,
       {
         scope: __scopeSelect,
@@ -9601,7 +9132,7 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
         position,
         isPositioned,
         searchRef,
-        children: /* @__PURE__ */ jsx20(Combination_default, { as: Slot3, allowPinchZoom: true, children: /* @__PURE__ */ jsx20(
+        children: /* @__PURE__ */ jsx18(Combination_default, { as: Slot3, allowPinchZoom: true, children: /* @__PURE__ */ jsx18(
           FocusScope,
           {
             asChild: true,
@@ -9613,7 +9144,7 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
               context.trigger?.focus({ preventScroll: true });
               event.preventDefault();
             }),
-            children: /* @__PURE__ */ jsx20(
+            children: /* @__PURE__ */ jsx18(
               DismissableLayer,
               {
                 asChild: true,
@@ -9622,7 +9153,7 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
                 onPointerDownOutside,
                 onFocusOutside: (event) => event.preventDefault(),
                 onDismiss: () => context.onOpenChange(false),
-                children: /* @__PURE__ */ jsx20(
+                children: /* @__PURE__ */ jsx18(
                   SelectPosition,
                   {
                     role: "listbox",
@@ -9671,24 +9202,24 @@ var SelectContentImpl = /* @__PURE__ */ React44.forwardRef(
     );
   }, "SelectContentImpl")
 );
-var SelectItemAlignedPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectItemAlignedPosition2(props, forwardedRef) {
+var SelectItemAlignedPosition = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name31(function SelectItemAlignedPosition2(props, forwardedRef) {
   const { __scopeSelect, onPlaced, ...popperProps } = props;
-  const context = useSelectContext(CONTENT_NAME10, __scopeSelect);
-  const contentContext = useSelectContentContext(CONTENT_NAME10, __scopeSelect);
-  const [contentWrapper, setContentWrapper] = React44.useState(null);
-  const [content, setContent] = React44.useState(null);
+  const context = useSelectContext(CONTENT_NAME8, __scopeSelect);
+  const contentContext = useSelectContentContext(CONTENT_NAME8, __scopeSelect);
+  const [contentWrapper, setContentWrapper] = React42.useState(null);
+  const [content, setContent] = React42.useState(null);
   const composedRefs = useComposedRefs(forwardedRef, setContent);
   const getItems = useCollection5(__scopeSelect);
-  const shouldExpandOnScrollRef = React44.useRef(false);
-  const shouldRepositionRef = React44.useRef(true);
+  const shouldExpandOnScrollRef = React42.useRef(false);
+  const shouldRepositionRef = React42.useRef(true);
   const { viewport, selectedItem, selectedItemText, focusSelectedItem } = contentContext;
-  const position = React44.useCallback(() => {
+  const position = React42.useCallback(() => {
     if (context.trigger && context.valueNode && contentWrapper && content && viewport && selectedItem && selectedItemText) {
       const triggerRect = context.trigger.getBoundingClientRect();
       const contentRect = content.getBoundingClientRect();
       const valueNodeRect = context.valueNode.getBoundingClientRect();
       const itemTextRect = selectedItemText.getBoundingClientRect();
-      if (context.dir !== Direction7.RTL) {
+      if (context.dir !== Direction6.RTL) {
         const itemTextOffset = itemTextRect.left - contentRect.left;
         const left = valueNodeRect.left - itemTextOffset;
         const leftDelta = triggerRect.left - left;
@@ -9782,11 +9313,11 @@ var SelectItemAlignedPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ 
     onPlaced
   ]);
   useLayoutEffect2(() => position(), [position]);
-  const [contentZIndex, setContentZIndex] = React44.useState();
+  const [contentZIndex, setContentZIndex] = React42.useState();
   useLayoutEffect2(() => {
     if (content) setContentZIndex(window.getComputedStyle(content).zIndex);
   }, [content]);
-  const handleScrollButtonChange = React44.useCallback(
+  const handleScrollButtonChange = React42.useCallback(
     (node) => {
       if (node && shouldRepositionRef.current === true) {
         position();
@@ -9796,14 +9327,14 @@ var SelectItemAlignedPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ 
     },
     [position, focusSelectedItem]
   );
-  return /* @__PURE__ */ jsx20(
+  return /* @__PURE__ */ jsx18(
     SelectViewportProvider,
     {
       scope: __scopeSelect,
       contentWrapper,
       shouldExpandOnScrollRef,
       onScrollButtonChange: handleScrollButtonChange,
-      children: /* @__PURE__ */ jsx20(
+      children: /* @__PURE__ */ jsx18(
         "div",
         {
           ref: setContentWrapper,
@@ -9813,7 +9344,7 @@ var SelectItemAlignedPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ 
             position: "fixed",
             zIndex: contentZIndex
           },
-          children: /* @__PURE__ */ jsx20(
+          children: /* @__PURE__ */ jsx18(
             Primitive.div,
             {
               ...popperProps,
@@ -9833,7 +9364,7 @@ var SelectItemAlignedPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ 
     }
   );
 }, "SelectItemAlignedPosition"));
-var SelectPopperPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectPopperPosition2(props, forwardedRef) {
+var SelectPopperPosition = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name31(function SelectPopperPosition2(props, forwardedRef) {
   const {
     __scopeSelect,
     align = "start",
@@ -9841,7 +9372,7 @@ var SelectPopperPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __
     ...popperProps
   } = props;
   const popperScope = usePopperScope4(__scopeSelect);
-  return /* @__PURE__ */ jsx20(
+  return /* @__PURE__ */ jsx18(
     PopperContent,
     {
       ...popperScope,
@@ -9865,17 +9396,17 @@ var SelectPopperPosition = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __
     }
   );
 }, "SelectPopperPosition"));
-var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME10, {});
+var [SelectViewportProvider, useSelectViewportContext] = createSelectContext(CONTENT_NAME8, {});
 var VIEWPORT_NAME2 = "SelectViewport";
-var SelectViewport = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectViewport2(props, forwardedRef) {
+var SelectViewport = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectViewport2(props, forwardedRef) {
     const { __scopeSelect, nonce, ...viewportProps } = props;
     const contentContext = useSelectContentContext(VIEWPORT_NAME2, __scopeSelect);
     const viewportContext = useSelectViewportContext(VIEWPORT_NAME2, __scopeSelect);
     const composedRefs = useComposedRefs(forwardedRef, contentContext.onViewportChange);
-    const prevScrollTopRef = React44.useRef(0);
+    const prevScrollTopRef = React42.useRef(0);
     return /* @__PURE__ */ jsxs3(Fragment22, { children: [
-      /* @__PURE__ */ jsx20(
+      /* @__PURE__ */ jsx18(
         "style",
         {
           dangerouslySetInnerHTML: {
@@ -9884,7 +9415,7 @@ var SelectViewport = /* @__PURE__ */ React44.forwardRef(
           nonce
         }
       ),
-      /* @__PURE__ */ jsx20(Collection6.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx20(
+      /* @__PURE__ */ jsx18(Collection5.Slot, { scope: __scopeSelect, children: /* @__PURE__ */ jsx18(
         Primitive.div,
         {
           "data-radix-select-viewport": "",
@@ -9935,25 +9466,25 @@ var SelectViewport = /* @__PURE__ */ React44.forwardRef(
 );
 var GROUP_NAME2 = "SelectGroup";
 var [SelectGroupContextProvider, useSelectGroupContext] = createSelectContext(GROUP_NAME2);
-var SelectGroup = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectGroup2(props, forwardedRef) {
+var SelectGroup = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectGroup2(props, forwardedRef) {
     const { __scopeSelect, ...groupProps } = props;
     const groupId = useId();
-    return /* @__PURE__ */ jsx20(SelectGroupContextProvider, { scope: __scopeSelect, id: groupId, children: /* @__PURE__ */ jsx20(Primitive.div, { role: "group", "aria-labelledby": groupId, ...groupProps, ref: forwardedRef }) });
+    return /* @__PURE__ */ jsx18(SelectGroupContextProvider, { scope: __scopeSelect, id: groupId, children: /* @__PURE__ */ jsx18(Primitive.div, { role: "group", "aria-labelledby": groupId, ...groupProps, ref: forwardedRef }) });
   }, "SelectGroup")
 );
 var LABEL_NAME = "SelectLabel";
-var SelectLabel = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectLabel2(props, forwardedRef) {
+var SelectLabel = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectLabel2(props, forwardedRef) {
     const { __scopeSelect, ...labelProps } = props;
     const groupContext = useSelectGroupContext(LABEL_NAME, __scopeSelect);
-    return /* @__PURE__ */ jsx20(Primitive.div, { id: groupContext.id, ...labelProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx18(Primitive.div, { id: groupContext.id, ...labelProps, ref: forwardedRef });
   }, "SelectLabel")
 );
-var ITEM_NAME5 = "SelectItem";
-var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME5);
-var SelectItem = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectItem2(props, forwardedRef) {
+var ITEM_NAME4 = "SelectItem";
+var [SelectItemContextProvider, useSelectItemContext] = createSelectContext(ITEM_NAME4);
+var SelectItem = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectItem2(props, forwardedRef) {
     const {
       __scopeSelect,
       value,
@@ -9961,24 +9492,24 @@ var SelectItem = /* @__PURE__ */ React44.forwardRef(
       textValue: textValueProp,
       ...itemProps
     } = props;
-    const context = useSelectContext(ITEM_NAME5, __scopeSelect);
-    const contentContext = useSelectContentContext(ITEM_NAME5, __scopeSelect);
+    const context = useSelectContext(ITEM_NAME4, __scopeSelect);
+    const contentContext = useSelectContentContext(ITEM_NAME4, __scopeSelect);
     const isSelected = context.value === value;
-    const [textValue, setTextValue] = React44.useState(textValueProp ?? "");
-    const [isFocused, setIsFocused] = React44.useState(false);
+    const [textValue, setTextValue] = React42.useState(textValueProp ?? "");
+    const [isFocused, setIsFocused] = React42.useState(false);
     const handleItemRefCallback = useCallbackRef(
       (node) => contentContext.itemRefCallback?.(node, value, disabled)
     );
     const composedRefs = useComposedRefs(forwardedRef, handleItemRefCallback);
     const textId = useId();
-    const pointerTypeRef = React44.useRef("touch");
+    const pointerTypeRef = React42.useRef("touch");
     function handleSelect(event) {
       context.hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
       context.onUserSelect(value);
       context.onOpenChange(false);
     }
-    __name33(handleSelect, "handleSelect");
-    return /* @__PURE__ */ jsx20(
+    __name31(handleSelect, "handleSelect");
+    return /* @__PURE__ */ jsx18(
       SelectItemContextProvider,
       {
         scope: __scopeSelect,
@@ -9986,17 +9517,17 @@ var SelectItem = /* @__PURE__ */ React44.forwardRef(
         disabled,
         textId,
         isSelected,
-        onItemTextChange: React44.useCallback((node) => {
+        onItemTextChange: React42.useCallback((node) => {
           setTextValue((prevTextValue) => prevTextValue || (node?.textContent ?? "").trim());
         }, []),
-        children: /* @__PURE__ */ jsx20(
-          Collection6.ItemSlot,
+        children: /* @__PURE__ */ jsx18(
+          Collection5.ItemSlot,
           {
             scope: __scopeSelect,
             value,
             disabled,
             textValue,
-            children: /* @__PURE__ */ jsx20(
+            children: /* @__PURE__ */ jsx18(
               Primitive.div,
               {
                 role: "option",
@@ -10067,14 +9598,14 @@ var SelectItem = /* @__PURE__ */ React44.forwardRef(
   }, "SelectItem")
 );
 var ITEM_TEXT_NAME = "SelectItemText";
-var SelectItemText = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectItemText2(props, forwardedRef) {
+var SelectItemText = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectItemText2(props, forwardedRef) {
     const { __scopeSelect, className, style, ...itemTextProps } = props;
     const context = useSelectContext(ITEM_TEXT_NAME, __scopeSelect);
     const contentContext = useSelectContentContext(ITEM_TEXT_NAME, __scopeSelect);
     const itemContext = useSelectItemContext(ITEM_TEXT_NAME, __scopeSelect);
     const nativeOptionsContext = useSelectNativeOptionsContext(ITEM_TEXT_NAME, __scopeSelect);
-    const [itemTextNode, setItemTextNode] = React44.useState(null);
+    const [itemTextNode, setItemTextNode] = React42.useState(null);
     const handleItemTextRefCallback = useCallbackRef(
       (node) => contentContext.itemTextRefCallback?.(node, itemContext.value, itemContext.disabled)
     );
@@ -10085,8 +9616,8 @@ var SelectItemText = /* @__PURE__ */ React44.forwardRef(
       handleItemTextRefCallback
     );
     const textContent = itemTextNode?.textContent;
-    const nativeOption = React44.useMemo(
-      () => /* @__PURE__ */ jsx20("option", { value: itemContext.value, disabled: itemContext.disabled, children: textContent }, itemContext.value),
+    const nativeOption = React42.useMemo(
+      () => /* @__PURE__ */ jsx18("option", { value: itemContext.value, disabled: itemContext.disabled, children: textContent }, itemContext.value),
       [itemContext.disabled, itemContext.value, textContent]
     );
     const { onNativeOptionAdd, onNativeOptionRemove } = nativeOptionsContext;
@@ -10095,25 +9626,25 @@ var SelectItemText = /* @__PURE__ */ React44.forwardRef(
       return () => onNativeOptionRemove(nativeOption);
     }, [onNativeOptionAdd, onNativeOptionRemove, nativeOption]);
     return /* @__PURE__ */ jsxs3(Fragment22, { children: [
-      /* @__PURE__ */ jsx20(Primitive.span, { id: itemContext.textId, ...itemTextProps, ref: composedRefs }),
+      /* @__PURE__ */ jsx18(Primitive.span, { id: itemContext.textId, ...itemTextProps, ref: composedRefs }),
       itemContext.isSelected && context.valueNode && !context.valueNodeHasChildren && !shouldShowPlaceholder(context.value) ? ReactDOM5.createPortal(itemTextProps.children, context.valueNode) : null
     ] });
   }, "SelectItemText")
 );
 var ITEM_INDICATOR_NAME2 = "SelectItemIndicator";
-var SelectItemIndicator = /* @__PURE__ */ React44.forwardRef(
+var SelectItemIndicator = /* @__PURE__ */ React42.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name33(function SelectItemIndicator2(props, forwardedRef) {
+  /* @__PURE__ */ __name31(function SelectItemIndicator2(props, forwardedRef) {
     const { __scopeSelect, ...itemIndicatorProps } = props;
     const itemContext = useSelectItemContext(ITEM_INDICATOR_NAME2, __scopeSelect);
-    return itemContext.isSelected ? /* @__PURE__ */ jsx20(Primitive.span, { "aria-hidden": true, ...itemIndicatorProps, ref: forwardedRef }) : null;
+    return itemContext.isSelected ? /* @__PURE__ */ jsx18(Primitive.span, { "aria-hidden": true, ...itemIndicatorProps, ref: forwardedRef }) : null;
   }, "SelectItemIndicator")
 );
 var SCROLL_UP_BUTTON_NAME = "SelectScrollUpButton";
-var SelectScrollUpButton = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectScrollUpButton2(props, forwardedRef) {
+var SelectScrollUpButton = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name31(function SelectScrollUpButton2(props, forwardedRef) {
   const contentContext = useSelectContentContext(SCROLL_UP_BUTTON_NAME, props.__scopeSelect);
   const viewportContext = useSelectViewportContext(SCROLL_UP_BUTTON_NAME, props.__scopeSelect);
-  const [canScrollUp, setCanScrollUp] = React44.useState(false);
+  const [canScrollUp, setCanScrollUp] = React42.useState(false);
   const composedRefs = useComposedRefs(forwardedRef, viewportContext.onScrollButtonChange);
   useLayoutEffect2(() => {
     if (contentContext.viewport && contentContext.isPositioned) {
@@ -10122,14 +9653,14 @@ var SelectScrollUpButton = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __
         setCanScrollUp(canScrollUp2);
       };
       var handleScroll2 = handleScroll22;
-      __name33(handleScroll22, "handleScroll");
+      __name31(handleScroll22, "handleScroll");
       const viewport = contentContext.viewport;
       handleScroll22();
       viewport.addEventListener("scroll", handleScroll22);
       return () => viewport.removeEventListener("scroll", handleScroll22);
     }
   }, [contentContext.viewport, contentContext.isPositioned]);
-  return canScrollUp ? /* @__PURE__ */ jsx20(
+  return canScrollUp ? /* @__PURE__ */ jsx18(
     SelectScrollButtonImpl,
     {
       ...props,
@@ -10144,10 +9675,10 @@ var SelectScrollUpButton = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __
   ) : null;
 }, "SelectScrollUpButton"));
 var SCROLL_DOWN_BUTTON_NAME = "SelectScrollDownButton";
-var SelectScrollDownButton = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectScrollDownButton2(props, forwardedRef) {
+var SelectScrollDownButton = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name31(function SelectScrollDownButton2(props, forwardedRef) {
   const contentContext = useSelectContentContext(SCROLL_DOWN_BUTTON_NAME, props.__scopeSelect);
   const viewportContext = useSelectViewportContext(SCROLL_DOWN_BUTTON_NAME, props.__scopeSelect);
-  const [canScrollDown, setCanScrollDown] = React44.useState(false);
+  const [canScrollDown, setCanScrollDown] = React42.useState(false);
   const composedRefs = useComposedRefs(forwardedRef, viewportContext.onScrollButtonChange);
   useLayoutEffect2(() => {
     if (contentContext.viewport && contentContext.isPositioned) {
@@ -10157,14 +9688,14 @@ var SelectScrollDownButton = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ 
         setCanScrollDown(canScrollDown2);
       };
       var handleScroll2 = handleScroll22;
-      __name33(handleScroll22, "handleScroll");
+      __name31(handleScroll22, "handleScroll");
       const viewport = contentContext.viewport;
       handleScroll22();
       viewport.addEventListener("scroll", handleScroll22);
       return () => viewport.removeEventListener("scroll", handleScroll22);
     }
   }, [contentContext.viewport, contentContext.isPositioned]);
-  return canScrollDown ? /* @__PURE__ */ jsx20(
+  return canScrollDown ? /* @__PURE__ */ jsx18(
     SelectScrollButtonImpl,
     {
       ...props,
@@ -10178,25 +9709,25 @@ var SelectScrollDownButton = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ 
     }
   ) : null;
 }, "SelectScrollDownButton"));
-var SelectScrollButtonImpl = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ __name33(function SelectScrollButtonImpl2(props, forwardedRef) {
+var SelectScrollButtonImpl = /* @__PURE__ */ React42.forwardRef(/* @__PURE__ */ __name31(function SelectScrollButtonImpl2(props, forwardedRef) {
   const { __scopeSelect, onAutoScroll, ...scrollIndicatorProps } = props;
   const contentContext = useSelectContentContext("SelectScrollButton", __scopeSelect);
-  const autoScrollTimerRef = React44.useRef(null);
+  const autoScrollTimerRef = React42.useRef(null);
   const getItems = useCollection5(__scopeSelect);
-  const clearAutoScrollTimer = React44.useCallback(() => {
+  const clearAutoScrollTimer = React42.useCallback(() => {
     if (autoScrollTimerRef.current !== null) {
       window.clearInterval(autoScrollTimerRef.current);
       autoScrollTimerRef.current = null;
     }
   }, []);
-  React44.useEffect(() => {
+  React42.useEffect(() => {
     return () => clearAutoScrollTimer();
   }, [clearAutoScrollTimer]);
   useLayoutEffect2(() => {
     const activeItem = getItems().find((item) => item.ref.current === document.activeElement);
     activeItem?.ref.current?.scrollIntoView({ block: "nearest" });
   }, [getItems]);
-  return /* @__PURE__ */ jsx20(
+  return /* @__PURE__ */ jsx18(
     Primitive.div,
     {
       "aria-hidden": true,
@@ -10220,39 +9751,39 @@ var SelectScrollButtonImpl = /* @__PURE__ */ React44.forwardRef(/* @__PURE__ */ 
     }
   );
 }, "SelectScrollButtonImpl"));
-var SelectSeparator = /* @__PURE__ */ React44.forwardRef(
+var SelectSeparator = /* @__PURE__ */ React42.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name33(function SelectSeparator2(props, forwardedRef) {
+  /* @__PURE__ */ __name31(function SelectSeparator2(props, forwardedRef) {
     const { __scopeSelect, ...separatorProps } = props;
-    return /* @__PURE__ */ jsx20(Primitive.div, { "aria-hidden": true, ...separatorProps, ref: forwardedRef });
+    return /* @__PURE__ */ jsx18(Primitive.div, { "aria-hidden": true, ...separatorProps, ref: forwardedRef });
   }, "SelectSeparator")
 );
 var ARROW_NAME2 = "SelectArrow";
-var SelectArrow = /* @__PURE__ */ React44.forwardRef(
-  /* @__PURE__ */ __name33(function SelectArrow2(props, forwardedRef) {
+var SelectArrow = /* @__PURE__ */ React42.forwardRef(
+  /* @__PURE__ */ __name31(function SelectArrow2(props, forwardedRef) {
     const { __scopeSelect, ...arrowProps } = props;
     const popperScope = usePopperScope4(__scopeSelect);
     const contentContext = useSelectContentContext(ARROW_NAME2, __scopeSelect);
-    return contentContext.position === Position.Popper ? /* @__PURE__ */ jsx20(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef }) : null;
+    return contentContext.position === Position.Popper ? /* @__PURE__ */ jsx18(PopperArrow, { ...popperScope, ...arrowProps, ref: forwardedRef }) : null;
   }, "SelectArrow")
 );
 var BUBBLE_INPUT_NAME = "SelectBubbleInput";
-var SelectBubbleInput = /* @__PURE__ */ React44.forwardRef(
+var SelectBubbleInput = /* @__PURE__ */ React42.forwardRef(
   // blank line to reduce diff noise
-  /* @__PURE__ */ __name33(function SelectBubbleInput2({ __scopeSelect, ...props }, forwardedRef) {
+  /* @__PURE__ */ __name31(function SelectBubbleInput2({ __scopeSelect, ...props }, forwardedRef) {
     const context = useSelectContext(BUBBLE_INPUT_NAME, __scopeSelect);
     const { value, onValueChange, required, disabled, name, autoComplete, form, userSelection } = context;
     const { nativeOptions, nativeSelectKey } = context;
-    const ref = React44.useRef(null);
+    const ref = React42.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, ref);
     const selectValue = value ?? "";
-    const prevValueRef = React44.useRef(selectValue);
-    const handledUserSelectionRef = React44.useRef(userSelection);
-    const isDispatchingUserSelectionRef = React44.useRef(false);
+    const prevValueRef = React42.useRef(selectValue);
+    const handledUserSelectionRef = React42.useRef(userSelection);
+    const isDispatchingUserSelectionRef = React42.useRef(false);
     const hasEmptyValueOption = Array.from(nativeOptions).some(
       (option) => (option.props.value ?? "") === ""
     );
-    React44.useEffect(() => {
+    React42.useEffect(() => {
       const select = ref.current;
       if (!select) return;
       const selectProto = window.HTMLSelectElement.prototype;
@@ -10304,7 +9835,7 @@ var SelectBubbleInput = /* @__PURE__ */ React44.forwardRef(
         ref: composedRefs,
         defaultValue: selectValue,
         children: [
-          shouldShowPlaceholder(value) && !hasEmptyValueOption ? /* @__PURE__ */ jsx20("option", { value: "" }) : null,
+          shouldShowPlaceholder(value) && !hasEmptyValueOption ? /* @__PURE__ */ jsx18("option", { value: "" }) : null,
           Array.from(nativeOptions)
         ]
       },
@@ -10315,16 +9846,16 @@ var SelectBubbleInput = /* @__PURE__ */ React44.forwardRef(
 function isFunction2(value) {
   return typeof value === "function";
 }
-__name33(isFunction2, "isFunction");
+__name31(isFunction2, "isFunction");
 function shouldShowPlaceholder(value) {
   return value === "" || value === void 0;
 }
-__name33(shouldShowPlaceholder, "shouldShowPlaceholder");
+__name31(shouldShowPlaceholder, "shouldShowPlaceholder");
 function useTypeaheadSearch(onSearchChange) {
   const handleSearchChange = useCallbackRef(onSearchChange);
-  const searchRef = React44.useRef("");
-  const timerRef = React44.useRef(0);
-  const handleTypeaheadSearch = React44.useCallback(
+  const searchRef = React42.useRef("");
+  const timerRef = React42.useRef(0);
+  const handleTypeaheadSearch = React42.useCallback(
     (key) => {
       const search = searchRef.current + key;
       handleSearchChange(search);
@@ -10333,21 +9864,21 @@ function useTypeaheadSearch(onSearchChange) {
         window.clearTimeout(timerRef.current);
         if (value !== "") timerRef.current = window.setTimeout(() => updateSearch(""), 1e3);
       }
-      __name33(updateSearch, "updateSearch");
+      __name31(updateSearch, "updateSearch");
       updateSearch(search);
     },
     [handleSearchChange]
   );
-  const resetTypeahead = React44.useCallback(() => {
+  const resetTypeahead = React42.useCallback(() => {
     searchRef.current = "";
     window.clearTimeout(timerRef.current);
   }, []);
-  React44.useEffect(() => {
+  React42.useEffect(() => {
     return () => window.clearTimeout(timerRef.current);
   }, []);
   return [searchRef, handleTypeaheadSearch, resetTypeahead];
 }
-__name33(useTypeaheadSearch, "useTypeaheadSearch");
+__name31(useTypeaheadSearch, "useTypeaheadSearch");
 function findNextItem(items, search, currentItem) {
   const isRepeated = search.length > 1 && Array.from(search).every((char) => char === search[0]);
   const normalizedSearch = isRepeated ? search[0] : search;
@@ -10360,19 +9891,18 @@ function findNextItem(items, search, currentItem) {
   );
   return nextItem !== currentItem ? nextItem : void 0;
 }
-__name33(findNextItem, "findNextItem");
+__name31(findNextItem, "findNextItem");
 function wrapArray4(array, startIndex) {
   return array.map((_, index2) => array[(startIndex + index2) % array.length]);
 }
-__name33(wrapArray4, "wrapArray");
+__name31(wrapArray4, "wrapArray");
 
 export {
   dist_exports,
-  dist_exports2,
+  dist_exports5 as dist_exports2,
   dist_exports7 as dist_exports3,
-  dist_exports9 as dist_exports4,
-  dist_exports10 as dist_exports5,
+  dist_exports8 as dist_exports4,
+  dist_exports9 as dist_exports5,
   dist_exports11 as dist_exports6,
-  dist_exports13 as dist_exports7,
-  dist_exports14 as dist_exports8
+  dist_exports12 as dist_exports7
 };

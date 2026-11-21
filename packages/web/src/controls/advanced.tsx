@@ -3,13 +3,13 @@ import {
   useContext, useId, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode,
 } from "react";
 import {
-  Accordion as A,
   ContextMenu as C,
   Menubar as M,
   NavigationMenu as N,
   Popover as P,
   HoverCard as H,
 } from "radix-ui";
+import { Accordion as SDKAccordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionPanel } from "@ui-sdk/react/accordion";
 import { DayPicker } from "react-day-picker";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import { Icon, type IconName, type Option } from "../foundation/foundation.js";
@@ -33,31 +33,41 @@ export function Accordion({
   }[];
   multiple?: boolean;
 }) {
-  const children = items.map((i) => (
-    <A.Item key={i.id} value={i.id} disabled={i.disabled}>
-      <A.Header>
-        <A.Trigger>
-          {i.title}
-          <Icon name="down" />
-        </A.Trigger>
-      </A.Header>
-      <A.Content className="yg-accordion-content">{i.content}</A.Content>
-    </A.Item>
-  ));
-  return multiple ? (
-    <A.Root type="multiple" className="yg-accordion" aria-label={label}>
-      {children}
-    </A.Root>
-  ) : (
-    <A.Root
-      type="single"
-      collapsible
-      className="yg-accordion"
-      aria-label={label}
-    >
-      {children}
-    </A.Root>
-  );
+  const [openItems, setOpenItems] = useState<string[]>([]);
+  return <SDKAccordion multiple={multiple} collapsible className="yg-accordion" aria-label={label}
+    value={openItems} onValueChange={(next, details) => {
+      if (next.some((id) => !openItems.includes(id) && !items.some((item) => item.id === id && !item.disabled))) {
+        details.cancel();
+        return;
+      }
+      setOpenItems(next);
+    }}
+    onKeyDownCapture={(event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const current = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-yg-accordion-id]");
+      if (current?.closest(".yg-accordion") !== event.currentTarget) return;
+      const enabled = items.filter((item) => !item.disabled);
+      const index = enabled.findIndex((item) => item.id === current?.dataset.ygAccordionId);
+      if (index < 0) return;
+      const next = ({ ArrowDown: (index + 1) % enabled.length,
+        ArrowUp: (index + enabled.length - 1) % enabled.length,
+        Home: 0, End: enabled.length - 1 } as Record<string, number | undefined>)[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      [...event.currentTarget.querySelectorAll<HTMLButtonElement>("button[data-yg-accordion-id]")]
+        .find((button) => button.dataset.ygAccordionId === enabled[next].id)?.focus();
+    }}>
+    {items.map((item) => <AccordionItem key={item.id} value={item.id} disabled={item.disabled}>
+      <AccordionHeader><AccordionTrigger data-yg-accordion-id={item.id}
+        render={(props, state) => <button {...props} disabled={state.disabled} data-state={state.open ? "open" : "closed"} />}>
+        {item.title}<Icon name="down" />
+      </AccordionTrigger></AccordionHeader>
+      <AccordionPanel className="yg-accordion-content"
+        render={(props, state) => <div {...props} data-state={state.open ? "open" : "closed"} />}>
+        {(state) => state.open ? item.content : null}
+      </AccordionPanel>
+    </AccordionItem>)}
+  </SDKAccordion>;
 }
 type CommandProps = {
   label: string;
