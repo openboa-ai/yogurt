@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { advanceSprings, playSprings, snap, spring } from "../foundation/spring-motion.js";
+import { Textarea } from "../controls/forms.js";
 
 export function StreamingReply({ value, active = false }: { value: string; active?: boolean }) {
   const surface = useRef<HTMLDivElement>(null);
@@ -57,50 +58,11 @@ export function StreamingReply({ value, active = false }: { value: string; activ
   </div>;
 }
 
-function SuggestionLetters({ text, interval, cap }: { text: string; interval: number; cap: number }) {
-  return Array.from(text.matchAll(/\s+|\S+/gu), match => {
-    const offset = match.index;
-    return /^\s/u.test(match[0])
-      ? <span key={offset}>{match[0]}</span>
-      : <span className="yg-ghost-word" key={offset}>{Array.from(match[0], (letter, i) =>
-          <span key={i} style={{animationDelay: `${Math.min((offset + i) * interval, cap)}ms`}}>{letter}</span>)}</span>;
-  });
-}
-
 export function GhostSuggestion({ value, suggestion, onChange }: {
   value: string; suggestion: string; onChange: (value: string) => void;
 }) {
-  const id = useId();
-  const [atEnd, setAtEnd] = useState(true);
-  const [accepted, setAccepted] = useState<{prefix: string; suffix: string} | null>(null);
-
-  const suffix = value && suggestion.startsWith(value) ? suggestion.slice(value.length) : "";
-  const show = atEnd && !!suffix;
-  const rolling = accepted && accepted.prefix + accepted.suffix === value;
-  useEffect(() => {
-    if (!accepted) return;
-    const timer = setTimeout(() => setAccepted(null), Math.min(400, Array.from(accepted.suffix).length * 16) + 420);
-    return () => clearTimeout(timer);
-  }, [accepted]);
-  return <div className="yg-ghost-field">
-    <div className="yg-ghost-head"><label htmlFor={id}>Your message</label>{show && <span className="yg-ghost-key" aria-hidden="true">Tab ↹</span>}</div>
-    <div className="yg-ghost-input">
-      <div className="yg-ghost-mirror" aria-hidden="true" data-accepted={rolling || undefined}>
-        <span>{rolling ? accepted.prefix : value}</span>
-        {show && <span className="yg-ghost-suffix"><SuggestionLetters text={suffix} interval={8} cap={200} /></span>}
-        {rolling && <span className="yg-ghost-accepted"><SuggestionLetters text={accepted.suffix} interval={16} cap={400} /></span>}
-      </div>
-      <textarea rows={2} id={id} value={value} autoComplete="off" aria-describedby={show ? `${id}-hint` : undefined} data-accepted={rolling || undefined}
-        onChange={(event) => { setAccepted(null); onChange(event.currentTarget.value); setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length); }}
-        onSelect={(event) => setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length)}
-        onKeyDown={(event) => {
-          if (show && (event.key === "Tab" || event.key === "ArrowRight") && !event.nativeEvent.isComposing) {
-            event.preventDefault(); setAccepted({prefix: value, suffix}); onChange(suggestion);
-          }
-        }} />
-    </div>
-    <span className="yg-ghost-hint" id={`${id}-hint`} aria-hidden={!show} data-visible={show}>Press Tab or right arrow to accept</span>
-  </div>;
+  return <div className="yg-ghost-field"><Textarea label="Your message" rows={2} value={value}
+    autoComplete="off" suggestion={suggestion} onChange={event => onChange(event.currentTarget.value)} /></div>;
 }
 
 export function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }: {

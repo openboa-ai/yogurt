@@ -130,10 +130,7 @@ const catalog = [
         await root
           .getByRole("button", { name: "Where are archived reviews?" })
           .click();
-        assert.equal(
-          await root.getByText("People with access to Sourdough.").count(),
-          0,
-        );
+        await root.getByText("People with access to Sourdough.").waitFor({ state: "detached" });
         root = await show("slider");
         let slider = root.getByRole("slider");
         await slider.focus();

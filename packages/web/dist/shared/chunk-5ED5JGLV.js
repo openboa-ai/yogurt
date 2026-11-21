@@ -19,6 +19,7 @@ import {
 import {
   useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState
 } from "react";
@@ -152,11 +153,104 @@ function ToastStack({
   onDismiss,
   label = "Notifications"
 }) {
-  return /* @__PURE__ */ jsx("section", { className: "yg-stack", "aria-label": label, children: items.map((item) => /* @__PURE__ */ jsx(
-    Toast,
+  const [entries, setEntries] = useState(() => items.map((item) => ({ ...item, exiting: false })));
+  const currentIds = useRef(new Set(items.map((item) => item.id)));
+  const currentEntries = useRef(entries);
+  const root = useRef(null);
+  const timers = useRef(/* @__PURE__ */ new Map());
+  useLayoutEffect(() => {
+    currentIds.current = new Set(items.map((item) => item.id));
+    currentEntries.current = entries;
+  }, [items, entries]);
+  const finish = (id, expected) => {
+    if (currentEntries.current.find((entry) => entry.id === id) !== expected) return;
+    const timer = timers.current.get(id);
+    if (timer) clearTimeout(timer);
+    timers.current.delete(id);
+    if (!currentIds.current.has(id)) setEntries((previous) => previous.filter((entry) => entry.id !== id || !entry.exiting));
+  };
+  useLayoutEffect(() => {
+    const ids = new Set(items.map((item) => item.id));
+    for (const id of ids) {
+      const timer = timers.current.get(id);
+      if (timer) {
+        clearTimeout(timer);
+        timers.current.delete(id);
+      }
+    }
+    const active = items.map((item) => {
+      const existing = entries.find((entry) => entry.id === item.id && !entry.exiting && entry.message === item.message);
+      return existing ?? { ...item, exiting: false };
+    });
+    const leaving = entries.filter((entry) => !ids.has(entry.id)).map((entry) => entry.exiting ? entry : { ...entry, exiting: true });
+    const next = [...active, ...leaving];
+    if (next.length === entries.length && next.every((entry, index) => entry.id === entries[index].id && entry.message === entries[index].message && entry.exiting === entries[index].exiting)) return;
+    const focus = root.current?.ownerDocument.activeElement;
+    const focusedEntry = focus instanceof Element ? focus.closest("[data-yg-toast-id]") : null;
+    if (focusedEntry && root.current?.contains(focusedEntry) && !ids.has(focusedEntry.dataset.ygToastId ?? "")) {
+      const targets = [...root.current.querySelectorAll("[data-yg-toast-id]")];
+      const replacement = targets.find((node) => ids.has(node.dataset.ygToastId ?? "") && !node.closest("[inert]"))?.querySelector("button:not(:disabled)");
+      replacement?.focus();
+      if (!replacement || root.current.ownerDocument.activeElement !== replacement) root.current.focus();
+    }
+    setEntries(next);
+  }, [items, entries]);
+  useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const settle = () => {
+      if (!media.matches) return;
+      for (const timer of timers.current.values()) clearTimeout(timer);
+      timers.current.clear();
+      setEntries((previous) => previous.filter((entry) => !entry.exiting || currentIds.current.has(entry.id)));
+    };
+    media.addEventListener("change", settle);
+    settle();
+    return () => {
+      media.removeEventListener("change", settle);
+      for (const timer of timers.current.values()) clearTimeout(timer);
+      timers.current.clear();
+    };
+  }, []);
+  useEffect(() => {
+    const exiting = new Set(entries.filter((entry) => entry.exiting).map((entry) => entry.id));
+    for (const [id, timer] of timers.current) {
+      if (!exiting.has(id)) {
+        clearTimeout(timer);
+        timers.current.delete(id);
+      }
+    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (exiting.size) setEntries((previous) => previous.filter((entry) => !entry.exiting || currentIds.current.has(entry.id)));
+      return;
+    }
+    for (const entry of entries.filter((item) => item.exiting)) {
+      if (timers.current.has(entry.id)) continue;
+      const element = [...root.current?.querySelectorAll("[data-yg-toast-id]") ?? []].find((node) => node.dataset.ygToastId === entry.id);
+      const style = element && getComputedStyle(element);
+      const milliseconds = (value) => value.trim().endsWith("ms") ? parseFloat(value) : parseFloat(value) * 1e3;
+      const durations = style?.animationDuration.split(",").map(milliseconds) ?? [0];
+      const delays = style?.animationDelay.split(",").map(milliseconds) ?? [0];
+      const iterations = style?.animationIterationCount.split(",").map((value) => Number(value.trim())) ?? [1];
+      const total = durations.reduce((longest, duration, index) => {
+        const count = iterations[index % iterations.length];
+        return Number.isFinite(count) ? Math.max(longest, duration * count + delays[index % delays.length]) : Infinity;
+      }, 0);
+      if (Number.isFinite(total)) timers.current.set(entry.id, setTimeout(() => finish(entry.id, entry), Math.max(0, total) + 100));
+    }
+  }, [entries]);
+  return /* @__PURE__ */ jsx("section", { ref: root, className: "yg-stack", "aria-label": label, tabIndex: -1, children: entries.map((item) => /* @__PURE__ */ jsx(
+    "div",
     {
-      message: item.message,
-      onDismiss: () => onDismiss(item.id)
+      "data-yg-toast-id": item.id,
+      "data-exiting": item.exiting || void 0,
+      "aria-hidden": item.exiting || void 0,
+      inert: item.exiting || void 0,
+      onAnimationEnd: (event) => {
+        if (event.target === event.currentTarget && item.exiting) finish(item.id, item);
+      },
+      children: /* @__PURE__ */ jsx(Toast, { message: item.message, onDismiss: () => {
+        if (!item.exiting) onDismiss(item.id);
+      } })
     },
     item.id
   )) });

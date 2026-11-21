@@ -186,6 +186,8 @@
   font: var(--yg-font-action);
 }
 .yg-section-line > div {
+  display: grid;
+  gap: var(--yg-gap-control);
   min-inline-size: 0;
   overflow-wrap: anywhere;
 }

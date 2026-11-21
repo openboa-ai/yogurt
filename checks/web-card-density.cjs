@@ -10,7 +10,7 @@ const assert = require("node:assert/strict");
       const page = await browser.newPage({ viewport: { width, height: 950 }, colorScheme: width === 320 ? "dark" : "light" });
       await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#card");
       const cards = page.locator(".variation .specimen");
-      for (const [density, padding] of Object.entries({ compact: 12, regular: 18, spacious: 24 })) {
+      for (const [density, padding] of Object.entries({ compact: 16, regular: 18, spacious: 24 })) {
         const card = cards.locator(`.yg-card[data-density="${density}"]`);
         await card.waitFor();
         const geometry = await card.evaluate(el => {

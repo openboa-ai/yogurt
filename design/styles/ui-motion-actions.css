@@ -295,9 +295,11 @@
     animation: yg-field-invalid var(--yg-change) var(--yg-settle);
   }
 
-  :is(.yg-notice, .yg-result, .yg-skeleton) {
+  :is(.yg-notice, .yg-result) {
     animation: yg-result-arrive var(--yg-change) var(--yg-arrive) both;
   }
+
+  .yg-skeleton span { animation: yg-skeleton-breathe calc(2 * var(--yg-busy)) var(--yg-settle) infinite alternate; }
 
   :is(.yg-status, .yg-badge)[data-tone] {
     transition: color var(--yg-press) var(--yg-settle),
@@ -320,10 +322,33 @@
     animation: yg-floating-arrive var(--yg-motion-picker-lift);
   }
 
-  [data-state="open"].yg-accordion-content {
-    animation: yg-result-arrive var(--yg-travel) var(--yg-settle) both;
+  .yg-accordion-content {
+    height: var(--accordion-panel-height);
+    overflow: clip;
+    transition: height var(--yg-motion-picker-slide), opacity var(--yg-motion-surface-focus);
+  }
+  .yg-accordion-content:is([data-starting-style], [data-ending-style]) {
+    height: 0;
+    opacity: 0;
   }
 }
+
+.yg-accordion-content { padding-block: 0; }
+.yg-accordion-inner { padding-block-end: var(--boa-space-12); }
+
+@supports (interpolate-size: allow-keywords) {
+  @media (prefers-reduced-motion: no-preference) {
+    .yg-disclosure { interpolate-size: allow-keywords; }
+    .yg-disclosure::details-content {
+      block-size: 0;
+      overflow: clip;
+      transition: block-size var(--yg-motion-picker-slide), content-visibility var(--yg-panel) allow-discrete;
+    }
+    .yg-disclosure[open]::details-content { block-size: auto; }
+  }
+}
+
+@keyframes yg-skeleton-breathe { from { opacity: 1; } to { opacity: .48; } }
 
 @keyframes yg-result-arrive {
   from { translate: 0 var(--boa-space-4); }

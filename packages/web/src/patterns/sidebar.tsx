@@ -277,7 +277,10 @@ export function SidebarSubmenu({ label, icon, children, defaultOpen = false, con
         <Label icon={icon} rail={rail}>{label}</Label>
         {!rail && <span className="yg-sidebar-chevron" aria-hidden="true"><Icon name="down" /></span>}
       </button>
-      <div id={id} className="yg-sidebar-submenu-content" hidden={!expanded}>{children}</div>
+      <div id={id} className="yg-sidebar-submenu-content" data-expanded={expanded}
+        aria-hidden={!expanded} inert={!expanded}>
+        <div>{children}</div>
+      </div>
     </div>
   );
 }

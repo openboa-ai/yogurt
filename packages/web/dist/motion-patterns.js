@@ -11,14 +11,14 @@ import {
 } from "./shared/chunk-NY3LGE3P.js";
 import {
   Command
-} from "./shared/chunk-OKUOI43A.js";
+} from "./shared/chunk-YQ7LMCB6.js";
 import {
   Slider
-} from "./shared/chunk-64RJCJLP.js";
+} from "./shared/chunk-QTYVRUEC.js";
 import {
   dist_exports7 as dist_exports
 } from "./shared/chunk-F374JVJP.js";
-import "./shared/chunk-OCMEOQIZ.js";
+import "./shared/chunk-HIT5KGTJ.js";
 import {
   advanceSprings,
   playSprings,
@@ -26,8 +26,9 @@ import {
   spring
 } from "./shared/chunk-DRQJWO7S.js";
 import {
-  Checkbox
-} from "./shared/chunk-GUM6KUXU.js";
+  Checkbox,
+  Textarea
+} from "./shared/chunk-L7PYNK52.js";
 import "./shared/chunk-5GJUJT3P.js";
 import {
   Button
@@ -933,7 +934,7 @@ function MorphTooltipBar({ label, tools, value, onChange }) {
 }
 
 // packages/web/src/patterns/motion-conversation.tsx
-import { useEffect as useEffect3, useId as useId5, useLayoutEffect as useLayoutEffect4, useRef as useRef5, useState as useState5 } from "react";
+import { useId as useId5, useLayoutEffect as useLayoutEffect4, useRef as useRef5, useState as useState5 } from "react";
 import { Fragment, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 function StreamingReply({ value, active = false }) {
   const surface = useRef5(null);
@@ -984,62 +985,18 @@ function StreamingReply({ value, active = false }) {
     /* @__PURE__ */ jsx5("div", { ref: reply, className: "yg-streaming-body", children: value && value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : /* @__PURE__ */ jsx5("span", { className: "yg-streaming-word", children: part }, index)) })
   ] }) });
 }
-function SuggestionLetters({ text, interval, cap }) {
-  return Array.from(text.matchAll(/\s+|\S+/gu), (match) => {
-    const offset = match.index;
-    return /^\s/u.test(match[0]) ? /* @__PURE__ */ jsx5("span", { children: match[0] }, offset) : /* @__PURE__ */ jsx5("span", { className: "yg-ghost-word", children: Array.from(match[0], (letter, i) => /* @__PURE__ */ jsx5("span", { style: { animationDelay: `${Math.min((offset + i) * interval, cap)}ms` }, children: letter }, i)) }, offset);
-  });
-}
 function GhostSuggestion({ value, suggestion, onChange }) {
-  const id = useId5();
-  const [atEnd, setAtEnd] = useState5(true);
-  const [accepted, setAccepted] = useState5(null);
-  const suffix = value && suggestion.startsWith(value) ? suggestion.slice(value.length) : "";
-  const show = atEnd && !!suffix;
-  const rolling = accepted && accepted.prefix + accepted.suffix === value;
-  useEffect3(() => {
-    if (!accepted) return;
-    const timer = setTimeout(() => setAccepted(null), Math.min(400, Array.from(accepted.suffix).length * 16) + 420);
-    return () => clearTimeout(timer);
-  }, [accepted]);
-  return /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-field", children: [
-    /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-head", children: [
-      /* @__PURE__ */ jsx5("label", { htmlFor: id, children: "Your message" }),
-      show && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-key", "aria-hidden": "true", children: "Tab \u21B9" })
-    ] }),
-    /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-input", children: [
-      /* @__PURE__ */ jsxs5("div", { className: "yg-ghost-mirror", "aria-hidden": "true", "data-accepted": rolling || void 0, children: [
-        /* @__PURE__ */ jsx5("span", { children: rolling ? accepted.prefix : value }),
-        show && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-suffix", children: /* @__PURE__ */ jsx5(SuggestionLetters, { text: suffix, interval: 8, cap: 200 }) }),
-        rolling && /* @__PURE__ */ jsx5("span", { className: "yg-ghost-accepted", children: /* @__PURE__ */ jsx5(SuggestionLetters, { text: accepted.suffix, interval: 16, cap: 400 }) })
-      ] }),
-      /* @__PURE__ */ jsx5(
-        "textarea",
-        {
-          rows: 2,
-          id,
-          value,
-          autoComplete: "off",
-          "aria-describedby": show ? `${id}-hint` : void 0,
-          "data-accepted": rolling || void 0,
-          onChange: (event) => {
-            setAccepted(null);
-            onChange(event.currentTarget.value);
-            setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length);
-          },
-          onSelect: (event) => setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length),
-          onKeyDown: (event) => {
-            if (show && (event.key === "Tab" || event.key === "ArrowRight") && !event.nativeEvent.isComposing) {
-              event.preventDefault();
-              setAccepted({ prefix: value, suffix });
-              onChange(suggestion);
-            }
-          }
-        }
-      )
-    ] }),
-    /* @__PURE__ */ jsx5("span", { className: "yg-ghost-hint", id: `${id}-hint`, "aria-hidden": !show, "data-visible": show, children: "Press Tab or right arrow to accept" })
-  ] });
+  return /* @__PURE__ */ jsx5("div", { className: "yg-ghost-field", children: /* @__PURE__ */ jsx5(
+    Textarea,
+    {
+      label: "Your message",
+      rows: 2,
+      value,
+      autoComplete: "off",
+      suggestion,
+      onChange: (event) => onChange(event.currentTarget.value)
+    }
+  ) });
 }
 function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
   const editor = useRef5(null);

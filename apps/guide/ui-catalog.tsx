@@ -63,7 +63,7 @@ const compactPreviews = new Set([
 ]);
 const widePreviews = new Set([
   "table", "data-table", "chart", "bar-chart", "grid-list", "resizable", "sidebar",
-  "sidebar-layout", "agent-avatar", "transcript", "navbar", "navigation-menu", "menubar",
+  "sidebar-layout", "agent-sidebar", "project-sidebar", "agent-avatar", "transcript", "navbar", "navigation-menu", "menubar",
 ]);
 function previewLayout(entry: {id: string; family: string}) {
   if (compactPreviews.has(entry.id)) return "compact";

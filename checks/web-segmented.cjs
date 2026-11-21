@@ -15,9 +15,12 @@ for(const width of [320,1440]){
  const target=buttons.nth(1);
  await target.click();
  assert.equal(await target.getAttribute('data-state'),'on');
- const track=await root.evaluate(el=>({shadow:getComputedStyle(el).boxShadow,padding:getComputedStyle(el).padding,outline:getComputedStyle(el).outlineStyle}));
+ const track=await root.evaluate(el=>({shadow:getComputedStyle(el).boxShadow,padding:getComputedStyle(el).padding,outline:getComputedStyle(el).outlineStyle,gap:getComputedStyle(el).columnGap}));
  assert.equal(track.shadow,'none');
  assert.equal(track.padding,'4px');
+ assert.equal(track.gap,'2px');
+ assert.equal(await buttons.first().evaluate(el=>getComputedStyle(el).paddingInlineStart),'8px');
+ assert.equal(await buttons.first().evaluate(el=>getComputedStyle(el).paddingInlineEnd),'8px');
  const marker=root.locator('.yg-selection-marker');
  await page.waitForTimeout(700);
  assert(await marker.isVisible());

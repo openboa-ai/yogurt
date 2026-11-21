@@ -89,6 +89,8 @@
   --yg-tab-pill-padding: 4px;
   --yg-tab-pill-height: 35px;
   --yg-segment-track-padding: 4px;
+  --yg-segment-option-gap: var(--boa-space-2);
+  --yg-segment-option-inset-inline: var(--boa-space-8);
   --yg-segment-option-height: var(--boa-control-row);
   --yg-segment-track-radius: var(--boa-space-16);
   --yg-segment-option-radius: var(--boa-radius-panel);
@@ -104,7 +106,7 @@
   --yg-list-row-gap: var(--boa-space-12);
   --yg-list-row-inset: var(--boa-space-12);
   --yg-card-corner: var(--boa-radius-sheet);
-  --yg-card-inset-compact: var(--boa-space-12);
+  --yg-card-inset-compact: var(--boa-space-16);
   --yg-card-inset-regular: var(--boa-space-18);
   --yg-card-inset-spacious: var(--boa-space-24);
   --yg-button-radius: var(--boa-radius-control);

@@ -1,14 +1,16 @@
 "use client";
 import { words } from "../foundation/words.js";
 import {
+  useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ComponentProps,
   type ReactNode,
 } from "react";
 import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
-import { Textarea as SDKTextarea } from "@ui-sdk/react/textarea";
+import { Textarea as SDKTextarea, createInputController } from "@ui-sdk/react/textarea";
 import { Switch as SDKSwitch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkbox";
 import { RadioGroup as SDKRadio, Radio as SDKRadioItem, RadioIndicator } from "@ui-sdk/react/radio";
@@ -40,8 +42,9 @@ export function Field({
   label,
   help,
   error,
+  labelEnd,
   children,
-}: FieldInfo & { children: (props: FieldAttributes) => ReactNode }) {
+}: FieldInfo & { labelEnd?: ReactNode; children: (props: FieldAttributes) => ReactNode }) {
   const fallback = useId();
   const input = id ?? fallback;
   const description =
@@ -50,7 +53,7 @@ export function Field({
       .join(" ") || undefined;
   return (
     <div className="yg-field">
-      <Label htmlFor={input}>{label}</Label>
+      {labelEnd ? <div className="yg-ghost-head"><Label htmlFor={input}>{label}</Label>{labelEnd}</div> : <Label htmlFor={input}>{label}</Label>}
       {children({
         id: input,
         "aria-describedby": description,
@@ -136,6 +139,15 @@ export function SearchField({
     </Field>
   );
 }
+function SuggestionLetters({ text, interval, cap }: { text: string; interval: number; cap: number }) {
+  return Array.from(text.matchAll(/\s+|\S+/gu), match => {
+    const offset = match.index;
+    return /^\s/u.test(match[0]) ? <span key={offset}>{match[0]}</span>
+      : <span className="yg-ghost-word" key={offset}>{Array.from(match[0], (letter, i) =>
+        <span key={i} style={{ animationDelay: `${Math.min((offset + i) * interval, cap)}ms` }}>{letter}</span>)}</span>;
+  });
+}
+
 export function Textarea({
   id,
   label,
@@ -145,21 +157,108 @@ export function Textarea({
   value,
   defaultValue,
   onSubmit,
+  onSelect,
+  suggestion,
   rows = 3,
   ...props
-}: FieldInfo & ComponentProps<"textarea">) {
+}: FieldInfo & ComponentProps<"textarea"> & { suggestion?: string }) {
+  const [localValue, setLocalValue] = useState(() => String(defaultValue ?? ""));
+  const [completionController] = useState(createInputController);
+  const [atEnd, setAtEnd] = useState(true);
+  const [accepted, setAccepted] = useState<{ prefix: string; suffix: string } | null>(null);
+  const accepting = useRef(false);
+  const textarea = useRef<HTMLTextAreaElement>(null);
+  const current = value == null ? localValue : String(value);
+  const suffix = current && suggestion?.startsWith(current) ? suggestion.slice(current.length) : "";
+  const available = !!suffix && atEnd && !props.disabled && !props.readOnly &&
+    (props.maxLength == null || props.maxLength < 0 || (suggestion?.length ?? 0) <= props.maxLength);
+  const rolling = !!accepted && accepted.prefix + accepted.suffix === current;
+  useEffect(() => {
+    if (!accepted) return;
+    const timer = setTimeout(() => setAccepted(null), Math.min(400, Array.from(accepted.suffix).length * 16) + 420);
+    return () => clearTimeout(timer);
+  }, [accepted]);
+  useLayoutEffect(() => {
+    const input = textarea.current;
+    if (suggestion === undefined || !input) return;
+    if (value == null) setLocalValue(input.value);
+    setAtEnd(input.ownerDocument.activeElement !== input || (input.selectionStart === input.value.length && input.selectionEnd === input.value.length));
+    setAccepted(null);
+  }, [suggestion]);
+  useEffect(() => {
+    const input = textarea.current;
+    const form = input?.form;
+    if (suggestion === undefined || !input || !form) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const reset = (event: Event) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (event.defaultPrevented || textarea.current !== input) return;
+        if (value == null) setLocalValue(input.value);
+        setAtEnd(input.ownerDocument.activeElement !== input || (input.selectionStart === input.value.length && input.selectionEnd === input.value.length));
+        setAccepted(null);
+      }, 0);
+    };
+    form.addEventListener("reset", reset);
+    return () => { form.removeEventListener("reset", reset); if (timer) clearTimeout(timer); };
+  }, [suggestion, value, props.form]);
   return (
-    <Field {...{ id, label, help, error }}>
+    <Field {...{ id, label, help, error }} labelEnd={suggestion !== undefined && available ? <span className="yg-ghost-key" aria-hidden="true">Tab ↹</span> : undefined}>
       {(binding) => (
-        <SDKInputGroup className={cx("yg-input yg-textarea", className)}>
-          <SDKTextarea {...props} {...binding} rows={rows}
+        <>
+        <SDKInputGroup className={cx("yg-input yg-textarea", suggestion !== undefined && "yg-ghost-input", className)}>
+          {suggestion !== undefined && <div className="yg-ghost-mirror" aria-hidden="true" data-accepted={rolling || undefined}>
+            <span>{rolling ? accepted?.prefix : current}</span>
+            {available && <span className="yg-ghost-suffix"><SuggestionLetters text={suffix} interval={8} cap={200} /></span>}
+            {rolling && accepted && <span className="yg-ghost-accepted"><SuggestionLetters text={accepted.suffix} interval={16} cap={400} /></span>}
+          </div>}
+          <SDKTextarea {...props} {...binding} rows={rows} controller={suggestion !== undefined ? completionController : undefined} aria-describedby={[
+            props["aria-describedby"], binding["aria-describedby"], available && `${binding.id}-suggestion`,
+          ].filter(Boolean).join(" ") || undefined} data-accepted={rolling || undefined}
             value={value == null ? undefined : String(value)}
             defaultValue={defaultValue == null ? undefined : String(defaultValue)}
+            onChange={suggestion === undefined ? props.onChange : event => {
+              if (!accepting.current) setAccepted(null);
+              setLocalValue(event.currentTarget.value);
+              setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+              props.onChange?.(event);
+            }}
+            onKeyUp={suggestion === undefined ? props.onKeyUp : event => {
+              setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+              props.onKeyUp?.(event);
+            }}
+            onMouseUp={suggestion === undefined ? props.onMouseUp : event => {
+              setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+              props.onMouseUp?.(event);
+            }}
+            onKeyDown={suggestion === undefined ? props.onKeyDown : event => {
+              props.onKeyDown?.(event);
+              const input = event.currentTarget;
+              const keySuffix = input.value && suggestion?.startsWith(input.value) ? suggestion.slice(input.value.length) : "";
+              if (!keySuffix || !suggestion || props.disabled || props.readOnly || (props.maxLength != null && props.maxLength >= 0 && suggestion.length > props.maxLength) ||
+                  event.defaultPrevented || event.nativeEvent.isComposing || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey ||
+                  (event.key !== "Tab" && event.key !== "ArrowRight") || input.selectionStart !== input.value.length || input.selectionEnd !== input.value.length || input.value !== current) return;
+              accepting.current = true;
+              try {
+                const prefix = input.value;
+                if (completionController.setValue(suggestion)) {
+                  event.preventDefault();
+                  setAccepted({ prefix, suffix: keySuffix });
+                  if (value == null) setLocalValue(input.value);
+                }
+              } finally { accepting.current = false; }
+            }}
             onValueChange={(next, details) => {
               if (details.reason === "imperative" && props.maxLength !== undefined && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
             }}
-            render={onSubmit ? <textarea onSubmit={onSubmit} /> : undefined} />
+            render={<textarea ref={textarea} onSubmit={onSubmit}
+              onSelect={suggestion === undefined ? onSelect : event => {
+                setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+                onSelect?.(event);
+              }} />} />
         </SDKInputGroup>
+        {suggestion !== undefined && <span className="yg-ghost-hint" id={`${binding.id}-suggestion`} aria-hidden={!available} data-visible={available}>Press Tab or right arrow to accept</span>}
+        </>
       )}
     </Field>
   );

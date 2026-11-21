@@ -355,14 +355,31 @@ export function Tooltip({
     const place = () => {
       const bounds = host.getBoundingClientRect();
       const viewport = view.visualViewport;
-      const left = viewport?.offsetLeft ?? 0;
-      const top = viewport?.offsetTop ?? 0;
+      let left = viewport?.offsetLeft ?? 0;
+      let top = viewport?.offsetTop ?? 0;
       const width = viewport?.width ?? view.innerWidth;
+      let right = left + width;
+      let bottom = top + (viewport?.height ?? view.innerHeight);
+      for (let parent = host.parentElement; parent && parent !== host.ownerDocument.documentElement; parent = parent.parentElement) {
+        const style = view.getComputedStyle(parent);
+        const clipsX = /^(auto|scroll|hidden|clip)$/.test(style.overflowX);
+        const clipsY = /^(auto|scroll|hidden|clip)$/.test(style.overflowY);
+        if (!clipsX && !clipsY) continue;
+        const box = parent.getBoundingClientRect();
+        const x = box.left + parent.clientLeft;
+        const y = box.top + parent.clientTop;
+        if (clipsX) { left = Math.max(left, x); right = Math.min(right, x + parent.clientWidth); }
+        if (clipsY) { top = Math.max(top, y); bottom = Math.min(bottom, y + parent.clientHeight); }
+      }
+      const available = `${Math.max(1, right - left - 16)}px`;
+      if (tip.style.getPropertyValue("--yg-tip-available") !== available) tip.style.setProperty("--yg-tip-available", available);
       const center = (bounds.left + bounds.right) / 2;
       const half = tip.offsetWidth / 2;
-      const safeCenter = Math.max(left + 8 + half, Math.min(center, left + width - 8 - half));
+      const safeCenter = Math.max(left + 8 + half, Math.min(center, right - 8 - half));
       tip.style.setProperty("--yg-tip-shift", `${safeCenter - center}px`);
-      tip.dataset.side = bounds.top - top < tip.offsetHeight + 16 ? "below" : "above";
+      const above = bounds.top - top - 12;
+      const below = bottom - bounds.bottom - 12;
+      tip.dataset.side = above >= tip.offsetHeight || above >= below ? "above" : "below";
     };
     place();
     const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(place);

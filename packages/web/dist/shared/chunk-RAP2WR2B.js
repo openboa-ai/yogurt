@@ -257,7 +257,17 @@ function SidebarSubmenu({ label, icon, children, defaultOpen = false, containsCu
         ]
       }
     ),
-    /* @__PURE__ */ jsx("div", { id, className: "yg-sidebar-submenu-content", hidden: !expanded, children })
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        id,
+        className: "yg-sidebar-submenu-content",
+        "data-expanded": expanded,
+        "aria-hidden": !expanded,
+        inert: !expanded,
+        children: /* @__PURE__ */ jsx("div", { children })
+      }
+    )
   ] });
 }
 

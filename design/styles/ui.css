@@ -6,6 +6,7 @@
 @import "./ui-agent-workspace.css";
 @import "./ui-project-workspace.css";
 @import "./ui-operations.css";
+@import "./ui-data.css";
 @import "./ui-sidebar.css";
 @import "./ui-agent-motion.css";
 @import "./ui-motion-actions.css";
@@ -634,7 +635,7 @@
   left: 50%;
   box-sizing: border-box;
   width: max-content;
-  max-inline-size: min(240px, 80vw);
+  max-inline-size: min(240px, 80vw, var(--yg-tip-available, 100vw));
   padding: var(--boa-space-8) var(--boa-space-12);
   border: 0;
   border-radius: 11px;
@@ -763,7 +764,7 @@
 .yg-segment {
   isolation: isolate;
   flex-wrap: nowrap;
-  gap: 0;
+  gap: var(--yg-segment-option-gap, 2px);
   border-radius: var(--yg-segment-track-radius);
   background: var(--yg-raised-surface);
   padding: var(--yg-segment-track-padding);
@@ -788,7 +789,7 @@
 }
 .yg-segment > button {
   min-block-size: var(--yg-segment-option-height);
-  padding-inline: var(--boa-space-4);
+  padding-inline: var(--yg-segment-option-inset-inline, 8px);
   border-radius: var(--yg-segment-option-radius);
   font: var(--yg-font-action);
 }

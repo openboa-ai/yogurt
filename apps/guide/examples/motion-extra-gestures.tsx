@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
-import { Button, Rating as SharedRating } from "@openboa/yogurt";
+import { Button, DatePicker, Icon, Rating as SharedRating } from "@openboa/yogurt";
 import { playSprings, spring } from "../../../packages/web/src/foundation/spring-motion.js";
 
 function Exposure() {
@@ -73,7 +73,13 @@ function Exposure() {
 }
 function Toolbar() {
   const [bold, setBold] = useState(false), [italic, setItalic] = useState(false);
-  return <div className="extra-gesture"><details className="extra-disclosure"><summary>Text formatting</summary><div className="extra-toolbar"><Button type="button" size="compact" emphasis="soft" aria-pressed={bold} onClick={() => setBold(!bold)}>Bold</Button><Button type="button" size="compact" emphasis="soft" aria-pressed={italic} onClick={() => setItalic(!italic)}>Italic</Button></div></details><p className="extra-format-sample" style={{fontWeight: bold ? 700 : 400, fontStyle: italic ? "italic" : "normal"}}>A little room for ideas.</p></div>;
+  return <div className="extra-gesture"><details className="extra-disclosure">
+    <summary><Icon name="next" />Text formatting</summary>
+    <div className="extra-toolbar">
+      <Button type="button" size="touch" emphasis="soft" aria-pressed={bold} onClick={() => setBold(!bold)}><span className="extra-format-icon" aria-hidden="true">B</span>Bold</Button>
+      <Button type="button" size="touch" emphasis="soft" aria-pressed={italic} onClick={() => setItalic(!italic)}><span className="extra-format-icon extra-format-icon-italic" aria-hidden="true">I</span>Italic</Button>
+    </div>
+  </details><p className="extra-format-sample" style={{fontWeight: bold ? 700 : 400, fontStyle: italic ? "italic" : "normal"}}>A little room for ideas.</p></div>;
 }
 function Rating() {
   const [value, setValue] = useState(0);
@@ -100,7 +106,11 @@ function MaskedField() {
 }
 function Schedule() {
   const [date, setDate] = useState("2026-11-20");
-  return <div className="extra-gesture"><label htmlFor="extra-date">Choose a date</label><input id="extra-date" type="date" value={date} onChange={e => setDate(e.target.value)}/><p role="status" className="extra-date-result"><span key={date}>{date ? `Selected: ${date}` : "No date selected"}</span></p><Button size="compact" emphasis="quiet" onClick={() => setDate("")}>Clear</Button></div>;
+  return <div className="extra-gesture extra-date-choice">
+    <DatePicker label="Choose a date" value={date || undefined} onValueChange={setDate} />
+    <p role="status" className="extra-date-result"><span key={date}>{date ? `Selected: ${date}` : "No date selected"}</span></p>
+    <Button size="compact" emphasis="quiet" onClick={() => setDate("")}>Clear</Button>
+  </div>;
 }
 export const extraGestures: {id:string; title:string; body:ReactNode}[] = [
   {id:"exposure",title:"Exposure adjustment",body:<Exposure/>},

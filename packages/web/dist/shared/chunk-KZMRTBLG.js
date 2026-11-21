@@ -6,7 +6,7 @@ import {
 
 // packages/web/src/controls/data.tsx
 import { useId, useState } from "react";
-import { jsx, jsxs } from "react/jsx-runtime";
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 function RecordFacts({
   title,
   facts,
@@ -110,12 +110,14 @@ function Chart({
   const numeric = points.flatMap(
     (p) => p.value !== null && Number.isFinite(p.value) ? [p.value] : []
   );
-  const lower = Math.min(0, ...numeric);
-  const upper = Math.max(0, ...numeric);
-  const range = upper - lower || 1;
+  const lower = numeric.reduce((minimum, value) => Math.min(minimum, value), 0);
+  const upper = numeric.reduce((maximum, value) => Math.max(maximum, value), 0);
+  const magnitude = Math.max(1, Math.abs(lower), Math.abs(upper));
+  const scaledLower = lower / magnitude;
+  const range = upper / magnitude - scaledLower || 1;
   const xy = (v, i) => [
     8 + 224 * i / Math.max(1, points.length - 1),
-    67 - 60 * (v - lower) / range
+    67 - 60 * (v / magnitude - scaledLower) / range
   ];
   let path = "", start = true;
   const dots = [];
@@ -134,22 +136,33 @@ function Chart({
       /* @__PURE__ */ jsx(Heading, { level: 3, children: title }),
       /* @__PURE__ */ jsx(Legend, { label: series + " (" + unit + ")" })
     ] }),
-    /* @__PURE__ */ jsxs("svg", { viewBox: "0 0 240 76", "aria-hidden": "true", children: [
-      /* @__PURE__ */ jsx(
-        "path",
-        {
-          d: path,
-          fill: "none",
-          stroke: "currentColor",
-          strokeWidth: "2",
-          strokeLinejoin: "round"
-        }
-      ),
-      dots.map((p) => /* @__PURE__ */ jsx("circle", { cx: p.x, cy: p.y, r: "2.5", fill: "currentColor" }, p.id))
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: "yg-chart-range", "aria-hidden": "true", children: [
-      /* @__PURE__ */ jsx("span", { children: points[0]?.label }),
-      /* @__PURE__ */ jsx("span", { children: points.at(-1)?.label })
+    /* @__PURE__ */ jsxs("div", { className: "yg-chart-plot", children: [
+      /* @__PURE__ */ jsx("div", { className: "yg-chart-scale", "aria-hidden": "true", children: numeric.length > 0 && /* @__PURE__ */ jsxs(Fragment, { children: [
+        /* @__PURE__ */ jsx("span", { children: upper }),
+        /* @__PURE__ */ jsx("span", { children: lower })
+      ] }) }),
+      /* @__PURE__ */ jsxs("svg", { viewBox: "0 0 240 76", "aria-hidden": "true", children: [
+        /* @__PURE__ */ jsx("g", { className: "yg-chart-grid", children: /* @__PURE__ */ jsx("path", { d: "M8 7H232 M8 37H232 M8 67H232", vectorEffect: "non-scaling-stroke" }) }),
+        /* @__PURE__ */ jsx(
+          "path",
+          {
+            className: "yg-chart-line",
+            d: path,
+            fill: "none",
+            stroke: "currentColor",
+            strokeWidth: "2",
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            vectorEffect: "non-scaling-stroke"
+          }
+        ),
+        dots.map((p) => /* @__PURE__ */ jsx("circle", { cx: p.x, cy: p.y, r: "2.5", fill: "currentColor" }, p.id))
+      ] }),
+      numeric.length === 0 && /* @__PURE__ */ jsx("span", { className: "yg-chart-empty", children: "No readings" }),
+      /* @__PURE__ */ jsxs("div", { className: "yg-chart-range", "aria-hidden": "true", children: [
+        /* @__PURE__ */ jsx("span", { children: points[0]?.label }),
+        /* @__PURE__ */ jsx("span", { children: points.at(-1)?.label })
+      ] })
     ] }),
     /* @__PURE__ */ jsxs("p", { className: "yg-meta", children: [
       source,

@@ -29,16 +29,25 @@ body { margin: 0; }
 .workflow-parts a:hover { background: var(--yg-hover); color: var(--yg-text); }
 .workflow-page-title { display: flex; align-items: center; gap: var(--yg-gap-inline); }
 .workflow-body .yg-sidebar-layout { min-block-size: 34rem; }
-.workflow-sort { margin-block-end: var(--boa-space-16); }
+.workflow-body .yg-sidebar-main:has(.workflow-records) { padding-inline-start: clamp(var(--boa-space-24), 3vi, var(--boa-space-32)); }
+.workflow-sort { margin-block-end: var(--boa-space-24); }
 .workflow-preview { margin-block: var(--boa-space-16); }
+.workflow-preview:has(.workflow-records) { margin-block: var(--boa-space-24); }
 .workflow-records, .workflow-decision {
   display: grid;
-  grid-template-columns: minmax(16rem, 2fr) minmax(0, 3fr);
+  grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
   gap: var(--yg-gap-section);
   align-items: start;
 }
-.workflow-record-list, .workflow-evidence { min-inline-size: 0; padding: var(--yg-inset-panel); border-radius: var(--yg-radius-card); background: var(--yg-surface); }
-.workflow-record-detail { min-inline-size: 0; padding: var(--yg-inset-panel); }
+.workflow-record-list, .workflow-evidence { min-inline-size: 0; border-radius: var(--yg-radius-card); background: var(--yg-surface); }
+.workflow-record-list { padding: var(--boa-space-24); }
+.workflow-evidence { padding: var(--yg-inset-panel); }
+.workflow-record-detail { min-inline-size: 0; padding: var(--boa-space-24) var(--yg-inset-panel); }
+.workflow-record-detail .yg-facts { max-inline-size: 34rem; }
+.workflow-record-detail .yg-facts dl { display: grid; gap: var(--boa-space-8); margin-block: var(--boa-space-24); }
+.workflow-record-detail .yg-facts dl > div { padding-block: var(--boa-space-8); }
+.workflow-record-detail .yg-facts dd { max-inline-size: 65%; overflow-wrap: anywhere; }
+.workflow-record-detail .yg-facts .yg-meta { margin-block: var(--boa-space-16) 0; }
 .workflow-back { display: none; }
 .workflow-conversation { display: grid; gap: var(--boa-space-24); max-inline-size: 41rem; margin-inline: auto; padding: var(--yg-inset-sheet); background: var(--yg-surface); border-radius: var(--yg-radius-card); }
 .workflow-conversation .yg-prompt-box { justify-self: center; }
@@ -61,6 +70,7 @@ body { margin: 0; }
   .workflow-back { display: inline-flex; margin-block-end: var(--boa-space-16); }
   .workflow-body h1 { font: var(--yg-font-heading); }
 }
+.workflow-body .yg-sidebar-layout[data-compact="true"] > .yg-sidebar-main:has(.workflow-records) { padding-inline-start: 0; }
 @media (pointer: coarse) {
   .workflow-parts a { min-block-size: var(--yg-size-touch); }
 }

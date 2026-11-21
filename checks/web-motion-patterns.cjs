@@ -291,6 +291,10 @@ async function run(browser) {
 
     const ghost = (await demo("ghost-suggestion")).getByRole("textbox");
     await ghost.focus();
+    await ghost.evaluate(node => {
+      node.setSelectionRange(node.value.length, node.value.length);
+      node.dispatchEvent(new Event("select", { bubbles: true }));
+    });
     await ghost.press("ArrowRight");
     assert.equal(await ghost.inputValue(), "Review the workspace notes");
 

@@ -5,6 +5,15 @@
   overflow-wrap: anywhere;
 }
 .yg-toast { box-sizing: border-box; }
+@media (prefers-reduced-motion: no-preference) {
+  [data-yg-toast-id][data-exiting] {
+    pointer-events: none;
+    animation: yg-toast-depart var(--yg-change) var(--yg-settle) both;
+  }
+}
+@keyframes yg-toast-depart {
+  to { opacity: 0; translate: 0 var(--boa-space-8); }
+}
 .yg-notice > div {
   display: grid;
   align-content: start;

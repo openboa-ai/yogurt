@@ -85,8 +85,8 @@ export function Composer({
         <div className="yg-composer-tools">
           {companion}
           {pending && onStop
-            ? <Button emphasis="soft" onClick={onStop}>Stop</Button>
-            : <Button type="submit" disabled={!ready} pending={pending} pendingLabel="Sending">Send</Button>}
+            ? <Button key="stop" emphasis="soft" onClick={onStop}>Stop</Button>
+            : <Button key="send" type="submit" disabled={!ready} pending={pending} pendingLabel="Sending">Send</Button>}
         </div>
       </div>
     </form>

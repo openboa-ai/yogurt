@@ -445,10 +445,17 @@ body {
 }
 .agent-motion-tools {
   display: flex;
-  align-items: center;
+  align-items: end;
   flex-wrap: wrap;
   gap: var(--boa-space-8);
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
+.agent-motion-tools > .yg-field {
+  flex: 1 1 9rem;
+  min-inline-size: min(9rem, 100%);
+}
+.agent-motion-tools > .yg-button { flex: none; max-inline-size: 100%; }
 
 
 @media (max-width: 480px) {

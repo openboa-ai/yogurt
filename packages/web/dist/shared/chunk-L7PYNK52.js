@@ -12,16 +12,18 @@ import {
 
 // packages/web/src/controls/forms.tsx
 import {
+  useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState
 } from "react";
 import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
-import { Textarea as SDKTextarea } from "@ui-sdk/react/textarea";
+import { Textarea as SDKTextarea, createInputController } from "@ui-sdk/react/textarea";
 import { Switch as SDKSwitch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkbox";
 import { RadioGroup as SDKRadio, Radio as SDKRadioItem, RadioIndicator } from "@ui-sdk/react/radio";
-import { jsx, jsxs } from "react/jsx-runtime";
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 function Label(props) {
   return /* @__PURE__ */ jsx("label", { ...props, className: cx("yg-label", props.className) });
 }
@@ -36,13 +38,17 @@ function Field({
   label,
   help,
   error,
+  labelEnd,
   children
 }) {
   const fallback = useId();
   const input = id ?? fallback;
   const description = [help && input + "-help", error && input + "-error"].filter(Boolean).join(" ") || void 0;
   return /* @__PURE__ */ jsxs("div", { className: "yg-field", children: [
-    /* @__PURE__ */ jsx(Label, { htmlFor: input, children: label }),
+    labelEnd ? /* @__PURE__ */ jsxs("div", { className: "yg-ghost-head", children: [
+      /* @__PURE__ */ jsx(Label, { htmlFor: input, children: label }),
+      labelEnd
+    ] }) : /* @__PURE__ */ jsx(Label, { htmlFor: input, children: label }),
     children({
       id: input,
       "aria-describedby": description,
@@ -120,6 +126,12 @@ function SearchField({
     ) : void 0
   ] }) });
 }
+function SuggestionLetters({ text, interval, cap }) {
+  return Array.from(text.matchAll(/\s+|\S+/gu), (match) => {
+    const offset = match.index;
+    return /^\s/u.test(match[0]) ? /* @__PURE__ */ jsx("span", { children: match[0] }, offset) : /* @__PURE__ */ jsx("span", { className: "yg-ghost-word", children: Array.from(match[0], (letter, i) => /* @__PURE__ */ jsx("span", { style: { animationDelay: `${Math.min((offset + i) * interval, cap)}ms` }, children: letter }, i)) }, offset);
+  });
+}
 function Textarea({
   id,
   label,
@@ -129,23 +141,125 @@ function Textarea({
   value,
   defaultValue,
   onSubmit,
+  onSelect,
+  suggestion,
   rows = 3,
   ...props
 }) {
-  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsx(SDKInputGroup, { className: cx("yg-input yg-textarea", className), children: /* @__PURE__ */ jsx(
-    SDKTextarea,
-    {
-      ...props,
-      ...binding,
-      rows,
-      value: value == null ? void 0 : String(value),
-      defaultValue: defaultValue == null ? void 0 : String(defaultValue),
-      onValueChange: (next, details) => {
-        if (details.reason === "imperative" && props.maxLength !== void 0 && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
-      },
-      render: onSubmit ? /* @__PURE__ */ jsx("textarea", { onSubmit }) : void 0
-    }
-  ) }) });
+  const [localValue, setLocalValue] = useState(() => String(defaultValue ?? ""));
+  const [completionController] = useState(createInputController);
+  const [atEnd, setAtEnd] = useState(true);
+  const [accepted, setAccepted] = useState(null);
+  const accepting = useRef(false);
+  const textarea = useRef(null);
+  const current = value == null ? localValue : String(value);
+  const suffix = current && suggestion?.startsWith(current) ? suggestion.slice(current.length) : "";
+  const available = !!suffix && atEnd && !props.disabled && !props.readOnly && (props.maxLength == null || props.maxLength < 0 || (suggestion?.length ?? 0) <= props.maxLength);
+  const rolling = !!accepted && accepted.prefix + accepted.suffix === current;
+  useEffect(() => {
+    if (!accepted) return;
+    const timer = setTimeout(() => setAccepted(null), Math.min(400, Array.from(accepted.suffix).length * 16) + 420);
+    return () => clearTimeout(timer);
+  }, [accepted]);
+  useLayoutEffect(() => {
+    const input = textarea.current;
+    if (suggestion === void 0 || !input) return;
+    if (value == null) setLocalValue(input.value);
+    setAtEnd(input.ownerDocument.activeElement !== input || input.selectionStart === input.value.length && input.selectionEnd === input.value.length);
+    setAccepted(null);
+  }, [suggestion]);
+  useEffect(() => {
+    const input = textarea.current;
+    const form = input?.form;
+    if (suggestion === void 0 || !input || !form) return;
+    let timer;
+    const reset = (event) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (event.defaultPrevented || textarea.current !== input) return;
+        if (value == null) setLocalValue(input.value);
+        setAtEnd(input.ownerDocument.activeElement !== input || input.selectionStart === input.value.length && input.selectionEnd === input.value.length);
+        setAccepted(null);
+      }, 0);
+    };
+    form.addEventListener("reset", reset);
+    return () => {
+      form.removeEventListener("reset", reset);
+      if (timer) clearTimeout(timer);
+    };
+  }, [suggestion, value, props.form]);
+  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, labelEnd: suggestion !== void 0 && available ? /* @__PURE__ */ jsx("span", { className: "yg-ghost-key", "aria-hidden": "true", children: "Tab \u21B9" }) : void 0, children: (binding) => /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsxs(SDKInputGroup, { className: cx("yg-input yg-textarea", suggestion !== void 0 && "yg-ghost-input", className), children: [
+      suggestion !== void 0 && /* @__PURE__ */ jsxs("div", { className: "yg-ghost-mirror", "aria-hidden": "true", "data-accepted": rolling || void 0, children: [
+        /* @__PURE__ */ jsx("span", { children: rolling ? accepted?.prefix : current }),
+        available && /* @__PURE__ */ jsx("span", { className: "yg-ghost-suffix", children: /* @__PURE__ */ jsx(SuggestionLetters, { text: suffix, interval: 8, cap: 200 }) }),
+        rolling && accepted && /* @__PURE__ */ jsx("span", { className: "yg-ghost-accepted", children: /* @__PURE__ */ jsx(SuggestionLetters, { text: accepted.suffix, interval: 16, cap: 400 }) })
+      ] }),
+      /* @__PURE__ */ jsx(
+        SDKTextarea,
+        {
+          ...props,
+          ...binding,
+          rows,
+          controller: suggestion !== void 0 ? completionController : void 0,
+          "aria-describedby": [
+            props["aria-describedby"],
+            binding["aria-describedby"],
+            available && `${binding.id}-suggestion`
+          ].filter(Boolean).join(" ") || void 0,
+          "data-accepted": rolling || void 0,
+          value: value == null ? void 0 : String(value),
+          defaultValue: defaultValue == null ? void 0 : String(defaultValue),
+          onChange: suggestion === void 0 ? props.onChange : (event) => {
+            if (!accepting.current) setAccepted(null);
+            setLocalValue(event.currentTarget.value);
+            setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+            props.onChange?.(event);
+          },
+          onKeyUp: suggestion === void 0 ? props.onKeyUp : (event) => {
+            setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+            props.onKeyUp?.(event);
+          },
+          onMouseUp: suggestion === void 0 ? props.onMouseUp : (event) => {
+            setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+            props.onMouseUp?.(event);
+          },
+          onKeyDown: suggestion === void 0 ? props.onKeyDown : (event) => {
+            props.onKeyDown?.(event);
+            const input = event.currentTarget;
+            const keySuffix = input.value && suggestion?.startsWith(input.value) ? suggestion.slice(input.value.length) : "";
+            if (!keySuffix || !suggestion || props.disabled || props.readOnly || props.maxLength != null && props.maxLength >= 0 && suggestion.length > props.maxLength || event.defaultPrevented || event.nativeEvent.isComposing || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey || event.key !== "Tab" && event.key !== "ArrowRight" || input.selectionStart !== input.value.length || input.selectionEnd !== input.value.length || input.value !== current) return;
+            accepting.current = true;
+            try {
+              const prefix = input.value;
+              if (completionController.setValue(suggestion)) {
+                event.preventDefault();
+                setAccepted({ prefix, suffix: keySuffix });
+                if (value == null) setLocalValue(input.value);
+              }
+            } finally {
+              accepting.current = false;
+            }
+          },
+          onValueChange: (next, details) => {
+            if (details.reason === "imperative" && props.maxLength !== void 0 && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+          },
+          render: /* @__PURE__ */ jsx(
+            "textarea",
+            {
+              ref: textarea,
+              onSubmit,
+              onSelect: suggestion === void 0 ? onSelect : (event) => {
+                setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+                onSelect?.(event);
+              }
+            }
+          )
+        }
+      )
+    ] }),
+    suggestion !== void 0 && /* @__PURE__ */ jsx("span", { className: "yg-ghost-hint", id: `${binding.id}-suggestion`, "aria-hidden": !available, "data-visible": available, children: "Press Tab or right arrow to accept" })
+  ] }) });
 }
 function Select({
   id,

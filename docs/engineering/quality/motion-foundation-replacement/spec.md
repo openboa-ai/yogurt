@@ -16,6 +16,8 @@ Each replacement must work through the ordinary package export, editable registr
 
 The first reviewable slice replaces the default tabs and segmented control with their selected moving-indicator geometry, lifts OTP geometry into generated design tokens, and adopts the selected switch geometry. The default tab contract still exposes every supplied tab and panel, keyboard selection, disabled states and existing dock presentation. Narrow tab lists scroll horizontally when their labels cannot fit. Segmented controls preserve controlled selection, disabled options and keyboard access; their indicator remains within the track on narrow screens.
 
+Segmented options use an 8 px minimum inline inset and a 2 px gap between options. Keep the moving indicator aligned to the selected option across dynamic sizes, keyboard changes and narrow containers.
+
 ## Button family
 
 The everyday action has filled, soft and quiet emphasis, compact, regular, comfortable, spacious and touch sizes, and neutral, brand and danger tones. The height roles resolve to 30, 36, 40, 48 and 44 px respectively and are shared across renderers. A control-radius shape is the default for standard actions. A pill shape is available for the compact copy, quantity and prominent action language. Icon actions keep an accessible name and their own hit area. Pending state retains its accessible label and blocks repeated activation.
@@ -26,7 +28,9 @@ The default switch uses a 52 × 32 px track with a 26 px thumb and a 3 px inset.
 
 Text fields, search fields and single-choice select controls use the same compact, regular, comfortable, spacious and touch height roles as actions. Their labels, validation, input attributes, controlled values and accessible descriptions remain attached to the actual input. The regular size remains the default. Select preserves the native `size` and `multiple` attributes separately from the visual `controlSize` choice. Each size is demonstrated and tested at narrow and wide widths.
 
-Cards use a shared 24 px corner and 18 px regular inset. Compact and spacious density choices use 12 px and 24 px insets without changing the caller's content or action. The ordinary card and the existing metric and profile cards consume these same roles. Cards remain fluid in their container and do not gain a perimeter outline.
+Textarea may show an optional inline completion using the same presentation and motion as the completion specimen. A matching suffix is offered only at an unselected end-of-text caret; Tab or right arrow accepts it without interrupting IME composition, disabled or read-only inputs, or a caller-cancelled key event. Preserve controlled and uncontrolled input, native change and selection callbacks, maxLength, form submission, focus, error and help descriptions. Explain the available action accessibly, keep decorative text hidden from assistive technology, and settle immediately with reduced motion. The specimen and the public entry share the same implementation rather than maintaining separate behavior.
+
+Cards use a shared 24 px corner and 18 px regular inset. Compact and spacious density choices use 16 px and 24 px insets without changing the caller's content or action. The ordinary card and the existing metric and profile cards consume these same roles. Cards remain fluid in their container and do not gain a perimeter outline.
 
 The single-value slider shares the motion specimen's four-pixel track and 28 px circular thumb, with a 44 px interaction area. Its filled section follows the controlled value and reading direction. The card presentation uses the same slider in the interactive example, including the floating formatted value. Preserve its native input, min, max, step, disabled state, keyboard behavior and accessible value text; forced colors retain platform control appearance.
 

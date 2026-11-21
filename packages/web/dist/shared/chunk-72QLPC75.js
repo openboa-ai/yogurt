@@ -1,10 +1,10 @@
 "use client";
 import {
   Attachment
-} from "./chunk-H3T76CDH.js";
+} from "./chunk-5ED5JGLV.js";
 import {
   ActionMenu
-} from "./chunk-OCMEOQIZ.js";
+} from "./chunk-HIT5KGTJ.js";
 import {
   Button
 } from "./chunk-4IPCB3MM.js";
@@ -71,7 +71,7 @@ function Composer({
           ] }),
           /* @__PURE__ */ jsxs("div", { className: "yg-composer-tools", children: [
             companion,
-            pending && onStop ? /* @__PURE__ */ jsx(Button, { emphasis: "soft", onClick: onStop, children: "Stop" }) : /* @__PURE__ */ jsx(Button, { type: "submit", disabled: !ready, pending, pendingLabel: "Sending", children: "Send" })
+            pending && onStop ? /* @__PURE__ */ jsx(Button, { emphasis: "soft", onClick: onStop, children: "Stop" }, "stop") : /* @__PURE__ */ jsx(Button, { type: "submit", disabled: !ready, pending, pendingLabel: "Sending", children: "Send" }, "send")
           ] })
         ] })
       ]

@@ -51,6 +51,7 @@ function RecordsWorkflow() {
         setShowDetail(false);
         requestAnimationFrame(() => list.current?.querySelector("input")?.focus());
       }}>Back to records</Button>
+      <span className="workflow-kicker">Selected record</span>
       <RecordFacts title={record.title} {...observation} facts={[
         { id: "owner", label: "Owner", value: record.owner },
         { id: "revision", label: "Revision", value: record.revision },

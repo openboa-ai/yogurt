@@ -236,7 +236,7 @@ if (!urls.length) throw Error("Provide one or more running consumer URLs.");
       await page.keyboard.press("Enter");
       assert.equal(await secondSection.getAttribute("aria-expanded"), "true");
       assert.equal(await firstSection.getAttribute("aria-expanded"), "false");
-      assert.equal(await accordion.getByRole("textbox", { name: "Section one" }).count(), 0);
+      await page.locator(`[id="${panelIdAccordion}"] textarea`).waitFor({ state: "detached" });
       await firstSection.click();
       assert.equal(await accordion.getByRole("textbox", { name: "Section one" }).inputValue(), "Original");
       const invalidAccordion = await page.evaluate(() => window.yogurtFixtureAgent.act({ steps: [{ ref: "Agent accordion", action: "setValue", args: [["disabled"]] }] }));

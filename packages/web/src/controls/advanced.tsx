@@ -63,8 +63,9 @@ export function Accordion({
         {item.title}<Icon name="down" />
       </AccordionTrigger></AccordionHeader>
       <AccordionPanel className="yg-accordion-content"
-        render={(props, state) => <div {...props} data-state={state.open ? "open" : "closed"} />}>
-        {(state) => state.open ? item.content : null}
+        render={(props, state) => <div {...props} data-state={state.open ? "open" : "closed"}
+          aria-hidden={!state.open || undefined} inert={!state.open || undefined} />}>
+        <div className="yg-accordion-inner">{item.content}</div>
       </AccordionPanel>
     </AccordionItem>)}
   </SDKAccordion>;
@@ -387,19 +388,21 @@ export function Sidebar({
           label={open ? "Collapse navigation" : "Expand navigation"}
           aria-expanded={open}
           aria-controls={id}
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen((value) => !value)}
         />
       </header>
-      <nav id={id} aria-label={label} hidden={!open}>
-        {links.map((l) => (
-          <a
-            key={l.id}
-            href={l.href}
-            aria-current={l.id === current ? "page" : undefined}
-          >
-            {l.label}
-          </a>
-        ))}
+      <nav id={id} aria-label={label} data-expanded={open} aria-hidden={!open} inert={!open}>
+        <div className="yg-sidebar-links">
+          {links.map((l) => (
+            <a
+              key={l.id}
+              href={l.href}
+              aria-current={l.id === current ? "page" : undefined}
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
       </nav>
     </aside>
   );

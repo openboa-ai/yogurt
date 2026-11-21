@@ -54,6 +54,43 @@ const assert = require("node:assert/strict");
           `Tooltip must remain on screen at the ${edge} edge`);
         await trigger.blur();
       }
+
+      // A scrollable container can clip an inline tooltip even when the tooltip
+      // remains inside the browser viewport. Keep the trigger focused as the
+      // container moves and check the actual visible scrollport boundaries.
+      await anchor.evaluate(node => {
+        node.removeAttribute("style");
+        const parent = node.parentElement;
+        const scroller = document.createElement("div");
+        scroller.dataset.testTooltipScroller = "";
+        Object.assign(scroller.style, {
+          position: "fixed", left: `${Math.max(0, (innerWidth - 180) / 2)}px`, top: "150px",
+          width: "180px", height: "120px", overflow: "auto", zIndex: "1000",
+        });
+        const content = document.createElement("div");
+        Object.assign(content.style, { position: "relative", width: "420px", height: "200px" });
+        Object.assign(node.style, { position: "absolute", left: "160px", top: "75px" });
+        parent.appendChild(scroller);
+        scroller.appendChild(content);
+        content.appendChild(node);
+        scroller.scrollLeft = 120;
+      });
+      const scroller = page.locator('[data-test-tooltip-scroller]');
+      await trigger.focus();
+      assert.equal(await trigger.evaluate(node => node === document.activeElement), true);
+      assert.equal(await tip.getAttribute("aria-hidden"), "false");
+      const assertWithinScrollport = async () => {
+        const [outer, inner] = await Promise.all([scroller.boundingBox(), tip.boundingBox()]);
+        assert(outer && inner && inner.x >= outer.x && inner.x + inner.width <= outer.x + outer.width &&
+          inner.y >= outer.y && inner.y + inner.height <= outer.y + outer.height,
+          "The tooltip must stay visible inside the scrollable container");
+      };
+      await assertWithinScrollport();
+      await scroller.evaluate(node => { node.scrollLeft = 145; });
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      assert.equal(await trigger.evaluate(node => node === document.activeElement), true);
+      assert.equal(await tip.getAttribute("aria-hidden"), "false");
+      await assertWithinScrollport();
       await page.close();
     }
     console.log("Tooltip position, focus, pointer, interruption, Escape and reduced motion verified.");

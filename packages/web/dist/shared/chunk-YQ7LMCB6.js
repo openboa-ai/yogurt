@@ -8,12 +8,12 @@ import {
 } from "./chunk-F374JVJP.js";
 import {
   Dialog
-} from "./chunk-OCMEOQIZ.js";
+} from "./chunk-HIT5KGTJ.js";
 import {
   Checkbox,
   RadioGroup,
   Textarea
-} from "./chunk-GUM6KUXU.js";
+} from "./chunk-L7PYNK52.js";
 import {
   Button,
   IconButton
@@ -6408,8 +6408,16 @@ function Accordion({
           AccordionPanel,
           {
             className: "yg-accordion-content",
-            render: (props2, state) => /* @__PURE__ */ jsx("div", { ...props2, "data-state": state.open ? "open" : "closed" }),
-            children: (state) => state.open ? item.content : null
+            render: (props2, state) => /* @__PURE__ */ jsx(
+              "div",
+              {
+                ...props2,
+                "data-state": state.open ? "open" : "closed",
+                "aria-hidden": !state.open || void 0,
+                inert: !state.open || void 0
+              }
+            ),
+            children: /* @__PURE__ */ jsx("div", { className: "yg-accordion-inner", children: item.content })
           }
         )
       ] }, item.id))
@@ -6705,11 +6713,11 @@ function Sidebar({
           label: open ? "Collapse navigation" : "Expand navigation",
           "aria-expanded": open,
           "aria-controls": id,
-          onClick: () => setOpen(!open)
+          onClick: () => setOpen((value) => !value)
         }
       )
     ] }),
-    /* @__PURE__ */ jsx("nav", { id, "aria-label": label, hidden: !open, children: links.map((l) => /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsx("nav", { id, "aria-label": label, "data-expanded": open, "aria-hidden": !open, inert: !open, children: /* @__PURE__ */ jsx("div", { className: "yg-sidebar-links", children: links.map((l) => /* @__PURE__ */ jsx(
       "a",
       {
         href: l.href,
@@ -6717,7 +6725,7 @@ function Sidebar({
         children: l.label
       },
       l.id
-    )) })
+    )) }) })
   ] });
 }
 function Navbar({

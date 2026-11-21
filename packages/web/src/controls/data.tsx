@@ -181,12 +181,16 @@ export function Chart({
   const numeric = points.flatMap((p) =>
     p.value !== null && Number.isFinite(p.value) ? [p.value] : [],
   );
-  const lower = Math.min(0, ...numeric);
-  const upper = Math.max(0, ...numeric);
-  const range = upper - lower || 1;
+  const lower = numeric.reduce((minimum, value) => Math.min(minimum, value), 0);
+  const upper = numeric.reduce((maximum, value) => Math.max(maximum, value), 0);
+  // Normalize first so that a finite positive and negative bound cannot overflow
+  // when computing the chart's domain.
+  const magnitude = Math.max(1, Math.abs(lower), Math.abs(upper));
+  const scaledLower = lower / magnitude;
+  const range = upper / magnitude - scaledLower || 1;
   const xy = (v: number, i: number) => [
     8 + (224 * i) / Math.max(1, points.length - 1),
-    67 - (60 * (v - lower)) / range,
+    67 - (60 * (v / magnitude - scaledLower)) / range,
   ];
   let path = "",
     start = true;
@@ -207,21 +211,33 @@ export function Chart({
         <Heading level={3}>{title}</Heading>
         <Legend label={series + " (" + unit + ")"} />
       </figcaption>
-      <svg viewBox="0 0 240 76" aria-hidden="true">
-        <path
-          d={path}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinejoin="round"
-        />
-        {dots.map((p) => (
-          <circle key={p.id} cx={p.x} cy={p.y} r="2.5" fill="currentColor" />
-        ))}
-      </svg>
-      <div className="yg-chart-range" aria-hidden="true">
-        <span>{points[0]?.label}</span>
-        <span>{points.at(-1)?.label}</span>
+      <div className="yg-chart-plot">
+        <div className="yg-chart-scale" aria-hidden="true">
+          {numeric.length > 0 && <><span>{upper}</span><span>{lower}</span></>}
+        </div>
+        <svg viewBox="0 0 240 76" aria-hidden="true">
+          <g className="yg-chart-grid">
+            <path d="M8 7H232 M8 37H232 M8 67H232" vectorEffect="non-scaling-stroke" />
+          </g>
+          <path
+            className="yg-chart-line"
+            d={path}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+          {dots.map((p) => (
+            <circle key={p.id} cx={p.x} cy={p.y} r="2.5" fill="currentColor" />
+          ))}
+        </svg>
+        {numeric.length === 0 && <span className="yg-chart-empty">No readings</span>}
+        <div className="yg-chart-range" aria-hidden="true">
+          <span>{points[0]?.label}</span>
+          <span>{points.at(-1)?.label}</span>
+        </div>
       </div>
       <p className="yg-meta">
         {source} · <time dateTime={asOf}>{timeLabel ?? asOf}</time>

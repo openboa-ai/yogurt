@@ -70,7 +70,15 @@ const actions = {
     });
     await button(root, "Copy").waitFor();
   },
-  "date-choice": async root => { await root.locator('input[type="date"]').fill("2027-01-15");await byText(root,"Selected: 2027-01-15").waitFor(); },
+  "date-choice": async root => {
+    const trigger = root.getByRole("button", { name: "Choose a date" });
+    await trigger.click();
+    await root.getByRole("button", { name: /November 21/ }).click();
+    await byText(root, "Selected: 2026-11-21").waitFor();
+    assert.equal(await trigger.getAttribute("data-state"), "closed");
+    await root.getByRole("button", { name: "Clear" }).click();
+    await byText(root, "No date selected").waitFor();
+  },
   "detent-dial": root => press(root.getByRole("slider"),"ArrowRight","1"),
   "disclosure-toolbar": async root => { await byText(root,"Text formatting").click(); await select(root,"button","Bold","aria-pressed"); },
   "dynamic-menu": async (root,page) => {
@@ -128,7 +136,15 @@ const actions = {
     await select(root, "button", "Underline", "aria-pressed");
     await page.waitForFunction(x => document.querySelector(".motion-format-marker").offsetLeft > x + 15, before);
   },
-  "ghost-suggestion": async root => { const input=root.getByRole("textbox");await input.press("ArrowRight");assert.equal(await input.inputValue(),"Review the workspace notes"); },
+  "ghost-suggestion": async root => {
+    const input = root.getByRole("textbox");
+    assert.equal(await input.inputValue(), "Review");
+    await input.focus();
+    await input.evaluate(element => element.setSelectionRange(element.value.length, element.value.length));
+    await input.press("ArrowRight");
+    assert.equal(await input.inputValue(), "Review the workspace notes");
+    assert.equal(await input.evaluate(element => element === document.activeElement), true);
+  },
   "hold-button": async (root, page) => {
     await root.locator(".yg-hold-confirm").hover();
     await page.mouse.down();

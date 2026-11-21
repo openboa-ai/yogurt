@@ -14,7 +14,8 @@ interface FieldAttributes {
     "aria-describedby"?: string;
     "aria-invalid"?: true;
 }
-export declare function Field({ id, label, help, error, children, }: FieldInfo & {
+export declare function Field({ id, label, help, error, labelEnd, children, }: FieldInfo & {
+    labelEnd?: ReactNode;
     children: (props: FieldAttributes) => ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
 type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & {
@@ -30,7 +31,9 @@ export declare function SearchField({ id, label, help, error, value, onValueChan
     onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     size?: ControlSize;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Textarea({ id, label, help, error, className, value, defaultValue, onSubmit, rows, ...props }: FieldInfo & ComponentProps<"textarea">): import("react/jsx-runtime").JSX.Element;
+export declare function Textarea({ id, label, help, error, className, value, defaultValue, onSubmit, onSelect, suggestion, rows, ...props }: FieldInfo & ComponentProps<"textarea"> & {
+    suggestion?: string;
+}): import("react/jsx-runtime").JSX.Element;
 export declare function Select({ id, label, help, error, options, placeholder, onPointerDown, onKeyDown, controlSize, ...props }: FieldInfo & ComponentProps<"select"> & {
     options: Option[];
     placeholder?: string;
