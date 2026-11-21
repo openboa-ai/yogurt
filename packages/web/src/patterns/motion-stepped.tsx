@@ -3,7 +3,7 @@ import { useId, useLayoutEffect, useRef, useState, type CSSProperties, type Keyb
 import { ElasticRange } from "./elastic-range.js";
 import { Checkbox } from "../controls/forms.js";
 import { Slider } from "../controls/inputs.js";
-import { advanceSprings, playSprings, snap, spring } from "../foundation/spring-motion.js";
+import { snap, spring } from "../foundation/spring-motion.js";
 
 type Option = { id: string; label: string };
 
@@ -44,9 +44,7 @@ export function RangeSlider({
     const firstTip = rail.querySelector<HTMLElement>('[data-tip="start"]');
     const lastTip = rail.querySelector<HTMLElement>('[data-tip="end"]');
     const joinedTip = rail.querySelector<HTMLElement>('[data-tip="joined"]');
-    const media = matchMedia("(prefers-reduced-motion: reduce)");
-    const tracks = Object.values(motion);
-    let frame = 0, previous = performance.now(), width = 0, need = 0;
+    let width = 0, need = 0;
     let startInset = 0, endInset = 0;
     let firstWidth = 0, lastWidth = 0, joinedWidth = 0;
     function contain(position: number, tipWidth: number) {
@@ -73,13 +71,6 @@ export function RangeSlider({
       for (const [key, value] of Object.entries(settings)) root?.style.setProperty(key,value);
     }
     function targetMerge() { motion.merge.target = Number((motion.end.position-motion.start.position)*width/100<need); }
-    function tick(now: number) {
-      targetMerge();
-      const moving = advanceSprings(tracks,(now-previous)/1000);
-      previous = now;
-      paint();
-      frame = moving ? requestAnimationFrame(tick) : 0;
-    }
     function work() {
       if (!rail || !root) return;
       const bounds = root.getBoundingClientRect(), inner = rail.getBoundingClientRect();
@@ -93,16 +84,8 @@ export function RangeSlider({
       lastWidth = lastTip?.offsetWidth ?? 0;
       joinedWidth = joinedTip?.offsetWidth ?? 0;
       need = (firstWidth + lastWidth) / 2 + 8;
-      motion.start.target=first; motion.end.target=last;
-      cancelAnimationFrame(frame);
-      if (media.matches) {
-        snap(motion.start,first); snap(motion.end,last);
-        targetMerge(); snap(motion.merge,motion.merge.target); paint();
-      } else {
-        previous=performance.now();
-        paint();
-        frame=requestAnimationFrame(tick);
-      }
+      snap(motion.start, first); snap(motion.end, last);
+      targetMerge(); snap(motion.merge, motion.merge.target); paint();
     }
     work();
     const size=new ResizeObserver(work);
@@ -110,8 +93,7 @@ export function RangeSlider({
     if (firstTip) size.observe(firstTip);
     if (lastTip) size.observe(lastTip);
     if (joinedTip) size.observe(joinedTip);
-    media.addEventListener("change",work);
-    return ()=>{size.disconnect();media.removeEventListener("change",work);cancelAnimationFrame(frame);};
+    return () => { size.disconnect(); };
   },[first,last,motion]);
 
   if (end === undefined || !onEndChange) {
@@ -198,27 +180,6 @@ export function PasswordStrength({ value, onChange }: { value: string; onChange:
   const [shown, setShown] = useState(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
-  const meter = useRef<HTMLDivElement>(null);
-  const [bars] = useState(() => Array.from({length: 4}, () => spring(0, 260, 24)));
-  useLayoutEffect(() => {
-    const fill = Array.from(meter.current?.querySelectorAll("i") ?? []);
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let stop: (() => void) | undefined;
-    const paint = () => fill.forEach((bar, index) => {
-      bar.style.scale = `${Math.max(0, Math.min(1, bars[index].position))} 1`;
-    });
-    const timers = bars.map((bar, index) => {
-      const target = Number(index < score);
-      if (reduced) { snap(bar, target); return undefined; }
-      return setTimeout(() => {
-        bar.target = target;
-        stop?.();
-        stop = playSprings(bars, paint);
-      }, index * 60);
-    });
-    paint();
-    return () => {timers.forEach(clearTimeout); stop?.();};
-  }, [bars, score]);
   return <div className="yg-motion-password" data-score={score}>
     <label htmlFor={id}>Create a password</label>
     <div className="yg-motion-password-field">
@@ -235,8 +196,8 @@ export function PasswordStrength({ value, onChange }: { value: string; onChange:
         </svg>
       </button>
     </div>
-    <div className="yg-motion-password-meter" ref={meter} aria-hidden="true">
-      {bars.map((_, index) => <span key={index}><i /></span>)}
+    <div className="yg-motion-password-meter" aria-hidden="true">
+      {Array.from({ length: 4 }, (_, index) => <span key={index}><i style={{ scale: `${Number(index < score)} 1` }} /></span>)}
     </div>
     <div className="yg-motion-password-checks">
       <span role="status"><strong key={word}>{word}</strong></span>

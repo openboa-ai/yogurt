@@ -193,64 +193,27 @@ export function LoadingSuccessButton({ presentation, ...props }: ResultActionPro
 }
 
 function MorphingResultAction({ label, pendingLabel, successLabel, errorLabel, state, onAction, fluid }: ResultActionProps & {fluid?: boolean}) {
-  const ref = useRef<HTMLButtonElement>(null);
-  const [motion] = useState(() => ({
-    width: spring(168, 300, 22), label: spring(1, 400, 30), spinner: spring(0, 300, 28),
-    result: spring(0, 220, 20), color: spring(0, 200, 30), check: spring(0, 120, 20),
-  }));
   const pending = state === "pending", success = state === "success", result = success || state === "error";
+  const ref = useRef<HTMLButtonElement>(null);
   useLayoutEffect(() => {
     const button = ref.current;
-    if (!button) return;
-    const tracked = Object.values(motion);
-    const parent = button.parentElement;
-    const setWidth = () => {
-      const room = fluid && parent ? parent.clientWidth : 168;
-      motion.width.target = Math.min(room, pending ? (fluid ? button.offsetHeight : 56) : result && !fluid ? 140 : room);
-    };
-    setWidth();
-    if (!button.style.getPropertyValue("--yg-result-width") && state === "idle") snap(motion.width, motion.width.target);
-    const restore = state === "idle" && motion.result.position > .05;
-    motion.label.target = state === "idle" && !restore ? 1 : 0;
-    motion.spinner.target = Number(pending);
-    motion.result.target = Number(result);
-    motion.color.target = Number(success);
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!success || reduced) motion.check.target = Number(success);
-    if (restore && reduced) motion.label.target = 1;
-    const idleLabel = button.querySelector<HTMLElement>(".yg-result-morph-label");
-    const resultLabel = button.querySelector<HTMLElement>(".yg-result-morph-feedback");
-    const paint = () => {
-      const width = Math.min(fluid && parent ? parent.clientWidth : 168, motion.width.position);
-      button.style.setProperty("--yg-result-width", `${width}px`);
-      for (const [name, track] of Object.entries(motion)) {
-        if (name === "width") continue;
-        const label = name === "label" ? idleLabel : name === "result" ? resultLabel : null;
-        const visible = label ? Math.max(0, Math.min(1, (width - label.offsetWidth - 8) / 18)) : 1;
-        button.style.setProperty(`--yg-result-${name}`, String(track.position * visible));
-      }
-    };
-    let stop = playSprings(tracked, paint);
-    const delay = reduced ? 0 : success ? 150 : restore ? 120 : 0;
-    const timed = delay ? setTimeout(() => {
-      if (success) motion.check.target = 1;
-      else motion.label.target = 1;
-      stop();
-      stop = playSprings(tracked, paint);
-    }, delay) : undefined;
-    let width = parent?.clientWidth;
-    const observer = fluid && parent ? new ResizeObserver(() => {
-      if (width === parent.clientWidth) return;
-      width = parent.clientWidth;
-      setWidth();
-      stop();
-      stop = playSprings(tracked, paint);
-    }) : null;
-    if (observer && parent) observer.observe(parent);
-    return () => { clearTimeout(timed); stop(); observer?.disconnect(); };
-  }, [fluid, motion, pending, result, state, success]);
+    if (!button || !pending || !fluid) return;
+    const sync = () => { button.style.setProperty("--yg-result-width", `${button.offsetHeight}px`); };
+    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(sync);
+    observer?.observe(button);
+    sync();
+    return () => observer?.disconnect();
+  }, [pending, fluid]);
+  const settledStyle = {
+    "--yg-result-width": pending ? "56px" : fluid ? "100%" : result ? "140px" : "168px",
+    "--yg-result-label": Number(state === "idle"),
+    "--yg-result-spinner": Number(pending),
+    "--yg-result-result": Number(result),
+    "--yg-result-color": Number(success),
+    "--yg-result-check": Number(success),
+  } as CSSProperties;
   const accessible = pending ? pendingLabel : success ? successLabel : result ? errorLabel : label;
-  return <button className="yg-result-morph" ref={ref} type="button" aria-label={accessible}
+  return <button className="yg-result-morph" ref={ref} style={settledStyle} type="button" aria-label={accessible}
     aria-busy={pending || undefined} disabled={pending} data-outcome={state} onClick={onAction}>
     <span className="yg-result-morph-label" aria-hidden="true">{label}</span>
     <span className="yg-result-morph-spinner" aria-hidden="true"><i /></span>
@@ -278,7 +241,6 @@ export function CopyButton({ value, onCopy, presentation = "standard", errorLabe
   const roll = useRef<HTMLSpanElement>(null);
   const ready = useRef<HTMLSpanElement>(null);
   const done = useRef<HTMLSpanElement>(null);
-  const [motion] = useState(() => ({label: spring(0, 260, 20), icon: spring(0, 420, 18), width: spring(0, 300, 24)}));
   useLayoutEffect(() => {
     mounted.current = true;
     return () => { mounted.current = false; };
@@ -292,24 +254,13 @@ export function CopyButton({ value, onCopy, presentation = "standard", errorLabe
     const label = state === "success" ? done.current : ready.current;
     const node = roll.current;
     if (!label || !node) return;
-    const sync = () => {
-      motion.label.target = motion.icon.target = Number(state === "success");
-      motion.width.target = label.offsetWidth;
-      if (motion.width.position === 0) snap(motion.width, motion.width.target);
-      stop?.();
-      stop = playSprings(Object.values(motion), () => {
-        node.parentElement?.style.setProperty("--yg-copy-roll", String(motion.label.position));
-        node.parentElement?.style.setProperty("--yg-copy-icon", String(motion.icon.position));
-        node.style.inlineSize = `${motion.width.position}px`;
-      });
-    };
-    let stop: (() => void) | undefined;
+    const sync = () => { node.style.inlineSize = `${label.offsetWidth}px`; };
     const resize = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(sync);
     resize?.observe(label);
     if (!resize) window.addEventListener("resize", sync);
     sync();
-    return () => { resize?.disconnect(); if (!resize) window.removeEventListener("resize", sync); stop?.(); };
-  }, [motion, state, errorLabel]);
+    return () => { resize?.disconnect(); if (!resize) window.removeEventListener("resize", sync); };
+  }, [state, errorLabel]);
   useEffect(() => {
     if (state !== "success") return;
     const reset = setTimeout(() => setState("idle"), 1800);
@@ -338,7 +289,7 @@ export function CopyButton({ value, onCopy, presentation = "standard", errorLabe
   const actionLabel = state === "success" ? "Copied" : state === "error" ? errorLabel : "Copy";
   return (
     <div className="yg-copy-action" data-presentation={presentation}>
-      <button className="yg-copy-button" type="button" aria-label={actionLabel} aria-disabled={state === "pending" || undefined}
+      <button className="yg-copy-button" style={{ "--yg-copy-roll": Number(state === "success"), "--yg-copy-icon": Number(state === "success") } as CSSProperties} type="button" aria-label={actionLabel} aria-disabled={state === "pending" || undefined}
         data-outcome={state} onClick={copy}>
         <span className="yg-copy-icons" aria-hidden="true"><Icon name="copy" /><Icon name="check" /></span>
         <span ref={roll} className="yg-copy-roll" aria-hidden="true">

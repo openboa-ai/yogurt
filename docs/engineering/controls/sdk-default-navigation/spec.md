@@ -15,3 +15,7 @@ Verify selected and disabled options, pointer and keyboard selection, long label
 ## Action menu follow-up
 
 The owner requested removal of the Action Menu's separate spring animation while retaining its settled expanding and anchored appearances. Preserve the SDK popover, host callback, enabled-item navigation, keyboard opening and dismissal, outside dismissal, focus restoration, and reduced-motion usability. Opening or closing must immediately expose the correct interactive state without a separate animation loop. Verify both presentations with pointer and keyboard, including disabled choices, Escape, Tab, focus return, and rapid reversal.
+
+## Range and password follow-up
+
+The owner requested immediate SDK-style state changes in ordinary UI. Preserve the range's controlled values, pointer capture, keyboard operations, tooltip positioning, size and colors, and preserve password input and visibility controls. Remove spring frames and staggered timers without changing callbacks or adding effects. Verify values and keyboard/pointer input, tooltip bounds on resize, password score display, and reduced motion.

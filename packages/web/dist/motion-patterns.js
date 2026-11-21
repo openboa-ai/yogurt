@@ -8,13 +8,13 @@ import {
   ProfileCard,
   SlideConfirm,
   StatCard
-} from "./shared/chunk-3A2GG6AB.js";
+} from "./shared/chunk-WYKKOSZ3.js";
 import {
   MentionOptions,
   PromptAction,
   PromptEditor,
   useMention
-} from "./shared/chunk-CYW4UNCK.js";
+} from "./shared/chunk-Q6DP7H5E.js";
 import {
   Command
 } from "./shared/chunk-ZUN2HDKK.js";
@@ -30,7 +30,7 @@ import {
   playSprings,
   snap,
   spring
-} from "./shared/chunk-LWILOQUT.js";
+} from "./shared/chunk-V7PMO7T5.js";
 import {
   dist_exports7 as dist_exports
 } from "./shared/chunk-F374JVJP.js";
@@ -741,11 +741,9 @@ import { jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
 var clamp = (n, min, max) => Math.min(max, Math.max(min, n));
 var radius = 12;
 function animateRange(element, initial) {
-  const preference = matchMedia("(prefers-reduced-motion: reduce)");
   const thumb = spring(0, 900, 50), dropX = spring(0, 260, 18);
   const dropY = spring(16, 420, 22), dropScale = spring(0.5, 420, 22), press = spring(1, 520, 16);
-  const tracks = [thumb, dropX, dropY, dropScale, press];
-  let ratio = initial, width = 0, frame = 0, previous = 0;
+  let ratio = initial, width = 0;
   const x = () => radius + ratio * Math.max(1, width - radius * 2);
   function paint() {
     const stretch = 1 + Math.min(Math.abs(thumb.velocity) / 2400, 0.4);
@@ -759,25 +757,11 @@ function animateRange(element, initial) {
     element.style.setProperty("--yg-elastic-tilt", `${clamp((dropX.position - thumb.position) * 0.9, -28, 28)}deg`);
     element.style.setProperty("--yg-elastic-label-opacity", String(clamp((dropScale.position - 0.7) / 0.25, 0, 1)));
   }
-  function tick(time) {
-    dropX.target = thumb.position;
-    const moving = advanceSprings(tracks, (time - previous) / 1e3);
-    previous = time;
-    paint();
-    frame = moving ? requestAnimationFrame(tick) : 0;
-  }
   function wake() {
-    if (preference.matches) {
-      cancelAnimationFrame(frame);
-      frame = 0;
-      snap(thumb, x());
-      snap(dropX, thumb.position);
-      [dropY, dropScale, press].forEach((track) => snap(track, track.target));
-      paint();
-    } else if (!frame) {
-      previous = performance.now();
-      frame = requestAnimationFrame(tick);
-    }
+    snap(thumb, thumb.target);
+    snap(dropX, thumb.position);
+    [dropY, dropScale, press].forEach((track) => snap(track, track.target));
+    paint();
   }
   function resize() {
     const next = element.clientWidth;
@@ -789,7 +773,6 @@ function animateRange(element, initial) {
   }
   const observer = new ResizeObserver(resize);
   observer.observe(element);
-  preference.addEventListener("change", wake);
   resize();
   return {
     controlled(next, dragging) {
@@ -825,8 +808,6 @@ function animateRange(element, initial) {
     },
     dispose() {
       observer.disconnect();
-      preference.removeEventListener("change", wake);
-      cancelAnimationFrame(frame);
     }
   };
 }
@@ -991,9 +972,7 @@ function RangeSlider({
     const firstTip = rail.querySelector('[data-tip="start"]');
     const lastTip = rail.querySelector('[data-tip="end"]');
     const joinedTip = rail.querySelector('[data-tip="joined"]');
-    const media = matchMedia("(prefers-reduced-motion: reduce)");
-    const tracks = Object.values(motion);
-    let frame = 0, previous = performance.now(), width = 0, need = 0;
+    let width = 0, need = 0;
     let startInset = 0, endInset = 0;
     let firstWidth = 0, lastWidth = 0, joinedWidth = 0;
     function contain(position2, tipWidth) {
@@ -1024,13 +1003,6 @@ function RangeSlider({
     function targetMerge() {
       motion.merge.target = Number((motion.end.position - motion.start.position) * width / 100 < need);
     }
-    function tick(now) {
-      targetMerge();
-      const moving = advanceSprings(tracks, (now - previous) / 1e3);
-      previous = now;
-      paint();
-      frame = moving ? requestAnimationFrame(tick) : 0;
-    }
     function work() {
       if (!rail || !root) return;
       const bounds = root.getBoundingClientRect(), inner = rail.getBoundingClientRect();
@@ -1044,20 +1016,11 @@ function RangeSlider({
       lastWidth = lastTip?.offsetWidth ?? 0;
       joinedWidth = joinedTip?.offsetWidth ?? 0;
       need = (firstWidth + lastWidth) / 2 + 8;
-      motion.start.target = first;
-      motion.end.target = last;
-      cancelAnimationFrame(frame);
-      if (media.matches) {
-        snap(motion.start, first);
-        snap(motion.end, last);
-        targetMerge();
-        snap(motion.merge, motion.merge.target);
-        paint();
-      } else {
-        previous = performance.now();
-        paint();
-        frame = requestAnimationFrame(tick);
-      }
+      snap(motion.start, first);
+      snap(motion.end, last);
+      targetMerge();
+      snap(motion.merge, motion.merge.target);
+      paint();
     }
     work();
     const size = new ResizeObserver(work);
@@ -1065,11 +1028,8 @@ function RangeSlider({
     if (firstTip) size.observe(firstTip);
     if (lastTip) size.observe(lastTip);
     if (joinedTip) size.observe(joinedTip);
-    media.addEventListener("change", work);
     return () => {
       size.disconnect();
-      media.removeEventListener("change", work);
-      cancelAnimationFrame(frame);
     };
   }, [first, last, motion]);
   if (end === void 0 || !onEndChange) {
@@ -1212,33 +1172,6 @@ function PasswordStrength({ value, onChange }) {
   const [shown, setShown] = useState6(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
-  const meter = useRef6(null);
-  const [bars] = useState6(() => Array.from({ length: 4 }, () => spring(0, 260, 24)));
-  useLayoutEffect4(() => {
-    const fill = Array.from(meter.current?.querySelectorAll("i") ?? []);
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let stop;
-    const paint = () => fill.forEach((bar, index) => {
-      bar.style.scale = `${Math.max(0, Math.min(1, bars[index].position))} 1`;
-    });
-    const timers = bars.map((bar, index) => {
-      const target = Number(index < score);
-      if (reduced) {
-        snap(bar, target);
-        return void 0;
-      }
-      return setTimeout(() => {
-        bar.target = target;
-        stop?.();
-        stop = playSprings(bars, paint);
-      }, index * 60);
-    });
-    paint();
-    return () => {
-      timers.forEach(clearTimeout);
-      stop?.();
-    };
-  }, [bars, score]);
   return /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password", "data-score": score, children: [
     /* @__PURE__ */ jsx7("label", { htmlFor: id, children: "Create a password" }),
     /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password-field", children: [
@@ -1272,7 +1205,7 @@ function PasswordStrength({ value, onChange }) {
         }
       )
     ] }),
-    /* @__PURE__ */ jsx7("div", { className: "yg-motion-password-meter", ref: meter, "aria-hidden": "true", children: bars.map((_, index) => /* @__PURE__ */ jsx7("span", { children: /* @__PURE__ */ jsx7("i", {}) }, index)) }),
+    /* @__PURE__ */ jsx7("div", { className: "yg-motion-password-meter", "aria-hidden": "true", children: Array.from({ length: 4 }, (_, index) => /* @__PURE__ */ jsx7("span", { children: /* @__PURE__ */ jsx7("i", { style: { scale: `${Number(index < score)} 1` } }) }, index)) }),
     /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password-checks", children: [
       /* @__PURE__ */ jsx7("span", { role: "status", children: /* @__PURE__ */ jsx7("strong", { children: word }, word) }),
       /* @__PURE__ */ jsx7("span", { id: `${id}-checks`, children: "8+ characters, mixed case, a number and a symbol" })

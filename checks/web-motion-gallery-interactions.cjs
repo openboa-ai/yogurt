@@ -64,10 +64,9 @@ const actions = {
   "copy-button": async (root, page) => {
     await button(root, "Copy").click();
     await root.getByRole("status").getByText("Copied to clipboard.").waitFor();
-    await page.waitForFunction(() => {
-      const progress = Number(document.querySelector(".yg-copy-button")?.style.getPropertyValue("--yg-copy-roll"));
-      return progress > 0 && progress < 1;
-    });
+    const copied = button(root, "Copied");
+    await copied.waitFor();
+    assert.equal(await copied.evaluate(node => node.style.getPropertyValue("--yg-copy-roll")), "1");
     await button(root, "Copy").waitFor();
   },
   "date-choice": async root => {

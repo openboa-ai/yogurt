@@ -1,10 +1,8 @@
 "use client";
 import {
-  advanceSprings,
   playSprings,
-  snap,
   spring
-} from "./chunk-LWILOQUT.js";
+} from "./chunk-V7PMO7T5.js";
 import {
   Disclosure
 } from "./chunk-Y34L4C5K.js";
@@ -531,62 +529,26 @@ function FanCards({ items }) {
 function StatSeries({ values }) {
   const stroke = useRef3(null), fill = useRef3(null);
   const dot = useRef3(null);
-  const axes = useRef3([]);
   useLayoutEffect2(() => {
     const safe = values.map((value) => Number.isFinite(value) ? value : 0);
-    if (axes.current.length !== safe.length) axes.current = safe.map((value) => spring(value, 200, 17));
-    const points = axes.current;
-    const media = matchMedia("(prefers-reduced-motion: reduce)");
-    function paint() {
-      if (!points.length) return;
-      const coordinates = points.map(({ position }, i) => [
-        4 + i / Math.max(1, points.length - 1) * 288,
-        8 + (1 - Math.min(1.05, Math.max(-0.05, position))) * 80
-      ]);
-      let curve = `M${coordinates[0].join(" ")}`;
-      for (let i = 0; i < coordinates.length - 1; i++) {
-        const a = coordinates[i - 1] ?? coordinates[i], b = coordinates[i];
-        const c = coordinates[i + 1], d = coordinates[i + 2] ?? c;
-        const first = b.map((value, axis) => value + (c[axis] - a[axis]) / 6);
-        const second = c.map((value, axis) => value - (d[axis] - b[axis]) / 6);
-        curve += ` C${first.join(" ")} ${second.join(" ")} ${c.join(" ")}`;
-      }
-      const last = coordinates[coordinates.length - 1];
-      stroke.current?.setAttribute("d", curve);
-      fill.current?.setAttribute("d", `${curve} L${last[0]} 96 L4 96 Z`);
-      dot.current?.setAttribute("cx", String(last[0]));
-      dot.current?.setAttribute("cy", String(last[1]));
+    if (!safe.length) return;
+    const coordinates = safe.map((position, i) => [
+      4 + i / Math.max(1, safe.length - 1) * 288,
+      8 + (1 - Math.min(1.05, Math.max(-0.05, position))) * 80
+    ]);
+    let curve = `M${coordinates[0].join(" ")}`;
+    for (let i = 0; i < coordinates.length - 1; i++) {
+      const a = coordinates[i - 1] ?? coordinates[i], b = coordinates[i];
+      const c = coordinates[i + 1], d = coordinates[i + 2] ?? c;
+      const first = b.map((value, axis) => value + (c[axis] - a[axis]) / 6);
+      const second = c.map((value, axis) => value - (d[axis] - b[axis]) / 6);
+      curve += ` C${first.join(" ")} ${second.join(" ")} ${c.join(" ")}`;
     }
-    let frame = 0, previous = performance.now(), start = previous;
-    function tick(time) {
-      let waiting = false;
-      points.forEach((point, index) => {
-        if (time - start < index * 30) waiting = true;
-        else point.target = safe[index];
-      });
-      const moving = advanceSprings(points, (time - previous) / 1e3);
-      previous = time;
-      paint();
-      if (moving || waiting) frame = requestAnimationFrame(tick);
-      else frame = 0;
-    }
-    function sync() {
-      cancelAnimationFrame(frame);
-      if (media.matches) {
-        points.forEach((point, index) => snap(point, safe[index]));
-        paint();
-      } else {
-        paint();
-        start = previous = performance.now();
-        frame = requestAnimationFrame(tick);
-      }
-    }
-    sync();
-    media.addEventListener("change", sync);
-    return () => {
-      cancelAnimationFrame(frame);
-      media.removeEventListener("change", sync);
-    };
+    const last = coordinates[coordinates.length - 1];
+    stroke.current?.setAttribute("d", curve);
+    fill.current?.setAttribute("d", `${curve} L${last[0]} 96 L4 96 Z`);
+    dot.current?.setAttribute("cx", String(last[0]));
+    dot.current?.setAttribute("cy", String(last[1]));
   }, [values]);
   return /* @__PURE__ */ jsxs3("svg", { viewBox: "0 0 296 96", className: "yg-stat-series", "aria-hidden": "true", children: [
     /* @__PURE__ */ jsx3("path", { ref: fill, className: "yg-stat-area" }),
@@ -595,23 +557,11 @@ function StatSeries({ values }) {
   ] });
 }
 function StatCard({ label, value, detail, series }) {
-  const total = useRef3(null);
-  const [motion] = useState3(() => spring(value, 160, 22));
-  useLayoutEffect2(() => {
-    motion.target = value;
-    if (!Number.isFinite(value) || !Number.isFinite(motion.position)) {
-      snap(motion, value);
-      return;
-    }
-    return playSprings([motion], () => {
-      if (total.current) total.current.textContent = (Number.isInteger(value) ? Math.round(motion.position) : Math.round(motion.position * 10) / 10).toLocaleString();
-    });
-  }, [motion, value]);
   return /* @__PURE__ */ jsxs3("section", { className: "yg-stat-card", "aria-label": label, children: [
     /* @__PURE__ */ jsxs3("div", { className: "yg-stat-heading", children: [
       /* @__PURE__ */ jsxs3("div", { children: [
         /* @__PURE__ */ jsx3("span", { className: "yg-stat-label", children: label }),
-        /* @__PURE__ */ jsx3("strong", { className: "yg-stat-value", ref: total, children: value.toLocaleString() })
+        /* @__PURE__ */ jsx3("strong", { className: "yg-stat-value", children: value.toLocaleString() })
       ] }),
       detail && /* @__PURE__ */ jsx3("span", { className: "yg-stat-detail", children: detail })
     ] }),

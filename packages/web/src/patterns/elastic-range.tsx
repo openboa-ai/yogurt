@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useLayoutEffect, useRef, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react";
-import { advanceSprings, snap, spring } from "../foundation/spring-motion.js";
+import { snap, spring } from "../foundation/spring-motion.js";
 
 const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n));
 const radius = 12;
@@ -12,11 +12,9 @@ type ElasticRangeProps = {
 };
 
 function animateRange(element: HTMLDivElement, initial: number) {
-  const preference = matchMedia("(prefers-reduced-motion: reduce)");
   const thumb = spring(0, 900, 50), dropX = spring(0, 260, 18);
   const dropY = spring(16, 420, 22), dropScale = spring(.5, 420, 22), press = spring(1, 520, 16);
-  const tracks = [thumb, dropX, dropY, dropScale, press];
-  let ratio = initial, width = 0, frame = 0, previous = 0;
+  let ratio = initial, width = 0;
   const x = () => radius + ratio * Math.max(1, width - radius * 2);
 
   function paint() {
@@ -32,24 +30,11 @@ function animateRange(element: HTMLDivElement, initial: number) {
     element.style.setProperty("--yg-elastic-label-opacity", String(clamp((dropScale.position - .7) / .25, 0, 1)));
   }
 
-  function tick(time: number) {
-    dropX.target = thumb.position;
-    const moving = advanceSprings(tracks, (time - previous) / 1000);
-    previous = time;
-    paint();
-    frame = moving ? requestAnimationFrame(tick) : 0;
-  }
   function wake() {
-    if (preference.matches) {
-      cancelAnimationFrame(frame);
-      frame = 0;
-      snap(thumb, x()); snap(dropX, thumb.position);
-      [dropY, dropScale, press].forEach(track => snap(track, track.target));
-      paint();
-    } else if (!frame) {
-      previous = performance.now();
-      frame = requestAnimationFrame(tick);
-    }
+    snap(thumb, thumb.target);
+    snap(dropX, thumb.position);
+    [dropY, dropScale, press].forEach(track => snap(track, track.target));
+    paint();
   }
   function resize() {
     const next = element.clientWidth;
@@ -60,7 +45,6 @@ function animateRange(element: HTMLDivElement, initial: number) {
   }
   const observer = new ResizeObserver(resize);
   observer.observe(element);
-  preference.addEventListener("change", wake);
   resize();
 
   return {
@@ -94,8 +78,6 @@ function animateRange(element: HTMLDivElement, initial: number) {
     },
     dispose() {
       observer.disconnect();
-      preference.removeEventListener("change", wake);
-      cancelAnimationFrame(frame);
     },
   };
 }
