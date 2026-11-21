@@ -11,6 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
+import { Input as SDKInput } from "@ui-sdk/react/input";
 import { Button, IconButton } from "./actions.js";
 import { Checkbox, Field } from "./forms.js";
 import { cx, Icon, type Option } from "../foundation/foundation.js";
@@ -139,16 +140,17 @@ export function InputOTP({
           data-disabled={disabled || undefined}
           style={{ "--yg-digits": count } as CSSProperties}
         >
-          <input
+          <SDKInput
             {...binding}
             aria-label={label}
+            data-agent-secret=""
             inputMode="numeric"
             autoComplete="one-time-code"
             pattern="[0-9]*"
             name={name}
             disabled={disabled}
             value={value}
-            onSelect={(e) => setCursor(e.currentTarget.selectionStart ?? 0)}
+            render={<input onSelect={(e) => setCursor(e.currentTarget.selectionStart ?? 0)} />}
             onChange={(event) => {
               const next = event.currentTarget.value.replace(/\D/g, "").slice(0, count);
               setCursor(Math.min(event.currentTarget.selectionStart ?? next.length, next.length));

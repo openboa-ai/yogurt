@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Accordion, ActionMenu, Button, Checkbox, Dialog, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
+import { Accordion, ActionMenu, Button, Checkbox, Dialog, InputOTP, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 import { Button as CopiedButton } from "../src/components/ui/button";
 
@@ -25,7 +25,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent accordion" && step.action === "setValue") ||
       (step.label === "Agent menu" && step.action === "setOpen") ||
       (step.label === "Menu second" && step.action === "press") ||
-      (step.label === "Agent hint" && step.action === "setOpen"),
+      (step.label === "Agent hint" && step.action === "setOpen") ||
+      (step.label === "Agent code" && step.action === "setValue"),
   });
 }
 
@@ -66,6 +67,9 @@ export default function AgentButtonFixture() {
   const [nestedChanges, setNestedChanges] = useState(0);
   const [menuSelection, setMenuSelection] = useState("");
   const [menuCalls, setMenuCalls] = useState(0);
+  const [code, setCode] = useState("");
+  const [deniedCode, setDeniedCode] = useState("31");
+  const [formCode, setFormCode] = useState("12");
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
   const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
   const sections = options.map(option => ({ id: option.id, title: option.label, disabled: option.disabled, content: <input aria-label={`Section ${option.id}`} defaultValue="Original" /> }));
@@ -133,6 +137,9 @@ export default function AgentButtonFixture() {
         <ActionMenu label="Denied menu" items={[{id: "denied", label: "Denied menu option"}]} onSelect={() => setMenuCalls(count => count + 1)} />
         <Tooltip label="Agent hint">{props => <Button {...props}>Tooltip trigger</Button>}</Tooltip>
         <Tooltip label="Denied hint">{props => <Button {...props}>Denied tooltip trigger</Button>}</Tooltip>
+        <InputOTP label="Agent code" value={code} onValueChange={setCode} />
+        <InputOTP label="Denied code" value={deniedCode} onValueChange={setDeniedCode} />
+        <InputOTP label="Disabled code" value="" disabled onValueChange={() => {}} />
         <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
         <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
           <input aria-label="Draft" defaultValue="Original draft" />
@@ -149,6 +156,7 @@ export default function AgentButtonFixture() {
           <Textarea label="Form notes" name="description" defaultValue="Original note" />
           <RadioGroup label="Form choice" name="choice" options={options} value={radio} onValueChange={setRadio} />
           <Toggle pressed={formToggle} onPressedChange={setFormToggle}>Form toggle</Toggle>
+          <InputOTP label="Form code" name="code" value={formCode} onValueChange={setFormCode} />
           <Button type="submit">Submit form</Button>
           <Button onClick={hit}>Ordinary action</Button>
         </form>

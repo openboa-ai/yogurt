@@ -27,6 +27,7 @@ import {
   useState
 } from "react";
 import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
+import { Input as SDKInput } from "@ui-sdk/react/input";
 import { jsx, jsxs } from "react/jsx-runtime";
 function InputGroup({
   label,
@@ -135,17 +136,18 @@ function InputOTP({
       style: { "--yg-digits": count },
       children: [
         /* @__PURE__ */ jsx(
-          "input",
+          SDKInput,
           {
             ...binding,
             "aria-label": label,
+            "data-agent-secret": "",
             inputMode: "numeric",
             autoComplete: "one-time-code",
             pattern: "[0-9]*",
             name,
             disabled,
             value,
-            onSelect: (e) => setCursor(e.currentTarget.selectionStart ?? 0),
+            render: /* @__PURE__ */ jsx("input", { onSelect: (e) => setCursor(e.currentTarget.selectionStart ?? 0) }),
             onChange: (event) => {
               const next = event.currentTarget.value.replace(/\D/g, "").slice(0, count);
               setCursor(Math.min(event.currentTarget.selectionStart ?? next.length, next.length));
