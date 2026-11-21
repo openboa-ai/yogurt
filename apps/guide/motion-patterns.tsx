@@ -533,6 +533,11 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
 
 const patterns = demos.flatMap(section => section.items.map(item => ({ ...item, section })));
 
+export function MotionComponentPreview({ id }: { id: string }) {
+  const pattern = patterns.find(example => example.id === id);
+  return pattern ? <div className="motion-pattern-sample">{pattern.body}</div> : null;
+}
+
 function locationPattern() {
   const id = locationId("motion");
   return patterns.find(pattern => pattern.id === id)?.id ??

@@ -10,6 +10,9 @@ import {
   Dialog
 } from "./chunk-Y34L4C5K.js";
 import {
+  NavigationList
+} from "./chunk-IJFODFEI.js";
+import {
   Checkbox,
   RadioGroup,
   Textarea
@@ -19,7 +22,8 @@ import {
   IconButton
 } from "./chunk-4IPCB3MM.js";
 import {
-  Icon
+  Icon,
+  cx
 } from "./chunk-GW3HPY4O.js";
 import {
   __export
@@ -6728,15 +6732,51 @@ function Sidebar({
     )) }) })
   ] });
 }
-function Navbar({
-  label,
-  onBack,
-  action
-}) {
-  return /* @__PURE__ */ jsxs("header", { className: "yg-navbar", children: [
-    /* @__PURE__ */ jsx(IconButton, { icon: "back", label: "Go back", onClick: onBack }),
-    /* @__PURE__ */ jsx("strong", { children: label }),
-    action
+function Navbar(props2) {
+  const navigationId = useId2();
+  const toggle = useRef4(null);
+  const className = cx("yg-navbar", props2.className);
+  if (props2.variant === "sections") {
+    return /* @__PURE__ */ jsxs("header", { className, "data-variant": "sections", onKeyDown: (event) => {
+      if (event.key === "Escape" && props2.expanded) {
+        props2.onExpandedChange(false);
+        toggle.current?.focus();
+      }
+    }, children: [
+      /* @__PURE__ */ jsx("div", { className: "yg-navbar-identity", children: props2.identity }),
+      /* @__PURE__ */ jsx(
+        NavigationList,
+        {
+          id: navigationId,
+          label: props2.label,
+          items: props2.destinations,
+          current: props2.current,
+          currentKind: props2.currentKind,
+          orientation: "horizontal",
+          expanded: props2.expanded
+        }
+      ),
+      /* @__PURE__ */ jsxs("div", { className: "yg-navbar-actions", children: [
+        /* @__PURE__ */ jsx(
+          IconButton,
+          {
+            ref: toggle,
+            className: "yg-navbar-toggle",
+            icon: props2.expanded ? "close" : "menu",
+            label: props2.expanded ? "Close menu" : "Open menu",
+            "aria-controls": navigationId,
+            "aria-expanded": props2.expanded,
+            onClick: () => props2.onExpandedChange(!props2.expanded)
+          }
+        ),
+        props2.action
+      ] })
+    ] });
+  }
+  return /* @__PURE__ */ jsxs("header", { className, children: [
+    /* @__PURE__ */ jsx(IconButton, { icon: "back", label: "Go back", onClick: props2.onBack }),
+    /* @__PURE__ */ jsx("strong", { children: props2.label }),
+    props2.action
   ] });
 }
 function CarouselStrip({ items, current, move }) {

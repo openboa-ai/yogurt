@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { Button, ButtonGroup, PageHeader, Select, Yogurt } from "@openboa/yogurt";
 import motion from "../../design/assets/agents/avatar-motion.json";
 import { AgentAvatar, getAgentFamily, type AgentColor, type AgentVariant } from "../../packages/web/src/identity/identity.js";
 import { agentPresenceLabels } from "../../packages/web/src/identity/agent-motion-data.js";
@@ -50,21 +51,18 @@ export function AgentFamily() {
 
   return (
     <main data-family>
-      <h1>Agent family</h1>
+      <PageHeader title="Agent family" detail="Explore the shapes and play through each agent state." />
       <div className="family-controls">
-        <label>Agent state
-          <select value={state} onChange={event => selectState(event.currentTarget.value as Presence)}>
-            {states.map(id => <option value={id} key={id}>{agentPresenceLabels[id]}</option>)}
-          </select>
-        </label>
-        <label>Color
-          <select value={color ?? ""} onChange={event => setColor((event.currentTarget.value || undefined) as AgentColor | undefined)}>
-            <option value="">Original colors</option>
-            {(Object.keys(agentColors) as AgentColor[]).map(token => <option value={token} key={token}>{token}</option>)}
-          </select>
-        </label>
-        <button type="button" className="family-sequence" onClick={playSequence}>{playing ? "Stop sequence" : "Play sequence"}</button>
-        <button type="button" onClick={() => setReplay(value => value + 1)}>Replay state</button>
+        <Select label="Agent state" value={state}
+          options={states.map(id => ({ id, label: agentPresenceLabels[id] }))}
+          onChange={event => selectState(event.currentTarget.value as Presence)} />
+        <Select label="Color" value={color ?? ""}
+          options={[{ id: "", label: "Original colors" }, ...Object.keys(agentColors).map(id => ({ id, label: id }))]}
+          onChange={event => setColor(event.currentTarget.value === "" ? undefined : event.currentTarget.value as AgentColor)} />
+        <ButtonGroup label="Agent playback">
+          <Button emphasis="soft" onClick={() => setReplay(value => value + 1)}>Replay state</Button>
+          <Button onClick={playSequence}>{playing ? "Stop sequence" : "Play sequence"}</Button>
+        </ButtonGroup>
       </div>
       <section aria-label="Detail preview" className="family-detail">
         <h2>{agentShapes[shape].name} <span>96 px</span></h2>
@@ -99,4 +97,4 @@ export function AgentFamily() {
 }
 
 const host = document.getElementById("yogurt-agent-family");
-if (host) createRoot(host).render(<AgentFamily />);
+if (host) createRoot(host).render(<Yogurt><AgentFamily /></Yogurt>);

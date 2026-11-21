@@ -175,21 +175,33 @@ export function PageHeader({
   title,
   detail,
   eyebrow,
+  subtitle,
+  leading,
   action,
+  featured = false,
+  className,
 }: {
   title: string;
   detail?: string;
   eyebrow?: string;
+  subtitle?: string;
+  leading?: ReactNode;
   action?: ReactNode;
+  featured?: boolean;
+  className?: string;
 }) {
   return (
-    <header className="yg-section-line">
+    <header className={cx("yg-section-line", "yg-page-header", className)} data-featured={featured || undefined}>
       <div>
         {eyebrow && <p className="yg-meta">{eyebrow}</p>}
-        <Heading level={1}>{title}</Heading>
-        {detail && <p className="yg-help">{detail}</p>}
+        <div className="yg-page-header-title">
+          {leading}
+          <Heading level={1} tabIndex={-1}>{title}</Heading>
+        </div>
+        {subtitle && <p className="yg-page-header-subtitle">{subtitle}</p>}
+        {detail && <p className="yg-page-header-detail">{detail}</p>}
       </div>
-      {action}
+      {action && <div className="yg-page-header-actions">{action}</div>}
     </header>
   );
 }

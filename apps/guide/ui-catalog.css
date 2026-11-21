@@ -60,36 +60,6 @@ body {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.nav-family {
-  margin: 0 0 4px;
-}
-.nav-family > button,
-.nav-family a {
-  width: 100%;
-  display: flex;
-  gap: var(--yg-gap-tight);
-  align-items: center;
-  justify-content: space-between;
-  min-height: 32px;
-  border: 0;
-  border-radius: var(--yg-radius-small);
-  background: transparent;
-  text-decoration: none;
-  color: var(--yg-text);
-  text-align: start;
-  padding: var(--boa-space-4) var(--boa-space-8);
-  font: var(--yg-font-action);
-}
-.nav-family > button svg {
-  width: 13px;
-  color: var(--yg-muted);
-}
-.nav-family > button .yg-button-label,
-.nav-family > button .yg-button-content {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
 .related-actions { margin-block: var(--yg-gap-section); }
 .catalog-guidance { margin-block: var(--yg-gap-section); max-inline-size: 42rem; }
 .catalog-guidance p { margin-block: var(--boa-space-4) var(--boa-space-12); }
@@ -97,46 +67,13 @@ body {
 .catalog-guidance-links { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline) var(--yg-gap-panel); }
 .related-actions p { margin-block: var(--boa-space-4) var(--boa-space-12); }
 .related-actions > div { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline) var(--yg-gap-panel); }
-.nav-family a {
-  padding-inline-start: var(--yg-inset-panel);
-  color: var(--yg-muted);
-  font: var(--yg-font-help);
-}
-.nav-family a[aria-current] {
-  color: var(--yg-inverse);
-  background: var(--yg-field);
-  font-weight: 550;
-}
-.nav-family a:hover,
-.nav-family > button:hover {
-  background: var(--yg-field);
-}
 .catalog-body > main {
   width: 100%;
   min-width: 0;
   padding: 0 0 var(--yg-inset-sheet);
   outline: 0;
 }
-.catalog-intro {
-  margin-bottom: 28px;
-}
-.catalog-intro p {
-  margin: 5px 0 0;
-  font: var(--yg-font-body);
-  color: var(--yg-muted);
-}
-.catalog-intro p.catalog-family {
-  font: var(--yg-font-help);
-  color: var(--yg-muted);
-  margin: 0 0 5px;
-}
-.catalog-intro h1 {
-  margin: 0;
-  font: var(--yg-font-display);
-  font-size: clamp(var(--boa-size-title), 4.5vw, var(--boa-size-headline));
-  line-height: 1.08;
-  letter-spacing: var(--boa-tracking-display);
-}
+.catalog-intro { margin-block-end: var(--yg-gap-section); }
 .preview-tools,
 .preview-caption {
   display: flex;
@@ -283,9 +220,6 @@ body {
   }
   .catalog-body > main {
     padding-top: var(--boa-space-4);
-  }
-  .catalog-intro {
-    margin-bottom: 20px;
   }
   .specimen {
     min-height: 155px;

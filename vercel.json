@@ -7,6 +7,10 @@
   "rewrites": [
     { "source": "/components", "destination": "/index.html" },
     { "source": "/components/:id", "destination": "/index.html" },
+    { "source": "/templates", "destination": "/index.html" },
+    { "source": "/templates/:id", "destination": "/index.html" },
+    { "source": "/examples", "destination": "/index.html" },
+    { "source": "/examples/sourdough", "destination": "/index.html" },
     { "source": "/motion", "destination": "/index.html" },
     { "source": "/motion/:id", "destination": "/index.html" },
     { "source": "/workflows", "destination": "/index.html" },

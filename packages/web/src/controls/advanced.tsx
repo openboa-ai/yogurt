@@ -12,10 +12,10 @@ import {
 import { Accordion as SDKAccordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionPanel } from "@ui-sdk/react/accordion";
 import { DayPicker } from "react-day-picker";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
-import { Icon, type IconName, type Option } from "../foundation/foundation.js";
+import { cx, Icon, type IconName, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
 import { Dialog } from "./layers.js";
-import type { Destination } from "./navigation.js";
+import { NavigationList, type Destination } from "./navigation.js";
 import { Checkbox, RadioGroup, Textarea } from "./forms.js";
 import { CarouselMotionReview } from "./motion-review-context.js";
 
@@ -407,20 +407,50 @@ export function Sidebar({
     </aside>
   );
 }
-export function Navbar({
-  label,
-  onBack,
-  action,
-}: {
-  label: string;
-  onBack: () => void;
-  action?: ReactNode;
-}) {
+type NavbarProps = { className?: string; action?: ReactNode } & (
+  | { variant?: "back"; label: string; onBack: () => void }
+  | {
+      variant: "sections";
+      label: string;
+      identity: ReactNode;
+      destinations: Destination[];
+      current: string;
+      currentKind?: "page" | "location";
+      expanded: boolean;
+      onExpandedChange: (expanded: boolean) => void;
+    }
+);
+
+export function Navbar(props: NavbarProps) {
+  const navigationId = useId();
+  const toggle = useRef<HTMLButtonElement>(null);
+  const className = cx("yg-navbar", props.className);
+  if (props.variant === "sections") {
+    return (
+      <header className={className} data-variant="sections" onKeyDown={event => {
+        if (event.key === "Escape" && props.expanded) {
+          props.onExpandedChange(false);
+          toggle.current?.focus();
+        }
+      }}>
+        <div className="yg-navbar-identity">{props.identity}</div>
+        <NavigationList id={navigationId} label={props.label} items={props.destinations}
+          current={props.current} currentKind={props.currentKind}
+          orientation="horizontal" expanded={props.expanded} />
+        <div className="yg-navbar-actions">
+          <IconButton ref={toggle} className="yg-navbar-toggle" icon={props.expanded ? "close" : "menu"}
+            label={props.expanded ? "Close menu" : "Open menu"} aria-controls={navigationId}
+            aria-expanded={props.expanded} onClick={() => props.onExpandedChange(!props.expanded)} />
+          {props.action}
+        </div>
+      </header>
+    );
+  }
   return (
-    <header className="yg-navbar">
-      <IconButton icon="back" label="Go back" onClick={onBack} />
-      <strong>{label}</strong>
-      {action}
+    <header className={className}>
+      <IconButton icon="back" label="Go back" onClick={props.onBack} />
+      <strong>{props.label}</strong>
+      {props.action}
     </header>
   );
 }

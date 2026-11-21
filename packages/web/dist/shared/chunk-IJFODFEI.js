@@ -11,8 +11,26 @@ import {
 import { SegmentedControl as SDKSegment, SegmentedControlItem, SegmentedControlIndicator } from "@ui-sdk/react/segmented-control";
 import { Tabs as SDKTabs, TabsList, TabsPanel, TabsTab, TabsIndicator } from "@ui-sdk/react/tabs";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
-function Link(props) {
-  return /* @__PURE__ */ jsx("a", { ...props, className: cx("yg-link", props.className) });
+function Link({
+  emphasis,
+  size = "regular",
+  className,
+  children,
+  ...props
+}) {
+  if (emphasis) {
+    return /* @__PURE__ */ jsx(
+      "a",
+      {
+        ...props,
+        className: cx("yg-button", "yg-action-link", className),
+        "data-emphasis": emphasis,
+        "data-control-size": size,
+        children: /* @__PURE__ */ jsx("span", { className: "yg-button-label", children })
+      }
+    );
+  }
+  return /* @__PURE__ */ jsx("a", { ...props, className: cx("yg-link", className), children });
 }
 function Breadcrumb({
   items,
@@ -24,19 +42,15 @@ function Breadcrumb({
   ] }, item.id)) }) });
 }
 function NavigationList({
+  id,
   items,
   current,
-  label
+  currentKind = "page",
+  label,
+  orientation = "vertical",
+  expanded
 }) {
-  return /* @__PURE__ */ jsx("nav", { "aria-label": label, className: "yg-nav-list", children: items.map((o) => /* @__PURE__ */ jsx(
-    "a",
-    {
-      href: o.href,
-      "aria-current": o.id === current ? "page" : void 0,
-      children: o.label
-    },
-    o.id
-  )) });
+  return /* @__PURE__ */ jsx("nav", { id, "aria-label": label, className: "yg-nav-list", "data-orientation": orientation, "data-expanded": expanded, children: items.map((item) => /* @__PURE__ */ jsx(Link, { href: item.href, "aria-current": item.id === current ? currentKind : void 0, children: item.label }, item.id)) });
 }
 function SegmentedControl({
   label,

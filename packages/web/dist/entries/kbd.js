@@ -1,7 +1,7 @@
 "use client";
 import {
   KeyboardShortcut
-} from "../shared/chunk-7EGCAWTV.js";
+} from "../shared/chunk-6Z6OHTQV.js";
 import "../shared/chunk-QVZBBQIY.js";
 import "../shared/chunk-ALIDK7RZ.js";
 import "../shared/chunk-F374JVJP.js";

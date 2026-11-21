@@ -1,23 +1,47 @@
 import { lazy, startTransition, Suspense, useEffect, useLayoutEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { Heading, IconButton, Link, ProjectMark, Text, Yogurt } from "@openboa/yogurt";
+import { IconButton, Link, Navbar, PageHeader, ProjectMark, Text, Yogurt } from "@openboa/yogurt";
 import "../../../design/styles/components.css";
 import "../../../design/styles/ui.css";
 import "./shell.css";
 import { guidePages, canonicalGuideUrl, matchGuidePath } from "../guide-routes.mjs";
+import motionCatalog from "../../../catalog/motion-components.json";
+
+const motionDestinations = new Map(motionCatalog.components.flatMap(component =>
+  component.examples.map(example => [example, component.id] as const)));
+for (const [example, component] of Object.entries({
+  "otp": "input-otp", "toggle-switch": "switch", "smooth-tabs": "tabs",
+  "segmented-control": "segmented-control", "sidebar-collapse": "sidebar-layout",
+  "plan-switch": "motion-plan-switch", "focus-mode": "motion-focus-picker",
+})) motionDestinations.set(example, component);
+
+function hostedUrl(url: URL) {
+  const canonical = canonicalGuideUrl(url);
+  if (!canonical) return null;
+  const next = new URL(canonical, url.origin);
+  const page = matchGuidePath(next.pathname);
+  if (page?.id === "workflows") return "/playbook";
+  if (page?.id === "motion-comparison") return "/components";
+  if (page?.id === "motion") {
+    const id = motionDestinations.get(next.pathname.split("/")[2] || next.hash.slice(1));
+    return id ? "/components/" + id : "/components";
+  }
+  return canonical;
+}
 
 const EditorialPage = lazy(() => import("./editorial").then(module => ({ default: module.EditorialPage })));
 const Catalog = lazy(() => import("./components"));
-const Gallery = lazy(() => import("./motion-patterns"));
-const Workflows = lazy(() => import("./workflows"));
-const MotionComparison = lazy(() => import("./motion-comparison"));
+const Templates = lazy(() => import("./templates"));
+const Examples = lazy(() => import("./examples"));
 const AgentFamily = lazy(() => import("./agents"));
+const destinations = guidePages.filter(page => !page.parent && !page.retired)
+  .map(page => ({ id: page.id, label: page.title, href: page.path }));
 const editorialPages = ["brand", "system", "library", "adoption", "playbook", "emoji"] as const;
 type EditorialId = typeof editorialPages[number];
 type Appearance = "light" | "dark";
 
 function currentUrl() {
-  return canonicalGuideUrl(new URL(location.href)) ?? (location.pathname + location.search + location.hash);
+  return hostedUrl(new URL(location.href)) ?? (location.pathname + location.search + location.hash);
 }
 
 const startingUrl = currentUrl();
@@ -64,11 +88,10 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
   if (editorialPages.includes(id as EditorialId)) return <EditorialPage id={id as EditorialId} />;
   switch (id) {
     case "components": return <Catalog guideAppearance={appearance} />;
-    case "motion": return <Gallery guideAppearance={appearance} />;
-    case "workflows": return <Workflows guideAppearance={appearance} />;
-    case "motion-comparison": return <MotionComparison embedded guideAppearance={appearance} />;
+    case "templates": return <Templates id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
+    case "examples": return <Examples id={new URL(href, location.origin).pathname.split("/")[2]} />;
     case "agents": return <div className="guide-agents"><AgentFamily /></div>;
-    default: return <main><Heading level={1}>Guide page not found</Heading><Link href="/">Go to Yogurt</Link></main>;
+    default: return <main><PageHeader title="Guide page not found" action={<Link href="/">Go to Yogurt</Link>} /></main>;
   }
 }
 
@@ -91,7 +114,7 @@ function Guide() {
       if (!(link instanceof HTMLAnchorElement) || (link.target && link.target !== "_self") || link.hasAttribute("download")) return;
       const target = new URL(link.href);
       if (target.origin !== location.origin) return;
-      const canonical = canonicalGuideUrl(target);
+      const canonical = hostedUrl(target);
       if (!canonical) return;
 
       event.preventDefault();
@@ -133,32 +156,18 @@ function Guide() {
   const active = page?.parent ?? id;
   return <Yogurt appearance={appearance} className="guide-shell">
     <Link className="guide-skip" href="#guide-content">Skip to content</Link>
-    <header className="guide-masthead" onKeyDown={event => {
-      if (event.key === "Escape" && menu) {
-        setMenu(false);
-        document.getElementById("guide-menu-toggle")?.focus();
-      }
-    }}>
-      <Link href="/" className="guide-identity" aria-label="Yogurt home">
+    <Navbar variant="sections" className="guide-masthead" label="Yogurt guide"
+      destinations={destinations} current={active} currentKind={active === id ? "page" : "location"}
+      expanded={menu} onExpandedChange={setMenu}
+      identity={<Link href="/" className="guide-identity" aria-label="Yogurt home">
         <ProjectMark project="yogurt" label="" size={30} />Yogurt
-      </Link>
-      <nav className="guide-navigation" id="guide-navigation" data-open={menu} aria-label="Yogurt guide">
-        {guidePages.filter(item => !item.parent).map(item =>
-          <Link key={item.id} href={item.path} aria-current={active === item.id ? (id === active ? "page" : "location") : undefined}>
-            {item.title}
-          </Link>
-        )}
-      </nav>
-      <div className="guide-header-actions">
-        <IconButton id="guide-menu-toggle" className="guide-menu-toggle" icon={menu ? "close" : "menu"} label={menu ? "Close menu" : "Open menu"}
-          aria-expanded={menu} aria-controls="guide-navigation" onClick={() => setMenu(open => !open)} />
-        <IconButton icon={appearance === "dark" ? "sun" : "moon"}
-          label={appearance === "dark" ? "Use light appearance" : "Use dark appearance"} onClick={toggleAppearance} />
-      </div>
-    </header>
+      </Link>}
+      action={<IconButton icon={appearance === "dark" ? "sun" : "moon"}
+        label={appearance === "dark" ? "Use light appearance" : "Use dark appearance"} onClick={toggleAppearance} />}
+    />
     <div id="guide-content" className="guide-content" tabIndex={-1}>
       <Suspense fallback={<Text className="guide-loading" role="status">Loading guide…</Text>}>
-        <GuideContent key={id + url.search} id={id} appearance={appearance} href={href} />
+        <GuideContent key={(id === "templates" || id === "examples" ? url.pathname : id) + url.search} id={id} appearance={appearance} href={href} />
       </Suspense>
     </div>
   </Yogurt>;

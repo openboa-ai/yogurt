@@ -134,15 +134,23 @@ function PageHeader({
   title,
   detail,
   eyebrow,
-  action
+  subtitle,
+  leading,
+  action,
+  featured = false,
+  className
 }) {
-  return /* @__PURE__ */ jsxs("header", { className: "yg-section-line", children: [
+  return /* @__PURE__ */ jsxs("header", { className: cx("yg-section-line", "yg-page-header", className), "data-featured": featured || void 0, children: [
     /* @__PURE__ */ jsxs("div", { children: [
       eyebrow && /* @__PURE__ */ jsx("p", { className: "yg-meta", children: eyebrow }),
-      /* @__PURE__ */ jsx(Heading, { level: 1, children: title }),
-      detail && /* @__PURE__ */ jsx("p", { className: "yg-help", children: detail })
+      /* @__PURE__ */ jsxs("div", { className: "yg-page-header-title", children: [
+        leading,
+        /* @__PURE__ */ jsx(Heading, { level: 1, tabIndex: -1, children: title })
+      ] }),
+      subtitle && /* @__PURE__ */ jsx("p", { className: "yg-page-header-subtitle", children: subtitle }),
+      detail && /* @__PURE__ */ jsx("p", { className: "yg-page-header-detail", children: detail })
     ] }),
-    action
+    action && /* @__PURE__ */ jsx("div", { className: "yg-page-header-actions", children: action })
   ] });
 }
 function BottomInfo({ label, children }) {

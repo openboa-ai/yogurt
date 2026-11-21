@@ -48,7 +48,9 @@
     "checks/native-catalog*.mjs",
     "docs/workspace-patterns.md",
     "docs/sidebar.md",
-    "docs/design-system-rules.md"
+    "docs/design-system-rules.md",
+    "docs/screen-composition.md",
+    "docs/component-composition.md"
   ],
   "sideEffects": [
     "**/*.css",

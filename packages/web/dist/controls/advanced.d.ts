@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { type IconName, type Option } from "../foundation/foundation.js";
-import type { Destination } from "./navigation.js";
+import { type Destination } from "./navigation.js";
 export declare function Accordion({ label, items, multiple, }: {
     label: string;
     items: {
@@ -54,11 +54,24 @@ export declare function Sidebar({ label, links, current, }: {
     links: Destination[];
     current?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Navbar({ label, onBack, action, }: {
+type NavbarProps = {
+    className?: string;
+    action?: ReactNode;
+} & ({
+    variant?: "back";
     label: string;
     onBack: () => void;
-    action?: ReactNode;
-}): import("react/jsx-runtime").JSX.Element;
+} | {
+    variant: "sections";
+    label: string;
+    identity: ReactNode;
+    destinations: Destination[];
+    current: string;
+    currentKind?: "page" | "location";
+    expanded: boolean;
+    onExpandedChange: (expanded: boolean) => void;
+});
+export declare function Navbar(props: NavbarProps): import("react/jsx-runtime").JSX.Element;
 export declare function Carousel({ label, items, }: {
     label: string;
     items: {

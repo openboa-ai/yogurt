@@ -40,3 +40,5 @@ Stack independent rows with the stack gap and group neighboring controls with th
 ### Typography
 
 Use Rethink Sans for interface text. Apply display and heading roles to titles, the action role to control labels and the body role to reading text. Use help and metadata roles for supporting information. Use the assigned tracking and line height to preserve hierarchy and readability in dense controls.
+
+Use the [desktop composition draft](screen-composition.md) for shell, layout and action defaults, and the [component selection index](component-composition.md) to choose parts and editable recipes by purpose.

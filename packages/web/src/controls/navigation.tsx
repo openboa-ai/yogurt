@@ -2,12 +2,24 @@
 import { type ComponentProps, type ReactNode } from "react";
 import { SegmentedControl as SDKSegment, SegmentedControlItem, SegmentedControlIndicator } from "@ui-sdk/react/segmented-control";
 import { Tabs as SDKTabs, TabsList, TabsPanel, TabsTab, TabsIndicator } from "@ui-sdk/react/tabs";
-import { Button } from "./actions.js";
+import { Button, type ButtonProps } from "./actions.js";
 import { type Choices } from "./forms.js";
 import { cx, Icon, type IconName } from "../foundation/foundation.js";
 
-export function Link(props: ComponentProps<"a"> & { href: string }) {
-  return <a {...props} className={cx("yg-link", props.className)} />;
+export function Link({
+  emphasis,
+  size = "regular",
+  className,
+  children,
+  ...props
+}: ComponentProps<"a"> & { href: string; emphasis?: ButtonProps["emphasis"]; size?: ButtonProps["size"] }) {
+  if (emphasis) {
+    return <a {...props} className={cx("yg-button", "yg-action-link", className)}
+      data-emphasis={emphasis} data-control-size={size}>
+      <span className="yg-button-label">{children}</span>
+    </a>;
+  }
+  return <a {...props} className={cx("yg-link", className)}>{children}</a>;
 }
 export interface Destination {
   id: string;
@@ -39,24 +51,28 @@ export function Breadcrumb({
   );
 }
 export function NavigationList({
+  id,
   items,
   current,
+  currentKind = "page",
   label,
+  orientation = "vertical",
+  expanded,
 }: {
+  id?: string;
   items: Destination[];
   current: string;
+  currentKind?: "page" | "location";
   label: string;
+  orientation?: "vertical" | "horizontal";
+  expanded?: boolean;
 }) {
   return (
-    <nav aria-label={label} className="yg-nav-list">
-      {items.map((o) => (
-        <a
-          key={o.id}
-          href={o.href}
-          aria-current={o.id === current ? "page" : undefined}
-        >
-          {o.label}
-        </a>
+    <nav id={id} aria-label={label} className="yg-nav-list" data-orientation={orientation} data-expanded={expanded}>
+      {items.map(item => (
+        <Link key={item.id} href={item.href} aria-current={item.id === current ? currentKind : undefined}>
+          {item.label}
+        </Link>
       ))}
     </nav>
   );

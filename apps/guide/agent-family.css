@@ -4,38 +4,26 @@
   font: var(--yg-font-body, var(--boa-role-weight-body) var(--boa-size-ui)/var(--boa-line-height-ui) var(--boa-font-family));
 }
 :is(#yogurt-agent-family, .guide-agents) main {
-  box-sizing: border-box;
-  background: light-dark(var(--boa-color-gray-green-50), var(--boa-color-neutral-950));
-  border-radius: 16px;
-  padding: 20px;
   display: grid;
-  gap: 16px;
+  gap: var(--yg-gap-section);
 }
-:is(#yogurt-agent-family, .guide-agents) :is(h1, h2) { margin: 0; font-weight: 550; }
-:is(#yogurt-agent-family, .guide-agents) h1 { font-size: 20px; }
-:is(#yogurt-agent-family, .guide-agents) h2 { font-size: 14px; }
+#yogurt-agent-family main { padding: var(--yg-inset-roomy); }
+:is(#yogurt-agent-family, .guide-agents) h2 { margin: 0; font: var(--yg-font-heading); }
 :is(#yogurt-agent-family, .guide-agents) h2 span {
-  margin-inline-start: 6px;
-  font-weight: 400;
-  color: light-dark(var(--boa-color-gray-green-700), var(--boa-color-neutral-400));
+  margin-inline-start: var(--yg-gap-control);
+  color: var(--yg-muted);
+  font: var(--yg-font-help);
 }
-.family-controls { display: flex; align-items: end; flex-wrap: wrap; gap: 8px; }
-.family-controls label { display: grid; gap: 4px; }
-:is(#yogurt-agent-family, .guide-agents) :is(button, select) {
-  font: inherit;
-  color: inherit;
-  padding: 6px 10px;
-  min-height: 36px;
+.family-controls { display: flex; align-items: end; flex-wrap: wrap; gap: var(--yg-gap-inline); }
+.family-roster button {
   border: 0;
-  border-radius: 8px;
-  background: light-dark(var(--boa-color-neutral-100), var(--boa-color-neutral-900));
+  border-radius: var(--yg-radius-control);
+  background: var(--yg-field);
+  color: var(--yg-text);
+  min-block-size: var(--yg-size-touch);
+  padding: var(--yg-inset-compact);
 }
-:is(#yogurt-agent-family, .guide-agents) button { cursor: pointer; }
-:is(#yogurt-agent-family, .guide-agents) .family-sequence,
-:is(#yogurt-agent-family, .guide-agents) button[aria-pressed="true"] {
-  color: light-dark(var(--boa-color-neutral-950), var(--boa-color-neutral-50));
-  background: light-dark(var(--boa-color-neutral-200), var(--boa-color-neutral-800));
-}
+.family-roster button[aria-pressed="true"] { background: var(--yg-hover); }
 .family-detail-pair {
   display: flex;
   justify-content: center;
@@ -57,10 +45,5 @@
 }
 .family-notch-row { display: flex; flex-wrap: wrap; gap: 1px; }
 @media (max-width: 400px) {
-  :is(#yogurt-agent-family, .guide-agents) main { padding: 12px; }
-  .family-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  :is(#yogurt-agent-family, .guide-agents) .family-controls select { min-width: 0; width: 100%; padding-inline: 6px; }
-}
-@media (pointer: coarse) {
-  :is(#yogurt-agent-family, .guide-agents) :is(button, select) { min-height: 44px; }
+  .family-controls > * { min-inline-size: 0; }
 }

@@ -576,11 +576,12 @@ export function ExtendedExample({
       return <Y.Sidebar label="Library" current="select" links={links} />;
     case "navbar":
       return (
-        <Y.Stack>
-          <Y.Navbar
-            label={on ? "Projects" : "Weekly review"}
-            onBack={() => setOn(!on)}
-          />
+        <Y.Stack gap={24}>
+          <Y.Navbar variant="sections" label="Workspace sections"
+            identity={<Y.Text>Workspace</Y.Text>}
+            destinations={links}
+            current="calendar" expanded={on} onExpandedChange={setOn} />
+          <Y.Navbar label={on ? "Projects" : "Weekly review"} onBack={() => setOn(!on)} />
         </Y.Stack>
       );
     case "carousel":

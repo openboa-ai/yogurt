@@ -247,9 +247,14 @@ function SidebarGroup({ label, children, action }) {
     }
   );
 }
-function SidebarSubmenu({ label, icon, children, defaultOpen = false, containsCurrent = false }) {
+function SidebarSubmenu({ label, icon, children, defaultOpen = false, containsCurrent = false, open: controlledOpen, onOpenChange }) {
   const id = useId();
-  const [open, setOpen] = useState(defaultOpen);
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+  const open = controlledOpen ?? localOpen;
+  function setOpen(next) {
+    if (controlledOpen === void 0) setLocalOpen(next);
+    onOpenChange?.(next);
+  }
   const state = useContext(SidebarContext);
   const rail = state?.rail ?? false;
   const expanded = !rail && open;

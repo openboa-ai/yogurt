@@ -1,7 +1,7 @@
 "use client";
 import {
   Attachment
-} from "./chunk-7EGCAWTV.js";
+} from "./chunk-6Z6OHTQV.js";
 import {
   MentionOptions,
   PromptAction,

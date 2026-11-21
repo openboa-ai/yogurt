@@ -265,15 +265,22 @@ export function SidebarGroup({ label, children, action }: {
   );
 }
 
-export function SidebarSubmenu({ label, icon, children, defaultOpen = false, containsCurrent = false }: {
+export function SidebarSubmenu({ label, icon, children, defaultOpen = false, containsCurrent = false, open: controlledOpen, onOpenChange }: {
   label: string;
   icon?: ReactNode;
   children: ReactNode;
   defaultOpen?: boolean;
   containsCurrent?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
   const id = useId();
-  const [open, setOpen] = useState(defaultOpen);
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+  const open = controlledOpen ?? localOpen;
+  function setOpen(next: boolean) {
+    if (controlledOpen === undefined) setLocalOpen(next);
+    onOpenChange?.(next);
+  }
   const state = useContext(SidebarContext);
   const rail = state?.rail ?? false;
   const expanded = !rail && open;

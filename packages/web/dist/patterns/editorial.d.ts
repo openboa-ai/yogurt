@@ -50,11 +50,15 @@ export declare function ListHeader({ title, detail, action, }: {
 export declare function ListFooter({ children, action, }: Content & {
     action?: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function PageHeader({ title, detail, eyebrow, action, }: {
+export declare function PageHeader({ title, detail, eyebrow, subtitle, leading, action, featured, className, }: {
     title: string;
     detail?: string;
     eyebrow?: string;
+    subtitle?: string;
+    leading?: ReactNode;
     action?: ReactNode;
+    featured?: boolean;
+    className?: string;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function BottomInfo({ label, children }: Content & {
     label: string;

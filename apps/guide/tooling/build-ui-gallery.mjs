@@ -44,8 +44,8 @@ const galleryStyles = [
     "apps/guide/motion-extra-utilities.css",
   ] : []),
 ];
-const familyStyles = ["design/styles/tokens.css", "design/styles/ui.css", "design/styles/ui-agent-motion.css", "apps/guide/agent-family.css"];
-const styles = (family ? familyStyles.map(path => read(path).replace(/^@import .*?;$/gm, "")) : galleryStyles.map(inlineStyles))
+const familyStyles = ["design/styles/ui.css", "apps/guide/agent-family.css"];
+const styles = (family ? familyStyles : galleryStyles).map(inlineStyles)
   .join("\n")
   .replace(
     /url\("\.\.\/(assets\/fonts\/[^"]+)"\)/g,

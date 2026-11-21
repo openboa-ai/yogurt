@@ -14,6 +14,8 @@ When several projects arrive at the same behavior, compare their inputs, states 
 
 ## Find the task
 
+For desktop screens, start with the [composition draft](docs/screen-composition.md) and look up the chosen parts in the [component selection index](docs/component-composition.md).
+
 | The person wants to… | Open this pattern |
 | --- | --- |
 | Find one item in a collection | `pattern.find-records` |

@@ -5,8 +5,6 @@ const base = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
 const destinations = [
   ["Design system", "/system", "Design system"],
   ["Components", "/components", "Button"],
-  ["Motion", "/motion", "Task list"],
-  ["Workflows", "/workflows", "Find a record"],
   ["Design sources", "/library", "Design sources"],
   ["Project use", "/adoption", "Use yogurt in a project"],
   ["Brand", "/", "Yogurt"],
@@ -25,21 +23,34 @@ async function checkGuide(browser, width) {
     await page.goto(base);
     await heading("Yogurt").waitFor();
     assert.equal(await page.locator("link[rel=icon]").getAttribute("href"), "/assets/projects/yogurt.svg");
-    await page.locator(".guide-home-tagline").filter({ hasText: /^ships with live cultures$/ }).waitFor();
+    await page.locator(".yg-page-header-subtitle").filter({ hasText: /^ships with live cultures$/ }).waitFor();
     await page.getByText(/^Yogurt is OpenBoa’s design system and UI SDK/).waitFor();
     await page.getByText("Every limit has a shelf life.", { exact: true }).waitFor();
+    const primaryActions = page.getByRole("group", { name: "Explore Yogurt" });
+    assert.deepEqual(await primaryActions.getByRole("link").allTextContents(), ["Explore the design system", "Browse components"]);
+    assert.deepEqual(await primaryActions.locator("[data-emphasis]").evaluateAll(links => links.map(link => link.dataset.emphasis)), ["soft", "filled"]);
+    const [logo, intro] = await Promise.all([
+      page.locator(".guide-identity").boundingBox(),
+      heading("Yogurt").locator("..").boundingBox(),
+    ]);
+    assert(Math.abs(logo.x - intro.x) < 1, "the brand and page share a reading edge");
     await page.locator(".guide-masthead").evaluate(element => { element.dataset.checkPersistence = "yes"; });
 
+    const titleSizes = [];
     for (const [label, path, title] of destinations) {
       if (mobile) await openMenu.click();
       await nav.getByRole("link", { name: label, exact: true }).click();
       await heading(title).waitFor();
+      assert.equal(await page.locator(".guide-content > :is(.catalog, .guide-editorial) .yg-page-header").first().getByRole("heading", { level: 1 }).count(), 1);
+      if (label !== "Brand") titleSizes.push(await heading(title).evaluate(el => getComputedStyle(el).fontSize));
       assert.equal(new URL(page.url()).pathname, path);
       assert.equal(await page.locator(".guide-masthead").getAttribute("data-check-persistence"), "yes");
-      assert.equal(await page.locator("#guide-navigation [aria-current=page]").innerText(), label);
+      assert.equal(await page.locator(".guide-masthead .yg-nav-list [aria-current=page]").innerText(), label);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, path);
     }
 
+    assert.equal(new Set(titleSizes).size, 1, "ordinary screen titles share the same type size");
+    assert.equal(await page.locator(".guide-masthead .yg-nav-list a:is([href='/motion'], [href='/workflows'])").count(), 0);
     await page.goBack();
     await heading("Use yogurt in a project").waitFor();
     await page.goForward();
@@ -57,12 +68,20 @@ async function checkGuide(browser, width) {
     await heading("InputOTP").waitFor();
     assert.equal(new URL(page.url()).pathname, "/components/input-otp");
     await page.goto(base + "/motion-patterns.html#plan-switch");
-    await heading("Plan switch").waitFor();
-    assert.equal(new URL(page.url()).pathname, "/motion/plan-switch");
+    await heading("PlanSwitch").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/components/motion-plan-switch");
+    const plan = page.locator(".specimen").getByRole("radiogroup", { name: "Plan" });
+    const studio = plan.getByRole("radio", { name: /Studio/ });
+    await studio.check();
+    assert.equal(await studio.isChecked(), true);
+    await page.getByRole("button", { name: "Use in a project" }).click();
+    await page.getByText('import { PlanSwitch } from "@openboa/yogurt/motion-patterns";', { exact: true }).waitFor();
     await page.goto(base + "/motion/unrecognized");
-    await heading("Pattern not found").waitFor();
+    await heading("Button").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/components");
     await page.goto(base + "/workflows#records");
-    await heading("Find a record").waitFor();
+    await heading("Product playbook").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/playbook");
     await page.goto(base + "/system#color");
     await page.locator("#swatches button").first().waitFor();
     await page.locator("#hue").selectOption("orange");
