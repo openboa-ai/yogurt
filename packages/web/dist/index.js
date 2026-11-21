@@ -11,7 +11,7 @@ import {
 import {
   Composer,
   VoiceControl
-} from "./shared/chunk-QKG6K2HK.js";
+} from "./shared/chunk-M3O4YF4O.js";
 import {
   SidebarContent,
   SidebarFooter,
@@ -103,9 +103,10 @@ import {
 import {
   CartButton,
   HoldButton,
+  ProfileCard,
   SlideConfirm
-} from "./shared/chunk-5U366SGG.js";
-import "./shared/chunk-DD5CG4T7.js";
+} from "./shared/chunk-MXD24MSV.js";
+import "./shared/chunk-SF2Y7KYI.js";
 import {
   Accordion,
   Calendar,
@@ -272,6 +273,7 @@ export {
   Pagination,
   Popover,
   Post,
+  ProfileCard,
   Progress,
   ProjectMark,
   Questionnaire,

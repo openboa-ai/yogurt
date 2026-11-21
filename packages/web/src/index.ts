@@ -20,3 +20,4 @@ export { words } from "./foundation/words.js";
 export { CopyButton, LoadingSuccessButton } from "./patterns/motion-status.js";
 export { HoldButton, SlideConfirm } from "./patterns/motion-confirm.js";
 export { CartButton } from "./patterns/motion-cart.js";
+export { ProfileCard } from "./patterns/motion-cards.js";

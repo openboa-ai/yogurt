@@ -10,7 +10,7 @@ export interface ComposerTool {
     label: string;
     disabled?: boolean;
 }
-export declare function Composer({ value, onValueChange, onSend, attachments, onRemoveAttachment, onAddAttachment, tools, onTool, pending, onStop, label, toolLabel, error, companion, }: {
+export declare function Composer({ value, onValueChange, onSend, attachments, onRemoveAttachment, onAddAttachment, tools, onTool, pending, onStop, label, toolLabel, error, companion, mentionPeople, }: {
     value: string;
     onValueChange: (value: string) => void;
     onSend: (message: {
@@ -28,6 +28,10 @@ export declare function Composer({ value, onValueChange, onSend, attachments, on
     toolLabel?: string;
     error?: string;
     companion?: ReactNode;
+    mentionPeople?: readonly {
+        id: string;
+        label: string;
+    }[];
 }): import("react/jsx-runtime").JSX.Element;
 export type VoiceState = "idle" | "recording" | "review" | "unavailable";
 export declare function VoiceControl({ state, duration, preview, onStart, onStop, onSend, onDiscard, }: {

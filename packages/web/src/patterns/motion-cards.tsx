@@ -1,6 +1,7 @@
 "use client";
 import { useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Icon } from "../foundation/foundation.js";
+import { DisclosureRow } from "../controls/layers.js";
 import { advanceSprings, playSprings, snap, spring } from "../foundation/spring-motion.js";
 
 export function ExpandCard({ title, children }: { title: string; children: ReactNode }) {
@@ -204,7 +205,7 @@ export function ProfileCard({ name, detail, initials, children, actions }: { nam
         <span className="yg-profile-avatar" aria-hidden="true">{initials}</span>
         <div><strong>{name}</strong><p>{detail}</p></div>
       </div>
-      {children != null && <details><summary>More about {name}</summary><div className="yg-profile-extra">{children}</div></details>}
+      {children != null && <DisclosureRow label={`More about ${name}`}><div className="yg-profile-extra">{children}</div></DisclosureRow>}
       {actions}
     </section>
   );

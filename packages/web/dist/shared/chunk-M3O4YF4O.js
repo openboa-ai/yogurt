@@ -3,9 +3,11 @@ import {
   Attachment
 } from "./chunk-LINP2RTD.js";
 import {
+  MentionOptions,
   PromptAction,
-  PromptEditor
-} from "./chunk-DD5CG4T7.js";
+  PromptEditor,
+  useMention
+} from "./chunk-SF2Y7KYI.js";
 import {
   ActionMenu
 } from "./chunk-42W7U233.js";
@@ -14,7 +16,7 @@ import {
 } from "./chunk-4IPCB3MM.js";
 
 // packages/web/src/patterns/composer.tsx
-import { useId } from "react";
+import { useId, useRef, useState } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 function Composer({
   value,
@@ -30,11 +32,15 @@ function Composer({
   label = "Message",
   toolLabel = "Tools",
   error,
-  companion
+  companion,
+  mentionPeople
 }) {
   const id = useId();
+  const mention = useMention({ people: mentionPeople, value, onChange: onValueChange, collapsedOnly: true });
+  const composingRef = useRef(false);
+  const [composing, setComposing] = useState(false);
   const text = value.trim();
-  const ready = !pending && (text.length > 0 || attachments.length > 0) && attachments.every((item) => item.progress == null || item.progress >= 100);
+  const ready = !pending && !composing && (text.length > 0 || attachments.length > 0) && attachments.every((item) => item.progress == null || item.progress >= 100);
   return /* @__PURE__ */ jsxs(
     "form",
     {
@@ -43,7 +49,7 @@ function Composer({
       "aria-busy": pending || void 0,
       onSubmit: (event) => {
         event.preventDefault();
-        if (ready) onSend({ text, attachmentIds: attachments.map((item) => item.id) });
+        if (ready && !composingRef.current) onSend({ text, attachmentIds: attachments.map((item) => item.id) });
       },
       children: [
         attachments.length > 0 && /* @__PURE__ */ jsx("ul", { className: "yg-composer-sources", "aria-label": "Attachments", children: attachments.map((item) => /* @__PURE__ */ jsx("li", { children: /* @__PURE__ */ jsx(
@@ -65,7 +71,21 @@ function Composer({
             placeholder: label,
             rows: 2,
             value,
-            onChange: (event) => onValueChange(event.currentTarget.value)
+            ...mentionPeople === void 0 ? {
+              onChange: (event) => onValueChange(event.currentTarget.value)
+            } : mention.editorProps,
+            onCompositionStart: (event) => {
+              composingRef.current = true;
+              setComposing(true);
+              mention.editorProps.onCompositionStart?.(event);
+            },
+            onCompositionEnd: (event) => {
+              composingRef.current = false;
+              setComposing(false);
+              mention.editorProps.onCompositionEnd?.(event);
+            },
+            inputRef: mentionPeople === void 0 ? void 0 : mention.input,
+            after: mentionPeople === void 0 ? void 0 : /* @__PURE__ */ jsx(MentionOptions, { mention })
           }
         ),
         error && /* @__PURE__ */ jsx("span", { className: "yg-field-error", id: id + "-error", role: "alert", children: error }),

@@ -63,7 +63,8 @@ writeFileSync(
     '\nexport { words } from "./foundation/words.js";\n' +
     'export { CopyButton, LoadingSuccessButton } from "./patterns/motion-status.js";\n' +
     'export { HoldButton, SlideConfirm } from "./patterns/motion-confirm.js";\n' +
-    'export { CartButton } from "./patterns/motion-cart.js";\n',
+    'export { CartButton } from "./patterns/motion-cart.js";\n' +
+    'export { ProfileCard } from "./patterns/motion-cards.js";\n',
 );
 const art = {};
 for (const [key, file] of Object.entries({

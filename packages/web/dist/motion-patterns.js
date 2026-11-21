@@ -2,13 +2,19 @@
 "use client";
 import {
   CartButton,
+  ExpandCard,
+  FanCards,
   HoldButton,
-  SlideConfirm
-} from "./shared/chunk-5U366SGG.js";
+  ProfileCard,
+  SlideConfirm,
+  StatCard
+} from "./shared/chunk-MXD24MSV.js";
 import {
+  MentionOptions,
   PromptAction,
-  PromptEditor
-} from "./shared/chunk-DD5CG4T7.js";
+  PromptEditor,
+  useMention
+} from "./shared/chunk-SF2Y7KYI.js";
 import {
   Command
 } from "./shared/chunk-7YBOZIXM.js";
@@ -45,195 +51,27 @@ import {
 import "./shared/chunk-5ZXHC2QO.js";
 
 // packages/web/src/patterns/motion-inputs.tsx
-import { useId, useLayoutEffect, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 function MentionPicker({ label, people, value, onChange }) {
-  const id = useId();
-  const input = useRef(null);
-  const followingSelection = useRef(null);
-  const marker = useRef(null);
-  const [edges] = useState(() => [spring(4, 620, 36), spring(44, 190, 19)]);
-  const markerOpen = useRef(false);
-  const [caret, setCaret] = useState(0);
-  const [focused, setFocused] = useState(false);
-  const [dismissed, setDismissed] = useState(null);
-  const [active, setActive] = useState(0);
-  const selection = Math.min(caret, value.length);
-  const before = value.slice(0, selection);
-  const match = /(?:^|\s)@([^\s@]*)$/.exec(before);
-  const start = match ? selection - match[1].length - 1 : -1;
-  const end = start < 0 ? selection : selection + (value.slice(selection).match(/^[^\s@]*/)?.[0].length ?? 0);
-  const tokenKey = `${start}:${selection}:${value}`;
-  const options = match ? people.filter((person) => person.label.toLocaleLowerCase().includes(match[1].toLocaleLowerCase())) : [];
-  const open = focused && !!match && dismissed !== tokenKey && options.length > 0;
-  const index = Math.min(active, options.length - 1);
-  useLayoutEffect(() => {
-    const pill = marker.current;
-    const list = pill?.parentElement;
-    const row = list?.querySelector('[aria-selected="true"]');
-    if (!pill || !list || !row || !open) {
-      markerOpen.current = false;
-      return;
-    }
-    const preference = matchMedia("(prefers-reduced-motion: reduce)");
-    const [top, bottom] = edges;
-    const y = row.offsetTop, end2 = y + row.offsetHeight;
-    const forward = y >= top.target;
-    const lead = forward ? bottom : top, trail = forward ? top : bottom;
-    lead.stiffness = 620;
-    lead.damping = 36;
-    trail.stiffness = 190;
-    trail.damping = 19;
-    top.target = y;
-    bottom.target = end2;
-    if (!markerOpen.current || preference.matches) {
-      snap(top, y);
-      snap(bottom, end2);
-    }
-    markerOpen.current = true;
-    if (y < list.scrollTop) list.scrollTop = y;
-    else if (end2 > list.scrollTop + list.clientHeight && list.clientHeight > 0) {
-      list.scrollTop = end2 - list.clientHeight;
-    }
-    let frame = 0, previous = performance.now();
-    function paint() {
-      pill?.style.setProperty("--yg-mention-top", `${top.position}px`);
-      pill?.style.setProperty("--yg-mention-height", `${Math.max(0, bottom.position - top.position)}px`);
-    }
-    function tick(timestamp) {
-      const moving = advanceSprings(edges, (timestamp - previous) / 1e3);
-      previous = timestamp;
-      paint();
-      if (moving) frame = requestAnimationFrame(tick);
-    }
-    function changePreference() {
-      if (!preference.matches) return;
-      cancelAnimationFrame(frame);
-      snap(top, top.target);
-      snap(bottom, bottom.target);
-      paint();
-    }
-    paint();
-    if (!preference.matches) frame = requestAnimationFrame(tick);
-    preference.addEventListener("change", changePreference);
-    return () => {
-      cancelAnimationFrame(frame);
-      preference.removeEventListener("change", changePreference);
-    };
-  }, [edges, index, open, options.length]);
-  function moveCaret(next) {
-    input.current?.focus({ preventScroll: true });
-    input.current?.setSelectionRange(next, next);
-    setCaret(next);
-  }
-  useLayoutEffect(() => {
-    const pending = followingSelection.current;
-    if (!pending) return;
-    if (pending.value !== value) {
-      if (pending.origin !== value) followingSelection.current = null;
-      return;
-    }
-    followingSelection.current = null;
-    if (input.current?.ownerDocument.activeElement === input.current) moveCaret(pending.caret);
-  }, [value]);
-  function select(person) {
-    if (start < 0) return;
-    const replacement = `@${person.label}`;
-    const suffix = value.slice(end);
-    const space = suffix && /^\s/.test(suffix) ? "" : " ";
-    const nextCaret = start + replacement.length + space.length;
-    const next = value.slice(0, start) + replacement + space + suffix;
-    setDismissed(null);
-    setActive(0);
-    if (next === value) moveCaret(nextCaret);
-    else {
-      followingSelection.current = {
-        value: next,
-        origin: value,
-        caret: nextCaret,
-        selectionStart: input.current?.selectionStart ?? selection,
-        selectionEnd: input.current?.selectionEnd ?? selection
-      };
-      onChange(next);
-    }
-  }
+  const mention = useMention({ people, value, onChange });
   return /* @__PURE__ */ jsxs("div", { className: "yg-mention", children: [
-    /* @__PURE__ */ jsx("label", { className: "yg-label", htmlFor: id, children: label }),
+    /* @__PURE__ */ jsx("label", { className: "yg-label", htmlFor: mention.id, children: label }),
     /* @__PURE__ */ jsxs("div", { className: "yg-mention-surface", children: [
       /* @__PURE__ */ jsx(
         "textarea",
         {
-          id,
-          ref: input,
+          id: mention.id,
+          ref: mention.input,
           value,
           rows: 2,
           placeholder: "Write a comment",
-          "aria-describedby": `${id}-hint`,
-          "aria-autocomplete": "list",
-          "aria-expanded": open,
-          "aria-controls": open ? `${id}-list` : void 0,
-          "aria-activedescendant": open ? `${id}-option-${index}` : void 0,
-          onFocus: (event) => {
-            setFocused(true);
-            setCaret(event.currentTarget.selectionStart);
-          },
-          onBlur: () => {
-            followingSelection.current = null;
-            setFocused(false);
-          },
-          onSelect: (event) => {
-            const pending = followingSelection.current;
-            if (pending && (event.currentTarget.selectionStart !== pending.selectionStart || event.currentTarget.selectionEnd !== pending.selectionEnd)) followingSelection.current = null;
-            setCaret(event.currentTarget.selectionStart);
-            setActive(0);
-          },
-          onChange: (event) => {
-            followingSelection.current = null;
-            setCaret(event.currentTarget.selectionStart);
-            setActive(0);
-            setDismissed(null);
-            onChange(event.currentTarget.value);
-          },
-          onKeyDown: (event) => {
-            if (!open || event.nativeEvent.isComposing) return;
-            if (event.key === "Escape") {
-              event.preventDefault();
-              setDismissed(tokenKey);
-            } else if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-              event.preventDefault();
-              setActive((index + (event.key === "ArrowDown" ? 1 : options.length - 1)) % options.length);
-            } else if (event.key === "Enter" && !event.nativeEvent.isComposing) {
-              event.preventDefault();
-              select(options[index]);
-            }
-          }
+          "aria-describedby": `${mention.id}-hint`,
+          ...mention.editorProps
         }
       ),
-      /* @__PURE__ */ jsx("span", { className: "yg-mention-hint", id: `${id}-hint`, children: "Type @ to mention" }),
-      /* @__PURE__ */ jsx("div", { className: "yg-mention-layer", "data-open": open, style: { "--yg-mention-count": options.length }, children: /* @__PURE__ */ jsxs("div", { id: `${id}-list`, className: "yg-mention-list", role: "listbox", "aria-label": "People", inert: !open, children: [
-        /* @__PURE__ */ jsx("span", { ref: marker, className: "yg-mention-marker", "aria-hidden": "true" }),
-        options.map((person, i) => /* @__PURE__ */ jsxs(
-          "button",
-          {
-            id: `${id}-option-${i}`,
-            role: "option",
-            "aria-selected": i === index,
-            type: "button",
-            tabIndex: -1,
-            style: { "--yg-mention-index": i },
-            onPointerMove: (event) => {
-              if (event.pointerType === "mouse") setActive(i);
-            },
-            onMouseDown: (event) => event.preventDefault(),
-            onClick: () => select(person),
-            children: [
-              /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: Array.from(person.label)[0]?.toLocaleUpperCase() }),
-              /* @__PURE__ */ jsx("b", { children: person.label })
-            ]
-          },
-          person.id
-        ))
-      ] }) })
+      /* @__PURE__ */ jsx("span", { className: "yg-mention-hint", id: `${mention.id}-hint`, children: "Type @ to mention" }),
+      /* @__PURE__ */ jsx(MentionOptions, { mention })
     ] })
   ] });
 }
@@ -475,7 +313,7 @@ function LetterLimit({ label, value, onChange, limit, placeholder, onSubmit }) {
 }
 
 // packages/web/src/patterns/motion-layers.tsx
-import { useId as useId3, useLayoutEffect as useLayoutEffect2, useRef as useRef3, useState as useState3 } from "react";
+import { useId as useId3, useLayoutEffect, useRef as useRef3, useState as useState3 } from "react";
 
 // packages/web/src/patterns/spring-picker-motion.ts
 var clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
@@ -704,7 +542,7 @@ function SpringDropdown({ label, value, onChange, options }) {
   const [roll, setRoll] = useState3({ value, previous: void 0 });
   if (roll.value !== value) setRoll({ value, previous: roll.value });
   const previous = options.find((option) => option.id === roll.previous);
-  useLayoutEffect2(() => {
+  useLayoutEffect(() => {
     if (!portal) return;
     const controller = animateSpringPicker(portal);
     motion.current = controller;
@@ -713,7 +551,7 @@ function SpringDropdown({ label, value, onChange, options }) {
       motion.current = null;
     };
   }, [portal]);
-  useLayoutEffect2(() => () => clearTimeout(dismissTimer.current), []);
+  useLayoutEffect(() => () => clearTimeout(dismissTimer.current), []);
   function changeOpen(open2) {
     if (!open2 && keepSelectionVisible.current) {
       keepSelectionVisible.current = false;
@@ -790,7 +628,7 @@ function CommandButton({ label, items, onSelect }) {
 }
 
 // packages/web/src/patterns/tooltip-bar.tsx
-import { useEffect as useEffect2, useId as useId4, useLayoutEffect as useLayoutEffect3, useRef as useRef4, useState as useState4 } from "react";
+import { useEffect as useEffect2, useId as useId4, useLayoutEffect as useLayoutEffect2, useRef as useRef4, useState as useState4 } from "react";
 import { jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
 var unit = (value) => Math.min(1, Math.max(0, value));
 function MorphTooltipBar({ label, tools, value, onChange }) {
@@ -809,7 +647,7 @@ function MorphTooltipBar({ label, tools, value, onChange }) {
     labels: /* @__PURE__ */ new Map()
   }));
   useEffect2(() => () => clearTimeout(hide.current), []);
-  useLayoutEffect3(() => {
+  useLayoutEffect2(() => {
     const root = bar.current;
     if (!root) return;
     const buttons = Array.from(root.querySelectorAll("button[data-tool]"));
@@ -955,7 +793,7 @@ function MorphTooltipBar({ label, tools, value, onChange }) {
 }
 
 // packages/web/src/patterns/motion-conversation.tsx
-import { useId as useId5, useLayoutEffect as useLayoutEffect4, useRef as useRef5, useState as useState5 } from "react";
+import { useId as useId5, useLayoutEffect as useLayoutEffect3, useRef as useRef5, useState as useState5 } from "react";
 import { Fragment, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 function StreamingReply({ value, active = false }) {
   const surface = useRef5(null);
@@ -965,7 +803,7 @@ function StreamingReply({ value, active = false }) {
   const mounted = useRef5(false);
   const [motion] = useState5(() => ({ width: spring(0, 260, 26), height: spring(40, 260, 26), waiting: spring(1, 300, 30) }));
   const streaming = active || wasActive.current;
-  useLayoutEffect4(() => {
+  useLayoutEffect3(() => {
     const box = surface.current, words = reply.current, thinking = wait.current;
     if (!box || !words || !thinking) return;
     let stop;
@@ -1059,7 +897,7 @@ function PromptBox({ value, onChange, onSubmit, busy = false, onCancel }) {
 function ThinkingIndicator({ label = "Thinking", active = true }) {
   const filter = useId5();
   const node = useRef5(null);
-  useLayoutEffect4(() => {
+  useLayoutEffect3(() => {
     if (!active || !node.current) return;
     const dots = Array.from(node.current.querySelectorAll("i"));
     const axes = dots.map(() => spring(0, 420, 14));
@@ -1111,270 +949,12 @@ function ThinkingIndicator({ label = "Thinking", active = true }) {
   ] });
 }
 
-// packages/web/src/patterns/motion-cards.tsx
-import { useLayoutEffect as useLayoutEffect5, useRef as useRef6, useState as useState6 } from "react";
-import { jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
-function ExpandCard({ title, children }) {
-  const card = useRef6(null);
-  const [open, setOpen] = useState6(false);
-  const [motion] = useState6(() => ({ shape: spring(0, 240, 21), copy: spring(0, 260, 28) }));
-  useLayoutEffect5(() => {
-    const root = card.current;
-    if (!root) return;
-    motion.shape.target = Number(open);
-    if (!open) motion.copy.target = 0;
-    const paint = () => {
-      root.style.setProperty("--yg-card-expansion", String(motion.shape.position));
-      root.style.setProperty("--yg-card-content", String(motion.copy.position));
-    };
-    const states = Object.values(motion);
-    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (open && reduced) motion.copy.target = 1;
-    let stop = playSprings(states, paint);
-    const reveal = open && !reduced ? setTimeout(() => {
-      motion.copy.target = 1;
-      stop();
-      stop = playSprings(states, paint);
-    }, 160) : void 0;
-    return () => {
-      clearTimeout(reveal);
-      stop();
-    };
-  }, [motion, open]);
-  return /* @__PURE__ */ jsxs6("details", { ref: card, className: "yg-expand-card", onToggle: (event) => setOpen(event.currentTarget.open), children: [
-    /* @__PURE__ */ jsxs6("summary", { children: [
-      /* @__PURE__ */ jsx6("span", { className: "yg-expand-art", "aria-hidden": "true" }),
-      /* @__PURE__ */ jsx6("span", { className: "yg-expand-title", children: title }),
-      /* @__PURE__ */ jsx6("span", { className: "yg-card-disclosure", children: /* @__PURE__ */ jsx6(Icon, { name: "plus" }) })
-    ] }),
-    /* @__PURE__ */ jsx6("div", { className: "yg-expand-card-body", children })
-  ] });
-}
-function FanCards({ items }) {
-  const [selectedId, setSelectedId] = useState6(null);
-  const [highlight, setHighlight] = useState6(null);
-  const [pointer, setPointer] = useState6(false);
-  const [keyboard, setKeyboard] = useState6(false);
-  const selected = items.find((item) => item.id === selectedId);
-  const list = useRef6(null);
-  const [spread] = useState6(() => spring(0, 220, 18));
-  const tracks = useRef6(/* @__PURE__ */ new Map());
-  const kick = useRef6(null);
-  useLayoutEffect5(() => {
-    const root = list.current;
-    if (!root || items.length > 3) return;
-    const buttons = Array.from(root.querySelectorAll("button[data-card]"));
-    const active = pointer || keyboard;
-    spread.target = Number(active);
-    const states = [spread];
-    const live = new Set(items.map((item) => item.id));
-    tracks.current.forEach((_, id) => {
-      if (!live.has(id)) tracks.current.delete(id);
-    });
-    const rows = buttons.map((button, index) => {
-      const id = button.dataset.card;
-      const tracksForCard = tracks.current.get(id) ?? { lift: spring(0, 420, 20), scale: spring(1, 420, 22) };
-      const featured = highlight ?? selectedId ?? items[Math.floor(items.length / 2)]?.id;
-      const hot = active && id === featured;
-      button.toggleAttribute("data-front", id === featured);
-      tracksForCard.lift.target = hot ? -22 : 0;
-      tracksForCard.scale.target = hot ? 1.06 : 1;
-      if (id === kick.current) tracksForCard.lift.velocity = -260;
-      states.push(tracksForCard.lift, tracksForCard.scale);
-      tracks.current.set(id, tracksForCard);
-      button.style.zIndex = id === featured ? "5" : index === 1 ? "3" : "2";
-      return { button, tracks: tracksForCard, index: index - (items.length - 1) / 2 };
-    });
-    kick.current = null;
-    const render = () => {
-      const width = root.offsetWidth;
-      const compact = width <= 290;
-      const room = Math.min(78, Math.max(10, (width - (compact ? 184 : 166)) / 2));
-      const angle = compact ? 5 : 9;
-      rows.forEach(({ button, tracks: tracks2, index }) => {
-        const x = index * (6 + spread.position * (room - 6));
-        const y = Math.abs(index) * spread.position * 12 + tracks2.lift.position;
-        button.style.setProperty("--yg-fan-transform", `translate(calc(-50% + ${x}px), ${y}px) rotate(${index * (3 + spread.position * angle)}deg) scale(${tracks2.scale.position})`);
-      });
-    };
-    let stop = playSprings(states, render);
-    const sizes = new ResizeObserver(() => {
-      stop();
-      stop = playSprings(states, render);
-    });
-    sizes.observe(root);
-    return () => {
-      sizes.disconnect();
-      stop();
-    };
-  }, [highlight, items, keyboard, pointer, selectedId, spread]);
-  return /* @__PURE__ */ jsxs6("div", { className: "yg-fan-cards", children: [
-    /* @__PURE__ */ jsx6(
-      "div",
-      {
-        className: "yg-fan-cards-list",
-        ref: list,
-        "aria-label": "Cards",
-        "data-many": items.length > 3 || void 0,
-        onPointerEnter: () => setPointer(true),
-        onPointerLeave: () => {
-          setPointer(false);
-          setHighlight(null);
-        },
-        onBlur: (event) => {
-          if (!event.currentTarget.contains(event.relatedTarget)) setKeyboard(false);
-        },
-        children: items.map((item, index) => /* @__PURE__ */ jsxs6(
-          "button",
-          {
-            type: "button",
-            "data-card": item.id,
-            style: { "--yg-fan-offset": index - (items.length - 1) / 2 },
-            "aria-pressed": item.id === selected?.id,
-            onPointerEnter: () => setHighlight(item.id),
-            onFocus: (event) => {
-              if (event.currentTarget.matches(":focus-visible")) {
-                setKeyboard(true);
-                setHighlight(item.id);
-              }
-            },
-            onClick: () => {
-              kick.current = item.id;
-              setSelectedId(item.id === selectedId ? null : item.id);
-            },
-            children: [
-              /* @__PURE__ */ jsx6("span", { className: "yg-fan-art", "aria-hidden": "true" }),
-              /* @__PURE__ */ jsx6("span", { className: "yg-fan-index", "aria-hidden": "true", children: String(index + 1).padStart(2, "0") }),
-              /* @__PURE__ */ jsx6("span", { className: "yg-fan-label", children: item.label }),
-              /* @__PURE__ */ jsx6(Icon, { name: "next" })
-            ]
-          },
-          item.id
-        ))
-      }
-    ),
-    selected && /* @__PURE__ */ jsxs6("p", { className: "yg-fan-detail", children: [
-      /* @__PURE__ */ jsx6("strong", { children: selected.label }),
-      /* @__PURE__ */ jsx6("span", { children: selected.detail })
-    ] })
-  ] });
-}
-function StatSeries({ values }) {
-  const stroke = useRef6(null), fill = useRef6(null);
-  const dot = useRef6(null);
-  const axes = useRef6([]);
-  useLayoutEffect5(() => {
-    const safe = values.map((value) => Number.isFinite(value) ? value : 0);
-    if (axes.current.length !== safe.length) axes.current = safe.map((value) => spring(value, 200, 17));
-    const points = axes.current;
-    const media = matchMedia("(prefers-reduced-motion: reduce)");
-    function paint() {
-      if (!points.length) return;
-      const coordinates = points.map(({ position }, i) => [
-        4 + i / Math.max(1, points.length - 1) * 288,
-        8 + (1 - Math.min(1.05, Math.max(-0.05, position))) * 80
-      ]);
-      let curve = `M${coordinates[0].join(" ")}`;
-      for (let i = 0; i < coordinates.length - 1; i++) {
-        const a = coordinates[i - 1] ?? coordinates[i], b = coordinates[i];
-        const c = coordinates[i + 1], d = coordinates[i + 2] ?? c;
-        const first = b.map((value, axis) => value + (c[axis] - a[axis]) / 6);
-        const second = c.map((value, axis) => value - (d[axis] - b[axis]) / 6);
-        curve += ` C${first.join(" ")} ${second.join(" ")} ${c.join(" ")}`;
-      }
-      const last = coordinates[coordinates.length - 1];
-      stroke.current?.setAttribute("d", curve);
-      fill.current?.setAttribute("d", `${curve} L${last[0]} 96 L4 96 Z`);
-      dot.current?.setAttribute("cx", String(last[0]));
-      dot.current?.setAttribute("cy", String(last[1]));
-    }
-    let frame = 0, previous = performance.now(), start = previous;
-    function tick(time) {
-      let waiting = false;
-      points.forEach((point, index) => {
-        if (time - start < index * 30) waiting = true;
-        else point.target = safe[index];
-      });
-      const moving = advanceSprings(points, (time - previous) / 1e3);
-      previous = time;
-      paint();
-      if (moving || waiting) frame = requestAnimationFrame(tick);
-      else frame = 0;
-    }
-    function sync() {
-      cancelAnimationFrame(frame);
-      if (media.matches) {
-        points.forEach((point, index) => snap(point, safe[index]));
-        paint();
-      } else {
-        paint();
-        start = previous = performance.now();
-        frame = requestAnimationFrame(tick);
-      }
-    }
-    sync();
-    media.addEventListener("change", sync);
-    return () => {
-      cancelAnimationFrame(frame);
-      media.removeEventListener("change", sync);
-    };
-  }, [values]);
-  return /* @__PURE__ */ jsxs6("svg", { viewBox: "0 0 296 96", className: "yg-stat-series", "aria-hidden": "true", children: [
-    /* @__PURE__ */ jsx6("path", { ref: fill, className: "yg-stat-area" }),
-    /* @__PURE__ */ jsx6("path", { ref: stroke, className: "yg-stat-line" }),
-    /* @__PURE__ */ jsx6("circle", { ref: dot, r: "4" })
-  ] });
-}
-function StatCard({ label, value, detail, series }) {
-  const total = useRef6(null);
-  const [motion] = useState6(() => spring(value, 160, 22));
-  useLayoutEffect5(() => {
-    motion.target = value;
-    if (!Number.isFinite(value) || !Number.isFinite(motion.position)) {
-      snap(motion, value);
-      return;
-    }
-    return playSprings([motion], () => {
-      if (total.current) total.current.textContent = (Number.isInteger(value) ? Math.round(motion.position) : Math.round(motion.position * 10) / 10).toLocaleString();
-    });
-  }, [motion, value]);
-  return /* @__PURE__ */ jsxs6("section", { className: "yg-stat-card", "aria-label": label, children: [
-    /* @__PURE__ */ jsxs6("div", { className: "yg-stat-heading", children: [
-      /* @__PURE__ */ jsxs6("div", { children: [
-        /* @__PURE__ */ jsx6("span", { className: "yg-stat-label", children: label }),
-        /* @__PURE__ */ jsx6("strong", { className: "yg-stat-value", ref: total, children: value.toLocaleString() })
-      ] }),
-      detail && /* @__PURE__ */ jsx6("span", { className: "yg-stat-detail", children: detail })
-    ] }),
-    series && series.length > 1 && /* @__PURE__ */ jsx6(StatSeries, { values: series })
-  ] });
-}
-function ProfileCard({ name, detail, initials, children, actions }) {
-  return /* @__PURE__ */ jsxs6("section", { className: "yg-profile-card", children: [
-    /* @__PURE__ */ jsxs6("div", { className: "yg-profile-header", children: [
-      /* @__PURE__ */ jsx6("span", { className: "yg-profile-avatar", "aria-hidden": "true", children: initials }),
-      /* @__PURE__ */ jsxs6("div", { children: [
-        /* @__PURE__ */ jsx6("strong", { children: name }),
-        /* @__PURE__ */ jsx6("p", { children: detail })
-      ] })
-    ] }),
-    children != null && /* @__PURE__ */ jsxs6("details", { children: [
-      /* @__PURE__ */ jsxs6("summary", { children: [
-        "More about ",
-        name
-      ] }),
-      /* @__PURE__ */ jsx6("div", { className: "yg-profile-extra", children })
-    ] }),
-    actions
-  ] });
-}
-
 // packages/web/src/patterns/motion-stepped.tsx
-import { useId as useId7, useLayoutEffect as useLayoutEffect7, useRef as useRef8, useState as useState7 } from "react";
+import { useId as useId7, useLayoutEffect as useLayoutEffect5, useRef as useRef7, useState as useState6 } from "react";
 
 // packages/web/src/patterns/elastic-range.tsx
-import { useId as useId6, useLayoutEffect as useLayoutEffect6, useRef as useRef7 } from "react";
-import { jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
+import { useId as useId6, useLayoutEffect as useLayoutEffect4, useRef as useRef6 } from "react";
+import { jsx as jsx6, jsxs as jsxs6 } from "react/jsx-runtime";
 var clamp2 = (n, min, max) => Math.min(max, Math.max(min, n));
 var radius = 12;
 function animateRange(element, initial) {
@@ -1469,13 +1049,13 @@ function animateRange(element, initial) {
 }
 function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
   const id = useId6(), filter = useId6();
-  const rail = useRef7(null), hit = useRef7(null);
-  const motion = useRef7(null);
-  const drag = useRef7(null);
-  const hover = useRef7(false), focused = useRef7(false);
+  const rail = useRef6(null), hit = useRef6(null);
+  const motion = useRef6(null);
+  const drag = useRef6(null);
+  const hover = useRef6(false), focused = useRef6(false);
   const ratio = max > min ? clamp2((value - min) / (max - min), 0, 1) : 0;
-  const valueOnMount = useRef7(ratio);
-  useLayoutEffect6(() => {
+  const valueOnMount = useRef6(ratio);
+  useLayoutEffect4(() => {
     if (!rail.current) return;
     const controller = animateRange(rail.current, valueOnMount.current);
     motion.current = controller;
@@ -1484,7 +1064,7 @@ function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
       motion.current = null;
     };
   }, []);
-  useLayoutEffect6(() => {
+  useLayoutEffect4(() => {
     motion.current?.controlled(ratio, drag.current !== null);
   }, [ratio]);
   function sync() {
@@ -1515,13 +1095,13 @@ function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
     sync();
     onChange(Number(next.toFixed(10)));
   }
-  return /* @__PURE__ */ jsxs7("div", { className: "yg-elastic-range", children: [
-    /* @__PURE__ */ jsx7("label", { htmlFor: id, children: label }),
-    /* @__PURE__ */ jsx7("svg", { width: "0", height: "0", "aria-hidden": "true", children: /* @__PURE__ */ jsx7("defs", { children: /* @__PURE__ */ jsxs7("filter", { id: filter, x: "-30%", y: "-100%", width: "160%", height: "240%", children: [
-      /* @__PURE__ */ jsx7("feGaussianBlur", { stdDeviation: "8", result: "blur" }),
-      /* @__PURE__ */ jsx7("feColorMatrix", { in: "blur", type: "matrix", values: "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -10" })
+  return /* @__PURE__ */ jsxs6("div", { className: "yg-elastic-range", children: [
+    /* @__PURE__ */ jsx6("label", { htmlFor: id, children: label }),
+    /* @__PURE__ */ jsx6("svg", { width: "0", height: "0", "aria-hidden": "true", children: /* @__PURE__ */ jsx6("defs", { children: /* @__PURE__ */ jsxs6("filter", { id: filter, x: "-30%", y: "-100%", width: "160%", height: "240%", children: [
+      /* @__PURE__ */ jsx6("feGaussianBlur", { stdDeviation: "8", result: "blur" }),
+      /* @__PURE__ */ jsx6("feColorMatrix", { in: "blur", type: "matrix", values: "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 22 -10" })
     ] }) }) }),
-    /* @__PURE__ */ jsxs7(
+    /* @__PURE__ */ jsxs6(
       "div",
       {
         ref: rail,
@@ -1549,13 +1129,13 @@ function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
           sync();
         },
         children: [
-          /* @__PURE__ */ jsx7("span", { className: "yg-elastic-track", "aria-hidden": "true", children: /* @__PURE__ */ jsx7("i", {}) }),
-          /* @__PURE__ */ jsxs7("span", { className: "yg-elastic-goo", "aria-hidden": "true", style: { filter: `url(#${filter})` }, children: [
-            /* @__PURE__ */ jsx7("i", { className: "yg-elastic-thumb" }),
-            /* @__PURE__ */ jsx7("i", { className: "yg-elastic-drop" })
+          /* @__PURE__ */ jsx6("span", { className: "yg-elastic-track", "aria-hidden": "true", children: /* @__PURE__ */ jsx6("i", {}) }),
+          /* @__PURE__ */ jsxs6("span", { className: "yg-elastic-goo", "aria-hidden": "true", style: { filter: `url(#${filter})` }, children: [
+            /* @__PURE__ */ jsx6("i", { className: "yg-elastic-thumb" }),
+            /* @__PURE__ */ jsx6("i", { className: "yg-elastic-drop" })
           ] }),
-          /* @__PURE__ */ jsx7("span", { className: "yg-elastic-value", "aria-hidden": "true", children: formatValue(value) }),
-          /* @__PURE__ */ jsx7(
+          /* @__PURE__ */ jsx6("span", { className: "yg-elastic-value", "aria-hidden": "true", children: formatValue(value) }),
+          /* @__PURE__ */ jsx6(
             "button",
             {
               ref: hit,
@@ -1581,7 +1161,7 @@ function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
         ]
       }
     ),
-    /* @__PURE__ */ jsx7("div", { className: "yg-elastic-marks", "aria-hidden": "true", children: Array.from({ length: 21 }, (_, i) => /* @__PURE__ */ jsx7(
+    /* @__PURE__ */ jsx6("div", { className: "yg-elastic-marks", "aria-hidden": "true", children: Array.from({ length: 21 }, (_, i) => /* @__PURE__ */ jsx6(
       "i",
       {
         "data-major": i % 5 === 0 || void 0,
@@ -1589,12 +1169,12 @@ function ElasticRange({ label, value, min, max, step, onChange, formatValue }) {
       },
       i
     )) }),
-    /* @__PURE__ */ jsx7("div", { className: "yg-elastic-labels", "aria-hidden": "true", children: [0, 0.25, 0.5, 0.75, 1].map((position) => /* @__PURE__ */ jsx7("span", { style: { "--yg-scale-position": position }, children: formatValue(min + position * (max - min)) }, position)) })
+    /* @__PURE__ */ jsx6("div", { className: "yg-elastic-labels", "aria-hidden": "true", children: [0, 0.25, 0.5, 0.75, 1].map((position) => /* @__PURE__ */ jsx6("span", { style: { "--yg-scale-position": position }, children: formatValue(min + position * (max - min)) }, position)) })
   ] });
 }
 
 // packages/web/src/patterns/motion-stepped.tsx
-import { jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
+import { jsx as jsx7, jsxs as jsxs7 } from "react/jsx-runtime";
 function RangeSlider({
   label,
   value,
@@ -1610,18 +1190,18 @@ function RangeSlider({
   minThumbGap = 0
 }) {
   const id = useId7();
-  const interval = useRef8(null);
-  const activeDrag = useRef8(null);
-  const [trackWidth, setTrackWidth] = useState7(0);
+  const interval = useRef7(null);
+  const activeDrag = useRef7(null);
+  const [trackWidth, setTrackWidth] = useState6(0);
   const percent = (number) => max > min ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
   const first = percent(value);
   const last = end === void 0 ? first : percent(end);
-  const [motion] = useState7(() => ({
+  const [motion] = useState6(() => ({
     start: spring(first, 260, 24),
     end: spring(last, 260, 24),
     merge: spring(0, 300, 26)
   }));
-  useLayoutEffect7(() => {
+  useLayoutEffect5(() => {
     const rail = interval.current;
     const root = rail?.parentElement;
     if (!rail || !root) return;
@@ -1711,9 +1291,9 @@ function RangeSlider({
   }, [first, last, motion]);
   if (end === void 0 || !onEndChange) {
     if (presentation === "elastic") {
-      return /* @__PURE__ */ jsx8(ElasticRange, { label, value, onChange, min, max, step, formatValue });
+      return /* @__PURE__ */ jsx7(ElasticRange, { label, value, onChange, min, max, step, formatValue });
     }
-    return /* @__PURE__ */ jsx8(
+    return /* @__PURE__ */ jsx7(
       Slider,
       {
         label,
@@ -1757,7 +1337,7 @@ function RangeSlider({
     event.preventDefault();
     set(side, keys[event.key]);
   };
-  return /* @__PURE__ */ jsxs8(
+  return /* @__PURE__ */ jsxs7(
     "div",
     {
       className: "yg-motion-range",
@@ -1766,11 +1346,11 @@ function RangeSlider({
       "aria-labelledby": id,
       style: { "--yg-range-start": `${first}%`, "--yg-range-end": `${last}%` },
       children: [
-        /* @__PURE__ */ jsxs8("div", { className: "yg-motion-range-heading", children: [
-          /* @__PURE__ */ jsx8("strong", { id, children: label }),
-          detail && /* @__PURE__ */ jsx8("span", { children: detail })
+        /* @__PURE__ */ jsxs7("div", { className: "yg-motion-range-heading", children: [
+          /* @__PURE__ */ jsx7("strong", { id, children: label }),
+          detail && /* @__PURE__ */ jsx7("span", { children: detail })
         ] }),
-        /* @__PURE__ */ jsxs8(
+        /* @__PURE__ */ jsxs7(
           "div",
           {
             className: "yg-motion-range-area",
@@ -1801,15 +1381,15 @@ function RangeSlider({
               if (activeDrag.current?.id === event.pointerId) activeDrag.current = null;
             },
             children: [
-              /* @__PURE__ */ jsx8("span", { className: "yg-motion-interval-track", "aria-hidden": "true", children: /* @__PURE__ */ jsx8("span", {}) }),
-              /* @__PURE__ */ jsx8("span", { className: "yg-motion-range-tip", "data-tip": "start", "aria-hidden": "true", children: formatValue(value) }),
-              /* @__PURE__ */ jsx8("span", { className: "yg-motion-range-tip", "data-tip": "end", "aria-hidden": "true", children: formatValue(end) }),
-              /* @__PURE__ */ jsxs8("span", { className: "yg-motion-range-tip", "data-tip": "joined", "aria-hidden": "true", children: [
+              /* @__PURE__ */ jsx7("span", { className: "yg-motion-interval-track", "aria-hidden": "true", children: /* @__PURE__ */ jsx7("span", {}) }),
+              /* @__PURE__ */ jsx7("span", { className: "yg-motion-range-tip", "data-tip": "start", "aria-hidden": "true", children: formatValue(value) }),
+              /* @__PURE__ */ jsx7("span", { className: "yg-motion-range-tip", "data-tip": "end", "aria-hidden": "true", children: formatValue(end) }),
+              /* @__PURE__ */ jsxs7("span", { className: "yg-motion-range-tip", "data-tip": "joined", "aria-hidden": "true", children: [
                 formatValue(value),
                 "\u2013",
                 formatValue(end)
               ] }),
-              /* @__PURE__ */ jsx8(
+              /* @__PURE__ */ jsx7(
                 "button",
                 {
                   type: "button",
@@ -1823,7 +1403,7 @@ function RangeSlider({
                   onKeyDown: (event) => onThumbKey(event, "start", value)
                 }
               ),
-              /* @__PURE__ */ jsx8(
+              /* @__PURE__ */ jsx7(
                 "button",
                 {
                   type: "button",
@@ -1846,12 +1426,12 @@ function RangeSlider({
 }
 function PasswordStrength({ value, onChange }) {
   const id = useId7();
-  const [shown, setShown] = useState7(false);
+  const [shown, setShown] = useState6(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
-  const meter = useRef8(null);
-  const [bars] = useState7(() => Array.from({ length: 4 }, () => spring(0, 260, 24)));
-  useLayoutEffect7(() => {
+  const meter = useRef7(null);
+  const [bars] = useState6(() => Array.from({ length: 4 }, () => spring(0, 260, 24)));
+  useLayoutEffect5(() => {
     const fill = Array.from(meter.current?.querySelectorAll("i") ?? []);
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let stop;
@@ -1876,10 +1456,10 @@ function PasswordStrength({ value, onChange }) {
       stop?.();
     };
   }, [bars, score]);
-  return /* @__PURE__ */ jsxs8("div", { className: "yg-motion-password", "data-score": score, children: [
-    /* @__PURE__ */ jsx8("label", { htmlFor: id, children: "Create a password" }),
-    /* @__PURE__ */ jsxs8("div", { className: "yg-motion-password-field", children: [
-      /* @__PURE__ */ jsx8(
+  return /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password", "data-score": score, children: [
+    /* @__PURE__ */ jsx7("label", { htmlFor: id, children: "Create a password" }),
+    /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password-field", children: [
+      /* @__PURE__ */ jsx7(
         "input",
         {
           id,
@@ -1890,7 +1470,7 @@ function PasswordStrength({ value, onChange }) {
           "aria-describedby": `${id}-checks`
         }
       ),
-      /* @__PURE__ */ jsx8(
+      /* @__PURE__ */ jsx7(
         "button",
         {
           type: "button",
@@ -1901,36 +1481,36 @@ function PasswordStrength({ value, onChange }) {
             if (event.currentTarget.previousElementSibling === document.activeElement) event.preventDefault();
           },
           onClick: () => setShown((current) => !current),
-          children: /* @__PURE__ */ jsxs8("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", children: [
-            /* @__PURE__ */ jsx8("path", { d: "M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" }),
-            /* @__PURE__ */ jsx8("circle", { cx: "12", cy: "12", r: "2.8" }),
-            /* @__PURE__ */ jsx8("path", { className: "yg-motion-password-slash", d: "M4.5 4.5l15 15" })
+          children: /* @__PURE__ */ jsxs7("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", children: [
+            /* @__PURE__ */ jsx7("path", { d: "M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" }),
+            /* @__PURE__ */ jsx7("circle", { cx: "12", cy: "12", r: "2.8" }),
+            /* @__PURE__ */ jsx7("path", { className: "yg-motion-password-slash", d: "M4.5 4.5l15 15" })
           ] })
         }
       )
     ] }),
-    /* @__PURE__ */ jsx8("div", { className: "yg-motion-password-meter", ref: meter, "aria-hidden": "true", children: bars.map((_, index) => /* @__PURE__ */ jsx8("span", { children: /* @__PURE__ */ jsx8("i", {}) }, index)) }),
-    /* @__PURE__ */ jsxs8("div", { className: "yg-motion-password-checks", children: [
-      /* @__PURE__ */ jsx8("span", { role: "status", children: /* @__PURE__ */ jsx8("strong", { children: word }, word) }),
-      /* @__PURE__ */ jsx8("span", { id: `${id}-checks`, children: "8+ characters, mixed case, a number and a symbol" })
+    /* @__PURE__ */ jsx7("div", { className: "yg-motion-password-meter", ref: meter, "aria-hidden": "true", children: bars.map((_, index) => /* @__PURE__ */ jsx7("span", { children: /* @__PURE__ */ jsx7("i", {}) }, index)) }),
+    /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password-checks", children: [
+      /* @__PURE__ */ jsx7("span", { role: "status", children: /* @__PURE__ */ jsx7("strong", { children: word }, word) }),
+      /* @__PURE__ */ jsx7("span", { id: `${id}-checks`, children: "8+ characters, mixed case, a number and a symbol" })
     ] })
   ] });
 }
 function CheckboxList({ options, value, onChange }) {
   const count = options.filter((option) => value.includes(option.id)).length;
-  return /* @__PURE__ */ jsxs8("fieldset", { className: "yg-motion-checklist", children: [
-    /* @__PURE__ */ jsx8("legend", { children: "Choose options" }),
-    /* @__PURE__ */ jsxs8("div", { className: "yg-motion-checklist-heading", children: [
-      /* @__PURE__ */ jsx8("strong", { children: "Today" }),
-      /* @__PURE__ */ jsxs8("span", { children: [
-        /* @__PURE__ */ jsx8("b", { children: count }),
+  return /* @__PURE__ */ jsxs7("fieldset", { className: "yg-motion-checklist", children: [
+    /* @__PURE__ */ jsx7("legend", { children: "Choose options" }),
+    /* @__PURE__ */ jsxs7("div", { className: "yg-motion-checklist-heading", children: [
+      /* @__PURE__ */ jsx7("strong", { children: "Today" }),
+      /* @__PURE__ */ jsxs7("span", { children: [
+        /* @__PURE__ */ jsx7("b", { children: count }),
         " of ",
         options.length,
         " done"
       ] })
     ] }),
     options.map(
-      (option) => /* @__PURE__ */ jsx8(
+      (option) => /* @__PURE__ */ jsx7(
         Checkbox,
         {
           className: "yg-motion-checklist-item",
@@ -1950,24 +1530,24 @@ function DetentDial({ options, value, onChange }) {
   const choose = (next) => {
     if (options.length) onChange(options[(next + options.length) % options.length].id);
   };
-  return /* @__PURE__ */ jsxs8("div", { className: "yg-motion-dial", children: [
-    /* @__PURE__ */ jsx8("label", { htmlFor: id, children: "Selection" }),
-    /* @__PURE__ */ jsxs8("div", { className: "yg-motion-dial-face", style: { "--yg-dial-angle": `${options.length > 1 ? -135 + 270 * selected / (options.length - 1) : 0}deg` }, children: [
-      /* @__PURE__ */ jsx8("span", { className: "yg-motion-dial-marker", "aria-hidden": "true" }),
-      /* @__PURE__ */ jsx8("span", { className: "yg-motion-dial-value", children: options[index]?.label ?? "No selection" })
+  return /* @__PURE__ */ jsxs7("div", { className: "yg-motion-dial", children: [
+    /* @__PURE__ */ jsx7("label", { htmlFor: id, children: "Selection" }),
+    /* @__PURE__ */ jsxs7("div", { className: "yg-motion-dial-face", style: { "--yg-dial-angle": `${options.length > 1 ? -135 + 270 * selected / (options.length - 1) : 0}deg` }, children: [
+      /* @__PURE__ */ jsx7("span", { className: "yg-motion-dial-marker", "aria-hidden": "true" }),
+      /* @__PURE__ */ jsx7("span", { className: "yg-motion-dial-value", children: options[index]?.label ?? "No selection" })
     ] }),
-    /* @__PURE__ */ jsx8("input", { id, type: "range", min: 0, max: Math.max(0, options.length - 1), step: 1, value: selected, disabled: !options.length, "aria-valuetext": options[index]?.label ?? "No selection", onChange: (event) => choose(event.currentTarget.valueAsNumber), onKeyDown: (event) => {
+    /* @__PURE__ */ jsx7("input", { id, type: "range", min: 0, max: Math.max(0, options.length - 1), step: 1, value: selected, disabled: !options.length, "aria-valuetext": options[index]?.label ?? "No selection", onChange: (event) => choose(event.currentTarget.valueAsNumber), onKeyDown: (event) => {
       if (["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown"].includes(event.key) && options.length) {
         event.preventDefault();
         choose(selected + (event.key === "ArrowRight" || event.key === "ArrowUp" ? 1 : -1));
       }
     } }),
-    /* @__PURE__ */ jsx8("div", { className: "yg-motion-dial-options", "aria-hidden": "true", children: options.map((option) => /* @__PURE__ */ jsx8("span", { "data-selected": option.id === value || void 0, children: option.label }, option.id)) })
+    /* @__PURE__ */ jsx7("div", { className: "yg-motion-dial-options", "aria-hidden": "true", children: options.map((option) => /* @__PURE__ */ jsx7("span", { "data-selected": option.id === value || void 0, children: option.label }, option.id)) })
   ] });
 }
 
 // packages/web/src/patterns/motion-task-list.tsx
-import { Fragment as Fragment2, jsx as jsx9, jsxs as jsxs9 } from "react/jsx-runtime";
+import { Fragment as Fragment2, jsx as jsx8, jsxs as jsxs8 } from "react/jsx-runtime";
 var stateName = {
   queued: "Queued",
   running: "Running",
@@ -1976,40 +1556,40 @@ var stateName = {
 };
 function TaskLine({ task }) {
   const showState = task.state === "failed";
-  return /* @__PURE__ */ jsxs9(Fragment2, { children: [
-    /* @__PURE__ */ jsx9("span", { className: "yg-task-marker", "aria-hidden": "true", children: task.state === "done" ? /* @__PURE__ */ jsx9("svg", { viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsx9("path", { pathLength: "1", d: "M5 12.5l4.2 4.2L19 7" }) }) : task.state === "failed" ? /* @__PURE__ */ jsx9(Icon, { name: "close" }) : null }),
-    /* @__PURE__ */ jsx9("span", { className: "yg-task-copy", children: /* @__PURE__ */ jsx9("strong", { children: task.label }) }),
-    /* @__PURE__ */ jsxs9("span", { className: "yg-task-meta", children: [
-      task.detail && !showState && /* @__PURE__ */ jsx9("span", { className: "yg-task-note", children: task.detail }),
-      /* @__PURE__ */ jsx9("span", { className: showState ? "yg-task-state" : "yg-task-sr", children: stateName[task.state] })
+  return /* @__PURE__ */ jsxs8(Fragment2, { children: [
+    /* @__PURE__ */ jsx8("span", { className: "yg-task-marker", "aria-hidden": "true", children: task.state === "done" ? /* @__PURE__ */ jsx8("svg", { viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsx8("path", { pathLength: "1", d: "M5 12.5l4.2 4.2L19 7" }) }) : task.state === "failed" ? /* @__PURE__ */ jsx8(Icon, { name: "close" }) : null }),
+    /* @__PURE__ */ jsx8("span", { className: "yg-task-copy", children: /* @__PURE__ */ jsx8("strong", { children: task.label }) }),
+    /* @__PURE__ */ jsxs8("span", { className: "yg-task-meta", children: [
+      task.detail && !showState && /* @__PURE__ */ jsx8("span", { className: "yg-task-note", children: task.detail }),
+      /* @__PURE__ */ jsx8("span", { className: showState ? "yg-task-state" : "yg-task-sr", children: stateName[task.state] })
     ] })
   ] });
 }
 function TaskList({ label, tasks }) {
   const complete = tasks.filter((task) => task.state === "done").length;
   const active = tasks.find((task) => task.state === "running")?.id;
-  return /* @__PURE__ */ jsxs9("section", { className: "yg-task-list", "aria-label": label, children: [
-    /* @__PURE__ */ jsxs9("header", { children: [
-      /* @__PURE__ */ jsx9("strong", { children: label }),
-      /* @__PURE__ */ jsxs9("span", { role: "status", children: [
-        /* @__PURE__ */ jsxs9("span", { className: "yg-task-sr", children: [
+  return /* @__PURE__ */ jsxs8("section", { className: "yg-task-list", "aria-label": label, children: [
+    /* @__PURE__ */ jsxs8("header", { children: [
+      /* @__PURE__ */ jsx8("strong", { children: label }),
+      /* @__PURE__ */ jsxs8("span", { role: "status", children: [
+        /* @__PURE__ */ jsxs8("span", { className: "yg-task-sr", children: [
           complete,
           " of ",
           tasks.length,
           " done"
         ] }),
-        /* @__PURE__ */ jsxs9("span", { "aria-hidden": "true", children: [
+        /* @__PURE__ */ jsxs8("span", { "aria-hidden": "true", children: [
           complete,
           "/",
           tasks.length
         ] })
       ] })
     ] }),
-    tasks.length === 0 && /* @__PURE__ */ jsx9("p", { className: "yg-help", children: "No steps yet." }),
-    /* @__PURE__ */ jsx9("ol", { children: tasks.map((task) => /* @__PURE__ */ jsx9("li", { "data-state": task.state, "data-active": active === task.id || void 0, children: task.steps?.length ? /* @__PURE__ */ jsxs9("details", { open: true, children: [
-      /* @__PURE__ */ jsx9("summary", { className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task }) }),
-      /* @__PURE__ */ jsx9("ol", { className: "yg-task-children", children: task.steps.map((step) => /* @__PURE__ */ jsx9("li", { "data-state": step.state, className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task: step }) }, step.id)) })
-    ] }) : /* @__PURE__ */ jsx9("div", { className: "yg-task-line", children: /* @__PURE__ */ jsx9(TaskLine, { task }) }) }, task.id)) })
+    tasks.length === 0 && /* @__PURE__ */ jsx8("p", { className: "yg-help", children: "No steps yet." }),
+    /* @__PURE__ */ jsx8("ol", { children: tasks.map((task) => /* @__PURE__ */ jsx8("li", { "data-state": task.state, "data-active": active === task.id || void 0, children: task.steps?.length ? /* @__PURE__ */ jsxs8("details", { open: true, children: [
+      /* @__PURE__ */ jsx8("summary", { className: "yg-task-line", children: /* @__PURE__ */ jsx8(TaskLine, { task }) }),
+      /* @__PURE__ */ jsx8("ol", { className: "yg-task-children", children: task.steps.map((step) => /* @__PURE__ */ jsx8("li", { "data-state": step.state, className: "yg-task-line", children: /* @__PURE__ */ jsx8(TaskLine, { task: step }) }, step.id)) })
+    ] }) : /* @__PURE__ */ jsx8("div", { className: "yg-task-line", children: /* @__PURE__ */ jsx8(TaskLine, { task }) }) }, task.id)) })
   ] });
 }
 export {

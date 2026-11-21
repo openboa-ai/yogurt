@@ -5,13 +5,20 @@ import { useCallback, useLayoutEffect, useRef, type ReactNode, type Ref, type Te
 type EditorProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "value"> & {
   value: string;
   presentation: "composer" | "prompt";
+  inputRef?: Ref<HTMLTextAreaElement>;
+  after?: ReactNode;
 };
 
 /** The measurement node is presentation-only; the host continues to own input. */
-export function PromptEditor({ value, presentation, rows = 1, ...props }: EditorProps) {
+export function PromptEditor({ value, presentation, rows = 1, inputRef, after, ...props }: EditorProps) {
   const editor = useRef<HTMLDivElement>(null);
   const measure = useRef<HTMLSpanElement>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
+  const setTextarea = useCallback((node: HTMLTextAreaElement | null) => {
+    textarea.current = node;
+    if (typeof inputRef === "function") inputRef(node);
+    else if (inputRef) inputRef.current = node;
+  }, [inputRef]);
   const resize = useCallback(() => {
     const target = editor.current, source = measure.current, input = textarea.current;
     if (!target || !source || !input) return;
@@ -38,7 +45,8 @@ export function PromptEditor({ value, presentation, rows = 1, ...props }: Editor
 
   return <div ref={editor} className={`yg-prompt-editor${presentation === "composer" ? " yg-composer-editor" : ""}`}>
     <span ref={measure} className="yg-prompt-measure" aria-hidden="true">{value}{"\u200b"}</span>
-    <textarea {...props} ref={textarea} rows={rows} value={value} />
+    <textarea {...props} ref={setTextarea} rows={rows} value={value} />
+    {after}
   </div>;
 }
 

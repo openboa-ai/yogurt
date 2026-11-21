@@ -2,9 +2,11 @@ import { type ReactNode, type Ref, type TextareaHTMLAttributes } from "react";
 type EditorProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "value"> & {
     value: string;
     presentation: "composer" | "prompt";
+    inputRef?: Ref<HTMLTextAreaElement>;
+    after?: ReactNode;
 };
 /** The measurement node is presentation-only; the host continues to own input. */
-export declare function PromptEditor({ value, presentation, rows, ...props }: EditorProps): import("react/jsx-runtime").JSX.Element;
+export declare function PromptEditor({ value, presentation, rows, inputRef, after, ...props }: EditorProps): import("react/jsx-runtime").JSX.Element;
 type ActionProps = {
     presentation: "composer" | "prompt";
     busy: boolean;

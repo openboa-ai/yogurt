@@ -1,5 +1,14 @@
 "use client";
 import {
+  Disclosure
+} from "./chunk-42W7U233.js";
+import {
+  advanceSprings,
+  playSprings,
+  snap,
+  spring
+} from "./chunk-DRQJWO7S.js";
+import {
   Icon
 } from "./chunk-GW3HPY4O.js";
 
@@ -389,8 +398,264 @@ function CartButton({ label, quantity, onQuantityChange, max = 99, addLabel = "A
   );
 }
 
+// packages/web/src/patterns/motion-cards.tsx
+import { useLayoutEffect as useLayoutEffect2, useRef as useRef3, useState as useState3 } from "react";
+import { jsx as jsx3, jsxs as jsxs3 } from "react/jsx-runtime";
+function ExpandCard({ title, children }) {
+  const card = useRef3(null);
+  const [open, setOpen] = useState3(false);
+  const [motion] = useState3(() => ({ shape: spring(0, 240, 21), copy: spring(0, 260, 28) }));
+  useLayoutEffect2(() => {
+    const root = card.current;
+    if (!root) return;
+    motion.shape.target = Number(open);
+    if (!open) motion.copy.target = 0;
+    const paint = () => {
+      root.style.setProperty("--yg-card-expansion", String(motion.shape.position));
+      root.style.setProperty("--yg-card-content", String(motion.copy.position));
+    };
+    const states = Object.values(motion);
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (open && reduced) motion.copy.target = 1;
+    let stop = playSprings(states, paint);
+    const reveal = open && !reduced ? setTimeout(() => {
+      motion.copy.target = 1;
+      stop();
+      stop = playSprings(states, paint);
+    }, 160) : void 0;
+    return () => {
+      clearTimeout(reveal);
+      stop();
+    };
+  }, [motion, open]);
+  return /* @__PURE__ */ jsxs3("details", { ref: card, className: "yg-expand-card", onToggle: (event) => setOpen(event.currentTarget.open), children: [
+    /* @__PURE__ */ jsxs3("summary", { children: [
+      /* @__PURE__ */ jsx3("span", { className: "yg-expand-art", "aria-hidden": "true" }),
+      /* @__PURE__ */ jsx3("span", { className: "yg-expand-title", children: title }),
+      /* @__PURE__ */ jsx3("span", { className: "yg-card-disclosure", children: /* @__PURE__ */ jsx3(Icon, { name: "plus" }) })
+    ] }),
+    /* @__PURE__ */ jsx3("div", { className: "yg-expand-card-body", children })
+  ] });
+}
+function FanCards({ items }) {
+  const [selectedId, setSelectedId] = useState3(null);
+  const [highlight, setHighlight] = useState3(null);
+  const [pointer, setPointer] = useState3(false);
+  const [keyboard, setKeyboard] = useState3(false);
+  const selected = items.find((item) => item.id === selectedId);
+  const list = useRef3(null);
+  const [spread] = useState3(() => spring(0, 220, 18));
+  const tracks = useRef3(/* @__PURE__ */ new Map());
+  const kick = useRef3(null);
+  useLayoutEffect2(() => {
+    const root = list.current;
+    if (!root || items.length > 3) return;
+    const buttons = Array.from(root.querySelectorAll("button[data-card]"));
+    const active = pointer || keyboard;
+    spread.target = Number(active);
+    const states = [spread];
+    const live = new Set(items.map((item) => item.id));
+    tracks.current.forEach((_, id) => {
+      if (!live.has(id)) tracks.current.delete(id);
+    });
+    const rows = buttons.map((button, index) => {
+      const id = button.dataset.card;
+      const tracksForCard = tracks.current.get(id) ?? { lift: spring(0, 420, 20), scale: spring(1, 420, 22) };
+      const featured = highlight ?? selectedId ?? items[Math.floor(items.length / 2)]?.id;
+      const hot = active && id === featured;
+      button.toggleAttribute("data-front", id === featured);
+      tracksForCard.lift.target = hot ? -22 : 0;
+      tracksForCard.scale.target = hot ? 1.06 : 1;
+      if (id === kick.current) tracksForCard.lift.velocity = -260;
+      states.push(tracksForCard.lift, tracksForCard.scale);
+      tracks.current.set(id, tracksForCard);
+      button.style.zIndex = id === featured ? "5" : index === 1 ? "3" : "2";
+      return { button, tracks: tracksForCard, index: index - (items.length - 1) / 2 };
+    });
+    kick.current = null;
+    const render = () => {
+      const width = root.offsetWidth;
+      const compact = width <= 290;
+      const room = Math.min(78, Math.max(10, (width - (compact ? 184 : 166)) / 2));
+      const angle = compact ? 5 : 9;
+      rows.forEach(({ button, tracks: tracks2, index }) => {
+        const x = index * (6 + spread.position * (room - 6));
+        const y = Math.abs(index) * spread.position * 12 + tracks2.lift.position;
+        button.style.setProperty("--yg-fan-transform", `translate(calc(-50% + ${x}px), ${y}px) rotate(${index * (3 + spread.position * angle)}deg) scale(${tracks2.scale.position})`);
+      });
+    };
+    let stop = playSprings(states, render);
+    const sizes = new ResizeObserver(() => {
+      stop();
+      stop = playSprings(states, render);
+    });
+    sizes.observe(root);
+    return () => {
+      sizes.disconnect();
+      stop();
+    };
+  }, [highlight, items, keyboard, pointer, selectedId, spread]);
+  return /* @__PURE__ */ jsxs3("div", { className: "yg-fan-cards", children: [
+    /* @__PURE__ */ jsx3(
+      "div",
+      {
+        className: "yg-fan-cards-list",
+        ref: list,
+        "aria-label": "Cards",
+        "data-many": items.length > 3 || void 0,
+        onPointerEnter: () => setPointer(true),
+        onPointerLeave: () => {
+          setPointer(false);
+          setHighlight(null);
+        },
+        onBlur: (event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setKeyboard(false);
+        },
+        children: items.map((item, index) => /* @__PURE__ */ jsxs3(
+          "button",
+          {
+            type: "button",
+            "data-card": item.id,
+            style: { "--yg-fan-offset": index - (items.length - 1) / 2 },
+            "aria-pressed": item.id === selected?.id,
+            onPointerEnter: () => setHighlight(item.id),
+            onFocus: (event) => {
+              if (event.currentTarget.matches(":focus-visible")) {
+                setKeyboard(true);
+                setHighlight(item.id);
+              }
+            },
+            onClick: () => {
+              kick.current = item.id;
+              setSelectedId(item.id === selectedId ? null : item.id);
+            },
+            children: [
+              /* @__PURE__ */ jsx3("span", { className: "yg-fan-art", "aria-hidden": "true" }),
+              /* @__PURE__ */ jsx3("span", { className: "yg-fan-index", "aria-hidden": "true", children: String(index + 1).padStart(2, "0") }),
+              /* @__PURE__ */ jsx3("span", { className: "yg-fan-label", children: item.label }),
+              /* @__PURE__ */ jsx3(Icon, { name: "next" })
+            ]
+          },
+          item.id
+        ))
+      }
+    ),
+    selected && /* @__PURE__ */ jsxs3("p", { className: "yg-fan-detail", children: [
+      /* @__PURE__ */ jsx3("strong", { children: selected.label }),
+      /* @__PURE__ */ jsx3("span", { children: selected.detail })
+    ] })
+  ] });
+}
+function StatSeries({ values }) {
+  const stroke = useRef3(null), fill = useRef3(null);
+  const dot = useRef3(null);
+  const axes = useRef3([]);
+  useLayoutEffect2(() => {
+    const safe = values.map((value) => Number.isFinite(value) ? value : 0);
+    if (axes.current.length !== safe.length) axes.current = safe.map((value) => spring(value, 200, 17));
+    const points = axes.current;
+    const media = matchMedia("(prefers-reduced-motion: reduce)");
+    function paint() {
+      if (!points.length) return;
+      const coordinates = points.map(({ position }, i) => [
+        4 + i / Math.max(1, points.length - 1) * 288,
+        8 + (1 - Math.min(1.05, Math.max(-0.05, position))) * 80
+      ]);
+      let curve = `M${coordinates[0].join(" ")}`;
+      for (let i = 0; i < coordinates.length - 1; i++) {
+        const a = coordinates[i - 1] ?? coordinates[i], b = coordinates[i];
+        const c = coordinates[i + 1], d = coordinates[i + 2] ?? c;
+        const first = b.map((value, axis) => value + (c[axis] - a[axis]) / 6);
+        const second = c.map((value, axis) => value - (d[axis] - b[axis]) / 6);
+        curve += ` C${first.join(" ")} ${second.join(" ")} ${c.join(" ")}`;
+      }
+      const last = coordinates[coordinates.length - 1];
+      stroke.current?.setAttribute("d", curve);
+      fill.current?.setAttribute("d", `${curve} L${last[0]} 96 L4 96 Z`);
+      dot.current?.setAttribute("cx", String(last[0]));
+      dot.current?.setAttribute("cy", String(last[1]));
+    }
+    let frame = 0, previous = performance.now(), start = previous;
+    function tick(time) {
+      let waiting = false;
+      points.forEach((point, index) => {
+        if (time - start < index * 30) waiting = true;
+        else point.target = safe[index];
+      });
+      const moving = advanceSprings(points, (time - previous) / 1e3);
+      previous = time;
+      paint();
+      if (moving || waiting) frame = requestAnimationFrame(tick);
+      else frame = 0;
+    }
+    function sync() {
+      cancelAnimationFrame(frame);
+      if (media.matches) {
+        points.forEach((point, index) => snap(point, safe[index]));
+        paint();
+      } else {
+        paint();
+        start = previous = performance.now();
+        frame = requestAnimationFrame(tick);
+      }
+    }
+    sync();
+    media.addEventListener("change", sync);
+    return () => {
+      cancelAnimationFrame(frame);
+      media.removeEventListener("change", sync);
+    };
+  }, [values]);
+  return /* @__PURE__ */ jsxs3("svg", { viewBox: "0 0 296 96", className: "yg-stat-series", "aria-hidden": "true", children: [
+    /* @__PURE__ */ jsx3("path", { ref: fill, className: "yg-stat-area" }),
+    /* @__PURE__ */ jsx3("path", { ref: stroke, className: "yg-stat-line" }),
+    /* @__PURE__ */ jsx3("circle", { ref: dot, r: "4" })
+  ] });
+}
+function StatCard({ label, value, detail, series }) {
+  const total = useRef3(null);
+  const [motion] = useState3(() => spring(value, 160, 22));
+  useLayoutEffect2(() => {
+    motion.target = value;
+    if (!Number.isFinite(value) || !Number.isFinite(motion.position)) {
+      snap(motion, value);
+      return;
+    }
+    return playSprings([motion], () => {
+      if (total.current) total.current.textContent = (Number.isInteger(value) ? Math.round(motion.position) : Math.round(motion.position * 10) / 10).toLocaleString();
+    });
+  }, [motion, value]);
+  return /* @__PURE__ */ jsxs3("section", { className: "yg-stat-card", "aria-label": label, children: [
+    /* @__PURE__ */ jsxs3("div", { className: "yg-stat-heading", children: [
+      /* @__PURE__ */ jsxs3("div", { children: [
+        /* @__PURE__ */ jsx3("span", { className: "yg-stat-label", children: label }),
+        /* @__PURE__ */ jsx3("strong", { className: "yg-stat-value", ref: total, children: value.toLocaleString() })
+      ] }),
+      detail && /* @__PURE__ */ jsx3("span", { className: "yg-stat-detail", children: detail })
+    ] }),
+    series && series.length > 1 && /* @__PURE__ */ jsx3(StatSeries, { values: series })
+  ] });
+}
+function ProfileCard({ name, detail, initials, children, actions }) {
+  return /* @__PURE__ */ jsxs3("section", { className: "yg-profile-card", children: [
+    /* @__PURE__ */ jsxs3("div", { className: "yg-profile-header", children: [
+      /* @__PURE__ */ jsx3("span", { className: "yg-profile-avatar", "aria-hidden": "true", children: initials }),
+      /* @__PURE__ */ jsxs3("div", { children: [
+        /* @__PURE__ */ jsx3("strong", { children: name }),
+        /* @__PURE__ */ jsx3("p", { children: detail })
+      ] })
+    ] }),
+    children != null && /* @__PURE__ */ jsx3(Disclosure, { label: `More about ${name}`, children: /* @__PURE__ */ jsx3("div", { className: "yg-profile-extra", children }) }),
+    actions
+  ] });
+}
+
 export {
   HoldButton,
   SlideConfirm,
-  CartButton
+  CartButton,
+  ExpandCard,
+  FanCards,
+  StatCard,
+  ProfileCard
 };
