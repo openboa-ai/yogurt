@@ -1,6 +1,7 @@
 "use client";
-import { useId, useLayoutEffect, useRef, type ComponentProps, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type ComponentProps, type ReactNode } from "react";
 import { SegmentedControl as SDKSegment, SegmentedControlItem } from "@ui-sdk/react/segmented-control";
+import { Tabs as SDKTabs, TabsList, TabsPanel, TabsTab } from "@ui-sdk/react/tabs";
 import { Button } from "./actions.js";
 import { type Choices } from "./forms.js";
 import { cx, Icon, type IconName } from "../foundation/foundation.js";
@@ -176,63 +177,42 @@ export function Tabs({
   onValueChange: (id: string) => void;
   presentation?: "pill" | "dock";
 }) {
-  const uid = useId();
-  const refs = useRef(new Map<string, HTMLButtonElement>());
   const enabled = items.filter((o) => !o.disabled);
   const selected = enabled.some((i) => i.id === value) ? value : enabled[0]?.id;
   return (
-    <div className="yg-tabs" data-presentation={presentation}>
-      <div role="tablist" aria-label={label}>
+    <SDKTabs className="yg-tabs" data-presentation={presentation} value={selected ?? null}
+      onValueChange={(id) => { if (id !== null) onValueChange(id); }}>
+      <TabsList aria-label={label} onKeyDownCapture={(event) => {
+        const current = (event.target as HTMLElement).closest<HTMLButtonElement>('[role="tab"]');
+        if (!current || !event.currentTarget.contains(current) || !enabled.length ||
+          event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        const index = enabled.findIndex((item) => item.id === current.dataset.ygTabId);
+        if (index < 0) return;
+        const next = ({ ArrowRight: (index + 1) % enabled.length,
+          ArrowLeft: (index + enabled.length - 1) % enabled.length,
+          Home: 0, End: enabled.length - 1 } as Record<string, number | undefined>)[event.key];
+        if (next === undefined) return;
+        event.preventDefault();
+        const id = enabled[next].id;
+        [...event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')]
+          .find((tab) => tab.dataset.ygTabId === id)?.focus();
+        onValueChange(id);
+      }}>
         <SelectionMarker selector=':scope > button[aria-selected="true"]' presentation={presentation} />
         {items.map((o) => (
-          <button
-            key={o.id}
-            type="button"
-            role="tab"
-            id={uid + "-t-" + o.id}
-            aria-controls={uid + "-p-" + o.id}
-            aria-selected={selected === o.id}
-            tabIndex={selected === o.id ? 0 : -1}
-            disabled={o.disabled}
-            ref={(el) => {
-              if (el) refs.current.set(o.id, el);
-              else refs.current.delete(o.id);
-            }}
-            onClick={() => onValueChange(o.id)}
-            onKeyDown={(e) => {
-              const index = enabled.findIndex((item) => item.id === o.id);
-              const next = (
-                {
-                  ArrowRight: (index + 1) % enabled.length,
-                  ArrowLeft: (index + enabled.length - 1) % enabled.length,
-                  Home: 0,
-                  End: enabled.length - 1,
-                } as Record<string, number | undefined>
-              )[e.key];
-              if (next !== undefined) {
-                e.preventDefault();
-                refs.current.get(enabled[next].id)?.focus();
-                onValueChange(enabled[next].id);
-              }
-            }}
-          >
+          <TabsTab key={o.id} value={o.id} disabled={o.disabled} data-yg-tab-id={o.id}
+            onClick={() => { if (o.id === selected) onValueChange(o.id); }}
+            render={(props, state) => <button {...props} disabled={state.disabled} />}>
             {o.icon ? <><Icon name={o.icon} /><span className="yg-tab-label"><span>{o.label}</span></span></> : o.label}
-          </button>
+          </TabsTab>
         ))}
-      </div>
+      </TabsList>
       {items.map((o) => (
-        <div
-          key={o.id}
-          role="tabpanel"
-          tabIndex={0}
-          id={uid + "-p-" + o.id}
-          aria-labelledby={uid + "-t-" + o.id}
-          hidden={selected !== o.id}
-        >
+        <TabsPanel key={o.id} value={o.id} keepMounted tabIndex={0}>
           {o.panel}
-        </div>
+        </TabsPanel>
       ))}
-    </div>
+    </SDKTabs>
   );
 }
 export function Pagination({

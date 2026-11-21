@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Button, Checkbox, SearchField, SegmentedControl, Switch, Textarea, TextField, Yogurt } from "@openboa/yogurt";
+import { Button, Checkbox, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 
 if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
@@ -13,7 +13,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent title" && step.action === "setValue") ||
       (step.label === "Agent search" && step.action === "setValue") ||
       (step.label === "Agent notes" && step.action === "setValue") ||
-      (step.label === "Agent segment" && step.action === "setValue"),
+      (step.label === "Agent segment" && step.action === "setValue") ||
+      (step.label === "Agent tabs" && step.action === "setValue"),
   });
 }
 
@@ -34,7 +35,11 @@ export default function AgentButtonFixture() {
   const [segment, setSegment] = useState("one");
   const [deniedSegment, setDeniedSegment] = useState("one");
   const [segmentChanges, setSegmentChanges] = useState(0);
+  const [tab, setTab] = useState("one");
+  const [deniedTab, setDeniedTab] = useState("one");
+  const [tabChanges, setTabChanges] = useState(0);
   const options = [{id: "one", label: "One"}, {id: "two", label: "Two"}, {id: "disabled", label: "Unavailable", disabled: true}];
+  const tabs = options.map(option => ({...option, panel: <input aria-label={`Panel ${option.id}`} defaultValue="Kept" />}));
   const actionRef = useRef(null);
   const hit = () => setCalls(value => value + 1);
   return (
@@ -76,6 +81,10 @@ export default function AgentButtonFixture() {
           setSegment(value); setSegmentChanges(count => count + 1);
         }} />
         <SegmentedControl label="Denied segment" options={options} value={deniedSegment} onValueChange={setDeniedSegment} />
+        <Tabs label="Agent tabs" items={tabs} value={tab} onValueChange={value => { setTab(value); setTabChanges(count => count + 1); }} />
+        <Tabs label="Denied tabs" items={tabs} value={deniedTab} onValueChange={setDeniedTab} />
+        <Tabs label="Fallback tabs" items={tabs} value="missing" onValueChange={() => {}} />
+        <Tabs label="Disabled tabs" items={tabs.map(item => ({...item, disabled: true}))} value="one" onValueChange={() => {}} />
         <form aria-label="Fixture form" onSubmit={event => { event.preventDefault(); setSubmits(value => value + 1); }}>
           <Checkbox label="Form checkbox" name="notes" value="include" defaultChecked />
           <Switch label="Form switch" name="enabled" value="yes" defaultChecked />
@@ -95,6 +104,9 @@ export default function AgentButtonFixture() {
         <output data-testid="segment-value">{segment}</output>
         <output data-testid="denied-segment-value">{deniedSegment}</output>
         <output data-testid="segment-changes">{segmentChanges}</output>
+        <output data-testid="tab-value">{tab}</output>
+        <output data-testid="denied-tab-value">{deniedTab}</output>
+        <output data-testid="tab-changes">{tabChanges}</output>
       </main>
     </Yogurt>
   );

@@ -1,7 +1,7 @@
 "use client";
 import {
   Tabs
-} from "../shared/chunk-NF6FXH3I.js";
+} from "../shared/chunk-R4VQZVXS.js";
 import "../shared/chunk-DRQJWO7S.js";
 import "../shared/chunk-4IPCB3MM.js";
 import "../shared/chunk-GW3HPY4O.js";
