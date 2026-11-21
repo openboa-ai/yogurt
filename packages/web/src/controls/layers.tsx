@@ -345,6 +345,7 @@ export function Tooltip({
   const id = useId();
   const [visible, setVisible] = useState(false);
   return (
+    <SDKPopover open={visible} onOpenChange={setVisible} dismissible={false}>
     <span
       className="yg-tip-anchor"
       onPointerEnter={() => setVisible(true)}
@@ -356,9 +357,11 @@ export function Tooltip({
       }}
     >
       {children({ "aria-describedby": id })}
-      <span role="tooltip" id={id} hidden={!visible} className="yg-tip">
+      <PopoverContent inline keepMounted initialFocus="none" finalFocus="none"
+        render={(props) => <span {...props} role="tooltip" id={id} aria-label={label} hidden={!visible} tabIndex={undefined} className="yg-tip" />}>
         {label}
-      </span>
+      </PopoverContent>
     </span>
+    </SDKPopover>
   );
 }

@@ -446,7 +446,7 @@ function Tooltip({
 }) {
   const id = useId();
   const [visible, setVisible] = useState(false);
-  return /* @__PURE__ */ jsxs(
+  return /* @__PURE__ */ jsx(SDKPopover, { open: visible, onOpenChange: setVisible, dismissible: false, children: /* @__PURE__ */ jsxs(
     "span",
     {
       className: "yg-tip-anchor",
@@ -459,10 +459,20 @@ function Tooltip({
       },
       children: [
         children({ "aria-describedby": id }),
-        /* @__PURE__ */ jsx("span", { role: "tooltip", id, hidden: !visible, className: "yg-tip", children: label })
+        /* @__PURE__ */ jsx(
+          PopoverContent,
+          {
+            inline: true,
+            keepMounted: true,
+            initialFocus: "none",
+            finalFocus: "none",
+            render: (props) => /* @__PURE__ */ jsx("span", { ...props, role: "tooltip", id, "aria-label": label, hidden: !visible, tabIndex: void 0, className: "yg-tip" }),
+            children: label
+          }
+        )
       ]
     }
-  );
+  ) });
 }
 
 export {

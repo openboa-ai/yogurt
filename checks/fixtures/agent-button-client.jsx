@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Accordion, ActionMenu, Button, Checkbox, Dialog, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Yogurt } from "@openboa/yogurt";
+import { Accordion, ActionMenu, Button, Checkbox, Dialog, Popover, RadioGroup, SearchField, SegmentedControl, Switch, Tabs, Textarea, TextField, Toggle, ToggleGroup, Tooltip, Yogurt } from "@openboa/yogurt";
 import { createYogurtAgent } from "@openboa/yogurt/agent";
 import { Button as CopiedButton } from "../src/components/ui/button";
 
@@ -24,7 +24,8 @@ if (typeof window !== "undefined" && !window.yogurtFixtureAgent) {
       (step.label === "Agent popover" && step.action === "setOpen") ||
       (step.label === "Agent accordion" && step.action === "setValue") ||
       (step.label === "Agent menu" && step.action === "setOpen") ||
-      (step.label === "Menu second" && step.action === "press"),
+      (step.label === "Menu second" && step.action === "press") ||
+      (step.label === "Agent hint" && step.action === "setOpen"),
   });
 }
 
@@ -130,6 +131,8 @@ export default function AgentButtonFixture() {
         <ActionMenu label="Agent menu" items={[{id: "one", label: "Menu first"}, {id: "two", label: "Menu second"}, {id: "locked", label: "Menu unavailable", disabled: true}]}
           onSelect={value => { setMenuSelection(value); setMenuCalls(count => count + 1); }} />
         <ActionMenu label="Denied menu" items={[{id: "denied", label: "Denied menu option"}]} onSelect={() => setMenuCalls(count => count + 1)} />
+        <Tooltip label="Agent hint">{props => <Button {...props}>Tooltip trigger</Button>}</Tooltip>
+        <Tooltip label="Denied hint">{props => <Button {...props}>Denied tooltip trigger</Button>}</Tooltip>
         <Button onClick={() => setModal(true)}>Open fixture dialog</Button>
         <Dialog title="Fixture dialog" description="Keep the draft." open={modal} onOpenChange={value => { setModal(value); setModalChanges(count => count + 1); }}>
           <input aria-label="Draft" defaultValue="Original draft" />

@@ -4,7 +4,7 @@ Each entry is pending until its normal package export, guide, registry and suppo
 
 The Web behavior runtime transition is in progress. Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle, ToggleGroup, Dialog, Sheet, Drawer, Popover and Accordion have Web implementation and installed-consumer evidence in their scoped control records. Their overall state remains pending until the corresponding registry and Native behavior, visual treatment and motion are qualified. Remaining entries have not been admitted as converted merely because their gallery tests pass.
 
-ActionMenu has a partial Web transition: shared inline popup and button behaviors with a Yogurt keyboard adapter. Its complete menu behavior and other renderers remain pending.
+ActionMenu has a partial Web transition: shared inline popup and button behaviors with a Yogurt keyboard adapter. Tooltip has shared inline popup state with a Yogurt activation adapter. Their complete shared behaviors and other renderers remain pending.
 
 | Component | Family | Yogurt specimen | State |
 | --- | --- | --- | --- |

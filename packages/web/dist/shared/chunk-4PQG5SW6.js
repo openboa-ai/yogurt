@@ -1,7 +1,7 @@
 "use client";
 import {
   Dialog
-} from "./chunk-P7AODOUJ.js";
+} from "./chunk-X5IYCPNL.js";
 import {
   words
 } from "./chunk-5GJUJT3P.js";
