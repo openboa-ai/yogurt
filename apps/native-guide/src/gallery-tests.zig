@@ -2,6 +2,41 @@ const std = @import("std");
 const sdk = @import("native_sdk");
 const gallery = @import("gallery-generated.zig");
 const app = @import("main.zig");
+const agent_preview = @import("agent-preview.zig");
+const agent_vector = @import("yogurt/models/agent-vector.zig");
+
+test "agent preview uses transparent and changing approved poses" {
+    var first: [agent_preview.side * agent_preview.side * 4]u8 = undefined;
+    var next: [agent_preview.side * agent_preview.side * 4]u8 = undefined;
+    const playback = agent_vector.Playback.init(.kai, 72, .working, 0);
+    try agent_preview.render(playback, 0, false, &first);
+    try agent_preview.render(playback, 1200, false, &next);
+    try std.testing.expectEqual(@as(u8, 0), first[3]);
+    var has_visible_pixel = false;
+    var index: usize = 3;
+    while (index < first.len) : (index += 4) {
+        if (first[index] > 0) { has_visible_pixel = true; break; }
+    }
+    try std.testing.expect(has_visible_pixel);
+    try std.testing.expect(!std.mem.eql(u8, &first, &next));
+}
+
+test "agent controls respect reduced motion and preserve it on navigation" {
+    var model = app.initialModel();
+    var effects: sdk.Effects(gallery.Msg) = .{ .allocator = std.testing.allocator };
+    for (gallery.ids, 0..) |id, index| {
+        if (std.mem.eql(u8, id, "agent-avatar")) app.update(&model, .{ .gallery_select = @intCast(index) }, &effects);
+    }
+    app.update(&model, .{ .agent_set_state = 2 }, &effects);
+    try std.testing.expectEqual(agent_vector.State.working, model.agent_pending.?);
+    app.update(&model, .{ .agent_set_kind = 1 }, &effects);
+    try std.testing.expectEqual(agent_vector.Agent.sol, model.agent_kind);
+    try std.testing.expectEqual(agent_vector.State.working, model.agent_pending.?);
+    app.update(&model, .{ .agent_reduce_motion = true }, &effects);
+    try std.testing.expect(model.agent_reduced_motion);
+    app.update(&model, .{ .gallery_select = 0 }, &effects);
+    try std.testing.expect(model.agent_reduced_motion);
+}
 
 test "catalog list and fixture state stay bounded" {
     try std.testing.expect(gallery.component_ids.len > 0);

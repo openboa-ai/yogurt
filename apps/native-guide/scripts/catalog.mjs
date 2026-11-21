@@ -69,6 +69,10 @@ const examples = {
   "text-field": { label: "View name" },
   textarea: { label: "Notes" },
   "input-group": { label: "View name" },
+  "input-otp": { label: "Verification code", value: "{value}" },
+  badge: { label: "Draft" },
+  status: { label: "Saved" },
+  notice: { title: "View updated", detail: "Your team can use the new view." },
 };
 const slots = {
   "action-menu": '<menu-item on-press="dismiss">Close menu</menu-item>',

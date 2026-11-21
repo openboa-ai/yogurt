@@ -1,5 +1,5 @@
 <template name="yg-keypad" args="label">
-  <column gap="8">
+  <column gap="8" max-width="480">
     <text size="sm">{label}</text>
     <grid columns="{key_columns}" gap="4">
       <for each="keys" key="id" as="item">

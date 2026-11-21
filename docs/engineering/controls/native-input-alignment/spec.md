@@ -16,6 +16,10 @@ Display the existing radio-group and selection-list labels using the small label
 
 Use one SDK switch with its default geometry and motion, the supplied visible and accessible label, the host-owned checked state, and the existing `toggle` message. Its label uses the shared text color in both appearances; the thumb retains its existing switch foreground role. Do not add a separate pressable row or override the switch dimensions. The theme remains the source of shared visual roles.
 
+Indent the individual agreement choices by 12 points below their group control. Keep keypad keys within a readable bounded width while allowing the host to provide a narrower space; retain existing labels, state and input callbacks.
+
+Keep the verification input bounded to 320 points and use a 56-point input height while retaining its single editable value and paste behavior. Use the shared small label role for rating. These dimensions do not claim segmented-code or star rendering support.
+
 ## Evidence
 
 Instantiate the edited templates in the native catalog and run strict markup validation. Render an installed sample with both controls; confirm input can be edited and each enabled button reports its distinct message once, while boundaries disable the appropriate action. Check the labeled templates' typography, spacing, popup placement and existing callbacks at narrow width. Inspect the narrow layout and keyboard names. Check that the single switch displays its label and sends one `toggle` request per pointer or keyboard activation. Record actual Native renderer and SDK evidence separately from source or markup compilation; do not claim OTP appearance or full visual/motion parity.

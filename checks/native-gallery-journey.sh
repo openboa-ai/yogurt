@@ -247,7 +247,15 @@ while IFS=$'\t' read -r id name; do
   fi
   case "$id" in
     agent-avatar|gaze)
-      interaction=UNSUPPORTED_FIXTURE
+      if "$cli" automate assert --timeout-ms 5000 'role=image name="Kai"' 'role=button name="Working"' >/dev/null 2>&1 &&
+         "$cli" automate snapshot > "$output/$prefix-interaction.txt" &&
+         ! rg -q 'Animation unavailable' "$output/$prefix-interaction.txt"; then
+        # The accessible tree alone cannot prove the pixels or animation.
+        interaction=PARTIAL
+      else
+        interaction=FAILED
+        failed=1
+      fi
       ;;
     button)
       role=button

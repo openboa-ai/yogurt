@@ -2,6 +2,6 @@
   <column gap="4">
     <text size="sm" foreground="text_muted">{label}</text>
     <text size="heading">{value}</text>
-    <text size="sm" foreground="text_muted">{detail}</text>
+    <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
   </column>
 </template>

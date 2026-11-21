@@ -4,6 +4,8 @@ const runner = @import("runner");
 const gallery = @import("gallery-generated.zig");
 const navigation = @import("navigation.zig");
 const theme = @import("yogurt/theme.zig");
+const agent_vector = @import("yogurt/models/agent-vector.zig");
+const agent_preview = @import("agent-preview.zig");
 const canvas = sdk.canvas;
 
 pub const panic = std.debug.FullPanic(sdk.debug.capturePanic);
@@ -67,6 +69,7 @@ fn syncPage(m: *Model) void {
 fn selectComponent(m: *Model, index: u32) void {
     if (index >= gallery.names.len) return;
     const dark = m.gallery_dark;
+    const reduced_motion = m.agent_reduced_motion;
     const show_list = m.gallery_list_open;
     const brand_picture = m.brand_picture;
     const project_picture = m.project_picture;
@@ -76,6 +79,7 @@ fn selectComponent(m: *Model, index: u32) void {
     const sourdough_missing = m.sourdough_missing;
     const meatball_missing = m.meatball_missing;
     m.* = .{};
+    m.agent_reduced_motion = reduced_motion;
     m.brand_picture = brand_picture;
     m.project_picture = project_picture;
     m.sourdough_picture = sourdough_picture;
@@ -88,12 +92,69 @@ fn selectComponent(m: *Model, index: u32) void {
     m.gallery_list_open = show_list;
     m.gallery_dark = dark;
     const id = gallery.ids[index];
+    if (std.mem.eql(u8, id, "input-otp")) { m.gallery_editor.clear(); m.value = m.gallery_editor.text(); }
     if (std.mem.eql(u8, id, "action-menu") or std.mem.eql(u8, id, "context-menu") or
         std.mem.eql(u8, id, "menubar") or std.mem.eql(u8, id, "date-picker")) m.is_open = false;
 }
 
-pub fn update(m: *Model, msg: Msg, _: *sdk.Effects(Msg)) void {
+fn isAgentSpecimen(m: *const Model) bool {
+    const id = gallery.ids[m.gallery_selected];
+    return std.mem.eql(u8, id, "agent-avatar") or std.mem.eql(u8, id, "gaze");
+}
+
+fn agentFrame(m: *const Model, frame: sdk.GpuFrame) ?Msg {
+    if (!isAgentSpecimen(m)) return null;
+    const now_ms = frame.timestamp_ns / std.time.ns_per_ms;
+    if (now_ms < m.agent_next_ms) return null;
+    return .{ .agent_tick = now_ms };
+}
+
+fn agentAppearance(appearance: sdk.platform.Appearance) ?Msg {
+    return .{ .agent_reduce_motion = appearance.reduce_motion };
+}
+
+pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
     switch (msg) {
+        .agent_tick => |now_ms| {
+            if (!isAgentSpecimen(m)) return;
+            if (m.agent_playback == null) m.agent_playback = agent_vector.Playback.init(m.agent_kind, 72, .ready, now_ms);
+            if (m.agent_pending) |pending| {
+                m.agent_playback.?.setState(pending, now_ms, m.agent_reduced_motion);
+                m.agent_pending = null;
+            }
+            const playback = m.agent_playback.?;
+            var pixels: [agent_preview.side * agent_preview.side * 4]u8 = undefined;
+            agent_preview.render(playback, now_ms, m.agent_reduced_motion, &pixels) catch {
+                m.agent_error = true; m.agent_next_ms = now_ms +| 500; return;
+            };
+            fx.registerImage(agent_preview.image_id, agent_preview.side, agent_preview.side, &pixels) catch {
+                m.agent_error = true; m.agent_next_ms = now_ms +| 500; return;
+            };
+            m.picture = agent_preview.image_id;
+            m.agent_error = false;
+            m.agent_next_ms = if (playback.nextFrameDelay(now_ms, true, m.agent_reduced_motion)) |delay| now_ms +| delay else std.math.maxInt(u64);
+        },
+        .agent_set_state => |choice| {
+            if (!isAgentSpecimen(m)) return;
+            const state: agent_vector.State = switch (choice) {
+                0 => .ready, 1 => .thinking, 2 => .working, 3 => .waiting, 4 => .blocked, 5 => .done, else => return,
+            };
+            m.agent_pending = state;
+            m.agent_next_ms = 0;
+        },
+        .agent_set_kind => |choice| {
+            if (!isAgentSpecimen(m) or choice > 1) return;
+            const state = if (m.agent_pending) |pending| pending else if (m.agent_playback) |playback| playback.state else .ready;
+            m.agent_kind = if (choice == 0) .kai else .sol;
+            m.agent_label = if (choice == 0) "Kai" else "Sol";
+            m.agent_playback = null;
+            m.agent_pending = state;
+            m.agent_next_ms = 0;
+        },
+        .agent_reduce_motion => |reduced| {
+            m.agent_reduced_motion = reduced;
+            m.agent_next_ms = 0;
+        },
         .gallery_select => |index| selectComponent(m, index),
         .gallery_previous => if (m.gallery_selected > 0) selectComponent(m, m.gallery_selected - 1),
         .gallery_next => if (m.gallery_selected + 1 < gallery.names.len) selectComponent(m, m.gallery_selected + 1),
@@ -203,7 +264,7 @@ pub fn update(m: *Model, msg: Msg, _: *sdk.Effects(Msg)) void {
 }
 
 pub fn tokens(m: *const Model) canvas.DesignTokens {
-    return theme.theme(m.gallery_dark, .neutral, false, false);
+    return theme.theme(m.gallery_dark, .neutral, false, m.agent_reduced_motion);
 }
 
 fn previewWidth(id: []const u8) f32 {
@@ -215,14 +276,16 @@ fn previewWidth(id: []const u8) f32 {
 }
 
 fn compactPreview(id: []const u8) bool {
-    const compact = [_][]const u8{ "button", "icon-button", "toggle", "switch", "checkbox", "radio", "badge", "project-mark", "icon", "avatar" };
+    const compact = [_][]const u8{ "button", "icon-button", "toggle", "switch", "checkbox", "radio", "badge", "project-mark", "icon", "avatar", "agent-avatar", "gaze" };
     for (compact) |item| if (std.mem.eql(u8, id, item)) return true;
     return false;
 }
 
 pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
     const index: usize = if (m.gallery_selected < gallery.names.len) m.gallery_selected else 0;
-    const has_agent = std.mem.eql(u8, gallery.ids[index], "gaze") or std.mem.startsWith(u8, gallery.ids[index], "agent-");
+    const animated_agent = isAgentSpecimen(m);
+    const selected_agent_state: agent_vector.State = if (m.agent_pending) |pending| pending else if (m.agent_playback) |playback| playback.state else .ready;
+    const has_agent = !animated_agent and std.mem.startsWith(u8, gallery.ids[index], "agent-");
     const compact = compactPreview(gallery.ids[index]);
     const preview = ui.scroll(.{ .grow = 1, .semantics = .{ .label = "Component preview" } }, .{
         ui.column(.{ .padding = 24, .gap = 20 }, .{
@@ -232,6 +295,7 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
                 ui.text(.{ .wrap = true }, gallery.descriptions[index]),
             }),
             if (has_agent) ui.text(.{}, "Animation unavailable") else ui.column(.{}, .{}),
+            if (animated_agent and m.agent_error) ui.text(.{}, "Animation unavailable") else ui.column(.{}, .{}),
             ui.text(.{ .size = .sm }, "Preview"),
             ui.stack(.{ .style_tokens = .{ .background = .surface, .radius = .xl } }, .{
                 ui.column(.{ .height = 200 }, .{}),
@@ -241,6 +305,22 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
                     }),
                 }),
             }),
+            if (animated_agent) ui.column(.{ .gap = 8 }, .{
+                ui.row(.{ .gap = 8 }, .{
+                    ui.button(.{ .on_press = .{ .agent_set_kind = 0 }, .variant = if (m.agent_kind == .kai) .primary else .secondary }, "Kai"),
+                    ui.button(.{ .on_press = .{ .agent_set_kind = 1 }, .variant = if (m.agent_kind == .sol) .primary else .secondary }, "Sol"),
+                }),
+                ui.row(.{ .gap = 8 }, .{
+                    ui.button(.{ .on_press = .{ .agent_set_state = 0 }, .variant = if (selected_agent_state == .ready) .primary else .secondary }, "Ready"),
+                    ui.button(.{ .on_press = .{ .agent_set_state = 1 }, .variant = if (selected_agent_state == .thinking) .primary else .secondary }, "Thinking"),
+                    ui.button(.{ .on_press = .{ .agent_set_state = 2 }, .variant = if (selected_agent_state == .working) .primary else .secondary }, "Working"),
+                }),
+                ui.row(.{ .gap = 8 }, .{
+                    ui.button(.{ .on_press = .{ .agent_set_state = 3 }, .variant = if (selected_agent_state == .waiting) .primary else .secondary }, "Waiting"),
+                    ui.button(.{ .on_press = .{ .agent_set_state = 4 }, .variant = if (selected_agent_state == .blocked) .primary else .secondary }, "Blocked"),
+                    ui.button(.{ .on_press = .{ .agent_set_state = 5 }, .variant = if (selected_agent_state == .done) .primary else .secondary }, "Finished"),
+                }),
+            }) else ui.column(.{}, .{}),
             if (std.mem.eql(u8, m.gallery_status, "Ready")) ui.column(.{}, .{}) else ui.text(.{ .wrap = true }, m.gallery_status),
             ui.row(.{ .gap = 8 }, .{
                 ui.button(.{ .on_press = .gallery_previous, .disabled = index == 0, .variant = .secondary }, "Previous"),
@@ -268,7 +348,7 @@ pub fn main(init: std.process.Init) !void {
     const App = sdk.UiApp(Model, Msg);
     const app = try App.create(std.heap.page_allocator, .{
         .name = app_name, .scene = .{ .windows = &windows }, .canvas_label = "main-canvas",
-        .init_fx = registerProjectMark, .update_fx = update, .tokens_fn = tokens, .view = rootView,
+        .init_fx = registerProjectMark, .update_fx = update, .tokens_fn = tokens, .view = rootView, .on_frame = agentFrame, .on_appearance = agentAppearance,
         .fonts = &.{
             .{ .id = theme.font_id, .name = "Rethink Sans", .ttf = @embedFile("yogurt/rethink-sans.ttf") },
             .{ .id = theme.button_font_id, .name = "Rethink Sans Medium", .ttf = @embedFile("yogurt/rethink-sans-medium.ttf") },

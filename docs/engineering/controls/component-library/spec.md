@@ -54,6 +54,12 @@ Native transcript follow-up: the scroll container takes the available height rat
 
 Native sidebar follow-up: the project and agent lists reserve a visible minimum while growing with the host, rather than collapsing their scroll viewport. Nest project destinations inside their disclosure heading, preserve the existing messages and slots, and verify both the visible default list and overflow scrolling.
 
+Native navigation follow-up: show the sidebar disclosure direction and indent destinations under their parent. Navigation-menu entries align to the start and retain their existing activation and disabled data without requiring new host fields.
+
+Native data and feedback follow-up: keep the neutral notice surface, icon and insets consistent with the shared roles, and allow descriptive text in records, results, charts and lists to wrap rather than disappear at narrow widths. Preserve existing data, messages and slots.
+
+Native agent avatar and gaze accept an optional square size, defaulting to the existing 48 points. The guide may use 72 points for its primary sample while smaller roster uses remain available. Preserve the image ID, label and original motion data.
+
 Native typography resolves the existing display-size token as well as the body, action and heading tokens, so a display text uses the same 40 px scale as the web guide.
 
 | Surface | Required behavior |

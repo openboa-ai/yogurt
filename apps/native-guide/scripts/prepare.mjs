@@ -1,5 +1,5 @@
 // Prepare the Native gallery inside an already-created disposable SDK host.
-import { readFileSync, writeFileSync, copyFileSync, existsSync, unlinkSync } from "node:fs";
+import { readFileSync, writeFileSync, copyFileSync, existsSync, unlinkSync, mkdirSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -19,6 +19,11 @@ if (result.status !== 0) throw Error("Native catalog fixture generation failed."
 const gallery = join(kit, "apps/native-guide");
 copyFileSync(join(gallery, "app.json"), join(host, "app.json"));
 copyFileSync(join(gallery, "src/main.zig"), join(host, "src/main.zig"));
+copyFileSync(join(gallery, "src/agent-preview.zig"), join(host, "src/agent-preview.zig"));
+mkdirSync(join(host, "src/yogurt/models"), { recursive: true });
+for (const name of ["agent-vector.zig", "avatar-pose-data.zig", "agent-family-data.zig"]) {
+  copyFileSync(join(kit, "packages/native/controls/models", name), join(host, "src/yogurt/models", name));
+}
 copyFileSync(join(gallery, "src/navigation.zig"), join(host, "src/navigation.zig"));
 copyFileSync(join(gallery, "src/gallery-tests.zig"), join(host, "src/gallery-tests.zig"));
 copyFileSync(join(gallery, "src/gallery-tests.zig"), join(host, "src/tests.zig"));
@@ -45,6 +50,12 @@ for (const id of ["icon", "avatar"]) {
   const source = readFileSync(file, "utf8");
   if (!source.includes("<column>")) throw Error(`Missing specimen container in ${id}.`);
   writeFileSync(file, source.replace("<column>", '<column cross="center">'));
+}
+for (const id of ["agent-avatar", "gaze"]) {
+  const file = join(host, "src/yogurt-catalog-test", `${id}-test.native`);
+  const source = readFileSync(file, "utf8");
+  if (!source.includes('<column>') || !source.includes('label="Weekly review"') || !source.includes('image_id="{picture}"')) throw Error(`Missing agent specimen binding in ${id}.`);
+  writeFileSync(file, source.replace('<column>', '<column cross="center">').replace('label="Weekly review"', 'label="{agent_label}"').replace('image_id="{picture}"', 'image_id="{picture}" size="72"'));
 }
 for (const id of ["text-field", "textarea", "search-field", "input-group", "combobox"]) {
   const file = join(host, "src/yogurt-catalog-test", `${id}-test.native`);
@@ -79,12 +90,13 @@ const findLine = (prefix) => {
 const model = findLine("const Model = struct {").replace("days: []const Choice = &sample", "days: []const Choice = &november_days").replace("const Model = struct {", "pub const Model = struct { gallery_days: [31]Choice = december_days, gallery_choices: [2]Choice = sample, gallery_date_value: []const u8 = \"Choose a date\", project_picture: u32 = 0, sourdough_picture: u32 = 0, meatball_picture: u32 = 0, project_missing: bool = true, sourdough_missing: bool = true, meatball_missing: bool = true, gallery_selected: u32 = 0, gallery_list_open: bool = true, gallery_dark: bool = false, gallery_status: []const u8 = \"Ready\", gallery_picker_open: bool = false, gallery_count: u8 = 0, gallery_count_text: []const u8 = \"0\", gallery_page: u8 = 0, gallery_page_text: []const u8 = \"1 of 2\", gallery_page_one: bool = true, gallery_page_two: bool = false, gallery_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"Weekly\"), gallery_first_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"415\"), gallery_last_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"0182\"),");
 const brandModel = model.replace("project_image: u32 = 1", "project_image: u32 = 0")
   .replace("sidebar_destinations: []const Choice = &sample", "sidebar_destinations: []const Choice = &sidebar_sample")
-  .replace("pub const Model = struct {", "pub const Model = struct { brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
-const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance,");
+  .replace("pub const Model = struct {", "pub const Model = struct { agent_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_error: bool = false, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
+const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { agent_tick: u64, agent_set_state: u8, agent_set_kind: u8, agent_reduce_motion: bool, gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance,");
 const zigString = (value) => JSON.stringify(value);
 const lines = [
   'const std = @import("std");',
   'const canvas = @import("native_sdk").canvas;',
+  'const agent_vector = @import("yogurt/models/agent-vector.zig");',
   findLine("const Choice = struct {"), findLine("const sample = "), findLine("const sidebar_sample = "),
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_days' : 'november_days'} = [_]Choice{ ${Array.from({ length: count }, (_, i) => `.{ .id = ${i + 1}, .title = \"${i + 1}\" }`).join(', ')} };`), brandModel, msg,
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_labels' : 'november_labels'} = [_][]const u8{ ${Array.from({ length: count }, (_, i) => `\"${index ? 'Dec' : 'Nov'} ${i + 1}, 2026\"`).join(', ')} };`),

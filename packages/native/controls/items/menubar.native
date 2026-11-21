@@ -6,7 +6,7 @@
       </for>
     </row>
     <if test="{is_open}">
-      <dropdown-menu on-dismiss="dismiss">
+      <dropdown-menu label="{label}" on-dismiss="dismiss">
         <for each="choices" key="id" as="item">
           <menu-item selected="{item.selected}" disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</menu-item>
         </for>

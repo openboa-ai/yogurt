@@ -2,9 +2,9 @@
   <list-item label="{label}" selected="{selected}" disabled="{disabled}" on-press="select_agent:{item_id}" gap="12" cross="center" padding="8">
     <image label="Agent silhouette" image="{image_id}" width="36" height="36"/>
     <column grow="1" gap="2">
-      <text>{label}</text>
-      <text size="sm" foreground="text_muted">{detail}</text>
-      <text size="sm" foreground="text_muted">{summary}</text>
+      <text wrap="true">{label}</text>
+      <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
+      <text size="sm" foreground="text_muted" wrap="true">{summary}</text>
     </column>
     <if test="{unread}"><text size="sm">Unread</text></if>
   </list-item>

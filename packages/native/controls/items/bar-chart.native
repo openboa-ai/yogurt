@@ -1,10 +1,10 @@
 <template name="yg-bar-chart" args="label source">
   <column gap="8">
-    <text>{label}</text>
+    <text wrap="true">{label}</text>
     <chart label="{label}" height="160">
       <series kind="bar" values="{samples}" color="text" label="{label}"/>
     </chart>
-    <text size="sm" foreground="text_muted">{source}</text>
+    <text size="sm" foreground="text_muted" wrap="true">{source}</text>
     <slot/>
   </column>
 </template>
