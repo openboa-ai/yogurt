@@ -95,6 +95,9 @@
 
 .yg-agent-row-time {
   align-self: flex-start;
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -227,7 +230,7 @@
 
 .yg-runtime-actions {
   display: flex;
-  gap: var(--boa-space-4);
+  gap: var(--yg-gap-inline);
   flex-wrap: wrap;
 }
 

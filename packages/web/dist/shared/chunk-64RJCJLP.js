@@ -313,6 +313,7 @@ function NumericSpinner({
         }
       ),
       /* @__PURE__ */ jsxs("output", { "aria-label": label, "aria-live": "polite", "data-decreasing": value < last || void 0, children: [
+        [min, max, last, value].map((measurement, index) => /* @__PURE__ */ jsx("span", { className: "yg-quantity-measure", "aria-hidden": "true", children: measurement }, index)),
         last !== value && /* @__PURE__ */ jsx("span", { className: "yg-quantity-out", "aria-hidden": "true", children: last }, `old-${value}`),
         /* @__PURE__ */ jsx("span", { className: last !== value ? "yg-quantity-in" : void 0, children: value }, value)
       ] }),

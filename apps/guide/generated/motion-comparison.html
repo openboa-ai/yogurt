@@ -1079,6 +1079,20 @@
 .yg-input-group input {
   width: 0;
 }
+.yg-choice[data-disabled] label,
+.yg-radio label[data-disabled] { cursor: default; }
+@media (forced-colors: none) {
+  .yg-input:has(:is(input, textarea):disabled):not(:has([aria-invalid="true"])) {
+    background: var(--yg-surface);
+  }
+  .yg-input :is(input, textarea):disabled {
+    color: var(--yg-off);
+    -webkit-text-fill-color: var(--yg-off);
+  }
+  .yg-input:has(:is(input, textarea):disabled) > .yg-icon { color: var(--yg-off); }
+  .yg-choice[data-disabled] :is([role="checkbox"], [role="switch"]),
+  .yg-radio label[data-disabled] [role="radio"] { opacity: .55; }
+}
 .yg-otp {
   position: relative;
   width: fit-content;
@@ -1181,15 +1195,19 @@
 .yg-quantity > div {
   display: inline-flex;
   align-items: center;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-x: auto;
   background: transparent;
 }
 .yg-quantity {
+  flex-wrap: wrap;
   gap: var(--yg-gap-stack);
   padding: var(--yg-quantity-card-inset);
   border-radius: var(--yg-card-corner);
   background: var(--yg-raised-surface);
 }
-.yg-quantity-label { display: grid; gap: var(--yg-gap-tight); min-width: 0; }
+.yg-quantity-label { display: grid; flex: 1 1 auto; gap: var(--yg-gap-tight); min-width: 0; }
 .yg-quantity-label > span { overflow-wrap: anywhere; }
 .yg-quantity > div > .yg-button {
   flex: none;
@@ -1203,7 +1221,9 @@
   position: relative;
   display: grid;
   place-items: center;
-  inline-size: var(--yg-quantity-value-width);
+  flex: none;
+  inline-size: max-content;
+  min-inline-size: var(--yg-quantity-value-width);
   block-size: 32px;
   overflow: hidden;
   text-align: center;
@@ -1211,7 +1231,9 @@
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-.yg-quantity output > span { grid-area: 1 / 1; }
+.yg-quantity output > span { grid-area: 1 / 1; white-space: nowrap; }
+.yg-quantity-measure { visibility: hidden; pointer-events: none; }
+.yg-quantity > div > .yg-button:focus-visible { outline-offset: calc(-1 * var(--boa-stroke-focus)); }
 .yg-quantity-out { visibility: hidden; }
 @media (prefers-reduced-motion: no-preference) {
   .yg-quantity output { --yg-quantity-edge: 14px; }
@@ -2088,6 +2110,9 @@
 
 .yg-agent-row-time {
   align-self: flex-start;
+  max-inline-size: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -2220,7 +2245,7 @@
 
 .yg-runtime-actions {
   display: flex;
-  gap: var(--boa-space-4);
+  gap: var(--yg-gap-inline);
   flex-wrap: wrap;
 }
 
@@ -3172,6 +3197,9 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   .yg-combo > .yg-options:not([hidden]) {
     animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
   }
+  .yg-anchor > .yg-anchored-panel:not([hidden]) {
+    animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
+  }
   .yg-combo .yg-options [role="option"] {
     transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
   }
@@ -3181,6 +3209,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 }
 @media (prefers-reduced-motion: reduce) {
   .yg-combo > .yg-options:not([hidden]) { animation: none; }
+  .yg-anchor > .yg-anchored-panel:not([hidden]) { animation: none; }
   .yg-root .yg-select[data-dropdown] > .yg-icon { transition: none; }
 }
 

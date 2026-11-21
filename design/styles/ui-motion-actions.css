@@ -229,6 +229,9 @@
   .yg-combo > .yg-options:not([hidden]) {
     animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
   }
+  .yg-anchor > .yg-anchored-panel:not([hidden]) {
+    animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
+  }
   .yg-combo .yg-options [role="option"] {
     transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
   }
@@ -238,6 +241,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .yg-combo > .yg-options:not([hidden]) { animation: none; }
+  .yg-anchor > .yg-anchored-panel:not([hidden]) { animation: none; }
   .yg-root .yg-select[data-dropdown] > .yg-icon { transition: none; }
 }
 

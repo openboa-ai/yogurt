@@ -36,6 +36,12 @@ An editable rating uses the same five-star interaction as the interactive rating
 
 The numeric spinner has two circular 40 px actions, a fixed-width rolling value and a borderless card surface. Preserve its label, disabled and range boundaries, integer stepping, callback and live value announcement. Optional supporting text and action names allow a host to describe the controlled value. A value change rolls in the direction of the change and settles immediately under reduced motion. The gallery uses this same component.
 
+### Numeric spinner width correction
+
+The fixed value viewport must accommodate the rendered text for the instance's `min`, `max`, current value and the prior value during a transition; 40 px is not a sufficient universal width for the public range. Use visually hidden, accessibility-hidden text in the same grid and font to size the viewport by the actual rendered values, with the existing width as a minimum. Keep the width stable throughout an ordinary transition within the declared bounds, including a rapid reversal and a host rerender. If a host supplies an out-of-range value or changes the bounds, accommodate the affected visible values without clipping and preserve controlled behavior. A character count alone is not evidence that glyphs fit.
+
+Maintain both action buttons, their accessible names and bounds, keyboard activation, announcements and reduced-motion behavior. At narrow widths, the label and actions must not overlap or enlarge the page; when the value and actions cannot fit in one row, provide an accessible way to reach and read all of them without silently clipping a value. Preserve the ordinary compact two-digit appearance. Qualify the actual packaged component with positive and negative values of different lengths, range updates and rapid reversals at 320 and 1440 px, plus reduced motion, keyboard and forced colors. Capture the rendered result separately from arithmetic or text measurements.
+
 Layered menus, attachments and carousel slides use surface contrast or elevation for their ordinary boundary instead of an inset perimeter line. Retain forced-color and keyboard-focus indicators.
 
 List rows use a 48 px minimum height and 12 px content gap. Their text, leading and trailing slots remain flexible and wrap when needed; links and actions retain their original behavior and current state. Noninteractive rows do not become buttons.

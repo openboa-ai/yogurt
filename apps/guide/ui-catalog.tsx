@@ -389,17 +389,19 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                   <Heading>When to use</Heading>
                   <p>{guidance.useWhen}</p>
                   <p className="yg-help">{guidance.avoid}</p>
-                  <h3>Works with</h3>
-                  <div className="catalog-guidance-links">
-                    {guidance.combineWith.map(companion => {
-                      const component = catalog.find(item => item.id === companion);
-                      return <Link key={companion} href={sectionHref("components", companion)}
-                        onClick={event => {
-                          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-                          event.preventDefault(); go(companion);
-                        }}>{component?.name ?? companion}</Link>;
-                    })}
-                  </div>
+                  {guidance.combineWith.length > 0 && <>
+                    <h3>Works with</h3>
+                    <div className="catalog-guidance-links">
+                      {guidance.combineWith.map(companion => {
+                        const component = catalog.find(item => item.id === companion);
+                        return <Link key={companion} href={sectionHref("components", companion)}
+                          onClick={event => {
+                            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                            event.preventDefault(); go(companion);
+                          }}>{component?.name ?? companion}</Link>;
+                      })}
+                    </div>
+                  </>}
                   <h3>Check</h3>
                   <p className="yg-help">{guidance.verify.join(" · ")}</p>
                 </section>

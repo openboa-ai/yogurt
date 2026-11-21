@@ -290,12 +290,8 @@
     "description": "Connect a label, value and correction.",
     "guidance": {
       "useWhen": "Associate a control with its label and optional help or error.",
-      "combineWith": [
-        "label",
-        "help-text",
-        "field-error"
-      ],
-      "avoid": "Do not rely on placeholder text as the only label.",
+      "combineWith": [],
+      "avoid": "Do not rely on placeholder text as the only label. The component creates its own label and supporting text.",
       "verify": [
         "label association",
         "help and error association",
@@ -474,10 +470,9 @@
     "guidance": {
       "useWhen": "Select an independent option or membership in a set.",
       "combineWith": [
-        "form",
-        "help-text"
+        "form"
       ],
-      "avoid": "Use a radio group when exactly one choice is required.",
+      "avoid": "Use a radio group when exactly one choice is required. The control does not expose a description association.",
       "verify": [
         "checked",
         "unchecked",
@@ -494,10 +489,9 @@
     "guidance": {
       "useWhen": "Choose one option from a small visible set.",
       "combineWith": [
-        "help-text",
         "form"
       ],
-      "avoid": "Do not use a radio group for independent choices.",
+      "avoid": "Do not use a radio group for independent choices. The group does not expose a description association.",
       "verify": [
         "selected",
         "disabled option",
@@ -513,10 +507,8 @@
     "description": "Apply a setting immediately.",
     "guidance": {
       "useWhen": "Change a setting that takes effect immediately.",
-      "combineWith": [
-        "help-text"
-      ],
-      "avoid": "Use a checkbox for a choice submitted as part of a form.",
+      "combineWith": [],
+      "avoid": "Use a checkbox for a choice submitted as part of a form. Use the built-in help property for supporting text.",
       "verify": [
         "on",
         "off",
@@ -1016,10 +1008,9 @@
     "guidance": {
       "useWhen": "Acknowledge an observed action result without interrupting the task.",
       "combineWith": [
-        "toast-stack",
         "icon-button"
       ],
-      "avoid": "Keep critical information available beyond a transient message.",
+      "avoid": "Keep critical information available beyond a transient message. ToastStack creates its own notices from items.",
       "verify": [
         "announcement",
         "dismissal",
@@ -1647,10 +1638,8 @@
     "description": "Present and dismiss independent notifications.",
     "guidance": {
       "useWhen": "Present independently dismissible notifications.",
-      "combineWith": [
-        "toast"
-      ],
-      "avoid": "Do not use a transient notice as the only record of a critical outcome.",
+      "combineWith": [],
+      "avoid": "Do not use a transient notice as the only record of a critical outcome. Pass items instead of nesting Toast children.",
       "verify": [
         "multiple notices",
         "dismissal",
@@ -1889,11 +1878,8 @@
     "description": "Edit related segments with individual labels.",
     "guidance": {
       "useWhen": "Edit related segments with independent accessible labels.",
-      "combineWith": [
-        "help-text",
-        "field-error"
-      ],
-      "avoid": "Use one field when segments have no separate meaning.",
+      "combineWith": [],
+      "avoid": "Use one field when segments have no separate meaning. Individual parts do not expose a description or error association.",
       "verify": [
         "part labels",
         "maximum length",
@@ -1909,10 +1895,8 @@
     "description": "Choose a numeric value within a range.",
     "guidance": {
       "useWhen": "Choose one numeric value within a known bounded range.",
-      "combineWith": [
-        "help-text"
-      ],
-      "avoid": "Use a numeric stepper when precise discrete steps are more important.",
+      "combineWith": [],
+      "avoid": "Use a numeric stepper when precise discrete steps are more important. The control does not expose a description association.",
       "verify": [
         "minimum",
         "maximum",
@@ -1928,10 +1912,8 @@
     "description": "Change a bounded integer one step at a time.",
     "guidance": {
       "useWhen": "Adjust a bounded integer one step at a time.",
-      "combineWith": [
-        "help-text"
-      ],
-      "avoid": "Use a slider for a continuous range.",
+      "combineWith": [],
+      "avoid": "Use a slider for a continuous range. Use the built-in help property for supporting text.",
       "verify": [
         "minimum",
         "maximum",
@@ -2048,10 +2030,8 @@
     "description": "Select one or more named toolbar options.",
     "guidance": {
       "useWhen": "Select or deselect named toolbar options as a group.",
-      "combineWith": [
-        "toggle"
-      ],
-      "avoid": "Do not assume the single-selection mode requires a value; it permits deselection.",
+      "combineWith": [],
+      "avoid": "Do not assume the single-selection mode requires a value; it permits deselection. Provide items to the group; do not nest Toggle children.",
       "verify": [
         "single and multiple selection",
         "disabled option",
@@ -2068,10 +2048,9 @@
     "guidance": {
       "useWhen": "Reveal related sections in a labeled disclosure group.",
       "combineWith": [
-        "disclosure-row",
         "help-text"
       ],
-      "avoid": "Do not hide information essential to completing a decision.",
+      "avoid": "Do not hide information essential to completing a decision. Provide items to the group; do not nest DisclosureRow children.",
       "verify": [
         "single or multiple expansion",
         "disabled item",
@@ -2189,10 +2168,9 @@
     "guidance": {
       "useWhen": "Present a persistent or collapsible group of destinations.",
       "combineWith": [
-        "navigation-list",
         "project-mark"
       ],
-      "avoid": "Do not use the navigation rail to hide the current destination.",
+      "avoid": "Do not use the navigation rail to hide the current destination. Sidebar renders its own navigation.",
       "verify": [
         "collapsed",
         "current page",
@@ -2230,10 +2208,9 @@
     "guidance": {
       "useWhen": "Let the reader move through ordered items at their own pace.",
       "combineWith": [
-        "icon-button",
-        "pagination"
+        "icon-button"
       ],
-      "avoid": "Do not make essential content depend on automatic movement.",
+      "avoid": "Do not make essential content depend on automatic movement. Its current position cannot be controlled by an external Pagination.",
       "verify": [
         "first and last item",
         "empty items",
@@ -2291,11 +2268,8 @@
     "description": "Choose a civil date in a keyboard-accessible month grid.",
     "guidance": {
       "useWhen": "Choose a local civil date in a labeled month view.",
-      "combineWith": [
-        "date-picker",
-        "help-text"
-      ],
-      "avoid": "Do not convert a civil date to a time-zone-dependent instant.",
+      "combineWith": [],
+      "avoid": "Do not convert a civil date to a time-zone-dependent instant. DatePicker already contains a calendar.",
       "verify": [
         "date limits",
         "keyboard navigation",
@@ -2311,11 +2285,8 @@
     "description": "Open a calendar to change a date.",
     "guidance": {
       "useWhen": "Choose a local date from a trigger and calendar.",
-      "combineWith": [
-        "calendar",
-        "field"
-      ],
-      "avoid": "Do not use a date picker for a date-and-time value.",
+      "combineWith": [],
+      "avoid": "Do not use a date picker for a date-and-time value. The control already contains its label and calendar.",
       "verify": [
         "date limits",
         "selection",
@@ -2355,10 +2326,9 @@
     "guidance": {
       "useWhen": "Show a named agent with its current state and optional unread activity.",
       "combineWith": [
-        "agent-avatar",
-        "list"
+        "agent-avatar"
       ],
-      "avoid": "Do not communicate state or unread activity through animation or color alone.",
+      "avoid": "Do not communicate state or unread activity through animation or color alone. Wrap the button in a list item when placing it in a list.",
       "verify": [
         "current agent",
         "unread",
@@ -2534,11 +2504,10 @@
     "guidance": {
       "useWhen": "Compose persistent navigation that adapts to narrow screens.",
       "combineWith": [
-        "sidebar",
         "search-field",
         "icon-button"
       ],
-      "avoid": "Keep project-specific destinations in the consuming product.",
+      "avoid": "Keep project-specific destinations in the consuming product. SidebarLayout supplies its own navigation structure.",
       "verify": [
         "current destination",
         "collapsed",

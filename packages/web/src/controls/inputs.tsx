@@ -340,6 +340,9 @@ export function NumericSpinner({
           −
         </Button>
         <output aria-label={label} aria-live="polite" data-decreasing={value < last || undefined}>
+          {[min, max, last, value].map((measurement, index) => (
+            <span className="yg-quantity-measure" aria-hidden="true" key={index}>{measurement}</span>
+          ))}
           {last !== value && <span key={`old-${value}`} className="yg-quantity-out" aria-hidden="true">{last}</span>}
           <span key={value} className={last !== value ? "yg-quantity-in" : undefined}>{value}</span>
         </output>
