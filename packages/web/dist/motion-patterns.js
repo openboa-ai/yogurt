@@ -8,7 +8,7 @@ import {
   ProfileCard,
   SlideConfirm,
   StatCard
-} from "./shared/chunk-W35E6YNY.js";
+} from "./shared/chunk-ZH3W3XUD.js";
 import {
   MentionOptions,
   PromptAction,
@@ -17,7 +17,7 @@ import {
 } from "./shared/chunk-LKB52XNS.js";
 import {
   Command
-} from "./shared/chunk-GMRHSTWH.js";
+} from "./shared/chunk-QFK5CMVQ.js";
 import {
   Slider
 } from "./shared/chunk-FMILLJGN.js";
@@ -33,7 +33,7 @@ import {
 import {
   dist_exports7 as dist_exports
 } from "./shared/chunk-F374JVJP.js";
-import "./shared/chunk-P2CIQA55.js";
+import "./shared/chunk-TPERHFV7.js";
 import "./shared/chunk-C7J43WRT.js";
 import {
   Checkbox,
@@ -385,7 +385,7 @@ function SpringDropdown({ label, value, onChange, options }) {
           }
         ) })
       ] }),
-      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", style: { animation: "none" }, position: "popper", sideOffset: 8, collisionPadding: 16, children: /* @__PURE__ */ jsx3(dist_exports.Viewport, { className: "yg-spring-viewport", children: options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
+      /* @__PURE__ */ jsx3(dist_exports.Portal, { container: portal, children: /* @__PURE__ */ jsx3(dist_exports.Content, { className: "yg-spring-menu", position: "popper", sideOffset: 8, collisionPadding: 16, children: /* @__PURE__ */ jsx3(dist_exports.Viewport, { className: "yg-spring-viewport", children: options.map((option) => /* @__PURE__ */ jsxs3(dist_exports.Item, { value: option.id, className: "yg-spring-option", children: [
         /* @__PURE__ */ jsx3("span", { className: "yg-spring-symbol", "data-marker": option.marker, "aria-hidden": "true" }),
         /* @__PURE__ */ jsx3(dist_exports.ItemText, { children: option.label }),
         /* @__PURE__ */ jsx3(

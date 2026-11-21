@@ -249,7 +249,7 @@
 .yg-icon-button {
   width: var(--yg-size-icon);
   min-height: var(--yg-size-icon);
-  border-radius: var(--yg-radius-small);
+  border-radius: var(--yg-radius-control);
   padding: 0;
   flex: none;
 }
@@ -402,20 +402,20 @@
     margin-block: var(--yg-offset-layer);
     padding: var(--yg-inset-layer);
     border: 0;
-    border-radius: var(--yg-radius-popover);
+    border-radius: var(--yg-radius-menu);
     background: var(--yg-raised-surface);
     color: var(--yg-text);
     box-shadow: var(--yg-float-shadow);
     font: inherit;
   }
   .yg-select[data-dropdown] select:open::picker(select) {
-    animation: yg-reveal var(--yg-layer) var(--yg-settle);
+    animation: yg-menu-enter var(--yg-layer) var(--yg-arrive);
   }
   .yg-select[data-dropdown] option {
     display: flex;
     align-items: center;
     gap: var(--yg-gap-row);
-    min-block-size: var(--yg-size-row);
+    min-block-size: var(--yg-menu-row);
     padding: var(--boa-space-4) var(--yg-inset-compact);
     border-radius: var(--yg-radius-control);
     background: transparent;
@@ -610,12 +610,14 @@
   max-inline-size: min(19rem, 85vw);
   background: var(--yg-raised-surface);
   color: var(--yg-text);
-  border-radius: var(--yg-radius-panel);
+  border-radius: var(--yg-radius-menu);
   padding: var(--yg-inset-layer);
   box-shadow: var(--yg-float-shadow);
-  --yg-enter-y: calc(-1 * var(--boa-space-8));
-  transform-origin: top left;
-  animation: yg-enter var(--yg-travel) var(--yg-arrive);
+  --yg-menu-shift: calc(-1 * var(--yg-layer-shift));
+  animation: yg-menu-enter var(--yg-layer) var(--yg-arrive);
+}
+.yg-anchored-panel[data-side="above"] {
+  --yg-menu-shift: var(--yg-layer-shift);
 }
 .yg-options {
   width: 100%;
@@ -675,6 +677,9 @@
   transform-origin: 50% -40%;
 }
 .yg-tip[data-side="below"]::after { top: -4px; bottom: auto; }
+@keyframes yg-menu-enter {
+  from { opacity: 0; translate: 0 var(--yg-menu-shift, 0); }
+}
 @keyframes yg-enter {
   from {
     translate: var(--yg-enter-x, 0) var(--yg-enter-y, 0);
@@ -696,9 +701,9 @@
   background: transparent;
   text-align: start;
   gap: var(--boa-space-8);
-  min-block-size: var(--yg-size-regular);
-  padding: var(--boa-space-4) var(--boa-space-8);
-  border-radius: var(--yg-radius-small);
+  min-block-size: var(--yg-menu-row);
+  padding: var(--boa-space-4) var(--yg-inset-compact);
+  border-radius: var(--yg-radius-control);
   color: var(--yg-text);
   font: var(--yg-font-body);
   cursor: pointer;
@@ -757,7 +762,7 @@
 .yg-segment {
   isolation: isolate;
   flex-wrap: nowrap;
-  gap: var(--yg-segment-option-gap, 2px);
+  gap: var(--yg-segment-option-gap);
   border-radius: var(--yg-segment-track-radius);
   background: var(--yg-raised-surface);
   padding: var(--yg-segment-track-padding);
@@ -782,9 +787,12 @@
 }
 .yg-segment > button {
   min-block-size: var(--yg-segment-option-height);
-  padding-inline: var(--yg-segment-option-inset-inline, 8px);
+  padding-inline: var(--yg-segment-option-inset-inline);
   border-radius: var(--yg-segment-option-radius);
   font: var(--yg-font-action);
+}
+@media (max-width: 30rem) {
+  .yg-segment > button { padding-inline: min(3vi, var(--yg-segment-option-inset-inline)); }
 }
 .yg-tabs [aria-selected="true"] {
   background: var(--yg-field);
@@ -1087,16 +1095,20 @@
 .yg-table caption {
   text-align: start;
   font: var(--yg-font-action);
-  padding-bottom: var(--boa-space-8);
+  padding-block-end: var(--yg-gap-row);
 }
 .yg-table :is(th, td) {
   text-align: start;
-  padding: var(--boa-space-8) var(--yg-inset-regular);
+  padding: var(--yg-gap-inline) var(--yg-inset-regular);
+  overflow-wrap: anywhere;
 }
 .yg-table th {
   font: var(--yg-font-label);
   color: var(--yg-muted);
   background: var(--yg-surface);
+}
+@media (hover: hover) {
+  .yg-table tbody tr:hover { background: var(--yg-surface); }
 }
 .yg-table [data-numeric="true"] {
   text-align: end;

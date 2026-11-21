@@ -1,4 +1,4 @@
-import { Heading, Inline, Link, PageHeader, Stack, Text } from "@openboa/yogurt";
+import { Heading, Inline, Link, PageHeader, Stack } from "@openboa/yogurt";
 import { StudioWorkspace } from "../examples/studio/workspace";
 import { SourdoughPreview } from "../examples/templates/sourdough";
 import "./templates.css";
@@ -8,7 +8,6 @@ export default function Examples({ id, appearance }: { id?: string; appearance: 
   if (!id) return <main className="guide-templates studio-page">
     <Inline className="studio-page-heading" gap={12}>
       <Heading level={1}>Sourdough Studio</Heading>
-      <Text variant="meta">Interactive example</Text>
       <Link href="/examples/sourdough">Research review</Link>
     </Inline>
     <StudioWorkspace appearance={appearance} />

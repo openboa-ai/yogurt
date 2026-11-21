@@ -11,7 +11,7 @@ const workflows = process.argv[2] === "--workflows";
 const patterns = process.argv[2] === "--motion-patterns";
 const review = family || motion ? process.argv[3] : undefined;
 const entry = family ? "agent-family" : motion ? "motion-review" :
-  comparison ? "motion-comparison" : patterns ? "motion-patterns" : workflows ? "workflows" : "ui-catalog";
+  comparison ? "motion-comparison" : patterns ? "motion-patterns" : workflows ? "workflows" : "ui-catalog-offline";
 const js = await build({
   entryPoints: ["apps/guide/" + entry + ".tsx"],
   write: false,
@@ -36,7 +36,7 @@ const galleryStyles = [
   ...(motion ? ["apps/guide/motion-review.css"] : []),
   ...(comparison ? ["apps/guide/motion-comparison.css"] : []),
   ...(workflows ? ["apps/guide/workflows.css"] : []),
-  ...(patterns ? [
+  ...(patterns || entry === "ui-catalog-offline" ? [
     "apps/guide/motion-pattern-gallery.css",
     "apps/guide/motion-extra-cards.css",
     "apps/guide/motion-extra-controls.css",

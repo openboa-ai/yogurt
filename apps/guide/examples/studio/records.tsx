@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import * as Y from "@openboa/yogurt";
-import { options, studioFiles } from "./fixtures";
+import { options, type studioFiles } from "./fixtures";
 
-export function Library({ target }: { target?: { id: string } }) {
-  const [files, setFiles] = useState(studioFiles);
+export function Library({ files, target, onRemove }: {
+  files: typeof studioFiles;
+  target?: { id: string };
+  onRemove: (ids: string[]) => void;
+}) {
   const [kind, setKind] = useState("All files");
   const [layout, setLayout] = useState("Grid");
   const [owner, setOwner] = useState("All agents");
@@ -16,6 +19,7 @@ export function Library({ target }: { target?: { id: string } }) {
   useEffect(() => { if (target) setSelected(target.id); }, [target]);
   const file = files.find(item => item.id === selected);
   const matches = files.filter(item => (kind === "All files" || item.kind === kind) && (owner === "All agents" || item.owner === owner) && item.name.toLowerCase().includes(query.toLowerCase()));
+  const visibleSelection = checked.filter(id => matches.some(item => item.id === id));
   return <Y.Stack gap={16}>
     <Y.Inline className="studio-split">
       <Y.Inline><Y.SearchField label="Find files" value={query} onValueChange={setQuery} />
@@ -30,8 +34,8 @@ export function Library({ target }: { target?: { id: string } }) {
       <Y.SegmentedControl label="File type" value={kind} options={options("All files", "Document", "Spreadsheet", "Code")} onValueChange={setKind} />
       <Y.SegmentedControl label="File layout" value={layout} options={options("Grid", "List")} onValueChange={setLayout} />
     </Y.Inline>
-    {!!checked.length && <Y.Notice title={checked.length + " selected"} action={<Y.Button emphasis="quiet" onClick={() => {
-      setFiles(previous => previous.filter(item => !checked.includes(item.id))); setChecked([]);
+    {!!visibleSelection.length && <Y.Notice title={visibleSelection.length + " selected"} action={<Y.Button emphasis="quiet" onClick={() => {
+      onRemove(visibleSelection); setChecked([]);
     }}>Remove from sample</Y.Button>} />}
     {matches.length ? <Y.List label="Files">
       <li className={layout === "Grid" ? "studio-file-grid" : undefined}><ul>

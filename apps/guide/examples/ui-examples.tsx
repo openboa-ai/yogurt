@@ -1,3 +1,4 @@
+import { sectionHref } from "../routing";
 import { useEffect, useRef, useState } from "react";
 import * as Y from "@openboa/yogurt";
 import { AgentMotionExample } from "./agent-motion-example";
@@ -419,14 +420,14 @@ export function Example({
         </Y.Stack>
       );
     case "link":
-      return <Y.Link href="#record-facts">View record details</Y.Link>;
+      return <Y.Link href={sectionHref("components", "record-facts")}>View record details</Y.Link>;
     case "breadcrumb":
       return (
         <Y.Breadcrumb
           items={[
-            { id: "home", label: "Library", href: "#button" },
-            { id: "records", label: "Records", href: "#list" },
-            { id: "view", label: "Weekly review", href: "#record-facts" },
+            { id: "home", label: "Library", href: sectionHref("components", "button") },
+            { id: "records", label: "Records", href: sectionHref("components", "list") },
+            { id: "view", label: "Weekly review", href: sectionHref("components", "record-facts") },
           ]}
         />
       );
@@ -436,8 +437,8 @@ export function Example({
           label="Library destinations"
           current="records"
           items={[
-            { id: "records", label: "Records", href: "#list" },
-            { id: "facts", label: "Facts", href: "#record-facts" },
+            { id: "records", label: "Records", href: sectionHref("components", "list") },
+            { id: "facts", label: "Facts", href: sectionHref("components", "record-facts") },
           ]}
         />
       );

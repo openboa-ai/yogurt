@@ -37,8 +37,8 @@
   --yg-radius-small: var(--boa-radius-small);
   --yg-radius-control: var(--boa-radius-control);
   --yg-radius-panel: var(--boa-radius-panel);
-  --yg-radius-sheet: var(--boa-radius-sheet);
-  --yg-radius-card: var(--boa-radius-card);
+  --yg-radius-sheet: var(--boa-radius-card);
+  --yg-radius-card: var(--boa-radius-surface);
   --yg-size-compact: var(--boa-control-compact);
   --yg-size-regular: var(--boa-control-height);
   --yg-size-touch: var(--boa-control-touch);
@@ -55,13 +55,16 @@
   --yg-gap-stack: var(--boa-space-12);
   --yg-gap-section: var(--boa-space-24);
   --yg-offset-layer: var(--boa-space-6);
+  --yg-radius-menu: var(--boa-radius-panel);
+  --yg-menu-row: var(--boa-control-height);
+  --yg-layer-shift: var(--boa-space-4);
   --yg-switch-width: 52px;
   --yg-switch-height: 32px;
   --yg-thumb-size: 26px;
   --yg-track-inset: 3px;
   --yg-radius-inset: var(--boa-radius-inset);
   --yg-radius-popover: var(--boa-radius-popover);
-  --yg-radius-feature: var(--boa-radius-feature);
+  --yg-radius-feature: var(--boa-radius-card);
   --yg-radius-pill: var(--boa-radius-round);
   --yg-size-comfort: var(--boa-control-comfort);
   --yg-size-row: var(--boa-control-row);
@@ -79,6 +82,7 @@
   --yg-gap-control: var(--boa-space-6);
   --yg-gap-row: var(--boa-space-10);
   --yg-gap-panel: var(--boa-space-16);
+  --yg-gap-card-copy: var(--boa-space-4);
   --yg-task-measure: 260px;
   --yg-storage-measure: 300px;
   --yg-drop-measure: 296px;
@@ -87,11 +91,11 @@
   --yg-otp-slot-gap: 8px;
   --yg-otp-slot-radius: 14px;
   --yg-tab-pill-padding: 4px;
-  --yg-tab-pill-height: 35px;
+  --yg-tab-pill-height: var(--boa-control-height);
   --yg-segment-track-padding: 4px;
-  --yg-segment-option-gap: var(--boa-space-2);
-  --yg-segment-option-inset-inline: var(--boa-space-8);
-  --yg-segment-option-height: var(--boa-control-row);
+  --yg-segment-option-gap: var(--boa-space-4);
+  --yg-segment-option-inset-inline: var(--boa-space-12);
+  --yg-segment-option-height: var(--boa-control-height);
   --yg-segment-track-radius: var(--boa-space-16);
   --yg-segment-option-radius: var(--boa-radius-panel);
   --yg-slider-track-height: var(--boa-space-4);
@@ -105,7 +109,8 @@
   --yg-list-row-height: var(--boa-control-spacious);
   --yg-list-row-gap: var(--boa-space-12);
   --yg-list-row-inset: var(--boa-space-12);
-  --yg-card-corner: var(--boa-radius-sheet);
+  --yg-card-corner: var(--boa-radius-surface);
+  --yg-composer-corner: var(--boa-radius-surface);
   --yg-card-inset-compact: var(--boa-space-16);
   --yg-card-inset-regular: var(--boa-space-18);
   --yg-card-inset-spacious: var(--boa-space-24);
@@ -122,6 +127,7 @@
   --yg-button-size-touch: var(--boa-control-touch);
   --yg-press: 110ms;
   --yg-layer: 160ms;
+  --yg-layer-exit: 110ms;
   --yg-travel: 220ms;
   --yg-change: 180ms;
   --yg-panel: 260ms;
@@ -193,6 +199,7 @@
   --yg-font-label: var(--boa-role-weight-ui) 0.8125rem/1.125rem var(--boa-font-family);
   --yg-font-help: var(--boa-role-weight-body) 0.8125rem/1.125rem var(--boa-font-family);
   --yg-font-meta: var(--boa-weight-regular) 0.75rem/1rem var(--boa-font-family);
+  --yg-font-card-title: var(--boa-role-weight-heading) 1rem/1.375rem var(--boa-font-family);
   --yg-font-heading: var(--boa-role-weight-heading) 1.25rem/1.625rem var(--boa-font-family);
   --yg-font-display: var(--boa-role-weight-heading) 2.5rem/2.75rem var(--boa-font-family);
   --yg-font-touch: var(--boa-weight-regular) 1rem/1.5rem var(--boa-font-family);

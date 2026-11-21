@@ -329,6 +329,7 @@
       "headline": 40,
       "help": 13,
       "editor": 15,
+      "card-title": 16,
       "section": 24,
       "value": 34
     },
@@ -342,6 +343,7 @@
       "headline": 44,
       "help": 18,
       "editor": 22,
+      "card-title": 22,
       "section": 30,
       "value": 40
     },
@@ -380,6 +382,7 @@
   "radius": {
     "control": 8,
     "panel": 12,
+    "surface": 16,
     "sheet": 24,
     "card": 20,
     "round": 999,

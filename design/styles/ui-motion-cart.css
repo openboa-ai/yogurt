@@ -46,6 +46,7 @@
   touch-action: manipulation;
   user-select: none;
 }
+.yg-cart-stepper > [hidden] { display: none; }
 .yg-cart-stepper > button:focus-visible {
   outline: var(--boa-stroke-focus) solid currentColor;
   outline-offset: -3px;
@@ -84,10 +85,31 @@
     background: color-mix(in srgb, currentColor 12%, transparent);
   }
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-cart-stepper {
+    transition:
+      inline-size var(--yg-travel) var(--yg-cart-ease),
+      background-color var(--yg-change) var(--yg-cart-ease),
+      color var(--yg-change) var(--yg-cart-ease);
+  }
+  .yg-cart-current { animation: yg-cart-count var(--yg-change) var(--yg-cart-ease) both; }
+  .yg-cart-previous {
+    display: block;
+    animation: yg-cart-count-out var(--yg-change) var(--yg-cart-ease) both;
+  }
+  .yg-cart-increase > span { animation: yg-cart-label var(--yg-press) var(--yg-cart-ease) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yg-cart-stepper { transition: none; }
+  .yg-cart-stepper :is(.yg-cart-current, .yg-cart-previous, .yg-cart-increase > span) {
+    animation: none;
+  }
+}
 @keyframes yg-cart-count {
   from { opacity: 0; translate: 0 var(--yg-cart-count-offset, 12px); }
 }
 @keyframes yg-cart-count-out {
+  from { opacity: 1; translate: 0 0; }
   to { opacity: 0; translate: 0 calc(-1 * var(--yg-cart-count-offset, 12px)); }
 }
 @keyframes yg-cart-label {

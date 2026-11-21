@@ -7,7 +7,7 @@ import {
 import {
   ActivityIsland, CheckboxList, CommandButton, CopyButton, DetentDial, ExpandCard, FanCards, FileDrop,
   FocusPicker, GhostSuggestion, HoldButton, LetterLimit, LoadingSuccessButton, MentionPicker,
-  MorphTooltipBar, PasswordStrength, PlanSwitch, PromptBox, RangeSlider, SlideConfirm,
+  MorphTooltip, MorphTooltipBar, PasswordStrength, PlanSwitch, PromptBox, RangeSlider, SlideConfirm,
   SpringDropdown, StatCard, StorageMeter, StreamingReply, TaskList, ThinkingIndicator,
 } from "@openboa/yogurt/motion-patterns";
 import { extraCards, ReviewerProfile } from "./examples/motion-extra-cards";
@@ -488,6 +488,7 @@ const demos: {title: string; id: string; items: Demo[]}[] = [
     {id: "elastic-slider", title: "Elastic slider", body: <RangeExample elastic />},
   ]},
   {title: "Navigation and layers", id: "navigation", items: [
+    {id: "tooltip-detail", title: "Tooltip detail", body: <MorphTooltip label="Review scope" detail="Only confirmed readings are included." />},
     {id: "morph-tooltip", title: "Morph tooltip", body: <TooltipExample />},
     {id: "spring-dropdown", title: "Spring dropdown", body: <ChoiceExample kind="select" />},
     {id: "command-button", title: "Command button", body: <CommandExample kind="button" />},

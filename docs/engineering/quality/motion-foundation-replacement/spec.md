@@ -51,3 +51,15 @@ Layered menus, attachments and carousel slides use surface contrast or elevation
 List rows use a 48 px minimum height and 12 px content gap. Their text, leading and trailing slots remain flexible and wrap when needed; links and actions retain their original behavior and current state. Noninteractive rows do not become buttons.
 
 The component guide and motion index use the shared search field, links and action controls for navigation. Preserve search, Enter-to-select, category disclosure, focus, links and narrow-screen access. The guide may supply layout-specific styling, but must not duplicate interactive control behavior.
+
+## Shared geometry and composition calibration
+
+Apply the approved component-first replacement to the default controls and live compositions. Align regular icon actions, fields and non-featured choice controls on a 36 px height. Give segmented options a 12 px inline inset and a 4 px gap, superseding the earlier 8 px and 2 px calibration. Keep segmented labels operable as the available width shrinks. Use a flatter 16 px card and composer corner and keep a distinct corner for large overlay surfaces. Compact card padding remains 16 px. Keep the palette, font family, agent artwork and agent motion. Distinct interaction surfaces such as tabs, modal dialogs and sliding confirmations retain their own purpose and geometry where needed.
+
+Shared selection, anchored menus and disclosures keep their current semantics and immediate callbacks. Restore localized enter and selection feedback, with no motion dependency for interaction and a stationary reduced-motion state. Test keyboard dismissal, focus restoration and repeated selection with unchanged public props. Validate the generated CSS and Zig dimensions and the live guide in both appearances. Keep table text and numeric columns aligned under long content, and keep chart point size stable as the plot grows. A generated native token reports geometry only.
+
+### Component state review
+
+Review each published component on its actual guide route in regular and compact viewports. Exercise available controls with meaningful input, activation and dismissal; identify presentation-only specimens separately. Compare direct transitions, interrupted states and reduced motion across actionable families. Use fixture-only inputs and inspect their visual outcomes for clipping, contrast, alignment and stable layout before showing the interactive candidate for review.
+
+Anchored action menus, custom selects, flyouts and option lists share a 12 px menu corner, the standard row size and a 6 px inset. Distinguish the floating plane from its selected or focused row with the palette and use the compact surface role for shorter commands. Keep side-aware entry within 4 px of the final position. Noninteractive tooltips use a shorter dismissal than arrival. Use a 16 px grouped surface corner, a 20 px modal corner, and a 16/22 title with a 4 px description gap for grouped cards. The same operations and focus recovery remain available when transitions are disabled.

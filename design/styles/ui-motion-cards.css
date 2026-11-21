@@ -104,7 +104,7 @@
   outline-offset: -2px;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-fan-cards-list button[aria-pressed="true"] { translate: 0 -4px; }
+
 }
 @keyframes yg-card-arrive { from { opacity: 0; translate: 0 4px; } }
 
@@ -126,7 +126,7 @@
 
 /* Card geometry and transitions */
 .yg-expand-card { width: min(320px, 100%); overflow: hidden; }
-.yg-expand-card summary { position: relative; min-height: 72px; box-sizing: border-box; padding: 12px; justify-content: start; gap: 12px; }
+.yg-expand-card summary { position: relative; min-height: 72px; box-sizing: border-box; padding: 12px; justify-content: start; gap: var(--yg-gap-stack); }
 .yg-expand-art { flex: none; width: 48px; height: 48px; border-radius: 12px; background: var(--yg-field); }
 .yg-expand-title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .yg-expand-card-body { padding: 4px 16px 18px; }
@@ -148,34 +148,80 @@
   translate: 0 calc((1 - var(--yg-card-content, 1)) * 10px);
 }
 .yg-stat-card { box-sizing: border-box; width: min(340px, 100%); min-block-size: 0; padding: var(--yg-card-inset-regular); border-radius: var(--yg-card-corner); }
-.yg-stat-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.yg-stat-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--yg-gap-stack); }
 .yg-stat-heading > div { min-inline-size: 0; overflow-wrap: anywhere; }
 .yg-stat-label { display: block; font: var(--yg-font-help); }
-.yg-stat-value { font-size: 34px; line-height: 40px; letter-spacing: -.02em; }
-.yg-stat-detail { flex: none; max-inline-size: 45%; padding: 4px 9px; border-radius: 999px; background: var(--yg-field); color: var(--yg-inverse); text-align: center; overflow-wrap: anywhere; }
+.yg-stat-value { font: var(--yg-font-value); font-variant-numeric: tabular-nums; }
+.yg-stat-detail { flex: none; max-inline-size: 45%; padding: var(--yg-gap-tight) var(--yg-inset-compact); border-radius: var(--yg-radius-small); background: var(--yg-field); color: var(--yg-inverse); text-align: center; overflow-wrap: anywhere; }
 .yg-stat-series { display: block; inline-size: 100%; block-size: auto; overflow: visible; color: var(--yg-action); fill: currentColor; }
 .yg-stat-area { fill: color-mix(in srgb, currentColor 12%, transparent); }
 .yg-stat-line { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .yg-profile-card { box-sizing: border-box; width: min(320px, 100%); padding: var(--yg-card-inset-regular); border-radius: var(--yg-card-corner); }
-.yg-profile-header { gap: 12px; }.yg-profile-avatar { width: 52px; height: 52px; }
-.yg-profile-card details { margin-top: 14px; }
-.yg-fan-cards-list:not([data-many]) { position: relative; display: block; height: 230px; overflow: visible; padding: 0; }
-.yg-fan-cards-list:not([data-many]) button { position: absolute; left: 50%; bottom: 0; box-sizing: border-box; display: flex; width: 150px; height: 196px; min-height: 0; padding: 10px; gap: 0; border-radius: 18px; transform-origin: 50% 100%; transform: translateX(calc(-50% + var(--yg-fan-offset) * 6px)) rotate(calc(var(--yg-fan-offset) * 3deg)); box-shadow: 0 2px 12px color-mix(in srgb, var(--yg-text) 12%, transparent); }
-.yg-fan-cards-list:not([data-many]):is(:hover, :focus-within) button { transform: translate(calc(-50% + var(--yg-fan-offset) * clamp(42px, 20vw, 78px)), calc(abs(var(--yg-fan-offset)) * 12px)) rotate(calc(var(--yg-fan-offset) * 12deg)); }
-.yg-fan-cards-list:not([data-many]) button:is(:hover, :focus-visible, [aria-pressed="true"]) { z-index: 3; translate: 0 -22px; }
-.yg-fan-cards-list button > svg { display: none; }
-.yg-fan-art { display: block; align-self: stretch; height: 100px; flex: none; border-radius: 12px; background: var(--yg-field); }
-.yg-fan-index { margin-top: 12px; font-size: .7rem; }.yg-fan-label { display: block; flex: none; margin-top: 2px; }
-.yg-fan-detail { margin-top: 16px; }
-.yg-fan-cards-list:not([data-many]) button,
-.yg-fan-cards-list:not([data-many]):is(:hover, :focus-within) button {
-  transform: var(--yg-fan-transform, translateX(-50%));
+.yg-profile-header { gap: var(--yg-gap-stack); }.yg-profile-avatar { inline-size: var(--yg-size-touch); block-size: var(--yg-size-touch); }
+.yg-profile-card details { margin-block-start: var(--yg-gap-stack); }
+.yg-fan-cards {
+  inline-size: min(100%, 340px);
+  min-inline-size: 0;
+  container-type: inline-size;
 }
-.yg-fan-cards-list:not([data-many]) button:is(:hover, :focus-visible, [aria-pressed="true"]) { translate: none; }
-.yg-fan-cards { inline-size: min(100%, 340px); min-inline-size: 0; container-type: inline-size; }
-@container (max-width: 290px) {
-  .yg-fan-cards-list:not([data-many]) button { width: 134px; height: 180px; }
-  .yg-fan-cards-list:not([data-many]) button:not([data-front]) :is(.yg-fan-index, .yg-fan-label) { opacity: 0; }
+.yg-fan-cards-list:not([data-many]) {
+  position: relative;
+  display: block;
+  block-size: 230px;
+  overflow: visible;
+  padding: 0;
+}
+.yg-fan-cards-list:not([data-many]) button {
+  position: absolute;
+  inset: auto auto 0 50%;
+  box-sizing: border-box;
+  inline-size: 150px;
+  block-size: 196px;
+  min-block-size: 0;
+  padding: var(--yg-inset-compact);
+  gap: 0;
+  border-radius: var(--yg-card-corner);
+  transform-origin: 50% 100%;
+  transform: var(--yg-fan-transform, translateX(-50%));
+  box-shadow: var(--yg-float-shadow);
+}
+.yg-fan-cards-list button > svg { display: none; }
+.yg-fan-art {
+  display: block;
+  align-self: stretch;
+  block-size: 100px;
+  flex: none;
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-field);
+}
+.yg-fan-index { margin-block-start: var(--yg-gap-stack); }
+.yg-fan-label { display: block; flex: none; margin-block-start: var(--boa-space-2); }
+.yg-fan-detail { margin-block-start: var(--yg-gap-panel); }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-fan-cards-list button { transition: transform var(--yg-travel) var(--yg-settle); }
+}
+@container (max-width: 336px) {
+  .yg-fan-cards-list:not([data-many]) {
+    display: grid;
+    gap: var(--yg-gap-tight);
+    block-size: auto;
+  }
+  .yg-fan-cards-list:not([data-many]) button {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--yg-gap-inline);
+    inline-size: 100%;
+    block-size: auto;
+    min-block-size: var(--yg-size-touch);
+    border-radius: var(--yg-radius-control);
+    transform: none;
+    box-shadow: none;
+  }
+  .yg-fan-cards-list:not([data-many]) :is(.yg-fan-index, .yg-fan-label) { margin: 0; }
+  .yg-fan-cards-list:not([data-many]) .yg-fan-art { display: none; }
+  .yg-fan-cards-list:not([data-many]) .yg-fan-label { flex: 1; min-inline-size: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .yg-expand-card-body { opacity: 1; translate: none; }

@@ -288,6 +288,7 @@
   --boa-size-headline: 40px;
   --boa-size-help: 13px;
   --boa-size-editor: 15px;
+  --boa-size-card-title: 16px;
   --boa-size-section: 24px;
   --boa-size-value: 34px;
   --boa-line-height-caption: 16px;
@@ -299,6 +300,7 @@
   --boa-line-height-headline: 44px;
   --boa-line-height-help: 18px;
   --boa-line-height-editor: 22px;
+  --boa-line-height-card-title: 22px;
   --boa-line-height-section: 30px;
   --boa-line-height-value: 40px;
   --boa-tracking-body: -0.01em;
@@ -323,6 +325,7 @@
   --boa-space-64: 64px;
   --boa-radius-control: 8px;
   --boa-radius-panel: 12px;
+  --boa-radius-surface: 16px;
   --boa-radius-sheet: 24px;
   --boa-radius-card: 20px;
   --boa-radius-round: 999px;

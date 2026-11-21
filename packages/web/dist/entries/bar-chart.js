@@ -1,7 +1,7 @@
 "use client";
 import {
   BarChart
-} from "../shared/chunk-XVPJW3WF.js";
+} from "../shared/chunk-CYWTRWDB.js";
 import "../shared/chunk-KXVFHR7K.js";
 import "../shared/chunk-JZH3NHGT.js";
 import "../shared/chunk-F374JVJP.js";

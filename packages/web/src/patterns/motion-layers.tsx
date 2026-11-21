@@ -68,7 +68,7 @@ export function SpringDropdown({ label, value, onChange, options }: {
         </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
       <SelectPrimitive.Portal container={portal}>
-        <SelectPrimitive.Content className="yg-spring-menu" style={{ animation: "none" }} position="popper" sideOffset={8} collisionPadding={16}>
+        <SelectPrimitive.Content className="yg-spring-menu" position="popper" sideOffset={8} collisionPadding={16}>
           <SelectPrimitive.Viewport className="yg-spring-viewport">
             {options.map(option => <SelectPrimitive.Item key={option.id} value={option.id} className="yg-spring-option">
               <span className="yg-spring-symbol" data-marker={option.marker} aria-hidden="true" />

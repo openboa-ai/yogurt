@@ -1,3 +1,4 @@
+import { sectionHref } from "../routing";
 import { useState } from "react";
 import * as Y from "@openboa/yogurt";
 const projects = [
@@ -6,8 +7,8 @@ const projects = [
   { id: "sourdough", label: "Sourdough" },
 ];
 const links = [
-  { id: "calendar", label: "Calendar", href: "#calendar" },
-  { id: "select", label: "Select", href: "#select" },
+  { id: "calendar", label: "Calendar", href: sectionHref("components", "calendar") },
+  { id: "select", label: "Select", href: sectionHref("components", "select") },
 ];
 const stages = [
   { id: "draft", label: "Draft", detail: "Write the change." },
@@ -567,7 +568,7 @@ export function ExtendedExample({
             {
               id: "actions",
               label: "Actions",
-              links: [{ id: "button", label: "Button", href: "#button" }],
+              links: [{ id: "button", label: "Button", href: sectionHref("components", "button") }],
             },
           ]}
         />

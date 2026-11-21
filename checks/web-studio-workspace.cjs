@@ -53,6 +53,10 @@ async function exercise(browser, width) {
     await inbox.getByText(/Attached: Observation log/).waitFor();
 
     const tasks = await go("Tasks");
+    await tasks.getByRole("radio", { name: /^Working/ }).click();
+    await tasks.getByRole("heading", { name: "Prepare the research brief" }).waitFor();
+    assert.equal(await tasks.getByRole("heading", { name: "Review the missing source" }).count(), 0);
+    await tasks.getByRole("radio", { name: /^All/ }).click();
     await tasks.getByRole("button", { name: "New task" }).click();
     const task = page.getByRole("dialog", { name: "New task" });
     await task.getByRole("textbox", { name: "Task", exact: true }).fill("Verify the sample");
@@ -82,10 +86,24 @@ async function exercise(browser, width) {
     const usage = await go("Usage");
     await usage.getByRole("combobox", { name: "Metric" }).selectOption("Tokens");
     await usage.getByRole("heading", { name: "320K tokens" }).waitFor();
+    await usage.getByRole("combobox", { name: "Period" }).selectOption("30 days");
+    await usage.getByText("Oct 23", { exact: true }).first().waitFor();
 
     const files = await go("Files");
     await files.getByRole("button", { name: /Observation log/ }).click();
     await page.getByRole("dialog", { name: "Observation log.csv" }).getByText(/Date, Observations, Reviewed/).waitFor();
+    await page.keyboard.press("Escape");
+
+    await files.getByRole("button", { name: "Select files" }).click();
+    await files.getByRole("checkbox", { name: "Select Observation log.csv" }).check();
+    await files.getByRole("radio", { name: "Document", exact: true }).click();
+    assert.equal(await files.getByRole("button", { name: "Remove from sample" }).count(), 0);
+    await files.getByRole("radio", { name: "All files" }).click();
+    await files.getByRole("button", { name: "Remove from sample" }).click();
+    await app.getByRole("button", { name: "Search", exact: true }).click();
+    const fileSearch = page.getByRole("dialog", { name: "Search workspace" });
+    await fileSearch.getByRole("searchbox").fill("Observation log");
+    assert.equal(await fileSearch.getByRole("button", { name: /Observation log/ }).count(), 0);
     await page.keyboard.press("Escape");
 
     const customers = await go("Customers");
@@ -126,8 +144,23 @@ async function exercise(browser, width) {
   }
 }
 
+async function exerciseShortWindow(browser) {
+  const page = await browser.newPage({ viewport: { width: 320, height: 568 }, reducedMotion: "reduce" });
+  try {
+    await page.goto(origin + "/examples");
+    const transcript = page.locator(".studio-thread .yg-transcript");
+    await transcript.waitFor();
+    assert((await transcript.boundingBox()).height >= 96, "the transcript needs room to read");
+    const send = page.getByRole("button", { name: "Send", exact: true });
+    await send.scrollIntoViewIfNeeded();
+    assert(await send.evaluate(node => node.getBoundingClientRect().bottom <= innerHeight), "send must be reachable");
+  } finally {
+    await page.close();
+  }
+}
+
 (async () => {
   const browser = await chromium.launch({ channel: "chrome" });
-  try { await Promise.all([exercise(browser, 1440), exercise(browser, 390)]); }
+  try { await Promise.all([exercise(browser, 1440), exercise(browser, 390), exerciseShortWindow(browser)]); }
   finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

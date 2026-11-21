@@ -16,7 +16,6 @@ const searchItems = [
   ...workspaceViews.map(item => ({ id: item.id, title: item.label, kind: "Views", view: item.id })),
   ...conversations.map(item => ({ id: item.id, title: item.name, kind: item.kind === "agent" ? "Agents" : "Channels", view: "conversations" as const })),
   ...conversations.map(item => ({ id: item.id, title: item.summary, kind: "Messages", view: "conversations" as const })),
-  ...studioFiles.map(item => ({ id: item.id, title: item.name, kind: "Files", view: "library" as const })),
   { id: "morning-routine", title: "Morning source review", kind: "Routines", view: "schedule" as const },
 ];
 
@@ -24,6 +23,7 @@ export function StudioWorkspace({ appearance }: { appearance: "light" | "dark" }
   const [trail, setTrail] = useState<{ views: View[]; index: number }>({ views: ["conversations"], index: 0 });
   const view = trail.views[trail.index];
   const [selected, setSelected] = useState("kai");
+  const [files, setFiles] = useState(studioFiles);
   const [fileTarget, setFileTarget] = useState<{ id: string }>();
   const [search, setSearch] = useState(false);
   const [query, setQuery] = useState("");
@@ -50,16 +50,17 @@ export function StudioWorkspace({ appearance }: { appearance: "light" | "dark" }
     setTrail(previous => next === previous.views[previous.index] ? previous : { views: [...previous.views.slice(0, previous.index + 1), next], index: previous.index + 1 });
   }
 
-  const matches = searchItems.filter(item => (kind === "All" || item.kind === kind) && item.title.toLowerCase().includes(query.toLowerCase()));
+  const fileSearchItems = files.map(item => ({ id: item.id, title: item.name, kind: "Files", view: "library" as const }));
+  const matches = [...searchItems, ...fileSearchItems].filter(item => (kind === "All" || item.kind === kind) && item.title.toLowerCase().includes(query.toLowerCase()));
   const panels: Record<View, ReactNode> = {
     conversations: <Inbox selected={selected} setSelected={setSelected} active={view === "conversations"} />,
     tasks: <Tasks />, workflows: <Workflows />, schedule: <Schedule />, usage: <Usage />,
-    library: <Library target={fileTarget} />, customers: <Customers />, extensions: <Connections />,
+    library: <Library files={files} target={fileTarget} onRemove={ids => setFiles(previous => previous.filter(item => !ids.includes(item.id)))} />, customers: <Customers />, extensions: <Connections />,
     providers: <Connections providers />, settings: <Settings onAppearance={setScheme} />, help: <Help />,
   };
 
   return <Y.Yogurt appearance={scheme ?? appearance} className="studio-demo">
-    <Y.SidebarLayout label="Studio navigation" width="11.5rem" compactAt={780} variant="flat" collapse="rail"
+    <Y.SidebarLayout label="Studio navigation" width="10.75rem" compactAt={780} variant="flat" collapse="rail"
       navigation={<>
         <Y.SidebarHeader compact={<Y.ProjectMark project="sourdough" label={server} size={30} />}>
           <Y.Inline><Y.ProjectMark project="sourdough" size={34} label="" /><Y.Stack gap={2}><Y.Text>{server}</Y.Text><Y.Text variant="meta">Sample workspace</Y.Text></Y.Stack></Y.Inline>

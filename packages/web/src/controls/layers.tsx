@@ -114,11 +114,13 @@ export function ActionMenu({
   label,
   items,
   onSelect,
+  triggerText = label,
   presentation = "anchored",
 }: {
   label: string;
   items: Option[];
   onSelect: (id: string) => void;
+  triggerText?: string;
   presentation?: "anchored" | "expanding";
 }) {
   const [open, setOpen] = useState(false);
@@ -177,6 +179,7 @@ export function ActionMenu({
       <Button
         ref={trigger}
         emphasis="soft"
+        aria-label={label}
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menu : undefined}
@@ -188,7 +191,7 @@ export function ActionMenu({
           }
         }}
       >
-        {label}
+        {triggerText}
         {expanding ? <span className="yg-action-menu-glyph" aria-hidden="true"><i /><i /></span> : <Icon name="down" />}
       </Button>
       {(open || expanding) && (

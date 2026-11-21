@@ -4,7 +4,7 @@
   min-width: 0;
   padding: var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-panel);
   border: 0;
-  border-radius: var(--yg-radius-sheet);
+  border-radius: var(--yg-composer-corner);
   background: var(--yg-raised-surface);
 }
 .yg-composer:focus-within {

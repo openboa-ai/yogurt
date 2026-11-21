@@ -87,7 +87,7 @@ export function ComposeStudy({ guideAppearance }: { guideAppearance: "light" | "
     '}',
   ].join("\n");
   return <Stack gap={24} className="template-study">
-    <Inline className="template-study-controls">
+    <Inline className="template-study-controls template-composition-controls">
       <Select label="Task" options={choices(["Review", "Settings", "Register"])} value={task} onChange={event => { setTask(event.target.value); setStatus("Draft"); }} />
       <Select label="Appearance" options={choices(["Light", "Dark"])} value={appearance} onChange={event => setAppearance(event.target.value as Appearance)} />
       <Select label="Surface" options={choices(["Neutral", "Paper", "Mist"])} value={material} onChange={event => setMaterial(event.target.value as Material)} />

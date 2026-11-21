@@ -111,7 +111,7 @@
           "reduced motion"
         ]
       },
-      "examples": []
+      "examples": ["tooltip-detail"]
     },
     {
       "id": "motion-spring-dropdown",

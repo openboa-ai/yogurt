@@ -18,7 +18,7 @@ async function checkGallery(browser, width) {
     assert.deepEqual(boardSizes, [33, 31]);
     const cards = await page.locator("[data-template-specimen]").evaluateAll(items => items.map(item => ({
       id: item.id,
-      hasContent: Boolean(item.querySelector(".yg-card > div > *, .template-specimen-surface > *")),
+      hasContent: Boolean(item.querySelector(":scope > :not(.yg-heading)")),
       title: item.getAttribute("aria-label"),
     })));
     assert.equal(new Set(cards.map(card => card.id)).size, 64);

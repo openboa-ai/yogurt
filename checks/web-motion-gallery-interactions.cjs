@@ -42,7 +42,34 @@ const actions = {
     await page.mouse.up();
     await root.locator('[data-depth="0"]').getByText("Launch").waitFor();
   },
-  "cart-button": root => show(root,"Add Greek yogurt","$11.20"),
+  "cart-button": async (root, page) => {
+    const group = root.getByRole("group", {name: "Greek yogurt"});
+    const add = button(group, "Add Greek yogurt");
+    assert.equal(await group.locator(".yg-cart-decrease").isVisible(), false);
+    const before = await group.boundingBox();
+    await add.press("Enter");
+    await byText(root, "$11.20").waitFor();
+    const plus = button(group, "Increase quantity of Greek yogurt");
+    await plus.press("Enter");
+    assert.equal(await group.locator("output").getAttribute("data-quantity"), "2");
+    assert.equal(await group.locator(".yg-cart-current").evaluate(el => getComputedStyle(el).animationName), "yg-cart-count");
+    assert.equal(Math.round((await group.boundingBox()).width), Math.round(before.width));
+    await button(group, "Decrease quantity of Greek yogurt").press("Enter");
+    await button(group, "Remove Greek yogurt").press("Enter");
+    await add.waitFor();
+    assert.equal(await group.locator(".yg-cart-decrease").isVisible(), false);
+    await page.waitForFunction(() => document.activeElement?.getAttribute("aria-label") === "Add Greek yogurt");
+    await page.emulateMedia({reducedMotion:"reduce"});
+    try {
+      await page.waitForFunction(() => {
+        const stepper = document.querySelector('.yg-cart-control[aria-label="Greek yogurt"] .yg-cart-stepper');
+        return stepper && matchMedia("(prefers-reduced-motion: reduce)").matches &&
+          stepper.getAnimations({subtree:true}).length === 0;
+      });
+    } finally {
+      await page.emulateMedia({reducedMotion:"no-preference"});
+    }
+  },
   "word-choice": root => show(root,"Next status","in review"),
   "checkbox-list": async root => {await root.locator(".yg-motion-checklist-item").first().click(); assert(await root.getByRole("checkbox").first().isChecked());},
   "checklist-card": async root => { await root.getByRole("checkbox").check(); assert(await root.getByRole("checkbox").isChecked()); },
@@ -115,7 +142,23 @@ const actions = {
   "expand-card": async root => { await root.locator("summary").click(); await byText(root,"See the source, changes and next action.").waitFor(); },
   "activity-island": async root => { const item=root.getByRole("button");await item.click();await selected(item,"aria-expanded"); },
   "exposure": root => press(root.getByRole("slider"),"ArrowRight","0.1"),
-  "fan-cards": async root => { const item=button(root,/draft the update/i); await item.click(); await selected(item,"aria-pressed"); },
+  "fan-cards": async (root, page) => {
+    const item = button(root, /draft the update/i);
+    await item.click();
+    await selected(item, "aria-pressed");
+    await page.setViewportSize({width:390,height:844});
+    try {
+      const cards = root.locator(".yg-fan-cards-list button");
+      for (const card of await cards.all()) {
+        await card.click();
+        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+        const rect = await card.boundingBox();
+        assert(rect.x >= 0 && rect.x + rect.width <= 390, "selected card fits the viewport");
+      }
+    } finally {
+      await page.setViewportSize({width:1280,height:900});
+    }
+  },
   "file-drop": async root => {
     await root.locator('input[type="file"]').setInputFiles(file);
     await root.getByRole("progressbar",{name:"Preparing selected files"}).waitFor();
@@ -410,6 +453,14 @@ const actions = {
     await page.waitForFunction(() => Array.from(document.querySelectorAll("#thinking .yg-thinking-dots i"))
       .slice(1).some(dot => Number.parseFloat(dot.style.translate.split(" ")[1]) < -.4));
     await click(root, "Stop thinking");
+  },
+  "tooltip-detail": async (root, page) => {
+    const trigger = button(root, "Review scope");
+    await trigger.focus();
+    await root.getByRole("tooltip").getByText("Only confirmed readings are included.").waitFor();
+    await trigger.press("Escape");
+    await root.getByRole("tooltip").waitFor({state:"hidden"});
+    assert(await trigger.evaluate(el => el === document.activeElement));
   },
   "toggle-switch": async root => {const item=root.getByRole("switch",{name:/Low power/});await item.click();await selected(item,"aria-checked");},
   "tool-approval": root => show(root,"Allow once","Allowed in preview"),

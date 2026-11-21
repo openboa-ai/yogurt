@@ -21,14 +21,18 @@ const assert = require("node:assert/strict");
       await page.locator(".related-actions").waitFor();
       const links = await related.getByRole("link").all();
       assert.equal(links.length, 5);
-      const targets = await Promise.all(links.map(async link => (await link.getAttribute("href")).split("#")[1]));
-      const motionPage = await browser.newPage({ viewport: { width, height: 900 } });
-      const motionUrl = pathToFileURL(join(process.cwd(), "apps/guide/generated/motion-patterns.html")).href;
-      for (const target of targets) {
-        await motionPage.goto(motionUrl + "#" + target);
-        await motionPage.locator(`.motion-pattern-article[id="${target}"]`).waitFor();
+      const targets = [
+        ["Copy", "motion-copy-button"], ["Quantity", "motion-cart-button"],
+        ["Hold to confirm", "motion-hold-button"], ["Slide to confirm", "motion-slide-confirm"],
+        ["Loading result", "motion-loading-success-button"],
+      ];
+      for (const [name, id] of targets) {
+        await related.getByRole("link", { name, exact: true }).click();
+        assert.equal(new URL(page.url()).hash, "#" + id);
+        await page.locator(`.specimen[data-component="${id}"]`).waitFor();
+        await page.goBack();
+        await related.waitFor();
       }
-      await motionPage.close();
       if (width === 320) await page.getByRole("button", { name: "Browse components" }).click();
       const search = page.getByRole("searchbox", { name: "Find a component" });
       await search.fill("slider");

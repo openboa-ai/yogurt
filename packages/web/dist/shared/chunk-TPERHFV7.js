@@ -120,6 +120,7 @@ function ActionMenu({
   label,
   items,
   onSelect,
+  triggerText = label,
   presentation = "anchored"
 }) {
   const [open, setOpen] = useState(false);
@@ -179,6 +180,7 @@ function ActionMenu({
           {
             ref: trigger,
             emphasis: "soft",
+            "aria-label": label,
             "aria-haspopup": "menu",
             "aria-expanded": open,
             "aria-controls": open ? menu : void 0,
@@ -190,7 +192,7 @@ function ActionMenu({
               }
             },
             children: [
-              label,
+              triggerText,
               expanding ? /* @__PURE__ */ jsxs("span", { className: "yg-action-menu-glyph", "aria-hidden": "true", children: [
                 /* @__PURE__ */ jsx("i", {}),
                 /* @__PURE__ */ jsx("i", {})

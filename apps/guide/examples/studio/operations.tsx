@@ -14,14 +14,14 @@ export function Tasks() {
   const [selected, setSelected] = useState("sources");
   const [filter, setFilter] = useState("All");
   const [create, setCreate] = useState(false);
-  const task = tasks.find(item => item.id === selected);
   const matches = tasks.filter(item => filter === "All" || filter === item.state);
+  const task = matches.find(item => item.id === selected) ?? matches[0];
   return <Y.Stack gap={16}>
     <Y.Inline className="studio-split"><Y.SegmentedControl label="Task status" options={["All", "Needs you", "Working", "Waiting", "Done"].map(id => ({ id, label: id + " · " + tasks.filter(item => id === "All" || item.state === id).length }))} value={filter} onValueChange={setFilter} />
       <Y.Button onClick={() => setCreate(true)}>New task</Y.Button></Y.Inline>
     <div className="studio-split-pane">
       <Y.Surface><Y.List label="Tasks">{matches.map(item =>
-        <Y.ListRow key={item.id} title={item.title} description={item.agent} current={item.id === selected}
+        <Y.ListRow key={item.id} title={item.title} description={item.agent} current={item.id === task?.id}
           trailing={<Y.Badge tone={item.state === "Needs you" ? "warning" : "neutral"}>{item.state}</Y.Badge>} onActivate={() => setSelected(item.id)} />)}
         {!matches.length && <li><Y.Text variant="help">No matching tasks.</Y.Text></li>}</Y.List></Y.Surface>
       {task && <div key={task.id} className="studio-detail"><Y.Card title={task.title} description={task.agent}>
@@ -167,7 +167,11 @@ export function Usage() {
   const [metric, setMetric] = useState("Cost");
   const [breakdown, setBreakdown] = useState("Agent");
   const base = agent === "All agents" ? 1 : agent === "Kai" ? .6 : .4;
-  const size = base * (period === "7 days" ? 1 : 3.4);
+  const weekly = period === "7 days";
+  const size = base * (weekly ? 1 : 3.4);
+  const labels = weekly ? ["Nov 15", "Nov 16", "Nov 17", "Nov 18", "Nov 19", "Nov 20", "Nov 21"]
+    : ["Oct 23", "Oct 30", "Nov 6", "Nov 13", "Nov 21"];
+  const weights = weekly ? [.12, .13, .10, .18, .12, .15, .20] : [.15, .22, .12, .20, .31];
   const value = metric === "Cost" ? 4.8 : 320;
   const summary = metric === "Cost" ? "$" + (value * size).toFixed(2) : Math.round(value * size) + "K tokens";
   return <Y.Stack gap={16}>
@@ -178,8 +182,8 @@ export function Usage() {
       <Y.Card title={"Total " + metric.toLowerCase()}><Y.Heading className="studio-metric" level={4}>{summary}</Y.Heading></Y.Card>
       <Y.Card title="Workspace resources"><Y.Stack><Y.Progress label="CPU" value={27} /><Y.Progress label="Memory" value={48} /></Y.Stack></Y.Card>
     </div>
-    <Y.Surface className="studio-usage-chart"><Y.Chart title={metric + " over time"} series={agent} unit={metric === "Cost" ? "USD" : "K tokens"} points={["Mon", "Tue", "Wed", "Thu", "Fri"].map((label, index) =>
-      ({ id: label, label, value: Math.round(value * size * [.15, .22, .12, .2, .31][index] * 100) / 100 }))} {...sample} /></Y.Surface>
+    <Y.Surface className="studio-usage-chart"><Y.Chart title={metric + " over time"} series={agent} unit={metric === "Cost" ? "USD" : "K tokens"} points={labels.map((label, index) =>
+      ({ id: label, label, value: Math.round(value * size * weights[index] * 100) / 100 }))} {...sample} /></Y.Surface>
     <Y.Card title="Breakdown"><Y.Stack gap={12}>
       <Y.SegmentedControl label="Group usage by" options={options("Agent", "Model", "Day", "Skill")} value={breakdown} onValueChange={setBreakdown} />
       <Y.List label="Usage breakdown">{(breakdown === "Agent" ? ["Kai", "Sol"] : breakdown === "Model" ? ["Studio Standard", "Studio Fast"] : breakdown === "Day" ? ["Today", "Earlier"] : ["Source review", "Brief writing"])

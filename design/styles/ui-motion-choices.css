@@ -109,3 +109,7 @@
   background: var(--yg-text);
   color: var(--yg-canvas);
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .yg-plan-choice { transition: background-color var(--yg-change) var(--yg-settle); }
+}

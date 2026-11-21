@@ -18,7 +18,7 @@ const assert = require("node:assert/strict");
           return { padding: parseFloat(style.paddingTop), radius: parseFloat(style.borderTopLeftRadius), border: parseFloat(style.borderTopWidth), width: el.getBoundingClientRect().width, parentWidth: el.parentElement.getBoundingClientRect().width };
         });
         assert.equal(geometry.padding, padding, density);
-        assert.equal(geometry.radius, 24, density);
+        assert.equal(geometry.radius, 16, density);
         assert.equal(geometry.border, 0, density);
         assert(geometry.width <= geometry.parentWidth + 1, density);
       }

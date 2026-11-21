@@ -124,18 +124,18 @@ const zig = [
     (k) => "pub const " + id(k) + ": f32 = " + dimension(k) + ";",
   ),
   ...Object.entries(ui.motion).map(
-    ([k, v]) => "pub const " + k + "_ms: u32 = " + v + ";",
+    ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v + ";",
   ),
   ...Object.entries(ui.motionProfiles ?? {}).map(
     ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v.duration + ";",
   ),
   ...Object.entries(ui.types).flatMap(([role, [size, weight]]) => [
-    "pub const " + role + "_type: f32 = " + brand.type.size[size] + ";",
-    "pub const " + role + "_line_height: f32 = " + brand.type.lineHeight[size] + ";",
-    "pub const " + role + "_weight: u16 = " + (brand.type.weight[weight] ?? brand.type.roleWeight[weight]) + ";",
+    "pub const " + id(role) + "_type: f32 = " + brand.type.size[size] + ";",
+    "pub const " + id(role) + "_line_height: f32 = " + brand.type.lineHeight[size] + ";",
+    "pub const " + id(role) + "_weight: u16 = " + (brand.type.weight[weight] ?? brand.type.roleWeight[weight]) + ";",
   ]),
   ...Object.entries(brand.type.tracking).map(
-    ([role, value]) => "pub const " + role + "_tracking: f32 = " + value + ";",
+    ([role, value]) => "pub const " + id(role) + "_tracking: f32 = " + value + ";",
   ),
 ];
 writeFileSync(nativeDir + "/tokens.zig", zig.join("\n") + "\n");

@@ -1,7 +1,7 @@
 .yg-chart {
   display: grid;
   min-inline-size: 0;
-  gap: var(--yg-gap-row);
+  gap: var(--yg-gap-stack);
 }
 
 .yg-chart figcaption {
@@ -19,6 +19,7 @@
 }
 
 .yg-chart-plot {
+  --yg-plot-height: clamp(8rem, 22vi, 14rem);
   display: grid;
   grid-template-columns: fit-content(30%) minmax(0, 1fr);
   column-gap: var(--yg-gap-inline);
@@ -32,7 +33,7 @@
   justify-content: space-between;
   align-items: end;
   min-inline-size: 0;
-  padding-block: var(--boa-space-4);
+  padding-block: max(0px, calc(var(--yg-plot-height) * 0.092 - 0.5lh)) max(0px, calc(var(--yg-plot-height) * 0.118 - 0.5lh));
   color: var(--yg-muted);
   font: var(--yg-font-meta);
   font-variant-numeric: tabular-nums;
@@ -44,7 +45,7 @@
   grid-column: 2;
   grid-row: 1;
   inline-size: 100%;
-  block-size: auto;
+  block-size: var(--yg-plot-height);
   color: var(--yg-inverse);
 }
 
@@ -61,6 +62,12 @@
   fill: none;
   stroke: var(--yg-hover);
   stroke-width: var(--boa-stroke-rule);
+}
+
+.yg-chart-point {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 5px;
 }
 
 .yg-chart-range {

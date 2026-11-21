@@ -74,6 +74,13 @@ export function Inbox({ selected, setSelected, active }: { selected: string; set
     setPanel(null);
   }, [selected]);
 
+  function gazeFor(id: string) {
+    if (Object.entries(busy).some(([key, pending]) => pending && key.startsWith(id + "/"))) return "working";
+    if (id === "kai") return "waiting";
+    if (id === "sol") return "done";
+    return "ready";
+  }
+
   function choose(id: string) {
     setSelected(id);
     setThread("");
@@ -159,7 +166,7 @@ export function Inbox({ selected, setSelected, active }: { selected: string; set
     </Y.Stack>;
   }
 
-  return <Y.SidebarLayout label="Conversation list" width="16rem" compactAt={760} variant="flat" collapse="hide" className="studio-inbox"
+  return <Y.SidebarLayout label="Conversation list" width="14.5rem" compactAt={760} variant="flat" collapse="hide" className="studio-inbox"
     navigation={<Y.SidebarContent label="Conversations">
       <Y.Stack gap={12}>
         <Y.SearchField label="Filter conversations" value={query} onValueChange={setQuery} />
@@ -171,10 +178,9 @@ export function Inbox({ selected, setSelected, active }: { selected: string; set
         if (!rows.length) return null;
         return <Y.SidebarGroup key={group} label={group === "agent" ? "Agents" : "Channels"}>
           {rows.map(item => {
-            const working = Object.entries(busy).some(([key, active]) => active && key.startsWith(item.id + "/"));
-            const gaze = working ? "working" : item.id === "kai" ? "waiting" : item.id === "sol" ? "done" : "ready";
+            const gaze = gazeFor(item.id);
             const preview = lastEntry(item.id) ?? item.summary;
-            const description = working ? "Preparing a reply" : gaze === "waiting" ? "Needs review · " + preview : preview;
+            const description = gaze === "working" ? "Preparing a reply" : gaze === "waiting" ? "Needs review · " + preview : preview;
             return <Y.SidebarItem key={item.id} label={item.kind === "channel" ? "# " + item.name : item.name}
               description={description} active={item.id === current.id} onSelect={() => choose(item.id)}
               badge={gaze === "waiting" ? <span className="studio-attention-dot" role="img" aria-label="Needs review" /> : undefined}
@@ -189,13 +195,13 @@ export function Inbox({ selected, setSelected, active }: { selected: string; set
     <div className="studio-conversation" ref={frame}>
       <Y.Inline className="studio-conversation-head">
         <Y.Inline><Y.SidebarTrigger label="Browse conversations" />
-          {current.kind === "agent" && <Y.AgentAvatar agent={current.art} size={44} state={busy[threadKey] ? "working" : "ready"} />}
+          {current.kind === "agent" && <Y.AgentAvatar agent={current.art} size={44} state={gazeFor(current.id)} />}
           <Y.Stack gap={2}><Y.Heading level={2}>{thread || current.name}</Y.Heading><Y.Text variant="help">{thread ? current.name : current.role}</Y.Text></Y.Stack>
         </Y.Inline>
         <Y.Inline>
           <Y.IconButton icon="plus" label="New thread" onClick={startThread} />
           <Y.IconButton icon="bookmark" label="Pinned messages" aria-pressed={panel === "Pinned messages"} onClick={event => { setFile(undefined); if (panel === "Pinned messages") closePanel(); else openPanel("Pinned messages", event.currentTarget); }} />
-          <Y.ActionMenu label="Conversation details" items={options("Files", "Threads", "Computer", current.kind === "agent" ? "Agent settings" : "Members")} onSelect={id => { setFile(undefined); openPanel(id as Panel); }} />
+          <Y.ActionMenu label="Conversation details" triggerText="Details" items={options("Files", "Threads", "Computer", current.kind === "agent" ? "Agent settings" : "Members")} onSelect={id => { setFile(undefined); openPanel(id as Panel); }} />
         </Y.Inline>
       </Y.Inline>
       <div className="studio-thread-layout" data-panel={Boolean(panel) && inspectorInline}>

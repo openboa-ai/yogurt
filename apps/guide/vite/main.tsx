@@ -23,8 +23,9 @@ function hostedUrl(url: URL) {
   if (page?.id === "workflows") return "/playbook";
   if (page?.id === "motion-comparison") return "/components";
   if (page?.id === "motion") {
-    const id = motionDestinations.get(next.pathname.split("/")[2] || next.hash.slice(1));
-    return id ? "/components/" + id : "/components";
+    const example = next.pathname.split("/")[2] || next.hash.slice(1);
+    const id = motionDestinations.get(example);
+    return id ? "/components/" + id : example ? canonical : "/components";
   }
   return canonical;
 }
@@ -90,6 +91,7 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
     case "components": return <Catalog guideAppearance={appearance} />;
     case "templates": return <Templates id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
     case "examples": return <Examples id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
+    case "motion": return <main><PageHeader title="Pattern not found" action={<Link href="/components">Browse components</Link>} /></main>;
     case "agents": return <div className="guide-agents"><AgentFamily /></div>;
     default: return <main><PageHeader title="Guide page not found" action={<Link href="/">Go to Yogurt</Link>} /></main>;
   }

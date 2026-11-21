@@ -51,8 +51,10 @@ export function Direction({
 export function Card({ title, description, children, action, density = "regular" }: NamedSection & { density?: "compact" | "regular" | "spacious" }) {
   return (
     <section className="yg-card" data-density={density}>
-      <Heading level={3}>{title}</Heading>
-      {description && <p className="yg-help">{description}</p>}
+      <header className="yg-card-header">
+        <Heading level={3}>{title}</Heading>
+        {description && <p className="yg-help">{description}</p>}
+      </header>
       <div>{children}</div>
       {action && <footer>{action}</footer>}
     </section>

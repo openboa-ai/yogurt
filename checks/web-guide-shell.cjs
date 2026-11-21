@@ -77,8 +77,8 @@ async function checkGuide(browser, width) {
     await page.getByRole("button", { name: "Use in a project" }).click();
     await page.getByText('import { PlanSwitch } from "@openboa/yogurt/motion-patterns";', { exact: true }).waitFor();
     await page.goto(base + "/motion/unrecognized");
-    await heading("Button").waitFor();
-    assert.equal(new URL(page.url()).pathname, "/components");
+    await heading("Pattern not found").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/motion/unrecognized");
     await page.goto(base + "/workflows#records");
     await heading("Product playbook").waitFor();
     assert.equal(new URL(page.url()).pathname, "/playbook");

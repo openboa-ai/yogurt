@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  Button, Card, Heading, Inline, Link, PageHeader, Select, Stack, Surface,
+  Button, Card, Heading, Inline, Link, PageHeader, Select, Stack,
 } from "@openboa/yogurt";
 import { FormRecipe } from "../examples/templates/recipe-forms";
 import { MetricRecipe, RecordRecipe } from "../examples/templates/recipe-data";
@@ -16,12 +16,13 @@ export function TemplateGallery({ appearance }: { appearance: "light" | "dark" }
         <div className="template-gallery-board">
           {board.specimens.map(id => {
             const { family, recipe } = getRecipe(id);
-            const preview = <Preview family={family} recipe={recipe} appearance={appearance} inGallery />;
-            const titled = recipe.components.some(part => ["bar-chart", "chart", "data-table", "record-facts", "result"].includes(part));
-            return <article key={id} id={id} className="template-specimen" data-template-specimen={id} aria-label={recipe.title}>
-              {titled
-                ? <Surface className="template-specimen-surface">{preview}</Surface>
-                : <Card title={recipe.title} density="compact">{preview}</Card>}
+            const span = recipe.components.some(part => ["data-table", "sidebar-layout"].includes(part)) ? "board"
+              : recipe.components.some(part => ["bar-chart", "chart"].includes(part)) ? "plot" : undefined;
+            const hasCaption = recipe.components.some(part =>
+              ["bar-chart", "chart", "data-table", "record-facts", "result"].includes(part));
+            return <article key={id} id={id} className="template-specimen" data-template-specimen={id} data-span={span} aria-label={recipe.title}>
+              {!hasCaption && <Heading level={3}>{recipe.title}</Heading>}
+              <Preview family={family} recipe={recipe} appearance={appearance} inGallery />
             </article>;
           })}
         </div>

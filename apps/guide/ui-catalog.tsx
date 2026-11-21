@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState, type ComponentType, type MouseEvent } from "react";
-import { createRoot } from "react-dom/client";
 import {
   Yogurt,
   PageHeader,
@@ -454,9 +453,4 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
       </div>
     </Yogurt>
   );
-}
-const host = document.getElementById("yogurt-ui-library");
-if (host) {
-  const inlinePreview = window !== window.top && host.hasAttribute("data-initial-component");
-  createRoot(host).render(<Catalog inlinePreview={inlinePreview} />);
 }

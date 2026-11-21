@@ -26,6 +26,16 @@
 .template-study-controls { align-items: end; gap: var(--yg-gap-stack); }
 .template-study-controls > * { min-inline-size: min(100%, 8rem); }
 .template-composition-canvas { border-radius: var(--yg-radius-panel); padding: var(--yg-gap-panel); }
+.template-composition-controls {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--yg-gap-stack);
+}
+.template-composition-controls > * { min-inline-size: 0; }
+.template-composition-canvas > .yg-card { max-inline-size: 36rem; }
+@media (max-width: 63rem) {
+  .template-composition-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .template-prose[data-measure="narrow"] { max-inline-size: 42ch; }
 .template-prose[data-measure="standard"] { max-inline-size: 62ch; }
 .template-prose[data-measure="wide"] { max-inline-size: 78ch; }
@@ -67,25 +77,31 @@
   max-inline-size: 105rem;
 }
 .template-gallery-board {
-  columns: auto 20rem;
-  gap: var(--yg-gap-stack);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  align-items: start;
+  gap: var(--yg-gap-panel);
   margin-block-start: var(--yg-gap-panel);
 }
 .template-specimen {
-  break-inside: avoid;
-  inline-size: 100%;
-  margin-block-end: var(--yg-gap-stack);
-}
-.template-specimen > .yg-card, .template-specimen-surface {
+  display: grid;
+  min-inline-size: 0;
+  gap: var(--yg-gap-inline);
+  padding: var(--yg-inset-roomy);
   background: var(--yg-surface);
-}
-.template-specimen-surface {
-  padding: var(--yg-card-inset-compact);
   border-radius: var(--yg-card-corner);
 }
-.template-specimen-surface .yg-table caption,
-.template-specimen-surface .yg-bars figcaption { font: var(--yg-font-heading); }
-.template-specimen .yg-sidebar-layout { min-inline-size: 0; }
+.template-specimen[data-span="board"] { grid-column: 1 / -1; }
+@media (min-width: 68rem) {
+  .template-specimen[data-span="plot"] { grid-column: span 2; }
+}
+.template-specimen[data-span="plot"] .yg-chart-plot {
+  --yg-plot-height: clamp(7.5rem, 16vi, 11rem);
+}
+.template-specimen .yg-segment { justify-self: start; }
+.template-specimen > .yg-heading { font: var(--yg-font-card-title); }
+.template-specimen .yg-chart figcaption > .yg-heading { font: var(--yg-font-card-title); }
+.template-specimen :is(.yg-sidebar-layout, .yg-chart, .yg-table) { min-inline-size: 0; }
 .template-component-links {
   flex-wrap: wrap;
   gap: var(--yg-gap-inline);

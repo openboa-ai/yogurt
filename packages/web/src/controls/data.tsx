@@ -215,7 +215,7 @@ export function Chart({
         <div className="yg-chart-scale" aria-hidden="true">
           {numeric.length > 0 && <><span>{upper}</span><span>{lower}</span></>}
         </div>
-        <svg viewBox="0 0 240 76" aria-hidden="true">
+        <svg viewBox="0 0 240 76" preserveAspectRatio="none" aria-hidden="true">
           <g className="yg-chart-grid">
             <path d="M8 7H232 M8 37H232 M8 67H232" vectorEffect="non-scaling-stroke" />
           </g>
@@ -230,7 +230,7 @@ export function Chart({
             vectorEffect="non-scaling-stroke"
           />
           {dots.map((p) => (
-            <circle key={p.id} cx={p.x} cy={p.y} r="2.5" fill="currentColor" />
+            <circle key={p.id} cx={p.x} cy={p.y} r="0.15" className="yg-chart-point" vectorEffect="non-scaling-stroke" />
           ))}
         </svg>
         {numeric.length === 0 && <span className="yg-chart-empty">No readings</span>}

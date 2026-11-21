@@ -1,7 +1,7 @@
 "use client";
 import {
   Disclosure
-} from "./chunk-P2CIQA55.js";
+} from "./chunk-TPERHFV7.js";
 import {
   Icon
 } from "./chunk-H36QHH35.js";
@@ -435,9 +435,8 @@ function FanCards({ items }) {
     });
     const render = () => {
       const width = root.offsetWidth;
-      const compact = width <= 290;
-      const room = Math.min(78, Math.max(10, (width - (compact ? 184 : 166)) / 2));
-      const angle = compact ? 5 : 9;
+      const room = Math.min(66, Math.max(0, (width - 208) / 2));
+      const angle = 9;
       rows.forEach(({ button, hot, index }) => {
         const x = index * (active ? room : 6);
         const y = Math.abs(index) * (active ? 12 : 0) + (hot ? -22 : 0);

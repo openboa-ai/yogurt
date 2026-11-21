@@ -38,6 +38,8 @@
   align-content: start;
   background: var(--yg-raised-surface);
 }
+.yg-card-header { display: grid; gap: var(--yg-gap-card-copy); }
+.yg-card-header > .yg-heading { font: var(--yg-font-card-title); }
 .yg-card[data-density="compact"] { padding: var(--yg-card-inset-compact); }
 .yg-card[data-density="spacious"] { padding: var(--yg-card-inset-spacious); }
 .yg-card p,
@@ -813,7 +815,7 @@
 .yg-flyout,
 .yg-command-list {
   padding: var(--yg-inset-layer);
-  border-radius: var(--yg-radius-popover);
+  border-radius: var(--yg-radius-menu);
   background: var(--yg-raised-surface);
   color: var(--yg-text);
   max-width: min(22rem, 92vi);
@@ -833,7 +835,7 @@
   white-space: normal;
   text-decoration: none;
   outline-offset: -2px;
-  min-block-size: var(--yg-size-row);
+  min-block-size: var(--yg-menu-row);
   border-radius: var(--yg-radius-control);
 }
 .yg-flyout [data-highlighted],

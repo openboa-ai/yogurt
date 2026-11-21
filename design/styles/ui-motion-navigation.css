@@ -51,6 +51,15 @@
   border: 1px solid transparent;
   pointer-events: none;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-selection-marker {
+    transition:
+      translate var(--yg-change) var(--yg-settle),
+      width var(--yg-change) var(--yg-settle),
+      height var(--yg-change) var(--yg-settle);
+  }
+}
+
 .yg-tabs .yg-selection-marker {
   --yg-selection-x: var(--active-tab-left, 0px);
   --yg-selection-y: var(--active-tab-top, 0px);
