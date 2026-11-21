@@ -9,7 +9,7 @@ On web, copy each component's `importStatement` exactly. Resolve every additiona
 
 For a decision that can lose its acknowledgement, query `pattern.review-decision pattern.track-request` together. Keep the original receipt ID with the submitted record and revision in host state that survives closing the detail view. Reopening the original record must recover that receipt. Opening another record must leave it hidden. Use the host's lookup to confirm the outcome.
 
-For that Web flow, start from the [tested decision example](../../references/examples/review-decision.web.tsx). Reuse its SDK imports, scope checks and recovery sequence. `Receipt` with `onLookup` already renders the check action; do not add a second lookup button. Replace the simulated ledger, sample records and endpoint bindings with the project's host operations.
+For that Web flow, start from the [tested decision example](../../references/examples/review-decision.web.tsx). Reuse its SDK imports, scope checks and recovery sequence. `Receipt` renders its state heading and, with `onLookup`, its check action; do not duplicate either. Replace the simulated ledger, sample records and endpoint bindings with the project's host operations.
 
 Use token roles and language from the installed pin. Preserve the host's routes and callbacks. Report an unavailable adapter before proposing a local fallback.
 
