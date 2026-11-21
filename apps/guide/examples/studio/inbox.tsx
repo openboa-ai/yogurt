@@ -127,7 +127,11 @@ export function Inbox({ selected, setSelected, active }: { selected: string; set
 
   function inspectorContents() {
     return <Y.Stack gap={12}>
-      {panel === "Files" && (file ? <Y.Stack><Y.Button emphasis="quiet" onClick={() => setFile(undefined)}>All conversation files</Y.Button><Y.Text>{file.name}</Y.Text><Y.CodeBlock language="Sample contents" code={file.detail} /></Y.Stack>
+      {panel === "Files" && (file ? <Y.Stack gap={12}>
+        <Y.Inline><Y.Button emphasis="quiet" size="compact" onClick={() => setFile(undefined)}><Y.Icon name="back" /> All conversation files</Y.Button></Y.Inline>
+        <Y.Heading level={4}>{file.name}</Y.Heading>
+        {file.kind === "Document" ? <Y.Text>{file.detail}</Y.Text> : <Y.CodeBlock language={file.kind === "Spreadsheet" ? "CSV" : "Sample code"} code={file.detail} />}
+      </Y.Stack>
         : <Y.List label="Conversation files">{studioFiles.filter(item => item.owner === current.name || current.kind === "channel").map(item => <Y.ListRow key={item.id} title={item.name} description={item.kind} onActivate={() => setFile(item)} />)}</Y.List>)}
       {panel === "Threads" && <Y.List label="Threads"><Y.ListRow title="Main conversation" onActivate={() => setThread("")} />
         {(threads[current.id] ?? []).map(name => <Y.ListRow key={name} title={name} onActivate={() => setThread(name)} />)}</Y.List>}
