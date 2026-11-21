@@ -3,6 +3,7 @@ const sdk = @import("native_sdk");
 const runner = @import("runner");
 const gallery = @import("gallery-generated.zig");
 const navigation = @import("navigation.zig");
+const precision = @import("yogurt/precision-inputs.zig");
 const theme = @import("yogurt/theme.zig");
 const agent_vector = @import("yogurt/models/agent-vector.zig");
 const agent_preview = @import("agent-preview.zig");
@@ -99,9 +100,12 @@ fn selectComponent(m: *Model, index: u32) void {
         m.agents = &m.gallery_agent_choices;
         if (std.mem.eql(u8, id, "agent-sidebar")) m.sidebar_destinations = &m.gallery_agent_choices;
     }
-    if (std.mem.eql(u8, id, "input-otp")) { m.gallery_editor.clear(); m.value = m.gallery_editor.text(); }
+    if (std.mem.eql(u8, id, "hover-card")) m.enabled = false;
     if (std.mem.eql(u8, id, "action-menu") or std.mem.eql(u8, id, "context-menu") or
-        std.mem.eql(u8, id, "menubar") or std.mem.eql(u8, id, "date-picker")) m.is_open = false;
+        std.mem.eql(u8, id, "menubar") or std.mem.eql(u8, id, "date-picker") or
+        std.mem.eql(u8, id, "dialog") or std.mem.eql(u8, id, "drawer") or std.mem.eql(u8, id, "sheet") or
+        std.mem.eql(u8, id, "confirm-dialog") or std.mem.eql(u8, id, "decision-review") or
+        std.mem.eql(u8, id, "sidebar-layout") or std.mem.eql(u8, id, "hover-card")) m.is_open = false;
 }
 
 fn isAgentSpecimen(m: *const Model) bool {
@@ -271,9 +275,35 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             m.sidebar_destinations = &m.gallery_sidebar_choices;
             m.gallery_status = if (id == 1) "Overview selected" else "Reviews selected";
         },
+        .toggle_all => {
+            m.all_checked = !m.all_checked;
+            for (&m.gallery_choices) |*choice| choice.selected = m.all_checked and !choice.disabled;
+            m.choices = &m.gallery_choices;
+        },
+        .confirm_current => {
+            m.is_open = false;
+            m.gallery_status = "Choice confirmed in this example.";
+        },
+        .close_sidebar => m.is_open = false,
         .dismiss => { m.gallery_picker_open = false; m.is_open = false; m.enabled = false; m.gallery_status = "state updated"; },
         .choose => |id| {
             const selected_id = gallery.ids[m.gallery_selected];
+            if (std.mem.eql(u8, selected_id, "agreement")) {
+                if (id == 0 or id > m.gallery_choices.len) return;
+                const choice = &m.gallery_choices[id - 1];
+                if (choice.disabled) return;
+                choice.selected = !choice.selected;
+                m.all_checked = true;
+                for (m.gallery_choices) |item| {
+                    if (!item.disabled and !item.selected) m.all_checked = false;
+                }
+                m.choices = &m.gallery_choices;
+                return;
+            }
+            if (std.mem.eql(u8, selected_id, "rating")) {
+                if (id >= 1 and id <= 5) m.rating_score = id;
+                return;
+            }
             if (std.mem.eql(u8, selected_id, "calendar") or std.mem.eql(u8, selected_id, "date-picker")) {
                 const count: usize = if (m.gallery_page_one) 30 else 31;
                 if (id == 0 or id > count) return;
@@ -306,6 +336,10 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         },
         .adjust => |value| { m.amount = std.math.clamp(value, 0, 1); m.gallery_status = "value changed"; },
         .edit => |event| {
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "input-otp")) {
+                precision.editCode(&m.code_editor, event);
+                return;
+            }
             m.gallery_editor.apply(event);
             m.value = m.gallery_editor.text();
             m.gallery_status = if (m.gallery_editor.truncated) "text limit reached" else "text changed";
@@ -348,6 +382,18 @@ fn compactPreview(id: []const u8) bool {
     return false;
 }
 
+fn chooseRating(score: u32) Msg {
+    return .{ .choose = score };
+}
+
+fn specimen(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
+    if (std.mem.eql(u8, id, "input-otp"))
+        return precision.codeView(Msg, ui, &m.code_editor, "Verification code", "Enter the six digits from your email.", AppUi.inputMsg(.edit));
+    if (std.mem.eql(u8, id, "rating"))
+        return precision.ratingView(Msg, ui, "How was the review?", m.rating_score, m.gallery_dark, chooseRating);
+    return gallery.specimen(ui, m);
+}
+
 pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
     const index: usize = if (m.gallery_selected < gallery.names.len) m.gallery_selected else 0;
     const animated_agent = isAgentSpecimen(m);
@@ -369,7 +415,7 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
                 ui.column(.{ .height = 200 }, .{}),
                 ui.row(.{ .padding = 24, .height = if (compact) 200 else 0, .main = .center, .cross = .center }, .{
                     ui.column(.{ .grow = 1, .max_width = previewWidth(gallery.ids[index]), .cross = if (compact) .center else .stretch }, .{
-                        gallery.specimen(ui, m),
+                        specimen(ui, m, gallery.ids[index]),
                     }),
                 }),
             }),
@@ -413,6 +459,7 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
 }
 
 pub fn main(init: std.process.Init) !void {
+    precision.registerRatingIcons();
     const App = sdk.UiApp(Model, Msg);
     const app = try App.create(std.heap.page_allocator, .{
         .name = app_name, .scene = .{ .windows = &windows }, .canvas_label = "main-canvas",

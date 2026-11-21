@@ -66,13 +66,6 @@ action_named() {
   fi
 }
 
-click_last_named() {
-  local role="$1" name="$2" snapshot="$3" id
-  id="$(sed -nE "s/^.*widget @w1\/main-canvas#([0-9]+) role=${role} name=\"${name}\".*$/\1/p" "$snapshot" | tail -n 1)"
-  test -n "$id"
-  "$cli" automate widget-click main-canvas "$id"
-}
-
 snapshot_after() {
   "$cli" automate assert --timeout-ms 5000 "$1" >/dev/null 2>&1 &&
     "$cli" automate snapshot > "$output/$prefix-interaction.txt"
@@ -81,6 +74,23 @@ snapshot_after() {
 check_interaction() {
   local before="$output/$prefix.txt" after="$output/$prefix-interaction.txt"
   case "$id" in
+    dialog|drawer|sheet)
+      local close=Close
+      if [ "$id" = sheet ]; then close=Done; fi
+      click_named button 'Edit view' "$before" &&
+        snapshot_after 'role=dialog name="Edit view"' &&
+        click_named button "$close" "$after" &&
+        "$cli" automate assert --timeout-ms 5000 --absent 'role=dialog name="Edit view"' &&
+        "$cli" automate snapshot > "$after" || return 1
+      ;;
+    input-otp)
+      action_named textbox 'Verification code' set_text '12-34567' "$before" &&
+        snapshot_after 'text="123456"' || return 1
+      ;;
+    rating)
+      click_named radio '4 of 5' "$before" &&
+        snapshot_after 'role=radio name="4 of 5".*value=1' || return 1
+      ;;
     project-mark)
       # Accessible image nodes and missing-resource indicators do not prove pixel rendering.
       rg -q 'role=image name="Yogurt"' "$before" &&
@@ -156,9 +166,12 @@ check_interaction() {
         rg -q 'role=button name="Review details".*focused=true' "$after" || return 1
       ;;
     hover-card)
-      rg -Fq 'role=text name="Three records are ready to review."' "$before" &&
-        click_named button 'Weekly review' "$before" && snapshot_after 'setting changed' &&
-        ! rg -Fq 'role=text name="Three records are ready to review."' "$after" || return 1
+      ! rg -Fq 'role=text name="Three records are ready to review."' "$before" &&
+        click_named button 'Weekly review' "$before" &&
+        snapshot_after 'Three records are ready to review' &&
+        click_named button 'Weekly review' "$after" &&
+        "$cli" automate assert --timeout-ms 5000 --absent 'Three records are ready to review' &&
+        "$cli" automate snapshot > "$after" || return 1
       ;;
     slider)
       rg -q 'role=slider name="Review progress".*value=0\.3([[:space:]]|$)' "$before" &&
@@ -273,13 +286,30 @@ while IFS=$'\t' read -r id name; do
         failed=1
       fi
       ;;
-    project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|icon-button|list-row)
+    dialog|drawer|sheet|input-otp|rating|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|icon-button|list-row)
       if [ "$render" = PRESENTED_UNVERIFIED ] && check_interaction; then
         interaction=PASS
         if [ "$id" = calendar ] || [ "$id" = project-mark ]; then interaction=PARTIAL; fi
       else
         interaction=FAILED
         failed=1
+      fi
+      ;;
+    *)
+      candidate="$(node "$workspace/checks/native-gallery-target.mjs" "$output/$prefix.txt")"
+      if [ -n "$candidate" ]; then
+        if "$cli" automate widget-click main-canvas "$candidate" &&
+           "$cli" automate snapshot > "$output/$prefix-interaction.txt" &&
+           ! rg -q 'AutomationCommandFailed|error event=automation.widget_click' "$output/$prefix-interaction.txt"; then
+          # A delivered click does not verify every action in a specimen.
+          interaction=PARTIAL
+          if rg -Fq 'This action is not implemented in this guide' "$output/$prefix-interaction.txt"; then
+            interaction=UNSUPPORTED_FIXTURE
+          fi
+        else
+          interaction=FAILED
+          failed=1
+        fi
       fi
       ;;
   esac
@@ -296,9 +326,13 @@ while IFS=$'\t' read -r id name; do
   printf '%s\t%s\t%s\t%s\t%s\n' "$index" "$id" "$name" "$render" "$interaction" >> "$output/results.tsv"
   if [ "$index" -lt "$total" ]; then
     "$cli" automate snapshot > "$output/current.txt"
+    if rg -q 'role=dialog .*actions=\[.*dismiss|role=menu ' "$output/current.txt"; then
+      "$cli" automate widget-key main-canvas escape
+      "$cli" automate snapshot > "$output/current.txt"
+    fi
     scroll_preview "$output/current.txt" 2000
     "$cli" automate snapshot > "$output/current.txt"
-    if ! click_last_named button Next "$output/current.txt"; then
+    if ! action_named button Next press '' "$output/current.txt"; then
       echo "Could not advance after $id; remaining pages were not observed." >&2
       exit 1
     fi

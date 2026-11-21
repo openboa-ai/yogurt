@@ -15,7 +15,7 @@ export const workspaceArgs = {
 export const workspaceSlots = {
   "runtime-panel": '<image label="Computer preview" image="{picture}" width="240" height="135"/>',
   "work-event": '<text>Scope: launch review</text>',
-  "sidebar-layout": '<use template="yg-sidebar-panel" label="Projects"><use template="yg-sidebar-group" label="Work"><use template="yg-sidebar-items"><use template="yg-sidebar-destination" label="Review" item_id="{entry_id}" selected="{enabled}"><text>Review</text></use></use></use></use><text>Project review</text><if test="{enabled}"><use template="yg-sidebar-drawer" label="Projects"><text>Project navigation</text></use></if>',
+  "sidebar-layout": '<use template="yg-sidebar-panel" label="Projects"><use template="yg-sidebar-group" label="Work"><use template="yg-sidebar-items"><use template="yg-sidebar-destination" label="Review" item_id="{entry_id}" selected="{enabled}"><text>Review</text></use></use></use></use><column grow="1" gap="8"><text>Project review</text><button variant="secondary" on-press="open_choices">Show project navigation</button></column><if test="{is_open}"><use template="yg-sidebar-drawer" label="Projects"><text>Project navigation</text></use></if>',
 };
 
 export const workspaceChoiceFields = [

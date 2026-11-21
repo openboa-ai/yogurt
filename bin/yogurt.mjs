@@ -162,6 +162,9 @@ function run() {
       readFileSync(join(kit, "packages/native/controls/" + helper)),
     );
   }
+  if (target === "native" && ["input-otp", "rating"].includes(item.id)) {
+    add("src/yogurt/precision-inputs.zig", readFileSync(join(kit, "packages/native/controls/precision-inputs.zig")));
+  }
   if (target === "native" && item.id === "gradient") {
     add(
       "src/yogurt/gradient-pixels.zig",

@@ -153,8 +153,14 @@ for (const { id, native } of [...catalog, ...blocks]) {
     (source.split("</template>")[0].includes("<slot/>")
       ? ">" + (slots[id] ?? "<text>Details</text>") + "</use>"
       : "/>");
+  const dismissibleLayer = ["dialog", "drawer", "sheet", "confirm-dialog"].includes(id);
+  const specimen = dismissibleLayer
+    ? '<button variant="secondary" on-press="open_choices">' + (id === "confirm-dialog" ? "Review change" : "Edit view") + '</button><if test="{is_open}">' + use + "</if>"
+    : id === "toast"
+      ? '<if test="{is_open}">' + use + '</if><else><button variant="secondary" on-press="open_choices">Save view</button></else>'
+      : use;
   const example =
-    '<import src="' + id + '.native"/>\n<column>' + use + "</column>\n";
+    '<import src="' + id + '.native"/>\n<column>' + specimen + "</column>\n";
   writeFileSync(dir + "/" + id + "-test.native", example);
   tests.push(
     'test "' + id + ' builds from its installed template" {',

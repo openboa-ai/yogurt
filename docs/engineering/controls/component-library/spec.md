@@ -189,3 +189,5 @@ The owner selected the local.14 performances and requested them for the complete
 Use the same registry and fitted transforms to render React and the typed Zig canvas. The host supplies identity, state and time. Preserve reduced-motion stills, archived artwork, interrupted transitions and visibility behavior. Validate only registered shapes and notch positions, and keep the core components usable without network or encoded frames. Publish no identity assignments. Keep palette permutations as candidates until their visual distinguishability is reviewed.
 
 Acceptance enumerates each of the 45 source outlines and exercises the six states at 24 and 96 px. Check interpolated outlines and both visible eye outlines for containment. Inspect the family in an interactive grid and verify the original two agents against local.14. Verify native rendering with stable path IDs and web behavior on narrow and wide screens.
+
+The Native HoverCard keeps its trigger reachable when expanded. Anchor the content below the trigger and route outside dismissal through the existing toggle message. Verify that the trigger can open and close the card.

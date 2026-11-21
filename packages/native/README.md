@@ -2,6 +2,10 @@
 
 Use `yogurt add <id> --target native` to install a markup template, its Zig source entry, the theme and fonts. Pass the same material, appearance and semantic roles as the web. The host owns its typed model, user preferences and effects. [Installation](../../docs/using-yogurt.md) · [Running macOS example](../../examples/native-ui/README.md) · [Target evidence](../../docs/engineering/controls/component-library/verification.md)
 
+## Verification code and rating
+
+Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`. Existing markup templates retain their original call signatures.
+
 ## Agent presence
 
 For a visible avatar in a Vercel Native GPU canvas, install `agent-avatar` and retain one `Playback` per avatar. The shared poses move the body and both eyes with affine transforms. Every pose uses the original body path and one eye outline shared by both eyes. Each update supplies at most three path fills with stable host IDs and zero encoded frames.

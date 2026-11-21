@@ -6,7 +6,7 @@ Status: reviewed follow-up under the accepted component library contract. This s
 
 Make the native input group a single-line labeled input with its host-provided adjacent action in the same row, and make numeric spinner actions compact icon controls. The host continues to supply current values, edit/increment/decrement messages, the input-group slot, and first/last boundary booleans. Preserve template names and arguments, one request per explicit action, bound-disabled behavior, accessible names, and regular keyboard interaction. Do not introduce an automatic submission, change data, or add a service effect. Use supported native controls and shared theme roles.
 
-The input group continues to dispatch `edit`, and the action slot remains supplied by the host. Numeric spinner continues to dispatch `decrement` and `increment`; the displayed value remains host-owned. Its two compact symbol buttons remain named Decrease and Increase. The current OTP remains a single labeled editable field because a code-slot presentation must not compromise input, paste, or host ownership; an independently qualified native slot renderer is needed for matching that presentation.
+The input group continues to dispatch `edit`, and the action slot remains supplied by the host. Numeric spinner continues to dispatch `decrement` and `increment`; the displayed value remains host-owned. Its two compact symbol buttons remain named Decrease and Increase. The Native Zig controls offer the six-slot OTP and five-star rating presentations. Preserve the original markup entry points for existing hosts.
 
 For labeled text, search, multiline, split, slider, field and label templates, use the supported small text size for the 13-point label role and a six-point label-to-control gap. Keep the split field's eight-point internal gap and the existing controls, template inputs, slots, `edit`, `edit_first`, `edit_last`, `clear` and `adjust` messages. This applies established shared presentation values only; it does not change validation or editing behavior.
 
@@ -18,7 +18,7 @@ Use one SDK switch with its default geometry and motion, the supplied visible an
 
 Indent the individual agreement choices by 12 points below their group control. Keep keypad keys within a readable bounded width while allowing the host to provide a narrower space; retain existing labels, state and input callbacks.
 
-Keep the verification input bounded to 320 points and use a 56-point input height while retaining its single editable value and paste behavior. Use the shared small label role for rating. These dimensions do not claim segmented-code or star rendering support.
+The six-slot view uses one accessible SDK editor with a separate visual projection of its value. Use the shared slot geometry and neutral field color. Accept up to six ASCII digits, keeping edit, paste, selection and deletion local to the caller. Filling the slots does not verify a code. The star rating uses a single SDK radio group with five ordered, named choices and a cumulative visual fill from the shared rating color. Keep keyboard focus visible and selection caller-owned. Verify populated and empty controls in the Native guide and retain compatibility with existing markup consumers.
 
 ## Evidence
 
