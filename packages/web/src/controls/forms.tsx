@@ -7,10 +7,10 @@ import {
   type ComponentProps,
   type ReactNode,
 } from "react";
-import { Input as SDKInput } from "@openai/apps-sdk-ui/components/Input";
-import { Textarea as SDKTextarea } from "@openai/apps-sdk-ui/components/Textarea";
-import { Switch as SDKSwitch } from "@openai/apps-sdk-ui/components/Switch";
-import { Checkbox as RadixCheckbox } from "radix-ui";
+import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
+import { Textarea as SDKTextarea } from "@ui-sdk/react/textarea";
+import { Switch as SDKSwitch, SwitchThumb } from "@ui-sdk/react/switch";
+import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkbox";
 import { RadioGroup as SDKRadio } from "@openai/apps-sdk-ui/components/RadioGroup";
 import { Icon, type ControlSize, type Option, cx } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
@@ -68,19 +68,19 @@ export function TextField({
   help,
   error,
   className,
+  value,
+  defaultValue,
   size = "regular",
   ...props
 }: InputProps) {
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <SDKInput
-          {...props}
-          {...binding}
-          variant="soft"
-          invalid={!!error}
-          className={cx("yg-input", `yg-input-size-${size}`, className)}
-        />
+        <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`, className)}>
+          <SDKInput {...props} {...binding}
+            value={value === undefined ? undefined : String(value)}
+            defaultValue={defaultValue === undefined ? undefined : String(defaultValue)} />
+        </SDKInputGroup>
       )}
     </Field>
   );
@@ -110,20 +110,12 @@ export function SearchField({
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <SDKInput
-          {...binding}
-          name={name}
-          ref={ref}
-          type="search"
-          variant="soft"
-          className={cx("yg-input", `yg-input-size-${size}`)}
-          value={value}
-          disabled={disabled}
-          placeholder={placeholder}
-          onChange={(e) => onValueChange(e.target.value)}
-          onKeyDown={onKeyDown}
-          startAdornment={<Icon name="search" />}
-          endAdornment={
+        <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`)}>
+          <Icon name="search" />
+          <SDKInput {...binding} name={name} ref={ref} type="search" value={value}
+            disabled={disabled} placeholder={placeholder}
+            onChange={(e) => onValueChange(e.target.value)} onKeyDown={onKeyDown} />
+          {
             value && !disabled ? (
               <IconButton
                 label={"Clear " + label.toLowerCase()}
@@ -136,7 +128,7 @@ export function SearchField({
               />
             ) : undefined
           }
-        />
+        </SDKInputGroup>
       )}
     </Field>
   );
@@ -147,18 +139,21 @@ export function Textarea({
   help,
   error,
   className,
+  value,
+  defaultValue,
+  onSubmit,
+  rows = 3,
   ...props
 }: FieldInfo & ComponentProps<"textarea">) {
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <SDKTextarea
-          {...props}
-          {...binding}
-          variant="soft"
-          invalid={!!error}
-          className={cx("yg-input yg-textarea", className)}
-        />
+        <SDKInputGroup className={cx("yg-input yg-textarea", className)}>
+          <SDKTextarea {...props} {...binding} rows={rows}
+            value={value === undefined ? undefined : String(value)}
+            defaultValue={defaultValue === undefined ? undefined : String(defaultValue)}
+            render={onSubmit ? <textarea onSubmit={onSubmit} /> : undefined} />
+        </SDKInputGroup>
       )}
     </Field>
   );
@@ -236,6 +231,9 @@ interface Checkable {
 export function Switch({
   label,
   help,
+  id,
+  className,
+  disabled,
   onCheckedChange,
   ...props
 }: Checkable & {
@@ -244,6 +242,8 @@ export function Switch({
   defaultChecked?: boolean;
   onCheckedChange?: (value: boolean) => void;
 }) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
   const labelRef = useRef<HTMLSpanElement>(null);
   const change = (checked: boolean) => {
     const thumb = labelRef.current?.closest(".yg-switch")?.querySelector<HTMLElement>('[role="switch"] > span');
@@ -265,18 +265,17 @@ export function Switch({
     onCheckedChange?.(checked);
   };
   return (
-    <SDKSwitch
-      {...props}
-      labelPosition="start"
-      className={cx("yg-choice yg-switch", props.className)}
-      onCheckedChange={change}
-      label={
+    <div className={cx("yg-choice yg-switch", className)} data-disabled={disabled || undefined}>
+      <SDKSwitch {...props} id={inputId} disabled={disabled} onCheckedChange={change}>
+        <SwitchThumb />
+      </SDKSwitch>
+      <label htmlFor={inputId}>
         <span ref={labelRef}>
           {label}
           {help && <span className="yg-help">{help}</span>}
         </span>
-      }
-    />
+      </label>
+    </div>
   );
 }
 export function Checkbox({
@@ -294,14 +293,14 @@ export function Checkbox({
   const inputId = id ?? generatedId;
   return (
     <div className={cx("yg-choice yg-checkbox", className)} data-disabled={disabled || undefined}>
-      <RadixCheckbox.Root {...props} id={inputId} disabled={disabled}>
-        <RadixCheckbox.Indicator forceMount>
+      <SDKCheckbox {...props} id={inputId} disabled={disabled}>
+        <CheckboxIndicator keepMounted>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path className="yg-checkbox-check" d="M6 12.5l4 4L18 8" />
             <path className="yg-checkbox-mixed" d="M7 12h10" />
           </svg>
-        </RadixCheckbox.Indicator>
-      </RadixCheckbox.Root>
+        </CheckboxIndicator>
+      </SDKCheckbox>
       <label htmlFor={inputId}><span>{label}</span></label>
     </div>
   );

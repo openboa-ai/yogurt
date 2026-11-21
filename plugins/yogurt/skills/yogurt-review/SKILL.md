@@ -9,4 +9,6 @@ For whole-screen critique, use [screen composition](../../references/composition
 
 Observe keyboard focus after dismissal, status before and after recovery, or both visible and accessible data after revocation as applicable. Review motion in a normal-speed recording at the real size and check reduced motion separately. A source check or still capture supplies only the evidence it shows.
 
+For an agent-operated surface, inspect what the host exposes and test allowed and refused actions against observed host state. An action policy does not filter observations, and an unsuccessful multi-step request does not prove earlier steps were undone. Distinguish a local bridge fixture from an actual model or Native runtime.
+
 Return actionable findings with the file and line for source evidence, or the renderer, action and state for interaction evidence. Include the reproduction, expected behavior, owner and any unverified scope. Keep a review request within review.

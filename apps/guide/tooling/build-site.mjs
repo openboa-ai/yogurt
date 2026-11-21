@@ -37,7 +37,7 @@ try {
     for (const name of interactivePages) {
       await cp(join(built, "_entry-" + name + ".html"), join(stage, name + ".html"));
     }
-    const notices = ["packages/web/dist/THIRD-PARTY-NOTICES.txt", "node_modules/react/LICENSE", "node_modules/react-dom/LICENSE", "node_modules/scheduler/LICENSE"];
+    const notices = ["packages/web/dist/THIRD-PARTY-NOTICES.txt", "node_modules/react/LICENSE", "node_modules/react-dom/LICENSE", "node_modules/scheduler/LICENSE", "node_modules/@ui-sdk/core/LICENSE", "node_modules/@ui-sdk/react/LICENSE"];
     const texts = await Promise.all(notices.map(path => readFile(join(root, path), "utf8")));
     await writeFile(join(stage, "THIRD-PARTY-NOTICES.txt"), texts.join("\n\n") + "\n");
   }

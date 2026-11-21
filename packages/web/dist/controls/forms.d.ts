@@ -20,7 +20,7 @@ export declare function Field({ id, label, help, error, children, }: FieldInfo &
 type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & {
     size?: ControlSize;
 };
-export declare function TextField({ id, label, help, error, className, size, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
+export declare function TextField({ id, label, help, error, className, value, defaultValue, size, ...props }: InputProps): import("react/jsx-runtime").JSX.Element;
 export declare function SearchField({ id, label, help, error, value, onValueChange, placeholder, disabled, name, onKeyDown, size, }: FieldInfo & {
     value: string;
     onValueChange: (value: string) => void;
@@ -30,7 +30,7 @@ export declare function SearchField({ id, label, help, error, value, onValueChan
     onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     size?: ControlSize;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Textarea({ id, label, help, error, className, ...props }: FieldInfo & ComponentProps<"textarea">): import("react/jsx-runtime").JSX.Element;
+export declare function Textarea({ id, label, help, error, className, value, defaultValue, onSubmit, rows, ...props }: FieldInfo & ComponentProps<"textarea">): import("react/jsx-runtime").JSX.Element;
 export declare function Select({ id, label, help, error, options, placeholder, onPointerDown, onKeyDown, controlSize, ...props }: FieldInfo & ComponentProps<"select"> & {
     options: Option[];
     placeholder?: string;
@@ -47,7 +47,7 @@ interface Checkable {
     onFocus?: React.FocusEventHandler<HTMLButtonElement>;
     onBlur?: React.FocusEventHandler<HTMLButtonElement>;
 }
-export declare function Switch({ label, help, onCheckedChange, ...props }: Checkable & {
+export declare function Switch({ label, help, id, className, disabled, onCheckedChange, ...props }: Checkable & {
     help?: string;
     checked?: boolean;
     defaultChecked?: boolean;

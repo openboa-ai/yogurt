@@ -127,6 +127,7 @@ const declarations = execFileSync(
 );
 const entryPoints = Object.fromEntries([
   ["index", src + "/index.ts"],
+  ["agent", src + "/agent.ts"],
   ["motion-patterns", src + "/patterns/motion-patterns.ts"],
   ...catalog.map((e) => ["entries/" + e.id, src + "/entries/" + e.id + ".ts"]),
 ]);
@@ -140,7 +141,7 @@ const built = await build({
   target: "es2022",
   jsx: "automatic",
   treeShaking: true,
-  external: ["react", "react/*", "react-dom", "react-dom/*"],
+  external: ["react", "react/*", "react-dom", "react-dom/*", "@ui-sdk/core", "@ui-sdk/core/*", "@ui-sdk/react", "@ui-sdk/react/*"],
   plugins: [anatomy],
   banner: { js: '"use client";' },
   legalComments: "none",

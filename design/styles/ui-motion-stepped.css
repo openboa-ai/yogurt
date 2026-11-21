@@ -150,8 +150,8 @@
 .yg-motion-checklist-item > label { position: relative; flex: 1; display: flex; align-items: center; min-height: var(--yg-list-row-height); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--yg-change); }
 .yg-motion-checklist-item > label > span { position: relative; overflow: hidden; text-overflow: ellipsis; }
 .yg-motion-checklist-item > label > span::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--yg-change) var(--yg-settle); }
-.yg-motion-checklist-item:has([role="checkbox"][data-state="checked"]) > label { color: var(--yg-muted); }
-.yg-motion-checklist-item:has([role="checkbox"][data-state="checked"]) > label > span::after {
+.yg-motion-checklist-item:has([role="checkbox"]:is([data-state="checked"], [data-checked])) > label { color: var(--yg-muted); }
+.yg-motion-checklist-item:has([role="checkbox"]:is([data-state="checked"], [data-checked])) > label > span::after {
   transform: scaleX(1);
   transition: transform var(--yg-motion-checklist-strike) 110ms;
 }

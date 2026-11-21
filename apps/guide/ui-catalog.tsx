@@ -262,7 +262,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                       )
                     }
                   >
-                    {f}
+                    <span>{f}</span>
                     <Icon name={open ? "down" : "next"} />
                   </Button>
                   {open &&

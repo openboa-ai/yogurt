@@ -13,4 +13,6 @@ For that Web flow, start from the [tested decision example](../../references/exa
 
 Use token roles and language from the installed pin. Preserve the host's routes and callbacks. Report an unavailable adapter before proposing a local fallback.
 
+For a user-requested agent-operated Web surface, check the installed SDK's `@openboa/yogurt/agent` entry and control support before wiring a bridge. The host supplies the action policy, observation scope, confirmations and service authorization; an action policy does not filter snapshots. Do not create a bridge merely by rendering a control. Report a missing entry or unqualified Native connection rather than inferring support.
+
 Run the installed consumer checker and exercise the normal and recovery paths in the actual renderer. Report the version, target, observations and remaining gaps.

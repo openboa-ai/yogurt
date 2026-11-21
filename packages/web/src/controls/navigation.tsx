@@ -1,6 +1,6 @@
 "use client";
 import { useId, useLayoutEffect, useRef, type ComponentProps, type ReactNode } from "react";
-import { SegmentedControl as SDKSegment } from "@openai/apps-sdk-ui/components/SegmentedControl";
+import { SegmentedControl as SDKSegment, SegmentedControlItem } from "@ui-sdk/react/segmented-control";
 import { Button } from "./actions.js";
 import { type Choices } from "./forms.js";
 import { cx, Icon, type IconName } from "../foundation/foundation.js";
@@ -148,16 +148,17 @@ export function SegmentedControl({
       aria-label={label}
       value={value}
       disabled={disabled}
-      onChange={(v) => {
+      loop={false}
+      onValueChange={(v) => {
         if (v) onValueChange(v);
       }}
-      pill={false}
     >
       <SelectionMarker selector=':scope > button[data-state="on"]' />
       {options.map((o) => (
-        <SDKSegment.Option key={o.id} value={o.id} disabled={o.disabled}>
+        <SegmentedControlItem key={o.id} value={o.id} disabled={o.disabled}
+          render={(props, state) => <button {...props} data-state={state.checked ? "on" : "off"} />}>
           {o.label}
-        </SDKSegment.Option>
+        </SegmentedControlItem>
       ))}
     </SDKSegment>
   );

@@ -222,6 +222,7 @@
   --yg-button-text: var(--yg-danger);
 }
 .yg-button-label,
+.yg-button-inner,
 .yg-sdk-Button-ButtonInner {
   display: inline-flex;
   align-items: center;
@@ -506,15 +507,15 @@
   transition: transform var(--yg-travel) var(--yg-settle),
     background-color var(--yg-travel) var(--yg-settle);
 }
-.yg-switch [role="switch"][data-state="checked"] {
+.yg-switch [role="switch"]:is([data-state="checked"], [data-checked]) {
   background: var(--yg-signal-positive);
 }
-.yg-switch [role="switch"][data-state="checked"] > span {
+.yg-switch [role="switch"]:is([data-state="checked"], [data-checked]) > span {
   --yg-thumb-travel: calc(var(--yg-switch-width) - var(--yg-thumb-size) - 2 * var(--yg-track-inset));
   transform: translateX(var(--yg-thumb-travel));
   background: var(--yg-on-signal-positive);
 }
-.yg-switch [role="switch"][data-state="checked"]:dir(rtl) > span {
+.yg-switch [role="switch"]:is([data-state="checked"], [data-checked]):dir(rtl) > span {
   transform: translateX(calc(-1 * var(--yg-thumb-travel)));
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -523,11 +524,11 @@
     transform-origin: left center;
     transition: transform var(--yg-motion-switch-travel), background-color var(--yg-motion-switch-travel);
   }
-  .yg-switch [role="switch"][data-state="checked"] > span,
-  .yg-switch [role="switch"]:not([data-state="checked"]):dir(rtl) > span {
+  .yg-switch [role="switch"]:is([data-state="checked"], [data-checked]) > span,
+  .yg-switch [role="switch"]:not([data-state="checked"], [data-checked]):dir(rtl) > span {
     transform-origin: right center;
   }
-  .yg-switch [role="switch"][data-state="checked"]:dir(rtl) > span { transform-origin: left center; }
+  .yg-switch [role="switch"]:is([data-state="checked"], [data-checked]):dir(rtl) > span { transform-origin: left center; }
 }
 .yg-checkbox [role="checkbox"],
 .yg-radio [role="radio"] {
@@ -553,7 +554,7 @@
   border-radius: 50%;
 }
 .yg-checkbox
-  [role="checkbox"]:is([data-state="checked"], [data-state="indeterminate"]),
+  [role="checkbox"]:is([data-state="checked"], [data-state="indeterminate"], [data-checked], [data-indeterminate]),
 .yg-radio [role="radio"][data-state="checked"] {
   background: var(--yg-inverse);
   border-color: var(--yg-inverse);
@@ -570,13 +571,13 @@
 }
 .yg-checkbox-check { stroke-dasharray: 18; stroke-dashoffset: 18; }
 .yg-checkbox-mixed { opacity: 0; }
-.yg-checkbox [data-state="checked"] .yg-checkbox-check { stroke-dashoffset: 0; }
-.yg-checkbox [data-state="indeterminate"] .yg-checkbox-mixed { opacity: 1; }
+.yg-checkbox :is([data-state="checked"], [data-checked]) .yg-checkbox-check { stroke-dashoffset: 0; }
+.yg-checkbox :is([data-state="indeterminate"], [data-indeterminate]) .yg-checkbox-mixed { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
   .yg-checkbox [role="checkbox"] { transition: background-color var(--yg-change) var(--yg-settle), transform var(--yg-travel) var(--yg-arrive); }
   .yg-checkbox [role="checkbox"]:active:not(:disabled) { transform: scale(.85); }
   .yg-checkbox-check { transition: stroke-dashoffset var(--yg-motion-task-check); }
-  .yg-checkbox [data-state="checked"] .yg-checkbox-check { transition-delay: 80ms; }
+  .yg-checkbox :is([data-state="checked"], [data-checked]) .yg-checkbox-check { transition-delay: 80ms; }
 }
 .yg-radio [role="radio"] > span {
   width: 6px;
@@ -1173,12 +1174,12 @@
     border: 1px solid ButtonText;
     background: Canvas;
   }
-  .yg-checkbox [role="checkbox"]:is([data-state="checked"], [data-state="indeterminate"]) {
+  .yg-checkbox [role="checkbox"]:is([data-state="checked"], [data-state="indeterminate"], [data-checked], [data-indeterminate]) {
     border-color: Highlight;
     background: Highlight;
   }
-  .yg-checkbox [data-state="checked"] svg,
-  .yg-checkbox [data-state="indeterminate"] svg { stroke: HighlightText; }
+  .yg-checkbox :is([data-state="checked"], [data-checked]) svg,
+  .yg-checkbox :is([data-state="indeterminate"], [data-indeterminate]) svg { stroke: HighlightText; }
   :is(.yg-input, .yg-select):focus-within,
   .yg-standalone:focus-visible {
     outline: var(--boa-stroke-focus) solid Highlight;

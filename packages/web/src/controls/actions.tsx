@@ -1,6 +1,6 @@
 "use client";
 import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
-import { Button as SDKButton } from "@openai/apps-sdk-ui/components/Button";
+import { Button as SDKButton } from "@ui-sdk/react/button";
 import { cx, Icon, Inline, type ControlSize, type IconName, type Size } from "../foundation/foundation.js";
 
 export type ButtonSize = ControlSize;
@@ -14,14 +14,6 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   pendingLabel?: string;
   ref?: Ref<HTMLButtonElement>;
 }
-const variants = { filled: "solid", soft: "soft", quiet: "ghost" } as const;
-const sizes = {
-  compact: "sm",
-  regular: "lg",
-  comfortable: "lg",
-  spacious: "2xl",
-  touch: "2xl",
-} as const;
 export function Button({
   emphasis = "filled",
   tone = "neutral",
@@ -44,10 +36,6 @@ export function Button({
     <SDKButton
       {...props}
       type={type}
-      color={tone === "danger" ? "danger" : "primary"}
-      variant={variants[emphasis]}
-      pill={false}
-      size={sizes[size]}
       className={cx("yg-button", className)}
       data-emphasis={emphasis}
       data-tone={tone}
@@ -60,10 +48,10 @@ export function Button({
           event.preventDefault();
           return;
         }
-        onClick?.(event);
+        onClick?.(event as React.MouseEvent<HTMLButtonElement>);
       }}
     >
-      <span className="yg-button-label">
+      <span className="yg-button-inner"><span className="yg-button-label">
         <span
           className="yg-button-content"
           aria-hidden={pending && hasPendingLabel ? true : undefined}
@@ -80,7 +68,7 @@ export function Button({
             {pendingLabel}
           </span>
         )}
-      </span>
+      </span></span>
     </SDKButton>
   );
 }

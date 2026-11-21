@@ -62,6 +62,8 @@ const licenses = [
   "node_modules/react/LICENSE",
   "node_modules/react-dom/LICENSE",
   "node_modules/scheduler/LICENSE",
+  "node_modules/@ui-sdk/core/LICENSE",
+  "node_modules/@ui-sdk/react/LICENSE",
   "design/assets/fonts/rethink-sans/OFL.txt",
 ]
   .map((path) => path + "\n" + read(path))

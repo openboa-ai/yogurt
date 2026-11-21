@@ -4,7 +4,7 @@ Start at the [component library and brand reference](../apps/guide/generated/com
 
 ## Install the local SDK
 
-Run `npm ci && npm run build && npm pack` at the Yogurt root to produce the archive for the version in `package.json`. Install that file in a consuming project using its relative path. The package has React and React DOM 19.2 as web peers. A Zig-only project can extract the tarball and invoke its Node CLI during setup. Its app binary has no JavaScript dependency.
+Run `npm ci && npm run build && npm pack` at the Yogurt root to produce the archive for the version in `package.json`. Install that file in a consuming project using its relative path. The package has React and React DOM 19.2 and the pinned UI SDK core and React adapter as web peers. A Zig-only project can extract the tarball and invoke its Node CLI during setup. Its app binary has no JavaScript dependency.
 
 ```sh
 npm install ./vendor/openboa-yogurt-0.1.0-local.16.tgz
@@ -74,7 +74,20 @@ Include `@import("yogurt/button.zig").file` in `UiApp.Options.markup.sources`. T
 
 Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. Shared dimensions are generated from the UI bindings; use the component's documented roles rather than local copies of measurements. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. [Foundation replacement](engineering/quality/motion-foundation-replacement/spec.md)
 
-The web adapter uses the actual Button, Input, Textarea, Switch, RadioGroup, SegmentedControl and Badge implementations from OpenAI Apps SDK UI 0.2.2. It binds their anatomy to Yogurt’s own styles. Other entries use platform elements or Yogurt compositions. The built package retains third-party notices.
+The web Button, Checkbox, Switch, TextField, SearchField, Textarea and SegmentedControl use the UI SDK behavior runtime with Yogurt's own presentation. An application that explicitly connects an agent must resolve its bridge and these controls to the same installed UI SDK core. Yogurt does not start a bridge or grant actions by rendering a component. The host owns access and effects. Other entries continue to use their existing behavior implementations while replacement is in progress. The built package retains third-party notices.
+
+### Connect an agent to web controls
+
+Create a bridge only in the browser, when the host has decided who can receive its results. The action policy is required. This example refuses every action until the host supplies its own policy.
+
+```tsx
+import { createYogurtAgent } from "@openboa/yogurt/agent";
+
+const agent = createYogurtAgent({ allow: () => false });
+const controls = agent.snapshot();
+```
+
+The action policy controls requested changes; it does not filter snapshots or queries. The host must choose what information is exposed and handle any confirmation marks. An action's result does not authorize or confirm a product operation. Inspect the returned steps and host state, including partial results, before reporting an outcome. Importing the entry does not create a bridge or register browser tools. Native agent integration is not supplied by this Web entry.
 
 ## Check a consuming project
 
