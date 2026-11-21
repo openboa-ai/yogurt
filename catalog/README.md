@@ -9,6 +9,5 @@ This directory owns stable IDs and the metadata that the SDK, guide, plugin and 
 | [Blocks](blocks.json) | Reusable compositions and their install targets |
 | [Brand](brand.json) | Identity rules and references to canonical artwork and vocabulary |
 | [Motion](motion.json) | Interaction treatments and motion references |
-| [References](references.json) | Coverage of external component and design references |
 
 Renderer code lives in [packages](../packages/README.md). Run `node scripts/describe-pattern.mjs --list` from the repository or installed SDK root. Verify catalog and export changes with `npm run check:ui`.
