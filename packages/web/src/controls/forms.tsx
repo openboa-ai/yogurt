@@ -405,7 +405,7 @@ export function Checkbox({
       <SDKCheckbox {...props} id={inputId} disabled={disabled}>
         <CheckboxIndicator keepMounted>
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path className="yg-checkbox-check" d="M6 12.5l4 4L18 8" />
+            <path className="yg-checkbox-check" d="M6.24 12.96 10.32 16.8 18.24 7.68" />
             <path className="yg-checkbox-mixed" d="M7 12h10" />
           </svg>
         </CheckboxIndicator>

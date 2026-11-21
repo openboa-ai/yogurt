@@ -101,6 +101,7 @@ const brandModel = model.replace("project_image: u32 = 1", "project_image: u32 =
   .replace("pub const Model = struct {", "pub const Model = struct { agent_playback: ?agent_vector.Playback = null, agent_sol_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_sol_next_ms: u64 = 0, agent_kai_picture: u32 = 0, agent_sol_picture: u32 = 0, agent_kai_error: bool = false, agent_sol_error: bool = false, agent_error: bool = false, gallery_agent_choices: [2]Choice = .{ .{ .id = 1, .title = \"Kai\", .selected = true, .detail = \"Ready\", .summary = \"Ready\", .image_id = 0 }, .{ .id = 2, .title = \"Sol\", .detail = \"Working\", .summary = \"Working\", .image_id = 0 } }, code_editor: canvas.TextBuffer(6) = .{}, rating_score: u32 = 3, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
 const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { agent_tick: u64, agent_set_state: u8, agent_set_kind: u8, agent_reduce_motion: bool, gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance, gallery_close_detail,");
 const zigString = (value) => JSON.stringify(value);
+const { dialog: editView } = JSON.parse(readFileSync(join(kit, "catalog/specimens/components.json"), "utf8"));
 const lines = [
   'const std = @import("std");',
   'const canvas = @import("native_sdk").canvas;',
@@ -109,6 +110,8 @@ const lines = [
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_days' : 'november_days'} = [_]Choice{ ${Array.from({ length: count }, (_, i) => `.{ .id = ${i + 1}, .title = \"${i + 1}\" }`).join(', ')} };`), brandModel, msg,
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_labels' : 'november_labels'} = [_][]const u8{ ${Array.from({ length: count }, (_, i) => `\"${index ? 'Dec' : 'Nov'} ${i + 1}, 2026\"`).join(', ')} };`),
   "pub const Ui = canvas.Ui(Msg);",
+  `pub const edit_view_value = ${zigString(editView.value)};`,
+  `pub const edit_view_saved = ${zigString(editView.saved)};`,
   `pub const names = [_][]const u8{ ${catalog.map((entry) => zigString(entry.name)).join(", ")} };`,
   `pub const ids = [_][]const u8{ ${catalog.map((entry) => zigString(entry.id)).join(", ")} };`,
   `pub const component_ids = [_][]const u8{ ${components.map((entry) => zigString(entry.id)).join(", ")} };`,

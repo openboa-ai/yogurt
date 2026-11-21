@@ -143,7 +143,7 @@ body {
   margin: var(--boa-space-12) 0;
   min-block-size: 0;
 }
-.specimen:is([data-component="card"], [data-variant-component="card"], [data-component="numeric-spinner"], [data-variant-component="slider"]) {
+.specimen:is([data-component="numeric-spinner"], [data-variant-component="slider"]) {
   background: var(--yg-canvas);
 }
 .surface-comparison {

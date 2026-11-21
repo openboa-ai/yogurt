@@ -2,6 +2,7 @@ const { chromium } = require("playwright-core");
 const { pathToFileURL } = require("node:url");
 const { join } = require("node:path");
 const assert = require("node:assert/strict");
+const checkboxSize = require("../design/tokens/ui.json").geometry["checkbox-size"];
 
 (async () => {
   const browser = await chromium.launch({ channel: "chrome" });
@@ -12,8 +13,8 @@ const assert = require("node:assert/strict");
       const control = page.locator('.specimen[data-component="checkbox"]').getByRole("checkbox");
       await control.waitFor();
       const box = await control.boundingBox();
-      assert.equal(box.width, 24);
-      assert.equal(box.height, 24);
+      assert.equal(box.width, checkboxSize);
+      assert.equal(box.height, checkboxSize);
       assert.equal(await control.evaluate(el => getComputedStyle(el).borderWidth), "0px");
       const before = await control.getAttribute("aria-checked");
       await control.focus();

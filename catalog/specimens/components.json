@@ -1,0 +1,35 @@
+{
+  "button": { "label": "Save view" },
+  "switch": {
+    "label": "Record dates",
+    "on": "Friday, November 20",
+    "off": "Dates hidden"
+  },
+  "checkbox": { "label": "Include archived views" },
+  "segmented-control": {
+    "label": "Project",
+    "options": [
+      { "id": "sourdough", "label": "Sourdough" },
+      { "id": "meatball", "label": "Meatball" },
+      { "id": "yogurt", "label": "Yogurt" }
+    ]
+  },
+  "dialog": {
+    "title": "Edit view",
+    "label": "View name",
+    "value": "Weekly review",
+    "submit": "Done",
+    "saved": "View updated."
+  },
+  "popover": {
+    "label": "About this view",
+    "body": "This view includes notes saved in the last seven days."
+  },
+  "card": {
+    "title": "Weekly review",
+    "detail": "Sourdough",
+    "body": "Release notes and decisions from the week.",
+    "pin": "Pin view",
+    "unpin": "Unpin view"
+  }
+}

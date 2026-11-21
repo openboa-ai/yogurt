@@ -127,6 +127,10 @@ fn selectComponent(m: *Model, index: u32) void {
     }
     m.gallery_list_open = show_list;
     m.gallery_dark = dark;
+    if (std.mem.eql(u8, id, "dialog") or std.mem.eql(u8, id, "drawer") or std.mem.eql(u8, id, "sheet")) {
+        m.gallery_editor = @TypeOf(m.gallery_editor).init(gallery.edit_view_value);
+        m.value = m.gallery_editor.text();
+    }
     if (std.mem.eql(u8, id, "field-error")) {
         m.gallery_editor.clear();
         m.value = m.gallery_editor.text();
@@ -255,6 +259,13 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .gallery_appearance => m.gallery_dark = !m.gallery_dark,
         .gallery_close_detail => m.gallery_detail_title = "",
         .gallery_select_option => |id| {
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "segmented-control")) {
+                if (id < 1 or id > 3) return;
+                m.gallery_first_selected = id == 1;
+                m.gallery_second_selected = id == 2;
+                m.gallery_third_selected = id == 3;
+                return;
+            }
             if (id != 1 and id != 2) return;
             m.gallery_first_selected = id == 1;
             m.gallery_second_selected = id == 2;
@@ -466,7 +477,10 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .clear => { m.gallery_editor.clear(); m.value = m.gallery_editor.text(); m.gallery_status = "text cleared"; },
         .activate => {
             const id = gallery.ids[m.gallery_selected];
-            if (std.mem.eql(u8, id, "form")) {
+            if (std.mem.eql(u8, id, "dialog") or std.mem.eql(u8, id, "drawer") or std.mem.eql(u8, id, "sheet")) {
+                m.is_open = false;
+                m.gallery_status = gallery.edit_view_saved;
+            } else if (std.mem.eql(u8, id, "form")) {
                 m.gallery_status = if (std.mem.trim(u8, m.value, " \t").len > 0) "Sample view saved" else "Enter a view name";
             } else if (std.mem.eql(u8, id, "stepper")) {
                 m.gallery_choices[0].selected = !m.gallery_choices[0].selected;
@@ -485,15 +499,16 @@ pub fn tokens(m: *const Model) canvas.DesignTokens {
 }
 
 fn previewWidth(id: []const u8) f32 {
+    if (std.mem.eql(u8, id, "switch") or std.mem.eql(u8, id, "card")) return 496;
     const wide = [_][]const u8{ "chart", "bar-chart", "table", "data-table", "table-row", "data-grid", "grid-list" };
     for (wide) |item| if (std.mem.eql(u8, id, item)) return 560;
-    const compact = [_][]const u8{ "button", "icon-button", "toggle", "switch", "checkbox", "radio", "badge" };
+    const compact = [_][]const u8{ "button", "icon-button", "toggle", "checkbox", "radio", "badge" };
     for (compact) |item| if (std.mem.eql(u8, id, item)) return 240;
     return 360;
 }
 
 fn compactPreview(id: []const u8) bool {
-    const compact = [_][]const u8{ "button", "icon-button", "toggle", "switch", "checkbox", "radio", "badge", "segmented-control", "project-mark", "icon", "avatar", "agent-avatar", "gaze" };
+    const compact = [_][]const u8{ "button", "icon-button", "toggle", "checkbox", "radio", "badge", "segmented-control", "project-mark", "icon", "avatar", "agent-avatar", "gaze" };
     for (compact) |item| if (std.mem.eql(u8, id, item)) return true;
     return false;
 }

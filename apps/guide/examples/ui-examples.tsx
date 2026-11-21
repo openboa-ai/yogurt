@@ -1,14 +1,11 @@
+import samples from "../../../catalog/specimens/components.json";
 import { sectionHref } from "../routing";
 import { useEffect, useRef, useState } from "react";
 import * as Y from "@openboa/yogurt";
 import { AgentMotionExample } from "./agent-motion-example";
 import { ExtendedExample } from "./extended-examples";
 
-const projects: Y.Option[] = [
-  { id: "sourdough", label: "Sourdough" },
-  { id: "meatball", label: "Meatball" },
-  { id: "yogurt", label: "Yogurt" },
-];
+const projects: Y.Option[] = samples["segmented-control"].options;
 const observation = {
   source: "Local sample",
   asOf: "2026-11-20T09:00:00Z",
@@ -34,7 +31,7 @@ export function Example({
   id: string;
   variation?: boolean;
 }) {
-  const [value, setValue] = useState("Weekly review"),
+  const [value, setValue] = useState(samples.dialog.value),
     [choice, setChoice] = useState("sourdough"),
     [active, setActive] = useState(true),
     [open, setOpen] = useState(false),
@@ -61,7 +58,7 @@ export function Example({
   }
   const primary = (
     <Y.Button pending={pending} onClick={save}>
-      Save view
+      {samples.button.label}
     </Y.Button>
   );
   const status = (
@@ -71,7 +68,7 @@ export function Example({
   );
   const mode = {
     options: projects,
-    label: "Project",
+    label: samples["segmented-control"].label,
     value: choice,
     onValueChange: setChoice,
   };
@@ -79,7 +76,7 @@ export function Example({
     <Y.Switch
       checked={active}
       onCheckedChange={setActive}
-      label="Record dates"
+      label={samples.switch.label}
       help={variation ? "Show the last change in each row." : undefined}
     />
   );
@@ -403,7 +400,7 @@ export function Example({
       }
       return (
         <Y.Checkbox
-          label="Include archived views"
+          label={samples.checkbox.label}
           checked={active}
           onCheckedChange={(v) => setActive(v === true)}
         />
@@ -415,7 +412,7 @@ export function Example({
         <Y.Stack gap={4}>
           {dates}
           <Y.Text variant="meta">
-            {active ? "Friday, November 20" : "Dates hidden"}
+            {active ? samples.switch.on : samples.switch.off}
           </Y.Text>
         </Y.Stack>
       );
@@ -494,9 +491,9 @@ export function Example({
       );
     case "popover":
       return (
-        <Y.Popover label="About this view">
+        <Y.Popover label={samples.popover.label}>
           <Y.Text>
-            This view includes notes saved in the last seven days.
+            {samples.popover.body}
           </Y.Text>
         </Y.Popover>
       );
@@ -508,21 +505,21 @@ export function Example({
       return (
         <>
           <Y.Button emphasis="soft" onClick={() => setOpen(true)}>
-            Edit view
+            {samples.dialog.title}
           </Y.Button>
-          <Panel open={open} onOpenChange={setOpen} title="Edit view">
+          <Panel open={open} onOpenChange={setOpen} title={samples.dialog.title}>
             <Y.TextField
-              label="View name"
+              label={samples.dialog.label}
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />
             <Y.Button
               onClick={() => {
                 setOpen(false);
-                setNote("View updated.");
+                setNote(samples.dialog.saved);
               }}
             >
-              Done
+              {samples.dialog.submit}
             </Y.Button>
           </Panel>
           {status}

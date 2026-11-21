@@ -10,6 +10,7 @@ const dir = resolve(host, "src/yogurt-catalog-test");
 mkdirSync(dir, { recursive: true });
 const catalog = JSON.parse(readFileSync(kit + "/catalog/components.json"));
 const blocks = JSON.parse(readFileSync(kit + "/catalog/blocks.json"));
+const samples = JSON.parse(readFileSync(kit + "/catalog/specimens/components.json"));
 const args = {
   label: "Weekly review",
   title: "Review",
@@ -36,23 +37,23 @@ const args = {
 const examples = {
   text: { label: "A clear view of the work ahead." },
   heading: { label: "Your workspace" },
-  button: { label: "Save view" },
+  button: samples.button,
   "icon-button": { label: "Add a view" },
-  checkbox: { label: "Include archived views" },
-  switch: { label: "Show dates" },
+  checkbox: samples.checkbox,
+  switch: samples.switch,
   toggle: { label: "Show details" },
   link: { label: "View record details" },
   tabs: { label: "Project details" },
-  "segmented-control": { label: "View mode" },
+  "segmented-control": samples["segmented-control"],
   "radio-group": { label: "Update frequency" },
   "selection-list": { label: "Included updates" },
   accordion: { label: "About this view" },
   "disclosure-row": { label: "View details" },
-  card: { title: "Weekly review", detail: "Three records are ready to review." },
-  dialog: { title: "Edit view" },
-  drawer: { title: "Edit view" },
-  sheet: { title: "Edit view" },
-  popover: { label: "About this view" },
+  card: samples.card,
+  dialog: samples.dialog,
+  drawer: { title: samples.dialog.title, footer: "false" },
+  sheet: { title: samples.dialog.title, footer: "false" },
+  popover: samples.popover,
   tooltip: { label: "Add a saved view" },
   toast: { label: "View saved." },
   progress: { label: "Reviewed records" },
@@ -82,7 +83,13 @@ const examples = {
   status: { label: "Saved" },
   notice: { title: "View updated", detail: "Your team can use the new view." },
 };
-const viewNameInput = '<text-field label="View name" text="{value}" on-input="edit"/>';
+const viewNameInput = '<text-field label="' + samples.dialog.label + '" text="{value}" on-input="edit"/>';
+const editView = '<column gap="12"><column gap="6"><text size="sm">' + samples.dialog.label + '</text>' +
+  viewNameInput + '</column><button variant="primary" on-press="activate">' + samples.dialog.submit + '</button></column>';
+const segmentPositions = ["first", "second", "third"];
+const segments = samples["segmented-control"].options.map(({ label }, index) =>
+  `<segmented-control selected="{gallery_${segmentPositions[index]}_selected}" on-press="gallery_select_option:{gallery_${segmentPositions[index]}_id}">${label}</segmented-control>`,
+).join("");
 const reviewRows = [
   ["Day", "Work", "Status"],
   ["Monday", "Review", "Ready"],
@@ -95,18 +102,20 @@ const slots = {
   "action-menu": '<menu-item on-press="dismiss">Close menu</menu-item>',
   tooltip: '<button on-press="activate">Review details</button>',
   tabs: '<toggle-button selected="{gallery_first_selected}" on-toggle="gallery_select_option:{gallery_first_id}">Overview</toggle-button><toggle-button selected="{gallery_second_selected}" on-toggle="gallery_select_option:{gallery_second_id}">Activity</toggle-button>',
-  "segmented-control": '<segmented-control selected="{gallery_first_selected}" on-press="gallery_select_option:{gallery_first_id}">Overview</segmented-control><segmented-control selected="{gallery_second_selected}" on-press="gallery_select_option:{gallery_second_id}">Activity</segmented-control>',
+  "segmented-control": segments,
   "radio-group": '<radio checked="{gallery_first_selected}" on-toggle="gallery_select_option:{gallery_first_id}">Daily</radio><radio checked="{gallery_second_selected}" on-toggle="gallery_select_option:{gallery_second_id}">Weekly</radio>',
   "data-table": reviewRows,
   table: reviewRows,
   "selection-list": '<checkbox checked="{gallery_first_checked}" on-toggle="gallery_toggle_option:{gallery_first_id}">Weekly digest</checkbox><checkbox checked="{gallery_second_checked}" on-toggle="gallery_toggle_option:{gallery_second_id}">Product updates</checkbox>',
   accordion: '<text>This view includes notes saved in the last seven days.</text>',
   "disclosure-row": '<text>Three records are ready to review.</text>',
-  card: '<text>Updated today</text>',
-  dialog: '<text>Change the name and details for this view.</text>',
-  drawer: '<text>Change the name and details for this view.</text>',
-  sheet: '<text>Change the name and details for this view.</text>',
-  popover: '<text>This view includes notes saved in the last seven days.</text>',
+  card: '<column gap="12"><text wrap="true">' + samples.card.body + '</text>' +
+    '<row main="start"><if test="{enabled}"><button variant="secondary" on-press="toggle">' + samples.card.pin + '</button></if>' +
+    '<else><button variant="secondary" on-press="toggle">' + samples.card.unpin + '</button></else></row></column>',
+  dialog: editView,
+  drawer: editView,
+  sheet: editView,
+  popover: "<text>" + samples.popover.body + "</text>",
   "empty-result": '<text>Try a different search or create a new view.</text>',
   result: '<text>Your saved view is still here.</text>',
   "record-facts": '<text>Last updated today</text>',
@@ -143,7 +152,7 @@ const tests = [
   `const Choice = struct { id: u32, title: []const u8, selected: bool = false, disabled: bool = false, detail: []const u8 = "Ready", ${workspaceChoiceFields} };`,
   'const sample = [_]Choice{ .{ .id=1, .title="Yogurt", .selected=true }, .{ .id=2, .title="Meatball" } };',
   'const sidebar_sample = [_]Choice{ .{ .id=1, .title="Overview", .selected=true }, .{ .id=2, .title="Reviews" } };',
-  `const Model = struct { gallery_first_id: u32 = 1, gallery_second_id: u32 = 2, gallery_first_selected: bool = true, gallery_second_selected: bool = false, gallery_first_checked: bool = true, gallery_second_checked: bool = false, enabled: bool = true, is_open: bool = true, unavailable: bool = false, at_first: bool = true, at_last: bool = false, amount: f32 = 0.3, picture: u32 = 1, samples: [3]f32 = .{1, 3, 2}, rtl: bool = false, all_checked: bool = false, stage: usize = 1, fraction: f32 = 0.4, key_columns: usize = 3, first_label: []const u8 = "Team", last_label: []const u8 = "Record", first_value: []const u8 = "415", last_value: []const u8 = "0182", month_label: []const u8 = "November 2026", choices: []const Choice = &sample, days: []const Choice = &sample, events: []const Choice = &sample, notifications: []const Choice = &sample, keys: []const Choice = &sample, menus: []const Choice = &sample, value: []const u8 = "Weekly", has_results: bool = true, facts: []const Choice = &sample, pending: bool = false, title: []const u8 = "Review", consequence: []const u8 = "Move to archive", action_label: []const u8 = "Archive", as_of: []const u8 = "Nov 20", source: []const u8 = "Example", ${workspaceModelFields} };`,
+  `const Model = struct { gallery_first_id: u32 = 1, gallery_second_id: u32 = 2, gallery_third_id: u32 = 3, gallery_third_selected: bool = false, gallery_first_selected: bool = true, gallery_second_selected: bool = false, gallery_first_checked: bool = true, gallery_second_checked: bool = false, enabled: bool = true, is_open: bool = true, unavailable: bool = false, at_first: bool = true, at_last: bool = false, amount: f32 = 0.3, picture: u32 = 1, samples: [3]f32 = .{1, 3, 2}, rtl: bool = false, all_checked: bool = false, stage: usize = 1, fraction: f32 = 0.4, key_columns: usize = 3, first_label: []const u8 = "Team", last_label: []const u8 = "Record", first_value: []const u8 = "415", last_value: []const u8 = "0182", month_label: []const u8 = "November 2026", choices: []const Choice = &sample, days: []const Choice = &sample, events: []const Choice = &sample, notifications: []const Choice = &sample, keys: []const Choice = &sample, menus: []const Choice = &sample, value: []const u8 = "Weekly", has_results: bool = true, facts: []const Choice = &sample, pending: bool = false, title: []const u8 = "Review", consequence: []const u8 = "Move to archive", action_label: []const u8 = "Archive", as_of: []const u8 = "Nov 20", source: []const u8 = "Example", ${workspaceModelFields} };`,
   `const Msg = union(enum) { gallery_select_option: u32, gallery_toggle_option: u32, activate, edit: canvas.TextInputEvent, edit_first: canvas.TextInputEvent, edit_last: canvas.TextInputEvent, clear, open_choices, toggle, navigate, previous_page, next_page, dismiss, confirm_current, lookup_original, jump_to_latest, choose: u32, dismiss_item: u32, open_menu: u32, adjust: f32, copy, decrement, increment, toggle_all, backspace, discard, stop, ${workspaceActionFields} };`,
   "const Ui = canvas.Ui(Msg);",
 ];
@@ -178,9 +187,12 @@ for (const { id, native } of [...catalog, ...blocks]) {
       : "/>");
   const dismissibleLayer = ["dialog", "drawer", "sheet", "confirm-dialog"].includes(id);
   const specimen = dismissibleLayer
-    ? '<button variant="secondary" on-press="open_choices">' + (id === "confirm-dialog" ? "Review change" : "Edit view") + '</button><if test="{is_open}">' + use + "</if>"
+    ? '<row main="start"><button variant="secondary" on-press="open_choices">' + (id === "confirm-dialog" ? "Review change" : samples.dialog.title) + '</button></row><if test="{is_open}">' + use + "</if>"
     : id === "toast"
       ? '<if test="{is_open}">' + use + '</if><else><button variant="secondary" on-press="open_choices">Save view</button></else>'
+      : id === "switch"
+        ? '<column gap="4">' + use + '<if test="{enabled}"><text size="sm" foreground="text_muted">' + samples.switch.on + '</text></if>' +
+          '<else><text size="sm" foreground="text_muted">' + samples.switch.off + '</text></else></column>'
       : id === "stepper"
         ? '<column gap="12">' + use + '<button variant="secondary" on-press="activate">Next stage</button></column>'
         : id === "label"

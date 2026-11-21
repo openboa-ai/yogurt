@@ -67,3 +67,7 @@ Anchored action menus, custom selects, flyouts and option lists share a 12 px me
 ### Cross-renderer visual alignment
 
 Compare the paired catalog in its existing guides. Align resting, selected, disabled and open appearances using shared control dimensions, spacing, colors and shape. Use one subdued track and raised neutral selection for segmented choices, a borderless 400-point regular dialog with a 20-point corner over a dimmed canvas, and the SDK's standard 44 by 24 switch track on both renderers. Keep label hit areas, focus, states, installed markup arguments and existing motion behavior. Use common theme roles wherever the Native SDK exposes them and report renderer-specific geometry that remains. Evaluate the paired catalog in aggregate, then inspect representative control states and composed blocks in both renderers.
+
+### Matched component states
+
+Use the current web component as the visual target. Align Native label placement, intrinsic sizes, type hierarchy, surface treatment and action order using the installed SDK controls. Where the SDK cannot preserve an existing control's geometry and interaction together, adopt its supported geometry on the web after checking both renderers. Compare identical example content and state before reporting equivalence. Preserve public component IDs, existing host contracts and keyboard actions. This scope covers presentation and guide fixtures.

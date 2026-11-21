@@ -75,13 +75,29 @@ check_interaction() {
   local before="$output/$prefix.txt" after="$output/$prefix-interaction.txt"
   case "$id" in
     dialog|drawer|sheet)
-      local close=Close
-      if [ "$id" = sheet ]; then close=Done; fi
       click_named button 'Edit view' "$before" &&
         snapshot_after 'role=dialog name="Edit view"' &&
-        click_named button "$close" "$after" &&
+        "$cli" automate screenshot main-canvas >/dev/null &&
+        cp "$automation/screenshot-main-canvas.png" "$output/$prefix-open.png" &&
+        cp "$after" "$output/$prefix-open.txt" &&
+        action_named textbox 'View name' set_text 'Team review' "$after" &&
+        snapshot_after 'text="Team review"' &&
+        click_named button Done "$after" &&
         "$cli" automate assert --timeout-ms 5000 --absent 'role=dialog name="Edit view"' &&
-        "$cli" automate snapshot > "$after" || return 1
+        snapshot_after 'View updated[.]' || return 1
+      ;;
+    card)
+      click_named button 'Pin view' "$before" &&
+        snapshot_after 'role=button name="Unpin view"' &&
+        click_named button 'Unpin view' "$after" &&
+        snapshot_after 'role=button name="Pin view"' || return 1
+      ;;
+    segmented-control)
+      rg -q 'name="Sourdough".*state=\[[^]]*selected' "$before" &&
+        click_named tab Meatball "$before" &&
+        snapshot_after 'name="Meatball".*state=\[[^]]*selected' &&
+        click_named tab Yogurt "$after" &&
+        snapshot_after 'name="Yogurt".*state=\[[^]]*selected' || return 1
       ;;
     input-otp)
       action_named textbox 'Verification code' set_text '12-34567' "$before" &&
@@ -132,7 +148,7 @@ check_interaction() {
     checkbox|toggle|switch)
       local role=button label='Show details'
       if [ "$id" = checkbox ]; then role=checkbox; label='Include archived views'; fi
-      if [ "$id" = switch ]; then role=switch; label='Show dates'; fi
+      if [ "$id" = switch ]; then role=switch; label='Record dates'; fi
       rg -q "role=$role name=\"$label\".*value=1" "$before" &&
         click_named "$role" "$label" "$before" && snapshot_after 'setting changed' &&
         rg -q "role=$role name=\"$label\".*value=0" "$after" || return 1
@@ -330,7 +346,7 @@ while IFS=$'\t' read -r id name; do
         failed=1
       fi
       ;;
-    dialog|drawer|sheet|input-otp|rating|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row)
+    dialog|drawer|sheet|card|segmented-control|input-otp|rating|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row)
       if [ "$render" = PRESENTED_UNVERIFIED ] && check_interaction; then
         interaction=PASS
         if [ "$id" = calendar ] || [ "$id" = project-mark ]; then interaction=PARTIAL; fi

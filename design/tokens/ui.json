@@ -261,7 +261,7 @@
     "slider-track-height": "space.4",
     "slider-thumb-size": 28,
     "slider-hit-height": "control.touch",
-    "checkbox-size": 24,
+    "checkbox-size": 20,
     "checkbox-radius": "radius.control",
     "quantity-action-size": "control.comfort",
     "quantity-value-width": "control.comfort",

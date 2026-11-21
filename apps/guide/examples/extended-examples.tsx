@@ -1,3 +1,4 @@
+import samples from "../../../catalog/specimens/components.json";
 import { sectionHref } from "../routing";
 import { useState } from "react";
 import * as Y from "@openboa/yogurt";
@@ -65,7 +66,7 @@ export function ExtendedExample({
             {(["compact", "regular", "spacious"] as const).map((density) => (
               <Y.Card key={density} density={density}
                 title={density[0].toUpperCase() + density.slice(1)} description="Weekly review">
-                Release notes and decisions from the week.
+                {samples.card.body}
               </Y.Card>
             ))}
           </Y.Stack>
@@ -73,15 +74,15 @@ export function ExtendedExample({
       }
       return (
         <Y.Card
-          title="Weekly review"
-          description="Sourdough"
+          title={samples.card.title}
+          description={samples.card.detail}
           action={
             <Y.Button emphasis="soft" onClick={() => setOn(!on)}>
-              {on ? "Unpin view" : "Pin view"}
+              {on ? samples.card.unpin : samples.card.pin}
             </Y.Button>
           }
         >
-          Release notes and decisions from the week.
+          {samples.card.body}
         </Y.Card>
       );
     case "asset":
