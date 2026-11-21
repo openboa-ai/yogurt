@@ -106,6 +106,7 @@ const catalog = [
         );
         const bounds = await drawer.boundingBox();
         assert(Math.abs(bounds.y + bounds.height - 850) < 2);
+        assert(Math.abs(bounds.x) < 2 && Math.abs(bounds.width - width) < 2);
         for (const delta of [20, 88]) {
           const grip = await drawer.locator(".yg-drawer-grip").boundingBox();
           const x = grip.x + grip.width / 2,

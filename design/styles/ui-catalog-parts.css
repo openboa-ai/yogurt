@@ -1176,6 +1176,7 @@
 .yg-dialog.yg-drawer {
   margin: auto auto 0;
   width: 100%;
+  max-width: none;
   max-height: 85dvh;
   padding-block-end: max(var(--boa-space-24), env(safe-area-inset-bottom));
   border-radius: var(--yg-radius-sheet);

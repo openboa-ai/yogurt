@@ -1814,6 +1814,7 @@
 .yg-dialog.yg-drawer {
   margin: auto auto 0;
   width: 100%;
+  max-width: none;
   max-height: 85dvh;
   padding-block-end: max(var(--boa-space-24), env(safe-area-inset-bottom));
   border-radius: var(--yg-radius-sheet);
@@ -6392,6 +6393,11 @@ summary.yg-task-line:focus-visible {
 }
 .yg-modal-header > .yg-heading {
   font: var(--yg-font-heading);
+  font-weight: var(--boa-role-weight-body);
+}
+.yg-dialog > .yg-field > .yg-label {
+  font: var(--yg-font-help);
+  line-height: 1.25;
 }
 .yg-sheet[open] {
   --yg-enter-x: var(--boa-space-16);

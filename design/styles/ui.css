@@ -866,6 +866,11 @@
 }
 .yg-modal-header > .yg-heading {
   font: var(--yg-font-heading);
+  font-weight: var(--boa-role-weight-body);
+}
+.yg-dialog > .yg-field > .yg-label {
+  font: var(--yg-font-help);
+  line-height: 1.25;
 }
 .yg-sheet[open] {
   --yg-enter-x: var(--boa-space-16);
