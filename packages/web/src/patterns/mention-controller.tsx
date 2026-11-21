@@ -1,6 +1,5 @@
 "use client";
 import { useId, useLayoutEffect, useRef, useState, type CSSProperties, type TextareaHTMLAttributes } from "react";
-import { advanceSprings, snap, spring } from "../foundation/spring-motion.js";
 
 type Person = { id: string; label: string };
 
@@ -14,8 +13,6 @@ export function useMention({ people, value, onChange, collapsedOnly = false }: {
     value: string; origin: string; caret: number; selectionStart: number; selectionEnd: number;
   } | null>(null);
   const marker = useRef<HTMLSpanElement>(null);
-  const [edges] = useState(() => [spring(4, 620, 36), spring(44, 190, 19)]);
-  const markerOpen = useRef(false);
   const [selection, setSelection] = useState({start: 0, end: 0});
   const [focused, setFocused] = useState(false);
   const [composing, setComposing] = useState(false);
@@ -49,39 +46,13 @@ export function useMention({ people, value, onChange, collapsedOnly = false }: {
     const pill = marker.current;
     const list = pill?.parentElement;
     const row = list?.querySelector<HTMLElement>('[aria-selected="true"]');
-    if (!pill || !list || !row || !open) { markerOpen.current = false; return; }
-    const preference = matchMedia("(prefers-reduced-motion: reduce)");
-    const [top, bottom] = edges;
+    if (!pill || !list || !row || !open) return;
     const y = row.offsetTop, last = y + row.offsetHeight;
-    const forward = y >= top.target;
-    const lead = forward ? bottom : top, trail = forward ? top : bottom;
-    lead.stiffness = 620; lead.damping = 36;
-    trail.stiffness = 190; trail.damping = 19;
-    top.target = y; bottom.target = last;
-    if (!markerOpen.current || preference.matches) { snap(top, y); snap(bottom, last); }
-    markerOpen.current = true;
     if (y < list.scrollTop) list.scrollTop = y;
     else if (last > list.scrollTop + list.clientHeight && list.clientHeight > 0) list.scrollTop = last - list.clientHeight;
-    let frame = 0, previous = performance.now();
-    function paint() {
-      pill?.style.setProperty("--yg-mention-top", `${top.position}px`);
-      pill?.style.setProperty("--yg-mention-height", `${Math.max(0, bottom.position - top.position)}px`);
-    }
-    function tick(timestamp: number) {
-      const moving = advanceSprings(edges, (timestamp - previous) / 1000);
-      previous = timestamp;
-      paint();
-      if (moving) frame = requestAnimationFrame(tick);
-    }
-    function changePreference() {
-      if (!preference.matches) return;
-      cancelAnimationFrame(frame); snap(top, top.target); snap(bottom, bottom.target); paint();
-    }
-    paint();
-    if (!preference.matches) frame = requestAnimationFrame(tick);
-    preference.addEventListener("change", changePreference);
-    return () => { cancelAnimationFrame(frame); preference.removeEventListener("change", changePreference); };
-  }, [edges, index, open, options.length]);
+    pill.style.setProperty("--yg-mention-top", `${y}px`);
+    pill.style.setProperty("--yg-mention-height", `${row.offsetHeight}px`);
+  }, [index, open, options.length]);
 
   function moveCaret(next: number) {
     input.current?.focus({preventScroll: true});

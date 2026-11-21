@@ -14,7 +14,7 @@ import {
   PromptAction,
   PromptEditor,
   useMention
-} from "./shared/chunk-APQ4ZN52.js";
+} from "./shared/chunk-LKB52XNS.js";
 import {
   Command
 } from "./shared/chunk-ZUN2HDKK.js";
@@ -27,7 +27,6 @@ import {
   LoadingSuccessButton,
   StorageMeter,
   advanceSprings,
-  playSprings,
   snap,
   spring
 } from "./shared/chunk-ALIDK7RZ.js";
@@ -413,116 +412,44 @@ function CommandButton({ label, items, onSelect }) {
 // packages/web/src/patterns/tooltip-bar.tsx
 import { useEffect as useEffect2, useId as useId4, useLayoutEffect, useRef as useRef3, useState as useState4 } from "react";
 import { jsx as jsx4, jsxs as jsxs4 } from "react/jsx-runtime";
-var unit = (value) => Math.min(1, Math.max(0, value));
 function MorphTooltipBar({ label, tools, value, onChange }) {
   const id = useId4();
   const bar = useRef3(null);
   const hide = useRef3(void 0);
   const [active, setActive] = useState4(null);
-  const lastActive = useRef3(null);
-  const [dial] = useState4(() => ({
-    tipLeft: spring(0, 620, 36),
-    tipRight: spring(0, 620, 36),
-    tail: spring(0, 300, 22),
-    left: spring(0, 620, 36),
-    right: spring(0, 620, 36),
-    opacity: spring(0, 420, 24),
-    labels: /* @__PURE__ */ new Map()
-  }));
   useEffect2(() => () => clearTimeout(hide.current), []);
   useLayoutEffect(() => {
     const root = bar.current;
     if (!root) return;
     const buttons = Array.from(root.querySelectorAll("button[data-tool]"));
     const labels = Array.from(root.querySelectorAll("[data-tooltip-label]"));
-    let stop;
     const arrange = () => {
       const current = buttons.findIndex((button) => button.dataset.tool === active);
-      const previous = buttons.findIndex((button) => button.dataset.tool === lastActive.current);
       const selected = buttons[current], description = labels[current];
-      const inPlace = dial.opacity.position < 0.3;
-      const direction = previous < 0 ? 0 : Math.sign((selected?.offsetLeft ?? 0) - (buttons[previous]?.offsetLeft ?? 0));
-      if (selected && description) {
-        const center = selected.offsetLeft + selected.offsetWidth / 2;
-        const half = Math.min(description.offsetWidth / 2, root.clientWidth / 2);
-        const left = Math.min(root.clientWidth - half * 2, Math.max(0, center - half));
-        const tracks = [
-          [dial.tipLeft, left],
-          [dial.tipRight, left + half * 2],
-          [dial.left, selected.offsetLeft],
-          [dial.right, selected.offsetLeft + selected.offsetWidth],
-          [dial.tail, center]
-        ];
-        for (const [track, target] of tracks) {
-          if (inPlace) snap(track, target);
-          else track.target = target;
-        }
-        if (direction) {
-          const leading = direction > 0 ? [dial.tipRight, dial.right] : [dial.tipLeft, dial.left];
-          const trailing = direction > 0 ? [dial.tipLeft, dial.left] : [dial.tipRight, dial.right];
-          leading.forEach((track) => {
-            track.stiffness = 620;
-            track.damping = 36;
-          });
-          trailing.forEach((track) => {
-            track.stiffness = 190;
-            track.damping = 19;
-          });
-        }
-        lastActive.current = active;
-      }
-      for (const node of labels) {
-        const tool = node.dataset.tooltipLabel;
-        const track = dial.labels.get(tool) ?? { visibility: spring(0, 420, 32), direction: 0 };
-        dial.labels.set(tool, track);
-        const visible = Number(tool === active);
-        if (inPlace && selected) {
-          snap(track.visibility, visible);
-          track.direction = 0;
-        } else if (selected && track.visibility.target !== visible) {
-          track.direction = visible ? direction : -direction;
-          track.visibility.target = visible;
-        }
-      }
-      dial.opacity.target = Number(current >= 0);
-      const axes = [
-        dial.tipLeft,
-        dial.tipRight,
-        dial.tail,
-        dial.left,
-        dial.right,
-        dial.opacity,
-        ...labels.map((node) => dial.labels.get(node.dataset.tooltipLabel).visibility)
-      ];
-      stop?.();
-      stop = playSprings(axes, () => {
-        const shown = Math.min(1.15, Math.max(0, dial.opacity.position));
-        const width = Math.max(30, dial.tipRight.position - dial.tipLeft.position);
-        const start = Math.min(Math.max(0, dial.tipLeft.position), Math.max(0, root.clientWidth - width));
-        const tail = Math.max(start + 8, Math.min(start + width - 8, dial.tail.position));
-        root.style.setProperty("--yg-tooltip-open", String(shown));
-        root.style.setProperty("--yg-tooltip-left", `${start}px`);
-        root.style.setProperty("--yg-tooltip-width", `${width}px`);
-        root.style.setProperty("--yg-tooltip-tail", `${tail}px`);
-        root.style.setProperty("--yg-tooltip-marker", `${dial.left.position}px`);
-        root.style.setProperty("--yg-tooltip-marker-width", `${Math.max(0, dial.right.position - dial.left.position)}px`);
-        labels.forEach((node) => {
-          const track = dial.labels.get(node.dataset.tooltipLabel);
-          const opacity = unit(track.visibility.position);
-          node.style.setProperty("--yg-tooltip-copy", String(opacity));
-          node.style.setProperty("--yg-tooltip-copy-x", `${track.direction * (1 - opacity) * 14}px`);
-        });
+      root.style.setProperty("--yg-tooltip-open", String(Number(Boolean(selected && description))));
+      labels.forEach((node) => {
+        node.style.setProperty("--yg-tooltip-copy", String(Number(node.dataset.tooltipLabel === active)));
+        node.style.setProperty("--yg-tooltip-copy-x", "0px");
       });
+      if (!selected || !description) return;
+      const center = selected.offsetLeft + selected.offsetWidth / 2;
+      const half = Math.min(description.offsetWidth / 2, root.clientWidth / 2);
+      const left = Math.min(root.clientWidth - half * 2, Math.max(0, center - half));
+      const width = Math.max(30, half * 2);
+      const start = Math.min(Math.max(0, left), Math.max(0, root.clientWidth - width));
+      const tail = Math.max(start + 8, Math.min(start + width - 8, center));
+      root.style.setProperty("--yg-tooltip-left", `${start}px`);
+      root.style.setProperty("--yg-tooltip-width", `${width}px`);
+      root.style.setProperty("--yg-tooltip-tail", `${tail}px`);
+      root.style.setProperty("--yg-tooltip-marker", `${selected.offsetLeft}px`);
+      root.style.setProperty("--yg-tooltip-marker-width", `${selected.offsetWidth}px`);
     };
     arrange();
     const resize = new ResizeObserver(arrange);
     resize.observe(root);
     labels.forEach((node) => resize.observe(node));
-    return () => {
-      resize.disconnect();
-      stop?.();
-    };
-  }, [active, dial, tools]);
+    return () => resize.disconnect();
+  }, [active, tools]);
   function reveal(tool) {
     clearTimeout(hide.current);
     setActive(tool);
@@ -576,52 +503,36 @@ function MorphTooltipBar({ label, tools, value, onChange }) {
 }
 
 // packages/web/src/patterns/motion-conversation.tsx
-import { useId as useId5, useLayoutEffect as useLayoutEffect2, useRef as useRef4, useState as useState5 } from "react";
+import { useId as useId5, useLayoutEffect as useLayoutEffect2, useRef as useRef4 } from "react";
 import { Fragment, jsx as jsx5, jsxs as jsxs5 } from "react/jsx-runtime";
 function StreamingReply({ value, active = false }) {
   const surface = useRef4(null);
   const reply = useRef4(null);
   const wait = useRef4(null);
   const wasActive = useRef4(active);
-  const mounted = useRef4(false);
-  const [motion] = useState5(() => ({ width: spring(0, 260, 26), height: spring(40, 260, 26), waiting: spring(1, 300, 30) }));
   const streaming = active || wasActive.current;
   useLayoutEffect2(() => {
     const box = surface.current, words = reply.current, thinking = wait.current;
     if (!box || !words || !thinking) return;
-    let stop;
     const resize = () => {
       const max = box.clientWidth;
       box.style.setProperty("--yg-reply-available", `${max}px`);
       const inline = value ? max : Math.min(max, thinking.offsetWidth + 28);
       const block = Math.max(40, words.offsetHeight + 18);
       const waitOpacity = Number(active && !value);
-      if (!mounted.current) {
-        snap(motion.width, inline);
-        snap(motion.height, block);
-        snap(motion.waiting, waitOpacity);
-      } else {
-        motion.width.target = inline;
-        motion.height.target = block;
-        motion.waiting.target = waitOpacity;
-      }
-      mounted.current = true;
-      stop?.();
-      stop = playSprings(Object.values(motion), () => {
-        box.style.setProperty("--yg-reply-width", `${motion.width.position}px`);
-        box.style.setProperty("--yg-reply-height", `${motion.height.position}px`);
-        box.style.setProperty("--yg-reply-waiting", String(motion.waiting.position));
-      });
+      box.style.setProperty("--yg-reply-width", `${inline}px`);
+      box.style.setProperty("--yg-reply-height", `${block}px`);
+      box.style.setProperty("--yg-reply-waiting", String(waitOpacity));
     };
     if (active) wasActive.current = true;
     resize();
     const observer = new ResizeObserver(resize);
     observer.observe(words);
+    observer.observe(box);
     return () => {
       observer.disconnect();
-      stop?.();
     };
-  }, [active, motion, value]);
+  }, [active, value]);
   return /* @__PURE__ */ jsx5("div", { ref: surface, className: "yg-streaming-shell", children: /* @__PURE__ */ jsxs5("div", { className: "yg-streaming-reply", "aria-busy": active || void 0, "data-streaming": streaming || void 0, children: [
     /* @__PURE__ */ jsx5("span", { ref: wait, className: "yg-streaming-wait", "aria-hidden": !active || !!value, children: active || value ? "Thinking" : "" }),
     /* @__PURE__ */ jsx5("div", { ref: reply, className: "yg-streaming-body", children: value && value.split(/(\s+)/).map((part, index) => /\s+/.test(part) ? part : /* @__PURE__ */ jsx5("span", { className: "yg-streaming-word", children: part }, index)) })
@@ -733,7 +644,7 @@ function ThinkingIndicator({ label = "Thinking", active = true }) {
 }
 
 // packages/web/src/patterns/motion-stepped.tsx
-import { useId as useId7, useLayoutEffect as useLayoutEffect4, useRef as useRef6, useState as useState6 } from "react";
+import { useId as useId7, useLayoutEffect as useLayoutEffect4, useRef as useRef6, useState as useState5 } from "react";
 
 // packages/web/src/patterns/elastic-range.tsx
 import { useId as useId6, useLayoutEffect as useLayoutEffect3, useRef as useRef5 } from "react";
@@ -956,11 +867,11 @@ function RangeSlider({
   const id = useId7();
   const interval = useRef6(null);
   const activeDrag = useRef6(null);
-  const [trackWidth, setTrackWidth] = useState6(0);
+  const [trackWidth, setTrackWidth] = useState5(0);
   const percent = (number) => max > min ? Math.max(0, Math.min(100, (number - min) / (max - min) * 100)) : 0;
   const first = percent(value);
   const last = end === void 0 ? first : percent(end);
-  const [motion] = useState6(() => ({
+  const [motion] = useState5(() => ({
     start: spring(first, 260, 24),
     end: spring(last, 260, 24),
     merge: spring(0, 300, 26)
@@ -1169,7 +1080,7 @@ function RangeSlider({
 }
 function PasswordStrength({ value, onChange }) {
   const id = useId7();
-  const [shown, setShown] = useState6(false);
+  const [shown, setShown] = useState5(false);
   const score = value.length < 6 ? 0 : 1 + Number(value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value)) + Number(/\d/.test(value)) + Number(value.length >= 10 && /[^A-Za-z0-9]/.test(value));
   const word = ["Too short", "Weak", "Fair", "Good", "Strong"][score];
   return /* @__PURE__ */ jsxs7("div", { className: "yg-motion-password", "data-score": score, children: [

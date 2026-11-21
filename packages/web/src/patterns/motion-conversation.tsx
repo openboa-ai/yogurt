@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useLayoutEffect, useRef, useState } from "react";
-import { advanceSprings, playSprings, snap, spring } from "../foundation/spring-motion.js";
+import { useId, useLayoutEffect, useRef } from "react";
+import { advanceSprings, snap, spring } from "../foundation/spring-motion.js";
 import { Textarea } from "../controls/forms.js";
 import { PromptAction, PromptEditor } from "./prompt-shared.js";
 
@@ -10,42 +10,27 @@ export function StreamingReply({ value, active = false }: { value: string; activ
   const reply = useRef<HTMLDivElement>(null);
   const wait = useRef<HTMLSpanElement>(null);
   const wasActive = useRef(active);
-  const mounted = useRef(false);
-  const [motion] = useState(() => ({width: spring(0, 260, 26), height: spring(40, 260, 26), waiting: spring(1, 300, 30)}));
   const streaming = active || wasActive.current;
   useLayoutEffect(() => {
     const box = surface.current, words = reply.current, thinking = wait.current;
     if (!box || !words || !thinking) return;
-    let stop: (() => void) | undefined;
     const resize = () => {
       const max = box.clientWidth;
       box.style.setProperty("--yg-reply-available", `${max}px`);
       const inline = value ? max : Math.min(max, thinking.offsetWidth + 28);
       const block = Math.max(40, words.offsetHeight + 18);
       const waitOpacity = Number(active && !value);
-      if (!mounted.current) {
-        snap(motion.width, inline);
-        snap(motion.height, block);
-        snap(motion.waiting, waitOpacity);
-      } else {
-        motion.width.target = inline;
-        motion.height.target = block;
-        motion.waiting.target = waitOpacity;
-      }
-      mounted.current = true;
-      stop?.();
-      stop = playSprings(Object.values(motion), () => {
-        box.style.setProperty("--yg-reply-width", `${motion.width.position}px`);
-        box.style.setProperty("--yg-reply-height", `${motion.height.position}px`);
-        box.style.setProperty("--yg-reply-waiting", String(motion.waiting.position));
-      });
+      box.style.setProperty("--yg-reply-width", `${inline}px`);
+      box.style.setProperty("--yg-reply-height", `${block}px`);
+      box.style.setProperty("--yg-reply-waiting", String(waitOpacity));
     };
     if (active) wasActive.current = true;
     resize();
     const observer = new ResizeObserver(resize);
     observer.observe(words);
-    return () => { observer.disconnect(); stop?.(); };
-  }, [active, motion, value]);
+    observer.observe(box);
+    return () => { observer.disconnect(); };
+  }, [active, value]);
   return <div ref={surface} className="yg-streaming-shell">
     <div className="yg-streaming-reply" aria-busy={active || undefined} data-streaming={streaming || undefined}>
       <span ref={wait} className="yg-streaming-wait" aria-hidden={!active || !!value}>
