@@ -5,7 +5,7 @@ description: Implement or change an OpenBoa screen, control or composition with 
 
 From the consumer root, run `node "<skill-directory>/../../bin/resolve-sdk.mjs" . <web|native> --lookup <id> [<id> ...]` using the directory of the discovered SKILL.md. Pass the relevant pattern and component IDs together. The result gives the installed public imports, exact declaration paths and short declarations, or Native template paths. Open a declaration without inline text when you need its props. Use the resolver without IDs when you only need the installed guide paths.
 
-On web, copy the module path from each component's `entry` and the import name from its `names`. The `types` path can group several components for inspection. Keep their separate public entries when importing them.
+On web, copy each component's `importStatement` exactly. Resolve every additional component before importing it. A shared `types` path is only for inspection: never combine names from different public entries into one import.
 
 For a decision that can lose its acknowledgement, query `pattern.review-decision pattern.track-request` together. Keep the original receipt ID with the submitted record and revision in host state that survives closing the detail view. Reopening the original record must recover that receipt. Opening another record must leave it hidden. Use the host's lookup to confirm the outcome.
 

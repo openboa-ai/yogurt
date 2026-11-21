@@ -154,7 +154,8 @@ function webComponent(binding, manifest, id) {
   if (!reexport) throw Error(`The installed declaration for ${entry} has an unsupported format at ${stub}.`);
   const types = optionalFile(binding.kit, resolve(dirname(stub), reexport[2] + ".d.ts"));
   if (!types) throw Error(`The installed declaration for ${entry} refers to a missing module.`);
-  return { id, entry, names: reexport[1].split(", "), types };
+  const names = reexport[1].split(", ");
+  return { id, entry, names, types, importStatement: `import { ${names.join(", ")} } from ${JSON.stringify(entry)};` };
 }
 
 function lookupSdk(binding, ids, includeDeclarations = true) {
