@@ -33,3 +33,17 @@ Gallery dialogs, drawers, sheets and confirmation layers start closed. Their tri
 Verify generation against the current catalog without silently missing entries; compile and launch with the project's pinned Native SDK and Zig versions. Exercise navigation, text input, selection and other modeled controls, both appearances and short window scrolling in the real application. Compare a compact action and all three project marks with the web guide in the actual Native window; inspect the marks after navigating away and back, and verify registration failure is visible. Distinguish compile and model tests from visual, interaction, accessibility and motion evidence. Record gaps rather than marking the entire catalog verified. Verify that agent sources are unchanged. Generated SDK scaffold files and dependencies are not committed.
 
 Exercise the live agent specimen at each state, compare rendered poses and transitions with the shared playback, and confirm it stops updating on navigation and at settled poses. Inspect actual frames and report timing and resource usage separately from model tests.
+
+### Strict markup and live composition acceptance
+
+Place loops and conditions under concrete layout or control elements before passing their output through a template slot. Retain the existing trigger, selection, drawer, and row semantics, including direct menu-item navigation. Exercise the repaired specimens through the generated host. The ordinary strict check and compiled host tests must both succeed. Run representative selector, disclosure, list and overlay interactions on the built guide and preserve the catalog count.
+
+The Composer example edits a bounded local draft, toggles the sample review tool, removes and restores the two sample attachments, and shows a stoppable local pending state. No send, attachment selection or tool action reaches the system. Sidebar search filters the existing host-owned rows without losing the selected destination or substituting an agent image.
+
+### Local workspace actions
+
+Connect remaining visible guide actions to bounded, session-local sample state. Open, close, take-control preview, navigation, receipt, notification, voice, profile and review actions must have a visible result tied to their specimen. Text edits and selections stay in the active specimen and are cleared on navigation. The guide performs no actual provider connection, invitation, message, recording, download, or permissions change. Verify strict markup, build, and the visible interaction outcome in the Native host.
+
+### Remaining specimen review
+
+Exercise scroll and resize with pointer or accessibility actions, verify visible extent before and after, and show a bounded local action for the Form and Stepper specimens. Align repeated table columns in the example. Compose Field, Label, HelpText and FieldError around the same editable view name; clear the sample error when a name is entered. For display-only specimens, check the visible sample and appearance change without adding an unrelated product action. Keep navigation and sample state local, reset it on changing specimens, and retain the existing Native package calls.

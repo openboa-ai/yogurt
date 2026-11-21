@@ -7,6 +7,6 @@
         <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
       </column>
     </list-item>
-    <if test="{can_pin}"><toggle-button label="Pin {label}" selected="{pinned}" disabled="{disabled}" on-toggle="toggle_resource_pin:{item_id}">Pin</toggle-button></if>
+    <if test="{can_pin}"><toggle-button label="{'Pin ' ++ label}" selected="{pinned}" disabled="{disabled}" on-toggle="toggle_resource_pin:{item_id}">Pin</toggle-button></if>
   </row>
 </template>

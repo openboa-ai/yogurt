@@ -6,7 +6,7 @@
     <text size="heading">Run history</text>
     <if test="{run_loading}"><use template="yg-status" label="Loading runs"/></if>
     <else>
-      <use template="yg-list" label="Runs">
+      <list label="Runs">
         <for each="runs" key="id" as="item">
           <list-item label="{item.title}" selected="{item.selected}" on-press="open_run:{item.id}" padding="8">
             <column gap="4">
@@ -15,7 +15,7 @@
             </column>
           </list-item>
         </for>
-      </use>
+      </list>
       <if test="{run_has_details}">
         <column gap="12">
           <text size="heading">{run_title}</text>

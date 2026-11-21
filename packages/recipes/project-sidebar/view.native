@@ -11,26 +11,28 @@
         <column height="160"/>
         <scroll label="Project views">
           <use template="yg-sidebar-group" label="Workspace">
-            <if test="{sidebar_group_open}"><list-item icon="chevron-down" on-press="toggle_sidebar_group">Project views</list-item></if>
-            <else><list-item icon="chevron-right" on-press="toggle_sidebar_group">Project views</list-item></else>
-            <if test="{sidebar_group_open}">
-              <row>
-                <spacer width="32"/>
-                <column grow="1">
-                  <use template="yg-sidebar-items">
-                    <for each="sidebar_destinations" key="id" as="item">
-                      <use template="yg-sidebar-destination" label="{item.title}" item_id="{item.id}" selected="{item.selected}">
-                        <text>{item.title}</text>
-                      </use>
-                    </for>
-                  </use>
-                </column>
-              </row>
-            </if>
+            <column gap="4">
+              <if test="{sidebar_group_open}"><list-item icon="chevron-down" on-press="toggle_sidebar_group">Project views</list-item></if>
+              <else><list-item icon="chevron-right" on-press="toggle_sidebar_group">Project views</list-item></else>
+              <if test="{sidebar_group_open}">
+                <row>
+                  <spacer width="32"/>
+                  <column grow="1">
+                    <list gap="2">
+                      <for each="sidebar_destinations" key="id" as="item">
+                        <use template="yg-sidebar-destination" label="{item.title}" item_id="{item.id}" selected="{item.selected}">
+                          <text>{item.title}</text>
+                        </use>
+                      </for>
+                    </list>
+                  </column>
+                </row>
+              </if>
+            </column>
           </use>
         </scroll>
       </stack>
-      <if test="{sidebar_can_add}"><button variant="secondary" on-press="add_sidebar_item">Add project view</button></if>
+      <column><if test="{sidebar_can_add}"><button variant="secondary" on-press="add_sidebar_item">Add project view</button></if></column>
     </use>
   </column>
 </template>

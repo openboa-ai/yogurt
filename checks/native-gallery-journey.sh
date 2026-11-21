@@ -59,7 +59,7 @@ action_named() {
   local role="$1" name="$2" action="$3" value="$4" snapshot="$5" id
   id="$(sed -nE "s/^.*widget @w1\/main-canvas#([0-9]+) role=${role} name=\"${name}\".*$/\1/p" "$snapshot" | tail -n 1)"
   test -n "$id"
-  if [ -n "$value" ]; then
+  if [ -n "$value" ] || [ "$action" = set_text ]; then
     "$cli" automate widget-action main-canvas "$id" "$action" "$value"
   else
     "$cli" automate widget-action main-canvas "$id" "$action"
@@ -209,6 +209,50 @@ check_interaction() {
       click_named button "$previous" "$after" && snapshot_after 'Sample page changed' &&
         rg -q 'role=text name="1 of 2"' "$after" || return 1
       ;;
+    field|label|help-text|field-error)
+      action_named textbox 'View name' set_text 'Native review' "$before" &&
+        snapshot_after 'role=textbox name="View name".*text="Native review"' || return 1
+      if [ "$id" = field-error ]; then
+        rg -q 'role=text name="Give this view a name."' "$before" &&
+          ! rg -q 'role=text name="Give this view a name."' "$after" || return 1
+      fi
+      ;;
+    scroll-area)
+      local scroll_id
+      scroll_id="$(sed -nE 's/^.*widget @w1\/main-canvas#([0-9]+) role=group name="Recent notes".*$/\1/p' "$before" | head -n1)"
+      test -n "$scroll_id" &&
+        rg -q 'role=group name="Recent notes".*x124\)' "$before" &&
+        "$cli" automate widget-wheel main-canvas "$scroll_id" 570 &&
+        snapshot_after 'role=text name="Archive"' || return 1
+      ;;
+    resizable)
+      local divider_x='s/.*role=separator name="Split divider" bounds=\(([-0-9.]+),[^ ]+ [^x]+x[1-9][0-9.]*\).*/\1/p'
+      local initial final
+      initial="$(sed -nE "$divider_x" "$before")"
+      test -n "$initial" &&
+        action_named separator 'Split divider' increment '' "$before" &&
+        snapshot_after 'role=separator name="Split divider"' || return 1
+      final="$(sed -nE "$divider_x" "$after")"
+      [ -n "$final" ] && [ "$initial" != "$final" ] || return 1
+      ;;
+    form)
+      action_named textbox 'View name' set_text '' "$before" &&
+        snapshot_after 'role=textbox name="View name"' &&
+        click_named button 'Save view' "$after" &&
+        snapshot_after 'Enter a view name' &&
+        action_named textbox 'View name' set_text 'Native review' "$after" &&
+        snapshot_after 'role=textbox name="View name".*text="Native review"' &&
+        click_named button 'Save view' "$after" &&
+        snapshot_after 'Sample view saved' || return 1
+      ;;
+    stepper)
+      local stage_edge='s/.*role=text name="(Prepare|Review)" bounds=\(([-0-9.]+),.*/\1 \2/p'
+      rg -q 'role=text name="Current"' "$before" &&
+        click_named button 'Next stage' "$before" &&
+        snapshot_after 'role=text name="Current"' &&
+        [ "$(rg 'role=text name="Current"' "$before")" != "$(rg 'role=text name="Current"' "$after")" ] &&
+        [ "$(sed -nE "$stage_edge" "$before")" = "$(sed -nE "$stage_edge" "$after")" ] || return 1
+      ;;
     icon-button|list-row)
       local role=button label='Add a view'
       if [ "$id" = list-row ]; then role=listitem; label='Weekly review'; fi
@@ -286,7 +330,7 @@ while IFS=$'\t' read -r id name; do
         failed=1
       fi
       ;;
-    dialog|drawer|sheet|input-otp|rating|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|icon-button|list-row)
+    dialog|drawer|sheet|input-otp|rating|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row)
       if [ "$render" = PRESENTED_UNVERIFIED ] && check_interaction; then
         interaction=PASS
         if [ "$id" = calendar ] || [ "$id" = project-mark ]; then interaction=PARTIAL; fi

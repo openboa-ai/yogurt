@@ -17,6 +17,8 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
             .card = .{ .background = if (dark) r.surface else r.canvas, .radius = ui.card_corner, .stroke_width = 0 },
             .panel = .{ .radius = ui.radius_panel, .stroke_width = 0 },
             .popover = .{ .radius = ui.radius_popover, .stroke_width = 0 },
+            .menu_surface = .{ .radius = ui.radius_menu, .stroke_width = 0 },
+            .dropdown_menu = .{ .radius = ui.radius_menu, .stroke_width = 0 },
             .dialog = .{ .radius = ui.radius_sheet },
             .drawer = .{ .radius = ui.radius_sheet },
             .sheet = .{ .radius = ui.radius_sheet },
@@ -25,7 +27,7 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
             .badge = .{ .background = r.field, .foreground = r.muted, .radius = ui.radius_small, .stroke_width = 0 },
             .skeleton = .{ .radius = ui.radius_small },
             .separator = .{ .background = r.hover },
-            .segmented_control = .{ .active_background = r.hover, .stroke_width = 0 },
+            .segmented_control = .{ .active_background = r.hover, .radius = ui.segment_track_radius, .stroke_width = 0 },
             .button_primary = .{ .background = r.inverse, .hover_background = r.inverse_hover, .pressed_background = r.inverse_press, .foreground = r.on_inverse, .radius = ui.radius_control, .disabled_background = r.field, .disabled_foreground = r.muted },
             .button_secondary = .{ .background = r.field, .foreground = r.text, .hover_background = r.hover, .radius = ui.radius_control, .stroke_width = 0 },
             .input = .{ .background = r.field, .foreground = r.text, .radius = ui.radius_control, .stroke_width = 0 },
@@ -42,6 +44,8 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
         result.controls.card.stroke_width = 1;
         result.controls.panel.stroke_width = 1;
         result.controls.popover.stroke_width = 1;
+        result.controls.menu_surface.stroke_width = 1;
+        result.controls.dropdown_menu.stroke_width = 1;
         result.controls.button_secondary.stroke_width = 1;
         result.controls.text_field.stroke_width = 1;
         result.controls.input.stroke_width = 1;

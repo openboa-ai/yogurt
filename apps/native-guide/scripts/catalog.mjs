@@ -60,6 +60,14 @@ const examples = {
   chart: { label: "Reviews this week", source: "Completed reviews" },
   "bar-chart": { label: "Reviews this week", source: "Completed reviews" },
   "data-table": { label: "Weekly reviews" },
+  "scroll-area": { label: "Recent notes", height: "124" },
+  resizable: { label: "Resize project list", summary: "Projects", height: "136" },
+  form: { label: "Save a view" },
+  field: { label: "View name" },
+  label: { label: "View name" },
+  "help-text": { label: "Use a name your team will recognize." },
+  "field-error": { label: "Give this view a name." },
+  stepper: { label: "Release stages" },
   table: { label: "Weekly readings" },
   "empty-result": { title: "No records found" },
   result: { title: "Could not load records" },
@@ -74,14 +82,23 @@ const examples = {
   status: { label: "Saved" },
   notice: { title: "View updated", detail: "Your team can use the new view." },
 };
+const viewNameInput = '<text-field label="View name" text="{value}" on-input="edit"/>';
+const reviewRows = [
+  ["Day", "Work", "Status"],
+  ["Monday", "Review", "Ready"],
+  ["Tuesday", "Planning", "In progress"],
+  ["Wednesday", "Notes", "Done"],
+].map(row => "<table-row>" + row.map((value, index) =>
+  '<table-cell width="' + [128, 144, 144][index] + '">' + value + '</table-cell>',
+).join("") + "</table-row>").join("");
 const slots = {
   "action-menu": '<menu-item on-press="dismiss">Close menu</menu-item>',
   tooltip: '<button on-press="activate">Review details</button>',
   tabs: '<toggle-button selected="{gallery_first_selected}" on-toggle="gallery_select_option:{gallery_first_id}">Overview</toggle-button><toggle-button selected="{gallery_second_selected}" on-toggle="gallery_select_option:{gallery_second_id}">Activity</toggle-button>',
   "segmented-control": '<segmented-control selected="{gallery_first_selected}" on-press="gallery_select_option:{gallery_first_id}">Overview</segmented-control><segmented-control selected="{gallery_second_selected}" on-press="gallery_select_option:{gallery_second_id}">Activity</segmented-control>',
   "radio-group": '<radio checked="{gallery_first_selected}" on-toggle="gallery_select_option:{gallery_first_id}">Daily</radio><radio checked="{gallery_second_selected}" on-toggle="gallery_select_option:{gallery_second_id}">Weekly</radio>',
-  "data-table": "<table-row><table-cell>Monday</table-cell><table-cell>Review</table-cell><table-cell>Ready</table-cell></table-row><table-row><table-cell>Tuesday</table-cell><table-cell>Planning</table-cell><table-cell>In progress</table-cell></table-row><table-row><table-cell>Wednesday</table-cell><table-cell>Notes</table-cell><table-cell>Done</table-cell></table-row>",
-  table: "<table-row><table-cell>Monday</table-cell><table-cell>Review</table-cell><table-cell>Ready</table-cell></table-row><table-row><table-cell>Tuesday</table-cell><table-cell>Planning</table-cell><table-cell>In progress</table-cell></table-row><table-row><table-cell>Wednesday</table-cell><table-cell>Notes</table-cell><table-cell>Done</table-cell></table-row>",
+  "data-table": reviewRows,
+  table: reviewRows,
   "selection-list": '<checkbox checked="{gallery_first_checked}" on-toggle="gallery_toggle_option:{gallery_first_id}">Weekly digest</checkbox><checkbox checked="{gallery_second_checked}" on-toggle="gallery_toggle_option:{gallery_second_id}">Product updates</checkbox>',
   accordion: '<text>This view includes notes saved in the last seven days.</text>',
   "disclosure-row": '<text>Three records are ready to review.</text>',
@@ -108,10 +125,14 @@ const slots = {
   bubble: '<text>The review is ready when you are.</text>',
   post: '<text>Shared the latest project notes.</text>',
   transcript: '<text>Review the notes and summarize the decisions.</text>',
-  form: '<text>Review the details before saving.</text>',
-  "scroll-area": '<text>Weekly review</text><text>Planning notes</text><text>Project updates</text>',
+  field: viewNameInput,
+  form: '<column gap="8">' + viewNameInput + '<button on-press="activate">Save view</button></column>',
+  "scroll-area": '<column gap="12" padding="8">' + [
+    "Weekly review", "Planning notes", "Project updates", "Draft decisions",
+    "Quality observations", "Access review", "Release notes", "Archive",
+  ].map(note => "<text>" + note + "</text>").join("") + "</column>",
   combobox: '<list-item on-press="choose:{gallery_first_id}">Yogurt</list-item><list-item on-press="choose:{gallery_second_id}">Meatball</list-item>',
-  resizable: "<text>Review</text>",
+  resizable: "<text>Weekly review</text>",
   questionnaire: '<radio checked="true" on-toggle="toggle">Sourdough</radio>',
   breadcrumb: '<button variant="ghost" on-press="navigate">Library</button><button variant="ghost" on-press="navigate">Records</button><text>Weekly review</text>',
   ...workspaceSlots,
@@ -137,7 +158,9 @@ for (const { id, native } of [...catalog, ...blocks]) {
   const keys = (source.match(/args="([^"]*)"/)?.[1] ?? "")
     .split(" ")
     // Optional arguments are supplied by the template's own defaults.
-    .filter((key) => key && !key.includes("="));
+    .map((argument) => argument.split("="))
+    .filter(([key, fallback]) => key && (fallback === undefined || examples[id]?.[key] !== undefined))
+    .map(([key]) => key);
   const attributes = keys
     .map((k) => {
       const value = examples[id]?.[k] ?? args[k];
@@ -158,7 +181,15 @@ for (const { id, native } of [...catalog, ...blocks]) {
     ? '<button variant="secondary" on-press="open_choices">' + (id === "confirm-dialog" ? "Review change" : "Edit view") + '</button><if test="{is_open}">' + use + "</if>"
     : id === "toast"
       ? '<if test="{is_open}">' + use + '</if><else><button variant="secondary" on-press="open_choices">Save view</button></else>'
-      : use;
+      : id === "stepper"
+        ? '<column gap="12">' + use + '<button variant="secondary" on-press="activate">Next stage</button></column>'
+        : id === "label"
+          ? '<column gap="6">' + use + viewNameInput + '</column>'
+          : id === "help-text"
+            ? '<column gap="6"><text size="sm">View name</text>' + viewNameInput + use + '</column>'
+            : id === "field-error"
+              ? '<column gap="6"><text size="sm">View name</text>' + viewNameInput + '<if test="{enabled}">' + use + '</if></column>'
+              : use;
   const example =
     '<import src="' + id + '.native"/>\n<column>' + specimen + "</column>\n";
   writeFileSync(dir + "/" + id + "-test.native", example);

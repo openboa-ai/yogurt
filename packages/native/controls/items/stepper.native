@@ -2,11 +2,11 @@
   <column label="{label}" gap="12">
     <for each="choices" key="id" as="item">
       <row gap="8" cross="center">
-        <if test="{item.selected}"><badge>Current</badge></if>
-        <column gap="2">
+        <column gap="2" grow="1">
           <text>{item.title}</text>
           <text size="sm" foreground="text_muted">{item.detail}</text>
         </column>
+        <if test="{item.selected}"><badge>Current</badge></if>
       </row>
     </for>
   </column>

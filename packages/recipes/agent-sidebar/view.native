@@ -11,7 +11,7 @@
             <row>
               <spacer width="12"/>
               <column grow="1">
-                <use template="yg-sidebar-items">
+                <list gap="2">
                   <for each="sidebar_destinations" key="id" as="item">
                     <use template="yg-sidebar-destination" label="{item.title}" item_id="{item.id}" selected="{item.selected}">
                       <row gap="8" cross="center">
@@ -21,13 +21,13 @@
                       </row>
                     </use>
                   </for>
-                </use>
+                </list>
               </column>
             </row>
           </use>
         </scroll>
       </stack>
-      <if test="{sidebar_can_add}"><button variant="secondary" on-press="add_sidebar_item">New conversation</button></if>
+      <column><if test="{sidebar_can_add}"><button variant="secondary" on-press="add_sidebar_item">New conversation</button></if></column>
     </use>
   </column>
 </template>

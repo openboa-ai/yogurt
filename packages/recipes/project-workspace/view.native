@@ -34,7 +34,7 @@
         </tabs>
         <if test="{project_chats_active}">
           <if test="{can_start_project_chat}"><button variant="secondary" on-press="start_project_chat">New chat</button></if>
-          <if test="{project_composer_visible}"><use template="yg-composer" label="New message in {project_name}" value="{project_draft}"/></if>
+          <if test="{project_composer_visible}"><use template="yg-composer" label="{'New message in ' ++ project_name}" value="{project_draft}"/></if>
           <search-field label="Find project chats" text="{project_query}" on-input="change_project_query"/>
           <if test="{project_threads_available}">
             <list label="Project chats">

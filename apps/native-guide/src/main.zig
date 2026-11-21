@@ -3,6 +3,7 @@ const sdk = @import("native_sdk");
 const runner = @import("runner");
 const gallery = @import("gallery-generated.zig");
 const navigation = @import("navigation.zig");
+const workspace_fixtures = @import("workspace-fixtures.zig");
 const precision = @import("yogurt/precision-inputs.zig");
 const theme = @import("yogurt/theme.zig");
 const agent_vector = @import("yogurt/models/agent-vector.zig");
@@ -67,6 +68,32 @@ fn syncPage(m: *Model) void {
     m.at_last = m.gallery_page_two;
 }
 
+fn syncSidebar(m: *Model) void {
+    const is_agent = std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-sidebar");
+    const rows = if (is_agent) &m.gallery_agent_choices else &m.gallery_sidebar_choices;
+    var count: usize = 0;
+    for (rows) |row| {
+        if (std.ascii.findIgnoreCase(row.title, m.sidebar_query) == null) continue;
+        m.gallery_sidebar_filtered[count] = row;
+        count += 1;
+    }
+    if (m.gallery_sidebar_added and std.ascii.findIgnoreCase("New sample view", m.sidebar_query) != null) {
+        m.gallery_sidebar_filtered[count] = .{ .id = 3, .title = "New sample view", .selected = m.gallery_sidebar_new_selected };
+        count += 1;
+    }
+    m.sidebar_destinations = m.gallery_sidebar_filtered[0..count];
+}
+
+fn syncComposerAttachments(m: *Model) void {
+    var count: usize = 0;
+    for (m.gallery_choices, m.gallery_composer_mask) |choice, shown| {
+        if (!shown) continue;
+        m.gallery_composer_visible[count] = choice;
+        count += 1;
+    }
+    m.composer_attachments = m.gallery_composer_visible[0..count];
+}
+
 fn selectComponent(m: *Model, index: u32) void {
     if (index >= gallery.names.len) return;
     const dark = m.gallery_dark;
@@ -90,9 +117,20 @@ fn selectComponent(m: *Model, index: u32) void {
     m.sourdough_missing = sourdough_missing;
     m.meatball_missing = meatball_missing;
     m.gallery_selected = index;
+    const id = gallery.ids[index];
+    if (std.mem.eql(u8, id, "stepper")) {
+        m.gallery_choices[0].title = "Prepare";
+        m.gallery_choices[1].title = "Review";
+        m.gallery_choices[0].detail = "Draft the release notes";
+        m.gallery_choices[1].detail = "Check the final changes";
+        m.choices = &m.gallery_choices;
+    }
     m.gallery_list_open = show_list;
     m.gallery_dark = dark;
-    const id = gallery.ids[index];
+    if (std.mem.eql(u8, id, "field-error")) {
+        m.gallery_editor.clear();
+        m.value = m.gallery_editor.text();
+    }
     if (isAgentComposition(m)) {
         m.picture = 0;
         m.agent_image = 0;
@@ -131,6 +169,7 @@ fn agentAppearance(appearance: sdk.platform.Appearance) ?Msg {
 }
 
 pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
+    if (workspace_fixtures.apply(m, msg)) return;
     switch (msg) {
         .agent_tick => |now_ms| {
             if (isAgentComposition(m)) {
@@ -166,6 +205,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
                 m.agent_image = if (m.gallery_agent_choices[1].selected) m.agent_sol_picture else m.agent_kai_picture;
                 m.profile_image = if (m.profile_sol) m.agent_sol_picture else m.agent_kai_picture;
                 m.agent_error = m.agent_kai_error or m.agent_sol_error;
+                if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-sidebar")) syncSidebar(m);
                 return;
             }
             if (!isAgentSpecimen(m)) return;
@@ -213,6 +253,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .gallery_next => if (m.gallery_selected + 1 < gallery.names.len) selectComponent(m, m.gallery_selected + 1),
         .gallery_list => m.gallery_list_open = !m.gallery_list_open,
         .gallery_appearance => m.gallery_dark = !m.gallery_dark,
+        .gallery_close_detail => m.gallery_detail_title = "",
         .gallery_select_option => |id| {
             if (id != 1 and id != 2) return;
             m.gallery_first_selected = id == 1;
@@ -262,18 +303,19 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             m.gallery_status = if (m.sidebar_group_open) "Project views expanded" else "Project views collapsed";
         },
         .select_sidebar_item => |id| {
-            if (id == 0 or id > 2) return;
+            if (id == 0 or id > 3 or (id == 3 and !m.gallery_sidebar_added)) return;
+            m.gallery_sidebar_new_selected = id == 3;
             if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-sidebar")) {
                 m.gallery_agent_choices[0].selected = id == 1;
                 m.gallery_agent_choices[1].selected = id == 2;
-                m.sidebar_destinations = &m.gallery_agent_choices;
-                m.gallery_status = if (id == 1) "Kai selected" else "Sol selected";
+                syncSidebar(m);
+                m.gallery_status = switch (id) { 1 => "Kai selected", 2 => "Sol selected", else => "New sample view selected" };
                 return;
             }
             m.gallery_sidebar_choices[0].selected = id == 1;
             m.gallery_sidebar_choices[1].selected = id == 2;
-            m.sidebar_destinations = &m.gallery_sidebar_choices;
-            m.gallery_status = if (id == 1) "Overview selected" else "Reviews selected";
+            syncSidebar(m);
+            m.gallery_status = switch (id) { 1 => "Overview selected", 2 => "Reviews selected", else => "New sample view selected" };
         },
         .toggle_all => {
             m.all_checked = !m.all_checked;
@@ -285,6 +327,18 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             m.gallery_status = "Choice confirmed in this example.";
         },
         .close_sidebar => m.is_open = false,
+        .navigate => {
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "navbar")) {
+                workspace_fixtures.detail(m, "Overview", "You returned to the sample parent view.");
+            } else workspace_fixtures.detail(m, "Record details", "The sample record is ready to review.");
+        },
+        .add_sidebar_item => {
+            m.gallery_sidebar_added = true;
+            m.gallery_sidebar_query.clear();
+            m.sidebar_query = "";
+            syncSidebar(m);
+            m.gallery_status = "Sample view added";
+        },
         .dismiss => { m.gallery_picker_open = false; m.is_open = false; m.enabled = false; m.gallery_status = "state updated"; },
         .choose => |id| {
             const selected_id = gallery.ids[m.gallery_selected];
@@ -334,7 +388,56 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             m.enabled = false;
             m.gallery_status = "state updated";
         },
-        .adjust => |value| { m.amount = std.math.clamp(value, 0, 1); m.gallery_status = "value changed"; },
+        .search_sidebar => |event| {
+            m.gallery_sidebar_query.apply(event);
+            m.sidebar_query = m.gallery_sidebar_query.text();
+            syncSidebar(m);
+            m.gallery_status = if (m.sidebar_destinations.len == 0) "No matching views" else "Ready";
+        },
+        .draft_changed => |event| {
+            m.gallery_editor.apply(event);
+            m.value = m.gallery_editor.text();
+            const id = gallery.ids[m.gallery_selected];
+            if (std.mem.eql(u8, id, "agent-workspace")) m.agent_draft = m.value;
+            if (std.mem.eql(u8, id, "project-workspace")) m.project_draft = m.value;
+            m.composer_send_disabled = std.mem.trim(u8, m.value, " \t\r\n").len == 0 and m.composer_attachments.len == 0;
+        },
+        .remove_attachment => |id| {
+            if (id < 1 or id > m.gallery_composer_mask.len) return;
+            m.gallery_composer_mask[id - 1] = false;
+            syncComposerAttachments(m);
+            m.composer_send_disabled = std.mem.trim(u8, m.value, " \t\r\n").len == 0 and m.composer_attachments.len == 0;
+            m.gallery_status = "Sample attachment removed";
+        },
+        .choose_attachment => {
+            if (std.mem.indexOfScalar(bool, &m.gallery_composer_mask, false)) |index| {
+                m.gallery_composer_mask[index] = true;
+                syncComposerAttachments(m);
+                m.composer_send_disabled = false;
+                m.gallery_status = "Sample attachment added";
+            } else m.gallery_status = "Both sample attachments are present";
+        },
+        .choose_tool => {
+            m.gallery_tool_selected = !m.gallery_tool_selected;
+            m.gallery_status = if (m.gallery_tool_selected) "Review tool selected" else "Review tool cleared";
+        },
+        .send_message => {
+            if (m.composer_pending or m.composer_send_disabled) return;
+            m.composer_pending = true;
+            m.gallery_status = "Preparing a sample reply";
+        },
+        .stop_response => {
+            m.composer_pending = false;
+            m.gallery_status = "Sample reply stopped";
+        },
+        .adjust => |value| {
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "resizable")) {
+                m.fraction = std.math.clamp(value, 0.15, 0.85);
+                return;
+            }
+            m.amount = std.math.clamp(value, 0, 1);
+            m.gallery_status = "value changed";
+        },
         .edit => |event| {
             if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "input-otp")) {
                 precision.editCode(&m.code_editor, event);
@@ -342,6 +445,8 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             }
             m.gallery_editor.apply(event);
             m.value = m.gallery_editor.text();
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "field-error"))
+                m.enabled = std.mem.trim(u8, m.value, " \t").len == 0;
             m.gallery_status = if (m.gallery_editor.truncated) "text limit reached" else "text changed";
         },
         .edit_first => |event| {
@@ -359,7 +464,18 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .next_page => if (m.gallery_page < 1) { m.gallery_page += 1; syncPage(m); m.gallery_status = "Sample page changed; dates are illustrative"; },
         .previous_page => if (m.gallery_page > 0) { m.gallery_page -= 1; syncPage(m); m.gallery_status = "Sample page changed; dates are illustrative"; },
         .clear => { m.gallery_editor.clear(); m.value = m.gallery_editor.text(); m.gallery_status = "text cleared"; },
-        .activate => m.gallery_status = "Action received locally; no external effect",
+        .activate => {
+            const id = gallery.ids[m.gallery_selected];
+            if (std.mem.eql(u8, id, "form")) {
+                m.gallery_status = if (std.mem.trim(u8, m.value, " \t").len > 0) "Sample view saved" else "Enter a view name";
+            } else if (std.mem.eql(u8, id, "stepper")) {
+                m.gallery_choices[0].selected = !m.gallery_choices[0].selected;
+                m.gallery_choices[1].selected = !m.gallery_choices[0].selected;
+                m.choices = &m.gallery_choices;
+            } else {
+                m.gallery_status = "Action received locally; no external effect";
+            }
+        },
         else => m.gallery_status = "This action is not implemented in this guide",
     }
 }
@@ -434,6 +550,11 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
                     ui.button(.{ .on_press = .{ .agent_set_state = 4 }, .variant = if (selected_agent_state == .blocked) .primary else .secondary }, "Blocked"),
                     ui.button(.{ .on_press = .{ .agent_set_state = 5 }, .variant = if (selected_agent_state == .done) .primary else .secondary }, "Finished"),
                 }),
+            }) else ui.column(.{}, .{}),
+            if (m.gallery_detail_title.len > 0) ui.column(.{ .gap = 8, .padding = 16, .style_tokens = .{ .background = .surface, .radius = .lg } }, .{
+                ui.text(.{ .size = .heading }, m.gallery_detail_title),
+                ui.text(.{ .wrap = true }, m.gallery_detail_body),
+                ui.button(.{ .on_press = .gallery_close_detail, .variant = .ghost }, "Close details"),
             }) else ui.column(.{}, .{}),
             if (std.mem.eql(u8, m.gallery_status, "Ready")) ui.column(.{}, .{}) else ui.text(.{ .wrap = true }, m.gallery_status),
             ui.row(.{ .gap = 8 }, .{
