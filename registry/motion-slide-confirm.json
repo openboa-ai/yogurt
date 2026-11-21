@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-slide-confirm",
+  "type": "registry:ui",
+  "title": "SlideConfirm",
+  "description": "Request a deliberate slide or accessible equivalent.",
+  "files": [
+    {
+      "path": "ui/motion-slide-confirm.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { SlideConfirm } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import { sectionHref } from "../routing";
 import { useState } from "react";
 import * as Y from "@openboa/yogurt";
 const projects = [
@@ -6,8 +7,8 @@ const projects = [
   { id: "sourdough", label: "Sourdough" },
 ];
 const links = [
-  { id: "calendar", label: "Calendar", href: "#calendar" },
-  { id: "select", label: "Select", href: "#select" },
+  { id: "calendar", label: "Calendar", href: sectionHref("components", "calendar") },
+  { id: "select", label: "Select", href: sectionHref("components", "select") },
 ];
 const stages = [
   { id: "draft", label: "Draft", detail: "Write the change." },
@@ -58,6 +59,18 @@ export function ExtendedExample({
         </Y.Stack>
       );
     case "card":
+      if (variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "spacious"] as const).map((density) => (
+              <Y.Card key={density} density={density}
+                title={density[0].toUpperCase() + density.slice(1)} description="Weekly review">
+                Release notes and decisions from the week.
+              </Y.Card>
+            ))}
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Card
           title="Weekly review"
@@ -83,7 +96,7 @@ export function ExtendedExample({
       );
     case "gradient":
       return (
-        <Y.Gradient tone={variation ? "accent" : "brand"}>
+        <Y.Gradient tone={variation ? "accent" : "neutral"}>
           <Y.Inline>
             {mark}
             <Y.Heading>Yogurt</Y.Heading>
@@ -298,6 +311,14 @@ export function ExtendedExample({
         />
       );
     case "input-group":
+      if (variation) return (
+        <Y.Stack gap={12}>
+          {(["compact", "regular", "comfortable", "spacious", "touch", "featured"] as const).map((size) => (
+            <Y.InputGroup key={size} size={size} label={size[0].toUpperCase() + size.slice(1)}
+              placeholder="release-notes" leading={<span className="yg-help">/projects/</span>} />
+          ))}
+        </Y.Stack>
+      );
       return (
         <Y.InputGroup
           label="Project path"
@@ -339,6 +360,7 @@ export function ExtendedExample({
           value={number * 10}
           onValueChange={(v) => setNumber(v / 10)}
           unit="%"
+          presentation={variation ? "card" : "inline"}
         />
       );
     case "numeric-spinner":
@@ -546,7 +568,7 @@ export function ExtendedExample({
             {
               id: "actions",
               label: "Actions",
-              links: [{ id: "button", label: "Button", href: "#button" }],
+              links: [{ id: "button", label: "Button", href: sectionHref("components", "button") }],
             },
           ]}
         />
@@ -555,11 +577,12 @@ export function ExtendedExample({
       return <Y.Sidebar label="Library" current="select" links={links} />;
     case "navbar":
       return (
-        <Y.Stack>
-          <Y.Navbar
-            label={on ? "Projects" : "Weekly review"}
-            onBack={() => setOn(!on)}
-          />
+        <Y.Stack gap={24}>
+          <Y.Navbar variant="sections" label="Workspace sections"
+            identity={<Y.Text>Workspace</Y.Text>}
+            destinations={links}
+            current="calendar" expanded={on} onExpandedChange={setOn} />
+          <Y.Navbar label={on ? "Projects" : "Weekly review"} onBack={() => setOn(!on)} />
         </Y.Stack>
       );
     case "carousel":

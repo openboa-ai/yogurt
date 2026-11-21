@@ -1,0 +1,95 @@
+.yg-chart {
+  display: grid;
+  min-inline-size: 0;
+  gap: var(--yg-gap-stack);
+}
+
+.yg-chart figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--yg-gap-inline) var(--yg-gap-stack);
+  min-inline-size: 0;
+}
+
+.yg-chart figcaption > * {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.yg-chart-plot {
+  --yg-plot-height: clamp(8rem, 22vi, 14rem);
+  display: grid;
+  grid-template-columns: fit-content(30%) minmax(0, 1fr);
+  column-gap: var(--yg-gap-inline);
+  row-gap: var(--yg-gap-tight);
+  min-inline-size: 0;
+}
+
+.yg-chart-scale {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: end;
+  min-inline-size: 0;
+  padding-block: max(0px, calc(var(--yg-plot-height) * 0.092 - 0.5lh)) max(0px, calc(var(--yg-plot-height) * 0.118 - 0.5lh));
+  color: var(--yg-muted);
+  font: var(--yg-font-meta);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.yg-chart-plot > svg {
+  display: block;
+  grid-column: 2;
+  grid-row: 1;
+  inline-size: 100%;
+  block-size: var(--yg-plot-height);
+  color: var(--yg-inverse);
+}
+
+.yg-chart-empty {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  color: var(--yg-muted);
+  font: var(--yg-font-help);
+}
+
+.yg-chart-grid {
+  fill: none;
+  stroke: var(--yg-hover);
+  stroke-width: var(--boa-stroke-rule);
+}
+
+.yg-chart-point {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 5px;
+}
+
+.yg-chart-range {
+  grid-column: 2;
+  min-inline-size: 0;
+  padding-inline: 3.333%;
+}
+
+.yg-chart-range > span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.yg-chart-range > span:last-child { text-align: end; }
+.yg-chart > .yg-meta { margin: 0; overflow-wrap: anywhere; }
+.yg-chart details { margin: 0; }
+.yg-chart summary { cursor: pointer; }
+.yg-chart summary:focus-visible {
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
+  outline-offset: var(--boa-space-2);
+  border-radius: var(--yg-radius-small);
+}
+
+.yg-bars { min-inline-size: 0; }
+.yg-bars :is(figcaption, small) { overflow-wrap: anywhere; }

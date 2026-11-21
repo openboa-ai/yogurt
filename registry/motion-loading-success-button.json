@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-loading-success-button",
+  "type": "registry:ui",
+  "title": "LoadingSuccessButton",
+  "description": "Show a host-reported action state.",
+  "files": [
+    {
+      "path": "ui/motion-loading-success-button.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { LoadingSuccessButton } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

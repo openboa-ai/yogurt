@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-range-slider",
+  "type": "registry:ui",
+  "title": "RangeSlider",
+  "description": "Choose a bounded value or interval.",
+  "files": [
+    {
+      "path": "ui/motion-range-slider.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { RangeSlider } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

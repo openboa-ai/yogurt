@@ -1,0 +1,125 @@
+type RecipeRows = readonly (readonly [id: string, title: string, detail: string, ...components: string[]])[];
+
+function family(id: string, title: string, rows: RecipeRows) {
+  return {
+    id, title,
+    recipes: rows.map(([id, title, detail, ...components]) => ({ id, title, detail, components })),
+  };
+}
+
+export const recipeFamilies = [
+  family("forms", "Forms & settings", [
+    ["feedback", "Share feedback", "Collect a response and confirm that it was received.", "textarea", "button"],
+    ["issue", "Report a problem", "Capture a summary, severity and reproducible steps.", "text-field", "select", "textarea", "button"],
+    ["shipping", "Shipping address", "Collect the recipient, street address and postal code.", "text-field", "button"],
+    ["invite", "Invite a teammate", "Give an email address a specific workspace role.", "text-field", "select", "button"],
+    ["environment", "Environment settings", "Set a variable for a chosen deployment environment.", "text-field", "select", "button"],
+    ["preferences", "Display preferences", "Keep appearance and density choices near their preview.", "select", "switch"],
+    ["notifications", "Notification settings", "Let people choose the updates they receive.", "switch"],
+    ["appointment", "Book an appointment", "Choose a date and an available time in that order.", "calendar", "select", "button"],
+    ["upload-file", "Upload a file", "Keep an attachment picker beside its upload status.", "motion-file-drop"],
+    ["shade", "Adjust a device", "Set the position of a connected shade.", "slider"],
+    ["payout", "Payout threshold", "Set the minimum balance for an automatic payout.", "numeric-spinner", "button"],
+    ["receiving", "Receiving method", "Choose where incoming payments arrive.", "radio-group"],
+    ["transfer", "Transfer funds", "Confirm the amount and destination together.", "numeric-spinner", "select", "button"],
+    ["access", "Verify account access", "Enter the six-digit code sent to the account owner.", "input-otp"],
+  ]),
+  family("records", "Records & lists", [
+    ["invoice", "Invoice summary", "Keep the invoice number, due date and balance together.", "record-facts"],
+    ["transactions", "Recent transactions", "Compare the date, description and amount in aligned columns.", "data-table"],
+    ["releases", "Release catalog", "Browse published versions and their review status.", "data-table"],
+    ["payments", "Payment methods", "Scan saved methods and distinguish the default.", "list"],
+    ["upcoming", "Upcoming payments", "See scheduled payments in due-date order.", "list"],
+    ["contributors", "Contributors", "Show who contributed and what they worked on.", "list"],
+    ["profile", "Contributor profile", "Keep the person's identity, role and team together.", "record-facts"],
+    ["balance", "Available balance", "Separate the amount available today from pending funds.", "record-facts"],
+    ["card-details", "Card details", "Expose only the last four digits alongside the card's status.", "record-facts"],
+    ["social", "Public profiles", "Group the destinations where people can find your team.", "list"],
+    ["album", "Collection cover", "Pair cover artwork with the collection's title and credits.", "project-mark", "text"],
+  ]),
+  family("metrics", "Metrics & progress", [
+    ["activity-history", "Activity history", "Show the pattern of activity across several weeks.", "chart"],
+    ["contributions", "Contribution activity", "Compare contributions across a recent working week.", "bar-chart"],
+    ["observability", "Service latency", "Show how response time changes over the week.", "chart"],
+    ["traffic-mix", "Traffic sources", "Compare each source's share of total visits.", "list"],
+    ["sleep", "Sleep report", "Compare hours of rest across several nights.", "chart"],
+    ["fitness", "Weekly activity", "Compare active minutes on different days.", "bar-chart"],
+    ["analytics", "Workspace analytics", "Show how completed work changes over time.", "chart"],
+    ["usage", "Plan usage", "Show used capacity beside the plan's limit.", "progress"],
+    ["visitors", "Visitors", "Display visit counts with the time period.", "chart"],
+    ["dividends", "Dividend income", "Compare distributions across quarterly periods.", "bar-chart"],
+    ["investment", "Investment overview", "Show returns with the observation date.", "chart"],
+    ["savings", "Savings progress", "Show the amount saved against the target.", "progress"],
+    ["targets", "Savings goals", "Compare progress across multiple targets.", "progress"],
+    ["energy", "Power usage", "Show changes in power usage over a set period.", "chart"],
+    ["stock", "Stock performance", "Show a price trend with the observation date.", "chart"],
+    ["signal", "Live signal", "Show changes in signal magnitude across readings.", "bar-chart"],
+    ["volume", "Activity by category", "Compare the number of requests across categories.", "bar-chart"],
+  ]),
+  family("states", "States & actions", [
+    ["workspace", "Open a workspace", "Give a clear next action from a workspace summary.", "button", "status"],
+    ["agent", "Activate an agent", "Ask for confirmation before enabling the agent.", "confirm-dialog", "button", "status"],
+    ["alert", "Anomaly alert", "Show which signal changed and how to recover.", "notice", "button"],
+    ["loading", "Loading records", "Reserve space for the content while records load.", "skeleton", "list", "button"],
+    ["loading-card", "Loading a workspace", "Keep the workspace summary in place while details load.", "spinner", "button", "status"],
+    ["syncing", "Syncing changes", "Make in-progress work and its completion visible.", "progress", "button"],
+    ["no-members", "No team members", "Give a new team a clear way to invite its first member.", "result", "button"],
+    ["no-bank", "Connect an account", "Explain what becomes available after connecting an account.", "result", "button"],
+    ["no-release", "Publish your first release", "Give a new catalog its first publishing action.", "result", "button"],
+    ["no-catalog", "Empty catalog", "Provide a way to return to browsing.", "result", "button"],
+    ["not-found", "Page not found", "Offer a route back from an unavailable page.", "result", "button"],
+    ["milestone", "New milestone", "Acknowledge completion and give the reader a clear next step.", "notice", "button"],
+    ["connect", "Connect another device", "Show a pairing code with a copy action.", "code-block"],
+    ["entry", "Entry access", "Show whether the entry is secured and let the owner change it.", "switch", "status"],
+    ["appliance", "Room controls", "Group controls for devices in the same space.", "switch", "slider"],
+  ]),
+  family("foundations", "Foundations & navigation", [
+    ["appearance", "Appearance & density", "Compare a single composition across supported surface and density options.", "card", "switch", "button-group"],
+    ["type-specimen", "Type hierarchy", "Compare text roles in documentation, records and conversation.", "post", "heading", "text"],
+    ["icons", "Icon actions", "Give each compact icon action a name and clear feedback.", "icon-button", "status"],
+    ["controls", "Control combinations", "Combine a text input, choice and action in one task.", "text-field", "select", "button"],
+    ["shortcuts", "Keyboard shortcuts", "Pair a command name with its keyboard binding.", "kbd"],
+    ["directory", "Workspace navigation", "Keep related destinations together in a compact sidebar.", "sidebar-layout", "sidebar"],
+    ["faq", "Frequently asked questions", "Let readers expand the answer they need.", "accordion"],
+  ]),
+];
+
+export type Recipe = typeof recipeFamilies[number]["recipes"][number];
+
+export const recipeBoards = [
+  {
+    id: "everyday",
+    title: "Accounts & everyday tools",
+    specimens: [
+      "activity-history", "no-release", "connect", "dividends", "investment", "syncing",
+      "payout", "balance", "preferences", "savings", "appliance",
+      "targets", "transactions", "directory", "faq", "payments", "entry", "releases",
+      "access", "card-details", "transfer", "album", "loading-card",
+      "receiving", "energy", "no-bank", "upcoming", "shade",
+      "stock", "no-catalog", "milestone", "social", "notifications",
+    ],
+  },
+  {
+    id: "studio",
+    title: "Studio & operations",
+    specimens: [
+      "appearance", "type-specimen", "controls", "workspace", "invoice",
+      "icons", "observability", "shipping",
+      "environment", "volume", "invite", "agent",
+      "loading", "traffic-mix", "no-members", "issue", "contributors",
+      "feedback", "appointment", "sleep", "profile",
+      "fitness", "upload-file", "analytics", "usage", "shortcuts",
+      "alert", "signal", "visitors", "contributions", "not-found",
+    ],
+  },
+];
+
+const indexedRecipes = new Map(recipeFamilies.flatMap(family =>
+  family.recipes.map(recipe => [recipe.id, { family: family.id, recipe }] as const),
+));
+
+export function getRecipe(id: string) {
+  const entry = indexedRecipes.get(id);
+  if (!entry) throw new Error("Unknown gallery specimen: " + id);
+  return entry;
+}

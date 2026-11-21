@@ -1,3 +1,4 @@
+import { sectionHref } from "../routing";
 import { useEffect, useRef, useState } from "react";
 import * as Y from "@openboa/yogurt";
 import { AgentMotionExample } from "./agent-motion-example";
@@ -202,6 +203,7 @@ export function Example({
               <>
                 <Y.Button
                   emphasis="soft"
+                  shape="pill"
                   onClick={() => setNote("Draft kept.")}
                 >
                   Keep draft
@@ -215,6 +217,17 @@ export function Example({
               </>
             )}
           </Y.ButtonGroup>
+          {variation && <Y.Stack gap={8}>
+            <Y.Inline gap={8}>
+              <Y.Button size="compact" emphasis="soft" onClick={() => setNote("Compact action selected.")}>Compact</Y.Button>
+              <Y.Button size="regular" emphasis="soft" onClick={() => setNote("Regular action selected.")}>Regular</Y.Button>
+              <Y.Button size="comfortable" emphasis="soft" onClick={() => setNote("Comfortable action selected.")}>Comfortable</Y.Button>
+            </Y.Inline>
+            <Y.Inline gap={8}>
+              <Y.Button size="spacious" shape="pill" onClick={() => setNote("Spacious action selected.")}>Spacious</Y.Button>
+              <Y.Button size="touch" emphasis="soft" onClick={() => setNote("Touch action selected.")}>Touch</Y.Button>
+            </Y.Inline>
+          </Y.Stack>}
           {status}
         </Y.Stack>
       );
@@ -269,6 +282,16 @@ export function Example({
     case "help-text":
     case "field-error":
     case "text-field":
+      if (id === "text-field" && variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
+              <Y.TextField key={size} label={size[0].toUpperCase() + size.slice(1)}
+                size={size} placeholder="Name your view" />
+            ))}
+          </Y.Stack>
+        );
+      }
       return (
         <Y.TextField
           ref={field}
@@ -305,6 +328,16 @@ export function Example({
       );
     case "search-field":
     case "filter-bar":
+      if (id === "search-field" && variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
+              <Y.SearchField key={size} label={size[0].toUpperCase() + size.slice(1)}
+                size={size} value={query} onValueChange={setQuery} placeholder="Find a view" />
+            ))}
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Stack>
           <Y.FilterBar
@@ -334,6 +367,17 @@ export function Example({
         </Y.Stack>
       );
     case "select":
+      if (variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
+              <Y.Select key={size} label={size[0].toUpperCase() + size.slice(1)}
+                controlSize={size} options={projects} value={choice} onChange={(e) => setChoice(e.target.value)} />
+            ))}
+            <Y.Select label="Multiple choice" multiple size={3} options={projects} />
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Select
           label="Project"
@@ -350,6 +394,13 @@ export function Example({
         />
       );
     case "checkbox":
+      if (variation) {
+        return <Y.Stack gap={8}>
+          <form aria-label="Checkbox form"><Y.Checkbox label="Include notes" name="notes" value="include" defaultChecked /></form>
+          <Y.Checkbox label="Some records selected" checked="indeterminate" />
+          <Y.Checkbox label="Unavailable option" disabled />
+        </Y.Stack>;
+      }
       return (
         <Y.Checkbox
           label="Include archived views"
@@ -369,14 +420,14 @@ export function Example({
         </Y.Stack>
       );
     case "link":
-      return <Y.Link href="#record-facts">View record details</Y.Link>;
+      return <Y.Link href={sectionHref("components", "record-facts")}>View record details</Y.Link>;
     case "breadcrumb":
       return (
         <Y.Breadcrumb
           items={[
-            { id: "home", label: "Library", href: "#button" },
-            { id: "records", label: "Records", href: "#list" },
-            { id: "view", label: "Weekly review", href: "#record-facts" },
+            { id: "home", label: "Library", href: sectionHref("components", "button") },
+            { id: "records", label: "Records", href: sectionHref("components", "list") },
+            { id: "view", label: "Weekly review", href: sectionHref("components", "record-facts") },
           ]}
         />
       );
@@ -386,8 +437,8 @@ export function Example({
           label="Library destinations"
           current="records"
           items={[
-            { id: "records", label: "Records", href: "#list" },
-            { id: "facts", label: "Facts", href: "#record-facts" },
+            { id: "records", label: "Records", href: sectionHref("components", "list") },
+            { id: "facts", label: "Facts", href: sectionHref("components", "record-facts") },
           ]}
         />
       );
@@ -547,7 +598,7 @@ export function Example({
     case "notice":
       return (
         <Y.Notice
-          tone={variation ? "warning" : "brand"}
+          tone={variation ? "warning" : "neutral"}
           title={variation ? "Review required" : "View updated"}
         >
           {variation

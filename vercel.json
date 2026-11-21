@@ -1,7 +1,25 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "true",
-  "buildCommand": "node apps/guide/tooling/build-site.mjs",
-  "outputDirectory": "site"
+  "installCommand": "npm ci",
+  "buildCommand": "npm run guide:build",
+  "outputDirectory": "site",
+  "rewrites": [
+    { "source": "/components", "destination": "/index.html" },
+    { "source": "/components/:id", "destination": "/index.html" },
+    { "source": "/templates", "destination": "/index.html" },
+    { "source": "/templates/:id", "destination": "/index.html" },
+    { "source": "/examples", "destination": "/index.html" },
+    { "source": "/examples/sourdough", "destination": "/index.html" },
+    { "source": "/motion", "destination": "/index.html" },
+    { "source": "/motion/:id", "destination": "/index.html" },
+    { "source": "/workflows", "destination": "/index.html" },
+    { "source": "/agents", "destination": "/index.html" },
+    { "source": "/motion-comparison", "destination": "/index.html" },
+    { "source": "/system", "destination": "/index.html" },
+    { "source": "/library", "destination": "/index.html" },
+    { "source": "/adoption", "destination": "/index.html" },
+    { "source": "/playbook", "destination": "/index.html" },
+    { "source": "/emoji", "destination": "/index.html" }
+  ]
 }

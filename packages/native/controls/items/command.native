@@ -2,7 +2,7 @@
   <column gap="8">
     <text size="heading">{label}</text>
     <search-field label="Find a command" text="{value}" on-input="edit"/>
-    <list>
+    <list gap="2">
       <for each="choices" key="id" as="item">
         <list-item disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</list-item>
       </for>

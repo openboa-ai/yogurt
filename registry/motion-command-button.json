@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-command-button",
+  "type": "registry:ui",
+  "title": "CommandButton",
+  "description": "Open and choose a named command.",
+  "files": [
+    {
+      "path": "ui/motion-command-button.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { CommandButton } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

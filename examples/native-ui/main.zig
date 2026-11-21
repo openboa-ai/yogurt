@@ -9,7 +9,7 @@ const geometry = native_sdk.geometry;
 
 const canvas_label = "main-canvas";
 const window_width: f32 = 480;
-const window_height: f32 = 400;
+const window_height: f32 = 480;
 
 const app_permissions = [_][]const u8{ native_sdk.security.permission_command, native_sdk.security.permission_view };
 const shell_views = [_]native_sdk.ShellView{

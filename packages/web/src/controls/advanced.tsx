@@ -1,21 +1,21 @@
 "use client";
 import {
-  useContext, useId, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode,
+  useContext, useId, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode,
 } from "react";
 import {
-  Accordion as A,
   ContextMenu as C,
   Menubar as M,
   NavigationMenu as N,
   Popover as P,
   HoverCard as H,
 } from "radix-ui";
+import { Accordion as SDKAccordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionPanel } from "@ui-sdk/react/accordion";
 import { DayPicker } from "react-day-picker";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
-import { Icon, type Option } from "../foundation/foundation.js";
+import { cx, Icon, type IconName, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
 import { Dialog } from "./layers.js";
-import type { Destination } from "./navigation.js";
+import { NavigationList, type Destination } from "./navigation.js";
 import { Checkbox, RadioGroup, Textarea } from "./forms.js";
 import { CarouselMotionReview } from "./motion-review-context.js";
 
@@ -33,35 +33,47 @@ export function Accordion({
   }[];
   multiple?: boolean;
 }) {
-  const children = items.map((i) => (
-    <A.Item key={i.id} value={i.id} disabled={i.disabled}>
-      <A.Header>
-        <A.Trigger>
-          {i.title}
-          <Icon name="down" />
-        </A.Trigger>
-      </A.Header>
-      <A.Content className="yg-accordion-content">{i.content}</A.Content>
-    </A.Item>
-  ));
-  return multiple ? (
-    <A.Root type="multiple" className="yg-accordion" aria-label={label}>
-      {children}
-    </A.Root>
-  ) : (
-    <A.Root
-      type="single"
-      collapsible
-      className="yg-accordion"
-      aria-label={label}
-    >
-      {children}
-    </A.Root>
-  );
+  const [openItems, setOpenItems] = useState<string[]>([]);
+  return <SDKAccordion multiple={multiple} collapsible className="yg-accordion" aria-label={label}
+    value={openItems} onValueChange={(next, details) => {
+      if (next.some((id) => !openItems.includes(id) && !items.some((item) => item.id === id && !item.disabled))) {
+        details.cancel();
+        return;
+      }
+      setOpenItems(next);
+    }}
+    onKeyDownCapture={(event) => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+      const current = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-yg-accordion-id]");
+      if (current?.closest(".yg-accordion") !== event.currentTarget) return;
+      const enabled = items.filter((item) => !item.disabled);
+      const index = enabled.findIndex((item) => item.id === current?.dataset.ygAccordionId);
+      if (index < 0) return;
+      const next = ({ ArrowDown: (index + 1) % enabled.length,
+        ArrowUp: (index + enabled.length - 1) % enabled.length,
+        Home: 0, End: enabled.length - 1 } as Record<string, number | undefined>)[event.key];
+      if (next === undefined) return;
+      event.preventDefault();
+      [...event.currentTarget.querySelectorAll<HTMLButtonElement>("button[data-yg-accordion-id]")]
+        .find((button) => button.dataset.ygAccordionId === enabled[next].id)?.focus();
+    }}>
+    {items.map((item) => <AccordionItem key={item.id} value={item.id} disabled={item.disabled}>
+      <AccordionHeader><AccordionTrigger data-yg-accordion-id={item.id}
+        render={(props, state) => <button {...props} disabled={state.disabled} data-state={state.open ? "open" : "closed"} />}>
+        {item.title}<Icon name="down" />
+      </AccordionTrigger></AccordionHeader>
+      <AccordionPanel className="yg-accordion-content"
+        render={(props, state) => <div {...props} data-state={state.open ? "open" : "closed"}
+          aria-hidden={!state.open || undefined} inert={!state.open || undefined} />}>
+        <div className="yg-accordion-inner">{item.content}</div>
+      </AccordionPanel>
+    </AccordionItem>)}
+  </SDKAccordion>;
 }
 type CommandProps = {
   label: string;
-  items: Option[];
+  title?: string;
+  items: (Option & { hint?: string; icon?: IconName; shortcut?: string })[];
   onSelect: (id: string) => void;
 };
 export function ContextMenu({
@@ -146,7 +158,13 @@ export function HoverCard({
     </H.Root>
   );
 }
-export function Command({ label, items, onSelect }: CommandProps) {
+export function Command({
+  label, title = label, items, onSelect, presentation = "dialog", triggerText = label,
+}: CommandProps & { presentation?: "dialog" | "inline"; triggerText?: string }) {
+  const inline = presentation === "inline";
+  const trigger = useRef<HTMLButtonElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const previousOpen = useRef(false);
   const [open, setOpen] = useState(false),
     [query, setQuery] = useState(""),
     [active, setActive] = useState(""),
@@ -156,6 +174,19 @@ export function Command({ label, items, onSelect }: CommandProps) {
     ),
     enabled = shown.filter((i) => !i.disabled);
   const current = enabled.find((i) => i.id === active) ?? enabled[0];
+  useLayoutEffect(() => {
+    if (!inline) return;
+    if (open) input.current?.focus();
+    else if (previousOpen.current) trigger.current?.focus();
+    previousOpen.current = open;
+  }, [inline, open]);
+
+  function start() {
+    setQuery("");
+    setActive("");
+    setOpen(true);
+  }
+
   function choose(item?: Option) {
     if (item && !item.disabled) {
       setOpen(false);
@@ -171,75 +202,107 @@ export function Command({ label, items, onSelect }: CommandProps) {
       .getElementById(list + next.id)
       ?.scrollIntoView({ block: "nearest" });
   }
-  return (
-    <>
-      <Button
-        emphasis="soft"
-        onClick={() => {
-          setQuery("");
+  const panel = <>
+    <div className="yg-command-search">
+      <Icon name="search" />
+      <input
+        ref={input}
+        autoFocus={!inline}
+        role="combobox"
+        aria-label="Find a command"
+        placeholder={inline ? "Type a command" : "Find a command"}
+        aria-expanded={open}
+        aria-controls={list}
+        aria-autocomplete="list"
+        aria-activedescendant={current ? list + current.id : undefined}
+        value={query}
+        onChange={(e) => {
+          setQuery(e.target.value);
           setActive("");
-          setOpen(true);
         }}
-      >
-        {label}
-      </Button>
-      <Dialog open={open} onOpenChange={setOpen} title={label}>
-        <input
-          autoFocus
-          role="combobox"
-          className="yg-standalone"
-          aria-label="Find a command"
-          placeholder="Find a command"
-          aria-expanded="true"
-          aria-controls={list}
-          aria-autocomplete="list"
-          aria-activedescendant={current ? list + current.id : undefined}
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            setActive("");
-          }}
-          onKeyDown={(e) => {
-            if (e.nativeEvent.isComposing) return;
-            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        onKeyDown={(e) => {
+          if (e.nativeEvent.isComposing) return;
+          if (inline && e.key === "Escape") {
+            e.stopPropagation();
+            setOpen(false);
+          }
+          if (inline && e.altKey) {
+            const key = e.code.startsWith("Key") ? e.code.slice(3) : e.key;
+            const shortcut = shown.find(item => !item.disabled && item.shortcut?.toLowerCase() === key.toLowerCase());
+            if (shortcut) {
               e.preventDefault();
-              move(e.key === "ArrowDown" ? 1 : -1);
+              choose(shortcut);
+              return;
             }
-            if (e.key === "Enter") {
-              e.preventDefault();
-              choose(current);
-            }
-          }}
-        />
+          }
+          if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            move(e.key === "ArrowDown" ? 1 : -1);
+          }
+          if (e.key === "Enter") {
+            e.preventDefault();
+            choose(current);
+          }
+        }}
+      />
+    </div>
+    <div
+      className="yg-command-list"
+      id={list}
+      role="listbox"
+      aria-label="Commands"
+      style={inline && current ? { "--yg-command-index": shown.indexOf(current) } as CSSProperties : undefined}
+    >
+      {inline && current && <span className="yg-inline-command-marker" aria-hidden="true" />}
+      {shown.map((i) => (
         <div
-          className="yg-command-list"
-          id={list}
-          role="listbox"
-          aria-label="Commands"
+          key={i.id}
+          id={list + i.id}
+          role="option"
+          aria-label={i.label}
+          aria-describedby={i.hint ? list + i.id + "-hint" : undefined}
+          aria-selected={current?.id === i.id}
+          aria-disabled={i.disabled}
+          aria-keyshortcuts={inline && i.shortcut ? `Alt+${i.shortcut}` : undefined}
+          onPointerMove={() => !i.disabled && setActive(i.id)}
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => choose(i)}
         >
-          {shown.map((i) => (
-            <div
-              key={i.id}
-              id={list + i.id}
-              role="option"
-              aria-selected={current?.id === i.id}
-              aria-disabled={i.disabled}
-              onPointerMove={() => !i.disabled && setActive(i.id)}
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => choose(i)}
-            >
-              {i.label}
-            </div>
-          ))}
+          {!inline && i.icon && <Icon name={i.icon} />}
+          <span className="yg-command-copy">
+            <span>{i.label}</span>
+            {i.hint && <span className="yg-help" id={list + i.id + "-hint"} hidden={inline}>{i.hint}</span>}
+          </span>
+          {inline && i.shortcut ? <kbd aria-hidden="true" title={`Alt + ${i.shortcut}`}>{i.shortcut}</kbd>
+            : current?.id === i.id && <kbd aria-hidden="true">↵</kbd>}
         </div>
-        {!shown.length && (
-          <p className="yg-help" role="status">
-            No matching commands
-          </p>
-        )}
-      </Dialog>
-    </>
-  );
+      ))}
+    </div>
+    {!shown.length && (
+      <p className="yg-help" role="status">
+        No matching commands
+      </p>
+    )}
+  </>;
+
+  if (inline) return <div className="yg-inline-command" data-open={open} onKeyDown={event => {
+    if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault();
+      if (open) setOpen(false);
+      else start();
+    }
+  }}>
+    <button ref={trigger} className="yg-inline-command-trigger" type="button" onClick={start}
+      inert={open} aria-label={label} aria-expanded={open} aria-controls={list + "-panel"} aria-keyshortcuts="Meta+K Control+K">
+      <Icon name="search" /><span>{triggerText}</span><kbd>⌘K</kbd>
+    </button>
+    <div className="yg-inline-command-panel" id={list + "-panel"} inert={!open}>{panel}</div>
+  </div>;
+
+  return <>
+    <Button emphasis="soft" onClick={start}>{label}</Button>
+    <Dialog open={open} onOpenChange={setOpen} title={title}>{panel}</Dialog>
+  </>;
 }
 export function Menubar({
   label,
@@ -325,37 +388,69 @@ export function Sidebar({
           label={open ? "Collapse navigation" : "Expand navigation"}
           aria-expanded={open}
           aria-controls={id}
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpen((value) => !value)}
         />
       </header>
-      <nav id={id} aria-label={label} hidden={!open}>
-        {links.map((l) => (
-          <a
-            key={l.id}
-            href={l.href}
-            aria-current={l.id === current ? "page" : undefined}
-          >
-            {l.label}
-          </a>
-        ))}
+      <nav id={id} aria-label={label} data-expanded={open} aria-hidden={!open} inert={!open}>
+        <div className="yg-sidebar-links">
+          {links.map((l) => (
+            <a
+              key={l.id}
+              href={l.href}
+              aria-current={l.id === current ? "page" : undefined}
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
       </nav>
     </aside>
   );
 }
-export function Navbar({
-  label,
-  onBack,
-  action,
-}: {
-  label: string;
-  onBack: () => void;
-  action?: ReactNode;
-}) {
+type NavbarProps = { className?: string; action?: ReactNode } & (
+  | { variant?: "back"; label: string; onBack: () => void }
+  | {
+      variant: "sections";
+      label: string;
+      identity: ReactNode;
+      destinations: Destination[];
+      current: string;
+      currentKind?: "page" | "location";
+      expanded: boolean;
+      onExpandedChange: (expanded: boolean) => void;
+    }
+);
+
+export function Navbar(props: NavbarProps) {
+  const navigationId = useId();
+  const toggle = useRef<HTMLButtonElement>(null);
+  const className = cx("yg-navbar", props.className);
+  if (props.variant === "sections") {
+    return (
+      <header className={className} data-variant="sections" onKeyDown={event => {
+        if (event.key === "Escape" && props.expanded) {
+          props.onExpandedChange(false);
+          toggle.current?.focus();
+        }
+      }}>
+        <div className="yg-navbar-identity">{props.identity}</div>
+        <NavigationList id={navigationId} label={props.label} items={props.destinations}
+          current={props.current} currentKind={props.currentKind}
+          orientation="horizontal" expanded={props.expanded} />
+        <div className="yg-navbar-actions">
+          <IconButton ref={toggle} className="yg-navbar-toggle" icon={props.expanded ? "close" : "menu"}
+            label={props.expanded ? "Close menu" : "Open menu"} aria-controls={navigationId}
+            aria-expanded={props.expanded} onClick={() => props.onExpandedChange(!props.expanded)} />
+          {props.action}
+        </div>
+      </header>
+    );
+  }
   return (
-    <header className="yg-navbar">
-      <IconButton icon="back" label="Go back" onClick={onBack} />
-      <strong>{label}</strong>
-      {action}
+    <header className={className}>
+      <IconButton icon="back" label="Go back" onClick={props.onBack} />
+      <strong>{props.label}</strong>
+      {props.action}
     </header>
   );
 }
@@ -532,15 +627,16 @@ export function Stepper({
   variant?: "list" | "progress";
 }) {
   const at = steps.findIndex((s) => s.id === current);
+  const connected = variant === "progress" && steps.length > 1 && steps.length <= 5;
   return (
-    <div className="yg-stage-list">
-      {variant === "progress" && (
-        <progress
-          aria-label={label}
-          value={at + 1}
-          max={Math.max(1, steps.length)}
-        />
-      )}
+    <div className="yg-stage-list" data-connected={connected || undefined}
+      style={connected ? {"--yg-step-count": steps.length} as CSSProperties : undefined}>
+      {variant === "progress" && <div className="yg-step-track">
+        <progress aria-label={label} value={at + 1} max={Math.max(1, steps.length)} />
+        <span aria-hidden="true" style={{
+          "--yg-step-progress": connected ? Math.max(0, at) / (steps.length - 1) : (at + 1) / Math.max(1, steps.length),
+        } as CSSProperties} />
+      </div>}
       <ol className="yg-stepper" aria-label={label} data-variant={variant}>
         {steps.map((s, i) => (
           <li
@@ -552,7 +648,11 @@ export function Stepper({
               className="yg-step-number"
               aria-label={i < at ? "Completed" : undefined}
             >
-              {i < at ? <Icon name="check" /> : i + 1}
+              <span aria-hidden={i < at || undefined}>{i + 1}</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="m5 12.5 4.5 4.5L19 7.5" pathLength="22" />
+              </svg>
             </span>
             <div>
               <strong>{s.label}</strong>

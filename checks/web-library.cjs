@@ -48,6 +48,15 @@ const catalog = [
           );
           if (overflow > 1)
             failures.push([scheme, width, entry.id, "overflow", overflow]);
+          const misalignment = await example.evaluate(inner => {
+            const content = inner.getBoundingClientRect();
+            const stage = inner.parentElement.getBoundingClientRect();
+            const heading = document.querySelector(".catalog-intro").getBoundingClientRect();
+            const midpoint = Math.abs((content.left + content.right) - (stage.left + stage.right)) / 2;
+            return Math.max(midpoint, Math.abs(stage.left - heading.left));
+          });
+          if (misalignment > 1)
+            failures.push([scheme, width, entry.id, "misalignment", misalignment]);
           renders++;
         } catch (e) {
           failures.push([scheme, width, entry.id, String(e).slice(0, 160)]);
@@ -121,10 +130,7 @@ const catalog = [
         await root
           .getByRole("button", { name: "Where are archived reviews?" })
           .click();
-        assert.equal(
-          await root.getByText("People with access to Sourdough.").count(),
-          0,
-        );
+        await root.getByText("People with access to Sourdough.").waitFor({ state: "detached" });
         root = await show("slider");
         let slider = root.getByRole("slider");
         await slider.focus();
@@ -290,7 +296,7 @@ const catalog = [
             path: path.join(process.env.YOGURT_CAPTURE_DIR, "calendar.png"),
           });
         ink.push("Component and block interactions");
-        const lookup = page.getByRole("textbox", { name: "Find a component" });
+        const lookup = page.getByRole("searchbox", { name: "Find a component" });
         for (const [query, name] of [
           ["Keypad", "Keypad"],
           ["IconButton", "IconButton"],

@@ -117,6 +117,10 @@ export function SaveView({ onSave }: { onSave: () =&gt; void }) {
 }
 </code></pre>
 <p>For shadcn CLI, supply the local file <code>registry/button.json</code> to <code>shadcn add</code> after installing the pinned package. The resulting editable entry imports the same library component. <code>npx yogurt add</code> is the dependency-light alternative and refuses to replace edited files. Install and pin a new version through the consuming project’s own review.</p>
+<h3>Control sizes and action shapes</h3>
+<p>Web <code>Button</code>, <code>TextField</code> and <code>SearchField</code> accept the same size names: <code>compact</code>, <code>regular</code>, <code>comfortable</code>, <code>spacious</code> and <code>touch</code>, corresponding to 30, 36, 40, 48 and 44 px. Use <code>controlSize</code> for the same visual choices on <code>Select</code>; its native <code>size</code> attribute retains its HTML meaning. Regular is the default. Choose the size for the context and provide at least a 44 px target for touch. Buttons support <code>shape=&quot;rounded&quot;</code> and <code>shape=&quot;pill&quot;</code>; filled, soft and quiet describe emphasis rather than size. The component guide demonstrates each option.</p>
+<p>Copy, quantity adjustment, hold confirmation, slide confirmation and loading results have dedicated web controls exported from the package root. They keep their own state and event contracts. Their individual registry entries and corresponding native implementations are not yet available. Generated Zig dimensions do not establish native visual or behavioral parity.</p>
+<p>Web cards accept <code>density=&quot;compact&quot;</code>, <code>&quot;regular&quot;</code> or <code>&quot;spacious&quot;</code>. The insets are 12, 18 and 24 px, with a shared 24 px corner. Choose the inset for the content and surrounding space; a density does not change the card&#39;s purpose or action.</p>
 <p>An <code>AgentAvatar</code> uses the host’s <code>ready</code>, <code>thinking</code>, <code>working</code>, <code>waiting</code>, <code>blocked</code> or <code>done</code> state. Pass the state to roster and conversation components through <code>AgentSummary</code>. Keep a readable status label next to active work, and use <code>animated={false}</code> for archived portraits outside the Message component. Message keeps its portraits still by default. AgentAvatar follows the system motion preference and uses a still version of the current expression when motion is reduced. <a href="#motion">Motion and component behavior</a></p>
 <h2>Zig and Vercel Native SDK</h2>
 <p>The same ID installs an editable markup template, a Zig source entry, the shared theme, English words and Rethink Sans. The installer writes under <code>src/yogurt</code>. Use the installed template from your Native view.</p>
@@ -164,8 +168,8 @@ npx yogurt add switch --target native
 <td>Single-component import or local source installation</td>
 </tr>
 </tbody></table></div>
-<p>Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. The four approved controls provide the proportions for larger compositions. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. <a href="#component-library">Accepted basis</a></p>
-<p>The web adapter uses the actual Button, Input, Textarea, Switch, Checkbox, RadioGroup, SegmentedControl and Badge implementations from OpenAI Apps SDK UI 0.2.2. It binds their anatomy to Yogurt’s own styles. Other entries use platform elements or Yogurt compositions. The built package retains third-party notices.</p>
+<p>Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. Shared dimensions are generated from the UI bindings; use the component&#39;s documented roles rather than local copies of measurements. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. <a href="engineering/quality/motion-foundation-replacement/spec.md">Foundation replacement</a></p>
+<p>The web adapter uses the actual Button, Input, Textarea, Switch, RadioGroup, SegmentedControl and Badge implementations from OpenAI Apps SDK UI 0.2.2. It binds their anatomy to Yogurt’s own styles. Other entries use platform elements or Yogurt compositions. The built package retains third-party notices.</p>
 <h2>Check a consuming project</h2>
 <p>Follow the <a href="#design-system-rules">design system rules</a> for mandatory reuse, project composition and promotion of shared patterns.</p>
 <p>Commit a <code>yogurt.config.json</code> in the project and run <code>yogurt check</code> in its CI. A mixed host can declare <code>{&quot;surfaces&quot;:{&quot;site&quot;:{&quot;target&quot;:&quot;web&quot;,&quot;root&quot;:&quot;apps/site/src&quot;},&quot;app&quot;:{&quot;target&quot;:&quot;native&quot;,&quot;root&quot;:&quot;apps/app/src&quot;}},&quot;version&quot;:&quot;0.1.0-local.16&quot;}</code>. The command reads only declared presentation directories, checks for the corresponding adapter, known imports and numbered colors, and reports direct vendor imports, literal color declarations and other typefaces with a source location. It leaves the source untouched. Review copy meaning, interaction and product-specific outcomes in the host fixture.</p>
@@ -252,7 +256,7 @@ npx yogurt add project-settings --target native
 </thead>
 <tbody><tr>
 <td>1. One token source</td>
-<td>Resolve component roles into existing numbered palette colors. Ink blue is the default. Validate both appearances and the contrast of alternate surface treatments. Rethink Sans, 14/20 action labels, 36 px regular height, 8 px corners and 44 px touch are the center of the scale.</td>
+<td>Resolve component roles into existing numbered palette colors. Neutral is the default for control fills, hover, and ordinary selection. Reserve Ink blue for major actions that request the brand tone. Validate both appearances and the contrast of alternate surface treatments. Rethink Sans, 14/20 action labels, 36 px regular height, 8 px corners and 44 px touch are the center of the scale.</td>
 </tr>
 <tr>
 <td>2. Basic components first</td>
@@ -930,8 +934,8 @@ npx yogurt add project-settings --target native
 <p>The first visual decision remains the button corner. Consumer installation and Vercel Native SDK qualification follow acceptance of the relevant spec.</p>
 <footer><a href="engineering/controls/first-four/README.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="direction"><a class="return" href="#overview">All design records</a><h1>OpenBoa product art direction</h1>
-<p>The <a href="#component-library">approved control basis</a> and <a href="../components.html">live library</a> apply this direction to web and native product work.</p>
-<p>Design revision 1. The system should feel clear enough to use at once and human enough to remember. Someone reviewing a decision should see what is at stake before they notice the styling. The character can have the opposite role in an agent roster, where recognizing an individual is the job. <a href="../index.html">Company guide</a> · <a href="#U21A">Surface composition spec</a></p>
+<p>The <a href="engineering/quality/motion-foundation-replacement/spec.md">component foundation replacement</a> and <a href="../components.html">live library</a> apply this direction to product work. Web and native availability are qualified separately while the replacement is in progress.</p>
+<p>Design revision 2. The system should feel clear enough to use at once and human enough to remember. Someone reviewing a decision should see what is at stake before they notice the styling. The character can have the opposite role in an agent roster, where recognizing an individual is the job. <a href="../index.html">Company guide</a> · <a href="#U21A">Surface composition spec</a></p>
 <h2>What carries the identity</h2>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
 <thead>
@@ -948,12 +952,12 @@ npx yogurt add project-settings --target native
 </tr>
 <tr>
 <td>Rounded geometry with a deliberate cut</td>
-<td>Keep the Upright 9 dimples for the company and a single fitted cut in the contour of a project or agent mark. The <a href="#first-four">first four study</a> starts with an 8 px button corner on a 36 px high action. Compare 6, 8 and 10 px in the same task. The switch keeps a capsule track to convey thumb travel.</td>
+<td>Keep the Upright 9 dimples for the company and a single fitted cut in the contour of a project or agent mark. Use the control&#39;s shared size and shape roles. Keep a 44 px minimum target for touch. The switch keeps a capsule track to convey thumb travel.</td>
 <td>The mark reads as a silhouette on either surface. An ordinary button should read immediately as a button.</td>
 </tr>
 <tr>
 <td>One family, distinct voices at size</td>
-<td>Use Rethink Sans throughout. In the active control study, action and row labels use 500, headings 525 and secondary text 400. The outlined B2 company nameplate uses 760. The existing body is 16/24 and compact interface text 14/20. Use tabular figures where people compare values.</td>
+<td>Use Rethink Sans throughout. Action and row labels use 560, headings use 620, and supporting text uses 450. The outlined B2 company nameplate uses 760. Reading text is 16/24, interface body is 14/20, and action labels are 14/20. Editors use 15/22, compact actions use 13/18, and key metrics use 34/40 at weight 650. Use tabular figures where people compare values.</td>
 <td>Read an actual action label and its consequence together. The label is clear, the paragraph has breathing room, and numbers stay aligned while a result changes.</td>
 </tr>
 <tr>
@@ -963,7 +967,7 @@ npx yogurt add project-settings --target native
 </tr>
 <tr>
 <td>Space as grouping</td>
-<td>The current product study uses 4 units between related lines, 8 between controls and 16–24 between tasks. These are working choices from the existing scale. Density can tighten around comparable rows.</td>
+<td>Use 4–6 px within a label group, 8–10 px between related controls, and 24 px between sections. Use an 18 px inset in cards and 6 px inside anchored menus.</td>
 <td>A person can tell which help, error or action belongs to which item at 320 px and at increased text size.</td>
 </tr>
 <tr>
@@ -972,7 +976,7 @@ npx yogurt add project-settings --target native
 <td>Watch the first frame, interrupt the movement and read the final state. With reduced motion, the same control and outcome remain apparent.</td>
 </tr>
 </tbody></table></div>
-<p>OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, <code>slate.750</code> (#175174). Use the exact color for a main action on paper and a contrast-tested lighter slate on ink. The shared palette has room for colorful art without requiring colorful chrome. <a href="../tokens/brand.json">Token source</a> · <a href="../examples/signature/index.html">Signature study</a></p>
+<p>OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, <code>slate.750</code> (#175174). Use neutral fills and ink for surfaces, routine hover, and selection containers. Use palette signals for data categories, measurable thresholds, and confirmed changes. When a major action needs brand emphasis, use Ink blue on paper and the contrast-tested lighter Slate role on ink. <a href="../tokens/brand.json">Token source</a> · <a href="../examples/signature/index.html">Signature study</a></p>
 <h2>Three surfaces, three first reads</h2>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
 <thead>
@@ -1402,6 +1406,11 @@ npx yogurt add project-sidebar --target native
 <li>A profile avatar and an agent silhouette convey different identities. The generic avatar&#39;s background covered the space around the agent&#39;s silhouette when they used the same style. Shared reuse must carry the same meaning as well as comparable geometry. <a href="#workspace-patterns">Workspace patterns</a></li>
 <li>Two projects can have a source with the same local ID. The common project view preserves project scope and leaves authorization and selection with the host. <a href="#sdk-evidence">Workspace verification</a></li>
 </ul>
+<h2>Interface geometry</h2>
+<p>Use the spacing and corner scales in <code>design/tokens/brand.json</code> and give their applications named roles in <code>design/tokens/ui.json</code>. Use the generated CSS or Zig roles in the renderer. Match elevation to the UI layer. Use the low shadow for a raised control, the floating shadow for a picker and the panel shadow for a modal.</p>
+<p>Stack independent rows with the stack gap and group neighboring controls with the inline gap. Use the tight gap for a label and its supporting content. Apply the layer inset to anchored menus, the panel inset to cards and the sheet inset to modal content. Use the inner radius for controls within another control, the control radius for fields and buttons, and the panel or sheet radius for the corresponding surface. Place icons and labels on a common centerline. Keep a control&#39;s hit area and the space it reserves stable while its state changes.</p>
+<h3>Typography</h3>
+<p>Use Rethink Sans for interface text. Apply display and heading roles to titles, the action role to control labels and the body role to reading text. Use help and metadata roles for supporting information. Use the assigned tracking and line height to preserve hierarchy and readability in dense controls.</p>
 <footer><a href="design-system-rules.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="craft"><a class="return" href="#overview">All design records</a><h1>Component craft and motion</h1>
 <p>A person should be able to see what their input did, where the interface moved and when it is ready for the next action.</p>

@@ -30,13 +30,14 @@ export declare function SidebarFooter({ children, compact }: {
     children: ReactNode;
     compact?: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function SidebarItem({ label, href, icon, active, disabled, badge, action, onSelect, }: {
+export declare function SidebarItem({ label, href, icon, active, disabled, badge, description, action, onSelect, }: {
     label: string;
     href?: string;
     icon?: ReactNode;
     active?: boolean;
     disabled?: boolean;
     badge?: ReactNode;
+    description?: string;
     action?: ReactNode;
     onSelect?: () => void;
 }): import("react/jsx-runtime").JSX.Element;
@@ -45,10 +46,12 @@ export declare function SidebarGroup({ label, children, action }: {
     children: ReactNode;
     action?: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function SidebarSubmenu({ label, icon, children, defaultOpen, containsCurrent }: {
+export declare function SidebarSubmenu({ label, icon, children, defaultOpen, containsCurrent, open: controlledOpen, onOpenChange }: {
     label: string;
     icon?: ReactNode;
     children: ReactNode;
     defaultOpen?: boolean;
     containsCurrent?: boolean;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }): import("react/jsx-runtime").JSX.Element;

@@ -1,8 +1,11 @@
 <template name="yg-notice" args="title detail">
-  <alert>
-  <column gap="4">
-  <text>{title}</text>
-  <text size="sm">{detail}</text>
-  </column>
+  <alert padding="12" background="surface_subtle" radius="md">
+    <row gap="8" cross="start">
+      <icon name="info" width="16" height="16" foreground="text_muted"/>
+      <column grow="1" gap="4">
+        <text wrap="true">{title}</text>
+        <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
+      </column>
+    </row>
   </alert>
 </template>

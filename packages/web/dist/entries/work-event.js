@@ -1,10 +1,11 @@
 "use client";
 import {
   WorkEvent
-} from "../shared/chunk-RR2TGWF5.js";
-import "../shared/chunk-LKJHLHJX.js";
-import "../shared/chunk-A323HUK4.js";
-import "../shared/chunk-RUS3W4HJ.js";
+} from "../shared/chunk-47CVU3AP.js";
+import "../shared/chunk-KXVFHR7K.js";
+import "../shared/chunk-LTCB3AU4.js";
+import "../shared/chunk-H36QHH35.js";
+import "../shared/chunk-5ZXHC2QO.js";
 export {
   WorkEvent
 };

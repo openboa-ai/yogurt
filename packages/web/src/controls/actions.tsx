@@ -1,22 +1,24 @@
 "use client";
 import type { ButtonHTMLAttributes, ReactNode, Ref } from "react";
-import { Button as SDKButton } from "@openai/apps-sdk-ui/components/Button";
-import { cx, Icon, Inline, type IconName, type Size } from "../foundation/foundation.js";
+import { Button as SDKButton } from "@ui-sdk/react/button";
+import { cx, Icon, Inline, type ControlSize, type IconName, type Size } from "../foundation/foundation.js";
+
+export type ButtonSize = ControlSize;
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   emphasis?: "filled" | "soft" | "quiet";
-  tone?: "brand" | "danger";
-  size?: Size;
+  tone?: "neutral" | "brand" | "danger";
+  size?: ButtonSize;
+  shape?: "rounded" | "pill";
   pending?: boolean;
   pendingLabel?: string;
   ref?: Ref<HTMLButtonElement>;
 }
-const variants = { filled: "solid", soft: "soft", quiet: "ghost" } as const;
-const sizes = { compact: "sm", regular: "lg", touch: "2xl" } as const;
 export function Button({
   emphasis = "filled",
-  tone = "brand",
+  tone = "neutral",
   size = "regular",
+  shape = "rounded",
   pending = false,
   pendingLabel,
   children,
@@ -34,14 +36,11 @@ export function Button({
     <SDKButton
       {...props}
       type={type}
-      color={tone === "danger" ? "danger" : "primary"}
-      variant={variants[emphasis]}
-      pill={false}
-      size={sizes[size]}
       className={cx("yg-button", className)}
       data-emphasis={emphasis}
       data-tone={tone}
       data-control-size={size}
+      data-shape={shape}
       aria-disabled={blocked || props.disabled || undefined}
       aria-busy={pending || undefined}
       onClick={(event) => {
@@ -49,10 +48,10 @@ export function Button({
           event.preventDefault();
           return;
         }
-        onClick?.(event);
+        onClick?.(event as React.MouseEvent<HTMLButtonElement>);
       }}
     >
-      <span className="yg-button-label">
+      <span className="yg-button-inner"><span className="yg-button-label">
         <span
           className="yg-button-content"
           aria-hidden={pending && hasPendingLabel ? true : undefined}
@@ -69,7 +68,7 @@ export function Button({
             {pendingLabel}
           </span>
         )}
-      </span>
+      </span></span>
     </SDKButton>
   );
 }

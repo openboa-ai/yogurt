@@ -38,7 +38,7 @@ body:has(#yogurt-motion-comparison) {
 }
 
 .motion-home {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
   font-weight: 700;
 }
 

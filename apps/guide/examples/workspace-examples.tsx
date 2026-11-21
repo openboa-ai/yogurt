@@ -43,6 +43,7 @@ export function WorkspaceExample({ id }: { id: string }) {
   if (id === "composer") return (
     <Stack gap={12}>
       <Composer label="Message Kai" value={draft} onValueChange={setDraft}
+        mentionPeople={[{id: "maya", label: "Maya Chen"}, {id: "jules", label: "Jules Reed"}]}
         attachments={files} onRemoveAttachment={(id) => setFiles((all) => all.filter((item) => item.id !== id))}
         onAddAttachment={() => setFiles((all) => all.some((item) => item.id === "notes") ? all : [...all, {id: "notes", name: "Research notes.md", detail: "Project source"}])}
         toolLabel={tool} tools={[{id:"search",label:"Search sources"},{id:"research",label:"Research mode"}]}
@@ -52,6 +53,7 @@ export function WorkspaceExample({ id }: { id: string }) {
           setDraft("");
           setFiles([]);
         }} />
+      <p className="yg-help">Type @ to mention someone.</p>
       {result && <Status>{result}</Status>}
     </Stack>
   );

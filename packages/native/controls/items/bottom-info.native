@@ -1,6 +1,8 @@
 <template name="yg-bottom-info" args="label">
-  <column gap="8">
-    <text size="sm">{label}</text>
-    <slot/>
-  </column>
+  <panel padding="12">
+    <column gap="8">
+      <text size="sm" foreground="text_muted">{label}</text>
+      <slot/>
+    </column>
+  </panel>
 </template>

@@ -72,10 +72,18 @@ function nativeInstallation(root, expected, inspecting) {
     const archive = inside(root, expected.archive);
     const digest = createHash("sha256").update(readFileSync(archive)).digest("hex");
     if ("sha256:" + digest !== revision) throw Error("The Native SDK archive digest differs from the declared pin.");
+    const motionName = "catalog/motion-components.json";
+    const archiveMembers = new Set(execFileSync("tar", ["-tzf", archive], { encoding: "utf8" }).split("\n"));
+    const motionInArchive = archiveMembers.has("package/" + motionName);
+    const extractedMotion = optionalFile(kit, motionName);
+    if (motionInArchive !== Boolean(extractedMotion) || (motionInArchive &&
+        !execFileSync("tar", ["-xOf", archive, "package/" + motionName]).equals(readFileSync(extractedMotion)))) {
+      throw Error(`The Native SDK extraction differs from its archive at ${motionName}.`);
+    }
     const members = inspecting
       ? new Set(execFileSync("tar", ["-tzf", archive], { encoding: "utf8" }).split("\n"))
       : null;
-    for (const name of ["package.json", ...files]) {
+    for (const name of ["package.json", ...files, "catalog/components.json"]) {
       if (members && name !== "package.json" && !members.has("package/" + name) && !optionalFile(kit, name)) continue;
       const archived = execFileSync("tar", ["-xOf", archive, "package/" + name]);
       if (!archived.equals(readFileSync(inside(kit, name)))) {
@@ -154,7 +162,8 @@ function webComponent(binding, manifest, id) {
   if (!reexport) throw Error(`The installed declaration for ${entry} has an unsupported format at ${stub}.`);
   const types = optionalFile(binding.kit, resolve(dirname(stub), reexport[2] + ".d.ts"));
   if (!types) throw Error(`The installed declaration for ${entry} refers to a missing module.`);
-  return { id, entry, names: reexport[1].split(", "), types };
+  const names = reexport[1].split(", ");
+  return { id, entry, names, types, importStatement: `import { ${names.join(", ")} } from ${JSON.stringify(entry)};` };
 }
 
 function lookupSdk(binding, ids, includeDeclarations = true) {
@@ -163,15 +172,40 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
   const manifest = json(inside(binding.kit, "package.json"));
   const inventory = json(inside(binding.kit, "catalog/components.json"));
   const knownComponents = new Set(inventory.map(item => item.id));
+  const motionFile = optionalFile(binding.kit, "catalog/motion-components.json");
+  const motionCatalog = motionFile ? json(motionFile) : {formatVersion: 1, components: []};
+  if (motionCatalog.formatVersion !== 1 || !Array.isArray(motionCatalog.components)) throw Error("Invalid installed motion component catalog.");
+  const reserved = new Set([...knownComponents, ...catalog.patterns.map(item => item.id),
+    ...json(inside(binding.kit, "catalog/blocks.json")).map(item => item.id)]);
+  const motionIds = new Set();
+  for (const item of motionCatalog.components) {
+    if (!/^motion-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id) || reserved.has(item.id) || motionIds.has(item.id) ||
+        !/^[A-Z][A-Za-z0-9]*$/.test(item.name) || item.entry !== `${manifest.name}/motion-patterns` ||
+        item.web !== "available" || item.native !== "unavailable" || !item.guidance ||
+        typeof item.guidance.useWhen !== "string" || !item.guidance.useWhen.trim() ||
+        typeof item.guidance.avoid !== "string" || !item.guidance.avoid.trim() ||
+        !Array.isArray(item.guidance.verify) || !item.guidance.verify.length ||
+        !item.guidance.verify.every(value => typeof value === "string" && value.trim())) {
+      throw Error("Invalid or duplicate installed motion component metadata.");
+    }
+    motionIds.add(item.id);
+  }
   const components = new Set();
+  const motionEntries = [];
   const patterns = [];
   for (const id of new Set(ids)) {
     if (knownComponents.has(id)) {
       components.add(id);
       continue;
     }
+    const motion = motionCatalog.components.find(item => item.id === id);
+    if (motion) {
+      if (target !== "web") throw Error(`${id} is unavailable for Native.`);
+      motionEntries.push(motion);
+      continue;
+    }
     const pattern = catalog.patterns.find(item => item.id === id);
-    if (!pattern) throw Error(`Unknown installed pattern or component: ${id}. Use describe-pattern.mjs --list or yogurt list.`);
+    if (!pattern) throw Error(`Unknown installed pattern or component: ${id}; it may be unavailable in this SDK version. Use describe-pattern.mjs --list or yogurt list.`);
     for (const key of pattern.components) {
       if (!knownComponents.has(key)) throw Error(`Pattern ${id} references unlisted component ${key}.`);
       components.add(key);
@@ -181,11 +215,24 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
   }
 
   const entries = [...components].map(id => {
-    if (target === "web") return webComponent(binding, manifest, id);
+    const guidance = inventory.find(item => item.id === id)?.guidance ?? null;
+    if (target === "web") return { ...webComponent(binding, manifest, id), guidance };
     const template = optionalFile(binding.kit, `packages/native/controls/items/${id}.native`);
     if (!template) throw Error(`The installed SDK is missing the Native template for ${id}.`);
-    return { id, template, install: `yogurt add ${id} --target native` };
+    return { id, template, install: `yogurt add ${id} --target native`, guidance };
   });
+  for (const item of motionEntries) {
+    const exported = manifest.exports?.["./motion-patterns"];
+    const js = exported?.import && optionalFile(binding.kit, exported.import);
+    const stub = exported?.types && optionalFile(binding.kit, exported.types);
+    if (!js || !stub) throw Error(`The installed SDK is missing the entry for ${item.id}.`);
+    const line = [...readFileSync(stub, "utf8").matchAll(/^export \{ ([\w$, ]+) \} from "(\.\/(?:[\w-]+\/)*[\w-]+)\.js";$/gm)]
+      .find(match => match[1].split(", ").includes(item.name));
+    const types = line && optionalFile(binding.kit, resolve(dirname(stub), line[2] + ".d.ts"));
+    if (!types) throw Error(`The installed declaration for ${item.id} does not expose ${item.name}.`);
+    entries.push({ id: item.id, entry: item.entry, names: [item.name], types, guidance: item.guidance,
+      importStatement: `import { ${item.name} } from ${JSON.stringify(item.entry)};` });
+  }
 
   const declarations = Object.create(null);
   if (includeDeclarations && target === "web") {

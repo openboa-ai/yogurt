@@ -2,7 +2,7 @@
   <stack>
   <button variant="secondary" on-press="open_choices">{label}</button>
   <if test="{is_open}">
-  <dropdown-menu anchor="below" on-dismiss="dismiss">
+  <dropdown-menu anchor="below" label="{label}" on-dismiss="dismiss">
   <slot/>
   </dropdown-menu>
   </if>

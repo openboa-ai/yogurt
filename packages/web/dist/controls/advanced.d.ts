@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
-import { type Option } from "../foundation/foundation.js";
-import type { Destination } from "./navigation.js";
+import { type IconName, type Option } from "../foundation/foundation.js";
+import { type Destination } from "./navigation.js";
 export declare function Accordion({ label, items, multiple, }: {
     label: string;
     items: {
@@ -13,7 +13,12 @@ export declare function Accordion({ label, items, multiple, }: {
 }): import("react/jsx-runtime").JSX.Element;
 type CommandProps = {
     label: string;
-    items: Option[];
+    title?: string;
+    items: (Option & {
+        hint?: string;
+        icon?: IconName;
+        shortcut?: string;
+    })[];
     onSelect: (id: string) => void;
 };
 export declare function ContextMenu({ label, items, onSelect, children, }: CommandProps & {
@@ -23,7 +28,10 @@ export declare function HoverCard({ label, children, }: {
     label: string;
     children: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Command({ label, items, onSelect }: CommandProps): import("react/jsx-runtime").JSX.Element;
+export declare function Command({ label, title, items, onSelect, presentation, triggerText, }: CommandProps & {
+    presentation?: "dialog" | "inline";
+    triggerText?: string;
+}): import("react/jsx-runtime").JSX.Element;
 export declare function Menubar({ label, menus, onSelect, }: {
     label: string;
     menus: {
@@ -46,11 +54,24 @@ export declare function Sidebar({ label, links, current, }: {
     links: Destination[];
     current?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Navbar({ label, onBack, action, }: {
+type NavbarProps = {
+    className?: string;
+    action?: ReactNode;
+} & ({
+    variant?: "back";
     label: string;
     onBack: () => void;
-    action?: ReactNode;
-}): import("react/jsx-runtime").JSX.Element;
+} | {
+    variant: "sections";
+    label: string;
+    identity: ReactNode;
+    destinations: Destination[];
+    current: string;
+    currentKind?: "page" | "location";
+    expanded: boolean;
+    onExpandedChange: (expanded: boolean) => void;
+});
+export declare function Navbar(props: NavbarProps): import("react/jsx-runtime").JSX.Element;
 export declare function Carousel({ label, items, }: {
     label: string;
     items: {

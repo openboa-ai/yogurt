@@ -1,8 +1,5 @@
 <template name="yg-disclosure-row" args="label expanded">
-  <column gap="4">
-  <button variant="ghost" on-press="toggle">{label}</button>
-  <if test="{expanded}">
-  <slot/>
-  </if>
-  </column>
+  <accordion text="{label}" selected="{expanded}" on-toggle="toggle">
+    <slot/>
+  </accordion>
 </template>

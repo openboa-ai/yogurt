@@ -1779,7 +1779,7 @@
           "path": "blocks/collection-browser.tsx",
           "target": "@components/blocks/collection-browser.tsx",
           "type": "registry:component",
-          "content": "\"use client\";\nimport { useState } from \"react\";\nimport {\n  Count,\n  EmptyResult,\n  FilterBar,\n  List,\n  ListHeader,\n  ListRow,\n  Stack,\n  Toggle,\n} from \"@openboa/yogurt\";\nexport interface BrowserRecord {\n  id: string;\n  title: string;\n  detail: string;\n  archived?: boolean;\n}\nexport function CollectionBrowser({\n  title,\n  records,\n  onOpen,\n}: {\n  title: string;\n  records: BrowserRecord[];\n  onOpen: (id: string) => void;\n}) {\n  const [query, setQuery] = useState(\"\"),\n    [archives, setArchives] = useState(false);\n  const shown = records.filter(\n    (r) =>\n      (archives || !r.archived) &&\n      (r.title + \" \" + r.detail)\n        .toLowerCase()\n        .includes(query.trim().toLowerCase()),\n  );\n  return (\n    <Stack gap={12}>\n      <ListHeader\n        title={title}\n        action={<Count value={shown.length} label=\"views\" />}\n      />\n      <FilterBar label=\"Find a view\" query={query} onQueryChange={setQuery}>\n        <Toggle pressed={archives} onPressedChange={setArchives}>\n          Include archived\n        </Toggle>\n      </FilterBar>\n      {shown.length ? (\n        <List label={title}>\n          {shown.map((r) => (\n            <ListRow\n              key={r.id}\n              title={r.title}\n              description={r.detail}\n              onActivate={() => onOpen(r.id)}\n            />\n          ))}\n        </List>\n      ) : (\n        <EmptyResult\n          query={query}\n          empty=\"No views yet\"\n          onClear={() => setQuery(\"\")}\n        />\n      )}\n    </Stack>\n  );\n}\n"
+          "content": "\"use client\";\nimport { useState } from \"react\";\nimport {\n  Count,\n  EmptyResult,\n  FilterBar,\n  List,\n  ListHeader,\n  ListRow,\n  Stack,\n  Toggle,\n} from \"@openboa/yogurt\";\nexport interface BrowserRecord {\n  id: string;\n  title: string;\n  detail: string;\n  archived?: boolean;\n}\nexport function CollectionBrowser({\n  title,\n  records,\n  onOpen,\n  selectedId,\n}: {\n  title: string;\n  records: BrowserRecord[];\n  onOpen: (id: string) => void;\n  selectedId?: string;\n}) {\n  const [query, setQuery] = useState(\"\"),\n    [archives, setArchives] = useState(false);\n  const shown = records.filter(\n    (r) =>\n      (archives || !r.archived) &&\n      (r.title + \" \" + r.detail)\n        .toLowerCase()\n        .includes(query.trim().toLowerCase()),\n  );\n  return (\n    <Stack gap={12}>\n      <ListHeader\n        title={title}\n        action={<Count value={shown.length} label=\"views\" />}\n      />\n      <FilterBar label=\"Find a view\" query={query} onQueryChange={setQuery}>\n        <Toggle pressed={archives} onPressedChange={setArchives}>\n          Include archived\n        </Toggle>\n      </FilterBar>\n      {shown.length ? (\n        <List label={title}>\n          {shown.map((r) => (\n            <ListRow\n              key={r.id}\n              title={r.title}\n              description={r.detail}\n              current={r.id === selectedId}\n              onActivate={() => onOpen(r.id)}\n            />\n          ))}\n        </List>\n      ) : (\n        <EmptyResult\n          query={query}\n          empty=\"No views yet\"\n          onClear={() => setQuery(\"\")}\n        />\n      )}\n    </Stack>\n  );\n}\n"
         }
       ]
     },
@@ -1869,7 +1869,7 @@
           "path": "blocks/attention-inbox.tsx",
           "target": "@components/blocks/attention-inbox.tsx",
           "type": "registry:component",
-          "content": "\"use client\";\nimport { useEffect, useState } from \"react\";\nimport {\n  Badge,\n  Button,\n  ConfirmDialog,\n  Count,\n  ListHeader,\n  Receipt,\n  Result,\n  SegmentedControl,\n  Skeleton,\n  Stack,\n  Text,\n  WorkEvent,\n  type DecisionRef,\n  type ReceiptRecord,\n  type WorkEventRecord,\n} from \"@openboa/yogurt\";\n\nexport interface AttentionItem extends WorkEventRecord {\n  unread: boolean;\n  attention: boolean;\n  review?: {\n    revision: string;\n    consequence: string;\n    confirmLabel: string;\n    available: boolean;\n  };\n}\n\nexport interface AttentionReceipt extends ReceiptRecord {\n  revision: string;\n}\n\nconst filters = [\n  { id: \"all\", label: \"All\" },\n  { id: \"unread\", label: \"Unread\" },\n  { id: \"attention\", label: \"Needs attention\" },\n];\n\nexport function AttentionInbox({\n  items,\n  loading,\n  onMarkRead,\n  onReview,\n  receipts,\n}: {\n  items: readonly AttentionItem[];\n  loading?: boolean;\n  onMarkRead?: (id: string) => void;\n  onReview?: (decision: DecisionRef) => void;\n  receipts?: Readonly<Record<string, AttentionReceipt | undefined>>;\n}) {\n  const [filter, setFilter] = useState(\"all\");\n  const [preview, setPreview] = useState<DecisionRef | null>(null);\n  const visible = items.filter(\n    (item) =>\n      filter === \"all\" ||\n      (filter === \"unread\" && item.unread) ||\n      (filter === \"attention\" && item.attention),\n  );\n  function receiptFor(item: AttentionItem) {\n    const receipt = receipts?.[item.id];\n    return receipt?.id === item.id && receipt.revision === item.review?.revision\n      ? receipt\n      : undefined;\n  }\n  const reviewed = !loading && items.find((item) => item.id === preview?.id);\n  const decision =\n    reviewed && reviewed.review?.revision === preview?.revision && reviewed.review\n      ? {\n          ...reviewed.review,\n          id: reviewed.id,\n          title: reviewed.title,\n          available:\n            reviewed.review.available &&\n            receiptFor(reviewed)?.state !== \"pending\" &&\n            receiptFor(reviewed)?.state !== \"confirmed\",\n        }\n      : null;\n  const canShowPreview = Boolean(decision && onReview);\n  useEffect(() => {\n    if (preview && !canShowPreview) setPreview(null);\n  }, [canShowPreview, preview]);\n  return (\n    <Stack gap={12} className=\"yg-attention-inbox\">\n      <ListHeader\n        title=\"Attention\"\n        action={!loading && <Count label=\"items\" value={visible.length} />}\n      />\n      <SegmentedControl\n        label=\"Filter attention\"\n        value={filter}\n        onValueChange={setFilter}\n        options={filters}\n      />\n      {loading ? (\n        <Skeleton label=\"Loading attention items\" />\n      ) : visible.length > 0 ? (\n        <ul className=\"yg-operations-list\" aria-label=\"Attention items\">\n          {visible.map((item) => {\n            const current = receiptFor(item);\n            const canReview =\n              item.review &&\n              onReview &&\n              current?.state !== \"pending\" &&\n              current?.state !== \"confirmed\";\n            return (\n              <li className=\"yg-attention-card\" key={item.id}>\n                <WorkEvent event={item} />\n                {current && <Receipt record={current} />}\n                {(item.unread || item.attention || canReview) && (\n                  <div className=\"yg-operations-line\">\n                    {item.unread && <Badge tone=\"brand\">Unread</Badge>}\n                    {item.attention && <Text variant=\"help\">Needs attention</Text>}\n                    {canReview && item.review && (\n                      <Button\n                        emphasis=\"soft\"\n                        size=\"compact\"\n                        aria-label={`Review ${item.title}`}\n                        onClick={() => {\n                          if (item.review) setPreview({ id: item.id, revision: item.review.revision });\n                        }}\n                      >\n                        Review\n                      </Button>\n                    )}\n                    {item.unread && onMarkRead && (\n                      <Button\n                        emphasis=\"quiet\"\n                        size=\"compact\"\n                        aria-label={`Mark ${item.title} as read`}\n                        onClick={() => onMarkRead(item.id)}\n                      >\n                        Mark read\n                      </Button>\n                    )}\n                  </div>\n                )}\n              </li>\n            );\n          })}\n        </ul>\n      ) : (\n        <Result\n          title={\n            filter === \"all\"\n              ? \"You're all caught up\"\n              : filter === \"unread\"\n                ? \"No unread items\"\n                : \"Nothing needs attention\"\n          }\n          action={\n            filter !== \"all\" && (\n              <Button emphasis=\"soft\" onClick={() => setFilter(\"all\")}>\n                Show all\n              </Button>\n            )\n          }\n        />\n      )}\n      {decision && onReview && (\n        <ConfirmDialog\n          decision={decision}\n          open\n          onOpenChange={(open) => {\n            if (!open) setPreview(null);\n          }}\n          onConfirm={onReview}\n        />\n      )}\n    </Stack>\n  );\n}\n"
+          "content": "\"use client\";\nimport { useEffect, useState } from \"react\";\nimport {\n  Badge,\n  Button,\n  ConfirmDialog,\n  Count,\n  ListHeader,\n  Receipt,\n  Result,\n  SegmentedControl,\n  Skeleton,\n  Stack,\n  Text,\n  WorkEvent,\n  type DecisionRef,\n  type ReceiptRecord,\n  type WorkEventRecord,\n} from \"@openboa/yogurt\";\n\nexport interface AttentionItem extends WorkEventRecord {\n  unread: boolean;\n  attention: boolean;\n  review?: {\n    revision: string;\n    consequence: string;\n    confirmLabel: string;\n    available: boolean;\n  };\n}\n\nexport interface AttentionReceipt extends ReceiptRecord {\n  revision: string;\n}\n\nconst filters = [\n  { id: \"all\", label: \"All\" },\n  { id: \"unread\", label: \"Unread\" },\n  { id: \"attention\", label: \"Needs attention\" },\n];\n\nexport function AttentionInbox({\n  items,\n  loading,\n  onMarkRead,\n  onReview,\n  receipts,\n}: {\n  items: readonly AttentionItem[];\n  loading?: boolean;\n  onMarkRead?: (id: string) => void;\n  onReview?: (decision: DecisionRef) => void;\n  receipts?: Readonly<Record<string, AttentionReceipt | undefined>>;\n}) {\n  const [filter, setFilter] = useState(\"all\");\n  const [preview, setPreview] = useState<DecisionRef | null>(null);\n  const visible = items.filter(\n    (item) =>\n      filter === \"all\" ||\n      (filter === \"unread\" && item.unread) ||\n      (filter === \"attention\" && item.attention),\n  );\n  function receiptFor(item: AttentionItem) {\n    const receipt = receipts?.[item.id];\n    return receipt?.id === item.id && receipt.revision === item.review?.revision\n      ? receipt\n      : undefined;\n  }\n  const reviewed = !loading && items.find((item) => item.id === preview?.id);\n  const decision =\n    reviewed && reviewed.review?.revision === preview?.revision && reviewed.review\n      ? {\n          ...reviewed.review,\n          id: reviewed.id,\n          title: reviewed.title,\n          available:\n            reviewed.review.available &&\n            receiptFor(reviewed)?.state !== \"pending\" &&\n            receiptFor(reviewed)?.state !== \"confirmed\",\n        }\n      : null;\n  const canShowPreview = Boolean(decision && onReview);\n  useEffect(() => {\n    if (preview && !canShowPreview) setPreview(null);\n  }, [canShowPreview, preview]);\n  return (\n    <Stack gap={12} className=\"yg-attention-inbox\">\n      <ListHeader\n        title=\"Attention\"\n        action={!loading && <Count label=\"items\" value={visible.length} />}\n      />\n      <SegmentedControl\n        label=\"Filter attention\"\n        value={filter}\n        onValueChange={setFilter}\n        options={filters}\n      />\n      {loading ? (\n        <Skeleton label=\"Loading attention items\" />\n      ) : visible.length > 0 ? (\n        <ul className=\"yg-operations-list\" aria-label=\"Attention items\">\n          {visible.map((item) => {\n            const current = receiptFor(item);\n            const canReview =\n              item.review &&\n              onReview &&\n              current?.state !== \"pending\" &&\n              current?.state !== \"confirmed\";\n            return (\n              <li className=\"yg-attention-card\" key={item.id}>\n                <WorkEvent event={item} />\n                {current && <Receipt record={current} />}\n                {(item.unread || item.attention || canReview) && (\n                  <div className=\"yg-operations-line\">\n                    {item.unread && <Badge>Unread</Badge>}\n                    {item.attention && <Text variant=\"help\">Needs attention</Text>}\n                    {canReview && item.review && (\n                      <Button\n                        emphasis=\"soft\"\n                        size=\"compact\"\n                        aria-label={`Review ${item.title}`}\n                        onClick={() => {\n                          if (item.review) setPreview({ id: item.id, revision: item.review.revision });\n                        }}\n                      >\n                        Review\n                      </Button>\n                    )}\n                    {item.unread && onMarkRead && (\n                      <Button\n                        emphasis=\"quiet\"\n                        size=\"compact\"\n                        aria-label={`Mark ${item.title} as read`}\n                        onClick={() => onMarkRead(item.id)}\n                      >\n                        Mark read\n                      </Button>\n                    )}\n                  </div>\n                )}\n              </li>\n            );\n          })}\n        </ul>\n      ) : (\n        <Result\n          title={\n            filter === \"all\"\n              ? \"You're all caught up\"\n              : filter === \"unread\"\n                ? \"No unread items\"\n                : \"Nothing needs attention\"\n          }\n          action={\n            filter !== \"all\" && (\n              <Button emphasis=\"soft\" onClick={() => setFilter(\"all\")}>\n                Show all\n              </Button>\n            )\n          }\n        />\n      )}\n      {decision && onReview && (\n        <ConfirmDialog\n          decision={decision}\n          open\n          onOpenChange={(open) => {\n            if (!open) setPreview(null);\n          }}\n          onConfirm={onReview}\n        />\n      )}\n    </Stack>\n  );\n}\n"
         }
       ]
     },
@@ -1929,7 +1929,7 @@
           "path": "blocks/run-inspector.tsx",
           "target": "@components/blocks/run-inspector.tsx",
           "type": "registry:component",
-          "content": "\"use client\";\nimport { useId, type ReactNode } from \"react\";\nimport {\n  Button,\n  ButtonGroup,\n  Heading,\n  List,\n  ListRow,\n  Result,\n  Skeleton,\n  Stack,\n  Status,\n  Text,\n  Trace,\n  type Tone,\n  type TraceEvent,\n} from \"@openboa/yogurt\";\n\nconst states = {\n  queued: { label: \"Queued\", tone: \"neutral\" },\n  running: { label: \"Running\", tone: \"brand\" },\n  blocked: { label: \"Blocked\", tone: \"warning\" },\n  failed: { label: \"Failed\", tone: \"danger\" },\n  complete: { label: \"Complete\", tone: \"success\" },\n  cancelled: { label: \"Cancelled\", tone: \"neutral\" },\n} satisfies Record<string, { label: string; tone: Tone }>;\n\nexport interface RunRecord {\n  id: string;\n  title: string;\n  time?: string;\n  state: keyof typeof states;\n  summary?: string;\n  steps: readonly TraceEvent[];\n  result?: ReactNode;\n  canRetry?: boolean;\n  canCancel?: boolean;\n  pending?: boolean;\n}\n\nexport function RunInspector({\n  runs,\n  selectedId,\n  onSelect,\n  onRetry,\n  onCancel,\n  renderResult,\n  loading,\n}: {\n  runs: readonly RunRecord[];\n  selectedId?: string;\n  onSelect: (id: string) => void;\n  onRetry?: (id: string) => void;\n  onCancel?: (id: string) => void;\n  renderResult?: (run: RunRecord) => ReactNode;\n  loading?: boolean;\n}) {\n  const headingId = useId();\n  const detailId = useId();\n  const current = runs.find((run) => run.id === selectedId);\n  const status = current && states[current.state];\n  const canRetry =\n    current?.canRetry && (current.state === \"blocked\" || current.state === \"failed\");\n  const canCancel =\n    current?.canCancel &&\n    (current.state === \"queued\" || current.state === \"running\" || current.state === \"blocked\");\n  return (\n    <Stack role=\"region\" aria-labelledby={headingId} gap={16}>\n      <Heading id={headingId}>Run history</Heading>\n      {loading ? (\n        <Skeleton label=\"Loading runs\" />\n      ) : runs.length === 0 ? (\n        <Result title=\"No runs yet\" />\n      ) : (\n        <>\n          <List label=\"Runs\">\n            {runs.map((run) => (\n              <ListRow\n                key={run.id}\n                title={run.title}\n                description={run.time}\n                trailing={\n                  <Text variant=\"meta\">\n                    {run.id === selectedId && \"Selected · \"}\n                    {states[run.state].label}\n                  </Text>\n                }\n                onActivate={() => onSelect(run.id)}\n              />\n            ))}\n          </List>\n          {current && status ? (\n            <Stack key={current.id} role=\"region\" aria-labelledby={detailId} gap={12}>\n              <Stack gap={4}>\n                <Heading id={detailId} level={3}>{current.title}</Heading>\n                <Status tone={status.tone}>{status.label}</Status>\n                {current.summary && <Text variant=\"help\">{current.summary}</Text>}\n              </Stack>\n              {current.steps.length > 0 && <Trace label=\"Steps\" events={[...current.steps]} />}\n              {(current.result != null || renderResult) && (\n                <Stack gap={4}>\n                  <Heading level={3}>Result</Heading>\n                  {current.result}\n                  {renderResult?.(current)}\n                </Stack>\n              )}\n              {((canRetry && onRetry) || (canCancel && onCancel)) && (\n                <ButtonGroup label=\"Run actions\">\n                  {canRetry && onRetry && (\n                    <Button\n                      emphasis=\"soft\"\n                      pending={current.pending}\n                      onClick={() => onRetry(current.id)}\n                    >\n                      Retry run\n                    </Button>\n                  )}\n                  {canCancel && onCancel && (\n                    <Button\n                      emphasis=\"quiet\"\n                      pending={current.pending}\n                      onClick={() => onCancel(current.id)}\n                    >\n                      Cancel run\n                    </Button>\n                  )}\n                </ButtonGroup>\n              )}\n            </Stack>\n          ) : (\n            <Result title=\"Select a run to see its details\" />\n          )}\n        </>\n      )}\n    </Stack>\n  );\n}\n"
+          "content": "\"use client\";\nimport { useId, type ReactNode } from \"react\";\nimport {\n  Button,\n  ButtonGroup,\n  Heading,\n  List,\n  ListRow,\n  Result,\n  Skeleton,\n  Stack,\n  Status,\n  Text,\n  Trace,\n  type Tone,\n  type TraceEvent,\n} from \"@openboa/yogurt\";\n\nconst states = {\n  queued: { label: \"Queued\", tone: \"neutral\" },\n  running: { label: \"Running\", tone: \"neutral\" },\n  blocked: { label: \"Blocked\", tone: \"warning\" },\n  failed: { label: \"Failed\", tone: \"danger\" },\n  complete: { label: \"Complete\", tone: \"success\" },\n  cancelled: { label: \"Cancelled\", tone: \"neutral\" },\n} satisfies Record<string, { label: string; tone: Tone }>;\n\nexport interface RunRecord {\n  id: string;\n  title: string;\n  time?: string;\n  state: keyof typeof states;\n  summary?: string;\n  steps: readonly TraceEvent[];\n  result?: ReactNode;\n  canRetry?: boolean;\n  canCancel?: boolean;\n  pending?: boolean;\n}\n\nexport function RunInspector({\n  runs,\n  selectedId,\n  onSelect,\n  onRetry,\n  onCancel,\n  renderResult,\n  loading,\n}: {\n  runs: readonly RunRecord[];\n  selectedId?: string;\n  onSelect: (id: string) => void;\n  onRetry?: (id: string) => void;\n  onCancel?: (id: string) => void;\n  renderResult?: (run: RunRecord) => ReactNode;\n  loading?: boolean;\n}) {\n  const headingId = useId();\n  const detailId = useId();\n  const current = runs.find((run) => run.id === selectedId);\n  const status = current && states[current.state];\n  const canRetry =\n    current?.canRetry && (current.state === \"blocked\" || current.state === \"failed\");\n  const canCancel =\n    current?.canCancel &&\n    (current.state === \"queued\" || current.state === \"running\" || current.state === \"blocked\");\n  return (\n    <Stack role=\"region\" aria-labelledby={headingId} gap={16}>\n      <Heading id={headingId}>Run history</Heading>\n      {loading ? (\n        <Skeleton label=\"Loading runs\" />\n      ) : runs.length === 0 ? (\n        <Result title=\"No runs yet\" />\n      ) : (\n        <>\n          <List label=\"Runs\">\n            {runs.map((run) => (\n              <ListRow\n                key={run.id}\n                title={run.title}\n                description={run.time}\n                trailing={\n                  <Text variant=\"meta\">\n                    {run.id === selectedId && \"Selected · \"}\n                    {states[run.state].label}\n                  </Text>\n                }\n                onActivate={() => onSelect(run.id)}\n              />\n            ))}\n          </List>\n          {current && status ? (\n            <Stack key={current.id} role=\"region\" aria-labelledby={detailId} gap={12}>\n              <Stack gap={4}>\n                <Heading id={detailId} level={3}>{current.title}</Heading>\n                <Status tone={status.tone}>{status.label}</Status>\n                {current.summary && <Text variant=\"help\">{current.summary}</Text>}\n              </Stack>\n              {current.steps.length > 0 && <Trace label=\"Steps\" events={[...current.steps]} />}\n              {(current.result != null || renderResult) && (\n                <Stack gap={4}>\n                  <Heading level={3}>Result</Heading>\n                  {current.result}\n                  {renderResult?.(current)}\n                </Stack>\n              )}\n              {((canRetry && onRetry) || (canCancel && onCancel)) && (\n                <ButtonGroup label=\"Run actions\">\n                  {canRetry && onRetry && (\n                    <Button\n                      emphasis=\"soft\"\n                      pending={current.pending}\n                      onClick={() => onRetry(current.id)}\n                    >\n                      Retry run\n                    </Button>\n                  )}\n                  {canCancel && onCancel && (\n                    <Button\n                      emphasis=\"quiet\"\n                      pending={current.pending}\n                      onClick={() => onCancel(current.id)}\n                    >\n                      Cancel run\n                    </Button>\n                  )}\n                </ButtonGroup>\n              )}\n            </Stack>\n          ) : (\n            <Result title=\"Select a run to see its details\" />\n          )}\n        </>\n      )}\n    </Stack>\n  );\n}\n"
         }
       ]
     },
@@ -1960,6 +1960,412 @@
           "target": "@components/blocks/project-sidebar.tsx",
           "type": "registry:component",
           "content": "\"use client\";\n\nimport { useState, type ReactNode } from \"react\";\nimport {\n  Badge, Heading, IconButton, Inline, ProjectMark, SearchField, SidebarContent,\n  SidebarFooter, SidebarGroup, SidebarHeader, SidebarItem, SidebarSubmenu, Text,\n  type Project,\n} from \"@openboa/yogurt\";\n\ntype Destination = { id: string; title: string; href?: string; unread?: number };\n\nexport function ProjectSidebar({\n  title, mark, sections, currentId, onSelect, onAdd, footer,\n}: {\n  title: string;\n  mark: Project;\n  sections: readonly { id: string; title: string; icon?: ReactNode; items: readonly Destination[] }[];\n  currentId?: string;\n  onSelect?: (id: string) => void;\n  onAdd?: () => void;\n  footer?: ReactNode;\n}) {\n  const [query, setQuery] = useState(\"\");\n  const term = query.trim().toLowerCase();\n  const visible = sections.map((section) => ({\n    ...section,\n    items: section.title.toLowerCase().includes(term) ? section.items :\n      section.items.filter((item) => item.title.toLowerCase().includes(term)),\n  })).filter((section) => section.items.length > 0);\n\n  return (\n    <>\n      <SidebarHeader compact={<ProjectMark project={mark} label=\"\" size={24} />}>\n        <Inline gap={8}><ProjectMark project={mark} label=\"\" size={24} /><Heading level={3}>{title}</Heading></Inline>\n      </SidebarHeader>\n      <SidebarHeader><SearchField label=\"Find a view\" value={query} onValueChange={setQuery} /></SidebarHeader>\n      <SidebarContent label={title + \" views\"}>\n        <SidebarGroup label=\"Workspace\" action={onAdd &&\n          <IconButton icon=\"plus\" size=\"compact\" label=\"Add project view\" onClick={onAdd} />}>\n          {visible.map((section) => (\n            <SidebarSubmenu key={section.id} label={section.title} icon={section.icon}\n              containsCurrent={section.items.some((item) => item.id === currentId)} defaultOpen>\n              {section.items.map((item) => (\n                <SidebarItem key={item.id} label={item.title} href={item.href}\n                  active={item.id === currentId} onSelect={onSelect && (() => onSelect(item.id))}\n                  badge={item.unread ? <Badge>{item.unread}</Badge> : undefined} />\n              ))}\n            </SidebarSubmenu>\n          ))}\n          {!visible.length && <Text variant=\"help\">{term ? \"No matching views.\" : \"No project views yet.\"}</Text>}\n        </SidebarGroup>\n      </SidebarContent>\n      {footer && <SidebarFooter>{footer}</SidebarFooter>}\n    </>\n  );\n}\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-mention-picker",
+      "type": "registry:ui",
+      "title": "MentionPicker",
+      "description": "Insert a selected person mention while editing a note.",
+      "files": [
+        {
+          "path": "ui/motion-mention-picker.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { MentionPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-file-drop",
+      "type": "registry:ui",
+      "title": "FileDrop",
+      "description": "Select or drop files for a host-managed upload.",
+      "files": [
+        {
+          "path": "ui/motion-file-drop.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { FileDrop } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-focus-picker",
+      "type": "registry:ui",
+      "title": "FocusPicker",
+      "description": "Choose one focus preference from named choices.",
+      "files": [
+        {
+          "path": "ui/motion-focus-picker.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { FocusPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-plan-switch",
+      "type": "registry:ui",
+      "title": "PlanSwitch",
+      "description": "Choose between described plan options.",
+      "files": [
+        {
+          "path": "ui/motion-plan-switch.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { PlanSwitch } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-letter-limit",
+      "type": "registry:ui",
+      "title": "LetterLimit",
+      "description": "Edit short text with a visible character limit.",
+      "files": [
+        {
+          "path": "ui/motion-letter-limit.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { LetterLimit } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-morph-tooltip",
+      "type": "registry:ui",
+      "title": "MorphTooltip",
+      "description": "Reveal a short contextual explanation.",
+      "files": [
+        {
+          "path": "ui/motion-morph-tooltip.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { MorphTooltip } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-spring-dropdown",
+      "type": "registry:ui",
+      "title": "SpringDropdown",
+      "description": "Select an option from an animated anchored list.",
+      "files": [
+        {
+          "path": "ui/motion-spring-dropdown.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { SpringDropdown } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-command-button",
+      "type": "registry:ui",
+      "title": "CommandButton",
+      "description": "Open and choose a named command.",
+      "files": [
+        {
+          "path": "ui/motion-command-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { CommandButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-morph-tooltip-bar",
+      "type": "registry:ui",
+      "title": "MorphTooltipBar",
+      "description": "Choose a named tool from a compact bar with animated detail.",
+      "files": [
+        {
+          "path": "ui/motion-morph-tooltip-bar.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { MorphTooltipBar } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-storage-meter",
+      "type": "registry:ui",
+      "title": "StorageMeter",
+      "description": "Show observed storage usage and optional categories.",
+      "files": [
+        {
+          "path": "ui/motion-storage-meter.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { StorageMeter } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-activity-island",
+      "type": "registry:ui",
+      "title": "ActivityIsland",
+      "description": "Reveal short activity details from a compact summary.",
+      "files": [
+        {
+          "path": "ui/motion-activity-island.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { ActivityIsland } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-loading-success-button",
+      "type": "registry:ui",
+      "title": "LoadingSuccessButton",
+      "description": "Show a host-reported action state.",
+      "files": [
+        {
+          "path": "ui/motion-loading-success-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { LoadingSuccessButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-copy-button",
+      "type": "registry:ui",
+      "title": "CopyButton",
+      "description": "Copy supplied text and report the observed result.",
+      "files": [
+        {
+          "path": "ui/motion-copy-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { CopyButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-streaming-reply",
+      "type": "registry:ui",
+      "title": "StreamingReply",
+      "description": "Present an incrementally arriving reply.",
+      "files": [
+        {
+          "path": "ui/motion-streaming-reply.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { StreamingReply } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-ghost-suggestion",
+      "type": "registry:ui",
+      "title": "GhostSuggestion",
+      "description": "Offer an inline text completion.",
+      "files": [
+        {
+          "path": "ui/motion-ghost-suggestion.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { GhostSuggestion } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-prompt-box",
+      "type": "registry:ui",
+      "title": "PromptBox",
+      "description": "Prepare and submit a short request.",
+      "files": [
+        {
+          "path": "ui/motion-prompt-box.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { PromptBox } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-thinking-indicator",
+      "type": "registry:ui",
+      "title": "ThinkingIndicator",
+      "description": "Show an active thinking state.",
+      "files": [
+        {
+          "path": "ui/motion-thinking-indicator.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { ThinkingIndicator } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-expand-card",
+      "type": "registry:ui",
+      "title": "ExpandCard",
+      "description": "Reveal supporting card details.",
+      "files": [
+        {
+          "path": "ui/motion-expand-card.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { ExpandCard } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-fan-cards",
+      "type": "registry:ui",
+      "title": "FanCards",
+      "description": "Browse a small stack of related cards.",
+      "files": [
+        {
+          "path": "ui/motion-fan-cards.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { FanCards } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-stat-card",
+      "type": "registry:ui",
+      "title": "StatCard",
+      "description": "Present a labeled metric with a small series.",
+      "files": [
+        {
+          "path": "ui/motion-stat-card.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { StatCard } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-profile-card",
+      "type": "registry:ui",
+      "title": "ProfileCard",
+      "description": "Present a named profile and related actions.",
+      "files": [
+        {
+          "path": "ui/motion-profile-card.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { ProfileCard } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-range-slider",
+      "type": "registry:ui",
+      "title": "RangeSlider",
+      "description": "Choose a bounded value or interval.",
+      "files": [
+        {
+          "path": "ui/motion-range-slider.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { RangeSlider } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-password-strength",
+      "type": "registry:ui",
+      "title": "PasswordStrength",
+      "description": "Show password entry and local strength guidance.",
+      "files": [
+        {
+          "path": "ui/motion-password-strength.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { PasswordStrength } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-checkbox-list",
+      "type": "registry:ui",
+      "title": "CheckboxList",
+      "description": "Choose several independent options.",
+      "files": [
+        {
+          "path": "ui/motion-checkbox-list.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { CheckboxList } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-detent-dial",
+      "type": "registry:ui",
+      "title": "DetentDial",
+      "description": "Choose one option along a discrete dial.",
+      "files": [
+        {
+          "path": "ui/motion-detent-dial.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { DetentDial } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-hold-button",
+      "type": "registry:ui",
+      "title": "HoldButton",
+      "description": "Require a deliberate hold before a host action.",
+      "files": [
+        {
+          "path": "ui/motion-hold-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { HoldButton } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-slide-confirm",
+      "type": "registry:ui",
+      "title": "SlideConfirm",
+      "description": "Request a deliberate slide or accessible equivalent.",
+      "files": [
+        {
+          "path": "ui/motion-slide-confirm.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { SlideConfirm } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-task-list",
+      "type": "registry:ui",
+      "title": "TaskList",
+      "description": "Show host-provided task states and details.",
+      "files": [
+        {
+          "path": "ui/motion-task-list.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { TaskList } from \"@openboa/yogurt/motion-patterns\";\n"
+        }
+      ]
+    },
+    {
+      "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+      "name": "motion-cart-button",
+      "type": "registry:ui",
+      "title": "CartButton",
+      "description": "Adjust a host-owned quantity.",
+      "files": [
+        {
+          "path": "ui/motion-cart-button.tsx",
+          "type": "registry:ui",
+          "content": "\"use client\";\n\nexport { CartButton } from \"@openboa/yogurt/motion-patterns\";\n"
         }
       ]
     }

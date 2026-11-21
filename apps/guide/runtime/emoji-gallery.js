@@ -1,4 +1,4 @@
-(() => {
+window.mountYogurtEmojiGallery = function () {
   const { groups, items } = window.yogurtEmojiCatalog;
   const el = id => document.getElementById("emoji-" + id);
   const search = el("search"), group = el("group"), grid = el("grid");
@@ -137,4 +137,6 @@
   const entry = url.get("emoji");
   const position = entry ? results.findIndex(item => item.id === entry) : -1;
   if (position >= 0) { page = Math.floor(position / pageSize); draw(entry); }
-})();
+};
+
+if (document.currentScript) window.mountYogurtEmojiGallery();

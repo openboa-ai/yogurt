@@ -1,6 +1,6 @@
 <template name="yg-progress" args="label amount">
   <column gap="4">
   <text>{label}</text>
-  <progress label="{label}" value="{amount}"/>
+  <progress label="{label}" value="{amount}" height="4"/>
   </column>
 </template>

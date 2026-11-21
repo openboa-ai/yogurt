@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-letter-limit",
+  "type": "registry:ui",
+  "title": "LetterLimit",
+  "description": "Edit short text with a visible character limit.",
+  "files": [
+    {
+      "path": "ui/motion-letter-limit.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { LetterLimit } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

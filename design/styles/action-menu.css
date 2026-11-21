@@ -5,8 +5,4 @@
 .yg-menu [role="menuitem"]:is(:hover, :focus) { color: var(--boa-paper); background: var(--boa-ink); }
 .yg-menu [role="menuitem"]:focus-visible { outline-offset: 0; }
 .yg-menu .boa-button[data-menu-trigger]:active:enabled { color: var(--boa-paper); background: var(--boa-ink); }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-menu [role="menu"]:not([hidden]) { animation: yg-menu-enter 140ms ease-out both; }
-  @keyframes yg-menu-enter { from { transform: translateY(-4px); } to { transform: none; } }
-}
 @media (pointer: coarse) { .yg-menu [role="menuitem"] { min-height: var(--boa-control-touch); } }

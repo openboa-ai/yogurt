@@ -1,17 +1,23 @@
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
-import { createRoot } from "react-dom/client";
+import { useEffect, useMemo, useRef, useState, type ComponentType, type MouseEvent } from "react";
 import {
   Yogurt,
+  PageHeader,
   ProjectMark,
   Button,
   IconButton,
   Icon,
   Heading,
   SegmentedControl,
+  SearchField,
+  SidebarContent,
+  SidebarItem,
+  SidebarSubmenu,
+  Link,
   type Material,
 } from "@openboa/yogurt";
 import catalog from "../../catalog/components.json";
 import motion from "../../catalog/motion.json";
+import motionCatalog from "../../catalog/motion-components.json";
 import blocks from "../../catalog/blocks.json";
 import { BlockExample } from "./examples/block-examples";
 import { BrandTokens } from "./brand-tokens";
@@ -23,6 +29,7 @@ import { WorkspaceExample } from "./examples/workspace-examples";
 import { AgentProfileExample } from "./examples/agent-profile-example";
 import { RunInspectorExample } from "./examples/run-inspector-example";
 import { SidebarExample } from "./examples/sidebar-example";
+import { guideHref, locationId, navigateSection, sectionHref } from "./routing";
 const scopedExamples = {
   "agent-row": AgentWorkspaceExample,
   "runtime-panel": AgentWorkspaceExample,
@@ -54,7 +61,27 @@ function foldName(name: string) {
 function compactName(name: string) {
   return name.replace(/[\s_\p{Dash_Punctuation}]+/gu, "");
 }
-const searchIndex = entries.map((entry) => {
+const compactPreviews = new Set([
+  "button", "icon-button", "button-group", "toggle", "toggle-group", "pagination",
+  "badge", "status", "spinner", "project-mark", "avatar", "tooltip", "link", "kbd",
+]);
+const widePreviews = new Set([
+  "table", "data-table", "chart", "bar-chart", "grid-list", "resizable", "sidebar",
+  "sidebar-layout", "agent-sidebar", "project-sidebar", "agent-avatar", "transcript", "navbar", "navigation-menu", "menubar",
+]);
+function previewLayout(entry: {id: string; family: string}) {
+  if (compactPreviews.has(entry.id)) return "compact";
+  if (entry.family === "Blocks" || entry.family === "Workspaces" || widePreviews.has(entry.id)) return "wide";
+  return "field";
+}
+const motionEntries = motionCatalog.components.filter(component => component.examples.length).map(component => ({
+  ...component,
+  family: "Interactive patterns",
+  description: component.guidance.useWhen,
+  guidance: { ...component.guidance, combineWith: [] as string[] },
+}));
+const hostedEntries = [...entries, ...motionEntries];
+const searchIndex = hostedEntries.map((entry) => {
   const names = [
     entry.name,
     entry.family,
@@ -62,7 +89,6 @@ const searchIndex = entries.map((entry) => {
   ].map(foldName);
   return { entry, text: names.join(" "), aliases: names.map(compactName) };
 });
-const families = [...new Set(entries.map((e) => e.family))];
 const materials = [
   { id: "neutral", label: "Neutral" },
   { id: "paper", label: "Paper" },
@@ -73,14 +99,19 @@ const variants = new Set([
   "gradient",
   "elevation",
   "button",
+  "card",
   "bottom-action",
   "icon-button",
   "stack",
   "inline",
   "grid",
   "text-field",
+  "input-group",
   "textarea",
   "search-field",
+  "select",
+  "checkbox",
+  "slider",
   "filter-bar",
   "switch",
   "list",
@@ -97,16 +128,8 @@ const variants = new Set([
   "help-text",
 ]);
 function keyFromHash() {
-  try {
-    const id =
-      decodeURIComponent(location.hash.slice(1)) ||
-      document.getElementById("yogurt-ui-library")?.dataset.initialComponent;
-    return id === "brand"
-      ? id
-      : (entries.find((e) => e.id === id)?.id ?? "button");
-  } catch {
-    return "button";
-  }
+  return locationId("components") ||
+    document.getElementById("yogurt-ui-library")?.dataset.initialComponent || "button";
 }
 // The embedded guide can run local form examples while its frame blocks navigation.
 function submitPreviewForm(event: MouseEvent<HTMLDivElement>) {
@@ -123,7 +146,11 @@ function submitPreviewForm(event: MouseEvent<HTMLDivElement>) {
   if (!form.noValidate && !submitter.formNoValidate && !form.reportValidity()) return;
   form.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true, submitter }));
 }
-function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
+export function Catalog({ inlinePreview = false, guideAppearance, motionPreview: MotionPreview }: {
+  inlinePreview?: boolean;
+  guideAppearance?: "light" | "dark";
+  motionPreview?: ComponentType<{ id: string }>;
+}) {
   const [id, select] = useState(keyFromHash),
     [search, setSearch] = useState(""),
     [expanded, expand] = useState<string[]>(["Actions"]),
@@ -134,40 +161,58 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
     [material, setMaterial] = useState<Material>("neutral"),
     [compare, setCompare] = useState(false),
     [showCode, setShowCode] = useState(false);
-  const entry = entries.find((e) => e.id === id) ?? entries[0];
+  const navigation = useRef<HTMLElement>(null);
+  const availableEntries = MotionPreview ? hostedEntries : entries;
+  const families = [...new Set(availableEntries.map(item => item.family))];
+  const entry = availableEntries.find(item => item.id === id) ?? availableEntries[0];
+  const motionEntry = "examples" in entry ? entry : undefined;
+  const guidance = "guidance" in entry ? entry.guidance : undefined;
+  const missing = id !== "brand" && !availableEntries.some((item) => item.id === id);
   const ScopedExample = scopedExamples[id as keyof typeof scopedExamples];
   useEffect(() => {
     const listener = () => {
       const next = keyFromHash();
+      if (next === "yg-inspect") return;
       select(next);
       setMenu(false);
       setShowCode(false);
     };
     addEventListener("hashchange", listener);
-    return () => removeEventListener("hashchange", listener);
+    addEventListener("popstate", listener);
+    return () => { removeEventListener("hashchange", listener); removeEventListener("popstate", listener); };
   }, []);
   useEffect(() => {
     expand((all) =>
       all.includes(entry.family) ? all : [...all, entry.family],
     );
   }, [entry.family]);
+  useEffect(() => {
+    const sidebar = navigation.current;
+    const active = sidebar?.querySelector("a[aria-current=page]");
+    if (!sidebar?.clientHeight || !active || search) return;
+    const available = sidebar.getBoundingClientRect();
+    const row = active.getBoundingClientRect();
+    if (row.top < available.top) sidebar.scrollTop += row.top - available.top;
+    if (row.bottom > available.bottom) sidebar.scrollTop += row.bottom - available.bottom;
+  }, [id, expanded, menu, search]);
   const matches = useMemo(() => {
     const term = foldName(search.trim());
     const compact = compactName(term);
     return searchIndex
+      .filter(({ entry }) => MotionPreview || entry.family !== "Interactive patterns")
       .filter(({ text, aliases }) =>
         text.includes(term) ||
         (compact.length > 0 && aliases.some((alias) => alias.includes(compact))),
       )
       .map(({ entry }) => entry);
-  }, [search]);
+  }, [search, MotionPreview]);
   function go(next: string) {
     select(next);
     setMenu(false);
     setShowCode(false);
-    location.hash = next;
+    navigateSection("components", next);
   }
-  const appearance = dark ? "dark" : "light";
+  const appearance = guideAppearance ?? (dark ? "dark" : "light");
   const tokenLabel =
     id === "button"
       ? "14 / 20 type · 36 px high · 8 px corners"
@@ -179,24 +224,26 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
       <a className="skip" href="#yg-inspect">
         Skip to component
       </a>
-      <header className="catalog-header">
+      {!guideAppearance && <header className="catalog-header">
         <div className="catalog-identity">
           <ProjectMark project="openboa" label="OpenBoa" size={30} />
           <span>Yogurt</span>
         </div>
         <nav className="catalog-top" aria-label="Yogurt guide">
-          <button
+          <Button emphasis="quiet" size="compact"
             aria-current={id !== "brand" ? "page" : undefined}
             onClick={() => go("button")}
           >
             Components
-          </button>
-          <button
+          </Button>
+          <Button emphasis="quiet" size="compact"
             aria-current={id === "brand" ? "page" : undefined}
             onClick={() => go("brand")}
           >
             Brand &amp; tokens
-          </button>
+          </Button>
+          <Link href={sectionHref("motion")}>Motion</Link>
+          <Link href={guideHref("workflows")}>Workflows</Link>
         </nav>
         <div className="header-actions">
           <IconButton
@@ -212,76 +259,43 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
             onClick={() => setDark(!dark)}
           />
         </div>
-      </header>
+      </header>}
+      {guideAppearance && <div className="guide-catalog-tools"><Button emphasis="quiet" onClick={() => setMenu(!menu)} aria-expanded={menu}><Icon name={menu ? "close" : "menu"} />Browse components</Button></div>}
       <div className="catalog-body">
-        <aside data-open={menu} aria-label="Components">
+        <aside ref={navigation} data-open={menu} aria-label="Components">
           <div className="catalog-search">
-            <Icon name="search" />
-            <input
-              aria-label="Find a component"
-              placeholder="Find a component"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {search && (
-              <IconButton
-                label="Clear component search"
-                icon="close"
-                onClick={() => setSearch("")}
-              />
-            )}
+            <SearchField label="Find a component" placeholder="Find a component"
+              value={search} onValueChange={setSearch} />
           </div>
-          <nav aria-label="Component index">
-            {families.map((f) => {
-              const rows = matches.filter((e) => e.family === f);
+          <SidebarContent label="Component index">
+            {families.map(family => {
+              const rows = matches.filter(item => item.family === family);
               if (!rows.length) return null;
-              const open = !!search || expanded.includes(f);
-              return (
-                <div className="nav-family" key={f}>
-                  <button
-                    type="button"
-                    aria-expanded={open}
-                    onClick={() =>
-                      expand((a) =>
-                        a.includes(f) ? a.filter((v) => v !== f) : [...a, f],
-                      )
-                    }
-                  >
-                    {f}
-                    <Icon name={open ? "down" : "next"} />
-                  </button>
-                  {open &&
-                    rows.map((e) => (
-                      <a
-                        key={e.id}
-                        href={"#" + e.id}
-                        aria-current={e.id === id ? "page" : undefined}
-                        onClick={(ev) => {
-                          ev.preventDefault();
-                          go(e.id);
-                        }}
-                      >
-                        {e.name}
-                      </a>
-                    ))}
-                </div>
-              );
+              return <SidebarSubmenu key={family} label={family}
+                containsCurrent={rows.some(item => item.id === id)}
+                open={!!search || expanded.includes(family)}
+                onOpenChange={open => expand(previous => open
+                  ? [...new Set([...previous, family])]
+                  : previous.filter(item => item !== family))}>
+                {rows.map(item => <SidebarItem key={item.id} label={item.name} active={item.id === id}
+                  href={sectionHref("components", item.id)} onSelect={() => setMenu(false)} />)}
+              </SidebarSubmenu>;
             })}
-            {!matches.length && (
-              <p className="yg-help">No matching components.</p>
-            )}
-          </nav>
+            {!matches.length && <p className="yg-help">No matching components.</p>}
+          </SidebarContent>
         </aside>
         <main id="yg-inspect" tabIndex={-1}>
-          {id === "brand" ? (
+          {missing ? (
+            <PageHeader className="catalog-intro" title="Component not found" detail="Choose a component from the index."
+              action={<Link href={sectionHref("components", "button")} onClick={event => {
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault(); go("button");
+              }}>Browse components</Link>} />
+          ) : id === "brand" ? (
             <BrandTokens />
           ) : (
             <>
-              <div className="catalog-intro">
-                <p className="catalog-family">{entry.family}</p>
-                <h1>{entry.name}</h1>
-                <p>{entry.description}</p>
-              </div>
+              <PageHeader className="catalog-intro" title={entry.name} detail={entry.description} eyebrow={entry.family} />
               <div className="preview-tools">
                 <span>Preview</span>
                 <SegmentedControl
@@ -296,11 +310,14 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                 material={material}
                 className="specimen"
                 data-component={id}
+                data-layout={previewLayout(entry)}
                 key={id}
               >
                 <div className="specimen-inner" onClick={inlinePreview ? submitPreviewForm : undefined}>
                   {ScopedExample ? (
                     <ScopedExample id={id} />
+                  ) : MotionPreview && motionEntry ? (
+                    <MotionPreview id={motionEntry.examples[0]} />
                   ) : entry.family === "Blocks" ? (
                     <BlockExample id={id} />
                   ) : (
@@ -310,13 +327,13 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
               </Yogurt>
               <div className="preview-caption">
                 <span>{tokenLabel}</span>
-                <button
+                <Button emphasis="quiet" size="compact"
                   type="button"
                   onClick={() => setCompare(!compare)}
                   aria-expanded={compare}
                 >
                   {compare ? "Hide surfaces" : "Compare surfaces"}
-                </button>
+                </Button>
               </div>
               {compare && (
                 <div className="surface-comparison">
@@ -347,21 +364,64 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                   <Yogurt
                     appearance={appearance}
                     material={material}
-                    className="variant-body"
+                    className="specimen variant-body"
+                    data-variant-component={id}
+                    data-layout={previewLayout(entry)}
                     key={id}
                   >
-                    <Example id={id} variation />
+                    <div className="specimen-inner"><Example id={id} variation /></div>
                   </Yogurt>
                 </section>
               )}
+              {guidance && (
+                <section className="catalog-guidance">
+                  <Heading>When to use</Heading>
+                  <p>{guidance.useWhen}</p>
+                  <p className="yg-help">{guidance.avoid}</p>
+                  {guidance.combineWith.length > 0 && <>
+                    <h3>Works with</h3>
+                    <div className="catalog-guidance-links">
+                      {guidance.combineWith.map(companion => {
+                        const component = catalog.find(item => item.id === companion);
+                        return <Link key={companion} href={sectionHref("components", companion)}
+                          onClick={event => {
+                            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                            event.preventDefault(); go(companion);
+                          }}>{component?.name ?? companion}</Link>;
+                      })}
+                    </div>
+                  </>}
+                  <h3>Check</h3>
+                  <p className="yg-help">{guidance.verify.join(" · ")}</p>
+                </section>
+              )}
+              {id === "button" && (
+                <section className="related-actions">
+                  <Heading>Related actions</Heading>
+                  <p className="yg-help">Use a dedicated action when the interaction has its own state.</p>
+                  <div>
+                    {[
+                      ["copy-button", "Copy"],
+                      ["cart-button", "Quantity"],
+                      ["hold-button", "Hold to confirm"],
+                      ["slide-confirm", "Slide to confirm"],
+                      ["loading-to-success", "Loading result"],
+                    ].map(([example, label]) => {
+                      const component = motionEntries.find(item => item.examples.includes(example));
+                      const href = MotionPreview && component ? sectionHref("components", component.id) : sectionHref("motion", example);
+                      return <Link key={example} href={href}>{label}</Link>;
+                    })}
+                  </div>
+                </section>
+              )}
               <section className="install-code">
-                <button
+                <Button emphasis="quiet" size="compact"
                   aria-expanded={showCode}
                   onClick={() => setShowCode(!showCode)}
                 >
                   Use in a project
                   <Icon name={showCode ? "down" : "next"} />
-                </button>
+                </Button>
                 {showCode && (
                   <div>
                     <p className="yg-help">
@@ -373,7 +433,9 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                       </p>
                     ))}
                     <code>
-                      {entry.family === "Blocks"
+                      {motionEntry
+                        ? `import { ${motionEntry.name} } from "${motionEntry.entry}";`
+                        : entry.family === "Blocks"
                         ? "yogurt add " + id + " --target web"
                         : "import { " +
                           entry.name +
@@ -381,7 +443,7 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
                           entry.id +
                           '";'}
                     </code>
-                    <code>{"yogurt add " + entry.id + " --target native"}</code>
+                    {motionEntry ? <p className="yg-help">Native implementation unavailable.</p> : <code>{"yogurt add " + entry.id + " --target native"}</code>}
                   </div>
                 )}
               </section>
@@ -391,9 +453,4 @@ function Catalog({ inlinePreview }: { inlinePreview: boolean }) {
       </div>
     </Yogurt>
   );
-}
-const host = document.getElementById("yogurt-ui-library");
-if (host) {
-  const inlinePreview = window !== window.top && host.hasAttribute("data-initial-component");
-  createRoot(host).render(<Catalog inlinePreview={inlinePreview} />);
 }

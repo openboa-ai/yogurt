@@ -55,6 +55,7 @@ export function SidebarLayout({
   style?: CSSProperties;
 }) {
   const root = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLElement>(null);
   const dialog = useRef<HTMLDialogElement>(null);
   const focusReturn = useRef<HTMLButtonElement | null>(null);
   const controls = useId();
@@ -64,6 +65,15 @@ export function SidebarLayout({
   const isCollapsed = collapse !== "none" && (collapsed ?? internalCollapsed);
   const rail = !compact && isCollapsed && collapse === "rail";
   const showOverlay = compact && drawer;
+  const panelHidden = !compact && isCollapsed && collapse === "hide";
+
+  useLayoutEffect(() => {
+    const frame = root.current;
+    if (!panelHidden || !frame || !panel.current?.contains(frame.ownerDocument.activeElement)) return;
+    const trigger = [...frame.querySelectorAll<HTMLButtonElement>("button[aria-controls]")]
+      .find(button => button.getAttribute("aria-controls") === controls && !panel.current?.contains(button));
+    trigger?.focus();
+  }, [controls, panelHidden]);
 
   useLayoutEffect(() => {
     const frame = root.current;
@@ -132,7 +142,8 @@ export function SidebarLayout({
             </div>
             {navigation}
           </dialog>
-        ) : <aside id={controls} className="yg-sidebar-panel" aria-label={label}>{navigation}</aside>}
+        ) : <aside ref={panel} id={controls} className="yg-sidebar-panel" aria-label={label}
+          aria-hidden={panelHidden || undefined} inert={panelHidden || undefined}>{navigation}</aside>}
         <div className="yg-sidebar-main">{children}</div>
       </div>
     </SidebarContext.Provider>
@@ -193,6 +204,7 @@ export function SidebarItem({
   active = false,
   disabled = false,
   badge,
+  description,
   action,
   onSelect,
 }: {
@@ -202,18 +214,27 @@ export function SidebarItem({
   active?: boolean;
   disabled?: boolean;
   badge?: ReactNode;
+  description?: string;
   action?: ReactNode;
   onSelect?: () => void;
 }) {
   const state = useContext(SidebarContext);
   const rail = state?.rail ?? false;
+  const descriptionId = useId();
   const attrs = {
     className: "yg-sidebar-item",
     "aria-current": active ? "page" as const : undefined,
-    "aria-label": rail ? label : undefined,
+    "aria-label": rail || description ? label : undefined,
     title: rail ? label : undefined,
+    "aria-describedby": !rail && description ? descriptionId : undefined,
   };
-  const body = <><Label icon={icon} rail={rail}>{label}</Label>{!rail && badge}</>;
+  const body = description && !rail
+    ? <>{icon && <span className="yg-sidebar-icon" aria-hidden="true">{icon}</span>}
+      <span className="yg-sidebar-item-copy">
+        <span className="yg-sidebar-label">{label}</span>
+        <span className="yg-sidebar-item-description" id={descriptionId}>{description}</span>
+      </span>{badge}</>
+    : <><Label icon={icon} rail={rail}>{label}</Label>{!rail && badge}</>;
   return (
     <div className="yg-sidebar-item-row">
       {href && !disabled ? (
@@ -254,15 +275,22 @@ export function SidebarGroup({ label, children, action }: {
   );
 }
 
-export function SidebarSubmenu({ label, icon, children, defaultOpen = false, containsCurrent = false }: {
+export function SidebarSubmenu({ label, icon, children, defaultOpen = false, containsCurrent = false, open: controlledOpen, onOpenChange }: {
   label: string;
   icon?: ReactNode;
   children: ReactNode;
   defaultOpen?: boolean;
   containsCurrent?: boolean;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
   const id = useId();
-  const [open, setOpen] = useState(defaultOpen);
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+  const open = controlledOpen ?? localOpen;
+  function setOpen(next: boolean) {
+    if (controlledOpen === undefined) setLocalOpen(next);
+    onOpenChange?.(next);
+  }
   const state = useContext(SidebarContext);
   const rail = state?.rail ?? false;
   const expanded = !rail && open;
@@ -277,7 +305,10 @@ export function SidebarSubmenu({ label, icon, children, defaultOpen = false, con
         <Label icon={icon} rail={rail}>{label}</Label>
         {!rail && <span className="yg-sidebar-chevron" aria-hidden="true"><Icon name="down" /></span>}
       </button>
-      <div id={id} className="yg-sidebar-submenu-content" hidden={!expanded}>{children}</div>
+      <div id={id} className="yg-sidebar-submenu-content" data-expanded={expanded}
+        aria-hidden={!expanded} inert={!expanded}>
+        <div>{children}</div>
+      </div>
     </div>
   );
 }

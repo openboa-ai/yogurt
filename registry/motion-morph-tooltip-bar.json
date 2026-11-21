@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-morph-tooltip-bar",
+  "type": "registry:ui",
+  "title": "MorphTooltipBar",
+  "description": "Choose a named tool from a compact bar with animated detail.",
+  "files": [
+    {
+      "path": "ui/motion-morph-tooltip-bar.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { MorphTooltipBar } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

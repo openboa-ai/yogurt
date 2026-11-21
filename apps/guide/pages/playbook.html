@@ -10,15 +10,15 @@
 <body>
 <header><div class="masthead"><div class="imprint"><b>yogurt</b><span>ships with live cultures</span></div><nav aria-label="Guide"><a href="index.html">Brand</a><a href="system.html">Design system</a><a href="library.html">Design sources</a><a href="adoption.html">Project use</a><a href="components.html">Components</a></nav></div></header>
 <main id="playbook" class="boa-surface">
-  <header class="pb-title"><h1>Product playbook</h1><p>Choose the job your screen needs to do. See which facts the product supplies and how yogurt turns them into an interface.</p></header>
+  <header class="pb-title"><div><h1>Product playbook</h1><p>Choose the job your screen needs to do. See which facts the product supplies and how yogurt turns them into an interface.</p></div><a href="#pb-directory-section">Browse all task patterns <span aria-hidden="true">↘</span></a></header>
   <div class="pb-layout">
-    <section aria-labelledby="task-title">
+    <section class="pb-controls" aria-labelledby="task-title">
       <h2 id="task-title">Choose a task</h2>
       <label class="boa-field">Product brief<select class="boa-input" id="pb-project"></select></label>
       <label class="boa-field">Product condition<select class="boa-input" id="pb-state"></select></label>
       <h3>Product inputs</h3><p id="pb-inputs"></p>
     </section>
-    <section aria-labelledby="example-title">
+    <section class="pb-preview" aria-labelledby="example-title">
       <div class="pb-example-head"><div class="pb-project-mark"><img alt="" id="pb-mark" width="40" height="40"><span id="pb-project-name"></span></div><span>Example data</span></div>
       <h2 id="example-title" aria-live="polite" aria-atomic="true"></h2><p id="pb-body"></p><dl class="pb-facts" id="pb-facts"></dl>
       <dl class="pb-action"><dt>Available next step</dt><dd id="pb-action"></dd></dl>
@@ -38,7 +38,7 @@
     <details id="parts"><summary>Component choices</summary><ul id="pb-parts"></ul><p id="pb-targets"></p></details>
     <details id="proof"><summary>Review checks</summary><p id="pb-test"></p><p id="pb-keyboard"></p></details>
   </section>
-  <details class="pb-directory"><summary>Browse all task patterns</summary><ul id="pb-directory"></ul></details>
+  <details class="pb-directory" id="pb-directory-section"><summary>Browse all task patterns</summary><ul id="pb-directory"></ul></details>
   <footer class="pb-end"><a href="DESIGN.md">Agent entry</a><a href="docs/repository.md">Repository blueprint</a><a href="docs/index.html">Design handbook</a><a href="catalog/patterns.json">Pattern catalog</a><a href="adoption.html#setup">Project binding</a></footer>
   <noscript><p>Read the <a href="docs/repository.md">repository blueprint</a> and <a href="examples/project-use/scenarios.json">worked examples</a>.</p></noscript>
 </main>

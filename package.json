@@ -20,6 +20,7 @@
     "packages/web/README.md",
     "bin",
     "catalog/components.json",
+    "catalog/motion-components.json",
     "catalog/patterns.json",
     "catalog/blocks.json",
     "catalog/motion.json",
@@ -47,10 +48,13 @@
     "checks/native-catalog*.mjs",
     "docs/workspace-patterns.md",
     "docs/sidebar.md",
-    "docs/design-system-rules.md"
+    "docs/design-system-rules.md",
+    "docs/screen-composition.md",
+    "docs/component-composition.md"
   ],
   "sideEffects": [
-    "**/*.css"
+    "**/*.css",
+    "./apps/guide/**"
   ],
   "exports": {
     ".": {
@@ -65,6 +69,14 @@
       "types": "./packages/web/dist/entries/*.d.ts",
       "import": "./packages/web/dist/entries/*.js"
     },
+    "./motion-patterns": {
+      "types": "./packages/web/dist/patterns/motion-patterns.d.ts",
+      "import": "./packages/web/dist/motion-patterns.js"
+    },
+    "./agent": {
+      "types": "./packages/web/dist/agent.d.ts",
+      "import": "./packages/web/dist/agent.js"
+    },
     "./styles.css": "./design/styles/ui.css",
     "./tokens": "./design/tokens/ui.json",
     "./palette": "./design/tokens/brand.json",
@@ -76,13 +88,18 @@
   },
   "scripts": {
     "build": "node scripts/build-ui.mjs",
+    "guide:dev": "npm run build && node apps/guide/tooling/build-site.mjs --static-only && vite --config apps/guide/vite.config.mjs",
+    "guide:build": "npm run build && vite build --config apps/guide/vite.config.mjs && node apps/guide/tooling/build-site.mjs",
+    "guide:preview": "vite preview --config apps/guide/vite.config.mjs --outDir ../../../site",
     "gallery": "node scripts/build-ui-gallery.mjs",
     "gallery:agents": "node scripts/build-ui-gallery.mjs --agents",
     "check:agents": "node checks/agent-family.mjs && node checks/web-agent-family.cjs",
     "check:ui": "node scripts/check-ui.mjs",
-    "check:web": "node checks/web-library.cjs && node checks/web-select.cjs && node checks/web-workspaces.cjs && node checks/web-sidebars.cjs && node checks/web-motion.cjs && node checks/web-motion-comparison.cjs"
+    "check:web": "node checks/web-library.cjs && node checks/web-button-sizes.cjs && node checks/web-action-layer-calibration.cjs && node checks/web-field-sizes.cjs && node checks/web-field-aria.cjs && node checks/web-form-feedback-motion.cjs && node checks/web-mention-caret.cjs && node checks/web-composer-mentions.cjs && node checks/web-combobox-form.cjs && node checks/web-card-density.cjs && node checks/web-profile-disclosure.cjs && node checks/web-slider-foundation.cjs && node checks/web-checkbox-foundation.cjs && node checks/web-rating-foundation.cjs && node checks/web-quantity-foundation.cjs && node checks/web-spinner-width.cjs && node checks/web-list-foundation.cjs && node checks/web-collection-long-content.cjs && node checks/web-avatar-foundation.cjs && node checks/web-text-data-foundation.cjs && node checks/web-attachment-foundation.cjs && node checks/web-pagination-motion.cjs && node checks/web-calendar-foundation.cjs && node checks/web-keypad-foundation.cjs && node checks/web-tooltip-motion.cjs && node checks/web-anchored-layers.cjs && node checks/web-composer-foundation.cjs && node checks/web-spring-input-foundation.cjs && node checks/web-toast-stack-motion.cjs && node checks/web-toast-swipe.cjs && node checks/web-toast-exit.cjs && node checks/web-top-spacing.cjs && node checks/web-disclosure-motion.cjs && node checks/web-sidebar-motion-feedback.cjs && node checks/web-sidebar-hide-motion.cjs && node checks/web-chart-foundation.cjs && node checks/web-agent-controls-layout.cjs && node checks/web-conversation-media-layout.cjs && node checks/web-ghost-textarea.cjs && node checks/web-records-layout.cjs && node checks/web-disclosure-toolbar.cjs && node checks/web-date-choice-foundation.cjs && node checks/web-guide-composition.cjs && node checks/web-navigation-feedback-layout.cjs && node checks/web-navigation-long-content.cjs && node checks/web-navigation-direction-motion.cjs && node checks/web-data-long-content.cjs && node checks/web-segmented.cjs && node checks/web-select.cjs && node checks/web-select-picker-motion.cjs && node checks/web-workspaces.cjs && node checks/web-sidebars.cjs && node checks/web-motion.cjs && node checks/web-motion-comparison.cjs && node checks/web-motion-patterns.cjs && node checks/web-action-menu.cjs && node checks/web-otp-motion.cjs && node checks/web-slide-confirm-direction.cjs && node checks/web-copy-action.cjs && node checks/web-motion-gallery-interactions.cjs && node checks/web-workflows.cjs"
   },
   "peerDependencies": {
+    "@ui-sdk/core": "0.1.0-beta.13",
+    "@ui-sdk/react": "0.1.0-beta.13",
     "react": ">=19.2.0 <20",
     "react-dom": ">=19.2.0 <20"
   },
@@ -90,14 +107,17 @@
     "@openai/apps-sdk-ui": "0.2.2",
     "@types/react": "19.2.10",
     "@types/react-dom": "19.2.2",
-    "esbuild": "0.25.12",
+    "@ui-sdk/core": "0.1.0-beta.13",
+    "@ui-sdk/react": "0.1.0-beta.13",
+    "esbuild": "0.28.2",
     "playwright-core": "1.62.1",
     "radix-ui": "1.8.1",
     "react": "19.2.0",
     "react-day-picker": "9.11.1",
     "react-dom": "19.2.0",
     "react-resizable-panels": "3.0.6",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite": "8.3.8"
   },
   "bin": {
     "yogurt": "./bin/yogurt.mjs"

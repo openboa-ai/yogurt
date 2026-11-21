@@ -3,8 +3,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: start;
-  column-gap: var(--boa-space-12);
-  row-gap: var(--boa-space-8);
+  column-gap: var(--yg-gap-stack);
+  row-gap: var(--yg-gap-inline);
   min-width: 0;
   padding: var(--boa-space-12);
   border-radius: var(--yg-radius-panel);
@@ -15,15 +15,14 @@
   flex: none;
   display: grid;
   place-items: center;
-  inline-size: var(--yg-size-compact);
-  block-size: var(--yg-size-compact);
+  inline-size: var(--boa-control-compact);
+  block-size: var(--boa-control-compact);
   border-radius: var(--yg-radius-control);
   background: var(--yg-field);
-  color: var(--yg-action);
-  transition: background-color var(--yg-change) var(--yg-settle);
+  color: var(--yg-inverse);
 }
 .yg-work-event[data-state="running"] .yg-work-event-icon {
-  background: var(--yg-action-soft);
+  background: var(--yg-field);
 }
 
 .yg-work-event-content {
@@ -55,7 +54,7 @@
 
 .yg-operations-list {
   display: grid;
-  gap: var(--boa-space-8);
+  gap: var(--yg-gap-inline);
   padding: 0;
   margin: 0;
   list-style: none;
@@ -67,16 +66,20 @@
 
 .yg-attention-card {
   display: grid;
-  gap: var(--boa-space-8);
-  padding: var(--boa-space-12);
-  border-radius: var(--yg-radius-panel);
+  gap: var(--yg-gap-row);
+  padding: var(--yg-inset-panel);
+  border-radius: var(--yg-radius-card);
   background: var(--yg-canvas);
 }
 
 .yg-attention-card > .yg-work-event {
   padding: 0;
+  background: transparent;
 }
 
 .yg-operations-library .yg-tabs [role="tabpanel"] {
   padding-block-start: var(--boa-space-12);
 }
+
+.yg-operations-list :is(.yg-work-event, .yg-routine-row) { border-radius: 0; background: transparent; }
+.yg-operations-actions { align-self: center; }

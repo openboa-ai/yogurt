@@ -2,6 +2,8 @@
 
 Start with a real task and representative content. Identify what someone must recognize first, which facts they need to decide, and what action is available in the current state. Make a quick layout with that content before choosing controls. Use the project's installed Yogurt patterns and tokens to implement the layout.
 
+Open `docs/screen-composition.md` in the pinned SDK for the desktop layout and action defaults, then use `docs/component-composition.md` to select component IDs or an editable recipe. If the pin predates those guides, use its design rules and component catalog. Resolve the selected IDs for the target before proposing imports or templates.
+
 | User task | Start with | Check the layout at a smaller window |
 | --- | --- | --- |
 | Read or complete one focused task | Use one reading column. Place the main action next to the facts or input it acts on. | Keep the reading order and the relationship between the action and its subject. |

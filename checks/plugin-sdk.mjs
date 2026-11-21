@@ -69,7 +69,17 @@ try {
   const receipt = review.components.find(item => item.id === "receipt");
   assert.equal(dialog.entry, "@openboa/yogurt/confirm-dialog");
   assert.deepEqual(dialog.names, ["ConfirmDialog"]);
+  assert.equal(dialog.importStatement, 'import { ConfirmDialog } from "@openboa/yogurt/confirm-dialog";');
   assert.equal(receipt.types, dialog.types);
+  assert.equal(receipt.importStatement, 'import { Receipt } from "@openboa/yogurt/receipt";');
+  const status = review.components.find(item => item.id === "status");
+  const resultEntry = review.components.find(item => item.id === "result");
+  assert.equal(status.types, resultEntry.types);
+  assert.equal(status.importStatement, 'import { Status } from "@openboa/yogurt/status";');
+  assert.equal(resultEntry.importStatement, 'import { Result } from "@openboa/yogurt/result";');
+  const verifyImports = `for (const item of JSON.parse(process.argv[1])) { const actual = await import(item.entry); for (const name of item.names) if (!(name in actual)) throw Error(item.entry + " does not export " + name); }`;
+  const imported = spawnSync(process.execPath, ["--input-type=module", "-e", verifyImports, JSON.stringify(review.components)], { cwd: web, encoding: "utf8" });
+  assert.equal(imported.status, 0, imported.stderr);
   assert.match(review.declarations[dialog.types], /export declare function Receipt/);
   assert.equal(review.components.filter(item => item.id === "confirm-dialog").length, 1);
   assert(Object.values(review.declarations).reduce((total, body) => total + Buffer.byteLength(body ?? ""), 0) <= 4096);

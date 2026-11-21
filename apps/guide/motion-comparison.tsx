@@ -120,20 +120,20 @@ function SegmentExample({ replay }: { replay: number }) {
 }
 
 type Appearance = "light" | "dark" | "auto";
-function MotionComparison() {
+export function MotionComparison({ embedded = false, guideAppearance }: { embedded?: boolean; guideAppearance?: "light" | "dark" }) {
   const [appearance, setAppearance] = useState<Appearance>("auto");
   const [replay, setReplay] = useState(0);
 
   return (
-    <Yogurt className="motion-comparison-theme" appearance={appearance}>
+    <Yogurt className="motion-comparison-theme" appearance={appearance === "auto" ? guideAppearance ?? "auto" : appearance}>
       <main className="motion-comparison">
         <header className="motion-heading">
           <div>
-            <nav className="motion-links" aria-label="Yogurt">
+            {!embedded && <nav className="motion-links" aria-label="Yogurt">
               <a className="motion-home" href="index.html">Yogurt</a>
               <a className="motion-home" href="components.html">Component library</a>
               <a className="motion-home" href="agents.html">Agent motion</a>
-            </nav>
+            </nav>}
             <Heading level={1}>Component motion</Heading>
             <Text>Try the same interaction in both versions.</Text>
           </div>

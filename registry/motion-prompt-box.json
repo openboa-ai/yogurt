@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-prompt-box",
+  "type": "registry:ui",
+  "title": "PromptBox",
+  "description": "Prepare and submit a short request.",
+  "files": [
+    {
+      "path": "ui/motion-prompt-box.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { PromptBox } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

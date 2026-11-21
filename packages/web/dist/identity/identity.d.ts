@@ -170,19 +170,22 @@ export declare function Activity({ state, agent, }: {
     state: "ready" | "working" | "interrupted" | "done";
     agent: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Message({ speaker, children, avatar, time, dateTime, }: {
+export declare function Message({ speaker, children, avatar, time, dateTime, variant, actions, }: {
     speaker: string;
     children: ReactNode;
     avatar?: ReactNode;
     time?: string;
     dateTime?: string;
+    variant?: "sent" | "received";
+    actions?: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function ReadingAnchor({ onClick, children, }: {
     onClick: () => void;
     children?: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Transcript({ label, children, revision, }: {
+export declare function Transcript({ label, children, revision, readingAnchor, }: {
     label: string;
     children: ReactNode;
     revision: string | number;
+    readingAnchor?: "always" | "when-away";
 }): import("react/jsx-runtime").JSX.Element;

@@ -17,7 +17,7 @@ pub fn pixels(dark: bool, material: ui.Material, tone: Tone) Pixels {
         .warning => roles.warning_soft,
         .danger => roles.danger_soft,
     };
-    const to = if (tone == .accent) roles.action_soft else roles.surface;
+    const to = roles.surface;
     const first = [_]f32{ from.r, from.g, from.b };
     const last = [_]f32{ to.r, to.g, to.b };
     var image: Pixels = undefined;

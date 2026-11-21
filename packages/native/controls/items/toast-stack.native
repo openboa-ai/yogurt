@@ -1,9 +1,9 @@
 <template name="yg-toast-stack" args="label">
   <column label="{label}" gap="8">
     <for each="notifications" key="id" as="item">
-      <row cross="center">
-        <text>{item.title}</text>
-        <button variant="ghost" on-press="dismiss_item:{item.id}">Dismiss</button>
+      <row gap="12" padding="8" cross="center" background="text" radius="md">
+        <text grow="1" wrap="true" foreground="background">{item.title}</text>
+        <button variant="ghost" foreground="background" label="Dismiss notification" icon="x" on-press="dismiss_item:{item.id}"/>
       </row>
     </for>
   </column>

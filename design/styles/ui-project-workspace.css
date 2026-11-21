@@ -7,17 +7,17 @@
 }
 
 .yg-workspace-row[data-selected="true"] {
-  background: var(--yg-action-soft);
+  background: var(--yg-field);
 }
 
 .yg-workspace-row-body {
   display: flex;
   align-items: center;
-  gap: var(--boa-space-8);
+  gap: var(--yg-list-row-gap);
   flex: 1 1 auto;
   min-inline-size: 0;
-  min-block-size: var(--yg-size-touch);
-  padding: var(--boa-space-8) var(--boa-space-12);
+  min-block-size: var(--yg-list-row-height);
+  padding: var(--boa-space-6) var(--yg-list-row-inset);
   border: 0;
   border-radius: inherit;
   background: transparent;
@@ -30,12 +30,9 @@ button.yg-workspace-row-body {
   cursor: pointer;
 }
 
-button.yg-workspace-row-body:hover {
-  background: var(--yg-field);
-}
-
-button.yg-workspace-row-body[aria-current="true"]:hover {
-  background: var(--yg-action-soft-hover);
+@media (hover: hover) {
+  button.yg-workspace-row-body:hover { background: var(--yg-field); }
+  button.yg-workspace-row-body[aria-current="true"]:hover { background: var(--yg-hover); }
 }
 
 .yg-resource-row > .yg-button {
@@ -44,18 +41,18 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
 }
 
 .yg-resource-row > [aria-pressed="true"] {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 
 .yg-resource-kind {
   display: inline-grid;
   flex: none;
   place-items: center;
-  inline-size: var(--boa-space-32);
-  block-size: var(--boa-space-32);
-  border-radius: var(--yg-radius-control);
+  inline-size: var(--boa-space-24);
+  block-size: var(--boa-space-24);
+  border-radius: var(--yg-radius-small);
   background: var(--yg-field);
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 
 .yg-workspace-row-copy {
@@ -77,7 +74,7 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
   max-inline-size: 38%;
   overflow-wrap: anywhere;
   color: var(--yg-muted);
-  font: var(--yg-font-help);
+  font: var(--yg-font-meta);
   text-align: end;
 }
 
@@ -86,7 +83,7 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
 }
 
 .yg-thread-meta .yg-thread-unread {
-  color: var(--yg-action);
+  color: var(--yg-inverse);
 }
 
 .yg-project-header {
@@ -133,3 +130,7 @@ button.yg-workspace-row-body[aria-current="true"]:hover {
     min-block-size: var(--yg-size-touch);
   }
 }
+
+.yg-project-identity { flex: 1 1 16rem; }
+.yg-project-description, .yg-project-instructions { max-inline-size: 70ch; }
+button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }

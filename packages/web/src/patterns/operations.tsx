@@ -14,7 +14,7 @@ const eventKinds = {
 } satisfies Record<string, { label: string; icon: IconName }>;
 
 const eventStates = {
-  running: { label: "In progress", tone: "brand" },
+  running: { label: "In progress", tone: "neutral" },
   ready: { label: "Ready", tone: "success" },
   waiting: { label: "Waiting", tone: "warning" },
   failed: { label: "Failed", tone: "danger" },
@@ -80,7 +80,7 @@ export function WorkEvent({
 const routineStates = {
   scheduled: { label: "Scheduled", tone: "success" },
   paused: { label: "Paused", tone: "neutral" },
-  running: { label: "Running", tone: "brand" },
+  running: { label: "Running", tone: "neutral" },
   failed: { label: "Needs attention", tone: "danger" },
 } satisfies Record<string, { label: string; tone: Tone }>;
 

@@ -41,6 +41,14 @@ for (const [k, v] of Object.entries(ui.motion))
   css.push("  --yg-" + k + ": " + v + "ms;");
 for (const [role, curve] of Object.entries(ui.easing))
   css.push("  --yg-" + role + ": " + curve + ";");
+for (const [role, profile] of Object.entries(ui.motionProfiles ?? {})) {
+  if (!Number.isSafeInteger(profile.duration) || profile.duration <= 0 ||
+      !Object.hasOwn(ui.easing, profile.fallback) || !Array.isArray(profile.samples) ||
+      profile.samples.length < 2 || profile.samples.some(value => !Number.isFinite(value))) {
+    throw Error("Invalid motion profile " + role);
+  }
+  css.push(`  --yg-motion-${role}: ${profile.duration}ms var(--yg-${profile.fallback});`);
+}
 for (const [name, layers] of Object.entries(ui.elevation)) {
   const shadows = layers.map(([y, blur, opacity]) =>
     "0 " + y + "px " + blur + "px color-mix(in srgb, " +
@@ -63,6 +71,10 @@ for (const [role, [size, weight]] of Object.entries(ui.types))
       "rem var(--boa-font-family);",
   );
 css.push("}");
+css.push("@supports (animation-timing-function: linear(0, 1)) {", "  .yg-root {");
+for (const [role, profile] of Object.entries(ui.motionProfiles ?? {}))
+  css.push(`    --yg-motion-${role}: ${profile.duration}ms linear(${profile.samples.join(", ")});`);
+css.push("  }", "}");
 for (const [m, roles] of Object.entries(ui.materials))
   css.push('.yg-root[data-material="' + m + '"] {', ...roleRules(roles), "}");
 writeFileSync("design/styles/ui-tokens.css", css.join("\n") + "\n");
@@ -112,10 +124,18 @@ const zig = [
     (k) => "pub const " + id(k) + ": f32 = " + dimension(k) + ";",
   ),
   ...Object.entries(ui.motion).map(
-    ([k, v]) => "pub const " + k + "_ms: u32 = " + v + ";",
+    ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v + ";",
   ),
-  ...Object.entries(ui.types).map(
-    ([k, [s]]) => "pub const " + k + "_type: f32 = " + brand.type.size[s] + ";",
+  ...Object.entries(ui.motionProfiles ?? {}).map(
+    ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v.duration + ";",
+  ),
+  ...Object.entries(ui.types).flatMap(([role, [size, weight]]) => [
+    "pub const " + id(role) + "_type: f32 = " + brand.type.size[size] + ";",
+    "pub const " + id(role) + "_line_height: f32 = " + brand.type.lineHeight[size] + ";",
+    "pub const " + id(role) + "_weight: u16 = " + (brand.type.weight[weight] ?? brand.type.roleWeight[weight]) + ";",
+  ]),
+  ...Object.entries(brand.type.tracking).map(
+    ([role, value]) => "pub const " + id(role) + "_tracking: f32 = " + value + ";",
   ),
 ];
 writeFileSync(nativeDir + "/tokens.zig", zig.join("\n") + "\n");

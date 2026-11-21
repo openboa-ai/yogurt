@@ -1,6 +1,6 @@
 <template name="yg-keypad" args="label">
-  <column gap="8">
-    <text>{label}</text>
+  <column gap="8" max-width="480">
+    <text size="sm">{label}</text>
     <grid columns="{key_columns}" gap="4">
       <for each="keys" key="id" as="item">
         <button variant="secondary" disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</button>

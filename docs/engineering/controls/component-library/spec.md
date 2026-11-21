@@ -15,7 +15,7 @@ The follow-up selects the existing OpenAI Apps SDK UI implementations for matchi
 
 | Requirement | Implementation and observation |
 | --- | --- |
-| 1. One token source | Resolve component roles into existing numbered palette colors. Ink blue is the default. Validate both appearances and the contrast of alternate surface treatments. Rethink Sans, 14/20 action labels, 36 px regular height, 8 px corners and 44 px touch are the center of the scale. |
+| 1. One token source | Resolve component roles into existing numbered palette colors. Neutral is the default for control fills, hover, and ordinary selection. Reserve Ink blue for major actions that request the brand tone. Validate both appearances and the contrast of alternate surface treatments. Rethink Sans, 14/20 action labels, 36 px regular height, 8 px corners and 44 px touch are the center of the scale. |
 | 2. Basic components first | Implement the ten named families. Export typed components, controlled inputs and stable IDs. Baseline and practical variants share the same control. Instantiate every public catalog entry in the working gallery. |
 | 3. Variation by function | Move between compact, regular and touch sizes, filled, soft and quiet emphasis, and the existing Neutral, Paper and Mist surfaces. Preserve keyboard focus, accessible names, state and semantic color across changes. Check field errors, no matches, canceled decisions, interrupted requests and original receipt lookup. |
 | 4. Reusable distribution | Package only component code, styles, relevant assets, notices and tokens. Supply a local read-only check of declared consumer surfaces, editable individual registry entries, the same import to Next.js and Vite and renderer-specific evidence. Keep third-party code and original brand masters identifiable. |
@@ -50,6 +50,18 @@ The owner also requested ready-made combinations following the individual compon
 
 The owner requested an unframed agent silhouette and coverage for agent-first and project-first workflows. Retain stable component IDs, existing consumers and OpenBoa's artwork, type and palette. Give a named agent's silhouette its own transparent presentation. Profile avatars can still use a circular crop. Use the same silhouette in lists, messages and the selected agent header. Keep the existing gaze states.
 
+Native transcript follow-up: the scroll container takes the available height rather than collapsing to zero. Preserve the caller's label and message slot, and permit the host to constrain the available viewport. Verify visible message content in a flexible parent and scrolling with content taller than a constrained viewport.
+
+Native sidebar follow-up: the project and agent lists reserve a visible minimum while growing with the host, rather than collapsing their scroll viewport. Nest project destinations inside their disclosure heading, preserve the existing messages and slots, and verify both the visible default list and overflow scrolling.
+
+Native navigation follow-up: show the sidebar disclosure direction and indent destinations under their parent. Navigation-menu entries align to the start and retain their existing activation and disabled data without requiring new host fields.
+
+Native data and feedback follow-up: keep the neutral notice surface, icon and insets consistent with the shared roles, and allow descriptive text in records, results, charts and lists to wrap rather than disappear at narrow widths. Preserve existing data, messages and slots.
+
+Native agent avatar and gaze accept an optional square size, defaulting to the existing 48 points. The guide may use 72 points for its primary sample while smaller roster uses remain available. Preserve the image ID, label and original motion data.
+
+Native typography resolves the existing display-size token as well as the body, action and heading tokens, so a display text uses the same 40 px scale as the web guide.
+
 | Surface | Required behavior |
 | --- | --- |
 | Agent workspace | Search the roster and select a stable agent ID. Show a named current agent, recent context, unread and attention states. Keep a usable reading pane with optional computer status and inspector. Expose watch, request control and return only through explicit host callbacks. At narrow widths provide a way to reopen the roster and close the inspector. |
@@ -69,6 +81,10 @@ The owner requested a shared sidebar that each project can compose from independ
 - Keep links navigable, distinguish separate item actions, label each group and expose active identity through `aria-current` on the active destination. Use plain links and buttons for ordinary navigation. Section and submenu disclosure uses keyboard-operable buttons. Collapsing the rail preserves group intent on return. Opening the drawer never changes the route.
 - Return focus to the opener when dismissing with Escape, a backdrop or the close action. Selecting a destination can close the drawer. Persistent search, selected records, permissions and navigation data belong to the host. These choices carry no service effects.
 - Ship two editable compositions with project or agent markup, host search and actions, active state and a narrow alternative. Use OpenBoa artwork and tokens. Native uses typed markup and host-controlled visibility. Exercise wide, rail, right edge, narrow modal, nesting, controlled state, and old props. Verify installed entry points and actual keyboard and pointer behavior.
+
+### Workspace row and conversation presentation
+
+A sidebar item can render a single truncated description beneath its label. The destination name remains the button or link name and the full description is available separately. Rail mode retains its single identity label. Message supports sent and received treatments and an optional action region. Secondary actions remain visible with touch and keyboard focus. Transcript supports an opt-in reading anchor that appears after the reader scrolls away and returns focus to the reading region when used. Existing callers retain their default presentation and reading-anchor behavior. Verify these options through the installed web package, including compact navigation and reduced motion.
 
 ## Motion and visual craft · local follow-up, revision 4
 
@@ -177,3 +193,5 @@ The owner selected the local.14 performances and requested them for the complete
 Use the same registry and fitted transforms to render React and the typed Zig canvas. The host supplies identity, state and time. Preserve reduced-motion stills, archived artwork, interrupted transitions and visibility behavior. Validate only registered shapes and notch positions, and keep the core components usable without network or encoded frames. Publish no identity assignments. Keep palette permutations as candidates until their visual distinguishability is reviewed.
 
 Acceptance enumerates each of the 45 source outlines and exercises the six states at 24 and 96 px. Check interpolated outlines and both visible eye outlines for containment. Inspect the family in an interactive grid and verify the original two agents against local.14. Verify native rendering with stable path IDs and web behavior on narrow and wide screens.
+
+The Native HoverCard keeps its trigger reachable when expanded. Anchor the content below the trigger and route outside dismissal through the existing toggle message. Verify that the trigger can open and close the card.
