@@ -158,24 +158,8 @@
 .yg-input.yg-ghost-input textarea { position: relative; align-self: stretch; resize: none; overflow: hidden; color: var(--yg-text); }
 .yg-ghost-field .yg-input.yg-ghost-input, .yg-ghost-field .yg-input.yg-ghost-input:focus-within { padding: 0; border-radius: 0; background: transparent; }
 .yg-ghost-word { display: inline-block; max-inline-size: 100%; overflow-wrap: anywhere; }
-.yg-ghost-suffix .yg-ghost-word > span { display: inline-block; animation: yg-ghost-appear var(--yg-motion-text-pop) both; }
-@keyframes yg-ghost-appear { from { opacity: 0; transform: translateY(3px); } }
+.yg-ghost-suffix .yg-ghost-word > span { display: inline-block; }
 .yg-ghost-accepted { visibility: hidden; }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-input.yg-ghost-input textarea[data-accepted] { color: transparent; }
-  .yg-ghost-mirror[data-accepted] > span:first-child, .yg-ghost-accepted { color: var(--yg-text); }
-  .yg-ghost-accepted { visibility: visible; }
-  .yg-ghost-accepted .yg-ghost-word > span { display: inline-block; animation: yg-ghost-accept 420ms linear both; }
-}
-@keyframes yg-ghost-accept {
-  0% { translate: 0 0; opacity: .55; }
-  13% { translate: 0 -2.2px; opacity: .84; }
-  22% { translate: 0 -1.7px; }
-  42% { translate: 0 .6px; }
-  63% { translate: 0 -.4px; }
-  84% { translate: 0 .15px; }
-  100% { translate: 0 0; opacity: 1; }
-}
 .yg-thinking { position: relative; box-sizing: border-box; display: inline-flex; width: 64px; height: 40px; align-items: center; justify-content: center; border-radius: var(--yg-radius-card); background: var(--yg-field); }
 .yg-thinking-dots { position: relative; display: flex; gap: 4px; align-items: center; }
 .yg-thinking-dots i { display: block; width: 9px; height: 9px; border-radius: 50%; background: var(--yg-muted); }

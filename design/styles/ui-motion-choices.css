@@ -109,28 +109,3 @@
   background: var(--yg-text);
   color: var(--yg-canvas);
 }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-letter-rejected { display: block; position: absolute; color: var(--yg-signal-limit); pointer-events: none; }
-  .yg-letter-rejected > span {
-    position: absolute;
-    font: var(--yg-font-reading);
-    animation: yg-letter-fall 560ms ease-in both;
-    animation-delay: calc(12ms * var(--yg-letter-order));
-  }
-  .yg-letter-limit[data-limit-state="full"] :is(.yg-letter-meter, .yg-letter-count) {
-    animation: yg-letter-limit-stop 310ms ease-out;
-  }
-}
-@keyframes yg-letter-fall {
-  0% { opacity: 0; transform: translateY(0); }
-  11% { opacity: 1; }
-  27% { transform: translate(-4px, -12px) rotate(-12deg); }
-  73% { opacity: 1; transform: translate(var(--yg-letter-drift), var(--yg-letter-fall)) rotate(18deg); }
-  85% { transform: translate(var(--yg-letter-drift), calc(var(--yg-letter-fall) - 8px)) rotate(14deg); }
-  100% { opacity: 1; transform: translate(var(--yg-letter-drift), var(--yg-letter-fall)) rotate(18deg); }
-}
-@keyframes yg-letter-limit-stop {
-  20% { translate: -3px; }
-  50% { translate: 2px; }
-  75% { translate: -1px; }
-}

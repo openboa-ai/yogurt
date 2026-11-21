@@ -248,12 +248,20 @@ async function run(browser) {
 
     const letterLimit = await demo("letter-limit");
     const letterField = letterLimit.getByRole("textbox", {name: "Short bio"});
+    const letterControl = letterLimit.locator(".yg-letter-limit");
+    const letterCount = letterLimit.locator(".yg-letter-count");
+    await letterField.fill("a".repeat(38));
+    assert.equal(await letterControl.getAttribute("data-limit-state"), "near");
+    assert.equal(await letterCount.innerText(), "10 remaining");
+    const nearColor = await letterCount.evaluate(node => getComputedStyle(node).color);
     await letterField.fill("a".repeat(60));
-    assert.equal((await letterField.inputValue()).length, 48);
-    assert.equal(await letterLimit.locator(".yg-letter-limit").getAttribute("data-limit-state"), "full");
+    assert.equal(await letterField.inputValue(), "a".repeat(48));
+    assert.equal(await letterControl.getAttribute("data-limit-state"), "full");
     await letterField.press("x");
-    assert.equal((await letterField.inputValue()).length, 48);
-    await letterLimit.locator(".yg-letter-rejected > span").first().waitFor();
+    assert.equal(await letterField.inputValue(), "a".repeat(48));
+    assert.equal(await letterCount.innerText(), "0 remaining");
+    assert(await letterCount.isVisible());
+    assert.notEqual(await letterCount.evaluate(node => getComputedStyle(node).color), nearColor);
     await letterLimit.getByRole("button", {name: "Post"}).click();
     assert.equal(await letterField.inputValue(), "");
 

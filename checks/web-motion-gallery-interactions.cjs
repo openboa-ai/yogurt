@@ -167,8 +167,20 @@ const actions = {
   },
   "invite-people": async root => {await root.getByRole("textbox",{name:"Email address"}).fill("kai@example.com");await show(root,"Add person","1 person added");},
   "letter-limit": async root => {
-    const input=root.getByRole("textbox");await input.fill("A".repeat(48));await input.press("x");
-    await root.locator(".yg-letter-rejected > span").first().waitFor();assert.equal((await input.inputValue()).length,48);
+    const input = root.getByRole("textbox");
+    const control = root.locator(".yg-letter-limit");
+    const count = root.locator(".yg-letter-count");
+    await input.fill("A".repeat(38));
+    assert.equal(await control.getAttribute("data-limit-state"), "near");
+    assert.equal(await count.innerText(), "10 remaining");
+    const nearColor = await count.evaluate(node => getComputedStyle(node).color);
+    await input.fill("A".repeat(48));
+    await input.press("x");
+    assert.equal(await input.inputValue(), "A".repeat(48));
+    assert.equal(await control.getAttribute("data-limit-state"), "full");
+    assert.equal(await count.innerText(), "0 remaining");
+    assert(await count.isVisible());
+    assert.notEqual(await count.evaluate(node => getComputedStyle(node).color), nearColor);
   },
   "loading-to-success": async (root, page) => {
     await click(root, "Save changes");
