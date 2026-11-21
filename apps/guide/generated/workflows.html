@@ -985,12 +985,34 @@
 .yg-trace li {
   padding-block: var(--boa-space-4);
 }
+.yg-trace summary {
+  min-block-size: var(--yg-list-row-height);
+  padding: var(--yg-inset-regular) var(--yg-list-row-inset);
+  border-radius: var(--yg-radius-control);
+  color: var(--yg-text);
+  font: var(--yg-font-action);
+  list-style-position: inside;
+  overflow-wrap: anywhere;
+}
+@media (hover: hover) {
+  .yg-trace summary:hover { background: var(--yg-hover); }
+}
+.yg-trace summary:focus-visible {
+  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
+  outline-offset: calc(-1 * var(--boa-stroke-focus));
+}
 .yg-trace small {
   margin-inline-start: var(--boa-space-8);
 }
 .yg-trace details > div {
   color: var(--yg-muted);
-  padding: var(--boa-space-8) var(--boa-space-16);
+  font: var(--yg-font-help);
+  padding: var(--boa-space-4) var(--yg-list-row-inset) var(--yg-inset-regular);
+  overflow-wrap: anywhere;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-trace summary { transition: background-color var(--yg-press) var(--yg-settle); }
+  .yg-trace details[open] > div { animation: yg-reveal var(--yg-layer) var(--yg-settle); }
 }
 .yg-input-group {
   gap: var(--boa-space-8);
@@ -4040,6 +4062,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   font: var(--yg-font-meta);
 }
 @media (prefers-reduced-motion: no-preference) {
+  .yg-progress-track > span { transition: transform var(--yg-motion-storage-fill); }
   .yg-storage-bar > span {
     transition: inline-size var(--yg-motion-storage-fill),
       opacity var(--yg-motion-storage-lift), scale var(--yg-motion-storage-lift);

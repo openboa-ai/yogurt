@@ -78,6 +78,7 @@
   font: var(--yg-font-meta);
 }
 @media (prefers-reduced-motion: no-preference) {
+  .yg-progress-track > span { transition: transform var(--yg-motion-storage-fill); }
   .yg-storage-bar > span {
     transition: inline-size var(--yg-motion-storage-fill),
       opacity var(--yg-motion-storage-lift), scale var(--yg-motion-storage-lift);
