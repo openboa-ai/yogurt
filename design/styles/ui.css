@@ -133,7 +133,7 @@
 }
 .yg-divider {
   border: 0;
-  height: 1px;
+  height: var(--boa-stroke-rule);
   width: 100%;
   background: var(--yg-hover);
   margin: var(--boa-space-8) 0;
@@ -750,6 +750,7 @@
 }
 .yg-nav-list a {
   text-decoration: none;
+  border-radius: var(--yg-radius-control);
 }
 .yg-segment,
 .yg-tabs [role="tablist"] {

@@ -121,9 +121,15 @@
 }
 .yg-shortcut {
   display: inline-flex;
+  flex-wrap: wrap;
+  max-inline-size: 100%;
+  min-inline-size: 0;
   gap: var(--boa-space-4);
 }
 .yg-shortcut kbd {
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
   font: var(--yg-font-help);
   color: var(--yg-muted);
   background: var(--yg-field);
@@ -179,6 +185,10 @@
 .yg-section-line .yg-heading {
   font: var(--yg-font-action);
 }
+.yg-section-line > div {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
 .yg-bottom-info {
   padding: var(--boa-space-12);
   background: var(--yg-field);
@@ -215,12 +225,15 @@
 }
 .yg-amount {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-inline-size: 0;
   gap: var(--boa-space-4);
 }
 .yg-amount strong {
   font: var(--yg-font-value);
   letter-spacing: var(--boa-tracking-value);
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 .yg-amount small {
   font: var(--yg-font-action);
@@ -269,6 +282,7 @@
   color: var(--yg-muted);
 }
 .yg-bubble {
+  box-sizing: border-box;
   width: fit-content;
   max-width: 90%;
   padding: var(--boa-space-8) var(--boa-space-12);

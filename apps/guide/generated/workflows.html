@@ -745,9 +745,15 @@
 }
 .yg-shortcut {
   display: inline-flex;
+  flex-wrap: wrap;
+  max-inline-size: 100%;
+  min-inline-size: 0;
   gap: var(--boa-space-4);
 }
 .yg-shortcut kbd {
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
   font: var(--yg-font-help);
   color: var(--yg-muted);
   background: var(--yg-field);
@@ -803,6 +809,10 @@
 .yg-section-line .yg-heading {
   font: var(--yg-font-action);
 }
+.yg-section-line > div {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
 .yg-bottom-info {
   padding: var(--boa-space-12);
   background: var(--yg-field);
@@ -839,12 +849,15 @@
 }
 .yg-amount {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-inline-size: 0;
   gap: var(--boa-space-4);
 }
 .yg-amount strong {
   font: var(--yg-font-value);
   letter-spacing: var(--boa-tracking-value);
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 .yg-amount small {
   font: var(--yg-font-action);
@@ -893,6 +906,7 @@
   color: var(--yg-muted);
 }
 .yg-bubble {
+  box-sizing: border-box;
   width: fit-content;
   max-width: 90%;
   padding: var(--boa-space-8) var(--boa-space-12);
@@ -2414,8 +2428,8 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   flex: none;
   display: grid;
   place-items: center;
-  inline-size: var(--yg-size-compact);
-  block-size: var(--yg-size-compact);
+  inline-size: var(--boa-control-compact);
+  block-size: var(--boa-control-compact);
   border-radius: var(--yg-radius-control);
   background: var(--yg-field);
   color: var(--yg-inverse);
@@ -2454,7 +2468,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 
 .yg-operations-list {
   display: grid;
-  gap: var(--boa-space-4);
+  gap: var(--yg-gap-inline);
   padding: 0;
   margin: 0;
   list-style: none;
@@ -2481,7 +2495,6 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   padding-block-start: var(--boa-space-12);
 }
 
-.yg-operations-list > li + li { margin-block-start: var(--yg-gap-tight); }
 .yg-operations-list :is(.yg-work-event, .yg-routine-row) { border-radius: 0; background: transparent; }
 .yg-operations-actions { align-self: center; }
 
@@ -5502,7 +5515,7 @@ summary.yg-task-line:focus-visible {
 }
 .yg-divider {
   border: 0;
-  height: 1px;
+  height: var(--boa-stroke-rule);
   width: 100%;
   background: var(--yg-hover);
   margin: var(--boa-space-8) 0;
@@ -6119,6 +6132,7 @@ summary.yg-task-line:focus-visible {
 }
 .yg-nav-list a {
   text-decoration: none;
+  border-radius: var(--yg-radius-control);
 }
 .yg-segment,
 .yg-tabs [role="tablist"] {
