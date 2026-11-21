@@ -605,6 +605,11 @@
 .yg-tip-anchor {
   width: fit-content;
 }
+.yg-tip-anchor {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
 .yg-options,
 .yg-anchored-panel,
 .yg-tip {

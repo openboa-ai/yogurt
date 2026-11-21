@@ -21,6 +21,11 @@
 }
 .yg-navbar { flex-wrap: wrap; }
 .yg-navbar > strong { flex: 1 1 min(12rem, 100%); }
+.yg-segment > button, .yg-menu-bar > button {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
 
 :where(.yg-tabs [role="tablist"], .yg-segment) {
   position: relative;

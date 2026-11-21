@@ -3,6 +3,7 @@
   background: var(--yg-surface);
   color: var(--yg-text);
 }
+.yg-card > * { min-inline-size: 0; overflow-wrap: anywhere; }
 .yg-expand-card summary {
   display: flex;
   align-items: center;
@@ -155,7 +156,7 @@
 }
 .yg-stat-card { box-sizing: border-box; width: min(340px, 100%); min-block-size: 0; padding: var(--yg-card-inset-regular); border-radius: var(--yg-card-corner); }
 .yg-stat-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-.yg-stat-heading > div { min-inline-size: 0; }
+.yg-stat-heading > div { min-inline-size: 0; overflow-wrap: anywhere; }
 .yg-stat-label { display: block; font: var(--yg-font-help); }
 .yg-stat-value { font-size: 34px; line-height: 40px; letter-spacing: -.02em; }
 .yg-stat-detail { flex: none; max-inline-size: 45%; padding: 4px 9px; border-radius: 999px; background: var(--yg-field); color: var(--yg-inverse); text-align: center; overflow-wrap: anywhere; }

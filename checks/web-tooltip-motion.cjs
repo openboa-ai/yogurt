@@ -17,10 +17,17 @@ const assert = require("node:assert/strict");
       await tip.waitFor({ state: "visible" });
       assert.equal(await tip.getAttribute("aria-hidden"), "false");
       await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
       const positions = await Promise.all([trigger.boundingBox(), tip.boundingBox()]);
       assert(positions[0] && positions[1]);
+      const anchorBox = await root.locator('.yg-tip-anchor').boundingBox();
+      assert(anchorBox && Math.abs(anchorBox.y - positions[0].y) < 1 && Math.abs(anchorBox.height - positions[0].height) < 1,
+        `Tooltip anchor should match the trigger's vertical bounds: ${JSON.stringify({anchorBox, trigger:positions[0]})}`);
       assert(Math.abs(positions[0].x + positions[0].width / 2 - positions[1].x - positions[1].width / 2) < 1);
-      assert(positions[1].y + positions[1].height < positions[0].y);
+      const side = await tip.getAttribute("data-side");
+      assert(side === "above" ? positions[1].y + positions[1].height < positions[0].y :
+        side === "below" && positions[1].y > positions[0].y + positions[0].height,
+        `Tooltip must open on its indicated side without overlapping its trigger: ${JSON.stringify({side, positions})}`);
       assert.equal(await tip.evaluate(node => getComputedStyle(node).transitionDuration), "0s");
       await trigger.press("Escape");
       assert.equal(await tip.getAttribute("aria-hidden"), "true");

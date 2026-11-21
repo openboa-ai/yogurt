@@ -83,3 +83,6 @@
   outline-offset: var(--boa-space-2);
   border-radius: var(--yg-radius-small);
 }
+
+.yg-bars { min-inline-size: 0; }
+.yg-bars :is(figcaption, small) { overflow-wrap: anywhere; }

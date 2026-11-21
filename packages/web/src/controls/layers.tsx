@@ -47,6 +47,70 @@ function useOutside(
     return () => document.removeEventListener("pointerdown", outside, true);
   }, [ref, close, open]);
 }
+
+/** Keep an inline layer within its viewport and any clipping scroll containers. */
+function useAnchoredPlacement(ref: React.RefObject<HTMLDivElement | null>, open: boolean) {
+  useLayoutEffect(() => {
+    const anchor = ref.current;
+    const panel = anchor?.querySelector<HTMLElement>(".yg-anchored-panel");
+    const view = anchor?.ownerDocument.defaultView;
+    if (!open || !anchor || !panel || !view) return;
+    const apply = (property: string, value: string) => {
+      if (panel.style.getPropertyValue(property) !== value) panel.style.setProperty(property, value);
+    };
+    const place = () => {
+      const viewport = view.visualViewport;
+      let left = viewport?.offsetLeft ?? 0, top = viewport?.offsetTop ?? 0;
+      let right = left + (viewport?.width ?? view.innerWidth), bottom = top + (viewport?.height ?? view.innerHeight);
+      for (let parent = anchor.parentElement; parent && parent !== anchor.ownerDocument.documentElement; parent = parent.parentElement) {
+        const style = view.getComputedStyle(parent);
+        const clipX = /^(auto|scroll|hidden|clip)$/.test(style.overflowX);
+        const clipY = /^(auto|scroll|hidden|clip)$/.test(style.overflowY);
+        if (!clipX && !clipY) continue;
+        const box = parent.getBoundingClientRect();
+        const x = box.left + parent.clientLeft, y = box.top + parent.clientTop;
+        if (clipX) { left = Math.max(left, x); right = Math.min(right, x + parent.clientWidth); }
+        if (clipY) { top = Math.max(top, y); bottom = Math.min(bottom, y + parent.clientHeight); }
+      }
+      const anchorBox = anchor.getBoundingClientRect();
+      const safeWidth = Math.max(0, right - left - 16);
+      apply("max-inline-size", `min(19rem, 85vw, ${safeWidth}px)`);
+      apply("min-inline-size", `min(11rem, 80vw, ${safeWidth}px)`);
+      const gap = parseFloat(view.getComputedStyle(panel).getPropertyValue("--yg-offset-layer")) || 6;
+      const below = Math.max(0, bottom - 8 - anchorBox.bottom - gap);
+      const above = Math.max(0, anchorBox.top - gap - top - 8);
+      apply("max-block-size", `${Math.max(above, below)}px`);
+      apply("overflow-y", "auto");
+      const width = panel.offsetWidth, height = panel.offsetHeight;
+      const rtl = view.getComputedStyle(anchor).direction === "rtl";
+      const preferred = rtl ? anchorBox.right - width : anchorBox.left;
+      const targetLeft = Math.min(Math.max(preferred, left + 8), Math.max(left + 8, right - 8 - width));
+      const showAbove = below < height && above > below;
+      const targetTop = showAbove ? anchorBox.top - gap - height : anchorBox.bottom + gap;
+      apply("inset-inline-start", "auto");
+      apply("inset-inline-end", "auto");
+      apply("left", `${targetLeft - anchorBox.left}px`);
+      apply("bottom", "auto");
+      apply("top", `${targetTop - anchorBox.top}px`);
+      panel.dataset.side = showAbove ? "above" : "below";
+    };
+    place();
+    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(place);
+    observer?.observe(anchor);
+    observer?.observe(panel);
+    view.addEventListener("resize", place);
+    view.addEventListener("scroll", place, true);
+    view.visualViewport?.addEventListener("resize", place);
+    view.visualViewport?.addEventListener("scroll", place);
+    return () => {
+      observer?.disconnect();
+      view.removeEventListener("resize", place);
+      view.removeEventListener("scroll", place, true);
+      view.visualViewport?.removeEventListener("resize", place);
+      view.visualViewport?.removeEventListener("scroll", place);
+    };
+  }, [ref, open]);
+}
 export function ActionMenu({
   label,
   items,
@@ -66,6 +130,7 @@ export function ActionMenu({
   const expanding = presentation === "expanding";
   const enabled = items.filter((i) => !i.disabled);
   const current = enabled.find((i) => i.id === active) ?? enabled[0];
+  useAnchoredPlacement(area, open && !expanding);
   function show(last = false) {
     setActive((last ? enabled.at(-1) : enabled[0])?.id);
     setOpen(true);
@@ -197,6 +262,7 @@ export function Popover({
   const trigger = useRef<HTMLButtonElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const id = useId();
+  useAnchoredPlacement(outer, open);
   useOutside(outer, () => setOpen(false), open);
   useEffect(() => {
     if (open) content.current?.focus();
