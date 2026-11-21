@@ -235,6 +235,11 @@
   .yg-combo .yg-options [role="option"] {
     transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
   }
+  .yg-flyout [role="menuitem"],
+  .yg-flyout a,
+  .yg-command-list [role="option"] {
+    transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
+  }
   .yg-root .yg-select[data-dropdown] > .yg-icon {
     transition: rotate var(--yg-motion-picker-slide);
   }

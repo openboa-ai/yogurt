@@ -2431,7 +2431,6 @@ button.yg-workspace-row-body {
   }
 }
 
-.yg-project-header { padding-block-end: var(--boa-space-12); }
 .yg-project-identity { flex: 1 1 16rem; }
 .yg-project-description, .yg-project-instructions { max-inline-size: 70ch; }
 button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
@@ -2681,6 +2680,21 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
 .yg-sidebar-layout[data-panel="rail"] .yg-sidebar-item {
   justify-content: center;
   padding-inline: 0;
+}
+.yg-navbar > strong,
+.yg-sidebar header > strong {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.yg-sidebar nav a {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.yg-navigation-menu li,
+.yg-navigation-menu li > button {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
 }
 .yg-sidebar-drawer {
   inset-block: 0;
@@ -3201,6 +3215,11 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
     animation: yg-floating-arrive var(--yg-motion-picker-lift) both;
   }
   .yg-combo .yg-options [role="option"] {
+    transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
+  }
+  .yg-flyout [role="menuitem"],
+  .yg-flyout a,
+  .yg-command-list [role="option"] {
     transition: background-color var(--yg-motion-picker-highlight), color var(--yg-motion-picker-highlight);
   }
   .yg-root .yg-select[data-dropdown] > .yg-icon {

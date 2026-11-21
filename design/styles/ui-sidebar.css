@@ -157,6 +157,21 @@
   justify-content: center;
   padding-inline: 0;
 }
+.yg-navbar > strong,
+.yg-sidebar header > strong {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.yg-sidebar nav a {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.yg-navigation-menu li,
+.yg-navigation-menu li > button {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
 .yg-sidebar-drawer {
   inset-block: 0;
   inset-inline: 0;
