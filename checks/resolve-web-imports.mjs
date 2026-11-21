@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const project = resolve(process.argv[2] ?? "");
 const resolver = fileURLToPath(new URL("../plugins/yogurt/bin/resolve-sdk.mjs", import.meta.url));
@@ -29,6 +29,17 @@ const guidance = JSON.parse(choices.stdout).components;
 assert.match(guidance.find(item => item.id === "select").guidance.useWhen, /short/);
 assert.match(guidance.find(item => item.id === "combobox").guidance.useWhen, /searchable/);
 assert(guidance.find(item => item.id === "rating").guidance.verify.includes("reduced motion"));
-const inventory = JSON.parse(readFileSync(resolve(project, "node_modules/@openboa/yogurt/catalog/components.json"), "utf8"));
+const catalogPath = resolve(project, "node_modules/@openboa/yogurt/catalog/components.json");
+const originalCatalog = readFileSync(catalogPath, "utf8");
+const inventory = JSON.parse(originalCatalog);
 assert.deepEqual(guidance.find(item => item.id === "accordion").guidance, inventory.find(item => item.id === "accordion").guidance ?? null);
+try {
+  for (const item of inventory) delete item.guidance;
+  writeFileSync(catalogPath, JSON.stringify(inventory));
+  const legacy = spawnSync(process.execPath, [resolver, project, "web", "--lookup", "accordion"], { encoding: "utf8" });
+  assert.equal(legacy.status, 0, legacy.stderr);
+  assert.equal(JSON.parse(legacy.stdout).components[0].guidance, null);
+} finally {
+  writeFileSync(catalogPath, originalCatalog);
+}
 console.log(`Verified ${lookup.components.length} installed Web import statements.`);

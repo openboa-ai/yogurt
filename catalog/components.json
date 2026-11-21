@@ -649,7 +649,19 @@
     "name": "DisclosureRow",
     "family": "Layers",
     "module": "layers",
-    "description": "Reveal related details on demand."
+    "description": "Reveal related details on demand.",
+    "guidance": {
+      "useWhen": "Reveal optional related detail beneath a labeled summary.",
+      "combineWith": [
+        "text"
+      ],
+      "avoid": "Do not hide information essential to completing a decision.",
+      "verify": [
+        "open and closed",
+        "keyboard activation",
+        "long content"
+      ]
+    }
   },
   {
     "id": "action-menu",
@@ -716,14 +728,42 @@
     "name": "Drawer",
     "family": "Layers",
     "module": "layers",
-    "description": "Pull up a task and dismiss it from its lower-edge surface."
+    "description": "Pull up a task and dismiss it from its lower-edge surface.",
+    "guidance": {
+      "useWhen": "Open a temporary task surface from the lower edge.",
+      "combineWith": [
+        "button",
+        "form"
+      ],
+      "avoid": "Do not use an overlay for information the reader must compare continuously with the underlying page.",
+      "verify": [
+        "open and close",
+        "focus restoration",
+        "narrow layout",
+        "reduced motion"
+      ]
+    }
   },
   {
     "id": "sheet",
     "name": "Sheet",
     "family": "Layers",
     "module": "layers",
-    "description": "Open more space for a task on a small screen."
+    "description": "Open more space for a task on a small screen.",
+    "guidance": {
+      "useWhen": "Open a temporary task surface with room for additional content.",
+      "combineWith": [
+        "button",
+        "form"
+      ],
+      "avoid": "Do not use a sheet to obscure information required throughout the task.",
+      "verify": [
+        "open and close",
+        "focus restoration",
+        "narrow layout",
+        "reduced motion"
+      ]
+    }
   },
   {
     "id": "tooltip",
@@ -1627,10 +1667,9 @@
     "guidance": {
       "useWhen": "Pair one named value with its label.",
       "combineWith": [
-        "record-facts",
         "amount-top"
       ],
-      "avoid": "Do not use this description row as a table row element.",
+      "avoid": "Do not use this description row as a table row element or nest it inside RecordFacts.",
       "verify": [
         "long value",
         "units",
@@ -1924,14 +1963,42 @@
     "name": "Agreement",
     "family": "Forms",
     "module": "inputs",
-    "description": "Review individual terms and change their collective selection."
+    "description": "Review individual terms and change their collective selection.",
+    "guidance": {
+      "useWhen": "Review and select individual terms, with a control for selecting all enabled entries.",
+      "combineWith": [
+        "button",
+        "link"
+      ],
+      "avoid": "Do not treat selecting terms as proof of submission or acceptance until the host confirms it.",
+      "verify": [
+        "partial selection",
+        "disabled entries",
+        "select all",
+        "detail access"
+      ]
+    }
   },
   {
     "id": "keypad",
     "name": "Keypad",
     "family": "Forms",
     "module": "inputs",
-    "description": "Enter a number or letters with a touch keypad."
+    "description": "Enter a number or letters with a touch keypad.",
+    "guidance": {
+      "useWhen": "Provide on-screen keys for a host-managed input.",
+      "combineWith": [
+        "text-field",
+        "button"
+      ],
+      "avoid": "Do not assume the private layout alone secures sensitive entry.",
+      "verify": [
+        "disabled",
+        "delete",
+        "optional submit",
+        "number and alphabet modes"
+      ]
+    }
   },
   {
     "id": "form",
@@ -1959,14 +2026,38 @@
     "name": "Toggle",
     "family": "Actions",
     "module": "inputs",
-    "description": "Turn a persistent action on or off."
+    "description": "Turn a persistent action on or off.",
+    "guidance": {
+      "useWhen": "Change a persistent on-or-off action.",
+      "combineWith": [
+        "button"
+      ],
+      "avoid": "Do not use a toggle for a one-time command.",
+      "verify": [
+        "pressed",
+        "disabled",
+        "keyboard activation"
+      ]
+    }
   },
   {
     "id": "toggle-group",
     "name": "ToggleGroup",
     "family": "Actions",
     "module": "inputs",
-    "description": "Select one or more named toolbar options."
+    "description": "Select one or more named toolbar options.",
+    "guidance": {
+      "useWhen": "Select or deselect named toolbar options as a group.",
+      "combineWith": [
+        "toggle"
+      ],
+      "avoid": "Do not assume the single-selection mode requires a value; it permits deselection.",
+      "verify": [
+        "single and multiple selection",
+        "disabled option",
+        "keyboard navigation"
+      ]
+    }
   },
   {
     "id": "accordion",
@@ -2260,14 +2351,43 @@
     "name": "AgentRow",
     "family": "Workspaces",
     "module": "agent-workspace",
-    "description": "Recognize a named agent and read its present state, unread activity and recent context."
+    "description": "Recognize a named agent and read its present state, unread activity and recent context.",
+    "guidance": {
+      "useWhen": "Show a named agent with its current state and optional unread activity.",
+      "combineWith": [
+        "agent-avatar",
+        "list"
+      ],
+      "avoid": "Do not communicate state or unread activity through animation or color alone.",
+      "verify": [
+        "current agent",
+        "unread",
+        "long name",
+        "selection"
+      ]
+    }
   },
   {
     "id": "runtime-panel",
     "name": "RuntimePanel",
     "family": "Workspaces",
     "module": "agent-workspace",
-    "description": "Check computer availability and open an authorized preview or control action."
+    "description": "Check computer availability and open an authorized preview or control action.",
+    "guidance": {
+      "useWhen": "Show the observed runtime state and available host-provided actions.",
+      "combineWith": [
+        "status",
+        "button"
+      ],
+      "avoid": "Do not imply control or connection was granted before the host confirms it.",
+      "verify": [
+        "offline",
+        "connecting",
+        "waiting",
+        "controlled",
+        "available actions"
+      ]
+    }
   },
   {
     "id": "resource-row",
