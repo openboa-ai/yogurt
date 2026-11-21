@@ -52,14 +52,14 @@ export function StudioWorkspace({ appearance }: { appearance: "light" | "dark" }
 
   const matches = searchItems.filter(item => (kind === "All" || item.kind === kind) && item.title.toLowerCase().includes(query.toLowerCase()));
   const panels: Record<View, ReactNode> = {
-    conversations: <Inbox selected={selected} setSelected={setSelected} />,
+    conversations: <Inbox selected={selected} setSelected={setSelected} active={view === "conversations"} />,
     tasks: <Tasks />, workflows: <Workflows />, schedule: <Schedule />, usage: <Usage />,
     library: <Library target={fileTarget} />, customers: <Customers />, extensions: <Connections />,
     providers: <Connections providers />, settings: <Settings onAppearance={setScheme} />, help: <Help />,
   };
 
   return <Y.Yogurt appearance={scheme ?? appearance} className="studio-demo">
-    <Y.SidebarLayout label="Studio navigation" width="13rem" compactAt={780} variant="flat" collapse="rail"
+    <Y.SidebarLayout label="Studio navigation" width="11.5rem" compactAt={780} variant="flat" collapse="rail"
       navigation={<>
         <Y.SidebarHeader compact={<Y.ProjectMark project="sourdough" label={server} size={30} />}>
           <Y.Inline><Y.ProjectMark project="sourdough" size={34} label="" /><Y.Stack gap={2}><Y.Text>{server}</Y.Text><Y.Text variant="meta">Sample workspace</Y.Text></Y.Stack></Y.Inline>

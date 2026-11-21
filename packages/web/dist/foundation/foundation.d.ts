@@ -49,6 +49,13 @@ declare const paths: {
     sun: string;
     arrow: string;
     info: string;
+    chat: string;
+    workflow: string;
+    calendar: string;
+    chart: string;
+    puzzle: string;
+    sliders: string;
+    folder: string;
     clock: string;
 };
 export type IconName = keyof typeof paths;

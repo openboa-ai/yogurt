@@ -226,3 +226,18 @@
 
 .yg-sidebar-item:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
 .yg-sidebar-layout[data-panel="rail"] .yg-sidebar-submenu-content { margin: 0; padding: 0; border: 0; }
+
+.yg-sidebar-item-copy {
+  display: grid;
+  min-inline-size: 0;
+  flex: 1;
+  gap: var(--boa-space-2);
+  padding-block: var(--boa-space-4);
+}
+.yg-sidebar-item-description {
+  color: var(--yg-muted);
+  font: var(--yg-font-meta);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

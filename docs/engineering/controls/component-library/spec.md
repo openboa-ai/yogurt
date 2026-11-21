@@ -82,6 +82,10 @@ The owner requested a shared sidebar that each project can compose from independ
 - Return focus to the opener when dismissing with Escape, a backdrop or the close action. Selecting a destination can close the drawer. Persistent search, selected records, permissions and navigation data belong to the host. These choices carry no service effects.
 - Ship two editable compositions with project or agent markup, host search and actions, active state and a narrow alternative. Use OpenBoa artwork and tokens. Native uses typed markup and host-controlled visibility. Exercise wide, rail, right edge, narrow modal, nesting, controlled state, and old props. Verify installed entry points and actual keyboard and pointer behavior.
 
+### Workspace row and conversation presentation
+
+A sidebar item can render a single truncated description beneath its label. The destination name remains the button or link name and the full description is available separately. Rail mode retains its single identity label. Message supports sent and received treatments and an optional action region. Secondary actions remain visible with touch and keyboard focus. Transcript supports an opt-in reading anchor that appears after the reader scrolls away and returns focus to the reading region when used. Existing callers retain their default presentation and reading-anchor behavior. Verify these options through the installed web package, including compact navigation and reduced motion.
+
 ## Motion and visual craft · local follow-up, revision 4
 
 The owner requested six distinguishable agent states and a motion review for each component. Review every catalog entry for a useful response to input or state. Apply continuous or transitional motion where it explains real behavior. Static reading, geometry and artwork retain stable content. The agent workspace and project workspace exercise these treatment decisions.

@@ -33,10 +33,17 @@ export function Connections({ providers = false }: { providers?: boolean }) {
       <Y.Button emphasis="soft" onClick={() => setAdding(true)}>{providers ? "Add sample provider" : "Create " + (tab === "Tools" ? "tool" : tab === "Agents" ? "agent" : "skill")}</Y.Button>
     </Y.Inline>
     <div className="studio-card-grid">
-      {matching.map(item => <Y.Card key={item.id} title={item.title} description={item.detail} density="compact">
-        <Y.Inline className="studio-split"><Y.Status tone={enabled.includes(item.id) ? "success" : "neutral"}>{enabled.includes(item.id) ? "Enabled" : "Available"}</Y.Status>
-          <Y.Button emphasis="soft" onClick={() => setSelected(item)}>{enabled.includes(item.id) ? "Manage" : tab === "Tools" || providers ? "Configure" : "Add"}</Y.Button></Y.Inline>
-      </Y.Card>)}
+      {matching.map(item => <Y.Surface key={item.id} className="studio-extension">
+        <Y.Stack gap={12}>
+          <Y.Inline gap={12}>
+            <span className="studio-extension-icon"><Y.Icon name={providers ? "sliders" : tab === "Agents" ? "person" : tab === "Skills" ? "check" : "puzzle"} /></span>
+            <Y.Stack gap={2}><Y.Heading level={3}>{item.title}</Y.Heading><Y.Text variant="help">{item.detail}</Y.Text></Y.Stack>
+          </Y.Inline>
+          <Y.Inline className="studio-split"><Y.Status tone={enabled.includes(item.id) ? "success" : "neutral"}>{enabled.includes(item.id) ? "Enabled" : "Available"}</Y.Status>
+            <Y.Button emphasis="soft" size="compact" onClick={() => setSelected(item)}>{enabled.includes(item.id) ? "Manage" : tab === "Tools" || providers ? "Configure" : "Add"}</Y.Button>
+          </Y.Inline>
+        </Y.Stack>
+      </Y.Surface>)}
     </div>
     {!matching.length && <Y.EmptyResult query={filter} onClear={() => setFilter("")} />}
     <Y.Dialog title={selected?.title ?? "Configure"} open={!!selected} onOpenChange={open => { if (!open) setSelected(null); }}>
@@ -95,7 +102,7 @@ export function Settings({ onAppearance }: { onAppearance: (value: "light" | "da
       <Y.List label={group.label}>{group.values.map(title => <Y.ListRow key={title} title={title} current={current === title}
         onActivate={() => { setCurrent(title); setSaved(false); }} />)}</Y.List>
     </Y.Stack>)}</Y.Stack></Y.Surface>
-    <Y.Card title={current} description={section?.detail}><Y.Stack gap={16}>
+    <div className="studio-detail" key={current}><Y.Card title={current} description={section?.detail}><Y.Stack gap={16}>
       {current === "Profile" && <Y.TextField label="Display name" value={values["Display name"]} onChange={event => {
         setValues(previous => ({ ...previous, "Display name": event.target.value })); setSaved(false);
       }} />}
@@ -108,7 +115,7 @@ export function Settings({ onAppearance }: { onAppearance: (value: "light" | "da
       {current === "Invites" && <Y.CodeBlock language="Sample invitation code" code="STUDIO-REVIEW" />}
       {current === "Mobile connection" && enabled["Allow sample pairing"] && <Y.CodeBlock language="Sample pairing code" code="452-801" />}
       <Y.Inline><Y.Button onClick={() => setSaved(true)}>Save preferences</Y.Button>{saved && <Y.Status tone="success">Preferences saved.</Y.Status>}</Y.Inline>
-    </Y.Stack></Y.Card>
+    </Y.Stack></Y.Card></div>
   </div>;
 }
 
@@ -116,12 +123,12 @@ export function Help() {
   const [draft, setDraft] = useState("");
   const [sent, setSent] = useState(false);
   return <Y.Stack gap={16}>
-    <Y.Card title="What’s new"><Y.Accordion label="Recent updates" items={[
+    <Y.Card title="What’s new" density="compact"><Y.Accordion label="Recent updates" items={[
       { id: "review", title: "Review a workflow result", content: "Open Workflows, choose Morning brief and run the sample to see its review decision." },
       { id: "files", title: "Find an observation file", content: "Use the Files view and filter by owner or file type." },
       { id: "thread", title: "Keep a follow-up in its own thread", content: "Open a conversation and use New thread." },
     ]} /></Y.Card>
-    <Y.Card title="Share feedback"><form onSubmit={event => {
+    <Y.Card title="Share feedback" density="compact"><form onSubmit={event => {
       event.preventDefault(); if (!draft.trim()) return; setDraft(""); setSent(true);
     }}><Y.Stack gap={12}><Y.Textarea label="Feedback" value={draft} onChange={event => { setDraft(event.target.value); setSent(false); }} required />
       <Y.Inline><Y.Button type="submit">Save sample feedback</Y.Button>{sent && <Y.Status tone="success">Feedback saved for this session.</Y.Status>}</Y.Inline>

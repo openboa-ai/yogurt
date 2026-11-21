@@ -1,11 +1,11 @@
 "use client";
 import {
   Button
-} from "./chunk-4IPCB3MM.js";
+} from "./chunk-LTCB3AU4.js";
 import {
   Icon,
   Text
-} from "./chunk-GW3HPY4O.js";
+} from "./chunk-H36QHH35.js";
 
 // packages/web/src/patterns/project-workspace.tsx
 import { useId } from "react";

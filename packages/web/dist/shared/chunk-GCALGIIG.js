@@ -2,11 +2,11 @@
 import {
   Button,
   IconButton
-} from "./chunk-4IPCB3MM.js";
+} from "./chunk-LTCB3AU4.js";
 import {
   Icon,
   cx
-} from "./chunk-GW3HPY4O.js";
+} from "./chunk-H36QHH35.js";
 
 // packages/web/src/patterns/sidebar.tsx
 import {
@@ -201,18 +201,28 @@ function SidebarItem({
   active = false,
   disabled = false,
   badge,
+  description,
   action,
   onSelect
 }) {
   const state = useContext(SidebarContext);
   const rail = state?.rail ?? false;
+  const descriptionId = useId();
   const attrs = {
     className: "yg-sidebar-item",
     "aria-current": active ? "page" : void 0,
-    "aria-label": rail ? label : void 0,
-    title: rail ? label : void 0
+    "aria-label": rail || description ? label : void 0,
+    title: rail ? label : void 0,
+    "aria-describedby": !rail && description ? descriptionId : void 0
   };
-  const body = /* @__PURE__ */ jsxs(Fragment, { children: [
+  const body = description && !rail ? /* @__PURE__ */ jsxs(Fragment, { children: [
+    icon && /* @__PURE__ */ jsx("span", { className: "yg-sidebar-icon", "aria-hidden": "true", children: icon }),
+    /* @__PURE__ */ jsxs("span", { className: "yg-sidebar-item-copy", children: [
+      /* @__PURE__ */ jsx("span", { className: "yg-sidebar-label", children: label }),
+      /* @__PURE__ */ jsx("span", { className: "yg-sidebar-item-description", id: descriptionId, children: description })
+    ] }),
+    badge
+  ] }) : /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(Label, { icon, rail, children: label }),
     !rail && badge
   ] });

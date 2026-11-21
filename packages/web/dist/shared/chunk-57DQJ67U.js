@@ -1,17 +1,17 @@
 "use client";
 import {
   Result
-} from "./chunk-QVZBBQIY.js";
+} from "./chunk-KXVFHR7K.js";
 import {
   Checkbox,
   SearchField
-} from "./chunk-72QPUJK5.js";
+} from "./chunk-7YCJ46UN.js";
 import {
   words
 } from "./chunk-5GJUJT3P.js";
 import {
   Button
-} from "./chunk-4IPCB3MM.js";
+} from "./chunk-LTCB3AU4.js";
 
 // packages/web/src/patterns/collections.tsx
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";

@@ -1,12 +1,12 @@
 "use client";
 import {
   IconButton
-} from "./chunk-4IPCB3MM.js";
+} from "./chunk-LTCB3AU4.js";
 import {
   Heading,
   Icon,
   Stack
-} from "./chunk-GW3HPY4O.js";
+} from "./chunk-H36QHH35.js";
 
 // node_modules/@openai/apps-sdk-ui/dist/es/components/Badge/index.js
 import { jsx as _jsx2 } from "react/jsx-runtime";

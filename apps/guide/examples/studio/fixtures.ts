@@ -1,14 +1,14 @@
 export const workspaceViews = [
-  { id: "conversations", label: "Conversations", icon: "menu" },
+  { id: "conversations", label: "Conversations", icon: "chat" },
   { id: "tasks", label: "Tasks", icon: "check" },
-  { id: "workflows", label: "Workflows", icon: "arrow" },
-  { id: "schedule", label: "Schedule", icon: "clock" },
-  { id: "library", label: "Files", icon: "copy" },
-  { id: "usage", label: "Usage", icon: "check" },
+  { id: "workflows", label: "Workflows", icon: "workflow" },
+  { id: "schedule", label: "Schedule", icon: "calendar" },
+  { id: "library", label: "Files", icon: "folder" },
+  { id: "usage", label: "Usage", icon: "chart" },
   { id: "customers", label: "Customers", icon: "person" },
-  { id: "extensions", label: "Extensions", icon: "plus" },
-  { id: "providers", label: "Model providers", icon: "menu" },
-  { id: "settings", label: "Settings", icon: "menu" },
+  { id: "extensions", label: "Extensions", icon: "puzzle" },
+  { id: "providers", label: "Model providers", icon: "sliders" },
+  { id: "settings", label: "Settings", icon: "sliders" },
   { id: "help", label: "Help", icon: "info" },
 ] as const;
 

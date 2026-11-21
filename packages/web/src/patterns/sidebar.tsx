@@ -204,6 +204,7 @@ export function SidebarItem({
   active = false,
   disabled = false,
   badge,
+  description,
   action,
   onSelect,
 }: {
@@ -213,18 +214,27 @@ export function SidebarItem({
   active?: boolean;
   disabled?: boolean;
   badge?: ReactNode;
+  description?: string;
   action?: ReactNode;
   onSelect?: () => void;
 }) {
   const state = useContext(SidebarContext);
   const rail = state?.rail ?? false;
+  const descriptionId = useId();
   const attrs = {
     className: "yg-sidebar-item",
     "aria-current": active ? "page" as const : undefined,
-    "aria-label": rail ? label : undefined,
+    "aria-label": rail || description ? label : undefined,
     title: rail ? label : undefined,
+    "aria-describedby": !rail && description ? descriptionId : undefined,
   };
-  const body = <><Label icon={icon} rail={rail}>{label}</Label>{!rail && badge}</>;
+  const body = description && !rail
+    ? <>{icon && <span className="yg-sidebar-icon" aria-hidden="true">{icon}</span>}
+      <span className="yg-sidebar-item-copy">
+        <span className="yg-sidebar-label">{label}</span>
+        <span className="yg-sidebar-item-description" id={descriptionId}>{description}</span>
+      </span>{badge}</>
+    : <><Label icon={icon} rail={rail}>{label}</Label>{!rail && badge}</>;
   return (
     <div className="yg-sidebar-item-row">
       {href && !disabled ? (

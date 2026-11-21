@@ -5,7 +5,7 @@ import { commands, conversations, options, studioFiles, type Conversation, type 
 type Panel = "Files" | "Threads" | "Agent settings" | "Pinned messages" | "Members" | "Computer";
 type CreateKind = typeof commands[number]["id"];
 
-export function Inbox({ selected, setSelected }: { selected: string; setSelected: (id: string) => void }) {
+export function Inbox({ selected, setSelected, active }: { selected: string; setSelected: (id: string) => void; active: boolean }) {
   const [items, setItems] = useState(conversations);
   const [folders, setFolders] = useState<string[]>([]);
   const [query, setQuery] = useState("");
@@ -19,6 +19,28 @@ export function Inbox({ selected, setSelected }: { selected: string; setSelected
   const [reply, setReply] = useState("");
   const [busy, setBusy] = useState<Record<string, boolean>>({});
   const [panel, setPanel] = useState<Panel | null>(null);
+  const [inspectorInline, setInspectorInline] = useState(false);
+  const frame = useRef<HTMLDivElement>(null);
+  const opener = useRef<HTMLElement | null>(null);
+  function openPanel(next: Panel, source?: HTMLElement) {
+    opener.current = source ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    setPanel(next);
+  }
+  function closePanel() {
+    setPanel(null);
+    requestAnimationFrame(() => {
+      if (opener.current?.isConnected) opener.current.focus({ preventScroll: true });
+    });
+  }
+  useEffect(() => {
+    const node = frame.current;
+    if (!node) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry.contentRect.width > 0) setInspectorInline(entry.contentRect.width >= 720);
+    });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
   const [file, setFile] = useState<typeof studioFiles[number]>();
   const [attachments, setAttachments] = useState<Record<string, string[]>>({});
   const [attach, setAttach] = useState(false);
@@ -41,6 +63,7 @@ export function Inbox({ selected, setSelected }: { selected: string; setSelected
   ];
   const channelMembers = members[current.id] ?? ["kai"];
   const messages = [...(!thread ? opening : []), ...(entries[threadKey] ?? [])];
+  const lastEntry = (id: string) => entries[id + "/"]?.at(-1)?.text;
   const results = items.filter(item => (filter === "All" || filter === "Agents" && item.kind === "agent" || filter === "Channels" && item.kind === "channel")
     && (item.name + " " + item.role).toLowerCase().includes(query.toLowerCase()));
 
@@ -102,23 +125,64 @@ export function Inbox({ selected, setSelected }: { selected: string; setSelected
     setCreate(undefined);
   }
 
-  return <Y.SidebarLayout label="Conversation list" width="15rem" compactAt={760} variant="flat" collapse="hide" className="studio-inbox"
+  function inspectorContents() {
+    return <Y.Stack gap={12}>
+      {panel === "Files" && (file ? <Y.Stack><Y.Button emphasis="quiet" onClick={() => setFile(undefined)}>All conversation files</Y.Button><Y.Text>{file.name}</Y.Text><Y.CodeBlock language="Sample contents" code={file.detail} /></Y.Stack>
+        : <Y.List label="Conversation files">{studioFiles.filter(item => item.owner === current.name || current.kind === "channel").map(item => <Y.ListRow key={item.id} title={item.name} description={item.kind} onActivate={() => setFile(item)} />)}</Y.List>)}
+      {panel === "Threads" && <Y.List label="Threads"><Y.ListRow title="Main conversation" onActivate={() => setThread("")} />
+        {(threads[current.id] ?? []).map(name => <Y.ListRow key={name} title={name} onActivate={() => setThread(name)} />)}</Y.List>}
+      {panel === "Pinned messages" && <Y.Stack>
+        {[...opening, ...Object.entries(entries).filter(([key]) => key.startsWith(current.id + "/")).flatMap(([, value]) => value)]
+          .filter(item => pinned[current.id]?.includes(item.id)).map(item => <Y.Text key={item.id}>{item.text}</Y.Text>)}
+        {!pinned[current.id]?.length && <Y.Text variant="help">No messages pinned.</Y.Text>}
+      </Y.Stack>}
+      {panel === "Computer" && <Y.RuntimePanel title="Review inspector" state="available" detail="Sample environment"
+        preview={<Y.RecordFacts title="Morning brief" source="Research register" asOf="2026-11-21" timeLabel="Nov 21" facts={[
+          { id: "coverage", label: "Reviewed", value: "3 of 4 readings" }, { id: "next", label: "Next step", value: "Confirm timestamp" },
+        ]} />} />}
+      {panel === "Members" && <Y.List label="Channel members">
+        {items.filter(item => item.kind === "agent").map(item => <Y.ListRow key={item.id} title={item.name}
+          trailing={<Y.Button emphasis="quiet" onClick={() => setMembers(previous => ({ ...previous, [current.id]: channelMembers.includes(item.id) ? channelMembers.filter(id => id !== item.id) : [...channelMembers, item.id] }))}>{channelMembers.includes(item.id) ? "Remove" : "Invite"}</Y.Button>} />)}
+      </Y.List>}
+      {panel === "Agent settings" && <Y.Stack key={current.id}>
+        <Y.TextField label="Display name" value={current.name} onChange={event => setItems(previous => previous.map(item => item.id === current.id ? { ...item, name: event.target.value } : item))} />
+        <Y.TextField label="Role" value={current.role} onChange={event => setItems(previous => previous.map(item => item.id === current.id ? { ...item, role: event.target.value } : item))} />
+        <Y.Select label="Model" value={model[current.id] ?? "Studio Standard"} options={options("Studio Standard", "Studio Fast")} onChange={event => setModel(previous => ({ ...previous, [current.id]: event.target.value }))} />
+        <Y.Select label="Backup model" options={options("Ask first", "Studio Fast")} />
+        <Y.Textarea label="Instructions" defaultValue="Ground conclusions in available evidence." />
+        <Y.Switch label="Remember review preferences" />
+      </Y.Stack>}
+    </Y.Stack>;
+  }
+
+  return <Y.SidebarLayout label="Conversation list" width="16rem" compactAt={760} variant="flat" collapse="hide" className="studio-inbox"
     navigation={<Y.SidebarContent label="Conversations">
       <Y.Stack gap={12}>
         <Y.SearchField label="Filter conversations" value={query} onValueChange={setQuery} />
         <Y.Inline><Y.ActionMenu label="Filter" items={options("All", "Agents", "Channels")} onSelect={setFilter} />
           <Y.ActionMenu label="New" items={[...commands]} onSelect={id => setCreate(id as CreateKind)} /></Y.Inline>
       </Y.Stack>
-      <Y.SidebarGroup label="Research desk">
-        {results.map(item => <Y.SidebarItem key={item.id} label={item.kind === "channel" ? "# " + item.name : item.name}
-          active={item.id === current.id} onSelect={() => choose(item.id)}
-          icon={item.kind === "agent" ? <Y.AgentAvatar agent={item.art} size={27} state={item.id === current.id && busy[threadKey] ? "working" : "ready"} /> : <Y.Icon name="menu" />} />)}
-        {!results.length && <Y.Text variant="help">No matching conversations.</Y.Text>}
-      </Y.SidebarGroup>
+      {(["agent", "channel"] as const).map(group => {
+        const rows = results.filter(item => item.kind === group);
+        if (!rows.length) return null;
+        return <Y.SidebarGroup key={group} label={group === "agent" ? "Agents" : "Channels"}>
+          {rows.map(item => {
+            const working = Object.entries(busy).some(([key, active]) => active && key.startsWith(item.id + "/"));
+            const gaze = working ? "working" : item.id === "kai" ? "waiting" : item.id === "sol" ? "done" : "ready";
+            const preview = lastEntry(item.id) ?? item.summary;
+            const description = working ? "Preparing a reply" : gaze === "waiting" ? "Needs review · " + preview : preview;
+            return <Y.SidebarItem key={item.id} label={item.kind === "channel" ? "# " + item.name : item.name}
+              description={description} active={item.id === current.id} onSelect={() => choose(item.id)}
+              badge={gaze === "waiting" ? <span className="studio-attention-dot" role="img" aria-label="Needs review" /> : undefined}
+              icon={item.kind === "agent" ? <Y.AgentAvatar agent={item.art} size={32} state={gaze} /> : <Y.Icon name="chat" />} />;
+          })}
+        </Y.SidebarGroup>;
+      })}
+      {!results.length && <Y.Text variant="help">No matching conversations.</Y.Text>}
       {!!folders.length && <Y.SidebarGroup label="Folders">{folders.map(name => <Y.SidebarItem key={name} label={name}
         icon={<Y.Icon name="copy" />} onSelect={() => { setQuery(""); setFilter("All"); }} />)}</Y.SidebarGroup>}
     </Y.SidebarContent>}>
-    <Y.Stack gap={16} className="studio-conversation">
+    <div className="studio-conversation" ref={frame}>
       <Y.Inline className="studio-conversation-head">
         <Y.Inline><Y.SidebarTrigger label="Browse conversations" />
           {current.kind === "agent" && <Y.AgentAvatar agent={current.art} size={44} state={busy[threadKey] ? "working" : "ready"} />}
@@ -126,29 +190,32 @@ export function Inbox({ selected, setSelected }: { selected: string; setSelected
         </Y.Inline>
         <Y.Inline>
           <Y.IconButton icon="plus" label="New thread" onClick={startThread} />
-          <Y.IconButton icon="bookmark" label="Pinned messages" aria-pressed={panel === "Pinned messages"} onClick={() => { setFile(undefined); setPanel(panel === "Pinned messages" ? null : "Pinned messages"); }} />
-          <Y.ActionMenu label="Conversation details" items={options("Files", "Threads", "Computer", current.kind === "agent" ? "Agent settings" : "Members")} onSelect={id => { setFile(undefined); setPanel(id as Panel); }} />
+          <Y.IconButton icon="bookmark" label="Pinned messages" aria-pressed={panel === "Pinned messages"} onClick={event => { setFile(undefined); if (panel === "Pinned messages") closePanel(); else openPanel("Pinned messages", event.currentTarget); }} />
+          <Y.ActionMenu label="Conversation details" items={options("Files", "Threads", "Computer", current.kind === "agent" ? "Agent settings" : "Members")} onSelect={id => { setFile(undefined); openPanel(id as Panel); }} />
         </Y.Inline>
       </Y.Inline>
-      <div className="studio-thread-layout" data-panel={Boolean(panel)}>
-        <Y.Stack gap={16} className="studio-thread">
-          <Y.Transcript label={current.name + " transcript"} revision={messages.length} key={threadKey}>
+      <div className="studio-thread-layout" data-panel={Boolean(panel) && inspectorInline}>
+        <Y.Stack gap={12} className="studio-thread">
+          <Y.Transcript label={current.name + " transcript"} revision={messages.length} readingAnchor="when-away" key={threadKey}>
             {!messages.length && <Y.Text variant="help">Start this thread with a note.</Y.Text>}
-            {messages.map(message => <Y.Message key={message.id} speaker={message.author} avatar={message.author === "You" ? undefined : <Y.AgentAvatar agent={current.art} size={24} animated={false} />}>
+            {messages.map(message => <Y.Message key={message.id} speaker={message.author}
+              variant={message.author === "You" ? "sent" : "received"}
+              avatar={message.author === "You" ? undefined : <Y.AgentAvatar agent={current.art} size={24} animated={false} />}
+              actions={<Y.Inline gap={2}>
+                <Y.IconButton size="compact" icon="check" label="Acknowledge message" aria-pressed={!!reactions[message.id]}
+                  onClick={() => setReactions(previous => ({ ...previous, [message.id]: !previous[message.id] }))} />
+                <Y.IconButton size="compact" icon="back" label="Reply to message" onClick={() => setReply(message.author)} />
+                <Y.IconButton size="compact" icon="bookmark" label="Pin message" aria-pressed={pinned[current.id]?.includes(message.id) ?? false}
+                  onClick={() => setPinned(previous => ({ ...previous, [current.id]: previous[current.id]?.includes(message.id)
+                    ? previous[current.id].filter(id => id !== message.id) : [...(previous[current.id] ?? []), message.id] }))} />
+              </Y.Inline>}>
               <Y.Stack gap={8}>
                 <Y.Text>{message.text}</Y.Text>
-                {message.id === "kai-start" && <Y.Notice title="Source check needed" tone="warning"
-                  action={<Y.Button emphasis="quiet" onClick={() => { setPanel("Files"); setFile(studioFiles[0]); }}>Open morning brief</Y.Button>}>
-                  One reading still needs a timestamp.
-                </Y.Notice>}
-                <Y.Inline>
-                  <Y.IconButton size="compact" icon="check" label="Acknowledge message" aria-pressed={!!reactions[message.id]}
-                    onClick={() => setReactions(previous => ({ ...previous, [message.id]: !previous[message.id] }))} />
-                  <Y.IconButton size="compact" icon="back" label="Reply to message" onClick={() => setReply(message.author)} />
-                  <Y.IconButton size="compact" icon="bookmark" label="Pin message" aria-pressed={pinned[current.id]?.includes(message.id) ?? false}
-                    onClick={() => setPinned(previous => ({ ...previous, [current.id]: previous[current.id]?.includes(message.id)
-                      ? previous[current.id].filter(id => id !== message.id) : [...(previous[current.id] ?? []), message.id] }))} />
-                </Y.Inline>
+                {message.id === "kai-start" && <Y.Surface className="studio-evidence">
+                  <Y.Inline className="studio-split"><Y.Status tone="warning">Source check needed</Y.Status><Y.Text variant="meta">3 of 4 reviewed</Y.Text></Y.Inline>
+                  <Y.Text variant="help">The last reading needs a timestamp.</Y.Text>
+                  <Y.Inline><Y.Button emphasis="quiet" size="compact" onClick={event => { openPanel("Files", event.currentTarget); setFile(studioFiles[0]); }}>Open morning brief <Y.Icon name="arrow" /></Y.Button></Y.Inline>
+                </Y.Surface>}
               </Y.Stack>
             </Y.Message>)}
             {busy[threadKey] && <Y.Text variant="help" role="status">{current.name} is preparing a sample reply.</Y.Text>}
@@ -168,38 +235,14 @@ export function Inbox({ selected, setSelected }: { selected: string; setSelected
               setBusy(previous => ({ ...previous, [threadKey]: false }));
             }} />
         </Y.Stack>
-        {panel && <Y.Surface className="studio-inspector">
-          <Y.Stack gap={12}>
-            <Y.Inline className="studio-split"><Y.Heading level={3}>{panel}</Y.Heading><Y.IconButton icon="close" label="Close conversation details" onClick={() => setPanel(null)} /></Y.Inline>
-            {panel === "Files" && (file ? <Y.Stack><Y.Button emphasis="quiet" onClick={() => setFile(undefined)}>All conversation files</Y.Button><Y.Text>{file.name}</Y.Text><Y.CodeBlock language="Sample contents" code={file.detail} /></Y.Stack>
-              : <Y.List label="Conversation files">{studioFiles.filter(item => item.owner === current.name || current.kind === "channel").map(item => <Y.ListRow key={item.id} title={item.name} description={item.kind} onActivate={() => setFile(item)} />)}</Y.List>)}
-            {panel === "Threads" && <Y.List label="Threads"><Y.ListRow title="Main conversation" onActivate={() => setThread("")} />
-              {(threads[current.id] ?? []).map(name => <Y.ListRow key={name} title={name} onActivate={() => setThread(name)} />)}</Y.List>}
-            {panel === "Pinned messages" && <Y.Stack>
-              {[...opening, ...Object.entries(entries).filter(([key]) => key.startsWith(current.id + "/")).flatMap(([, value]) => value)]
-                .filter(item => pinned[current.id]?.includes(item.id)).map(item => <Y.Text key={item.id}>{item.text}</Y.Text>)}
-              {!pinned[current.id]?.length && <Y.Text variant="help">No messages pinned.</Y.Text>}
-            </Y.Stack>}
-            {panel === "Computer" && <Y.RuntimePanel title="Review inspector" state="available" detail="Sample environment"
-              preview={<Y.RecordFacts title="Morning brief" source="Research register" asOf="2026-11-21" timeLabel="Nov 21" facts={[
-                { id: "coverage", label: "Reviewed", value: "3 of 4 readings" }, { id: "next", label: "Next step", value: "Confirm timestamp" },
-              ]} />} />}
-            {panel === "Members" && <Y.List label="Channel members">
-              {items.filter(item => item.kind === "agent").map(item => <Y.ListRow key={item.id} title={item.name}
-                trailing={<Y.Button emphasis="quiet" onClick={() => setMembers(previous => ({ ...previous, [current.id]: channelMembers.includes(item.id) ? channelMembers.filter(id => id !== item.id) : [...channelMembers, item.id] }))}>{channelMembers.includes(item.id) ? "Remove" : "Invite"}</Y.Button>} />)}
-            </Y.List>}
-            {panel === "Agent settings" && <Y.Stack key={current.id}>
-              <Y.TextField label="Display name" value={current.name} onChange={event => setItems(previous => previous.map(item => item.id === current.id ? { ...item, name: event.target.value } : item))} />
-              <Y.TextField label="Role" value={current.role} onChange={event => setItems(previous => previous.map(item => item.id === current.id ? { ...item, role: event.target.value } : item))} />
-              <Y.Select label="Model" value={model[current.id] ?? "Studio Standard"} options={options("Studio Standard", "Studio Fast")} onChange={event => setModel(previous => ({ ...previous, [current.id]: event.target.value }))} />
-              <Y.Select label="Backup model" options={options("Ask first", "Studio Fast")} />
-              <Y.Textarea label="Instructions" defaultValue="Ground conclusions in available evidence." />
-              <Y.Switch label="Remember review preferences" />
-            </Y.Stack>}
-          </Y.Stack>
-        </Y.Surface>}
+        <div className="studio-inspector-track">
+          {panel && (inspectorInline ? <aside className="studio-inspector" aria-label="Conversation inspector">
+            <Y.Inline className="studio-inspector-heading"><Y.Heading level={3}>{panel}</Y.Heading><Y.IconButton icon="close" label="Close conversation details" onClick={closePanel} /></Y.Inline>
+            {inspectorContents()}
+          </aside> : active && <Y.Sheet title={panel} open onOpenChange={open => { if (!open) closePanel(); }}>{inspectorContents()}</Y.Sheet>)}
+        </div>
       </div>
-    </Y.Stack>
+    </div>
     <Y.Dialog title="Attach a sample file" open={attach} onOpenChange={setAttach}>
       <Y.List label="Available attachments">{studioFiles.map(item => <Y.ListRow key={item.id} title={item.name} description={item.kind}
         onActivate={() => { setAttachments(previous => ({ ...previous, [threadKey]: [...new Set([...(previous[threadKey] ?? []), item.id])] })); setAttach(false); }} />)}</Y.List>

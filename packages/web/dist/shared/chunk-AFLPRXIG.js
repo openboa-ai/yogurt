@@ -1,7 +1,7 @@
 "use client";
 import {
   Attachment
-} from "./chunk-6Z6OHTQV.js";
+} from "./chunk-XVPJW3WF.js";
 import {
   MentionOptions,
   PromptAction,
@@ -10,10 +10,10 @@ import {
 } from "./chunk-LKB52XNS.js";
 import {
   ActionMenu
-} from "./chunk-Y34L4C5K.js";
+} from "./chunk-P2CIQA55.js";
 import {
   Button
-} from "./chunk-4IPCB3MM.js";
+} from "./chunk-LTCB3AU4.js";
 
 // packages/web/src/patterns/composer.tsx
 import { useId, useRef, useState } from "react";

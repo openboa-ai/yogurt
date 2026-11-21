@@ -4,7 +4,7 @@ import {
 } from "./chunk-5GJUJT3P.js";
 import {
   Inline
-} from "./chunk-GW3HPY4O.js";
+} from "./chunk-H36QHH35.js";
 
 // packages/web/src/identity/agent-motion-data.ts
 var agentPresenceLabels = {
@@ -18,7 +18,7 @@ var agentPresenceLabels = {
 var loopingGazes = ["ready", "working"];
 
 // packages/web/src/identity/identity.tsx
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 // packages/web/src/identity/art-data.ts
 var marks = {
@@ -1460,15 +1460,20 @@ function Message({
   children,
   avatar,
   time,
-  dateTime
+  dateTime,
+  variant,
+  actions
 }) {
-  return /* @__PURE__ */ jsxs("article", { className: "yg-message", children: [
+  return /* @__PURE__ */ jsxs("article", { className: "yg-message", "data-variant": variant, children: [
     /* @__PURE__ */ jsxs(Inline, { gap: 8, children: [
       avatar,
       /* @__PURE__ */ jsx("strong", { children: speaker }),
       time && /* @__PURE__ */ jsx("time", { className: "yg-meta", dateTime, children: time })
     ] }),
-    /* @__PURE__ */ jsx("div", { children })
+    /* @__PURE__ */ jsxs("div", { className: "yg-message-body", children: [
+      variant ? /* @__PURE__ */ jsx("div", { className: "yg-message-content", children }) : children,
+      actions && /* @__PURE__ */ jsx("div", { className: "yg-message-actions", children: actions })
+    ] })
   ] });
 }
 function ReadingAnchor({
@@ -1480,15 +1485,22 @@ function ReadingAnchor({
 function Transcript({
   label,
   children,
-  revision
+  revision,
+  readingAnchor = "always"
 }) {
   const box = useRef(null);
   const follow = useRef(true);
+  const [away, setAway] = useState(false);
+  function trackScroll(el) {
+    follow.current = el.scrollHeight - el.clientHeight - el.scrollTop < 8;
+    if (readingAnchor === "when-away") setAway(!follow.current);
+  }
   function latest() {
     const el = box.current;
     if (el) {
       el.scrollTop = el.scrollHeight;
       follow.current = true;
+      setAway(false);
     }
   }
   useLayoutEffect(() => {
@@ -1503,14 +1515,14 @@ function Transcript({
         tabIndex: 0,
         role: "region",
         "aria-label": label,
-        onScroll: (e) => {
-          const n = e.currentTarget;
-          follow.current = n.scrollHeight - n.clientHeight - n.scrollTop < 8;
-        },
+        onScroll: (event) => trackScroll(event.currentTarget),
         children
       }
     ),
-    /* @__PURE__ */ jsx(ReadingAnchor, { onClick: latest })
+    (readingAnchor === "always" || away) && /* @__PURE__ */ jsx(ReadingAnchor, { onClick: () => {
+      latest();
+      if (readingAnchor === "when-away") box.current?.focus({ preventScroll: true });
+    } })
   ] });
 }
 

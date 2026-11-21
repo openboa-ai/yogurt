@@ -5,7 +5,7 @@ const origin = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
 const names = ["Conversations", "Tasks", "Workflows", "Schedule", "Files", "Usage", "Customers", "Extensions", "Model providers", "Settings", "Help"];
 
 async function exercise(browser, width) {
-  const page = await browser.newPage({ viewport: { width, height: 980 }, colorScheme: width < 780 ? "dark" : "light" });
+  const page = await browser.newPage({ viewport: { width, height: width >= 780 ? 720 : 900 }, colorScheme: width < 780 ? "dark" : "light" });
   const errors = [];
   const remoteRequests = [];
   page.on("pageerror", error => errors.push(error.stack ?? error.message));
@@ -27,9 +27,24 @@ async function exercise(browser, width) {
     for (const name of names) await go(name);
 
     const inbox = await go("Conversations");
-    await inbox.getByRole("textbox", { name: "Message Kai" }).fill("Please compare the timestamps.");
+    const composer = inbox.getByRole("textbox", { name: "Message Kai" });
+    if (width >= 780) assert(await composer.evaluate(el => el.getBoundingClientRect().bottom <= innerHeight), "composer must fit in desktop viewport");
+    assert.equal(await inbox.getByRole("button", { name: "Jump to latest" }).count(), 0);
+    const source = inbox.getByRole("button", { name: "Open morning brief" });
+    await source.click();
+    if (width >= 1200) {
+      const inspector = inbox.getByRole("complementary", { name: "Conversation inspector" });
+      await inspector.getByText("Morning brief.md").waitFor();
+      await inspector.getByRole("button", { name: "Close conversation details" }).click();
+    } else {
+      const inspector = page.getByRole("dialog", { name: "Files" });
+      await inspector.getByText("Morning brief.md").waitFor();
+      await page.keyboard.press("Escape");
+    }
+    await page.waitForFunction(() => document.activeElement?.textContent?.trim() === "Open morning brief");
+    await composer.fill("Please compare the timestamps.");
     await inbox.getByRole("button", { name: "Send", exact: true }).click();
-    await inbox.getByText(/I added your note/).waitFor();
+    await inbox.getByRole("region", { name: "Kai transcript" }).getByText(/I added your note/).waitFor();
     await inbox.getByRole("button", { name: "New thread" }).click();
     await inbox.getByRole("textbox", { name: "Message Thread 1" }).fill("Use the observation log.");
     await inbox.getByRole("button", { name: "Attach", exact: true }).click();
@@ -47,6 +62,11 @@ async function exercise(browser, width) {
     await tasks.getByText("Review recorded").waitFor();
 
     const workflows = await go("Workflows");
+    assert.equal(await workflows.evaluate(el => getComputedStyle(el).animationName), "studio-view-in");
+    await workflows.getByRole("button", { name: "Prepare the morning brief" }).click();
+    await workflows.getByRole("textbox", { name: "Step label" }).fill("Prepare the Tuesday brief");
+    await workflows.getByRole("button", { name: "Move up" }).click();
+    await workflows.getByRole("list", { name: "Step 1" }).getByText("Prepare the Tuesday brief").waitFor();
     await workflows.getByRole("button", { name: "Run sample" }).click();
     await workflows.getByRole("button", { name: "Review output" }).click();
     await page.getByRole("dialog").getByRole("button", { name: "Approve sample" }).click();
@@ -94,6 +114,9 @@ async function exercise(browser, width) {
     await search.getByRole("button", { name: /Morning brief/ }).click();
     await page.getByRole("dialog", { name: "Morning brief.md" }).waitFor();
     await page.keyboard.press("Escape");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const reduced = await go("Workflows");
+    assert.equal(await reduced.evaluate(el => getComputedStyle(el).animationName), "none");
 
     assert.deepEqual(errors, []);
     assert.deepEqual(remoteRequests, []);

@@ -167,3 +167,21 @@
 @media (forced-colors: active) { .yg-input.yg-ghost-input textarea, .yg-input.yg-ghost-input textarea[data-accepted] { color: FieldText; } .yg-ghost-mirror { display: none; } .yg-thinking { border: 1px solid CanvasText; } .yg-thinking-dots { filter: none !important; } .yg-thinking-dots i { background: CanvasText; } }
 
 .yg-ghost-hint[data-visible="false"] { visibility: hidden; }
+
+.yg-message[data-variant] { position: relative; gap: var(--boa-space-6); }
+.yg-message[data-variant="sent"] { padding-inline-start: var(--boa-space-12); }
+.yg-message[data-variant="sent"] .yg-message-content {
+  inline-size: fit-content;
+  max-inline-size: 100%;
+  border-radius: var(--yg-radius-panel);
+  padding: var(--boa-space-8) var(--boa-space-12);
+  background: var(--yg-field);
+}
+.yg-message-actions { display: flex; justify-content: flex-start; margin-block-start: var(--boa-space-4); }
+@media (hover: hover) and (pointer: fine) {
+  .yg-message-actions { opacity: 0; transition: opacity var(--yg-press) var(--yg-settle); }
+  .yg-message:hover .yg-message-actions, .yg-message:focus-within .yg-message-actions { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yg-message-actions { transition: none; }
+}

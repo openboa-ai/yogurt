@@ -2,18 +2,18 @@
 import {
   AgentAvatar,
   agentPresenceLabels
-} from "./chunk-WP7YZA6Z.js";
+} from "./chunk-IXON7IRO.js";
 import {
   Status
-} from "./chunk-QVZBBQIY.js";
+} from "./chunk-KXVFHR7K.js";
 import {
   Button
-} from "./chunk-4IPCB3MM.js";
+} from "./chunk-LTCB3AU4.js";
 import {
   Heading,
   Stack,
   Text
-} from "./chunk-GW3HPY4O.js";
+} from "./chunk-H36QHH35.js";
 
 // packages/web/src/patterns/agent-workspace.tsx
 import { useId } from "react";

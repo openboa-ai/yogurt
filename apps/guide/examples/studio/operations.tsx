@@ -17,18 +17,18 @@ export function Tasks() {
   const task = tasks.find(item => item.id === selected);
   const matches = tasks.filter(item => filter === "All" || filter === item.state);
   return <Y.Stack gap={16}>
-    <Y.Inline className="studio-split"><Y.SegmentedControl label="Task status" options={options("All", "Needs you", "Working", "Waiting", "Done")} value={filter} onValueChange={setFilter} />
+    <Y.Inline className="studio-split"><Y.SegmentedControl label="Task status" options={["All", "Needs you", "Working", "Waiting", "Done"].map(id => ({ id, label: id + " · " + tasks.filter(item => id === "All" || item.state === id).length }))} value={filter} onValueChange={setFilter} />
       <Y.Button onClick={() => setCreate(true)}>New task</Y.Button></Y.Inline>
     <div className="studio-split-pane">
       <Y.Surface><Y.List label="Tasks">{matches.map(item =>
         <Y.ListRow key={item.id} title={item.title} description={item.agent} current={item.id === selected}
           trailing={<Y.Badge tone={item.state === "Needs you" ? "warning" : "neutral"}>{item.state}</Y.Badge>} onActivate={() => setSelected(item.id)} />)}
         {!matches.length && <li><Y.Text variant="help">No matching tasks.</Y.Text></li>}</Y.List></Y.Surface>
-      {task && <Y.Card title={task.title} description={task.agent}>
+      {task && <div key={task.id} className="studio-detail"><Y.Card title={task.title} description={task.agent}>
         <Y.Stack gap={12}><Y.Text>{task.note}</Y.Text>
-          {task.state === "Done" ? <Y.Status tone="success">Review recorded</Y.Status> : <Y.Button onClick={() => setTasks(current => current.map(item => item.id === task.id ? { ...item, state: "Done" } : item))}>Mark complete</Y.Button>}
+          {task.state === "Done" ? <Y.Status tone="success">Review recorded</Y.Status> : <Y.Inline><Y.Button onClick={() => setTasks(current => current.map(item => item.id === task.id ? { ...item, state: "Done" } : item))}>Mark complete</Y.Button></Y.Inline>}
         </Y.Stack>
-      </Y.Card>}
+      </Y.Card></div>}
     </div>
     <Y.Dialog title="New task" open={create} onOpenChange={setCreate}>
       <form onSubmit={event => {
@@ -94,13 +94,15 @@ export function Workflows() {
     </Y.Inline>
     <div className="studio-split-pane">
       <Y.Surface className="studio-workflow-canvas"><Y.Stack gap={12}>
-        {flow.nodes.map((node, index) => <Y.List key={node.id} label={"Step " + (index + 1)}>
-          <Y.ListRow title={node.label} description={(index + 1) + " · " + node.type} current={node.id === selected} onActivate={() => setSelected(node.id)} />
-        </Y.List>)}
+        <Y.Text variant="meta">Workflow steps</Y.Text>
+        {flow.nodes.map((node, index) => <div key={node.id} className="studio-workflow-step"><Y.List label={"Step " + (index + 1)}>
+          <Y.ListRow title={node.label} description={node.type} current={node.id === selected}
+            leading={<span className="studio-step-number" aria-hidden="true">{index + 1}</span>} onActivate={() => setSelected(node.id)} />
+        </Y.List></div>)}
         {!flow.nodes.length && <Y.Text>Start with a trigger or add a step.</Y.Text>}
         <Y.Inline><Y.ActionMenu label="Add step" items={options(...nodeTypes)} onSelect={add} /></Y.Inline>
       </Y.Stack></Y.Surface>
-      <Y.Card title={step ? "Edit " + step.type.toLowerCase() : "Workflow details"}>
+      <div className="studio-detail" key={step?.id ?? "workflow"}><Y.Card title={step ? "Edit " + step.type.toLowerCase() : "Workflow details"}>
         <Y.Stack gap={12}>
           <Y.TextField label="Workflow name" value={flow.name} onChange={event => setFlows(previous => previous.map(item => item.id === current ? { ...item, name: event.target.value } : item))} />
           {step && <>
@@ -113,7 +115,7 @@ export function Workflows() {
             </Y.ButtonGroup>
           </>}
         </Y.Stack>
-      </Y.Card>
+      </Y.Card></div>
     </div>
     {run === "review" && <Y.Notice title="Approval required" tone="warning" action={<Y.ButtonGroup label="Run decision">
       <Y.Button emphasis="soft" onClick={() => setRun("cancelled")}>Stop run</Y.Button>
@@ -136,7 +138,7 @@ export function Schedule() {
   return <Y.Stack gap={16}>
     <div className="studio-split-pane">
       <Y.Card title="Calendar"><Y.Calendar label="Schedule date" value={date} onValueChange={setDate} /></Y.Card>
-      <Y.Card title={date} action={<Y.Button onClick={() => setOpen(true)}>Add routine</Y.Button>}>
+      <Y.Card title={new Intl.DateTimeFormat("en", { dateStyle: "full", timeZone: "UTC" }).format(new Date(date + "T00:00:00Z"))} action={<Y.Button onClick={() => setOpen(true)}>Add routine</Y.Button>}>
         <Y.Stack>{events.filter(item => item.date === date).map(item =>
           <Y.Switch key={item.id} label={item.time + " · " + item.title} checked={item.enabled}
             onCheckedChange={enabled => setEvents(previous => previous.map(event => event.id === item.id ? { ...event, enabled } : event))} />)}
@@ -176,8 +178,8 @@ export function Usage() {
       <Y.Card title={"Total " + metric.toLowerCase()}><Y.Heading className="studio-metric" level={4}>{summary}</Y.Heading></Y.Card>
       <Y.Card title="Workspace resources"><Y.Stack><Y.Progress label="CPU" value={27} /><Y.Progress label="Memory" value={48} /></Y.Stack></Y.Card>
     </div>
-    <Y.Card title="Daily usage"><Y.Chart title={metric + " over time"} series={agent} unit={metric === "Cost" ? "USD" : "K tokens"} points={["Mon", "Tue", "Wed", "Thu", "Fri"].map((label, index) =>
-      ({ id: label, label, value: Math.round(value * size * [.15, .22, .12, .2, .31][index] * 100) / 100 }))} {...sample} /></Y.Card>
+    <Y.Surface className="studio-usage-chart"><Y.Chart title={metric + " over time"} series={agent} unit={metric === "Cost" ? "USD" : "K tokens"} points={["Mon", "Tue", "Wed", "Thu", "Fri"].map((label, index) =>
+      ({ id: label, label, value: Math.round(value * size * [.15, .22, .12, .2, .31][index] * 100) / 100 }))} {...sample} /></Y.Surface>
     <Y.Card title="Breakdown"><Y.Stack gap={12}>
       <Y.SegmentedControl label="Group usage by" options={options("Agent", "Model", "Day", "Skill")} value={breakdown} onValueChange={setBreakdown} />
       <Y.List label="Usage breakdown">{(breakdown === "Agent" ? ["Kai", "Sol"] : breakdown === "Model" ? ["Studio Standard", "Studio Fast"] : breakdown === "Day" ? ["Today", "Earlier"] : ["Source review", "Brief writing"])

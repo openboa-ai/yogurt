@@ -1,18 +1,18 @@
 "use client";
 import {
   Dialog
-} from "./chunk-Y34L4C5K.js";
+} from "./chunk-P2CIQA55.js";
 import {
   words
 } from "./chunk-5GJUJT3P.js";
 import {
   Button,
   ButtonGroup
-} from "./chunk-4IPCB3MM.js";
+} from "./chunk-LTCB3AU4.js";
 import {
   Heading,
   Stack
-} from "./chunk-GW3HPY4O.js";
+} from "./chunk-H36QHH35.js";
 
 // packages/web/src/patterns/decisions.tsx
 import { useEffect, useRef } from "react";

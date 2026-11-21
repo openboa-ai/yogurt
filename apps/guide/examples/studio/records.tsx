@@ -79,12 +79,12 @@ export function Customers() {
       <Y.Inline className="studio-split"><Y.SearchField label="Filter customers" value={query} onValueChange={setQuery} />
         <Y.ButtonGroup label="Customer actions"><Y.Button emphasis="quiet" aria-pressed={showEmail} onClick={() => setShowEmail(!showEmail)}>Email column</Y.Button>
         <Y.Button onClick={() => setOpen(true)}>New customer</Y.Button></Y.ButtonGroup></Y.Inline>
-      <Y.DataTable caption="Customer register" columns={[{ id: "name", label: "Customer", sortValue: row => row.id },
+      <Y.Surface><Y.DataTable caption="Customer register" columns={[{ id: "name", label: "Customer", sortValue: row => row.id },
         ...(showEmail ? [{ id: "email", label: "Email" }] : []), { id: "status", label: "Status" }]}
-        rows={matching.map(item => ({ id: item.id, cells: { name: <Y.Button emphasis="quiet" onClick={() => setSelected(item.id)}>{item.name}</Y.Button>, email: item.email, status: item.status } }))} />
+        rows={matching.map(item => ({ id: item.id, cells: { name: <Y.Button emphasis="quiet" onClick={() => setSelected(item.id)}>{item.name}</Y.Button>, email: item.email, status: <Y.Status tone="success">{item.status}</Y.Status> } }))} /></Y.Surface>
       {!matching.length && <Y.EmptyResult query={query} onClear={() => setQuery("")} />}
-      {current && <Y.Card title={current.name}><Y.Stack><Y.Text>{current.email}</Y.Text><Y.Status>{current.status}</Y.Status>
-        <Y.Button emphasis="quiet" onClick={() => setSelected("")}>Close customer details</Y.Button></Y.Stack></Y.Card>}
+      {current && <div key={current.id} className="studio-detail"><Y.Card title={current.name}><Y.Stack><Y.Text>{current.email}</Y.Text><Y.Status>{current.status}</Y.Status>
+        <Y.Button emphasis="quiet" onClick={() => setSelected("")}>Close customer details</Y.Button></Y.Stack></Y.Card></div>}
     </>}
     {tab === "Payments" && <Y.Card title="November invoice" description="Fieldwork Studio"><Y.Stack gap={8}>
       <Y.Text>$240.00 · Due Nov 28</Y.Text>{payment ? <Y.Status tone="success">Marked paid in this sample.</Y.Status> : <Y.Button onClick={() => setPayment(true)}>Mark paid</Y.Button>}</Y.Stack></Y.Card>}

@@ -2,7 +2,7 @@
 import {
   Heading,
   Stack
-} from "./chunk-GW3HPY4O.js";
+} from "./chunk-H36QHH35.js";
 
 // packages/web/src/controls/data.tsx
 import { useId, useState } from "react";
