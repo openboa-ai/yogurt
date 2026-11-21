@@ -92,6 +92,13 @@ fn selectComponent(m: *Model, index: u32) void {
     m.gallery_list_open = show_list;
     m.gallery_dark = dark;
     const id = gallery.ids[index];
+    if (isAgentComposition(m)) {
+        m.picture = 0;
+        m.agent_image = 0;
+        m.profile_image = 0;
+        m.agents = &m.gallery_agent_choices;
+        if (std.mem.eql(u8, id, "agent-sidebar")) m.sidebar_destinations = &m.gallery_agent_choices;
+    }
     if (std.mem.eql(u8, id, "input-otp")) { m.gallery_editor.clear(); m.value = m.gallery_editor.text(); }
     if (std.mem.eql(u8, id, "action-menu") or std.mem.eql(u8, id, "context-menu") or
         std.mem.eql(u8, id, "menubar") or std.mem.eql(u8, id, "date-picker")) m.is_open = false;
@@ -102,10 +109,16 @@ fn isAgentSpecimen(m: *const Model) bool {
     return std.mem.eql(u8, id, "agent-avatar") or std.mem.eql(u8, id, "gaze");
 }
 
+fn isAgentComposition(m: *const Model) bool {
+    const id = gallery.ids[m.gallery_selected];
+    return std.mem.eql(u8, id, "agent-row") or std.mem.eql(u8, id, "agent-sidebar") or std.mem.eql(u8, id, "agent-workspace") or std.mem.eql(u8, id, "agent-profile");
+}
+
 fn agentFrame(m: *const Model, frame: sdk.GpuFrame) ?Msg {
-    if (!isAgentSpecimen(m)) return null;
+    const composition = isAgentComposition(m);
+    if (!isAgentSpecimen(m) and !composition) return null;
     const now_ms = frame.timestamp_ns / std.time.ns_per_ms;
-    if (now_ms < m.agent_next_ms) return null;
+    if (now_ms < m.agent_next_ms and (!composition or now_ms < m.agent_sol_next_ms)) return null;
     return .{ .agent_tick = now_ms };
 }
 
@@ -116,6 +129,41 @@ fn agentAppearance(appearance: sdk.platform.Appearance) ?Msg {
 pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
     switch (msg) {
         .agent_tick => |now_ms| {
+            if (isAgentComposition(m)) {
+                const size: f32 = if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-sidebar")) 24 else 40;
+                const multiple_agents = !std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-row");
+                if (m.agent_playback == null) m.agent_playback = agent_vector.Playback.init(.kai, size, .ready, now_ms);
+                if (multiple_agents and m.agent_sol_playback == null) m.agent_sol_playback = agent_vector.Playback.init(.sol, size, .working, now_ms);
+                if (!multiple_agents) m.agent_sol_next_ms = std.math.maxInt(u64);
+                var pixels: [agent_preview.side * agent_preview.side * 4]u8 = undefined;
+                if (now_ms >= m.agent_next_ms) {
+                    const playback = m.agent_playback.?;
+                    if (agent_preview.render(playback, now_ms, m.agent_reduced_motion, &pixels)) {
+                        if (fx.registerImage(agent_preview.image_id, agent_preview.side, agent_preview.side, &pixels)) {
+                            m.agent_kai_picture = agent_preview.image_id;
+                            m.gallery_agent_choices[0].image_id = agent_preview.image_id;
+                            m.agent_kai_error = false;
+                            m.agent_next_ms = if (playback.nextFrameDelay(now_ms, true, m.agent_reduced_motion)) |delay| now_ms +| delay else std.math.maxInt(u64);
+                        } else |_| { m.agent_kai_error = true; m.agent_next_ms = now_ms +| 500; }
+                    } else |_| { m.agent_kai_error = true; m.agent_next_ms = now_ms +| 500; }
+                }
+                if (multiple_agents and now_ms >= m.agent_sol_next_ms) {
+                    const playback = m.agent_sol_playback.?;
+                    if (agent_preview.render(playback, now_ms, m.agent_reduced_motion, &pixels)) {
+                        if (fx.registerImage(agent_preview.image_id + 1, agent_preview.side, agent_preview.side, &pixels)) {
+                            m.agent_sol_picture = agent_preview.image_id + 1;
+                            m.gallery_agent_choices[1].image_id = agent_preview.image_id + 1;
+                            m.agent_sol_error = false;
+                            m.agent_sol_next_ms = if (playback.nextFrameDelay(now_ms, true, m.agent_reduced_motion)) |delay| now_ms +| delay else std.math.maxInt(u64);
+                        } else |_| { m.agent_sol_error = true; m.agent_sol_next_ms = now_ms +| 500; }
+                    } else |_| { m.agent_sol_error = true; m.agent_sol_next_ms = now_ms +| 500; }
+                }
+                m.picture = m.agent_kai_picture;
+                m.agent_image = if (m.gallery_agent_choices[1].selected) m.agent_sol_picture else m.agent_kai_picture;
+                m.profile_image = if (m.profile_sol) m.agent_sol_picture else m.agent_kai_picture;
+                m.agent_error = m.agent_kai_error or m.agent_sol_error;
+                return;
+            }
             if (!isAgentSpecimen(m)) return;
             if (m.agent_playback == null) m.agent_playback = agent_vector.Playback.init(m.agent_kind, 72, .ready, now_ms);
             if (m.agent_pending) |pending| {
@@ -154,6 +202,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .agent_reduce_motion => |reduced| {
             m.agent_reduced_motion = reduced;
             m.agent_next_ms = 0;
+            m.agent_sol_next_ms = 0;
         },
         .gallery_select => |index| selectComponent(m, index),
         .gallery_previous => if (m.gallery_selected > 0) selectComponent(m, m.gallery_selected - 1),
@@ -193,12 +242,30 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             m.gallery_status = if (next) "Options opened" else "Options closed";
         },
         .open_menu => { m.is_open = true; m.gallery_status = "Menu opened"; },
+        .select_agent => |id| {
+            if (!isAgentComposition(m) or id == 0 or id > 2) return;
+            m.gallery_agent_choices[0].selected = id == 1;
+            m.gallery_agent_choices[1].selected = id == 2;
+            m.agent_name = if (id == 1) "Kai" else "Sol";
+            m.agent_status = if (id == 1) "Ready" else "Working";
+            m.agent_image = if (id == 1) m.agent_kai_picture else m.agent_sol_picture;
+            m.gallery_status = if (id == 1) "Kai selected" else "Sol selected";
+        },
+        .pick_profile_kai => { m.profile_kai = true; m.profile_sol = false; m.profile_image = m.agent_kai_picture; },
+        .pick_profile_sol => { m.profile_kai = false; m.profile_sol = true; m.profile_image = m.agent_sol_picture; },
         .toggle_sidebar_group => {
             m.sidebar_group_open = !m.sidebar_group_open;
             m.gallery_status = if (m.sidebar_group_open) "Project views expanded" else "Project views collapsed";
         },
         .select_sidebar_item => |id| {
             if (id == 0 or id > 2) return;
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-sidebar")) {
+                m.gallery_agent_choices[0].selected = id == 1;
+                m.gallery_agent_choices[1].selected = id == 2;
+                m.sidebar_destinations = &m.gallery_agent_choices;
+                m.gallery_status = if (id == 1) "Kai selected" else "Sol selected";
+                return;
+            }
             m.gallery_sidebar_choices[0].selected = id == 1;
             m.gallery_sidebar_choices[1].selected = id == 2;
             m.sidebar_destinations = &m.gallery_sidebar_choices;
@@ -284,8 +351,9 @@ fn compactPreview(id: []const u8) bool {
 pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
     const index: usize = if (m.gallery_selected < gallery.names.len) m.gallery_selected else 0;
     const animated_agent = isAgentSpecimen(m);
+    const agent_composition = isAgentComposition(m);
     const selected_agent_state: agent_vector.State = if (m.agent_pending) |pending| pending else if (m.agent_playback) |playback| playback.state else .ready;
-    const has_agent = !animated_agent and std.mem.startsWith(u8, gallery.ids[index], "agent-");
+    const has_agent = !animated_agent and !agent_composition and std.mem.startsWith(u8, gallery.ids[index], "agent-");
     const compact = compactPreview(gallery.ids[index]);
     const preview = ui.scroll(.{ .grow = 1, .semantics = .{ .label = "Component preview" } }, .{
         ui.column(.{ .padding = 24, .gap = 20 }, .{
@@ -295,7 +363,7 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
                 ui.text(.{ .wrap = true }, gallery.descriptions[index]),
             }),
             if (has_agent) ui.text(.{}, "Animation unavailable") else ui.column(.{}, .{}),
-            if (animated_agent and m.agent_error) ui.text(.{}, "Animation unavailable") else ui.column(.{}, .{}),
+            if ((animated_agent or agent_composition) and m.agent_error) ui.text(.{}, "Animation unavailable") else ui.column(.{}, .{}),
             ui.text(.{ .size = .sm }, "Preview"),
             ui.stack(.{ .style_tokens = .{ .background = .surface, .radius = .xl } }, .{
                 ui.column(.{ .height = 200 }, .{}),

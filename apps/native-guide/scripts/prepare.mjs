@@ -57,6 +57,12 @@ for (const id of ["agent-avatar", "gaze"]) {
   if (!source.includes('<column>') || !source.includes('label="Weekly review"') || !source.includes('image_id="{picture}"')) throw Error(`Missing agent specimen binding in ${id}.`);
   writeFileSync(file, source.replace('<column>', '<column cross="center">').replace('label="Weekly review"', 'label="{agent_label}"').replace('image_id="{picture}"', 'image_id="{picture}" size="72"'));
 }
+{
+  const file = join(host, "src/yogurt-catalog-test/agent-row-test.native");
+  const source = readFileSync(file, "utf8");
+  if (!source.includes('label="Weekly review"')) throw Error("Missing agent row label.");
+  writeFileSync(file, source.replace('label="Weekly review"', 'label="Kai"'));
+}
 for (const id of ["text-field", "textarea", "search-field", "input-group", "combobox"]) {
   const file = join(host, "src/yogurt-catalog-test", `${id}-test.native`);
   const source = readFileSync(file, "utf8");
@@ -90,7 +96,7 @@ const findLine = (prefix) => {
 const model = findLine("const Model = struct {").replace("days: []const Choice = &sample", "days: []const Choice = &november_days").replace("const Model = struct {", "pub const Model = struct { gallery_days: [31]Choice = december_days, gallery_choices: [2]Choice = sample, gallery_date_value: []const u8 = \"Choose a date\", project_picture: u32 = 0, sourdough_picture: u32 = 0, meatball_picture: u32 = 0, project_missing: bool = true, sourdough_missing: bool = true, meatball_missing: bool = true, gallery_selected: u32 = 0, gallery_list_open: bool = true, gallery_dark: bool = false, gallery_status: []const u8 = \"Ready\", gallery_picker_open: bool = false, gallery_count: u8 = 0, gallery_count_text: []const u8 = \"0\", gallery_page: u8 = 0, gallery_page_text: []const u8 = \"1 of 2\", gallery_page_one: bool = true, gallery_page_two: bool = false, gallery_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"Weekly\"), gallery_first_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"415\"), gallery_last_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"0182\"),");
 const brandModel = model.replace("project_image: u32 = 1", "project_image: u32 = 0")
   .replace("sidebar_destinations: []const Choice = &sample", "sidebar_destinations: []const Choice = &sidebar_sample")
-  .replace("pub const Model = struct {", "pub const Model = struct { agent_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_error: bool = false, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
+  .replace("pub const Model = struct {", "pub const Model = struct { agent_playback: ?agent_vector.Playback = null, agent_sol_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_sol_next_ms: u64 = 0, agent_kai_picture: u32 = 0, agent_sol_picture: u32 = 0, agent_kai_error: bool = false, agent_sol_error: bool = false, agent_error: bool = false, gallery_agent_choices: [2]Choice = .{ .{ .id = 1, .title = \"Kai\", .selected = true, .detail = \"Ready\", .summary = \"Ready\", .image_id = 0 }, .{ .id = 2, .title = \"Sol\", .detail = \"Working\", .summary = \"Working\", .image_id = 0 } }, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
 const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { agent_tick: u64, agent_set_state: u8, agent_set_kind: u8, agent_reduce_motion: bool, gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance,");
 const zigString = (value) => JSON.stringify(value);
 const lines = [

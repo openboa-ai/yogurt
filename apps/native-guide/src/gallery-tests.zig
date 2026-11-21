@@ -38,6 +38,26 @@ test "agent controls respect reduced motion and preserve it on navigation" {
     try std.testing.expect(model.agent_reduced_motion);
 }
 
+test "agent compositions keep independent identities and avoid substitute images" {
+    var model = app.initialModel();
+    var effects: sdk.Effects(gallery.Msg) = .{ .allocator = std.testing.allocator };
+    for (gallery.ids, 0..) |id, index| {
+        if (std.mem.eql(u8, id, "agent-workspace")) app.update(&model, .{ .gallery_select = @intCast(index) }, &effects);
+    }
+    try std.testing.expectEqualStrings("Kai", model.agents[0].title);
+    try std.testing.expectEqualStrings("Sol", model.agents[1].title);
+    app.update(&model, .{ .select_agent = 2 }, &effects);
+    try std.testing.expectEqualStrings("Sol", model.agent_name);
+    try std.testing.expect(model.agents[1].selected);
+    try std.testing.expectEqual(@as(u32, 0), model.agent_image);
+    for (gallery.ids, 0..) |id, index| {
+        if (std.mem.eql(u8, id, "agent-profile")) app.update(&model, .{ .gallery_select = @intCast(index) }, &effects);
+    }
+    app.update(&model, .pick_profile_sol, &effects);
+    try std.testing.expect(model.profile_sol);
+    try std.testing.expectEqual(@as(u32, 0), model.profile_image);
+}
+
 test "catalog list and fixture state stay bounded" {
     try std.testing.expect(gallery.component_ids.len > 0);
     try std.testing.expect(gallery.block_ids.len > 0);
