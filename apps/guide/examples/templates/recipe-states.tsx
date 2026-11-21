@@ -4,6 +4,7 @@ import { type Recipe } from "./recipes";
 import { SampleForm } from "./recipe-forms";
 import { NavigationPreview } from "./navigation";
 import { ComposeStudy, TypeStudy } from "./studies";
+import pairingPreview from "./pairing-preview.svg";
 
 const emptyStates: Record<string, [string, string, string]> = {
   "no-members": ["Your team is empty", "Invite a teammate to share this workspace.", "Invite a teammate"],
@@ -55,6 +56,15 @@ export function StateRecipe({ recipe }: { recipe: Recipe }) {
         {active ? <Y.List label="Loaded records"><Y.ListRow title="Release review" description="Updated today" /></Y.List> : <Y.Skeleton label="Loading records" lines={3} />}
         <Y.Inline><Y.Button emphasis="soft" onClick={() => setActive(!active)}>{active ? "Show loading state" : "Show records"}</Y.Button></Y.Inline>
       </Y.Stack>;
+    case "loading-card":
+      return <Y.Stack gap={12}>
+        <Y.Text>Studio workspace</Y.Text>
+        {active ? <Y.Spinner label="Loading workspace" /> : synced ? <Y.Status tone="success">Workspace ready.</Y.Status> : <Y.Text variant="help">3 open reviews · Updated today</Y.Text>}
+        <Y.Inline><Y.Button emphasis="soft" pending={active} onClick={() => {
+          setActive(true);
+          timer.current = setTimeout(() => { setActive(false); setSynced(true); }, 900);
+        }}>Reload workspace</Y.Button></Y.Inline>
+      </Y.Stack>;
     case "syncing":
       return <Y.Stack gap={12}>
         <Y.Progress label={active ? "Syncing changes" : synced ? "Changes synced" : "Ready to sync"} value={active ? undefined : synced ? 100 : 0} />
@@ -65,7 +75,10 @@ export function StateRecipe({ recipe }: { recipe: Recipe }) {
         }}>Sync now</Y.Button></Y.Inline>
       </Y.Stack>;
     case "connect":
-      return <Y.CodeBlock language="Pairing code" code="STUDIO-2468" />;
+      return <Y.Stack gap={12}>
+        <img className="template-pairing-code" src={pairingPreview} width={112} height={112} alt="Sample QR code for pairing a device" />
+        <Y.CodeBlock language="Pairing code" code="STUDIO-2468" />
+      </Y.Stack>;
     case "entry":
       return <Y.Stack gap={12}><Y.Switch label="Unlock entry" checked={active} onCheckedChange={setActive} />
         <Y.Status tone={active ? "warning" : "success"}>{active ? "Entry unlocked" : "Entry secured"}</Y.Status></Y.Stack>;
@@ -75,15 +88,36 @@ export function StateRecipe({ recipe }: { recipe: Recipe }) {
   }
 }
 
-export function FoundationRecipe({ recipe, appearance }: { recipe: Recipe; appearance: "light" | "dark" }) {
+export function FoundationRecipe({ recipe, appearance, inGallery }: { recipe: Recipe; appearance: "light" | "dark"; inGallery: boolean }) {
   const [action, setAction] = useState("");
+  const [viewName, setViewName] = useState("Studio review");
+  const [volume, setVolume] = useState(64);
+  const [material, setMaterial] = useState<Y.Material>("neutral");
   switch (recipe.id) {
     case "appearance":
-      return <ComposeStudy guideAppearance={appearance} />;
+      return inGallery ? <Y.Stack gap={12}>
+        <Y.Select label="Surface" options={["neutral", "paper", "mist"].map(id => ({ id, label: id[0].toUpperCase() + id.slice(1) }))}
+          value={material} onChange={event => setMaterial(event.target.value as Y.Material)} />
+        <Y.Yogurt appearance={appearance} material={material} className="template-style-sample">
+          <Y.Stack gap={8}><Y.Text>Workspace preferences</Y.Text><Y.Switch label="Reminders" defaultChecked /></Y.Stack>
+        </Y.Yogurt>
+      </Y.Stack> : <ComposeStudy guideAppearance={appearance} />;
     case "type-specimen":
-      return <TypeStudy />;
+      return inGallery ? <Y.Stack gap={8}>
+        <Y.Heading level={4} className="template-type-display">Field notes</Y.Heading>
+        <Y.Heading level={5}>Studio review</Y.Heading>
+        <Y.Text>Make the next step clear, even when the work is still in progress.</Y.Text>
+        <Y.Text variant="help">Updated November 21</Y.Text>
+      </Y.Stack> : <TypeStudy />;
     case "controls":
-      return <SampleForm id="controls" />;
+      return inGallery ? <Y.Stack gap={12}>
+        <Y.TextField label="View name" value={viewName} onChange={event => { setViewName(event.target.value); setAction(""); }} />
+        <Y.Inline><Y.Button emphasis="soft" onClick={() => { setViewName(""); setAction("Draft cleared."); }}>Clear</Y.Button><Y.Button disabled={!viewName.trim()} onClick={() => setAction("View saved.")}>Save view</Y.Button></Y.Inline>
+        <Y.Switch label="Two-step verification" defaultChecked />
+        <Y.Slider label="Volume" value={volume} onValueChange={setVolume} unit="%" />
+        <Y.Inline><Y.Badge>Draft</Y.Badge><Y.Badge tone="success">Ready</Y.Badge></Y.Inline>
+        {action && <Y.Status>{action}</Y.Status>}
+      </Y.Stack> : <SampleForm id="controls" />;
     case "icons":
       return <Y.Stack gap={12}><Y.Inline>
         <Y.IconButton label="Save view" icon="bookmark" onClick={() => setAction("View saved.")} />

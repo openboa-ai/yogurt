@@ -14,28 +14,33 @@ async function checkGallery(browser, width) {
   try {
     await page.goto(origin + "/templates");
     await page.getByRole("heading", { name: "Templates", exact: true }).waitFor();
-    const categories = ["forms", "records", "metrics", "states", "foundations"];
-    const links = await page.locator("main a[href^='/templates/']").evaluateAll(links => links.map(link => link.pathname));
-    assert.deepEqual(links, [...categories, "compose", "type", "chart"].map(id => "/templates/" + id));
-    const stage = page.locator(".template-stage");
-    let recipes = 0;
-    for (const category of categories) {
-      await page.goto(origin + "/templates/" + category);
-      const picker = page.getByRole("combobox", { name: "Example" });
-      await picker.waitFor();
-      const examples = await picker.locator("option").evaluateAll(options => options.map(option => ({ id: option.value, name: option.textContent })));
-      for (const { id, name } of examples) {
-        await picker.selectOption(id);
-        await stage.getByRole("heading", { name, exact: true }).first().waitFor();
-        assert(await stage.locator(".yg-card").first().locator(":scope > :last-child > *").count(), id + " has no content");
-        const documented = await page.locator(".template-component-links a").evaluateAll(links => links.map(link => link.pathname));
-        assert(documented.length > 0 && documented.every(path => componentPaths.has(path)), id + " has a missing component page");
-        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), id + " overflows");
-      }
-      recipes += examples.length;
-    }
-    assert.equal(recipes, 63);
+    const boardSizes = await page.locator("[data-template-board]").evaluateAll(boards => boards.map(board => board.querySelectorAll("[data-template-specimen]").length));
+    assert.deepEqual(boardSizes, [33, 31]);
+    const cards = await page.locator("[data-template-specimen]").evaluateAll(items => items.map(item => ({
+      id: item.id,
+      hasContent: Boolean(item.querySelector(".yg-card > div > *, .template-specimen-surface > *")),
+      title: item.getAttribute("aria-label"),
+    })));
+    assert.equal(new Set(cards.map(card => card.id)).size, 64);
+    assert(cards.every(card => card.hasContent && card.title));
+    assert.equal(await page.locator("main a[href^='/templates/']").count(), 0);
+    assert.equal(await page.getByRole("combobox", { name: "Example", exact: true }).count(), 0);
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), "gallery overflows horizontally");
+    const columns = await page.locator(".template-gallery-board").first().evaluate(board => new Set([...board.children].map(card => Math.round(card.getBoundingClientRect().x))).size);
+    assert(width >= 1000 ? columns > 1 : columns === 1);
 
+    const inlineInvite = page.locator("#invite");
+    await inlineInvite.getByRole("textbox", { name: "Work email" }).fill("alex@example.test");
+    await inlineInvite.getByRole("button", { name: "Send invitation" }).click();
+    await inlineInvite.getByText("Invitation prepared.").waitFor();
+    assert.equal(await page.locator("#no-members").getByText("Invitation prepared.").count(), 0);
+    const loading = page.locator("#loading-card");
+    await loading.getByRole("button", { name: "Reload workspace" }).click();
+    await loading.getByText("Workspace ready.").waitFor();
+    await page.locator("#not-found").scrollIntoViewIfNeeded();
+    assert.equal(new URL(page.url()).pathname, "/templates");
+
+    const stage = page.locator(".template-stage");
     await page.goto(origin + "/templates/invite");
     await stage.getByRole("textbox", { name: "Work email" }).fill("alex@example.test");
     await stage.getByRole("combobox", { name: "Access" }).selectOption("Viewer");
@@ -43,6 +48,9 @@ async function checkGallery(browser, width) {
     await stage.getByText("Invitation prepared.").waitFor();
     await page.getByRole("button", { name: "Reset preview" }).click();
     assert.equal(await stage.getByRole("textbox", { name: "Work email" }).inputValue(), "");
+
+    const documented = await page.locator(".template-component-links a").evaluateAll(links => links.map(link => link.pathname));
+    assert(documented.length > 0 && documented.every(path => componentPaths.has(path)), "missing component page");
 
     await page.goto(origin + "/templates/faq");
     await stage.getByRole("button", { name: "Who can see my drafts?" }).focus();
@@ -117,7 +125,7 @@ async function checkGallery(browser, width) {
     await stage.getByRole("button", { name: "Send", exact: true }).click();
     await stage.getByText(/Sample response:/).waitFor();
     assert.deepEqual(errors, []);
-    console.log(width + "px: 63 compositions, studies and workspace interactions passed.");
+    console.log(width + "px: 64 inline compositions, studies and workspace interactions passed.");
   } finally {
     await page.close();
   }

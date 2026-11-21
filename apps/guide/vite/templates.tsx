@@ -9,7 +9,7 @@ import { DashboardPreview } from "../examples/templates/dashboard";
 import { NavigationPreview } from "../examples/templates/navigation";
 import { ComposeStudy, ChartStudy, TypeStudy } from "../examples/templates/studies";
 import { recipeFamilies } from "../examples/templates/recipes";
-import { TemplateFamily, TemplateIndex } from "./template-directory";
+import { TemplateFamily, TemplateGallery } from "./template-directory";
 import "./templates.css";
 
 const paths = (id: string) => "/templates/" + id;
@@ -32,7 +32,7 @@ const related = {
 
 export default function Templates({ id = "", appearance }: { id?: string; appearance: "light" | "dark" }) {
   const [reset, setReset] = useState(0);
-  if (!id) return <TemplateIndex />;
+  if (!id) return <TemplateGallery appearance={appearance} />;
   const family = recipeFamilies.find(group => group.id === id || group.recipes.some(recipe => recipe.id === id));
   if (family) return <TemplateFamily family={family} initialId={id} appearance={appearance} />;
   const entry = groups.find(item => item.id === id);

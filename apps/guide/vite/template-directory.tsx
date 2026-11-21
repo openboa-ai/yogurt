@@ -1,39 +1,41 @@
 import { useState } from "react";
 import {
-  Button, Card, Heading, Inline, Link, PageHeader, Select, Stack,
+  Button, Card, Heading, Inline, Link, PageHeader, Select, Stack, Surface,
 } from "@openboa/yogurt";
 import { FormRecipe } from "../examples/templates/recipe-forms";
 import { MetricRecipe, RecordRecipe } from "../examples/templates/recipe-data";
 import { FoundationRecipe, StateRecipe } from "../examples/templates/recipe-states";
-import { recipeFamilies, type Recipe } from "../examples/templates/recipes";
+import { getRecipe, recipeBoards, recipeFamilies, type Recipe } from "../examples/templates/recipes";
 
-const path = (family: string) => "/templates/" + family;
-
-export function TemplateIndex() {
-  return <main className="guide-templates">
+export function TemplateGallery({ appearance }: { appearance: "light" | "dark" }) {
+  return <main className="guide-templates template-gallery">
     <Stack gap={24}>
-      <PageHeader title="Templates" detail="Try reusable Yogurt compositions and see the components behind each one." />
-      <div className="template-index-grid">
-        {recipeFamilies.map(family => <Card key={family.id} title={family.title} density="compact"
-          description={family.recipes.slice(0, 3).map(recipe => recipe.title).join(" · ")}>
-          <Link href={path(family.id)} aria-label={"Browse " + family.title}>Browse examples</Link>
-        </Card>)}
-      </div>
-      <Inline className="template-studies-links">
-        <Link href="/templates/compose">Composition editor</Link>
-        <Link href="/templates/type">Typography</Link>
-        <Link href="/templates/chart">Chart studies</Link>
-      </Inline>
+      <PageHeader title="Templates" />
+      {recipeBoards.map(board => <section key={board.id} aria-labelledby={board.id + "-templates"} data-template-board={board.id}>
+        <Heading level={2} id={board.id + "-templates"}>{board.title}</Heading>
+        <div className="template-gallery-board">
+          {board.specimens.map(id => {
+            const { family, recipe } = getRecipe(id);
+            const preview = <Preview family={family} recipe={recipe} appearance={appearance} inGallery />;
+            const titled = recipe.components.some(part => ["bar-chart", "chart", "data-table", "record-facts", "result"].includes(part));
+            return <article key={id} id={id} className="template-specimen" data-template-specimen={id} aria-label={recipe.title}>
+              {titled
+                ? <Surface className="template-specimen-surface">{preview}</Surface>
+                : <Card title={recipe.title} density="compact">{preview}</Card>}
+            </article>;
+          })}
+        </div>
+      </section>)}
     </Stack>
   </main>;
 }
 
-function Preview({ family, recipe, appearance }: { family: string; recipe: Recipe; appearance: "light" | "dark" }) {
+function Preview({ family, recipe, appearance, inGallery = false }: { family: string; recipe: Recipe; appearance: "light" | "dark"; inGallery?: boolean }) {
   if (family === "forms") return <FormRecipe recipe={recipe} />;
   if (family === "records") return <RecordRecipe recipe={recipe} />;
   if (family === "metrics") return <MetricRecipe recipe={recipe} />;
   if (family === "states") return <StateRecipe recipe={recipe} />;
-  return <FoundationRecipe recipe={recipe} appearance={appearance} />;
+  return <FoundationRecipe recipe={recipe} appearance={appearance} inGallery={inGallery} />;
 }
 
 export function TemplateFamily({ family, initialId, appearance }: {
@@ -42,7 +44,7 @@ export function TemplateFamily({ family, initialId, appearance }: {
   const [selected, setSelected] = useState(initialId === family.id ? family.recipes[0].id : initialId ?? family.recipes[0].id);
   const [reset, setReset] = useState(0);
   const recipe = family.recipes.find(item => item.id === selected) ?? family.recipes[0];
-  const componentIds = [...new Set(["card", ...recipe.components, ...(family.id === "metrics" && !recipe.components.includes("progress") ? ["segmented-control"] : [])])];
+  const componentIds = [...new Set(["card", ...recipe.components, ...(family.id === "metrics" && recipe.components.some(id => id === "chart" || id === "bar-chart") ? ["segmented-control"] : [])])];
 
   return <main className="guide-templates">
     <Stack gap={24}>

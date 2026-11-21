@@ -63,14 +63,30 @@
   .template-account[data-layout="split"], .template-account[data-layout="framed"] { grid-template-columns: minmax(0, 1fr); }
   .template-account-main { padding: var(--yg-gap-panel); }
 }
-.template-index-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
-  max-inline-size: 70rem;
-  gap: var(--yg-gap-panel);
+.template-gallery {
+  max-inline-size: 105rem;
 }
-.template-index-grid > .yg-card { min-inline-size: 0; }
-.template-studies-links, .template-component-links {
+.template-gallery-board {
+  columns: auto 20rem;
+  gap: var(--yg-gap-stack);
+  margin-block-start: var(--yg-gap-panel);
+}
+.template-specimen {
+  break-inside: avoid;
+  inline-size: 100%;
+  margin-block-end: var(--yg-gap-stack);
+}
+.template-specimen > .yg-card, .template-specimen-surface {
+  background: var(--yg-surface);
+}
+.template-specimen-surface {
+  padding: var(--yg-card-inset-compact);
+  border-radius: var(--yg-card-corner);
+}
+.template-specimen-surface .yg-table caption,
+.template-specimen-surface .yg-bars figcaption { font: var(--yg-font-heading); }
+.template-specimen .yg-sidebar-layout { min-inline-size: 0; }
+.template-component-links {
   flex-wrap: wrap;
   gap: var(--yg-gap-inline);
 }
@@ -89,3 +105,27 @@
 .template-recipe-preview > .yg-card { background: var(--yg-surface); }
 .template-recipe-preview[data-family="forms"] { max-inline-size: 34rem; }
 .template-cover { align-items: center; }
+.template-style-sample {
+  background: var(--yg-canvas);
+  border-radius: var(--yg-radius-panel);
+  padding: var(--yg-gap-panel);
+}
+.template-type-display { font: var(--yg-font-display); }
+.template-pairing-code {
+  display: block;
+  border-radius: var(--yg-radius-control);
+}
+.template-donut {
+  inline-size: min(100%, 9rem);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  border-radius: 50%;
+  background: conic-gradient(var(--template-chart-slices));
+  mask-image: radial-gradient(circle closest-side, transparent 62%, black 63%);
+}
+.template-chart-key {
+  display: block;
+  inline-size: var(--boa-space-8);
+  block-size: var(--boa-space-8);
+  border-radius: 50%;
+}

@@ -41,7 +41,7 @@ export const recipeFamilies = [
     ["activity-history", "Activity history", "Show the pattern of activity across several weeks.", "chart"],
     ["contributions", "Contribution activity", "Compare contributions across a recent working week.", "bar-chart"],
     ["observability", "Service latency", "Show how response time changes over the week.", "chart"],
-    ["traffic-mix", "Traffic sources", "Compare each source's share of total visits.", "bar-chart"],
+    ["traffic-mix", "Traffic sources", "Compare each source's share of total visits.", "list"],
     ["sleep", "Sleep report", "Compare hours of rest across several nights.", "chart"],
     ["fitness", "Weekly activity", "Compare active minutes on different days.", "bar-chart"],
     ["analytics", "Workspace analytics", "Show how completed work changes over time.", "chart"],
@@ -61,6 +61,7 @@ export const recipeFamilies = [
     ["agent", "Activate an agent", "Ask for confirmation before enabling the agent.", "confirm-dialog", "button", "status"],
     ["alert", "Anomaly alert", "Show which signal changed and how to recover.", "notice", "button"],
     ["loading", "Loading records", "Reserve space for the content while records load.", "skeleton", "list", "button"],
+    ["loading-card", "Loading a workspace", "Keep the workspace summary in place while details load.", "spinner", "button", "status"],
     ["syncing", "Syncing changes", "Make in-progress work and its completion visible.", "progress", "button"],
     ["no-members", "No team members", "Give a new team a clear way to invite its first member.", "result", "button"],
     ["no-bank", "Connect an account", "Explain what becomes available after connecting an account.", "result", "button"],
@@ -84,3 +85,41 @@ export const recipeFamilies = [
 ];
 
 export type Recipe = typeof recipeFamilies[number]["recipes"][number];
+
+export const recipeBoards = [
+  {
+    id: "everyday",
+    title: "Accounts & everyday tools",
+    specimens: [
+      "activity-history", "no-release", "connect", "dividends", "investment", "syncing",
+      "payout", "balance", "preferences", "savings", "appliance",
+      "targets", "transactions", "directory", "faq", "payments", "entry", "releases",
+      "access", "card-details", "transfer", "album", "loading-card",
+      "receiving", "energy", "no-bank", "upcoming", "shade",
+      "stock", "no-catalog", "milestone", "social", "notifications",
+    ],
+  },
+  {
+    id: "studio",
+    title: "Studio & operations",
+    specimens: [
+      "appearance", "type-specimen", "controls", "workspace", "invoice",
+      "icons", "observability", "shipping",
+      "environment", "volume", "invite", "agent",
+      "loading", "traffic-mix", "no-members", "issue", "contributors",
+      "feedback", "appointment", "sleep", "profile",
+      "fitness", "upload-file", "analytics", "usage", "shortcuts",
+      "alert", "signal", "visitors", "contributions", "not-found",
+    ],
+  },
+];
+
+const indexedRecipes = new Map(recipeFamilies.flatMap(family =>
+  family.recipes.map(recipe => [recipe.id, { family: family.id, recipe }] as const),
+));
+
+export function getRecipe(id: string) {
+  const entry = indexedRecipes.get(id);
+  if (!entry) throw new Error("Unknown gallery specimen: " + id);
+  return entry;
+}
