@@ -19,32 +19,50 @@ cp "$kit/checks/fixtures/native-otp/main.zig" consumer/src/main.zig
 yogurt() { node sdk/bin/yogurt.mjs "$@"; }
 yogurt add input-otp --target native --dir consumer
 yogurt add input-otp --target native --dir consumer
-yogurt native build consumer -Doptimize=Debug
-yogurt native package consumer -Dautomation=true --signing none --output "$scratch/release"
-test -x "$scratch/release/Contents/MacOS/consumer"
-cmp consumer/zig-out/bin/consumer "$scratch/release/Contents/MacOS/consumer"
 test ! -e consumer/src/yogurt/items/input-otp.native
 test ! -e consumer/src/yogurt/input-otp.zig
 
 cd consumer
+otp_scenario() {
+  native automate assert --timeout-ms 120000 'gpu_nonblank=true' 'role=textbox name="Verification code"'
+  otp="$(native automate snapshot | sed -nE 's/.*#([0-9]+) role=textbox name="Verification code".*/\1/p')"
+  shot() {
+    native automate screenshot main-canvas 1
+    cp .zig-cache/native-sdk-automation/screenshot-main-canvas.png "$scratch/$1.png"
+  }
+  shot idle
+  native automate widget-click main-canvas "$otp"
+  shot click
+  native automate widget-key main-canvas Tab
+  native automate assert --timeout-ms 5000 'role=button name="After".*focused=true'
+  shot blur
+  native automate widget-key main-canvas shift+Tab
+  native automate widget-key main-canvas shift+Tab
+  native automate assert --timeout-ms 5000 'role=button name="Before".*focused=true'
+  native automate widget-key main-canvas Tab
+  native automate assert --timeout-ms 5000 'role=textbox name="Verification code".*focused=true'
+  shot tab
+  swift "$kit/checks/fixtures/native-otp/focus-pixels.swift" "$scratch"
+}
+
+# Exercise the default project directory with flags immediately after the verb.
+node ../sdk/bin/yogurt.mjs native dev -Dautomation=true >"$scratch/dev.log" 2>&1 &
+pid=$!
+if ! native automate assert --timeout-ms 120000 'gpu_nonblank=true'; then
+  cat "$scratch/dev.log"
+  exit 1
+fi
+otp_scenario
+kill "$pid"
+wait "$pid" || true
+pid=
+rm -rf .zig-cache/native-sdk-automation
+
+# The SDK-generated app-owned build must receive the same patched framework.
+native eject .
+node ../sdk/bin/yogurt.mjs native package -Dautomation=true --signing none --output "$scratch/release"
+test -x "$scratch/release/Contents/MacOS/consumer"
+cmp zig-out/bin/consumer "$scratch/release/Contents/MacOS/consumer"
 "$scratch/release/Contents/MacOS/consumer" >"$scratch/consumer.log" 2>&1 &
 pid=$!
-native automate assert --timeout-ms 15000 'gpu_nonblank=true' 'role=textbox name="Verification code"'
-otp="$(native automate snapshot | sed -nE 's/.*#([0-9]+) role=textbox name="Verification code".*/\1/p')"
-shot() {
-  native automate screenshot main-canvas 1
-  cp .zig-cache/native-sdk-automation/screenshot-main-canvas.png "$scratch/$1.png"
-}
-shot idle
-native automate widget-click main-canvas "$otp"
-shot click
-native automate widget-key main-canvas Tab
-native automate assert --timeout-ms 5000 'role=button name="After".*focused=true'
-shot blur
-native automate widget-key main-canvas shift+Tab
-native automate widget-key main-canvas shift+Tab
-native automate assert --timeout-ms 5000 'role=button name="Before".*focused=true'
-native automate widget-key main-canvas Tab
-native automate assert --timeout-ms 5000 'role=textbox name="Verification code".*focused=true'
-shot tab
-swift "$kit/checks/fixtures/native-otp/focus-pixels.swift" "$scratch"
+otp_scenario

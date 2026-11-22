@@ -24,9 +24,9 @@ for (const item of motion) {
 }
 const usage =
   "yogurt check [--dir project] | yogurt list | yogurt add <component-or-block> --target web|native [--dir project]";
-function run() {
+async function run() {
   if (args[0] === "native") {
-    process.exitCode = runNative(kit, args.slice(1));
+    process.exitCode = await runNative(kit, args.slice(1));
     return;
   }
   if (args[0] === "check") {
@@ -66,7 +66,7 @@ function run() {
   }
 }
 try {
-  run();
+  await run();
 } catch (err) {
   console.error(err.message);
   process.exitCode = 1;

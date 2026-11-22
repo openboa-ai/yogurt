@@ -1,5 +1,5 @@
 import { cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync } from "node:fs";
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { basename, delimiter, dirname, join, resolve } from "node:path";
 
@@ -19,11 +19,15 @@ export function nativeFramework() {
   throw Error("Install Native SDK 0.11.1 or set NATIVE_SDK_PATH to its framework directory.");
 }
 
-export function runNative(kit, [verb, app = ".", ...flags]) {
+export async function runNative(kit, [verb, ...args]) {
   if (!["build", "dev", "test", "check", "package"].includes(verb)) {
     throw Error("Usage: yogurt native build|dev|test|check|package [app-dir] [Native flags]");
   }
-  const project = resolve(app);
+  const project = resolve(args[0] && !args[0].startsWith("-") ? args.shift() : ".");
+  const flags = args;
+  if (flags.some(flag => /^-Dnative-sdk-path(?:=|$)/.test(flag))) {
+    throw Error("Yogurt sets -Dnative-sdk-path. Use NATIVE_SDK_PATH to select the original framework.");
+  }
   const packaging = verb === "package";
   let binary;
   if (packaging) {
@@ -57,7 +61,13 @@ export function runNative(kit, [verb, app = ".", ...flags]) {
       env: { ...process.env, NATIVE_SDK_PATH: framework },
       stdio: "inherit",
     };
-    const build = spawnSync("native", packaging ? ["build", project, ...flags.filter(flag => flag.startsWith("-D"))] : [verb, project, ...flags], options);
+    const buildFlags = packaging ? flags.filter(flag => flag.startsWith("-D")) : [...flags];
+    if (verb !== "check" && existsSync(join(project, "build.zig"))) {
+      buildFlags.push("-Dnative-sdk-path=" + framework);
+    }
+    const buildArgs = [packaging ? "build" : verb, project, ...buildFlags];
+    if (verb === "dev") return await runDevelopment(buildArgs, options);
+    const build = spawnSync("native", buildArgs, options);
     if (build.error) throw build.error;
     if (!packaging || build.status !== 0) return build.status ?? 1;
     const release = spawnSync("native", ["package", "--target", "macos", "--binary", binary, ...flags.filter(flag => !flag.startsWith("-D"))], {
@@ -68,4 +78,17 @@ export function runNative(kit, [verb, app = ".", ...flags]) {
   } finally {
     rmSync(scratch, { recursive: true, force: true });
   }
+}
+
+function runDevelopment(args, options) {
+  return new Promise((resolve, reject) => {
+    const child = spawn("native", args, options);
+    const handlers = ["SIGINT", "SIGTERM", "SIGHUP"].map(signal => [signal, () => child.kill(signal)]);
+    for (const [signal, handler] of handlers) process.once(signal, handler);
+    child.on("error", reject);
+    child.on("close", code => {
+      for (const [signal, handler] of handlers) process.removeListener(signal, handler);
+      resolve(code ?? 1);
+    });
+  });
 }
