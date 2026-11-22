@@ -228,3 +228,17 @@ import { AgentAvatar } from "@openboa/yogurt/agent-avatar";
 For the Native canvas, after installing `agent-avatar`, use `Playback.initVariant(.round_star_right, 24, .thinking, now_ms)`. Set `playback.color = .blue_300` to use the same token. Keep the `Playback` instance per avatar, and pass the current host state and reduced-motion preference to its drawing call.
 
 [Agent family gallery](../apps/guide/generated/agents.html) · [Motion](motion.md#agent-family)
+
+## Agent name data
+
+The SDK provides 1,170 short names. Each row has a `name`, fitted `variant` and palette `color`. Use a row as a suggested pairing or combine its name with an appearance chosen by the app. The app owns selection and uniqueness.
+
+```js
+import identities from "@openboa/yogurt/agent-names" with { type: "json" };
+```
+
+For Native, copy `packages/native/controls/agent-names.zig` from the pinned Yogurt package to the app's `src/yogurt/` directory. It contains the same rows.
+
+```zig
+const identities = @import("yogurt/agent-names.zig").identities;
+```

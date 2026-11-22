@@ -6,6 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 import { checkProject } from "../bin/check-project.mjs";
+import { generateAgentNames } from "../scripts/agents/agent-names.mjs";
 import { generateTokens } from "../scripts/tokens/generate.mjs";
 import { dimension } from "../scripts/tokens/dimension.mjs";
 
@@ -17,6 +18,13 @@ function scratch(t) {
   t.after(() => rmSync(dir, { recursive: true, force: true }));
   return dir;
 }
+
+test("agent name data covers the fitted avatar combinations on Web and Native", async () => {
+  generateAgentNames({ check: true });
+  const { default: identities } = await import("@openboa/yogurt/agent-names", { with: { type: "json" } });
+  assert.deepEqual(identities, json("design/content/agent-names.json"));
+  assert.equal(identities.length, 1170);
+});
 
 test("a token edit reaches both renderers and checking never overwrites a stale output", t => {
   generateTokens({ check: true });
