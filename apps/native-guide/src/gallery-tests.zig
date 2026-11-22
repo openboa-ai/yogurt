@@ -217,3 +217,22 @@ test "progress publishes its target while its fill is still at the prior value" 
     try std.testing.expectEqual(model.gallery_progress_fraction, model.interface_motion.value);
     try std.testing.expect(!model.interface_motion.active());
 }
+
+test "taking over a returning drawer retains its current offset" {
+    var model = app.initialModel();
+    var effects: sdk.Effects(gallery.Msg) = .{ .allocator = std.testing.allocator };
+    for (gallery.ids, 0..) |id, index| {
+        if (std.mem.eql(u8, id, "drawer")) app.update(&model, .{ .gallery_select = @intCast(index) }, &effects);
+    }
+    app.update(&model, .open_choices, &effects);
+    model.interface_motion.snap(0.5);
+    app.update(&model, .{ .drawer_drag = .{ .phase = 0, .y = 6 } }, &effects);
+    try std.testing.expectEqual(@as(f32, 14), model.drawer_distance);
+    app.update(&model, .{ .drawer_drag = .{ .phase = 1, .y = 6 } }, &effects);
+    try std.testing.expect(model.is_open);
+    try std.testing.expect(model.interface_motion.active());
+    model.interface_motion.value = 0.5;
+    app.update(&model, .{ .drawer_drag = .{ .phase = 0, .y = 2 } }, &effects);
+    try std.testing.expectEqual(@as(f32, 9), model.drawer_distance);
+    try std.testing.expect(!model.interface_motion.active());
+}

@@ -204,6 +204,12 @@ fn interfaceFrame(m: *const Model, frame: sdk.GpuFrame) ?Msg {
     return agentFrame(m, frame);
 }
 
+fn drawerOffset(m: *const Model) f32 {
+    if (m.drawer_dragging) return m.drawer_distance;
+    const distance = if (m.drawer_distance > 0) m.drawer_distance else layout_tokens.gap_panel;
+    return distance * (1 - m.interface_motion.value);
+}
+
 fn animateEntrance(m: *Model, duration_ms: u32) void {
     m.interface_motion.snap(0);
     m.interface_motion.retarget(1, sdk.monotonicNanoseconds(), duration(m, duration_ms), layout_tokens.arrive_curve);
@@ -304,8 +310,9 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .drawer_drag => |drag| {
             switch (@as(canvas.WidgetDragPhase, @enumFromInt(drag.phase))) {
                 .change => {
+                    if (!m.drawer_dragging) m.drawer_drag_origin = drawerOffset(m);
                     m.interface_motion.snap(1);
-                    m.drawer_distance = @max(0, drag.y);
+                    m.drawer_distance = @max(0, m.drawer_drag_origin + drag.y);
                     m.drawer_dragging = true;
                 },
                 .end, .cancel => {
@@ -381,6 +388,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             const id = gallery.ids[m.gallery_selected];
             if (isEditLayer(id)) {
                 m.drawer_distance = 0;
+                m.drawer_drag_origin = 0;
                 m.drawer_dragging = false;
                 m.interface_motion.snap(1);
                 if (next) animateEntrance(m, layout_tokens.panel_ms);
@@ -627,7 +635,8 @@ fn editLayer(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
     const sheet = std.mem.eql(u8, id, "sheet");
     const phase = m.interface_motion.value;
     const returning = drawer and m.drawer_distance > 0;
-    const offset = (if (returning) m.drawer_distance else if (drawer or sheet) layout_tokens.gap_panel else layout_tokens.gap_inline) * (1 - phase);
+    const offset = if (drawer) drawerOffset(m) else
+        (if (sheet) layout_tokens.gap_panel else layout_tokens.gap_inline) * (1 - phase);
     const fields = ui.column(.{ .gap = layout_tokens.gap_stack }, .{
         ui.column(.{ .gap = 6 }, .{
             ui.text(.{ .size = .sm }, gallery.edit_view_label),
@@ -636,10 +645,7 @@ fn editLayer(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
         ui.button(.{ .variant = .primary, .on_press = .activate }, gallery.edit_view_submit),
     });
     if (drawer) {
-        var presentation = motion.surfaceOptions(Msg, gallery.edit_view_title, .dismiss, 0, offset, if (returning) 1 else phase);
-        if (m.drawer_dragging) {
-            presentation.transform = canvas.Affine.translate(0, m.drawer_distance);
-        }
+        const presentation = motion.surfaceOptions(Msg, gallery.edit_view_title, .dismiss, 0, offset, if (returning or m.drawer_dragging) 1 else phase);
         return drawer_surface.present(Msg, ui, gallery.edit_view_title, .dismiss, .{ .drawer_drag = .{} }, fields, presentation);
     }
     var options = motion.surfaceOptions(Msg, gallery.edit_view_title, .dismiss, if (sheet) offset else 0, if (sheet) 0 else offset, phase);
