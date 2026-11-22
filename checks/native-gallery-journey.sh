@@ -200,14 +200,6 @@ check_interaction() {
       click_named radio '4 of 5' "$before" &&
         snapshot_after 'role=radio name="4 of 5".*value=1' || return 1
       ;;
-    project-mark)
-      # Accessible image nodes and missing-resource indicators do not prove pixel rendering.
-      rg -q 'role=image name="Yogurt"' "$before" &&
-        rg -q 'role=image name="Sourdough"' "$before" &&
-        rg -q 'role=image name="Meatball"' "$before" &&
-        ! rg -q 'role=text name="Unavailable"' "$before" &&
-        cp "$before" "$after" || return 1
-      ;;
     composer)
       action_named textbox 'Message Kai' set_text 'Check the release notes' "$before" &&
         snapshot_after 'text="Check the release notes"' &&
@@ -310,7 +302,8 @@ check_interaction() {
         rg -q 'role=button name="31"' "$after" &&
         click_named button Previous "$after" && snapshot_after 'Sample page changed' &&
         rg -q 'role=text name="November 2026"' "$after" &&
-        ! rg -q 'role=button name="31"' "$after" || return 1
+        ! rg -q 'role=button name="31"' "$after" &&
+        click_named button '12' "$after" && snapshot_after 'Nov 12, 2026' || return 1
       ;;
     numeric-spinner)
       rg -q 'role=text name="0"' "$before" &&
@@ -388,6 +381,25 @@ check_interaction() {
   ! rg -Fq 'This action is not implemented in this guide' "$after"
 }
 
+check_animated() {
+  local before="$output/$prefix.txt" after="$output/$prefix-interaction.txt" state
+  if [ "$id" = agent-avatar ] || [ "$id" = gaze ]; then
+    for state in Thinking Working Waiting Blocked Finished Ready; do
+      click_named button "$state" "$before" &&
+        "$cli" automate screenshot main-canvas >/dev/null &&
+        cp "$automation/screenshot-main-canvas.png" "$output/$prefix-$state.png" || return 1
+    done
+    click_named button Sol "$before" && snapshot_after 'role=image name="Sol"' &&
+      click_named button Kai "$after" && snapshot_after 'role=image name="Kai"' || return 1
+  else
+    "$cli" automate snapshot > "$after" || return 1
+  fi
+  sleep 0.25
+  ! rg -q 'Animation unavailable|AutomationCommandFailed' "$after" &&
+    "$cli" automate screenshot main-canvas >/dev/null &&
+    ! cmp -s "$automation/screenshot-main-canvas.png" "$output/$prefix.png"
+}
+
 scroll_preview() {
   local snapshot="$1" delta="$2" id
   id="$(sed -nE 's/^.*widget @w1\/main-canvas#([0-9]+) role=group name="Component preview".*$/\1/p' "$snapshot" | head -n 1)"
@@ -397,6 +409,10 @@ scroll_preview() {
 
 "$cli" automate assert --timeout-ms 5000 'ready=true' 'gpu_nonblank=true'
 "$cli" automate snapshot > "$output/list.txt"
+if [ "${YOGURT_NATIVE_DARK:-0}" = 1 ]; then
+  click_named button 'Change appearance' "$output/list.txt"
+  "$cli" automate snapshot > "$output/list.txt"
+fi
 click_named button 'Hide list' "$output/list.txt"
 button_index="$(awk -F '\t' '$1 == "button" { print NR - 1; found = 1; exit } END { if (!found) exit 1 }' "$output/inventory.tsv")"
 for ((step = 0; step < button_index; step++)); do
@@ -427,12 +443,9 @@ while IFS=$'\t' read -r id name; do
     exit 1
   fi
   case "$id" in
-    agent-avatar|gaze)
-      if "$cli" automate assert --timeout-ms 5000 'role=image name="Kai"' 'role=button name="Working"' >/dev/null 2>&1 &&
-         "$cli" automate snapshot > "$output/$prefix-interaction.txt" &&
-         ! rg -q 'Animation unavailable' "$output/$prefix-interaction.txt"; then
-        # The accessible tree alone cannot prove the pixels or animation.
-        interaction=PARTIAL
+    agent-avatar|gaze|skeleton|spinner)
+      if check_animated; then
+        interaction=PASS
       else
         interaction=FAILED
         failed=1
@@ -454,30 +467,20 @@ while IFS=$'\t' read -r id name; do
         failed=1
       fi
       ;;
-    dialog|drawer|sheet|card|segmented-control|input-otp|action-menu|progress|chart|rating|agent-row|composer|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row|tabs|radio-group|popover|toast|sidebar-layout|select|decision-review)
+    dialog|drawer|sheet|card|segmented-control|input-otp|action-menu|progress|chart|rating|agent-row|composer|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row|tabs|radio-group|popover|toast|sidebar-layout|select|decision-review)
       if [ "$render" = PRESENTED_UNVERIFIED ] && check_interaction; then
         interaction=PASS
-        if [ "$id" = calendar ] || [ "$id" = project-mark ]; then interaction=PARTIAL; fi
       else
         interaction=FAILED
         failed=1
       fi
       ;;
     *)
-      candidate="$(node "$workspace/checks/native-gallery-target.mjs" "$output/$prefix.txt")"
-      if [ -n "$candidate" ]; then
-        if "$cli" automate widget-click main-canvas "$candidate" &&
-           "$cli" automate snapshot > "$output/$prefix-interaction.txt" &&
-           ! rg -q 'AutomationCommandFailed|error event=automation.widget_click' "$output/$prefix-interaction.txt"; then
-          # A delivered click does not verify every action in a specimen.
-          interaction=PARTIAL
-          if rg -Fq 'This action is not implemented in this guide' "$output/$prefix-interaction.txt"; then
-            interaction=UNSUPPORTED_FIXTURE
-          fi
-        else
-          interaction=FAILED
-          failed=1
-        fi
+      if observed="$(node "$workspace/checks/native-gallery-contracts.mjs" "$id" "$cli" "$output/$prefix.txt" "$output/$prefix-interaction.txt")"; then
+        interaction="$observed"
+      else
+        interaction=FAILED
+        failed=1
       fi
       ;;
   esac
@@ -490,7 +493,7 @@ while IFS=$'\t' read -r id name; do
       failed=1
     fi
   fi
-  if [ "$interaction" = NOT_TESTED ] || [ "$interaction" = UNSUPPORTED_FIXTURE ] || [ "$interaction" = PARTIAL ]; then incomplete=1; fi
+  if [ "$interaction" != PASS ] && [ "$interaction" != PRESENTATION ] && [ "$interaction" != FAILED ]; then incomplete=1; fi
   printf '%s\t%s\t%s\t%s\t%s\n' "$index" "$id" "$name" "$render" "$interaction" >> "$output/results.tsv"
   if [ "$index" -lt "$total" ]; then
     "$cli" automate snapshot > "$output/current.txt"
@@ -516,4 +519,4 @@ if [ "$incomplete" -ne 0 ]; then
   echo "Traversal finished with untested or unsupported interactions; see results.tsv." >&2
   exit 2
 fi
-echo "Traversal finished; PRESENTED_UNVERIFIED is not a visual quality assessment."
+echo "Traversal finished; each specimen passed its interaction or presentation contract."

@@ -3,7 +3,7 @@
 <template name="yg-project-settings">
   <column gap="16">
     <text size="heading">Project settings</text>
-    <use template="yg-switch" label="Send a digest" checked="{enabled}"/>
+    <column key="{'digest-' ++ enabled}"><use template="yg-switch" label="Send a digest" checked="{enabled}"/></column>
     <if test="{enabled}"><use template="yg-select-picker" label="Frequency" value="{value}" expanded="{is_open}">
       <column><for each="choices" key="id" as="item"><menu-item selected="{item.selected}" disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</menu-item></for></column>
     </use></if>

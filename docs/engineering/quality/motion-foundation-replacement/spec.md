@@ -99,3 +99,7 @@ Use the restored Web controls as the reference for movement and timing. Keep sem
 ### Native surface edges during interaction
 
 Use neutral fill, contrast and spacing to define Native controls in ordinary appearance, including idle, hover, pressed, checked, open and disabled states. Suppress inherited outlines for ordinary buttons, radios, sliders, avatars and surfaces, and use row spacing instead of an implicit line on table rows. Keep drawn symbols, intentional separators and keyboard focus visible. Preserve high-contrast and existing public variant inputs. Qualify emitted drawing commands as well as actual pointer and keyboard interactions in the Native guide, in light and dark appearance.
+
+### Native catalog acceptance by specimen
+
+Every catalog ID has an explicit acceptance path. An interactive path must perform named actions and assert the resulting content, value, selection, dismissal or focus. A presentation-only path checks the named specimen content and frames, with image evidence for marks and loading states. A delivered click or a nonblank application window does not qualify a specimen. The audit records light and dark runtime evidence and keeps distinct statuses for observed presentation, tested interactions, and any unsupported behavior. Repairs preserve public templates, keyboard access, shared visual roles and agent playback.

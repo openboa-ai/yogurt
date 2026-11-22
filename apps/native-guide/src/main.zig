@@ -9,6 +9,7 @@ const drawer_surface = @import("yogurt/drawer-surface.zig");
 const layout_tokens = @import("yogurt/tokens.zig");
 const precision = @import("yogurt/precision-inputs.zig");
 const theme = @import("yogurt/theme.zig");
+const gradient_pixels = @import("yogurt/gradient-pixels.zig");
 const agent_vector = @import("yogurt/models/agent-vector.zig");
 const agent_preview = @import("agent-preview.zig");
 const canvas = sdk.canvas;
@@ -53,6 +54,8 @@ fn registerProjectMark(m: *Model, fx: *sdk.Effects(Msg)) void {
         m.meatball_picture = 2003;
         m.meatball_missing = false;
     } else |_| { m.meatball_picture = 0; m.meatball_missing = true; }
+    gradient_pixels.register(fx, 2004, false, .neutral, .neutral) catch {};
+    gradient_pixels.register(fx, 2005, true, .neutral, .neutral) catch {};
 }
 
 fn syncCount(m: *Model) void {
@@ -78,6 +81,16 @@ fn changePage(m: *Model, page: u8) void {
         animateEntrance(m, layout_tokens.travel_ms);
     }
     m.gallery_status = "Sample page changed; dates are illustrative";
+}
+
+fn syncFrequency(m: *Model, choice: u32) void {
+    m.settings_frequency = choice;
+    m.gallery_choices[0].selected = choice == 1;
+    m.gallery_choices[1].selected = choice == 2;
+    m.choices = &m.gallery_choices;
+    m.gallery_editor = @TypeOf(m.gallery_editor).init(m.gallery_choices[choice - 1].title);
+    m.value = m.gallery_editor.text();
+    m.is_open = false;
 }
 
 fn syncSidebar(m: *Model) void {
@@ -137,6 +150,22 @@ fn selectComponent(m: *Model, index: u32) void {
         m.project_image = meatball_picture;
         syncSidebar(m);
     }
+    if (std.mem.eql(u8, id, "project-settings")) {
+        m.is_open = false;
+        m.gallery_choices[0].title = "Weekly";
+        m.gallery_choices[1].title = "Daily";
+        syncFrequency(m, 1);
+    }
+    if (std.mem.eql(u8, id, "keypad")) {
+        m.keys = &gallery.number_keys;
+        m.gallery_editor.clear();
+        m.value = m.gallery_editor.text();
+    }
+    if (std.mem.eql(u8, id, "conversation-panel")) {
+        m.gallery_editor.clear();
+        m.value = m.gallery_editor.text();
+        m.unavailable = true;
+    }
     if (std.mem.eql(u8, id, "composer")) {
         m.gallery_editor.clear();
         m.value = m.gallery_editor.text();
@@ -153,6 +182,7 @@ fn selectComponent(m: *Model, index: u32) void {
     }
     m.gallery_list_open = show_list;
     m.gallery_dark = dark;
+    m.gallery_gradient = if (dark) 2005 else 2004;
     if (std.mem.eql(u8, id, "dialog") or std.mem.eql(u8, id, "drawer") or std.mem.eql(u8, id, "sheet")) {
         m.gallery_editor = @TypeOf(m.gallery_editor).init(gallery.edit_view_value);
         m.value = m.gallery_editor.text();
@@ -305,7 +335,10 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .gallery_previous => if (m.gallery_selected > 0) selectComponent(m, m.gallery_selected - 1),
         .gallery_next => if (m.gallery_selected + 1 < gallery.names.len) selectComponent(m, m.gallery_selected + 1),
         .gallery_list => m.gallery_list_open = !m.gallery_list_open,
-        .gallery_appearance => m.gallery_dark = !m.gallery_dark,
+        .gallery_appearance => {
+            m.gallery_dark = !m.gallery_dark;
+            m.gallery_gradient = if (m.gallery_dark) 2005 else 2004;
+        },
         .gallery_close_detail => m.gallery_detail_title = "",
         .drawer_drag => |drag| {
             switch (@as(canvas.WidgetDragPhase, @enumFromInt(drag.phase))) {
@@ -375,17 +408,18 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         },
         .toggle => {
             m.enabled = !m.enabled;
-            m.is_open = m.enabled;
+            const settings = std.mem.eql(u8, gallery.ids[m.gallery_selected], "project-settings");
+            m.is_open = !settings and m.enabled;
             m.gallery_status = "setting changed";
         },
         .open_choices => {
-            const is_picker = std.mem.eql(u8, gallery.ids[m.gallery_selected], "select");
+            const id = gallery.ids[m.gallery_selected];
+            const is_picker = std.mem.eql(u8, id, "select");
             const next = if (is_picker) !m.gallery_picker_open else !m.is_open;
             m.gallery_picker_open = next;
             m.is_open = next;
-            m.enabled = next;
+            if (!std.mem.eql(u8, id, "project-settings")) m.enabled = next;
             m.gallery_status = if (next) "Options opened" else "Options closed";
-            const id = gallery.ids[m.gallery_selected];
             if (isEditLayer(id)) {
                 m.drawer_distance = 0;
                 m.drawer_drag_origin = 0;
@@ -443,6 +477,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         },
         .toggle_all => {
             m.all_checked = !m.all_checked;
+            m.gallery_status = if (m.all_checked) "All choices selected" else "All choices cleared";
             for (&m.gallery_choices) |*choice| choice.selected = m.all_checked and !choice.disabled;
             m.choices = &m.gallery_choices;
         },
@@ -463,9 +498,27 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             syncSidebar(m);
             m.gallery_status = "Sample view added";
         },
-        .dismiss => { if (isEditLayer(gallery.ids[m.gallery_selected]) or isSmallSurface(gallery.ids[m.gallery_selected])) m.interface_motion.snap(1); m.gallery_picker_open = false; m.is_open = false; m.enabled = false; m.gallery_status = "state updated"; },
+        .dismiss => {
+            const id = gallery.ids[m.gallery_selected];
+            if (isEditLayer(id) or isSmallSurface(id)) m.interface_motion.snap(1);
+            m.gallery_picker_open = false;
+            m.is_open = false;
+            if (!std.mem.eql(u8, id, "project-settings")) m.enabled = false;
+            m.gallery_status = "state updated";
+        },
         .choose => |id| {
             const selected_id = gallery.ids[m.gallery_selected];
+            if (std.mem.eql(u8, selected_id, "project-settings")) {
+                if (id == 1 or id == 2) syncFrequency(m, id);
+                return;
+            }
+            if (std.mem.eql(u8, selected_id, "keypad")) {
+                if (id < '0' or id > '9') return;
+                const digit = [_]u8{@intCast(id)};
+                m.gallery_editor.apply(.{ .insert_text = &digit });
+                m.value = m.gallery_editor.text();
+                return;
+            }
             if (std.mem.eql(u8, selected_id, "agreement")) {
                 if (id == 0 or id > m.gallery_choices.len) return;
                 const choice = &m.gallery_choices[id - 1];
@@ -476,6 +529,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
                     if (!item.disabled and !item.selected) m.all_checked = false;
                 }
                 m.choices = &m.gallery_choices;
+                m.gallery_status = if (m.all_checked) "All choices selected" else "Selection updated";
                 return;
             }
             if (std.mem.eql(u8, selected_id, "rating")) {
@@ -579,7 +633,20 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             }
             m.gallery_editor.apply(event);
             m.value = m.gallery_editor.text();
-            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "field-error"))
+            const id = gallery.ids[m.gallery_selected];
+            if (std.mem.eql(u8, id, "collection-browser")) {
+                var count: usize = 0;
+                for (m.gallery_choices) |choice| {
+                    if (std.ascii.findIgnoreCase(choice.title, m.value) == null) continue;
+                    m.gallery_sidebar_filtered[count] = choice;
+                    count += 1;
+                }
+                m.has_results = count > 0;
+                m.choices = m.gallery_sidebar_filtered[0..count];
+            }
+            if (std.mem.eql(u8, id, "conversation-panel"))
+                m.unavailable = m.pending or std.mem.trim(u8, m.value, " \t\r\n").len == 0;
+            if (std.mem.eql(u8, id, "field-error"))
                 m.enabled = std.mem.trim(u8, m.value, " \t").len == 0;
             m.gallery_status = if (m.gallery_editor.truncated) "text limit reached" else "text changed";
         },
@@ -597,13 +664,46 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .decrement => if (m.gallery_count > 0) { m.gallery_count -= 1; syncCount(m); m.gallery_status = "quantity changed"; },
         .next_page => if (m.gallery_page < 1) { changePage(m, 1); },
         .previous_page => if (m.gallery_page > 0) { changePage(m, 0); },
-        .clear => { m.gallery_editor.clear(); m.value = m.gallery_editor.text(); m.gallery_status = "text cleared"; },
+        .clear => {
+            m.gallery_editor.clear();
+            m.value = m.gallery_editor.text();
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "collection-browser")) {
+                m.has_results = true;
+                m.choices = &m.gallery_choices;
+            }
+            m.gallery_status = "text cleared";
+        },
+        .backspace => {
+            m.gallery_editor.apply(.delete_backward);
+            m.value = m.gallery_editor.text();
+        },
+        .stop => {
+            m.pending = false;
+            m.unavailable = std.mem.trim(u8, m.value, " \t\r\n").len == 0;
+            m.gallery_status = "Sample reply stopped";
+        },
+        .discard => {
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "project-settings")) {
+                m.enabled = m.settings_saved_digest;
+                syncFrequency(m, m.settings_saved_frequency);
+                m.gallery_status = "Sample settings restored";
+            }
+        },
         .activate => {
             const id = gallery.ids[m.gallery_selected];
             if (std.mem.eql(u8, id, "dialog") or std.mem.eql(u8, id, "drawer") or std.mem.eql(u8, id, "sheet")) {
                 m.is_open = false;
                 m.interface_motion.snap(1);
                 m.gallery_status = gallery.edit_view_saved;
+            } else if (std.mem.eql(u8, id, "project-settings")) {
+                m.settings_saved_digest = m.enabled;
+                m.settings_saved_frequency = m.settings_frequency;
+                m.gallery_status = "Sample settings saved";
+            } else if (std.mem.eql(u8, id, "conversation-panel")) {
+                if (m.unavailable or m.pending) return;
+                m.pending = true;
+                m.unavailable = true;
+                m.gallery_status = "Preparing a sample reply";
             } else if (std.mem.eql(u8, id, "form")) {
                 m.gallery_status = if (std.mem.trim(u8, m.value, " \t").len > 0) "Sample view saved" else "Enter a view name";
             } else if (std.mem.eql(u8, id, "stepper")) {

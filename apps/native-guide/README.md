@@ -36,4 +36,14 @@ Preparation installs the current Native theme and fonts, then generates the comp
 
 Use the list to choose a component, the previous and next buttons to navigate, and the appearance button to switch themes. Hide the list for a narrow window. AgentAvatar and Gaze provide Kai and Sol previews with the six shared animation states; the agent row, sidebar, workspace and profile examples also use the live playback. Examples are local and some interactions are not yet implemented; loading a component does not establish its visual, accessibility, or motion coverage.
 
+## Verify the catalog
+
+Build a disposable guide host with `native build /tmp/yogurt-native-guide-host -Doptimize=Debug -Dautomation=true`. Keep the guide in the foreground during the run so keyboard input and animation frames reach the window.
+
+```sh
+bash checks/native-gallery-journey.sh "$(command -v native)" /tmp/yogurt-native-guide-host /tmp/yogurt-review-light
+```
+
+For a dark run, set `YOGURT_NATIVE_DARK=1` and use a fresh automation host and output directory. The script checks the installed inventory against the checkout and writes `results.tsv` with before and after captures. `PASS` covers the recorded input or animation scenario. `PRESENTATION` covers the required content of a static specimen. Review captures for clipping, contrast, spacing and rendered artwork.
+
 The application host includes SDK starter-derived code; see [LICENSE.native-sdk](LICENSE.native-sdk). The installed font retains its own license in the generated host.

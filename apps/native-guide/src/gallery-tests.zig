@@ -264,6 +264,23 @@ test "ordinary controls draw no perimeter across pointer states and retain keybo
                 }
             }
         }
+        const kinds = [_]canvas.WidgetKind{ .checkbox, .radio, .slider, .select, .text_field, .textarea, .accordion, .card, .panel };
+        for (kinds) |kind| {
+            for (states) |state| {
+                var surface_commands: [64]canvas.CanvasCommand = undefined;
+                var surface_builder = canvas.Builder.init(&surface_commands);
+                try canvas.emitWidgetTree(&surface_builder, .{
+                    .id = 1, .kind = kind, .state = state, .value = 0.4,
+                    .frame = Frame.init(8, 8, 124, 36), .text = "Weekly review",
+                }, tokens);
+                for (surface_builder.displayList().commands) |command| {
+                    if (command == .stroke_rect) {
+                        try std.testing.expect(command.stroke_rect.stroke.width == 0 or
+                            command.stroke_rect.stroke.fill.color.a == 0);
+                    }
+                }
+            }
+        }
         var commands: [32]canvas.CanvasCommand = undefined;
         var builder = canvas.Builder.init(&commands);
         try canvas.emitWidgetTree(&builder, .{

@@ -19,7 +19,7 @@ if (result.status !== 0) throw Error("Native catalog fixture generation failed."
 const gallery = join(kit, "apps/native-guide");
 copyFileSync(join(gallery, "app.json"), join(host, "app.json"));
 copyFileSync(join(gallery, "src/main.zig"), join(host, "src/main.zig"));
-for (const name of ["precision-inputs.zig", "drawer-surface.zig", "interface-motion.zig"]) {
+for (const name of ["precision-inputs.zig", "drawer-surface.zig", "interface-motion.zig", "gradient-pixels.zig"]) {
   copyFileSync(join(kit, "packages/native/controls", name), join(host, "src/yogurt", name));
 }
 copyFileSync(join(gallery, "src/agent-preview.zig"), join(host, "src/agent-preview.zig"));
@@ -55,6 +55,16 @@ for (const id of ["icon", "avatar"]) {
   if (!source.includes("<column>")) throw Error(`Missing specimen container in ${id}.`);
   writeFileSync(file, source.replace("<column>", '<column cross="center">'));
 }
+writeFileSync(join(host, "src/yogurt-catalog-test/asset-test.native"), `<import src="asset.native"/>
+<row main="center" cross="center" gap="16">
+  <use template="yg-asset" image_id="{project_picture}" label="Yogurt" width="36" height="36"/>
+  <use template="yg-asset" image_id="{meatball_picture}" label="Meatball" width="36" height="36"/>
+  <use template="yg-asset" image_id="{sourdough_picture}" label="Sourdough" width="36" height="36"/>
+</row>\n`);
+writeFileSync(join(host, "src/yogurt-catalog-test/gradient-test.native"), `<import src="gradient.native"/>
+<column cross="center"><use template="yg-gradient" image_id="{gallery_gradient}" label="Neutral gradient" width="240" height="100">
+  <row cross="center" main="center" gap="8"><image image="{project_picture}" label="Yogurt" width="32" height="32"/><text size="heading">Yogurt</text></row>
+</use></column>\n`);
 for (const id of ["agent-avatar", "gaze"]) {
   const file = join(host, "src/yogurt-catalog-test", `${id}-test.native`);
   const source = readFileSync(file, "utf8");
@@ -93,11 +103,11 @@ const findLine = (prefix) => {
 };
 const model = findLine("const Model = struct {").replace("days: []const Choice = &sample", "days: []const Choice = &november_days").replace("const Model = struct {", "pub const Model = struct { gallery_days: [31]Choice = december_days, gallery_choices: [2]Choice = sample, gallery_date_value: []const u8 = \"Choose a date\", project_missing: bool = true, sourdough_missing: bool = true, meatball_missing: bool = true, gallery_selected: u32 = 0, gallery_progress_count: u32 = 1, gallery_list_open: bool = true, gallery_dark: bool = false, gallery_status: []const u8 = \"Ready\", gallery_picker_open: bool = false, gallery_count: u8 = 0, gallery_count_text: []const u8 = \"0\", gallery_page: u8 = 0, gallery_page_text: []const u8 = \"1 of 2\", gallery_page_one: bool = true, gallery_page_two: bool = false, gallery_detail_title: []const u8 = \"\", gallery_detail_body: []const u8 = \"\", gallery_workspace_query: canvas.TextBuffer(128) = .{}, gallery_picker_query: canvas.TextBuffer(128) = .{}, gallery_profile_name: canvas.TextBuffer(128) = canvas.TextBuffer(128).init(\"Kai\"), gallery_profile_instructions: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"Review the release notes.\"), gallery_notification_mask: [2]bool = .{ true, true }, gallery_notification_rows: [2]Choice = sample, gallery_sidebar_query: canvas.TextBuffer(128) = .{}, gallery_sidebar_filtered: [5]Choice = .{ sample[0], sample[1], sample[0], sample[1], sample[0] }, gallery_sidebar_added: bool = false, gallery_sidebar_new_selected: bool = false, gallery_composer_mask: [2]bool = .{ true, true }, gallery_composer_visible: [2]Choice = sample, gallery_tool_selected: bool = false, gallery_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"Weekly\"), gallery_first_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"415\"), gallery_last_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"0182\"),");
 const brandModel = model.replace("project_image: u32 = 1", "project_image: u32 = 0")
-  .replace("project_picture: u32 = 1", "project_picture: u32 = 0")
+  .replace("project_picture: u32 = 1", "project_picture: u32 = 0, gallery_gradient: u32 = 2004")
   .replace("sourdough_picture: u32 = 2", "sourdough_picture: u32 = 0")
   .replace("meatball_picture: u32 = 3", "meatball_picture: u32 = 0")
   .replace("sidebar_destinations: []const Choice = &sample", "sidebar_destinations: []const Choice = &sidebar_sample")
-  .replace("pub const Model = struct {", "pub const Model = struct { interface_motion: @import(\"yogurt/interface-motion.zig\").Tween = .{}, drawer_distance: f32 = 0, drawer_drag_origin: f32 = 0, drawer_dragging: bool = false, agent_playback: ?agent_vector.Playback = null, agent_sol_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_sol_next_ms: u64 = 0, agent_kai_picture: u32 = 0, agent_sol_picture: u32 = 0, agent_kai_error: bool = false, agent_sol_error: bool = false, agent_error: bool = false, gallery_agent_choices: [2]Choice = .{ .{ .id = 1, .title = \"Kai\", .selected = true, .detail = \"Ready\", .summary = \"Ready\", .image_id = 0 }, .{ .id = 2, .title = \"Sol\", .detail = \"Working\", .summary = \"Working\", .image_id = 0 } }, code_editor: canvas.TextBuffer(6) = .{}, rating_score: u32 = 3, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
+  .replace("pub const Model = struct {", "pub const Model = struct { interface_motion: @import(\"yogurt/interface-motion.zig\").Tween = .{}, drawer_distance: f32 = 0, drawer_drag_origin: f32 = 0, drawer_dragging: bool = false, settings_saved_digest: bool = true, settings_frequency: u32 = 1, settings_saved_frequency: u32 = 1, agent_playback: ?agent_vector.Playback = null, agent_sol_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_sol_next_ms: u64 = 0, agent_kai_picture: u32 = 0, agent_sol_picture: u32 = 0, agent_kai_error: bool = false, agent_sol_error: bool = false, agent_error: bool = false, gallery_agent_choices: [2]Choice = .{ .{ .id = 1, .title = \"Kai\", .selected = true, .detail = \"Ready\", .summary = \"Ready\", .image_id = 0 }, .{ .id = 2, .title = \"Sol\", .detail = \"Working\", .summary = \"Working\", .image_id = 0 } }, code_editor: canvas.TextBuffer(6) = .{}, rating_score: u32 = 3, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
 const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { interface_tick: u64, agent_tick: u64, agent_set_state: u8, agent_set_kind: u8, agent_reduce_motion: bool, gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance, gallery_close_detail, drawer_drag: @import(\"yogurt/drawer-surface.zig\").Drag,");
 const zigString = (value) => JSON.stringify(value);
 const specimenContent = JSON.parse(readFileSync(join(kit, "catalog/specimens/components.json"), "utf8"));
@@ -110,6 +120,7 @@ const lines = [
   findLine("const Choice = struct {"), findLine("const sample = "), findLine("const sidebar_sample = "), findLine("const project_destinations = "),
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_days' : 'november_days'} = [_]Choice{ ${Array.from({ length: count }, (_, i) => `.{ .id = ${i + 1}, .title = \"${i + 1}\" }`).join(', ')} };`), brandModel, msg,
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_labels' : 'november_labels'} = [_][]const u8{ ${Array.from({ length: count }, (_, i) => `\"${index ? 'Dec' : 'Nov'} ${i + 1}, 2026\"`).join(', ')} };`),
+  `pub const number_keys = [_]Choice{ ${Array.from("1234567890", digit => `.{ .id = ${digit.charCodeAt(0)}, .title = "${digit}" }`).join(", ")} };`,
   "pub const Ui = canvas.Ui(Msg);",
   `pub const percentages = [_][]const u8{ ${Array.from({ length: 101 }, (_, index) => zigString(index + "%")).join(", ")} };`,
   "pub const PreviewLayout = enum { compact, field, wide };",

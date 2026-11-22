@@ -40,6 +40,7 @@ const examples = {
   button: samples.button,
   "project-sidebar": { custom_navigation: "true" },
   "icon-button": { label: "Add a view" },
+  "runtime-panel": { summary: "{runtime_status}" },
   composer: { label: samples.composer.label, value: "{value}", attachment_detail: samples.composer.detail },
   "agent-row": {
     label: samples["agent-row"].name,
@@ -265,6 +266,10 @@ for (const { id, native } of [...catalog, ...blocks]) {
     : id === "tabs"
       ? `<column gap="12">${use}<if test="{gallery_first_selected}"><text>Project overview</text></if>
          <else><text>Recent activity</text></else></column>`
+    : id === "keypad"
+      ? `<column gap="12"><text>{value}</text>${use}</column>`
+    : id === "attachment"
+      ? `<if test="{enabled}">${use}</if><else><text>Attachment removed</text></else>`
     : id === "composer"
       ? `<column gap="12">${use}<text size="sm" foreground="text_muted">${samples.composer.hint}</text></column>`
     : id === "project-sidebar"
