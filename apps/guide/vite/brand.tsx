@@ -1,6 +1,6 @@
 import {
   ButtonGroup, Disclosure, Grid, Heading, Inline, Link, NavigationList,
-  PageHeader, ProjectMark, Stack, Surface, Text,
+  ProjectMark, Stack, Surface, Text,
 } from "@openboa/yogurt";
 import tokens from "../../../design/tokens/brand.json";
 import { GuideSection } from "./guides/layout";
@@ -45,19 +45,21 @@ const resources = [
 export default function BrandPage() {
   return <main className="guide-brand">
     <Grid className="guide-brand-opening" gap={32}>
-      <PageHeader className="guide-home-intro" featured title="Yogurt"
-        leading={<ProjectMark project="yogurt" label="" size={104} />}
-        subtitle="ships with live cultures"
-        detail="Yogurt is OpenBoa’s design system and UI SDK, with shared design tokens, artwork, product language, and components for web and native apps."
-        action={<ButtonGroup label="Explore Yogurt">
+      <Stack className="guide-brand-title" gap={12}>
+        <Text variant="help">OpenBoa design system</Text>
+        <Heading level={1}>Yogurt</Heading>
+      </Stack>
+      <Stack className="guide-brand-intro" gap={16}>
+        <Text className="guide-brand-slogan">ships with <strong>live cultures</strong></Text>
+        <Text className="guide-brand-description">Shared design tokens, original artwork, product language, and a UI SDK for web and native apps.</Text>
+        <ButtonGroup label="Explore Yogurt">
           <Link href="/system" emphasis="soft" size="touch">Explore the design system</Link>
           <Link href="/components" emphasis="filled" size="touch">Browse components</Link>
-        </ButtonGroup>} />
-      <Grid className="guide-brand-artwork" gap={12} aria-hidden="true">
-        <ProjectMark project="yogurt" label="" size={232} />
-        <ProjectMark project="sourdough" label="" size={152} />
-        <ProjectMark project="meatball" label="" size={104} />
-      </Grid>
+        </ButtonGroup>
+      </Stack>
+      <Surface className="guide-brand-artwork" aria-hidden="true">
+        <ProjectMark project="yogurt" label="" size={456} />
+      </Surface>
     </Grid>
     <Stack gap={64} className="guide-brand-body">
       <NavigationList label="Brand guide sections" items={chapters} current="" orientation="horizontal" />
@@ -75,7 +77,7 @@ export default function BrandPage() {
         <Grid className="guide-brand-cards" gap={24}>
           {names.map(({ project, slogan, detail }) => <article key={project}>
             <Stack gap={8}>
-              <ProjectMark project={project} label="" size={48} />
+              <ProjectMark project={project} label="" size={32} />
               <Heading level={3}>{project}</Heading>
               <Text>{slogan}</Text>
               <Text variant="help">{detail}</Text>

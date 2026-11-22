@@ -7,57 +7,55 @@
 }
 
 .guide-brand-opening {
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr);
+  grid-template-areas: "title artwork" "intro artwork";
+  grid-template-rows: auto auto;
+  align-content: center;
   align-items: center;
-  min-block-size: clamp(25rem, 46vi, 35rem);
+  min-block-size: clamp(29rem, 44vi, 37rem);
+  padding-block: var(--boa-space-32) var(--boa-space-48);
   margin-block-end: var(--boa-space-32);
-  padding-block: var(--boa-space-32);
 }
-
-.guide-home-intro[data-featured] .yg-page-header-title {
-  gap: clamp(var(--yg-gap-stack), 2vi, var(--boa-space-24));
-}
-.guide-home-intro[data-featured] .yg-page-header-title .yg-heading {
-  font-size: clamp(3.5rem, 11vi, 10rem);
+.guide-brand-title { grid-area: title; }
+.guide-brand-title .yg-heading {
+  font-size: clamp(4.5rem, 14.3vi, 12.5rem);
   font-weight: var(--boa-role-weight-wordmark);
+  line-height: .86;
   letter-spacing: var(--boa-tracking-display);
 }
-.guide-home-intro .yg-page-header-title .yg-mark {
-  inline-size: clamp(2.75rem, 7.3vi, 6.5rem);
-  block-size: auto;
+.guide-brand-intro {
+  grid-area: intro;
+  inline-size: min(100%, 32rem);
+  padding-inline-start: clamp(var(--boa-space-24), 5.5vi, var(--boa-space-64));
 }
-.guide-home-intro .yg-page-header-subtitle {
-  max-inline-size: 22ch;
-  font-size: clamp(var(--boa-size-subheading), 3vi, var(--boa-size-headline));
-  line-height: 1.08;
+.guide-brand-intro .guide-brand-slogan {
+  font-size: clamp(var(--boa-size-title), 4vi, 3.5rem);
+  line-height: .99;
   letter-spacing: var(--boa-tracking-heading);
 }
-.guide-home-intro .yg-page-header-detail {
+.guide-brand-slogan strong {
+  display: block;
+  color: light-dark(var(--boa-color-slate-750), var(--boa-color-slate-300));
+  font-weight: var(--boa-role-weight-heading);
+}
+.guide-brand-intro .guide-brand-description {
   max-inline-size: 47ch;
+  color: var(--yg-muted);
   font-size: var(--boa-size-body);
   line-height: var(--boa-line-height-body);
 }
-
 .guide-brand-artwork {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  grid-template-rows: repeat(5, minmax(0, 1fr));
-  min-block-size: clamp(12rem, 30vi, 25rem);
-  max-inline-size: 28rem;
+  grid-area: artwork;
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  min-block-size: 26rem;
+  border-radius: var(--yg-radius-sheet);
+  background: light-dark(var(--boa-color-paper-100), var(--boa-color-gray-green-950));
 }
-.guide-brand-artwork .yg-mark { align-self: center; block-size: auto; max-inline-size: 100%; }
-.guide-brand-artwork .yg-mark:first-child {
-  grid-area: 1 / 2 / 6 / 6;
-  inline-size: min(100%, 15rem);
-  justify-self: center;
-}
-.guide-brand-artwork .yg-mark:nth-child(2) {
-  grid-area: 1 / 5 / 3 / 7;
-  inline-size: min(100%, 9rem);
-  justify-self: end;
-}
-.guide-brand-artwork .yg-mark:last-child {
-  grid-area: 4 / 1 / 6 / 3;
-  inline-size: min(80%, 6.5rem);
+.guide-brand-artwork .yg-mark {
+  inline-size: min(88%, 28.5rem);
+  block-size: auto;
 }
 
 .guide-brand-body { max-inline-size: 70rem; }
@@ -100,9 +98,15 @@
 .guide-brand .yg-inline { flex-wrap: wrap; }
 
 @media (max-width: 48rem) {
-  .guide-brand-opening { grid-template-columns: minmax(0, 1fr); min-block-size: 0; padding-block: var(--boa-space-24) 0; }
-  .guide-brand-artwork { min-block-size: 9rem; max-inline-size: min(100%, 16rem); margin-inline: auto; }
-
+  .guide-brand-opening {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "title" "intro" "artwork";
+    min-block-size: 0;
+    padding-block: var(--boa-space-24) 0;
+  }
+  .guide-brand-intro { padding-inline-start: 0; }
+  .guide-brand-artwork { min-block-size: 13rem; }
+  .guide-brand-artwork .yg-mark { inline-size: min(60%, 14rem); }
   .guide-company-layout { grid-template-columns: minmax(0, 1fr); padding-block: 0; }
 }
 @media (max-width: 34rem) {

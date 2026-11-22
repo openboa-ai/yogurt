@@ -14,7 +14,7 @@ The hosted guide uses one Vite entry and a persistent Yogurt shell for Brand, De
 
 The normal development server and online interactive guide build use Vite with React. Existing static guide documents and offline packaged examples remain part of the build; no server-side rendering, database, runtime service or production data is required. The SDK build and its individual imports stay independent of Vite and Next.js. Source changes must reach the deployed artifact through the Vercel build, and no credentials or local absolute paths belong in the output.
 
-The hosted Brand route composes the Yogurt project mark, featured PageHeader, section navigation, company signature, asset panels, resource links and disclosures using shared Yogurt components. Preserve the existing brand story and deep links. The masthead uses the shared section Navbar. Collapse it before links wrap, open a full-width list on compact screens, move focus into it when opened with the keyboard, and return focus on Escape. Keep shared page gutters and actions across hosted sections. Use the Yogurt project mark in the tab and keep the OpenBoa signature inside company content.
+The hosted Brand route composes the original Yogurt artwork, cover typography, section navigation, company signature, asset panels, resource links and disclosures using shared Yogurt components. Preserve the existing brand story and deep links. The masthead uses the shared section Navbar. Collapse it before links wrap, open a full-width list on compact screens, move focus into it when opened with the keyboard, and return focus on Escape. Keep shared page gutters and actions across hosted sections. Use the Yogurt project mark in the tab and keep the OpenBoa signature inside company content.
 
 ## Acceptance
 
@@ -34,7 +34,7 @@ Verify this boundary in Shared UI sources. Check the actual hosted menu after na
 
 ## Brand book and reference guide
 
-The home opens with an expressive Yogurt title and the original project artwork. Preserve the company story and brand language. Continue into a restrained manual with readable section titles, logo previews, plain usage instructions, and downloads beside the relevant assets. Keep the Yogurt mark at the left of the title and in the browser tab. The manual keeps its anchors and the original artwork files.
+The home identifies Yogurt as OpenBoa’s design system ahead of an expressive text-only title. The original Yogurt artwork has its own field on the cover. Other project marks belong in the smaller family examples. Preserve the company story and brand language. Continue into a restrained manual with readable section titles, logo previews, plain usage instructions, and downloads beside the relevant assets. Use the Yogurt mark in the shared masthead and browser tab. The manual keeps its anchors and the original artwork files.
 
 Use one masthead and one reading rhythm for the reference pages. A component page presents purpose, live specimen, usage guidance, and installation in that order. The template gallery and Studio keep their interactive examples. Use typography and alignment to group information. Reserve raised surfaces for a specimen, a distinct task, or the artwork's intended background.
 

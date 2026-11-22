@@ -26,8 +26,17 @@ async function checkGuide(browser, width) {
     await page.goto(base);
     await heading("Yogurt").waitFor();
     assert.equal(await page.locator("link[rel=icon]").getAttribute("href"), "/assets/projects/yogurt.svg");
-    await page.locator(".yg-page-header-subtitle").filter({ hasText: /^ships with live cultures$/ }).waitFor();
-    await page.getByText(/^Yogurt is OpenBoa’s design system and UI SDK/).waitFor();
+    await page.locator(".guide-brand-slogan").filter({ hasText: /^ships with live cultures$/ }).waitFor();
+    const cover = page.locator(".guide-brand-opening");
+    await cover.getByText("OpenBoa design system", { exact: true }).waitFor();
+    await cover.getByText(/a UI SDK for web and native apps/).waitFor();
+    const coverMarks = await cover.locator(".yg-mark").evaluateAll(marks => marks.map(mark => mark.getAttribute("src")));
+    assert.equal(coverMarks.length, 1, "the original artwork has one position on the cover");
+    assert.equal(coverMarks[0], await page.locator(".guide-identity .yg-mark").getAttribute("src"));
+    assert.equal(await cover.locator(".guide-brand-title .yg-mark").count(), 0);
+    const familyMarks = page.locator("#family .yg-mark");
+    assert.equal(await familyMarks.count(), 3);
+    assert.deepEqual(await familyMarks.evaluateAll(marks => marks.map(mark => mark.getAttribute("width"))), ["32", "32", "32"]);
     await page.getByText("Every limit has a shelf life.", { exact: true }).waitFor();
     const primaryActions = page.getByRole("group", { name: "Explore Yogurt" });
     assert.deepEqual(await primaryActions.getByRole("link").allTextContents(), ["Explore the design system", "Browse components"]);
@@ -39,7 +48,6 @@ async function checkGuide(browser, width) {
     assert(Math.abs(logo.x - intro.x) < 1, "the brand and page share a reading edge");
     await page.locator(".guide-masthead").evaluate(element => { element.dataset.checkPersistence = "yes"; });
 
-    assert.equal(await page.locator(".guide-home-intro .yg-mark").count(), 1);
     if (mobile) {
       await openMenu.focus();
       await page.keyboard.press("Enter");
