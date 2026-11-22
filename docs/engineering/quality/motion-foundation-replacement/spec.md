@@ -81,3 +81,9 @@ Draw the same drawer grip and retain both the close action and the drag threshol
 The Native font bundle uses static instances of the approved body and action weights from the same variable font used by the web. Retain the variable master and the installed filenames. Compare text, control sizing and clipping after regenerating the instances.
 
 Use the display size for desktop catalog titles and preserve the compact title size on narrow web pages. Bind Native composer input, card titles and agent metadata to the equivalent web size roles. Check the rendered titles and text bounds independently from font weight and line height.
+
+### Shared component typography
+
+Use Rethink Sans in both adapters. Text and the controls that use the SDK text face use the body instance. Actions that use the SDK button face use the action instance. Resolve shared role size, weight, leading and tracking from the UI tokens. Use the SDK's proportional line height and natural tracking for shared copy. The 12-point metadata role reserves the 13-point line box because the SDK lays it out as a scaled span within compact text. Keep the wide and narrow catalog title sizes, touch input legibility and independent brand typography.
+
+Apply the shared roles to component and catalog text, including state-dependent labels, fields, cards, dialogs and composed specimens. Preserve content, accessibility and interactions, including agent animation. Verify token generation for both adapters, compare text and line bounds on actual web and Native specimens and exercise the catalog for layout regressions. Present the branch preview for approval before merge.

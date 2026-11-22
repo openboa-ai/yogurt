@@ -58,20 +58,21 @@ for (const [name, layers] of Object.entries(ui.elevation)) {
   );
   css.push("  --yg-" + name + "-shadow: " + shadows.join(", ") + ";");
 }
-for (const [role, [size, weight]] of Object.entries(ui.types))
+const { lineHeightScale, lineBoxSize, tracking } = ui.typeMetrics;
+const types = Object.entries(ui.types).map(([role, [sizeKey, weightKey]]) => ({
+  role,
+  size: brand.type.size[sizeKey],
+  lineHeight: brand.type.size[lineBoxSize[role] ?? sizeKey] * lineHeightScale,
+  weight: brand.type.weight[weightKey] ?? brand.type.roleWeight[weightKey],
+}));
+css.push(`  --yg-type-leading: ${lineHeightScale};`, `  --yg-type-tracking: ${tracking}em;`);
+for (const { role, size, lineHeight, weight } of types) {
   css.push(
-    "  --yg-font-" +
-      role +
-      ": var(--boa-" +
-      (weight in brand.type.weight ? "weight" : "role-weight") +
-      "-" +
-      weight +
-      ") " +
-      brand.type.size[size] / 16 +
-      "rem/" +
-      brand.type.lineHeight[size] / 16 +
-      "rem var(--boa-font-family);",
+    `  --yg-type-${role}-size: ${size / 16}rem;`,
+    `  --yg-type-${role}-line: ${lineHeight / 16}rem;`,
+    `  --yg-font-${role}: ${weight} var(--yg-type-${role}-size)/var(--yg-type-${role}-line) var(--boa-font-family);`,
   );
+}
 css.push("}");
 css.push("@supports (animation-timing-function: linear(0, 1)) {", "  .yg-root {");
 for (const [role, profile] of Object.entries(ui.motionProfiles ?? {}))
@@ -134,13 +135,15 @@ const zig = [
   ...Object.entries(ui.motionProfiles ?? {}).map(
     ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v.duration + ";",
   ),
-  ...Object.entries(ui.types).flatMap(([role, [size, weight]]) => [
-    "pub const " + id(role) + "_type: f32 = " + brand.type.size[size] + ";",
-    "pub const " + id(role) + "_line_height: f32 = " + brand.type.lineHeight[size] + ";",
-    "pub const " + id(role) + "_weight: u16 = " + (brand.type.weight[weight] ?? brand.type.roleWeight[weight]) + ";",
+  `pub const type_leading: f32 = ${lineHeightScale};`,
+  `pub const type_tracking: f32 = ${tracking};`,
+  ...types.flatMap(({ role, size, lineHeight, weight }) => [
+    `pub const ${id(role)}_type: f32 = ${size};`,
+    `pub const ${id(role)}_line_height: f32 = ${lineHeight};`,
+    `pub const ${id(role)}_weight: u16 = ${weight};`,
   ]),
-  ...Object.entries(brand.type.tracking).map(
-    ([role, value]) => "pub const " + id(role) + "_tracking: f32 = " + value + ";",
+  ...Object.keys(brand.type.tracking).map(
+    (role) => `pub const ${id(role)}_tracking: f32 = type_tracking;`,
   ),
 ];
 writeFileSync(nativeDir + "/tokens.zig", zig.join("\n") + "\n");

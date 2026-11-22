@@ -401,59 +401,28 @@
     "arrive": "cubic-bezier(.23, 1, .32, 1)",
     "selection": "cubic-bezier(.2, .76, .26, 1.08)"
   },
+  "typeMetrics": {
+    "lineHeightScale": 1.25,
+    "tracking": 0,
+    "lineBoxSize": {
+      "meta": "help"
+    }
+  },
   "types": {
-    "action": [
-      "ui",
-      "ui"
-    ],
-    "body": [
-      "interface",
-      "body"
-    ],
-    "compact": [
-      "help",
-      "ui"
-    ],
-    "label": [
-      "help",
-      "ui"
-    ],
-    "help": [
-      "help",
-      "body"
-    ],
-    "meta": [
-      "caption",
-      "regular"
-    ],
-    "card-title": ["card-title", "heading"],
-    "heading": [
-      "subheading",
-      "heading"
-    ],
-    "display": [
-      "headline",
-      "heading"
-    ],
-    "touch": [
-      "body",
-      "regular"
-    ],
-    "editor": [
-      "editor",
-      "body"
-    ],
-    "reading": [
-      "body",
-      "body"
-    ],
-    "section": [
-      "section",
-      "heading"
-    ],
-    "value": [
-      "value",
-      "value"
-    ]
+    "action": ["ui", "ui"],
+    "body": ["interface", "body"],
+    "compact": ["help", "ui"],
+    "label": ["help", "body"],
+    "help": ["help", "body"],
+    "meta": ["caption", "body"],
+    "badge": ["caption", "body"],
+    "card-title": ["card-title", "body"],
+    "heading": ["subheading", "body"],
+    "display": ["headline", "body"],
+    "touch": ["body", "body"],
+    "editor": ["editor", "body"],
+    "reading": ["body", "body"],
+    "section": ["section", "body"],
+    "value": ["value", "body"]
   }
 }

@@ -15,7 +15,7 @@
   position: absolute; z-index: 10; inset-block-end: calc(100% + 12px); inset-inline-start: 50%;
   box-sizing: border-box; width: max-content; max-width: min(240px, 80vw); padding: 8px 12px;
   border: 0; border-radius: 11px; background: var(--yg-inverse); color: var(--yg-on-inverse);
-  font: var(--yg-font-label); line-height: 18px; overflow-wrap: anywhere; pointer-events: none;
+  font: var(--yg-font-label); overflow-wrap: anywhere; pointer-events: none;
   opacity: 0; visibility: hidden; transform: translate(-50%, var(--yg-layer-shift)) scale(.96);
   transform-origin: 50% 140%;
 }
@@ -48,7 +48,7 @@
 .yg-spring-symbol[data-marker="in-progress"] { background: var(--yg-signal-warning); }
 .yg-spring-symbol[data-marker="review"] { background: var(--yg-action); }
 .yg-spring-symbol[data-marker="done"] { background: var(--yg-signal-positive); }
-.yg-spring-value { flex: 1; display: grid; min-inline-size: 0; block-size: 100%; overflow: hidden; white-space: nowrap; font-weight: 500; }
+.yg-spring-value { flex: 1; display: grid; min-inline-size: 0; block-size: 100%; overflow: hidden; white-space: nowrap; font: var(--yg-font-body); }
 .yg-spring-value-roll { display: flex; grid-area: 1 / 1; min-inline-size: 0; align-items: center; gap: var(--yg-gap-row); }
 .yg-spring-value-roll[data-outgoing] { visibility: hidden; }
 .yg-spring-value-label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; }
@@ -68,7 +68,7 @@
 }
 .yg-spring-menu[data-side="top"] { --yg-spring-shift: var(--yg-layer-shift); }
 .yg-spring-viewport { position: relative; isolation: isolate; padding: var(--yg-inset-layer); }
-.yg-spring-option { position: relative; display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-menu-row); padding: 0 var(--yg-inset-compact); border-radius: var(--yg-radius-control); font-weight: 500; outline: none; cursor: pointer; box-sizing: border-box; }
+.yg-spring-option { position: relative; display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-menu-row); padding: 0 var(--yg-inset-compact); border-radius: var(--yg-radius-control); font: var(--yg-font-body); outline: none; cursor: pointer; box-sizing: border-box; }
 .yg-spring-option[data-state="checked"] { background: var(--yg-field); }
 .yg-spring-option[data-highlighted] { background: var(--yg-hover); }
 @media (pointer: coarse) {

@@ -19,7 +19,7 @@ body { margin: 0; }
   gap: var(--boa-space-8);
   color: var(--yg-text);
   font: var(--yg-font-heading);
-  letter-spacing: var(--boa-tracking-heading);
+  letter-spacing: var(--yg-type-tracking);
   text-decoration: none;
 }
 .guide-catalog-tools { display: none; }
@@ -67,6 +67,10 @@ body { margin: 0; }
 .guide-editorial-copy .chapter-nav { margin-block: var(--boa-space-16); }
 .guide-shell .guide-home-intro {
   padding-block: var(--boa-space-32) var(--boa-space-48);
+}
+.guide-home-intro[data-featured] .yg-page-header-title .yg-heading {
+  font-weight: var(--boa-role-weight-heading);
+  letter-spacing: var(--boa-tracking-display);
 }
 .guide-home-intro .yg-mark { inline-size: clamp(44px, 6vi, 70px); block-size: auto; }
 .guide-composition {

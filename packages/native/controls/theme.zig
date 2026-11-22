@@ -17,7 +17,7 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
         .blur = .{ .scrim = 0 },
         .radius = .{ .sm = ui.radius_small, .md = ui.radius_control, .lg = ui.radius_panel, .xl = ui.segment_track_radius },
         .metrics = .{ .control_height_sm = ui.size_compact, .control_height = ui.size_regular, .control_height_lg = ui.size_touch, .button_inset_sm = ui.inset_compact, .button_inset = ui.inset_regular, .button_inset_lg = ui.inset_roomy, .spinner_period_ms = ui.busy_ms, .row_extent = ui.list_row_height, .slider_track_height = ui.slider_track_height, .slider_thumb_width = ui.slider_thumb_size, .slider_thumb_height = ui.slider_thumb_size, .tabs_trigger_height = ui.segment_option_height, .tabs_trigger_inset = ui.segment_option_inset_inline, .tabs_gap = ui.segment_option_gap },
-        .typography = .{ .font_id = font_id, .mono_font_id = font_id, .button_font_id = button_font_id, .body_size = ui.body_type, .label_size = ui.help_type, .button_size = ui.action_type, .heading_size = ui.heading_type, .title_size = ui.heading_type, .display_size = ui.display_type },
+        .typography = .{ .font_id = font_id, .mono_font_id = font_id, .button_font_id = button_font_id, .body_size = ui.body_type, .label_size = ui.label_type, .button_size = ui.action_type, .heading_size = ui.heading_type, .title_size = ui.heading_type, .display_size = ui.display_type },
         .motion = .{ .fast_ms = ui.press_ms, .normal_ms = ui.travel_ms, .slow_ms = ui.panel_ms },
         .controls = .{
             .card = .{ .background = raised, .radius = ui.card_corner, .stroke_width = 0 },

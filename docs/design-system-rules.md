@@ -13,6 +13,8 @@ OpenBoa products share Yogurt tokens, basic components and common interaction be
 
 When a role or state is missing, assemble the closest supported parts and record the gap. Extend the existing shared part when the missing behavior belongs to its contract. A new entry earns its place when it serves a distinct task or interaction.
 
+Use a component typography role for copy, fields, labels, actions and values. Web and Native share Rethink Sans, role sizes, natural tracking and line heights. Apply the action face to action labels and the body face to other text. Use the metadata role for compact context and the badge role for single-line indicators. Keep brand and wordmark typography separate from interface roles.
+
 ## Choosing and combining controls
 
 The installed component catalog stores each reviewed control's `guidance` with its stable ID. It identifies an appropriate use, companion controls, an unsuitable use and states to check. The component guide presents the same guidance. Resolve the relevant IDs through the Yogurt skill's installed SDK lookup to retrieve the guidance alongside public imports or Native templates. The task pattern catalog describes complete workflows and their host-owned inputs.

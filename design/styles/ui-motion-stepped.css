@@ -1,5 +1,5 @@
 .yg-motion-range, .yg-motion-password, .yg-motion-dial { display: grid; gap: var(--yg-gap-stack); inline-size: min(100%, 360px); }
-.yg-motion-range-heading { display: flex; justify-content: space-between; gap: var(--yg-gap-panel); font-weight: 600; }
+.yg-motion-range-heading { display: flex; justify-content: space-between; gap: var(--yg-gap-panel); }
 .yg-motion-range-heading output { font-variant-numeric: tabular-nums; }
 .yg-motion-range input, .yg-motion-dial input { inline-size: 100%; accent-color: var(--yg-inverse); cursor: pointer; }
 .yg-motion-range input {
@@ -43,17 +43,16 @@
     box-shadow: var(--yg-lift-shadow);
   }
 }
-.yg-motion-range-ends, .yg-motion-dial-options { display: flex; justify-content: space-between; gap: var(--yg-gap-inline); color: var(--yg-muted); font-size: 0.8em; }
-.yg-motion-password label, .yg-motion-dial > label { font-weight: 600; }
+.yg-motion-range-ends, .yg-motion-dial-options { display: flex; justify-content: space-between; gap: var(--yg-gap-inline); color: var(--yg-muted); font: var(--yg-font-meta); }
 .yg-motion-password > input { box-sizing: border-box; inline-size: 100%; padding: var(--yg-inset-regular); border: 1px solid var(--yg-off); border-radius: var(--yg-radius-control); background: var(--yg-field); color: inherit; font: inherit; }
 .yg-motion-password-meter { display: flex; gap: var(--yg-gap-tight); }
 .yg-motion-password-meter span { flex: 1; height: 4px; border-radius: var(--yg-radius-inset); background: var(--yg-field);  }
 .yg-motion-password-meter span[data-active] { background: var(--yg-inverse); }
-.yg-motion-password-checks { font-size: .85em; color: var(--yg-muted); }
+.yg-motion-password-checks { color: var(--yg-muted); }
 .yg-motion-password-checks ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: var(--yg-gap-tight); }
 .yg-motion-password-checks li[data-passed] { color: var(--yg-text, inherit); }
 .yg-motion-checklist { border: 0; padding: 0; margin: 0; display: grid; gap: var(--yg-gap-inline); min-inline-size: 0; }
-.yg-motion-checklist legend { font-weight: 600; margin-bottom: 12px; }
+.yg-motion-checklist legend { margin-bottom: 12px; }
 .yg-motion-checklist-item { display: flex; gap: var(--yg-gap-row); align-items: center; padding: var(--yg-inset-regular); border: 1px solid var(--yg-off); border-radius: var(--yg-radius-control); cursor: pointer; }
 .yg-motion-checklist-item:has(input:checked) { background: var(--yg-field); }
 .yg-motion-checklist-item input { accent-color: var(--yg-inverse); }
@@ -61,9 +60,9 @@
 .yg-motion-dial-face { position: relative; display: grid; place-items: center; inline-size: 144px; aspect-ratio: 1; border: 1px solid var(--yg-off); border-radius: 50%; background: var(--yg-field); box-shadow: inset 0 0 0 8px var(--yg-surface, transparent); }
 .yg-motion-dial-marker { position: absolute; inset: 8px; border-radius: 50%; transform: rotate(var(--yg-dial-angle));  }
 .yg-motion-dial-marker::before { content: ""; position: absolute; inset-block-start: 0; inset-inline-start: calc(50% - 2px); inline-size: 4px; block-size: 13px; border-radius: var(--yg-radius-inset); background: var(--yg-inverse); }
-.yg-motion-dial-value { max-inline-size: 90px; text-align: center; font-weight: 600; }
+.yg-motion-dial-value { max-inline-size: 90px; text-align: center; }
 .yg-motion-dial-options { inline-size: 100%; flex-wrap: wrap; }
-.yg-motion-dial-options [data-selected] { color: var(--yg-text, inherit); font-weight: 600; }
+.yg-motion-dial-options [data-selected] { color: var(--yg-text, inherit); }
 
 .yg-motion-password > input { padding: var(--yg-inset-regular) var(--yg-inset-row); border-color: var(--yg-surface-edge); background: color-mix(in srgb, var(--yg-surface) 78%, var(--yg-field)); }
 .yg-motion-password > input:focus-visible { outline: 2px solid var(--yg-inverse); outline-offset: 2px; }
@@ -73,35 +72,34 @@
 .yg-motion-dial-face { border-color: var(--yg-surface-edge); background: color-mix(in srgb, var(--yg-surface) 65%, var(--yg-field)); box-shadow: inset 0 0 0 8px var(--yg-surface); }
 
 .yg-motion-range, .yg-motion-password, .yg-motion-dial { gap: var(--yg-gap-inline); }
-.yg-motion-range-heading, .yg-motion-password label, .yg-motion-dial > label { font-size: 13px; line-height: 18px; }
-.yg-motion-range-ends, .yg-motion-dial-options, .yg-motion-password-checks { font-size: 12px; line-height: 16px; }
-.yg-motion-password > input { min-height: 36px; padding: var(--boa-space-8) var(--yg-inset-regular); border-radius: var(--yg-radius-control); font-size: 14px; line-height: 20px; }
+.yg-motion-dial > label { font: var(--yg-font-label); }
+.yg-motion-password > input { min-height: 36px; padding: var(--boa-space-8) var(--yg-inset-regular); border-radius: var(--yg-radius-control); font: var(--yg-font-body); }
 .yg-motion-password-checks ul { margin-top: 8px; gap: var(--yg-gap-tight); }
-.yg-motion-checklist legend { margin-bottom: 8px; font-size: 13px; line-height: 18px; }
-.yg-motion-checklist-item { min-height: 36px; box-sizing: border-box; gap: var(--yg-gap-inline); padding: var(--boa-space-8) var(--yg-inset-regular); border-radius: var(--yg-radius-control); font-size: 14px; line-height: 20px; }
+.yg-motion-checklist legend { margin-bottom: 8px; font: var(--yg-font-label); }
+.yg-motion-checklist-item { min-height: 36px; box-sizing: border-box; gap: var(--yg-gap-inline); padding: var(--boa-space-8) var(--yg-inset-regular); border-radius: var(--yg-radius-control); font: var(--yg-font-body); }
 .yg-motion-dial-face { inline-size: 120px; }
-.yg-motion-dial-value { font-size: 14px; line-height: 20px; }
+.yg-motion-dial-value { font: var(--yg-font-body); }
 
 /* Compact task list, password meter, and single-value range arrangements. */
 .yg-motion-range { box-sizing: border-box; width: min(320px, 100%); padding: 18px 20px 24px; border-radius: 24px; background: var(--yg-surface); gap: 0; }
-.yg-motion-range-heading { font-size: 16px; line-height: 20px; }
+.yg-motion-range-heading { font: var(--yg-font-card-title); }
 .yg-motion-range-area { position: relative; height: 28px; margin-top: 52px; }
 .yg-motion-range-area input { position: absolute; inset: 0; height: 28px; min-height: 0; }
 .yg-motion-range:not([data-interval]) .yg-motion-range-area input {
   inset-block: calc((28px - var(--yg-slider-hit-height)) / 2);
   height: var(--yg-slider-hit-height);
 }
-.yg-motion-range-tip { position: absolute; bottom: 40px; transform: translateX(-50%); padding: 5px 10px; border-radius: 10px; background: var(--yg-inverse); color: var(--yg-on-inverse); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap; }
+.yg-motion-range-tip { position: absolute; bottom: 40px; transform: translateX(-50%); padding: 5px 10px; border-radius: 10px; background: var(--yg-inverse); color: var(--yg-on-inverse); font: var(--yg-font-label); font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap; }
 .yg-motion-range:not([data-interval]) .yg-motion-range-tip:dir(rtl) { transform: translateX(50%); }
 @media (forced-colors: none) {
   .yg-motion-range input::-webkit-slider-thumb { width: var(--yg-slider-thumb-size); height: var(--yg-slider-thumb-size); margin-top: calc((var(--yg-slider-track-height) - var(--yg-slider-thumb-size)) / 2); border: 0; background: var(--yg-inverse); }
   .yg-motion-range input::-moz-range-thumb { width: var(--yg-slider-thumb-size); height: var(--yg-slider-thumb-size); border: 0; background: var(--yg-inverse); }
 }
 .yg-motion-password { width: min(320px, 100%); gap: 0; }
-.yg-motion-password > label { margin: 0 0 8px 4px; font-size: 13px; color: var(--yg-muted); font-weight: 400; }
+.yg-motion-password > label { margin: 0 0 8px 4px; font: var(--yg-font-label); color: var(--yg-muted); }
 .yg-motion-password-field { box-sizing: border-box; display: flex; align-items: center; height: 52px; padding: 0 6px 0 16px; border-radius: 16px; background: var(--yg-surface); }
 .yg-motion-password-field:focus-within { outline: 2px solid var(--yg-inverse); outline-offset: 2px; }
-.yg-motion-password-field input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--yg-text); font: inherit; font-size: 16px; letter-spacing: .04em; }
+.yg-motion-password-field input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--yg-text); font: var(--yg-font-body); }
 .yg-motion-password-eye { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border: 0; border-radius: 12px; background: transparent; color: var(--yg-muted); cursor: pointer; }
 .yg-motion-password-eye:focus-visible { outline: 2px solid var(--yg-inverse); }
 .yg-motion-password-eye svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.9; }
@@ -123,7 +121,7 @@
 .yg-motion-password { container-type: inline-size; }
 .yg-motion-password-checks {
   display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
-  margin-top: 10px; font-size: 12px; min-block-size: 32px;
+  margin-top: 10px; font: var(--yg-font-meta); min-block-size: 32px;
 }
 .yg-motion-password-checks strong { display: inline-block; color: var(--yg-meter-color, var(--yg-muted)); white-space: nowrap; }
 .yg-motion-password-checks > [id] { min-inline-size: 0; text-align: end; }
@@ -135,8 +133,8 @@
 .yg-motion-checklist { box-sizing: border-box; width: min(320px, 100%); gap: 0; padding: 14px 16px 8px; border-radius: 24px; background: var(--yg-surface); }
 .yg-motion-checklist legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .yg-motion-checklist-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-.yg-motion-checklist-heading strong { font-size: 16px; }
-.yg-motion-checklist-heading span { color: var(--yg-muted); font-size: 12px; }
+.yg-motion-checklist-heading strong { font: var(--yg-font-card-title); }
+.yg-motion-checklist-heading span { color: var(--yg-muted); font: var(--yg-font-meta); }
 .yg-motion-checklist-heading b { color: var(--yg-text); font-variant-numeric: tabular-nums; }
 .yg-motion-checklist-item, .yg-motion-checklist-item:has(input:checked) { position: relative; min-height: var(--yg-list-row-height); gap: var(--yg-list-row-gap); padding: 0; border: 0; border-radius: 0; background: transparent; }
 .yg-motion-checklist-item > label { position: relative; flex: 1; display: flex; align-items: center; min-height: var(--yg-list-row-height); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;  }

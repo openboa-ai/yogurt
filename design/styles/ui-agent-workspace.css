@@ -59,7 +59,7 @@
 .yg-agent-row-signals { column-gap: var(--yg-gap-inline); }
 
 .yg-agent-row-name {
-  font: var(--yg-font-action);
+  font: var(--yg-font-body);
   overflow-wrap: anywhere;
 }
 
@@ -99,7 +99,6 @@
 }
 
 .yg-agent-row-new {
-  font-weight: var(--boa-weight-medium);
 }
 
 .yg-agent-workspace,

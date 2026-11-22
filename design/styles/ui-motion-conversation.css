@@ -55,13 +55,13 @@
 .yg-prompt-editor {
   position: relative;
   min-inline-size: 0;
-  block-size: var(--yg-prompt-editor-height, var(--boa-line-height-editor));
+  block-size: var(--yg-prompt-editor-height, var(--yg-type-editor-line));
   margin-block-end: 5px;
 }
 .yg-prompt-measure, .yg-prompt-editor textarea {
   box-sizing: border-box;
   inline-size: 100%;
-  min-block-size: var(--boa-line-height-editor);
+  min-block-size: var(--yg-type-editor-line);
   padding: 0;
   border: 0;
   font: var(--yg-font-editor);
@@ -130,12 +130,12 @@
 .yg-streaming-reply {
   position: relative; box-sizing: border-box; inline-size: var(--yg-reply-width, 100%); max-inline-size: 100%;
   block-size: var(--yg-reply-height, 40px); overflow: clip;
-  border-radius: var(--yg-radius-card); background: var(--yg-field); color: var(--yg-text); line-height: 22px;
+  border-radius: var(--yg-radius-card); background: var(--yg-field); color: var(--yg-text); font: var(--yg-font-body);
 }
 .yg-streaming-body, .yg-streaming-wait { position: absolute; inset: 9px auto auto 14px; }
 .yg-streaming-body { inline-size: max(0px, calc(var(--yg-reply-available, 100%) - 28px)); }
 .yg-streaming-word { display: inline-block; max-inline-size: 100%; }
-.yg-streaming-wait { color: var(--yg-muted); font-weight: 500; opacity: var(--yg-reply-waiting, 1); white-space: nowrap; }
+.yg-streaming-wait { color: var(--yg-muted); font: var(--yg-font-help); opacity: var(--yg-reply-waiting, 1); white-space: nowrap; }
 @keyframes yg-reply-word { from { opacity: 0; transform: translateY(6px); filter: blur(4px); } }
 .yg-ghost-field { box-sizing: border-box; width: min(380px, 100%); gap: var(--yg-gap-row); padding: var(--yg-inset-row) var(--yg-inset-panel) var(--yg-inset-panel); border-radius: var(--yg-radius-card); background: var(--yg-raised-surface); }
 .yg-ghost-head { display: flex; align-items: center; justify-content: space-between; gap: var(--yg-gap-inline); color: var(--yg-muted); }
@@ -145,7 +145,7 @@
 .yg-ghost-input { display: grid; grid-template-columns: minmax(0, 1fr); }
 .yg-ghost-input textarea, .yg-ghost-mirror {
   grid-area: 1 / 1; min-height: 3em; padding: 0; font: inherit;
-  font-size: clamp(16px, 2.4vi, 20px); line-height: 1.5; letter-spacing: -.01em;
+  font: var(--yg-font-editor);
   white-space: pre-wrap; overflow-wrap: anywhere;
 }
 .yg-ghost-mirror { position: relative; inset: auto; }
@@ -153,7 +153,7 @@
 .yg-ghost-input textarea { color: var(--yg-text); }
 .yg-ghost-mirror > span:first-child { color: transparent; }
 .yg-input.yg-ghost-input { display: grid; grid-template-columns: minmax(0, 1fr); box-sizing: border-box; padding: var(--boa-space-8) var(--yg-inset-regular); }
-.yg-input.yg-ghost-input textarea, .yg-input.yg-ghost-input .yg-ghost-mirror { grid-area: 1 / 1; min-width: 0; min-height: 3em; padding: 0; font: inherit; font-size: clamp(16px, 2.4vi, 20px); line-height: 1.5; letter-spacing: -.01em; white-space: pre-wrap; overflow-wrap: anywhere; }
+.yg-input.yg-ghost-input textarea, .yg-input.yg-ghost-input .yg-ghost-mirror { grid-area: 1 / 1; min-width: 0; min-height: 3em; padding: 0; font: var(--yg-font-editor); white-space: pre-wrap; overflow-wrap: anywhere; }
 .yg-input.yg-ghost-input .yg-ghost-mirror { position: relative; inset: auto; }
 .yg-input.yg-ghost-input textarea { position: relative; align-self: stretch; resize: none; overflow: hidden; color: var(--yg-text); }
 .yg-ghost-field .yg-input.yg-ghost-input, .yg-ghost-field .yg-input.yg-ghost-input:focus-within { padding: 0; border-radius: 0; background: transparent; }

@@ -11,6 +11,25 @@ const manifest = json("catalog/brand.json"),
   terms = json(manifest.sources.words).terms;
 const webTokens = readFileSync("design/styles/ui-tokens.css", "utf8");
 const nativeTokens = readFileSync("packages/native/controls/tokens.zig", "utf8");
+const { lineHeightScale, lineBoxSize, tracking } = ui.typeMetrics;
+assert.equal(lineHeightScale, 1.25);
+assert.equal(tracking, 0);
+assert(webTokens.includes(`--yg-type-tracking: ${tracking}em;`));
+assert(nativeTokens.includes(`pub const type_tracking: f32 = ${tracking};`));
+for (const [role, [sizeKey, weightKey]] of Object.entries(ui.types)) {
+  const size = base.type.size[sizeKey];
+  const lineHeight = base.type.size[lineBoxSize[role] ?? sizeKey] * lineHeightScale;
+  const weight = base.type.roleWeight[weightKey];
+  const nativeRole = role.replaceAll("-", "_");
+  assert(Number.isFinite(size) && lineHeight >= size, role);
+  assert(["ui", "body"].includes(weightKey), role);
+  assert(webTokens.includes(`--yg-type-${role}-size: ${size / 16}rem;`), role);
+  assert(webTokens.includes(`--yg-type-${role}-line: ${lineHeight / 16}rem;`), role);
+  assert(webTokens.includes(`--yg-font-${role}: ${weight} var(--yg-type-${role}-size)/var(--yg-type-${role}-line) var(--boa-font-family);`), role);
+  assert(nativeTokens.includes(`pub const ${nativeRole}_type: f32 = ${size};`), role);
+  assert(nativeTokens.includes(`pub const ${nativeRole}_line_height: f32 = ${lineHeight};`), role);
+  assert(nativeTokens.includes(`pub const ${nativeRole}_weight: u16 = ${weight};`), role);
+}
 for (const [name, profile] of Object.entries(ui.motionProfiles ?? {})) {
   assert(Number.isSafeInteger(profile.duration) && profile.duration > 0, name);
   assert(Object.hasOwn(ui.easing, profile.fallback), name);

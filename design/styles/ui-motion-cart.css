@@ -72,7 +72,6 @@
 .yg-cart-stepper .yg-icon { inline-size: var(--yg-glyph); block-size: var(--yg-glyph); flex: none; }
 .yg-cart-quantity {
   font: var(--yg-font-action);
-  font-weight: var(--boa-weight-semibold);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }

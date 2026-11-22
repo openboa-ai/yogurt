@@ -319,8 +319,6 @@
   border-radius: calc(var(--yg-otp-slot-radius) * (1 - var(--yg-otp-merge)));
   background: transparent;
   font: var(--yg-font-heading);
-  line-height: 1;
-  font-weight: var(--boa-role-weight-body);
   font-variant-numeric: tabular-nums;
 
 }

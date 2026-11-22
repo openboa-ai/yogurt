@@ -170,7 +170,7 @@
 
 .yg-mention { inline-size: min(100%, 320px); }
 .yg-mention-surface { box-sizing: border-box; gap: var(--boa-space-12); padding: var(--boa-space-16); border-radius: var(--yg-radius-sheet); }
-.yg-mention textarea { min-block-size: 64px; font: var(--yg-font-reading); line-height: 32px; }
+.yg-mention textarea { min-block-size: 64px; font: var(--yg-font-reading); }
 .yg-mention-hint { min-block-size: 36px; display: flex; align-items: center; }
 .yg-mention-list { box-sizing: border-box; }
 .yg-mention-list button { box-sizing: border-box; gap: 10px; }
