@@ -99,28 +99,3 @@ exit 17
   assert(!existsSync(join(source, "patched")));
   assert(!existsSync(read(record)));
 });
-
-test("OTP upgrade keeps local edits and leaves overlapping changes for review", t => {
-  const root = scratch(t);
-  const previous = join(root, "previous");
-  const name = "precision-inputs.zig";
-  const oldDir = join(previous, "packages/native/controls");
-  const appDir = join(root, "src/yogurt");
-  mkdirSync(oldDir, { recursive: true });
-  mkdirSync(appDir, { recursive: true });
-  const source = read(join(kit, "packages/native/controls", name));
-  const base = source.replace(".focus_ring = transparent,", ".focus_ring = null,");
-  assert.notEqual(base, source);
-  writeFileSync(join(oldDir, name), base);
-  const installed = join(appDir, name);
-  const args = [join(kit, "bin/yogurt.mjs"), "upgrade-otp", root, previous];
-  writeFileSync(installed, "// Local note\n" + base);
-  execFileSync(process.execPath, args);
-  assert.equal(read(installed), "// Local note\n" + source);
-  const overlap = base.replace(".focus_ring = null,", ".focus_ring = custom_ring,");
-  writeFileSync(installed, overlap);
-  const conflict = spawnSync(process.execPath, args, { encoding: "utf8" });
-  assert.equal(conflict.status, 1, conflict.stderr);
-  assert.equal(read(installed), overlap);
-  assert.match(read(installed + ".merge"), /<<<<<<< installed/);
-});

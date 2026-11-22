@@ -25,8 +25,6 @@ npx yogurt native build .
 
 The build command copies the framework, applies the bundled patch automatically and builds against that copy. It removes the temporary framework when the command exits. The original SDK remains available for other projects. Use `yogurt native dev .`, `yogurt native test .` or `yogurt native check . --strict` for the corresponding Native commands. Compiling the public OTP renderer against an unpatched framework reports an error with the build command to use.
 
-Existing apps with a copied typed OTP use `npx yogurt upgrade-otp . /path/to/previous-yogurt`. Provide the exact previous kit release used for the installed source. The command preserves edits that merge cleanly. If changes overlap, it writes `precision-inputs.zig.merge` for review and leaves the installed source intact.
-
 Use `npx yogurt native package .` for macOS releases. It builds against the patched framework and passes that binary to the packager. Put this command in the app's release job. Projects with custom packaging can package the output of `yogurt native build .` directly.
 
 Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`. Existing markup templates retain their original call signatures.

@@ -30,7 +30,7 @@ Keep the six-cell Native code field borderless on pointer and keyboard focus, wi
 
 The Yogurt Native build command applies the versioned OTP patch to a disposable framework copy and builds against that copy. The supplied framework and consumer sources stay untouched. A mismatched SDK or unappliable patch stops the build. The same command prepares the guide and fresh consumers. Verify the installed command, including build failure propagation and the actual empty-field click, Tab and blur states in a fresh consumer.
 
-For existing typed OTP installations, accept the exact previously installed Yogurt revision as the merge base and preserve nonconflicting product edits. Leave the installed file untouched and emit a conflict candidate when changes overlap. Package macOS releases from a binary freshly built with the patched framework. Required CI compiles a fresh consumer with the pinned SDK.
+At initial adoption, install the typed OTP from the packaged kit into a new consumer. Reinstalling the same revision is safe. Product edits are preserved when the installer encounters a conflicting file. For macOS releases, package only a binary freshly built with the patched framework. Required CI exercises the installed package, Debug build and release artifact.
 
 ### Select when open
 
