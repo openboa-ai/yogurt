@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -74,5 +74,21 @@ test("the Native guide embeds the installed controls and recipes and calls the p
       assert(gallery.includes(`pub const ${name} = @import("yogurt/${module}").${symbol};`), item.id);
       assert(app.includes(`gallery.Views.${name}(`), item.id);
     }
+  }
+});
+
+test("the hosted Vite guide composes Yogurt instead of embedding a separate UI", () => {
+  const roots = ["apps/guide/vite", "apps/guide/examples"];
+  const offlineOnly = /^(?:motion-extra-(?:cards|controls|gestures|utilities)|spring-field)\.tsx$/;
+  const files = roots.flatMap(root => readdirSync(join(kit, root), { recursive: true })
+    .filter(path => typeof path === "string" && /\.tsx?$/.test(path) && !offlineOnly.test(path))
+    .map(path => join(root, path)));
+  files.push("apps/guide/agent-family.tsx", "apps/guide/ui-catalog.tsx", "apps/guide/brand-tokens.tsx");
+  for (const path of files) {
+    const source = read(join(kit, path));
+    assert.doesNotMatch(source, /dangerouslySetInnerHTML|\.html\?raw|(?:from|import)\s+["'][^"']*\/runtime\//,
+      path + " embeds an offline page");
+    assert.doesNotMatch(source, /<(?:button|input|select|textarea|a|details|h[1-6]|p)(?=[\s>])/,
+      path + " should use the matching public Yogurt component");
   }
 });

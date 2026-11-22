@@ -34,7 +34,7 @@ export function BrandTokens() {
             <ProjectMark project="sourdough" />
             <ProjectMark project="meatball" />
           </Inline>
-          <p>{brand.rules[0].body}</p>
+          <Text>{brand.rules[0].body}</Text>
           <Text variant="help">{brand.rules[1].body}</Text>
         </section>
         <section>

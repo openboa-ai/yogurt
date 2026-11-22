@@ -76,7 +76,7 @@ export function SidebarExample({ id }: { id: string }) {
             <Heading>{active}</Heading>
             <Text variant="help">{id === "agent-sidebar" ? "Read the conversation with " + active + "." : "Review the latest work in " + active + "."}</Text>
           </Stack>
-          {result && <p role="status">{result}</p>}
+          {result && <Text role="status">{result}</Text>}
           {id === "sidebar-layout" && <Button emphasis="quiet" onClick={() => select("overview")}>Return to overview</Button>}
         </Stack>
       </SidebarLayout>

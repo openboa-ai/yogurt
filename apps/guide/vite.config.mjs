@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
-import { matchGuidePath } from "./guide-routes.mjs";
+import { canonicalGuideUrl } from "./guide-routes.mjs";
 import { generateTokens } from "../../scripts/tokens/generate.mjs";
 
 const repo = fileURLToPath(new URL("../..", import.meta.url));
@@ -23,7 +23,7 @@ function watchTokens() {
 function guideRoutes() {
   const configure = (server) => server.middlewares.use((request, _response, next) => {
     const url = new URL(request.url || "/", "http://localhost");
-    if (matchGuidePath(url.pathname)) request.url = "/index.html" + url.search;
+    if (canonicalGuideUrl(url)) request.url = "/index.html" + url.search;
     next();
   });
   return {
@@ -68,6 +68,7 @@ export default defineConfig({
     include: ["react", "react/jsx-runtime", "react-dom", "react-dom/client", "lodash.debounce", "@openai/apps-sdk-ui > react/jsx-runtime"],
   },
   server: { fs: { allow: [repo] } },
+  preview: { port: 5273 },
   build: {
     outDir: resolve(repo, ".vite-guide"),
     emptyOutDir: true,

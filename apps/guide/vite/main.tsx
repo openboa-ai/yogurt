@@ -1,7 +1,7 @@
 import { lazy, startTransition, Suspense, useEffect, useLayoutEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { IconButton, Link, Navbar, PageHeader, ProjectMark, Text, Yogurt } from "@openboa/yogurt";
-import "../../../design/styles/components.css";
+import "../../../design/styles/brand.css";
 import "../../../design/styles/ui.css";
 import "./shell.css";
 import { guidePages, canonicalGuideUrl, matchGuidePath } from "../guide-routes.mjs";
@@ -31,15 +31,17 @@ function hostedUrl(url: URL) {
 }
 
 const BrandPage = lazy(() => import("./brand"));
-const EditorialPage = lazy(() => import("./editorial").then(module => ({ default: module.EditorialPage })));
+const SystemGuide = lazy(() => import("./guides/system"));
+const DesignSources = lazy(() => import("./guides/library"));
+const AdoptionGuide = lazy(() => import("./guides/adoption"));
+const Playbook = lazy(() => import("./guides/playbook"));
+const EmojiGallery = lazy(() => import("./guides/emoji"));
 const Catalog = lazy(() => import("./components"));
 const Templates = lazy(() => import("./templates"));
 const Examples = lazy(() => import("./examples"));
 const AgentFamily = lazy(() => import("./agents"));
 const destinations = guidePages.filter(page => !page.parent && !page.retired)
   .map(page => ({ id: page.id, label: page.title, href: page.path }));
-const editorialPages = ["system", "library", "adoption", "playbook", "emoji"] as const;
-type EditorialId = typeof editorialPages[number];
 type Appearance = "light" | "dark";
 
 function currentUrl() {
@@ -87,9 +89,13 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
     return () => cancelAnimationFrame(frame);
   }, [initialUrl]);
 
-  if (editorialPages.includes(id as EditorialId)) return <EditorialPage id={id as EditorialId} />;
   switch (id) {
     case "brand": return <BrandPage />;
+    case "system": return <SystemGuide />;
+    case "library": return <DesignSources />;
+    case "adoption": return <AdoptionGuide />;
+    case "playbook": return <Playbook />;
+    case "emoji": return <EmojiGallery />;
     case "components": return <Catalog guideAppearance={appearance} />;
     case "templates": return <Templates id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
     case "examples": return <Examples id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;

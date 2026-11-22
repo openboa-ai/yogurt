@@ -15,3 +15,9 @@ The initial gallery pass rendered 30 template or study routes at 390 and 1440 pi
 - The transcript displays its reading anchor even before there is material below the current reading position. A follow-up should verify when the affordance is useful and define its focus behavior before changing the shared component.
 - The chart study uses the available line and bar APIs. Filled areas, stacked series and percentage stacks would require a separate chart contract and data accessibility evidence.
 - Generated composition code demonstrates the card, presentation options and action group. The demo's sample data and task state remain host inputs.
+
+## Hosted guide composition
+
+The production Vite build used the same Yogurt masthead across all hosted route families. The selected destination retained its surface treatment without an underline at 320, 900 and 1440 pixels. Old handbook, control, wordmark and task-state URLs opened the matching React page. The browser exercised color selection, roster search and recovery, project emoji contour, agent playback, emoji search and artwork variants, the playbook menu and profile actions.
+
+The component sweep opened all 168 hosted component and block routes at 320 pixels in dark appearance and 1440 pixels in light appearance. It checked the specimen, the guide title, horizontal overflow, the masthead treatment and browser errors. The interactive template check passed all 64 compositions at 390 and 1440 pixels. Shared UI sources checks the source boundary and runs the hosted shell test against a production Vite build.

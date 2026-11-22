@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
 import {
-  ButtonGroup, Card, Disclosure, Heading, Inline, Link, NavigationList,
+  ButtonGroup, Card, Disclosure, Grid, Heading, Inline, Link, NavigationList,
   PageHeader, ProjectMark, Stack, Surface, Text,
 } from "@openboa/yogurt";
+import tokens from "../../../design/tokens/brand.json";
+import { GuideSection } from "./guides/layout";
 import "./brand.css";
 
 const chapters = [
@@ -41,15 +42,6 @@ const resources = [
   ] },
 ];
 
-function BrandSection({ id, title, children }: { id: string; title: string; children: ReactNode }) {
-  return <section id={id} aria-labelledby={id + "-title"}>
-    <Stack gap={16}>
-      <Heading id={id + "-title"}>{title}</Heading>
-      {children}
-    </Stack>
-  </section>;
-}
-
 export default function BrandPage() {
   return <main className="guide-brand">
     <PageHeader className="guide-home-intro" featured title="Yogurt"
@@ -71,20 +63,20 @@ export default function BrandPage() {
           </Stack>
         </Surface>
       </section>
-      <BrandSection id="family" title="The OpenBoa family">
+      <GuideSection id="family" title="The OpenBoa family">
         <Text>Write OpenBoa with a capital O and B in company introductions and credits. Lead with the project’s own name when someone is using it. Keep repository names lowercase.</Text>
-        <div className="guide-brand-cards">
+        <Grid className="guide-brand-cards" gap={12}>
           {names.map(({ project, slogan, detail }) => <Card key={project} title={project} description={slogan}>
             <Stack gap={12}>
               <ProjectMark project={project} label="" size={36} />
               <Text>{detail}</Text>
             </Stack>
           </Card>)}
-        </div>
+        </Grid>
         <Text>Kai and Sol each have a familiar silhouette. Use the name and silhouette together where someone chooses or returns to an agent.</Text>
         <Inline gap={16}><Link href="/library#emoji">Project emoji</Link><Link href="/agents">Agent family</Link></Inline>
-      </BrandSection>
-      <BrandSection id="voice" title="Voice">
+      </GuideSection>
+      <GuideSection id="voice" title="Voice">
         <Text>“Shelf life” gives a big claim an ordinary unit of time. The About copy follows it back to the person whose idea arrived early.</Text>
         <Text>A repository description can reward a second reading. Someone looking for a missing agent needs the result and a way forward. The roster says <strong>No matching agents.</strong> The button reads <strong>Clear filters</strong>.</Text>
         <Disclosure label="Plainspoken copy study">
@@ -94,42 +86,42 @@ export default function BrandPage() {
           </Stack>
         </Disclosure>
         <Link href="/content/terms.json" download>English terms by context</Link>
-      </BrandSection>
-      <BrandSection id="logo" title="Logo">
+      </GuideSection>
+      <GuideSection id="logo" title="Logo">
         <Text>The small notch on Kai’s top edge repeats nine times around one uneven outline. It gives the company and its agents a family resemblance. The company signs with Upright 9.</Text>
-        <div className="guide-brand-cards">
+        <Grid className="guide-brand-cards" gap={12}>
           {artwork.map(item => <Card key={item.href} title={item.title} description={item.detail}
             action={<Link href={item.href} download emphasis="soft" aria-label={`Download ${item.title.toLowerCase()} SVG`}>Download SVG</Link>}>
             <Surface className="guide-brand-art">
               <img src={item.href} width={item.width} height={item.height} alt="" />
             </Surface>
           </Card>)}
-        </div>
-        <Disclosure label="Signature proportions and placement">
+        </Grid>
+        <Stack id="wordmark-study"><Disclosure label="Signature proportions and placement">
           <Stack gap={12}>
             <Text>Use the horizontal SVG as one piece. In the B2 construction, the flat capital B is 60 units high and the visible symbol is 80. The symbol-to-name gap is 18 units. The symbol’s center sits 3 units below the capital’s center.</Text>
             <Surface className="guide-brand-art"><img src={signature} width={160} height={32} alt="OpenBoa horizontal signature on paper" /></Surface>
             <Text variant="help">The supplied ink-blue and dark-lettered artwork reads on paper. Use a paper surface when placing it on a dark page.</Text>
           </Stack>
-        </Disclosure>
-      </BrandSection>
-      <BrandSection id="type" title="Type and color">
-        <Text>Use Rethink Sans for headings, paragraphs and interface labels. Use weight 570 for headings, 425 for paragraphs and 550 for interface labels. The outlined OpenBoa signature uses weight 760. Use tabular figures for IDs and times.</Text>
+        </Disclosure></Stack>
+      </GuideSection>
+      <GuideSection id="type" title="Type and color">
+        <Text>Use Rethink Sans for headings, paragraphs and interface labels. Use weight {tokens.type.roleWeight.heading} for headings, {tokens.type.roleWeight.body} for paragraphs and {tokens.type.roleWeight.ui} for interface labels. The outlined OpenBoa signature uses weight {tokens.type.roleWeight.wordmark}. Use tabular figures for IDs and times.</Text>
         <Text>Upright 9 defines OpenBoa’s primary color, Ink blue (<code>slate.750</code>). Kai’s sage and Sol’s coral come from the same numbered palette as the interface.</Text>
-        <Inline gap={16}><Link href="/system#type">Type scale</Link><Link href="/system#color">Shared palette</Link><Link href="/examples/signature/index.html">Wordmark study</Link></Inline>
-      </BrandSection>
-      <BrandSection id="files" title="Files">
-        <div className="guide-brand-cards">
+        <Inline gap={16}><Link href="/system#type">Type scale</Link><Link href="/system#color">Shared palette</Link><Link href="/#wordmark-study">Wordmark study</Link></Inline>
+      </GuideSection>
+      <GuideSection id="files" title="Files">
+        <Grid className="guide-brand-cards" gap={12}>
           {resources.map(({ label, links }) => <Card key={label} title={label}>
             <Stack gap={8}>{links.map(link => <Link key={link.href} href={link.href} download>{link.label}</Link>)}</Stack>
           </Card>)}
-        </div>
+        </Grid>
         <Inline gap={16}>
           <Link href="/library">Design sources</Link>
           <Link href="/adoption#intent">Use in an intent</Link>
           <Link href="/assets/fonts/rethink-sans/OFL.txt">Typeface license</Link>
         </Inline>
-      </BrandSection>
+      </GuideSection>
     </Stack>
   </main>;
 }

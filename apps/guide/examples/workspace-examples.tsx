@@ -3,13 +3,14 @@ import { useState } from "react";
 import {
   Composer, VoiceControl, Stack, Status,
   type DraftAttachment, type VoiceState,
+  Text,
 } from "@openboa/yogurt";
 import { ArtifactLibrary, type LibraryArtifact } from "../../../packages/recipes/artifact-library/web";
 import { ProjectAccess, type ProjectRole } from "../../../packages/recipes/project-access/web";
 
 const sources: LibraryArtifact[] = [
   { id: "summary", name: "November review", kind: "page", detail: "Today", pinned: true,
-    preview: <p>Review the draft and send the open questions to the project owner.</p> },
+    preview: <Text>Review the draft and send the open questions to the project owner.</Text> },
   { id: "brief", name: "Launch brief.pdf", kind: "file", detail: "PDF · 1.2 MB" },
   { id: "research", name: "Interview notes", kind: "link", detail: "Link · Yesterday" },
   { id: "library", name: "Support workspace", kind: "app", detail: "Connected source" },
@@ -54,7 +55,7 @@ export function WorkspaceExample({ id }: { id: string }) {
           setDraft("");
           setFiles([]);
         }} />
-      <p className="yg-help">{samples.composer.hint}</p>
+      <Text variant="help">{samples.composer.hint}</Text>
       {result && <Status>{result}</Status>}
     </Stack>
   );

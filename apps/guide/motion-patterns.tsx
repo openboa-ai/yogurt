@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  ActionMenu, Button, Command, Icon, IconButton, InputOTP,
+  ActionMenu, Button, Command, Disclosure, Icon, IconButton, InputOTP,
   ProjectMark, SearchField, Link, SegmentedControl, SidebarItem, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
 } from "@openboa/yogurt";
 import {
@@ -10,7 +10,8 @@ import {
   MorphTooltip, MorphTooltipBar, PasswordStrength, PlanSwitch, PromptBox, RangeSlider, SlideConfirm,
   SpringDropdown, StatCard, StorageMeter, StreamingReply, TaskList, ThinkingIndicator,
 } from "@openboa/yogurt/motion-patterns";
-import { extraCards, ReviewerProfile } from "./examples/motion-extra-cards";
+import { extraCards } from "./examples/motion-extra-cards";
+import { ReviewerProfile } from "./examples/reviewer-profile";
 import { extraControls } from "./examples/motion-extra-controls";
 import { extraGestures } from "./examples/motion-extra-gestures";
 import { extraUtilities } from "./examples/motion-extra-utilities";
@@ -305,8 +306,7 @@ function TaskListExample() {
         {id: "references", label: "Verify the revision", state: active > 0 ? "done" : "queued"},
       ] : undefined,
     }))} />
-    <details className="motion-example-controls">
-      <summary>Example controls</summary>
+    <Disclosure label="Example controls">
       <div className="motion-sample-actions">
         <Button emphasis="soft" disabled={active >= steps.length} onClick={() => {
           if (failed) setFailed(false);
@@ -315,7 +315,7 @@ function TaskListExample() {
         <Button size="compact" emphasis="quiet" disabled={failed || active >= steps.length} onClick={() => setFailed(true)}>Mark failed</Button>
         <Button size="compact" emphasis="quiet" onClick={() => { setActive(0); setFailed(false); }}>Restart</Button>
       </div>
-    </details>
+    </Disclosure>
   </div>;
 }
 

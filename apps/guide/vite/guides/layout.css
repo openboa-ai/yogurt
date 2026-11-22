@@ -1,0 +1,47 @@
+.guide-shell .guide-editorial {
+  inline-size: 100%;
+  max-inline-size: var(--guide-width);
+  margin-inline: auto;
+  padding-inline: var(--guide-gutter);
+  padding-block: var(--yg-gap-section) var(--boa-space-64);
+}
+.guide-editorial > .yg-stack { max-inline-size: 72rem; }
+.guide-editorial [id] { scroll-margin-block-start: var(--yg-gap-section); }
+.guide-editorial :where(.yg-stack, .yg-grid) > .yg-text { max-inline-size: 70ch; }
+.guide-editorial .yg-inline { flex-wrap: wrap; }
+.guide-editorial .guide-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.guide-editorial .guide-pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.guide-editorial img { display: block; max-inline-size: 100%; object-fit: contain; }
+.guide-editorial .guide-panel {
+  padding: var(--yg-inset-panel);
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-surface);
+}
+.guide-editorial .guide-proof {
+  display: grid;
+  place-items: center;
+  min-block-size: var(--boa-space-64);
+  padding: var(--yg-inset-roomy);
+  border-radius: var(--yg-radius-panel);
+  background: var(--yg-field);
+}
+.guide-proof[data-ink] { background: var(--boa-color-gray-green-950); }
+.guide-editorial .guide-swatches {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(var(--yg-size-touch) * 2)), 1fr));
+}
+.guide-swatch {
+  display: block;
+  inline-size: var(--boa-space-24);
+  block-size: var(--boa-space-16);
+  border-radius: var(--yg-radius-control);
+}
+.guide-editorial .guide-emoji-tiles {
+  grid-template-columns: repeat(auto-fill, minmax(var(--yg-size-touch), 1fr));
+}
+.guide-emoji-tiles .yg-button { min-inline-size: 0; }
+.guide-emoji-tiles .yg-button[aria-pressed="true"] { background: var(--yg-field); }
+.guide-emoji-tiles img { max-inline-size: none; }
+.guide-editorial .guide-emoji-layout { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+@media (max-width: 48rem) {
+  .guide-editorial :is(.guide-pairs, .guide-emoji-layout) { grid-template-columns: minmax(0, 1fr); }
+}

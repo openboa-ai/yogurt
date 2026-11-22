@@ -18,13 +18,22 @@ jobs:
   design-sources:
     name: Shared UI sources
     runs-on: ubuntu-24.04
-    timeout-minutes: 3
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Verify tokens and Native guide imports
+      - name: Verify tokens and Web and Native guide composition
         run: node --test checks/design-sources.mjs
+      - name: Exercise the built Vite guide in Chrome
+        run: |
+          npm ci
+          npm run guide:build
+          npm run guide:preview -- --host 127.0.0.1 --strictPort &
+          preview=$!
+          trap 'kill "$preview" 2>/dev/null || true' EXIT
+          curl -fsS --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:5273/ > /dev/null
+          node checks/web-guide-shell.cjs
 
   native-otp:
     name: Native OTP consumer

@@ -47,3 +47,5 @@ The hosted workflow address leads to the product playbook. Build the three offli
 ## Templates and examples
 
 Open `/templates` to build and reset a small composition with the installed UI. The directory also includes desktop navigation, account forms, a release dashboard and typography and chart studies. Open `/examples/sourdough` for a complete research workspace demonstration with sample data, independent agent threads and a source inspector. The previews exercise local interactions and introduce no product service. With the guide running, `node checks/web-template-gallery.cjs` checks the example routes and representative interactions.
+
+The hosted routes compose the public Yogurt package. Put guide-specific layout in the owning React route and use shared components for the controls, typography and navigation. Offline pages and their styles are separate exports. Shared UI sources checks this boundary in required CI.

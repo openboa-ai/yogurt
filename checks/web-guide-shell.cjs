@@ -5,6 +5,8 @@ const base = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
 const destinations = [
   ["Design system", "/system", "Design system"],
   ["Components", "/components", "Button"],
+  ["Templates", "/templates", "Templates"],
+  ["Examples", "/examples", "Sourdough Studio"],
   ["Design sources", "/library", "Design sources"],
   ["Project use", "/adoption", "Use yogurt in a project"],
   ["Brand", "/", "Yogurt"],
@@ -50,11 +52,15 @@ async function checkGuide(browser, width) {
       if (mobile) await openMenu.click();
       await nav.getByRole("link", { name: label, exact: true }).click();
       await heading(title).waitFor();
-      assert.equal(await page.locator(".guide-content > :is(.catalog, .guide-editorial, .guide-brand) .yg-page-header").first().getByRole("heading", { level: 1 }).count(), 1);
-      if (label !== "Brand") titleSizes.push(await heading(title).evaluate(el => getComputedStyle(el).fontSize));
+      assert.equal(await page.locator("#guide-content").getByRole("heading", { level: 1 }).count(), 1);
+      if (label !== "Brand" && label !== "Examples") titleSizes.push(await heading(title).evaluate(el => getComputedStyle(el).fontSize));
       assert.equal(new URL(page.url()).pathname, path);
       assert.equal(await page.locator(".guide-masthead").getAttribute("data-check-persistence"), "yes");
-      assert.equal(await page.locator(".guide-masthead .yg-nav-list [aria-current=page]").innerText(), label);
+      if (mobile) await openMenu.click();
+      const current = nav.locator("[aria-current=page]");
+      assert.equal(await current.innerText(), label);
+      assert.equal(await current.evaluate(el => getComputedStyle(el).textDecorationLine), "none", path);
+      if (mobile) await page.keyboard.press("Escape");
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true, path);
     }
 
@@ -91,15 +97,62 @@ async function checkGuide(browser, width) {
     await page.goto(base + "/workflows#records");
     await heading("Product playbook").waitFor();
     assert.equal(new URL(page.url()).pathname, "/playbook");
+    for (const [previous, next, title] of [
+      ["/docs/index.html", "/adoption", "Use yogurt in a project"],
+      ["/examples/basic-controls/index.html", "/system#controls", "Design system"],
+      ["/examples/signature/index.html", "/#wordmark-study", "Yogurt"],
+      ["/patterns/task-states.html", "/components/motion-task-list", "TaskList"],
+    ]) {
+      await page.goto(base + previous);
+      await heading(title).waitFor();
+      assert.equal(page.url().slice(base.length), next);
+    }
     await page.goto(base + "/system#color");
     await page.locator("#swatches button").first().waitFor();
     await page.locator("#hue").selectOption("orange");
     assert.match(await page.locator("#color-name").innerText(), /^orange\./);
+    await page.getByRole("button", { name: /^orange 600/ }).click();
+    assert.equal(await page.locator("#color-name").innerText(), "orange.600");
+    const rosterSearch = page.getByRole("searchbox", { name: "Find an agent" });
+    await rosterSearch.fill("014");
+    await page.getByLabel("Status", { exact: true }).selectOption("Working");
+    await page.getByText("No matching agents.").waitFor();
+    await page.getByRole("button", { name: "Clear filters" }).click();
+    assert.equal(await rosterSearch.evaluate(el => document.activeElement === el), true);
+    await page.getByText("2 agents", { exact: true }).waitFor();
+
+    await page.goto(base + "/library#emoji");
+    const contour = page.getByRole("radiogroup", { name: "Contour at detail size" });
+    await contour.getByRole("radio", { name: "Plain" }).click();
+    assert.equal(await contour.getByRole("radio", { name: "Plain" }).getAttribute("aria-checked"), "true");
+    await page.getByLabel("Agent state").selectOption("blocked");
+    await page.getByText("Kai · Blocked", { exact: true }).waitFor();
     await page.goto(base + "/emoji.html?emoji=1f60a");
     await page.locator("#emoji-name").filter({ hasText: /Smiling Face/i }).waitFor();
+    await page.getByLabel("Face color").selectOption("peach");
+    assert.match(await page.getByRole("link", { name: "SVG", exact: true }).getAttribute("href"), /variants\/peach/);
+    const emojiSearch = page.getByRole("searchbox", { name: "Find an emoji" });
+    await emojiSearch.fill("zzzznoemoji");
+    await page.getByText("No matching emoji.").waitFor();
+    await page.getByRole("button", { name: "Clear filters" }).click();
+    assert.equal(await emojiSearch.evaluate(el => document.activeElement === el), true);
     await page.goto(base + "/playbook?project=sourdough");
     await page.locator("#pb-project option").first().waitFor({ state: "attached" });
     assert.equal(await page.locator("#pb-project").inputValue(), "sourdough");
+    await page.getByLabel("Product brief").selectOption("meatball");
+    const previous = await page.locator("#example-title").textContent();
+    await page.getByLabel("Product condition").selectOption({ index: 1 });
+    assert.notEqual(await page.locator("#example-title").textContent(), previous);
+    await page.getByRole("button", { name: "Guide options" }).click();
+    await page.getByRole("menuitem", { name: "Review checks" }).click();
+    assert.equal(await page.locator("#proof details").getAttribute("open"), "");
+    await page.goto(base + "/components/motion-profile-card");
+    const specimen = page.locator(".specimen");
+    await specimen.getByRole("button", { name: "Follow Kai" }).click();
+    await specimen.getByRole("button", { name: "Message" }).click();
+    await specimen.getByRole("status").filter({ hasText: "A message draft is ready for Kai." }).waitFor();
+    assert.equal(await specimen.getByRole("button", { name: "Following Kai" }).getAttribute("aria-pressed"), "true");
+
     await page.goto(base + "/agents");
     await page.getByRole("button", { name: "Play sequence" }).click();
     await page.getByRole("button", { name: "Stop sequence" }).waitFor();
@@ -110,7 +163,7 @@ async function checkGuide(browser, width) {
 }
 
 (async () => {
-  const browser = await chromium.launch({ channel: "chrome" });
+  const browser = await chromium.launch({ channel: process.env.YOGURT_BROWSER_CHANNEL ?? "chrome" });
   try {
     await Promise.all([checkGuide(browser, 320), checkGuide(browser, 900), checkGuide(browser, 1440)]);
     console.log("Guide shell passed at 320px, 900px and 1440px.");

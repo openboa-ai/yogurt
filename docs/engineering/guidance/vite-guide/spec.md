@@ -26,6 +26,12 @@ Use the shared Navbar with its NavigationList destinations, PageHeader, Button, 
 
 Build from the locked dependencies. Exercise direct routes, navigation, reload, back/forward and legacy hashes at desktop and narrow widths, and verify unknown routes. Verify interactive specimens, local offline documents and static assets remain available. Run the existing component and gallery checks. Validate the package with representative Vite and Next.js consumers separately; a build or token export alone is not native-runtime evidence. Share the running guide before updating the draft preview. No merge or production deployment is authorized by this specification.
 
+## Hosted route ownership
+
+Every maintained guide route renders through the Vite React entry. Compose page layouts with the public Yogurt components and use their focus, selection and appearance behavior for controls. Token, artwork and example data may have guide-specific presentation, using Yogurt components for the surrounding controls. Offline source files remain available as exported artifacts. The hosted routes may not load their HTML, scripts or page styles.
+
+Verify this boundary in Shared UI sources. Check the actual hosted menu after navigating through every top-level and supporting route, in both appearances. The current destination uses the NavigationList selection treatment. Exercise the palette, roster, artwork options, emoji picker and playbook in the hosted guide through their public controls, including direct links and a recovery path.
+
 ## Composition calibration
 
 Let previews own their surfaces. A gallery frame identifies the composition and provides space around it, while the components within it demonstrate their packaged geometry. Wide data and workspace previews receive the available width. Keep the two gallery boards and all 64 direct specimens.

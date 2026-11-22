@@ -7,6 +7,7 @@ import {
   IconButton,
   Icon,
   Heading,
+  Text,
   SegmentedControl,
   SearchField,
   SidebarContent,
@@ -217,9 +218,9 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
         : "Rethink Sans · Yogurt palette";
   return (
     <Yogurt appearance={appearance} className="catalog">
-      <a className="skip" href="#yg-inspect">
+      <Link className="skip" href="#yg-inspect">
         Skip to component
-      </a>
+      </Link>
       {!guideAppearance && <header className="catalog-header">
         <div className="catalog-identity">
           <ProjectMark project="openboa" label="OpenBoa" size={30} />
@@ -277,7 +278,7 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                   href={sectionHref("components", item.id)} onSelect={() => setMenu(false)} />)}
               </SidebarSubmenu>;
             })}
-            {!matches.length && <p className="yg-help">No matching components.</p>}
+            {!matches.length && <Text variant="help">No matching components.</Text>}
           </SidebarContent>
         </aside>
         <main id="yg-inspect" tabIndex={-1}>
@@ -372,10 +373,10 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
               {guidance && (
                 <section className="catalog-guidance">
                   <Heading>When to use</Heading>
-                  <p>{guidance.useWhen}</p>
-                  <p className="yg-help">{guidance.avoid}</p>
+                  <Text>{guidance.useWhen}</Text>
+                  <Text variant="help">{guidance.avoid}</Text>
                   {guidance.combineWith.length > 0 && <>
-                    <h3>Works with</h3>
+                    <Heading level={3}>Works with</Heading>
                     <div className="catalog-guidance-links">
                       {guidance.combineWith.map(companion => {
                         const component = catalog.find(item => item.id === companion);
@@ -387,14 +388,14 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                       })}
                     </div>
                   </>}
-                  <h3>Check</h3>
-                  <p className="yg-help">{guidance.verify.join(" · ")}</p>
+                  <Heading level={3}>Check</Heading>
+                  <Text variant="help">{guidance.verify.join(" · ")}</Text>
                 </section>
               )}
               {id === "button" && (
                 <section className="related-actions">
                   <Heading>Related actions</Heading>
-                  <p className="yg-help">Use a dedicated action when the interaction has its own state.</p>
+                  <Text variant="help">Use a dedicated action when the interaction has its own state.</Text>
                   <div>
                     {[
                       ["copy-button", "Copy"],
@@ -420,13 +421,11 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                 </Button>
                 {showCode && (
                   <div>
-                    <p className="yg-help">
-                      From a project with the pinned Yogurt package installed.
-                    </p>
+                    <Text variant="help">From a project with the pinned Yogurt package installed.</Text>
                     {motion.filter((item) => item.id === id).map((item) => (
-                      <p className="yg-help" key={item.id}>
+                      <Text variant="help" key={item.id}>
                         <strong>{item.role}</strong> · {item.treatment}
-                      </p>
+                      </Text>
                     ))}
                     <code>
                       {motionEntry
@@ -439,7 +438,7 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                           entry.id +
                           '";'}
                     </code>
-                    {motionEntry ? <p className="yg-help">Native implementation unavailable.</p> : <code>{"yogurt add " + entry.id + " --target native"}</code>}
+                    {motionEntry ? <Text variant="help">Native implementation unavailable.</Text> : <code>{"yogurt add " + entry.id + " --target native"}</code>}
                   </div>
                 )}
               </section>

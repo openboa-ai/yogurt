@@ -9,21 +9,7 @@
 }
 #yogurt-agent-family main { padding: var(--yg-inset-roomy); }
 :is(#yogurt-agent-family, .guide-agents) h2 { margin: 0; font: var(--yg-font-heading); }
-:is(#yogurt-agent-family, .guide-agents) h2 span {
-  margin-inline-start: var(--yg-gap-control);
-  color: var(--yg-muted);
-  font: var(--yg-font-help);
-}
-.family-controls { display: flex; align-items: end; flex-wrap: wrap; gap: var(--yg-gap-inline); }
-.family-roster button {
-  border: 0;
-  border-radius: var(--yg-radius-control);
-  background: var(--yg-field);
-  color: var(--yg-text);
-  min-block-size: var(--yg-size-touch);
-  padding: var(--yg-inset-compact);
-}
-.family-roster button[aria-pressed="true"] { background: var(--yg-hover); }
+.family-controls { display: flex; align-items: end; flex-wrap: wrap; }
 .family-detail-pair {
   display: flex;
   justify-content: center;
@@ -38,11 +24,8 @@
   gap: 6px;
   margin-block-start: 8px;
 }
-:is(#yogurt-agent-family, .guide-agents) .family-roster button {
-  display: grid;
-  justify-items: start;
-  gap: 4px;
-}
+.family-roster .yg-button { justify-content: start; padding: var(--yg-inset-compact); }
+.family-roster .yg-button-content { display: grid; justify-items: start; gap: var(--yg-gap-tight); }
 .family-notch-row { display: flex; flex-wrap: wrap; gap: 1px; }
 @media (max-width: 400px) {
   .family-controls > * { min-inline-size: 0; }

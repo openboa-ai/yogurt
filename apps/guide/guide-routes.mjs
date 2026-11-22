@@ -14,6 +14,13 @@ export const guidePages = [
   { id: "motion-comparison", path: "/motion-comparison", legacy: "motion-comparison.html", title: "Compare motion", retired: true },
 ];
 
+export const guideAliases = {
+  "/docs/index.html": "/adoption",
+  "/examples/basic-controls/index.html": "/system#controls",
+  "/examples/signature/index.html": "/#wordmark-study",
+  "/patterns/task-states.html": "/components/motion-task-list",
+};
+
 export function matchGuidePath(pathname) {
   const path = pathname.replace(/\/$/, "") || "/";
   return guidePages.find(page =>
@@ -24,6 +31,10 @@ export function matchGuidePath(pathname) {
 }
 
 export function canonicalGuideUrl(url) {
+  if (Object.hasOwn(guideAliases, url.pathname)) {
+    const alias = new URL(guideAliases[url.pathname], url.origin);
+    return alias.pathname + url.search + (alias.hash || url.hash);
+  }
   const page = matchGuidePath(url.pathname);
   if (!page) return null;
   const legacy = url.pathname === "/" + page.legacy;
