@@ -114,6 +114,61 @@ check_interaction() {
         click_named tab Yogurt "$after" &&
         snapshot_after 'name="Yogurt".*state=\[[^]]*selected' || return 1
       ;;
+    tabs)
+      click_named tab Activity "$before" &&
+        snapshot_after 'role=text name="Recent activity"' &&
+        rg -q 'role=tab name="Activity".*state=\[[^]]*selected' "$after" &&
+        click_named tab Overview "$after" &&
+        snapshot_after 'role=text name="Project overview"' || return 1
+      ;;
+    radio-group)
+      click_named radio Weekly "$before" &&
+        snapshot_after 'role=text name="Weekly selected"' &&
+        rg -q 'role=radio name="Weekly".*value=1' "$after" &&
+        click_named radio Daily "$after" &&
+        snapshot_after 'role=text name="Daily selected"' || return 1
+      ;;
+    popover)
+      ! rg -q 'role=dialog name="About this view"' "$before" &&
+        click_named button 'About this view' "$before" &&
+        snapshot_after 'role=dialog name="About this view"' &&
+        "$cli" automate widget-key main-canvas escape &&
+        "$cli" automate assert --timeout-ms 5000 --absent 'role=dialog name="About this view"' &&
+        snapshot_after 'role=button name="About this view"' || return 1
+      ;;
+    toast)
+      click_named button 'Save view' "$before" &&
+        snapshot_after 'role=text name="View saved[.]"' &&
+        click_named button 'Dismiss notification' "$after" &&
+        snapshot_after 'role=button name="Save view"' &&
+        ! rg -q 'role=text name="View saved[.]"' "$after" || return 1
+      ;;
+    sidebar-layout)
+      click_named button 'Show project navigation' "$before" &&
+        snapshot_after 'role=dialog name="Projects"' &&
+        click_named button 'Close navigation' "$after" &&
+        "$cli" automate assert --timeout-ms 5000 --absent 'role=dialog name="Projects"' &&
+        snapshot_after 'role=button name="Show project navigation"' || return 1
+      ;;
+    select)
+      click_named button 'Weekly review' "$before" &&
+        snapshot_after 'role=menuitem name="Meatball"' &&
+        click_named menuitem Meatball "$after" &&
+        snapshot_after 'state updated' &&
+        ! rg -q 'role=menuitem name="Meatball"' "$after" || return 1
+      ;;
+    decision-review)
+      click_named button Archive "$before" &&
+        snapshot_after 'role=dialog name="Review"' &&
+        click_named button Cancel "$after" &&
+        "$cli" automate assert --timeout-ms 5000 --absent 'role=dialog name="Review"' &&
+        snapshot_after 'role=button name="Archive"' &&
+        click_named button Archive "$after" &&
+        snapshot_after 'role=dialog name="Review"' &&
+        action_named button Archive press '' "$after" &&
+        snapshot_after 'Choice confirmed in this example[.]' &&
+        ! rg -q 'role=dialog name="Review"' "$after" || return 1
+      ;;
     input-otp)
       action_named textbox 'Verification code' focus '' "$before" &&
         snapshot_after 'role=textbox name="Verification code".*focused=true' &&
@@ -399,7 +454,7 @@ while IFS=$'\t' read -r id name; do
         failed=1
       fi
       ;;
-    dialog|drawer|sheet|card|segmented-control|input-otp|action-menu|progress|chart|rating|agent-row|composer|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row)
+    dialog|drawer|sheet|card|segmented-control|input-otp|action-menu|progress|chart|rating|agent-row|composer|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row|tabs|radio-group|popover|toast|sidebar-layout|select|decision-review)
       if [ "$render" = PRESENTED_UNVERIFIED ] && check_interaction; then
         interaction=PASS
         if [ "$id" = calendar ] || [ "$id" = project-mark ]; then interaction=PARTIAL; fi

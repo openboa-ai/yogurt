@@ -165,7 +165,10 @@ const slots = {
     `<menu-item height="36" on-press="gallery_menu:{gallery_${segmentPositions[index]}_id}">${label}</menu-item>`,
   ).join(""),
   tooltip: '<button on-press="activate">Review details</button>',
-  tabs: '<toggle-button selected="{gallery_first_selected}" on-toggle="gallery_select_option:{gallery_first_id}">Overview</toggle-button><toggle-button selected="{gallery_second_selected}" on-toggle="gallery_select_option:{gallery_second_id}">Activity</toggle-button>',
+  tabs: [
+    '<segmented-control selected="{gallery_first_selected}" on-press="gallery_select_option:{gallery_first_id}">Overview</segmented-control>',
+    '<segmented-control selected="{gallery_second_selected}" on-press="gallery_select_option:{gallery_second_id}">Activity</segmented-control>',
+  ].join(""),
   "segmented-control": segments,
   "radio-group": '<radio checked="{gallery_first_selected}" on-toggle="gallery_select_option:{gallery_first_id}">Daily</radio><radio checked="{gallery_second_selected}" on-toggle="gallery_select_option:{gallery_second_id}">Weekly</radio>',
   "data-table": reviewRows,
@@ -205,7 +208,7 @@ const slots = {
   post: '<text>Shared the latest project notes.</text>',
   transcript: '<text>Review the notes and summarize the decisions.</text>',
   field: viewNameInput,
-  form: '<column gap="8">' + viewNameInput + '<button on-press="activate">Save view</button></column>',
+  form: '<column gap="8">' + viewNameInput + '<button variant="primary" on-press="activate">Save view</button></column>',
   "scroll-area": '<column gap="12" padding="8">' + [
     "Weekly review", "Planning notes", "Project updates", "Draft decisions",
     "Quality observations", "Access review", "Release notes", "Archive",
@@ -259,6 +262,9 @@ for (const { id, native } of [...catalog, ...blocks]) {
   const dismissibleLayer = ["dialog", "drawer", "sheet", "confirm-dialog"].includes(id);
   const specimen = id === "text"
     ? `<column gap="4">${use}<text size="sm" foreground="text_muted">${samples.text.help}</text><text size="sm" foreground="text_muted">${samples.text.meta}</text></column>`
+    : id === "tabs"
+      ? `<column gap="12">${use}<if test="{gallery_first_selected}"><text>Project overview</text></if>
+         <else><text>Recent activity</text></else></column>`
     : id === "composer"
       ? `<column gap="12">${use}<text size="sm" foreground="text_muted">${samples.composer.hint}</text></column>`
     : id === "project-sidebar"

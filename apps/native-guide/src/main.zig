@@ -174,7 +174,7 @@ fn selectComponent(m: *Model, index: u32) void {
         std.mem.eql(u8, id, "dialog") or std.mem.eql(u8, id, "drawer") or std.mem.eql(u8, id, "sheet") or
         std.mem.eql(u8, id, "confirm-dialog") or std.mem.eql(u8, id, "decision-review") or
         std.mem.eql(u8, id, "sidebar-layout") or std.mem.eql(u8, id, "hover-card") or
-        std.mem.eql(u8, id, "toast")) m.is_open = false;
+        std.mem.eql(u8, id, "toast") or std.mem.eql(u8, id, "popover")) m.is_open = false;
 }
 
 fn isAgentSpecimen(m: *const Model) bool {

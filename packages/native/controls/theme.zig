@@ -9,19 +9,29 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
     const r = ui.roles(dark, material);
     const raised = if (dark) r.surface else r.canvas;
     const ink = r.overlay_ink;
+    const soft_button: canvas.ControlVisualTokenOverrides = .{
+        .background = r.field, .foreground = r.text, .hover_background = r.hover,
+        .pressed_background = r.off, .radius = ui.radius_control, .stroke_width = 0,
+    };
     const field: canvas.ControlVisualTokenOverrides = .{ .background = r.field, .foreground = r.text, .radius = ui.radius_control, .stroke_width = 0 };
     const menu: canvas.ControlVisualTokenOverrides = .{ .background = raised, .radius = ui.radius_menu, .stroke_width = 0 };
     const modal: canvas.ControlVisualTokenOverrides = .{ .background = raised, .foreground = r.text, .radius = ui.radius_sheet, .stroke_width = 0 };
     var result = canvas.DesignTokens.themeWithOverrides(.{ .color_scheme = scheme }, .{
-        .colors = .{ .background = r.canvas, .surface = r.surface, .surface_subtle = r.field, .surface_pressed = r.hover, .text = r.text, .text_muted = r.muted, .accent = r.inverse, .accent_text = r.on_inverse, .focus_ring = r.text, .destructive = r.danger, .success = r.success, .warning = r.warning, .border = r.off, .scrim = canvas.Color.rgba(ink.r, ink.g, ink.b, ui.overlay_scrim_alpha) },
+        .colors = .{ .background = r.canvas, .surface = r.surface, .surface_subtle = r.field, .surface_pressed = r.hover, .text = r.text, .text_muted = r.muted, .accent = r.inverse, .accent_text = r.on_inverse, .focus_ring = r.text, .destructive = r.danger, .success = r.success, .warning = r.warning, .border = if (high_contrast) r.off else canvas.Color.rgba8(0, 0, 0, 0), .scrim = canvas.Color.rgba(ink.r, ink.g, ink.b, ui.overlay_scrim_alpha) },
         .blur = .{ .scrim = 0 },
+        .stroke = .{ .regular = if (high_contrast) 1 else 0 },
         .radius = .{ .sm = ui.radius_small, .md = ui.radius_control, .lg = ui.radius_panel, .xl = ui.segment_track_radius },
         .metrics = .{ .control_height_sm = ui.size_compact, .control_height = ui.size_regular, .control_height_lg = ui.size_touch, .button_inset_sm = ui.inset_compact, .button_inset = ui.inset_regular, .button_inset_lg = ui.inset_roomy, .spinner_period_ms = ui.busy_ms, .row_extent = ui.list_row_height, .slider_track_height = ui.slider_track_height, .slider_thumb_width = ui.slider_thumb_size, .slider_thumb_height = ui.slider_thumb_size, .tabs_trigger_height = ui.segment_option_height, .tabs_trigger_inset = ui.segment_option_inset_inline, .tabs_gap = ui.segment_option_gap },
         .typography = .{ .font_id = font_id, .mono_font_id = font_id, .button_font_id = button_font_id, .body_size = ui.body_type, .label_size = ui.label_type, .button_size = ui.action_type, .heading_size = ui.heading_type, .title_size = ui.heading_type, .display_size = ui.display_type },
         .motion = .{ .fast_ms = ui.change_ms, .normal_ms = ui.travel_ms, .slow_ms = ui.panel_ms, .easing = .standard },
         .controls = .{
+            .accordion = .{ .stroke_width = 0 },
             .card = .{ .background = raised, .radius = ui.card_corner, .stroke_width = 0 },
             .panel = .{ .radius = ui.radius_panel, .stroke_width = 0 },
+            .resizable = .{ .radius = ui.radius_panel, .stroke_width = 0 },
+            .avatar = .{ .stroke_width = 0 },
+            .data_cell = .{ .stroke_width = 0 },
+            .tooltip = .{ .stroke_width = 0 },
             .popover = .{ .background = raised, .radius = ui.radius_popover, .stroke_width = 0 },
             .menu_surface = menu,
             .dropdown_menu = menu,
@@ -35,16 +45,18 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
             .menu_item = .{ .hover_background = r.field, .active_background = r.hover, .foreground = r.text, .radius = ui.radius_control, .stroke_width = 0 },
             .toggle_button = .{ .background = r.field, .hover_background = r.hover, .active_background = r.hover, .foreground = r.text, .radius = ui.radius_control, .stroke_width = 0 },
             .checkbox = .{ .background = r.field, .active_background = r.inverse, .active_foreground = r.on_inverse, .radius = ui.checkbox_radius, .stroke_width = 0 },
-            .radio = .{ .active_background = r.inverse, .active_foreground = r.on_inverse },
-            .slider = .{ .background = r.hover, .active_background = r.inverse, .foreground = r.inverse },
+            .radio = .{ .background = r.hover, .active_background = r.inverse, .active_foreground = r.on_inverse, .stroke_width = 0 },
+            .slider = .{ .background = r.hover, .active_background = r.inverse, .foreground = r.inverse, .stroke_width = 0 },
             .switch_control = .{ .background = r.off, .active_background = r.signal_positive, .foreground = r.thumb, .active_foreground = r.on_signal_positive },
             .progress = .{ .background = r.field, .active_background = r.inverse },
             .badge = .{ .background = r.field, .foreground = r.muted, .radius = ui.radius_small, .stroke_width = 0 },
             .skeleton = .{ .radius = ui.radius_small },
             .separator = .{ .background = r.hover },
             .segmented_control = .{ .active_background = r.hover, .radius = ui.segment_option_radius, .stroke_width = 0 },
-            .button_primary = .{ .background = r.inverse, .hover_background = r.inverse_hover, .pressed_background = r.inverse_press, .foreground = r.on_inverse, .radius = ui.radius_control, .disabled_background = r.field, .disabled_foreground = r.muted },
-            .button_secondary = .{ .background = r.field, .foreground = r.text, .hover_background = r.hover, .radius = ui.radius_control, .stroke_width = 0 },
+            .button_default = soft_button,
+            .button_outline = soft_button,
+            .button_primary = .{ .background = r.inverse, .hover_background = r.inverse_hover, .pressed_background = r.inverse_press, .foreground = r.on_inverse, .radius = ui.radius_control, .disabled_background = r.field, .disabled_foreground = r.muted, .stroke_width = 0 },
+            .button_secondary = soft_button,
             .input = field,
             .text_field = field,
             .textarea = field,
@@ -62,7 +74,11 @@ pub fn theme(dark: bool, material: Material, high_contrast: bool, reduced_motion
         result.controls.popover.stroke_width = 1;
         result.controls.menu_surface.stroke_width = 1;
         result.controls.dropdown_menu.stroke_width = 1;
+        result.controls.button_default.stroke_width = 1;
+        result.controls.button_outline.stroke_width = 1;
         result.controls.button_secondary.stroke_width = 1;
+        result.controls.radio.stroke_width = 1;
+        result.controls.slider.stroke_width = 1;
         result.controls.text_field.stroke_width = 1;
         result.controls.input.stroke_width = 1;
         result.controls.textarea.stroke_width = 1;

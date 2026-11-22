@@ -236,3 +236,44 @@ test "taking over a returning drawer retains its current offset" {
     try std.testing.expectEqual(@as(f32, 9), model.drawer_distance);
     try std.testing.expect(!model.interface_motion.active());
 }
+
+test "ordinary controls draw no perimeter across pointer states and retain keyboard focus" {
+    const canvas = sdk.canvas;
+    const kit_theme = @import("yogurt/theme.zig");
+    const states = [_]canvas.WidgetState{
+        .{}, .{ .hovered = true }, .{ .pressed = true }, .{ .selected = true }, .{ .disabled = true },
+    };
+    const variants = [_]canvas.WidgetVariant{ .default, .primary, .secondary, .outline, .ghost, .destructive };
+    const Frame = sdk.geometry.RectF;
+    for ([_]bool{ false, true }) |dark| {
+        const tokens = kit_theme.theme(dark, .neutral, false, false);
+        try std.testing.expectEqual(@as(f32, 0), tokens.colors.border.a);
+        for (variants) |variant| {
+            for (states) |state| {
+                var commands: [32]canvas.CanvasCommand = undefined;
+                var builder = canvas.Builder.init(&commands);
+                try canvas.emitWidgetTree(&builder, .{
+                    .id = 1, .kind = .button, .variant = variant, .state = state,
+                    .frame = Frame.init(8, 8, 124, 36), .text = "Save view",
+                }, tokens);
+                for (builder.displayList().commands) |command| {
+                    if (command == .stroke_rect) {
+                        try std.testing.expect(command.stroke_rect.stroke.width == 0 or
+                            command.stroke_rect.stroke.fill.color.a == 0);
+                    }
+                }
+            }
+        }
+        var commands: [32]canvas.CanvasCommand = undefined;
+        var builder = canvas.Builder.init(&commands);
+        try canvas.emitWidgetTree(&builder, .{
+            .id = 1, .kind = .button, .variant = .primary, .state = .{ .focused = true },
+            .frame = Frame.init(8, 8, 124, 36), .text = "Save view",
+        }, tokens);
+        var found_focus = false;
+        for (builder.displayList().commands) |command| {
+            if (command == .stroke_rect and command.stroke_rect.stroke.width == tokens.stroke.focus) found_focus = true;
+        }
+        try std.testing.expect(found_focus);
+    }
+}

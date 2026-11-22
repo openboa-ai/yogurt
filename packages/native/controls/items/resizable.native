@@ -1,6 +1,6 @@
 <template name="yg-resizable" args="label summary height=0">
   <split height="{height}" label="{label}" value="{fraction}" on-resize="adjust" gap="8">
-    <panel padding="12"><text>{summary}</text></panel>
-    <panel padding="12"><slot/></panel>
+    <panel background="surface" padding="12"><text>{summary}</text></panel>
+    <panel background="background" padding="12"><slot/></panel>
   </split>
 </template>
