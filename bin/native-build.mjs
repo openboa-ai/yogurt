@@ -1,11 +1,22 @@
-import { cpSync, existsSync, mkdtempSync, realpathSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 
 export function runNative(kit, [verb, app = ".", ...flags]) {
-  if (!["build", "dev", "test", "check"].includes(verb)) {
-    throw Error("Usage: yogurt native build|dev|test|check [app-dir] [Native flags]");
+  if (!["build", "dev", "test", "check", "package"].includes(verb)) {
+    throw Error("Usage: yogurt native build|dev|test|check|package [app-dir] [Native flags]");
+  }
+  const project = resolve(app);
+  const packaging = verb === "package";
+  let binary;
+  if (packaging) {
+    if (process.platform !== "darwin" || flags.some(flag => /^--(?:target|binary)(?:=|$)/.test(flag))) {
+      throw Error("yogurt native package supports the host macOS target and chooses the freshly built binary.");
+    }
+    const { name } = JSON.parse(readFileSync(join(project, "app.json"), "utf8"));
+    if (typeof name !== "string" || !/^[a-zA-Z0-9_-]+$/.test(name)) throw Error("Invalid app.json executable name.");
+    binary = join(project, "zig-out/bin", name);
   }
   const configured = process.env.NATIVE_SDK_PATH;
   if (!configured) throw Error("Set NATIVE_SDK_PATH to the unpatched Native SDK 0.11.1 framework.");
@@ -28,12 +39,18 @@ export function runNative(kit, [verb, app = ".", ...flags]) {
     const apply = spawnSync("git", ["apply", patch], { cwd: framework, stdio: "inherit" });
     if (apply.error) throw apply.error;
     if (apply.status !== 0) throw Error("Could not apply Yogurt's OTP patch to the SDK copy. Use the original SDK 0.11.1 framework.");
-    const build = spawnSync("native", [verb, resolve(app), ...flags], {
+    const options = {
       env: { ...process.env, NATIVE_SDK_PATH: framework },
       stdio: "inherit",
-    });
+    };
+    const build = spawnSync("native", packaging ? ["build", project] : [verb, project, ...flags], options);
     if (build.error) throw build.error;
-    return build.status ?? 1;
+    if (!packaging || build.status !== 0) return build.status ?? 1;
+    const release = spawnSync("native", ["package", "--target", "macos", "--binary", binary, ...flags], {
+      ...options, cwd: project,
+    });
+    if (release.error) throw release.error;
+    return release.status ?? 1;
   } finally {
     rmSync(scratch, { recursive: true, force: true });
   }

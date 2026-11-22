@@ -30,6 +30,8 @@ Keep the six-cell Native code field borderless on pointer and keyboard focus, wi
 
 The Yogurt Native build command applies the versioned OTP patch to a disposable framework copy and builds against that copy. The supplied framework and consumer sources stay untouched. A mismatched SDK or unappliable patch stops the build. The same command prepares the guide and fresh consumers. Verify the installed command, including build failure propagation and the actual empty-field click, Tab and blur states in a fresh consumer.
 
+For existing typed OTP installations, accept the exact previously installed Yogurt revision as the merge base and preserve nonconflicting product edits. Leave the installed file untouched and emit a conflict candidate when changes overlap. Package macOS releases from a binary freshly built with the patched framework. Required CI compiles a fresh consumer with the pinned SDK.
+
 ### Select when open
 
 The owner reported that the opened Select looks out of place. Apply requirements 1–3 and 6 to the option list in the web SDK, component gallery and brand guide. Align option text to the field value, match the field width, and leave a 4 px gap. Use an opaque material surface, a quiet active row and a trailing ink-blue check for the current value. Keep the field and rows at least 44 px tall on touch screens. The list can open above a field near the bottom of a viewport and scroll through longer choices.

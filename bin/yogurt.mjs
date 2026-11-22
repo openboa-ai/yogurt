@@ -2,6 +2,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { upgradeOtp } from "./install/upgrade-otp.mjs";
 import { runNative } from "./native-build.mjs";
 import { checkProject } from "./check-project.mjs";
 import { nativeEntry, nativeFiles } from "./install/native.mjs";
@@ -25,6 +26,7 @@ for (const item of motion) {
 const usage =
   "yogurt check [--dir project] | yogurt list | yogurt add <component-or-block> --target web|native [--dir project]";
 function run() {
+  if (args[0] === "upgrade-otp") return upgradeOtp(kit, args.slice(1));
   if (args[0] === "native") {
     process.exitCode = runNative(kit, args.slice(1));
     return;
