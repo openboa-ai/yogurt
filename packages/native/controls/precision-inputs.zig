@@ -58,19 +58,31 @@ pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEdit
                 .height = tokens.otp_slot_height,
                 .text = value,
                 .semantics = .{ .label = title },
-                .style = .{
-                    .background = transparent,
-                    .foreground = transparent,
-                    .border = transparent,
-                    .focus_ring = transparent,
-                    .stroke_width = 0,
-                    .radius = tokens.otp_slot_radius,
-                },
+                .style = codeFieldStyle(slots.len),
                 .on_input = on_input,
             }),
         }),
         ui.text(.{ .size = .sm, .wrap = true, .style_tokens = .{ .foreground = .text_muted } }, help),
     });
+}
+
+fn codeFieldStyle(comptime count: usize) canvas.WidgetStyle {
+    var style: canvas.WidgetStyle = .{
+        .background = transparent,
+        .foreground = transparent,
+        .border = transparent,
+        .focus_ring = transparent,
+        .stroke_width = 0,
+        .radius = tokens.otp_slot_radius,
+    };
+    if (@hasField(canvas.WidgetStyle, "empty_focus_cell")) {
+        style.empty_focus_cell = .{
+            .width = tokens.otp_slot_width,
+            .remaining_gap = tokens.otp_slot_gap * (count - 1),
+            .count = count,
+        };
+    }
+    return style;
 }
 
 pub fn ratingView(comptime Msg: type, ui: *canvas.Ui(Msg), title: []const u8, selected: u32, dark: bool, comptime select: fn (u32) Msg) canvas.Ui(Msg).Node {

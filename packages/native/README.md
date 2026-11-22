@@ -14,6 +14,16 @@ The Native installer includes `src/yogurt/interface-motion.zig` for animated sur
 
 ## Verification code and rating
 
+### OTP focus on SDK 0.11.1
+
+Apply the included patch to a writable copy of the SDK framework before building the app. Use an absolute path to the installed Yogurt package.
+
+```sh
+git -C "$NATIVE_SDK_PATH" apply "$YOGURT_SDK_PATH/packages/native/controls/sdk-patches/v0.11.1-empty-focus-cell.patch"
+```
+
+Set `NATIVE_SDK_PATH` to that patched framework for the application build. The patch adds an opt-in text-field paint property. The OTP renderer supplies the cell geometry and uses the shared pressed-surface color. Existing SDK frameworks can still compile the public OTP entry and retain the previous focus treatment.
+
 Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`. Existing markup templates retain their original call signatures.
 
 ## Drawer

@@ -26,7 +26,7 @@ Data comes from the consumer. Display and dismissal generate no external effects
 
 ### Native code field focus and shared source checks
 
-Keep the six-cell Native code field borderless on pointer and keyboard focus, with a visible keyboard focus cue inside the control. Keep its public entry, accessible label and digit editing contract. Verify click, Tab and typing in the running guide using the installed control. The Required CI aggregate must fail when Shared UI sources fails, is skipped or is cancelled.
+Keep the six-cell Native code field borderless on pointer and keyboard focus, with only the first cell filled while the field is empty and focused, restoring its resting fill on blur. Keep its public entry, accessible label and digit editing contract. Verify click, Tab and typing in the running guide using the installed control. The Required CI aggregate must fail when Shared UI sources fails, is skipped or is cancelled.
 
 ### Select when open
 

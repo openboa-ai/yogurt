@@ -2,7 +2,7 @@
 
 ## Native code field focus and shared source checks
 
-In the running macOS guide, clicking the installed code field and returning to it with Shift+Tab reproduced the SDK focus ring around all six cells. The public typed renderer now makes that ring transparent for the OTP alone. A fresh guide build accepted pointer focus and keyboard traversal, and typing a digit after returning to the field advanced the active cell without drawing an outer box. The empty focused field still needs a visible keyboard cue.
+In the running macOS guide, clicking the installed code field and returning to it with Shift+Tab reproduced the SDK focus ring around all six cells. The public typed renderer now makes that ring transparent for the OTP alone. A fresh guide build accepted pointer focus and keyboard traversal, and typing a digit after returning to the field advanced the active cell without drawing an outer box. With the patched SDK, an empty field uses the pressed-surface fill on the first cell when focused. The other five cells use their resting fill.
 
 The existing shared source suite passed locally. The Required CI shell step accepted a successful Shared UI sources result and rejected failure, cancellation and skip. This check covers the aggregate logic locally. Native focus was exercised separately in the running app.
 

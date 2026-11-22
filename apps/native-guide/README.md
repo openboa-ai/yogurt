@@ -4,7 +4,7 @@ The Native guide is a local macOS application for exploring the Yogurt component
 
 ## Run
 
-Use macOS, Node.js, Zig 0.16.0 and Native SDK 0.11.1. From the repository root, start the guide with:
+Use macOS, Node.js, Zig 0.16.0 and Native SDK 0.11.1. For empty OTP focus, apply the [Native SDK patch](../../packages/native/README.md#otp-focus-on-sdk-0111) and set `NATIVE_SDK_PATH` to the patched framework. From the repository root, start the guide with:
 
 ```sh
 node apps/native-guide/scripts/run.mjs
