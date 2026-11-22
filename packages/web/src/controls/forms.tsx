@@ -422,6 +422,12 @@ export interface Choices {
   disabled?: boolean;
   name?: string;
 }
+type SwatchOption = Option & { color: string; accessibleLabel: string; column?: number };
+type RadioGroupProps = Omit<Choices, "options"> & (
+  | { presentation?: "standard"; options: Option[]; columns?: never }
+  | { presentation: "swatches"; options: SwatchOption[]; columns?: number }
+);
+
 export function RadioGroup({
   label,
   options,
@@ -429,22 +435,32 @@ export function RadioGroup({
   onValueChange,
   disabled,
   name,
-}: Choices) {
+  presentation = "standard",
+  columns,
+}: RadioGroupProps) {
   return (
     <fieldset className="yg-fieldset">
       <legend className="yg-label">{label}</legend>
       <SDKRadio
-        className="yg-radio"
+        className={presentation === "swatches" ? "yg-swatch-list" : "yg-radio"}
+        data-aligned={columns !== undefined || undefined}
+        style={columns === undefined ? undefined : { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
         aria-label={label}
         value={value}
         name={name}
         disabled={disabled}
         onValueChange={(next) => { if (next !== null) onValueChange(next); }}
       >
-        {options.map((o) => (
-          <div key={o.id}><label data-disabled={disabled || o.disabled ? "" : undefined}>
-            <div><SDKRadioItem value={o.id} disabled={o.disabled}><RadioIndicator /></SDKRadioItem></div>
-            {o.label}
+        {options.map((option) => presentation === "swatches" && "color" in option ? (
+          <div className="yg-swatch-choice" key={option.id} style={{ gridColumn: option.column }}>
+            <SDKRadioItem value={option.id} disabled={option.disabled}
+              aria-label={option.accessibleLabel} style={{ backgroundColor: option.color }} />
+            {columns === undefined && <span className="yg-meta" aria-hidden="true">{option.label}</span>}
+          </div>
+        ) : (
+          <div key={option.id}><label data-disabled={disabled || option.disabled ? "" : undefined}>
+            <div><SDKRadioItem value={option.id} disabled={option.disabled}><RadioIndicator /></SDKRadioItem></div>
+            {option.label}
           </label></div>
         ))}
       </SDKRadio>

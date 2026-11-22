@@ -62,8 +62,7 @@ body {
 }
 .related-actions { margin-block: var(--yg-gap-section); }
 .catalog-guidance { margin-block: var(--yg-gap-section); max-inline-size: 42rem; }
-.catalog-guidance p { margin-block: var(--boa-space-4) var(--boa-space-12); }
-.catalog-guidance h3 { font: var(--yg-font-label); margin-block: var(--yg-gap-panel) var(--yg-gap-tight); }
+.catalog-guidance h3 { margin-block-start: var(--yg-gap-inline); font: var(--yg-font-label); }
 .catalog-guidance-links { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline) var(--yg-gap-panel); }
 .related-actions p { margin-block: var(--boa-space-4) var(--boa-space-12); }
 .related-actions > div { display: flex; flex-wrap: wrap; gap: var(--yg-gap-inline) var(--yg-gap-panel); }
@@ -86,10 +85,7 @@ body {
   margin-bottom: var(--yg-gap-inline);
   font: var(--yg-font-action);
 }
-.preview-tools .yg-segment button {
-  font: var(--yg-font-meta);
-  padding-inline: var(--yg-inset-compact);
-}
+.preview-tools .yg-heading { font: var(--yg-font-heading); }
 .specimen {
   background: var(--yg-surface);
   border-radius: var(--yg-radius-sheet);
@@ -121,21 +117,10 @@ body {
 .sample-response:empty {
   display: none;
 }
-.preview-caption,
-.preview-caption button {
-  font: var(--yg-font-meta);
-  color: var(--yg-muted);
-}
 .preview-caption {
-  margin: 8px 0 20px;
+  margin-block: var(--boa-space-8) var(--boa-space-24);
 }
-.preview-caption button,
-.install-code > button {
-  color: var(--yg-inverse);
-  border: 0;
-  background: none;
-  padding: var(--boa-space-4) 0;
-}
+
 .variation {
   margin: 24px 0;
 }
@@ -167,25 +152,9 @@ body {
 .sample-scroll {
   max-height: 90px;
 }
-.install-code {
-  margin-top: 24px;
-}
-.install-code > button {
-  display: flex;
-  align-items: center;
-  gap: var(--yg-gap-inline);
-  font: var(--yg-font-action);
-}
-.install-code code {
-  display: block;
-  overflow-wrap: anywhere;
-  margin-top: 8px;
-  color: var(--yg-text);
-  font: var(--yg-font-help);
-  background: var(--yg-field);
-  padding: var(--boa-space-8);
-  border-radius: var(--yg-radius-small);
-}
+.install-code { margin-block-start: var(--boa-space-24); max-inline-size: 50rem; }
+.install-code > .yg-stack { margin-block-start: var(--yg-gap-inline); }
+
 .skip {
   position: absolute;
   left: -300vw;

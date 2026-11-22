@@ -4,9 +4,12 @@ import {
   PageHeader,
   ProjectMark,
   Button,
+  CodeBlock,
   IconButton,
   Icon,
   Heading,
+  Inline,
+  Stack,
   Text,
   SegmentedControl,
   SearchField,
@@ -293,15 +296,15 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
           ) : (
             <>
               <PageHeader className="catalog-intro" title={entry.name} detail={entry.description} eyebrow={entry.family} />
-              <div className="preview-tools">
-                <span>Preview</span>
+              <Inline className="preview-tools">
+                <Heading level={2}>Preview</Heading>
                 <SegmentedControl
                   label="Neutral palette"
                   options={materials}
                   value={material}
                   onValueChange={(v) => setMaterial(v as Material)}
                 />
-              </div>
+              </Inline>
               <Yogurt
                 appearance={appearance}
                 material={material}
@@ -322,8 +325,8 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                   )}
                 </div>
               </Yogurt>
-              <div className="preview-caption">
-                <span>{tokenLabel}</span>
+              <Inline className="preview-caption">
+                <Text variant="meta">{tokenLabel}</Text>
                 <Button emphasis="quiet" size="compact"
                   type="button"
                   onClick={() => setCompare(!compare)}
@@ -331,7 +334,7 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                 >
                   {compare ? "Hide surfaces" : "Compare surfaces"}
                 </Button>
-              </div>
+              </Inline>
               {compare && (
                 <div className="surface-comparison">
                   {materials.map((m) => (
@@ -372,12 +375,13 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
               )}
               {guidance && (
                 <section className="catalog-guidance">
+                  <Stack gap={12}>
                   <Heading>When to use</Heading>
                   <Text>{guidance.useWhen}</Text>
                   <Text variant="help">{guidance.avoid}</Text>
                   {guidance.combineWith.length > 0 && <>
                     <Heading level={3}>Works with</Heading>
-                    <div className="catalog-guidance-links">
+                    <Inline className="catalog-guidance-links" gap={12}>
                       {guidance.combineWith.map(companion => {
                         const component = catalog.find(item => item.id === companion);
                         return <Link key={companion} href={sectionHref("components", companion)}
@@ -386,10 +390,11 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                             event.preventDefault(); go(companion);
                           }}>{component?.name ?? companion}</Link>;
                       })}
-                    </div>
+                    </Inline>
                   </>}
                   <Heading level={3}>Check</Heading>
                   <Text variant="help">{guidance.verify.join(" · ")}</Text>
+                  </Stack>
                 </section>
               )}
               {id === "button" && (
@@ -419,28 +424,19 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                   Use in a project
                   <Icon name={showCode ? "down" : "next"} />
                 </Button>
-                {showCode && (
-                  <div>
-                    <Text variant="help">From a project with the pinned Yogurt package installed.</Text>
-                    {motion.filter((item) => item.id === id).map((item) => (
-                      <Text variant="help" key={item.id}>
-                        <strong>{item.role}</strong> · {item.treatment}
-                      </Text>
-                    ))}
-                    <code>
-                      {motionEntry
-                        ? `import { ${motionEntry.name} } from "${motionEntry.entry}";`
-                        : entry.family === "Blocks"
-                        ? "yogurt add " + id + " --target web"
-                        : "import { " +
-                          entry.name +
-                          ' } from "@openboa/yogurt/' +
-                          entry.id +
-                          '";'}
-                    </code>
-                    {motionEntry ? <Text variant="help">Native implementation unavailable.</Text> : <code>{"yogurt add " + entry.id + " --target native"}</code>}
-                  </div>
-                )}
+                {showCode && <Stack gap={12}>
+                  <Text variant="help">From a project with the pinned Yogurt package installed.</Text>
+                  <CodeBlock language={entry.family === "Blocks" ? "Shell" : "TypeScript"} code={
+                    motionEntry ? `import { ${motionEntry.name} } from "${motionEntry.entry}";`
+                      : entry.family === "Blocks" ? "yogurt add " + id + " --target web"
+                        : `import { ${entry.name} } from "@openboa/yogurt/${entry.id}";`
+                  } />
+                  {motionEntry ? <Text variant="help">Native implementation unavailable.</Text> :
+                    <CodeBlock language="Native" code={"yogurt add " + entry.id + " --target native"} />}
+                  {motion.filter(item => item.id === id).map(item => <Text variant="help" key={item.id}>
+                    <strong>{item.role}</strong> · {item.treatment}
+                  </Text>)}
+                </Stack>}
               </section>
             </>
           )}

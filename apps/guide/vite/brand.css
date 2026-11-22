@@ -6,40 +6,105 @@
   padding-block: var(--yg-gap-section) var(--boa-space-64);
 }
 
-.guide-brand-body {
-  max-inline-size: 72rem;
+.guide-brand-opening {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: center;
+  min-block-size: clamp(25rem, 46vi, 35rem);
+  margin-block-end: var(--boa-space-32);
+  padding-block: var(--boa-space-32);
 }
 
-.guide-brand-body :is(section, nav)[id] {
-  scroll-margin-block-start: var(--yg-gap-section);
+.guide-home-intro[data-featured] .yg-page-header-title {
+  gap: clamp(var(--yg-gap-stack), 2vi, var(--boa-space-24));
+}
+.guide-home-intro[data-featured] .yg-page-header-title .yg-heading {
+  font-size: clamp(3.5rem, 11vi, 10rem);
+  font-weight: var(--boa-role-weight-wordmark);
+  letter-spacing: var(--boa-tracking-display);
+}
+.guide-home-intro .yg-page-header-title .yg-mark {
+  inline-size: clamp(2.75rem, 7.3vi, 6.5rem);
+  block-size: auto;
+}
+.guide-home-intro .yg-page-header-subtitle {
+  max-inline-size: 22ch;
+  font-size: clamp(var(--boa-size-subheading), 3vi, var(--boa-size-headline));
+  line-height: 1.08;
+  letter-spacing: var(--boa-tracking-heading);
+}
+.guide-home-intro .yg-page-header-detail {
+  max-inline-size: 47ch;
+  font-size: var(--boa-size-body);
+  line-height: var(--boa-line-height-body);
 }
 
-.guide-company-story {
-  background: var(--yg-surface);
-  padding: clamp(var(--yg-inset-roomy), 5vi, var(--boa-space-64));
-  border-radius: var(--yg-radius-panel);
+.guide-brand-artwork {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  min-block-size: clamp(12rem, 30vi, 25rem);
+  max-inline-size: 28rem;
 }
-.guide-company-story img,
+.guide-brand-artwork .yg-mark { align-self: center; block-size: auto; max-inline-size: 100%; }
+.guide-brand-artwork .yg-mark:first-child {
+  grid-area: 1 / 2 / 6 / 6;
+  inline-size: min(100%, 15rem);
+  justify-self: center;
+}
+.guide-brand-artwork .yg-mark:nth-child(2) {
+  grid-area: 1 / 5 / 3 / 7;
+  inline-size: min(100%, 9rem);
+  justify-self: end;
+}
+.guide-brand-artwork .yg-mark:last-child {
+  grid-area: 4 / 1 / 6 / 3;
+  inline-size: min(80%, 6.5rem);
+}
+
+.guide-brand-body { max-inline-size: 70rem; }
+.guide-brand-body [id] { scroll-margin-block-start: var(--yg-gap-section); }
+.guide-brand-body .guide-section .yg-text { max-inline-size: 68ch; }
+.guide-brand-body .guide-section > .yg-stack > h2 {
+  font-size: var(--boa-size-section);
+  line-height: var(--boa-line-height-section);
+}
+
+.guide-company-layout {
+  grid-template-columns: minmax(10rem, 1fr) minmax(0, 2fr);
+  align-items: start;
+  padding-block: var(--boa-space-24);
+}
+.guide-company-layout .yg-heading {
+  font-size: clamp(var(--boa-size-section), 4vi, var(--boa-size-headline));
+  line-height: 1.06;
+  letter-spacing: var(--boa-tracking-heading);
+}
+.guide-company-layout .yg-text { max-inline-size: 48ch; }
+.guide-company-layout img,
 .guide-brand-art img { display: block; max-inline-size: 100%; object-fit: contain; }
-.guide-company-story .yg-heading { max-inline-size: 25ch; }
-.guide-company-story .yg-text { max-inline-size: 58ch; }
-
-.guide-brand-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
-  gap: var(--yg-gap-stack);
-}
-.guide-brand-art {
-  display: grid;
-  place-items: center;
-  min-block-size: calc(var(--yg-size-touch) + var(--yg-inset-roomy));
-  padding: var(--yg-inset-regular);
-  border-radius: var(--yg-radius-control);
-  background: var(--boa-color-gray-green-50);
-}
-.guide-company-story img {
+.guide-company-layout img {
   background: var(--boa-color-gray-green-50);
   border-radius: var(--yg-radius-control);
   padding: var(--yg-gap-tight);
 }
+
+.guide-brand-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+.guide-brand-asset-row { grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr); align-items: center; }
+.guide-brand-art {
+  display: grid;
+  place-items: center;
+  min-block-size: 7rem;
+  padding: var(--yg-inset-regular);
+  border-radius: var(--yg-radius-control);
+  background: var(--boa-color-gray-green-50);
+}
 .guide-brand .yg-inline { flex-wrap: wrap; }
+
+@media (max-width: 48rem) {
+  .guide-brand-opening { grid-template-columns: minmax(0, 1fr); min-block-size: 0; padding-block: var(--boa-space-24) 0; }
+  .guide-brand-artwork { min-block-size: 9rem; max-inline-size: min(100%, 16rem); margin-inline: auto; }
+
+  .guide-company-layout { grid-template-columns: minmax(0, 1fr); padding-block: 0; }
+}
+@media (max-width: 34rem) {
+  .guide-brand-asset-row { grid-template-columns: minmax(0, 1fr); }
+}

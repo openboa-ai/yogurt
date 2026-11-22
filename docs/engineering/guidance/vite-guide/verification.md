@@ -21,3 +21,9 @@ The initial gallery pass rendered 30 template or study routes at 390 and 1440 pi
 The production Vite build used the same Yogurt masthead across all hosted route families. The selected destination retained its surface treatment without an underline at 320, 900 and 1440 pixels. Old handbook, control, wordmark and task-state URLs opened the matching React page. The browser exercised color selection, roster search and recovery, project emoji contour, agent playback, emoji search and artwork variants, the playbook menu and profile actions.
 
 The component sweep opened all 168 hosted component and block routes at 320 pixels in dark appearance and 1440 pixels in light appearance. It checked the specimen, the guide title, horizontal overflow, the masthead treatment and browser errors. The interactive template check passed all 64 compositions at 390 and 1440 pixels. Shared UI sources checks the source boundary and runs the hosted shell test against a production Vite build.
+
+## Brand book and reference guide
+
+The built guide opened the home, asset anchors, foundations, component detail, templates, design sources, project setup, playbook, emoji, agents, and Studio at 390 and 1440 pixels. The desktop and mobile captures showed the original project artwork, a shared reading edge, and flat brand documentation with source downloads. The Upright 9 download returned its SVG from the built site.
+
+The palette presented all 267 tokens in 22 hue families at once. Pointer selection, directional keys, and copying the selected CSS variable worked in light and dark appearances. At narrow width, the shade columns scrolled inside the palette while the hue names stayed visible and the page retained its width.

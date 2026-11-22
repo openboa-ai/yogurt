@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   ActionMenu, Badge, Card, Disclosure, Heading, Inline, Link, ProjectMark,
-  Select, Stack, Table, Text,
+  Select, Stack, Surface, Table, Text,
 } from "@openboa/yogurt";
 import catalog from "../../../../catalog/patterns.json";
 import examples from "../../../../examples/project-use/scenarios.json";
@@ -33,7 +33,7 @@ export default function Playbook() {
   return <GuidePage title="Product playbook" id="playbook"
     detail="Choose the job your screen needs to do. See which facts the product supplies and how Yogurt turns them into an interface."
     action={<Link href="#pb-directory-section" emphasis="soft" size="touch">Browse all task patterns</Link>}>
-    <GuideGrid>
+    <GuideGrid split>
       <Card title="Choose a task">
         <Stack gap={16}>
           <Select id="pb-project" label="Product brief" value={project.id} options={projects}
@@ -48,9 +48,10 @@ export default function Playbook() {
           <Text>{project.inputs}</Text>
         </Stack>
       </Card>
-      <Card title={project.project} action={<Badge>Example data</Badge>}>
-        <Stack gap={12}>
-          <ProjectMark project={marks[project.id as keyof typeof marks]} label="" size={40} />
+      <Surface className="guide-panel">
+        <Stack gap={16}>
+          <Inline gap={8}><ProjectMark project={marks[project.id as keyof typeof marks]} label="" size={32} />
+            <Text>{project.project}</Text><Badge>Example data</Badge></Inline>
           <Heading id="example-title" level={3} aria-live="polite" aria-atomic="true">{scene.headline}</Heading>
           <Text>{scene.body}</Text>
           <Table caption="Product facts">
@@ -59,7 +60,7 @@ export default function Playbook() {
           <Heading level={4}>Available next step</Heading>
           <Text>{scene.action}</Text>
         </Stack>
-      </Card>
+      </Surface>
     </GuideGrid>
     <GuideSection id="usage" title="What Yogurt supplies">
       <Inline gap={16}>

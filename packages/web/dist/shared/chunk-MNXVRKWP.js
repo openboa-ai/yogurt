@@ -384,14 +384,18 @@ function RadioGroup({
   value,
   onValueChange,
   disabled,
-  name
+  name,
+  presentation = "standard",
+  columns
 }) {
   return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset", children: [
     /* @__PURE__ */ jsx("legend", { className: "yg-label", children: label }),
     /* @__PURE__ */ jsx(
       SDKRadio,
       {
-        className: "yg-radio",
+        className: presentation === "swatches" ? "yg-swatch-list" : "yg-radio",
+        "data-aligned": columns !== void 0 || void 0,
+        style: columns === void 0 ? void 0 : { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` },
         "aria-label": label,
         value,
         name,
@@ -399,10 +403,21 @@ function RadioGroup({
         onValueChange: (next) => {
           if (next !== null) onValueChange(next);
         },
-        children: options.map((o) => /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("label", { "data-disabled": disabled || o.disabled ? "" : void 0, children: [
-          /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(SDKRadioItem, { value: o.id, disabled: o.disabled, children: /* @__PURE__ */ jsx(RadioIndicator, {}) }) }),
-          o.label
-        ] }) }, o.id))
+        children: options.map((option) => presentation === "swatches" && "color" in option ? /* @__PURE__ */ jsxs("div", { className: "yg-swatch-choice", style: { gridColumn: option.column }, children: [
+          /* @__PURE__ */ jsx(
+            SDKRadioItem,
+            {
+              value: option.id,
+              disabled: option.disabled,
+              "aria-label": option.accessibleLabel,
+              style: { backgroundColor: option.color }
+            }
+          ),
+          columns === void 0 && /* @__PURE__ */ jsx("span", { className: "yg-meta", "aria-hidden": "true", children: option.label })
+        ] }, option.id) : /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsxs("label", { "data-disabled": disabled || option.disabled ? "" : void 0, children: [
+          /* @__PURE__ */ jsx("div", { children: /* @__PURE__ */ jsx(SDKRadioItem, { value: option.id, disabled: option.disabled, children: /* @__PURE__ */ jsx(RadioIndicator, {}) }) }),
+          option.label
+        ] }) }, option.id))
       }
     )
   ] });

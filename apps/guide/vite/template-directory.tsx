@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  Button, Card, Heading, Inline, Link, PageHeader, Select, Stack,
+  Button, Card, Heading, Inline, Link, NavigationList, PageHeader, Select, Stack,
 } from "@openboa/yogurt";
 import { FormRecipe } from "../examples/templates/recipe-forms";
 import { MetricRecipe, RecordRecipe } from "../examples/templates/recipe-data";
@@ -9,8 +9,10 @@ import { getRecipe, recipeBoards, recipeFamilies, type Recipe } from "../example
 
 export function TemplateGallery({ appearance }: { appearance: "light" | "dark" }) {
   return <main className="guide-templates template-gallery">
-    <Stack gap={24}>
-      <PageHeader title="Templates" />
+    <Stack gap={32}>
+      <PageHeader title="Templates" detail="Explore working compositions for navigation, forms, data and everyday product states." />
+      <NavigationList label="Template boards" orientation="horizontal" current=""
+        items={recipeBoards.map(board => ({ id: board.id, label: board.title, href: "#" + board.id + "-templates" }))} />
       {recipeBoards.map(board => <section key={board.id} aria-labelledby={board.id + "-templates"} data-template-board={board.id}>
         <Heading level={2} id={board.id + "-templates"}>{board.title}</Heading>
         <div className="template-gallery-board">

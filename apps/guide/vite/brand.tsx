@@ -1,5 +1,5 @@
 import {
-  ButtonGroup, Card, Disclosure, Grid, Heading, Inline, Link, NavigationList,
+  ButtonGroup, Disclosure, Grid, Heading, Inline, Link, NavigationList,
   PageHeader, ProjectMark, Stack, Surface, Text,
 } from "@openboa/yogurt";
 import tokens from "../../../design/tokens/brand.json";
@@ -44,34 +44,43 @@ const resources = [
 
 export default function BrandPage() {
   return <main className="guide-brand">
-    <PageHeader className="guide-home-intro" featured title="Yogurt"
-      leading={<ProjectMark project="yogurt" label="" size={56} />}
-      subtitle="ships with live cultures"
-      detail="Yogurt is OpenBoa’s design system and UI SDK, with shared design tokens, artwork, product language, and components for web and native apps."
-      action={<ButtonGroup label="Explore Yogurt">
-        <Link href="/system" emphasis="soft" size="touch">Explore the design system</Link>
-        <Link href="/components" emphasis="filled" size="touch">Browse components</Link>
-      </ButtonGroup>} />
-    <Stack gap={48} className="guide-brand-body">
+    <Grid className="guide-brand-opening" gap={32}>
+      <PageHeader className="guide-home-intro" featured title="Yogurt"
+        leading={<ProjectMark project="yogurt" label="" size={104} />}
+        subtitle="ships with live cultures"
+        detail="Yogurt is OpenBoa’s design system and UI SDK, with shared design tokens, artwork, product language, and components for web and native apps."
+        action={<ButtonGroup label="Explore Yogurt">
+          <Link href="/system" emphasis="soft" size="touch">Explore the design system</Link>
+          <Link href="/components" emphasis="filled" size="touch">Browse components</Link>
+        </ButtonGroup>} />
+      <Grid className="guide-brand-artwork" gap={12} aria-hidden="true">
+        <ProjectMark project="yogurt" label="" size={232} />
+        <ProjectMark project="sourdough" label="" size={152} />
+        <ProjectMark project="meatball" label="" size={104} />
+      </Grid>
+    </Grid>
+    <Stack gap={64} className="guide-brand-body">
       <NavigationList label="Brand guide sections" items={chapters} current="" orientation="horizontal" />
-      <section id="identity" aria-label="OpenBoa company introduction">
-        <Surface className="guide-company-story">
-          <Stack gap={16}>
-            <img src={signature} alt="OpenBoa" width={170} height={34} />
+      <section id="identity" className="guide-company-story" aria-label="OpenBoa company introduction">
+        <Grid className="guide-company-layout" gap={32}>
+          <img src={signature} alt="OpenBoa" width={184} height={37} />
+          <Stack gap={12}>
             <Heading>Every limit has a shelf life.</Heading>
             <Text>A good idea can be a few years early. OpenBoa builds products and businesses around what people can now do with AI.</Text>
           </Stack>
-        </Surface>
+        </Grid>
       </section>
       <GuideSection id="family" title="The OpenBoa family">
         <Text>Write OpenBoa with a capital O and B in company introductions and credits. Lead with the project’s own name when someone is using it. Keep repository names lowercase.</Text>
-        <Grid className="guide-brand-cards" gap={12}>
-          {names.map(({ project, slogan, detail }) => <Card key={project} title={project} description={slogan}>
-            <Stack gap={12}>
-              <ProjectMark project={project} label="" size={36} />
-              <Text>{detail}</Text>
+        <Grid className="guide-brand-cards" gap={24}>
+          {names.map(({ project, slogan, detail }) => <article key={project}>
+            <Stack gap={8}>
+              <ProjectMark project={project} label="" size={48} />
+              <Heading level={3}>{project}</Heading>
+              <Text>{slogan}</Text>
+              <Text variant="help">{detail}</Text>
             </Stack>
-          </Card>)}
+          </article>)}
         </Grid>
         <Text>Kai and Sol each have a familiar silhouette. Use the name and silhouette together where someone chooses or returns to an agent.</Text>
         <Inline gap={16}><Link href="/library#emoji">Project emoji</Link><Link href="/agents">Agent family</Link></Inline>
@@ -89,14 +98,18 @@ export default function BrandPage() {
       </GuideSection>
       <GuideSection id="logo" title="Logo">
         <Text>The small notch on Kai’s top edge repeats nine times around one uneven outline. It gives the company and its agents a family resemblance. The company signs with Upright 9.</Text>
-        <Grid className="guide-brand-cards" gap={12}>
-          {artwork.map(item => <Card key={item.href} title={item.title} description={item.detail}
-            action={<Link href={item.href} download emphasis="soft" aria-label={`Download ${item.title.toLowerCase()} SVG`}>Download SVG</Link>}>
+        <Stack gap={24}>
+          {artwork.map(item => <Grid key={item.href} className="guide-brand-asset-row" gap={24}>
             <Surface className="guide-brand-art">
               <img src={item.href} width={item.width} height={item.height} alt="" />
             </Surface>
-          </Card>)}
-        </Grid>
+            <Stack gap={8}>
+              <Heading level={3}>{item.title}</Heading>
+              <Text>{item.detail}</Text>
+              <Inline><Link href={item.href} download aria-label={`Download ${item.title.toLowerCase()} SVG`}>Download SVG</Link></Inline>
+            </Stack>
+          </Grid>)}
+        </Stack>
         <Stack id="wordmark-study"><Disclosure label="Signature proportions and placement">
           <Stack gap={12}>
             <Text>Use the horizontal SVG as one piece. In the B2 construction, the flat capital B is 60 units high and the visible symbol is 80. The symbol-to-name gap is 18 units. The symbol’s center sits 3 units below the capital’s center.</Text>
@@ -111,10 +124,11 @@ export default function BrandPage() {
         <Inline gap={16}><Link href="/system#type">Type scale</Link><Link href="/system#color">Shared palette</Link><Link href="/#wordmark-study">Wordmark study</Link></Inline>
       </GuideSection>
       <GuideSection id="files" title="Files">
-        <Grid className="guide-brand-cards" gap={12}>
-          {resources.map(({ label, links }) => <Card key={label} title={label}>
-            <Stack gap={8}>{links.map(link => <Link key={link.href} href={link.href} download>{link.label}</Link>)}</Stack>
-          </Card>)}
+        <Grid className="guide-brand-cards" gap={24}>
+          {resources.map(({ label, links }) => <Stack key={label} gap={8}>
+            <Heading level={3}>{label}</Heading>
+            {links.map(link => <Link key={link.href} href={link.href} download>{link.label}</Link>)}
+          </Stack>)}
         </Grid>
         <Inline gap={16}>
           <Link href="/library">Design sources</Link>

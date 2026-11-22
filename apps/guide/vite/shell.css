@@ -45,14 +45,6 @@ body { margin: 0; }
     grid-template-columns: var(--guide-rail-width) minmax(0, 1fr);
   }
 }
-.guide-shell .guide-home-intro {
-  padding-block: var(--boa-space-32) var(--boa-space-48);
-}
-.guide-home-intro[data-featured] .yg-page-header-title .yg-heading {
-  font-weight: var(--boa-role-weight-heading);
-  letter-spacing: var(--boa-tracking-display);
-}
-.guide-home-intro .yg-mark { inline-size: clamp(44px, 6vi, 70px); block-size: auto; }
 @media (max-width: 62rem) {
   .guide-masthead { padding-block: var(--yg-gap-inline); }
 }

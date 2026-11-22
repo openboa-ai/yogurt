@@ -32,6 +32,16 @@ Every maintained guide route renders through the Vite React entry. Compose page 
 
 Verify this boundary in Shared UI sources. Check the actual hosted menu after navigating through every top-level and supporting route, in both appearances. The current destination uses the NavigationList selection treatment. Exercise the palette, roster, artwork options, emoji picker and playbook in the hosted guide through their public controls, including direct links and a recovery path.
 
+## Brand book and reference guide
+
+The home opens with an expressive Yogurt title and the original project artwork. Preserve the company story and brand language. Continue into a restrained manual with readable section titles, logo previews, plain usage instructions, and downloads beside the relevant assets. Keep the Yogurt mark at the left of the title and in the browser tab. The manual keeps its anchors and the original artwork files.
+
+Use one masthead and one reading rhythm for the reference pages. A component page presents purpose, live specimen, usage guidance, and installation in that order. The template gallery and Studio keep their interactive examples. Use typography and alignment to group information. Reserve raised surfaces for a specimen, a distinct task, or the artwork's intended background.
+
+The palette shows every hue family in one matrix. Align existing lightness numbers across rows and leave unavailable steps empty. Use the shared RadioGroup selection behavior and swatch presentation. Keep the numeric and hexadecimal values available, and let a person copy the selected CSS variable. The family selector changes the selection without filtering the matrix. At narrow widths, scroll the matrix within its own labelled area while keeping the family labels visible.
+
+Verify the title and artwork in the home, its direct download links, the reading and navigation order across reference pages, and the real controls in the palette, component library, templates and Studio. Exercise direct URLs, narrow layouts, both appearances, keyboard selection and clipboard feedback. Check the packaged Web output as well as the built guide.
+
 ## Composition calibration
 
 Let previews own their surfaces. A gallery frame identifies the composition and provides space around it, while the components within it demonstrate their packaged geometry. Wide data and workspace previews receive the available width. Keep the two gallery boards and all 64 direct specimens.

@@ -73,7 +73,7 @@ export default function DesignSources() {
     </ButtonGroup>}>
     <GuideSection id="general-emoji" title="General emoji">
       <Text>Find faces, gestures, animals, places, activities, objects, symbols and flags. Each sequence has an editable drawing and a transparent chat export.</Text>
-      <Inline gap={8}>{samples.map(([id, label]) => <Link key={id} href={"/emoji?emoji=" + id} aria-label={label} emphasis="quiet">
+      <Inline className="guide-emoji-preview-strip" gap={8}>{samples.map(([id, label]) => <Link key={id} href={"/emoji?emoji=" + id} aria-label={label} emphasis="quiet">
         <Asset size={28}><img src={"/assets/emoji/svg/" + id + ".svg"} width="28" height="28" alt="" /></Asset>
       </Link>)}</Inline>
       <Link href="/emoji">Open the complete emoji catalog</Link>
@@ -81,7 +81,7 @@ export default function DesignSources() {
     <GuideSection id="applications" title="Brand applications">
       <Text>Introduce the company on a cover with the full signature and a single thought. In this 16:9 example, the wordmark stays outlined and the headline stays editable in Rethink Sans.</Text>
       <Card title="Company opener" action={<Link href="/assets/applications/company-opener.svg" download>Download editable SVG</Link>}>
-        <img src="/assets/applications/company-opener.svg" alt="OpenBoa cover reading Every limit has a shelf life." width={640} height={360} />
+        <img src="/assets/applications/company-opener.svg" alt="OpenBoa cover reading Every limit has a shelf life." width={640} height={360} loading="lazy" />
       </Card>
       <Link href="/system#catalog">Product component catalog</Link>
     </GuideSection>

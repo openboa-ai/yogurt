@@ -72,6 +72,20 @@ export interface Choices {
     disabled?: boolean;
     name?: string;
 }
-export declare function RadioGroup({ label, options, value, onValueChange, disabled, name, }: Choices): import("react/jsx-runtime").JSX.Element;
+type SwatchOption = Option & {
+    color: string;
+    accessibleLabel: string;
+    column?: number;
+};
+type RadioGroupProps = Omit<Choices, "options"> & ({
+    presentation?: "standard";
+    options: Option[];
+    columns?: never;
+} | {
+    presentation: "swatches";
+    options: SwatchOption[];
+    columns?: number;
+});
+export declare function RadioGroup({ label, options, value, onValueChange, disabled, name, presentation, columns, }: RadioGroupProps): import("react/jsx-runtime").JSX.Element;
 export declare function Combobox({ label, options, value, onValueChange, disabled, name, help, error, }: Choices & Pick<FieldInfo, "help" | "error">): import("react/jsx-runtime").JSX.Element;
 export {};

@@ -73,14 +73,11 @@
   .template-account[data-layout="split"], .template-account[data-layout="framed"] { grid-template-columns: minmax(0, 1fr); }
   .template-account-main { padding: var(--yg-gap-panel); }
 }
-.template-gallery {
-  max-inline-size: 105rem;
-}
 .template-gallery-board {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   align-items: start;
-  gap: var(--yg-gap-panel);
+  gap: var(--yg-gap-section);
   margin-block-start: var(--yg-gap-panel);
 }
 .template-specimen {

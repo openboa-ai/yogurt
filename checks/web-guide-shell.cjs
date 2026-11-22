@@ -1,5 +1,6 @@
 const assert = require("node:assert/strict");
 const { chromium } = require("playwright-core");
+const { color: palette } = require("../design/tokens/brand.json");
 
 const base = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
 const destinations = [
@@ -108,11 +109,19 @@ async function checkGuide(browser, width) {
       assert.equal(page.url().slice(base.length), next);
     }
     await page.goto(base + "/system#color");
-    await page.locator("#swatches button").first().waitFor();
+    const matrix = page.getByRole("region", { name: "Color matrix", exact: true });
+    await matrix.getByRole("radiogroup", { name: "slate shades" }).waitFor();
+    assert.equal(await matrix.getByRole("radiogroup").count(), Object.keys(palette).length);
+    assert.equal(await matrix.getByRole("radio").count(),
+      Object.values(palette).flatMap(colors => Object.keys(colors)).length);
     await page.locator("#hue").selectOption("orange");
     assert.match(await page.locator("#color-name").innerText(), /^orange\./);
-    await page.getByRole("button", { name: /^orange 600/ }).click();
+    const shades = page.getByRole("radiogroup", { name: "orange shades" });
+    const shade = shades.getByRole("radio", { name: /^orange 600/ });
+    await shade.click();
     assert.equal(await page.locator("#color-name").innerText(), "orange.600");
+    await shade.press("ArrowLeft");
+    assert.equal(await page.locator("#color-name").innerText(), "orange.500");
     const rosterSearch = page.getByRole("searchbox", { name: "Find an agent" });
     await rosterSearch.fill("014");
     await page.getByLabel("Status", { exact: true }).selectOption("Working");

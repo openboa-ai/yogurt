@@ -1,15 +1,15 @@
 import { useState, type CSSProperties } from "react";
 import {
-  Badge, Button, Checkbox, CodeBlock, CopyButton, Disclosure, Grid, Heading, Inline,
-  Link, Result, SearchField, Select, Stack, Surface, Table, Text, Yogurt,
+  Badge, Button, Checkbox, CodeBlock, CopyButton, Disclosure, Grid, GridList, Heading, Inline, RadioGroup,
+  Link, Result, ScrollArea, SearchField, Select, Stack, Surface, Table, Text, Yogurt,
 } from "@openboa/yogurt";
 import tokens from "../../../../design/tokens/brand.json";
 import { GuideGrid, GuidePage, GuideSection } from "./layout";
 
 const chapters = [
-  ["screen-composition", "Composition"], ["type", "Type"], ["color", "Color"],
-  ["dimensions", "Dimensions"], ["controls", "Controls"], ["catalog", "Catalog"],
-  ["components", "Agent roster"], ["handoff", "Use in an app"],
+  ["color", "Color"], ["type", "Typography"], ["dimensions", "Dimensions"],
+  ["screen-composition", "Composition"], ["controls", "Controls"],
+  ["catalog", "Catalog"], ["components", "Agent roster"], ["handoff", "Use in an app"],
 ] as const;
 
 const roles = [
@@ -21,34 +21,60 @@ const roles = [
   ["Supporting text", "help", "body", "body"], ["Caption", "caption", "caption", "meta"],
 ] as const;
 const palette = tokens.color as Record<string, Record<string, string>>;
-const colorFamilies = Object.keys(palette).map(id => ({id, label: id.replaceAll("-", " ")}));
+const colorFamilies = Object.keys(palette).map(id => ({ id, label: id.replaceAll("-", " ") }));
+const shades = [...new Set(Object.values(palette).flatMap(colors => Object.keys(colors)))].sort((a, b) => Number(a) - Number(b));
+const colorRows = colorFamilies.map(({ id: family, label }) => ({
+  family,
+  label,
+  samples: Object.entries(palette[family]).map(([id, hex]) => ({
+    id,
+    label: id,
+    accessibleLabel: family + " " + id + ", " + hex,
+    column: shades.indexOf(id) + 1,
+    color: "var(--boa-color-" + family + "-" + id + ")",
+  })),
+}));
+const colorCount = colorRows.reduce((total, row) => total + row.samples.length, 0);
 
 function Palette() {
-  const [family, setFamily] = useState("slate");
-  const [step, setStep] = useState("750");
-  const colors = palette[family];
+  const [{ family, step }, select] = useState({ family: "slate", step: "750" });
   const name = family + "." + step;
   const variable = "var(--boa-color-" + family + "-" + step + ")";
-  return <Surface className="guide-panel" id="palette">
-    <Stack gap={16}>
+  return <Stack gap={16} id="palette">
+    <Grid className="guide-palette-heading" gap={16}>
+      <Text variant="help">{colorRows.length} families · {colorCount} colors</Text>
       <Select id="hue" label="Color family" value={family} options={colorFamilies} onChange={event => {
         const next = event.currentTarget.value;
-        setFamily(next);
-        setStep("500" in palette[next] ? "500" : Object.keys(palette[next])[0]);
+        select({ family: next, step: "500" in palette[next] ? "500" : Object.keys(palette[next])[0] });
       }} />
-      <Grid className="guide-swatches" gap={8} id="swatches" role="group" aria-label="Color steps">
-        {Object.entries(colors).map(([id, hex]) => <Button key={id} emphasis={id === step ? "soft" : "quiet"} size="touch"
-          aria-label={family + " " + id + ", " + hex} aria-pressed={id === step} onClick={() => setStep(id)}>
-          <span className="guide-swatch" style={{background: "var(--boa-color-" + family + "-" + id + ")"}} />{id}
-        </Button>)}
-      </Grid>
-      <Inline gap={12}>
-        <Text id="color-name">{name}</Text>
-        <Text id="color-hex" variant="help">{colors[step]}</Text>
-        <CopyButton key={name} value={variable} />
+    </Grid>
+    <Grid gap={16} className="guide-palette-selection">
+      <Inline gap={12} aria-live="polite">
+        <span className="guide-color-sample" aria-hidden="true" style={{ backgroundColor: variable }} />
+        <Stack gap={2}>
+          <Text id="color-name">{name}</Text>
+          <Text id="color-hex" variant="help">{palette[family][step]}</Text>
+        </Stack>
       </Inline>
-    </Stack>
-  </Surface>;
+      <CopyButton key={name} value={variable} />
+    </Grid>
+    <ScrollArea className="guide-color-scroll" label="Color matrix">
+      <Stack className="guide-color-matrix" gap={4} style={{ "--guide-shades": shades.length } as CSSProperties}>
+        <Grid className="guide-color-row" gap={8} aria-hidden="true">
+          <Text className="guide-color-family" variant="meta">Family</Text>
+          <Grid className="guide-color-steps" gap={2}>
+            {shades.map(shade => <Text key={shade} variant="meta">{shade}</Text>)}
+          </Grid>
+        </Grid>
+        {colorRows.map(row => <Grid className="guide-color-row" gap={8} key={row.family}>
+          <Text className="guide-color-family" aria-hidden="true" variant="help">{row.label}</Text>
+          <RadioGroup label={row.label + " shades"} presentation="swatches" columns={shades.length}
+            value={row.family === family ? step : ""} options={row.samples}
+            onValueChange={step => select({ family: row.family, step })} />
+        </Grid>)}
+      </Stack>
+    </ScrollArea>
+  </Stack>;
 }
 
 const agents = [
@@ -91,12 +117,12 @@ function Roster() {
 }
 
 export default function SystemGuide() {
-  const spacing = Object.keys(tokens.space).map(step => step + " px").join(" · ");
-  return <GuidePage title="Design system" detail="Use these foundations to build a product screen. The agent roster shows how type, color and controls work together." chapters={chapters}>
-    <GuideSection id="screen-composition" title="Screen composition">
-      <Text>Use PageHeader for the screen’s title and context. Align the title, body and actions to one reading edge.</Text>
-      <Text>In an action group, put alternatives first and the single filled action last. Use links to open destinations and buttons to change state.</Text>
-      <Inline gap={16}><Link href="/components/top">Inspect PageHeader</Link><Link href="/docs/design-system-rules.md">Web and Native composition rules</Link></Inline>
+  return <GuidePage title="Design system" detail="The colors, type and dimensions behind OpenBoa products. See how they come together in the live agent roster." chapters={chapters}>
+    <GuideSection id="color" title="Color">
+      <Text>Compare lightness across color families. Blank cells indicate an unused step. Each color keeps its value across themes.</Text>
+      <Palette />
+      <Text>Check foreground and background together. Use a readable status word, such as <Badge tone="success">Ready</Badge>, alongside the color.</Text>
+      <Link href="/tokens/brand.json" download>Download tokens</Link>
     </GuideSection>
     <GuideSection id="type" title="Typography">
       <Text>Choose the role first. A title introduces a page, body text explains it, and an interface label names an action or value.</Text>
@@ -113,16 +139,21 @@ export default function SystemGuide() {
       </Table>
       <Text>Use tabular figures on comparable IDs, times and amounts. <Link href="/#logo">Choose a logo master</Link>.</Text>
     </GuideSection>
-    <GuideSection id="color" title="Color">
-      <Text>Pick a hue and a lightness step from the shared palette. Each primitive keeps its value across themes.</Text>
-      <Palette />
-      <Text>Check foreground and background together. Use a readable status word, such as <Badge tone="success">Ready</Badge>, alongside the color.</Text>
-      <Link href="/tokens/brand.json" download>Download tokens</Link>
-    </GuideSection>
     <GuideSection id="dimensions" title="Dimensions">
       <Text>Use 4–6 px within a label group, 8–10 px between related controls and 24 px between groups.</Text>
-      <Text>Spacing scale · {spacing}</Text>
+      <GridList label="Spacing scale in pixels" minWidth={76} items={Object.keys(tokens.space).map(step => ({
+        id: step,
+        content: <Stack className="guide-spacing-sample" gap={8}>
+          <span aria-hidden="true" style={{inlineSize: "var(--boa-space-" + step + ")"}} />
+          <Text variant="meta">{step} px</Text>
+        </Stack>,
+      }))} />
       <Inline gap={16}><Link href="/components/button">Control sizes and corners</Link><Link href="/components/disclosure-row">Surface motion</Link></Inline>
+    </GuideSection>
+    <GuideSection id="screen-composition" title="Screen composition">
+      <Text>Use PageHeader for the screen’s title and context. Align the title, body and actions to one reading edge.</Text>
+      <Text>In an action group, put alternatives first and the single filled action last. Use links to open destinations and buttons to change state.</Text>
+      <Inline gap={16}><Link href="/components/top">Inspect PageHeader</Link><Link href="/docs/design-system-rules.md">Web and Native composition rules</Link></Inline>
     </GuideSection>
     <GuideSection id="controls" title="Controls">
       <Text>Keep the field label visible as someone types. Use Select for a short fixed list, Checkbox for an independent choice and Disclosure for details that can open in place.</Text>
