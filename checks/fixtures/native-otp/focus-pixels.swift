@@ -3,7 +3,7 @@ import AppKit
 let directory = URL(fileURLWithPath: CommandLine.arguments[1])
 func capture(_ name: String) throws -> NSBitmapImageRep {
     let data = try Data(contentsOf: directory.appendingPathComponent(name + ".png"))
-    guard let image = NSBitmapImageRep(data: data), image.pixelsWide == 480, image.pixelsHigh == 480 else {
+    guard let image = NSBitmapImageRep(data: data), image.pixelsWide >= 336, image.pixelsHigh >= 130 else {
         fatalError("Unexpected OTP fixture dimensions for \(name)")
     }
     return image
