@@ -1,6 +1,6 @@
 # Use Yogurt in a product
 
-Start at the [component library and brand reference](../apps/guide/generated/components.html). Each entry has one stable name, an English purpose, an interactive web example, an individual React export and an editable Vercel Native markup template. A project owns its data, navigation and effects.
+Find the control by what the person wants to do. Its stable catalog ID identifies the supported public entry for the project's SDK pin and target. The Native installer selects the typed view when the catalog specifies one. Follow the entry it prints. The product supplies data, navigation and effects. [Design a screen](../DESIGN.md) · [Component catalog](../catalog/components.json) · [Component gallery](../apps/guide/generated/components.html)
 
 ## Install the local SDK
 

@@ -12,7 +12,8 @@ Yogurt is OpenBoa’s design system and UI SDK, with shared design tokens, artwo
 
 ## Getting started
 
-- **Design a screen** with the [design rules](DESIGN.md), [component gallery](https://yogurt.openboa.ai/components) and [product playbook](https://yogurt.openboa.ai/playbook).
+- **Design a screen** with the [consumer guide](DESIGN.md), [component gallery](https://yogurt.openboa.ai/components) and [product playbook](https://yogurt.openboa.ai/playbook).
+- **Find where a shared fix belongs** in the [design system rules and source map](docs/design-system-rules.md#why-yogurt-exists).
 - **Build a product** using a pinned SDK revision. Follow the [Web setup](docs/using-yogurt.md#web) or [Zig and Vercel Native setup](docs/using-yogurt.md#zig-and-vercel-native-sdk).
 - **Use Yogurt with Codex** by installing the [Yogurt plugin](plugins/yogurt/README.md) and pointing it at the project's SDK pin.
 - **Make something on brand** with the [identity guide](https://yogurt.openboa.ai/), [design tokens](https://yogurt.openboa.ai/system) and [artwork and emoji](design/assets/README.md).

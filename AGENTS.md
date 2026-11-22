@@ -2,7 +2,7 @@
 
 Read [the product intent](docs/intent.md), [the visual direction](docs/design-direction.md) and the owning feature pair before changing a shared rule or renderer. Use [the design portfolio](docs/README.md) to find its engineering criterion. The catalog's explicit parent and predecessor fields determine ownership and order.
 
-Apply [One source for UI](docs/design-system-rules.md#one-source-for-ui) to this repository's own guide, Studio, templates and examples. Fix a shared interaction in the public component and exercise the same entry a consumer installs.
+Use the [shared UI source map](docs/design-system-rules.md#one-source-for-ui) and [contributor workflow](CONTRIBUTING.md#changing-shared-ui) for changes to Yogurt itself, including its guide, Studio, templates and examples. Reproduce the reported state through the installed public entry, edit the owner and record the interaction that proves the fix. On resuming work, replay the recorded path at the named revision.
 
 Before implementation, identify the accepted spec revision, the scoped plan and the target evidence. Develop against the declared public contract and exercise its positive and recovery cases. Keep exact design review, admission, implementation, observed verification and release as distinct records. Add those records when the corresponding event occurs.
 

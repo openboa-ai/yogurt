@@ -1,6 +1,14 @@
 # Design system rules
 
-OpenBoa products share Yogurt tokens, basic components and common interaction behavior. Each product combines those parts for its tasks, information and actions.
+## Why Yogurt exists
+
+A person who learns to choose an option, dismiss a menu or recover from an error in one OpenBoa product should be able to use that knowledge in the next. A product team should be able to offer that experience by choosing a supported control. The team can then spend its design time on what people came to do.
+
+Yogurt owns decisions that should change together. A shared decision has one editable source and a public way to use it. Web and Native can draw a control with different APIs. They share its purpose, design roles and promises about what a person can see and do. Products keep their own information, permissions, commands and release schedules. A correction reaches each product when it adopts the corrected SDK revision.
+
+Use a change to test this boundary. If the inset for regular cards changes, changing its role once should reach both targets. If a six-cell code field gains focus, the field owns the visible cue and keyboard behavior wherever it appears. If one product changes where to send a completed code, only that product should change. Two properties that happen to measure the same today can have different owners.
+
+Check the system from a team's first use. Can someone find the control by its purpose, use its default in a real composition and receive a fix by updating one dependency? A copied focus handler, a guide-only style override or a repeated question about the same state gives the maintainer a specific place to investigate. It may expose a hard-to-find entry, a missing option or a defect in the implementation.
 
 ## One source for UI
 
@@ -10,6 +18,7 @@ This rule starts inside Yogurt. The guide, Studio, templates and examples are co
 | --- | --- |
 | A shared color, type, spacing, shape or motion value | Edit the palette and primitives in `design/tokens/brand.json` or the component roles in `design/tokens/ui.json`. Run `npm run tokens` to generate the CSS and Zig outputs together. |
 | How a control looks, responds or moves in any state | Edit React in `packages/web/src` and its shared stylesheet in `design/styles`. For Native, edit markup in `packages/native/src/templates` or the catalog's typed Zig renderer in `packages/native/controls`. Vite and Next.js use the same web export. The component ID, guidance and default typed Native entry live in `catalog/components.json`. |
+| Which words or marks carry a shared meaning | Use the vocabulary and artwork sources listed in `catalog/brand.json`. A product supplies its object names, actual outcomes and recovery actions. |
 | How shared controls work together | Edit the reusable composition in `packages/recipes` when it is shared. A screen supplies its own content, layout, state and callbacks. |
 
 Native controls and blocks use `@{role}` references for layout spacing in their authoring templates. Generation resolves these to SDK markup. Edit each block in `packages/recipes/<id>/view.native.in`. The corresponding `view.native` and `controls/items` files are distribution outputs.
@@ -29,7 +38,9 @@ The Vite development guide watches the token sources. The Native guide launcher 
 | Common behavior | Reuse the shared implementation when it has the same purpose and state contract. This includes drawer dismissal and focus return, selection, loading and accessible feedback. Product code supplies route selection, permissions and effects. |
 | Product composition | Own the screen's layout, content hierarchy, navigation groups and available actions. Combine the shared parts to express the task. An editable preset is a starting point when a known composition fits. Its project-specific details stay in the product. |
 
-When a role or state is missing, assemble the closest supported parts and record the gap. Extend the existing shared part when the missing behavior belongs to its contract. A new entry earns its place when it serves a distinct task or interaction.
+Choose the simplest public API that expresses the task. For example, an action menu offers commands such as Rename or Archive. A select remembers the chosen setting. Both may open a list, but a person expects different results after making a choice. Use the appropriate control and let the host perform the command or save the setting.
+
+When a role or state is missing, identify the input and expected result on the project's SDK pin. Extend the existing part if the missing behavior belongs to its contract. Use its slots or compose controls when only the arrangement changes. A new public ID earns its place when it serves a distinct interaction. Keep a product-specific composition local until another real use shares its behavior.
 
 Use a component typography role for copy, fields, labels, actions and values. Web and Native share Rethink Sans, role sizes, natural tracking and line heights. Apply the action face to action labels and the body face to other text. Use the metadata role for compact context and the badge role for single-line indicators. Keep brand and wordmark typography separate from interface roles.
 
@@ -39,6 +50,8 @@ The installed component catalog stores each reviewed control's `guidance` with i
 
 Guidance is being added as components are reviewed. An entry without it is a documented coverage gap. Inspect the current component contract and target support before composing with it. An entry's guidance does not by itself qualify its renderer or grant an agent access to product data.
 
+For a new or revised control, document the choices in the order someone makes them. Give the task and public entry first, then a working default, the useful parts or variants, and the input or event the host supplies. Show the states that change a decision, including relevant keyboard, accessibility and motion behavior. A simple control can do this in one example. Keep role values in the token source and support claims in the target record so a guide cannot silently acquire its own specification.
+
 ## When a composition becomes shared
 
 Review real examples from the projects that use the same function. Compare inputs, normal use, narrow layouts, keyboard operation and failure recovery. Extract the common input and behavior and keep project context in slots and callbacks. Supply an editable preset when the whole combination recurs. Test the shared result with its actual consuming examples and record which renderers support it.
@@ -47,6 +60,8 @@ Design review checks the reuse decision and the screen. Run `yogurt check` again
 
 ## Lessons applied in Yogurt
 
+- **A working gallery showed the wrong path to adopters.** Native had a six-cell OTP view, while installation and agent guidance directed new consumers to a single-field compatibility entry. The catalog now names the default typed view. For an entry change, compare what the installer, agent and gallery resolve on the same pin. For a focus complaint, focus the installed field and inspect its appearance and keyboard cue. Finding six cells answers a different question. [Shared UI source verification](engineering/controls/component-library/verification.md#shared-ui-sources)
+- **A copied number hid a broken connection.** Native templates could look correct with the current spacing while a later role edit reached only some consumers. Templates now bind layout spacing to named roles. Exercise a role change in a disposable copy and inspect the web output and compiled Native markup. For a source-only migration, compare the distributed markup before and after with the original values. [Shared UI source verification](engineering/controls/component-library/verification.md#shared-ui-sources)
 - The sidebar examples share collapse, modal dismissal and focus behavior. The project chooses a directory, agent roster or another composition using the same shell. A fixed sidebar would require each app to work around its fields and menu structure. [Sidebar composition](sidebar.md)
 - A profile avatar and an agent silhouette convey different identities. The generic avatar's background covered the space around the agent's silhouette when they used the same style. Shared reuse must carry the same meaning as well as comparable geometry. [Workspace patterns](workspace-patterns.md)
 - Two projects can have a source with the same local ID. The common project view preserves project scope and leaves authorization and selection with the host. [Workspace verification](engineering/controls/component-library/verification.md)

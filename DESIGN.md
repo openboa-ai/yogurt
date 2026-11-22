@@ -1,16 +1,12 @@
 # Design with yogurt
 
-Read the [brand contract](catalog/brand.json) for the canonical artwork, English vocabulary, palette and role sources. Use the same [component entry](docs/using-yogurt.md) in web and Zig product intents.
-
-Start with the thing a person came to do. A project supplies the facts and actions it can actually support. Yogurt supplies the layout, wording, interaction and evidence for presenting them. The installed guide, catalogs and examples travel with the same SDK pin. [Design rules](docs/design-system-rules.md) · [Component and target inventory](catalog/components.json)
+Start with what a person came to do. Yogurt gives them familiar controls, language and feedback across OpenBoa products. Your product decides what information to show, what the person is allowed to do and what actually happened. [Why Yogurt exists](docs/design-system-rules.md#why-yogurt-exists) · [Brand contract](catalog/brand.json)
 
 ## Compose screens
 
-Start with shared Yogurt tokens and basic components. Combine them in the project to suit its tasks, information and navigation. The project owns its content, route state and actions.
-
-Use an editable preset when a common combination fits. An installed preset stays in the project, imports the same basic components and can be adapted alongside the other project views.
-
-When several projects arrive at the same behavior, compare their inputs, states and recovery paths. Lift the common behavior into a shared component or preset when it supports the real uses in each project. Keep workspace-specific facts and actions with their owner. [Sidebar composition](docs/sidebar.md) · [Editable blocks](catalog/blocks.json)
+1. Find the task in your pinned catalog. Read the control's use, companion parts, states and target support. Use its public default and pass the real labels, values and actions. For example, use a select to keep a chosen setting and an action menu to run a command. [Component inventory](catalog/components.json) · [Use the SDK](docs/using-yogurt.md)
+2. Compose the screen from those parts. Use public slots for content and shared roles for spacing and type. An editable preset can supply a familiar arrangement. Keep the product's routing, permissions and effects in the host. [Sidebar composition](docs/sidebar.md) · [Editable blocks](catalog/blocks.json)
+3. Exercise the result in context. For a card with an action menu, use the real label, open the menu by keyboard, dismiss it and check where focus returns. If the control fails, report its ID, pin, target, input and observed result to Yogurt. If the menu works and the wrong record opens, fix the host's callback. [Ownership and reuse](docs/design-system-rules.md#one-source-for-ui)
 
 ## Find the task
 
