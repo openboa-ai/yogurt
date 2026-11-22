@@ -30,6 +30,7 @@ function hostedUrl(url: URL) {
   return canonical;
 }
 
+const BrandPage = lazy(() => import("./brand"));
 const EditorialPage = lazy(() => import("./editorial").then(module => ({ default: module.EditorialPage })));
 const Catalog = lazy(() => import("./components"));
 const Templates = lazy(() => import("./templates"));
@@ -37,7 +38,7 @@ const Examples = lazy(() => import("./examples"));
 const AgentFamily = lazy(() => import("./agents"));
 const destinations = guidePages.filter(page => !page.parent && !page.retired)
   .map(page => ({ id: page.id, label: page.title, href: page.path }));
-const editorialPages = ["brand", "system", "library", "adoption", "playbook", "emoji"] as const;
+const editorialPages = ["system", "library", "adoption", "playbook", "emoji"] as const;
 type EditorialId = typeof editorialPages[number];
 type Appearance = "light" | "dark";
 
@@ -88,6 +89,7 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
 
   if (editorialPages.includes(id as EditorialId)) return <EditorialPage id={id as EditorialId} />;
   switch (id) {
+    case "brand": return <BrandPage />;
     case "components": return <Catalog guideAppearance={appearance} />;
     case "templates": return <Templates id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
     case "examples": return <Examples id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;

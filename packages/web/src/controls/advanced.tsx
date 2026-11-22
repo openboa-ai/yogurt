@@ -424,6 +424,12 @@ type NavbarProps = { className?: string; action?: ReactNode } & (
 export function Navbar(props: NavbarProps) {
   const navigationId = useId();
   const toggle = useRef<HTMLButtonElement>(null);
+  const sectionsOpen = props.variant === "sections" && props.expanded;
+  useLayoutEffect(() => {
+    if (sectionsOpen && document.activeElement === toggle.current) {
+      document.getElementById(navigationId)?.querySelector<HTMLElement>("a")?.focus();
+    }
+  }, [navigationId, sectionsOpen]);
   const className = cx("yg-navbar", props.className);
   if (props.variant === "sections") {
     return (

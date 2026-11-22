@@ -1,0 +1,45 @@
+.guide-shell .guide-brand {
+  inline-size: 100%;
+  max-inline-size: var(--guide-width);
+  margin-inline: auto;
+  padding-inline: var(--guide-gutter);
+  padding-block: var(--yg-gap-section) var(--boa-space-64);
+}
+
+.guide-brand-body {
+  max-inline-size: 72rem;
+}
+
+.guide-brand-body :is(section, nav)[id] {
+  scroll-margin-block-start: var(--yg-gap-section);
+}
+
+.guide-company-story {
+  background: var(--yg-surface);
+  padding: clamp(var(--yg-inset-roomy), 5vi, var(--boa-space-64));
+  border-radius: var(--yg-radius-panel);
+}
+.guide-company-story img,
+.guide-brand-art img { display: block; max-inline-size: 100%; object-fit: contain; }
+.guide-company-story .yg-heading { max-inline-size: 25ch; }
+.guide-company-story .yg-text { max-inline-size: 58ch; }
+
+.guide-brand-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: var(--yg-gap-stack);
+}
+.guide-brand-art {
+  display: grid;
+  place-items: center;
+  min-block-size: calc(var(--yg-size-touch) + var(--yg-inset-roomy));
+  padding: var(--yg-inset-regular);
+  border-radius: var(--yg-radius-control);
+  background: var(--boa-color-gray-green-50);
+}
+.guide-company-story img {
+  background: var(--boa-color-gray-green-50);
+  border-radius: var(--yg-radius-control);
+  padding: var(--yg-gap-tight);
+}
+.guide-brand .yg-inline { flex-wrap: wrap; }

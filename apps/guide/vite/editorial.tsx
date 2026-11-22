@@ -1,6 +1,5 @@
 import { useLayoutEffect, useMemo } from "react";
-import { ButtonGroup, Heading, Link, PageHeader, ProjectMark } from "@openboa/yogurt";
-import brand from "../pages/index.html?raw";
+import { ButtonGroup, Heading, Link, NavigationList, PageHeader } from "@openboa/yogurt";
 import system from "../pages/system.html?raw";
 import library from "../pages/library.html?raw";
 import adoption from "../pages/adoption.html?raw";
@@ -21,7 +20,7 @@ import "../runtime/playbook.js";
 import "../runtime/emoji-gallery.js";
 import { canonicalGuideUrl } from "../guide-routes.mjs";
 
-const documents = { brand, system, library, adoption, playbook, emoji };
+const documents = { system, library, adoption, playbook, emoji };
 const pageStyles = { system: systemCss, library: libraryCss, playbook: menuCss + playbookCss, emoji: emojiCss };
 
 type EditorialId = keyof typeof documents;
@@ -47,24 +46,22 @@ function resolveContent(id: EditorialId) {
     }
   }
 
-  let title = "";
-  let description = "";
   const opening = main.firstElementChild;
-  if (id === "brand") {
-    const signatureHeading = opening?.querySelector("h1");
-    const signature = signatureHeading?.querySelector("img");
-    if (signature && signatureHeading) signatureHeading.replaceWith(signature);
-    opening?.classList.add("guide-company-story");
-  } else {
-    const heading = opening?.querySelector("h1");
-    const paragraph = opening?.querySelector("p");
-    title = heading?.textContent ?? "";
-    description = paragraph?.textContent ?? "";
-    heading?.remove();
-    paragraph?.remove();
-    if (!opening?.textContent?.trim()) opening?.remove();
-  }
-  return { body: { __html: main.innerHTML }, className: main.className, mainId: main.id, title, description };
+  const heading = opening?.querySelector("h1");
+  const paragraph = opening?.querySelector("p");
+  const title = heading?.textContent ?? "";
+  const description = paragraph?.textContent ?? "";
+  heading?.remove();
+  paragraph?.remove();
+  if (!opening?.textContent?.trim()) opening?.remove();
+
+  const chapters = main.querySelector("nav.chapter-nav");
+  const items = Array.from(chapters?.querySelectorAll("a[href]") ?? [], (link, index) => ({
+    id: String(index), label: link.textContent ?? "", href: link.getAttribute("href")!,
+  }));
+  const chapterLabel = chapters?.getAttribute("aria-label") ?? title;
+  chapters?.remove();
+  return { body: { __html: main.innerHTML }, className: main.className, mainId: main.id, title, description, items, chapterLabel };
 }
 
 export function EditorialPage({ id }: { id: EditorialId }) {
@@ -87,18 +84,14 @@ export function EditorialPage({ id }: { id: EditorialId }) {
   return <div className="guide-editorial">
     <style>{specimenCss + guideCss + (pageStyles[id as keyof typeof pageStyles] ?? "")}</style>
     <main className={content.className} id={content.mainId || undefined}>
-      {id === "brand" ? <PageHeader className="guide-home-intro" featured title="Yogurt"
-        leading={<ProjectMark project="yogurt" label="" size={56} />}
-        subtitle="ships with live cultures"
-        detail="Yogurt is OpenBoa’s design system and UI SDK, with shared design tokens, artwork, product language, and components for web and native apps."
-        action={<ButtonGroup label="Explore Yogurt">
-          <Link href="/system" emphasis="soft" size="touch">Explore the design system</Link>
-          <Link href="/components" emphasis="filled" size="touch">Browse components</Link>
-        </ButtonGroup>} /> : <PageHeader className="guide-editorial-intro" title={content.title} detail={content.description}
+      <PageHeader className="guide-editorial-intro" title={content.title} detail={content.description}
         action={id === "library" ? <ButtonGroup label="Explore design sources">
           <Link href="/agents" emphasis="soft" size="touch">Explore agent motion</Link>
           <Link href="/emoji" emphasis="filled" size="touch">Browse emoji</Link>
-        </ButtonGroup> : id === "adoption" ? <Link href="/playbook" emphasis="filled" size="touch">Open the product playbook</Link> : undefined} />}
+        </ButtonGroup> : id === "adoption" ? <Link href="/playbook" emphasis="filled" size="touch">Open the product playbook</Link> : undefined} />
+      {content.items.length > 0 && <div className="guide-chapters">
+        <NavigationList label={content.chapterLabel} items={content.items} current="" orientation="horizontal" />
+      </div>}
       {id === "system" && <section className="guide-composition" id="screen-composition">
         <Heading>Screen composition</Heading>
         <p>Use PageHeader for the screen’s title and context. Align the title, body and actions to one reading edge. Keep 6 px between title and detail, 8 px between neighboring actions, 16 px between header content and its actions, and 24 px between sections.</p>

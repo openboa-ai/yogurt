@@ -17,7 +17,7 @@ async function checkGuide(browser, width) {
   const heading = name => page.getByRole("heading", { name, level: 1, exact: true });
   const nav = page.getByRole("navigation", { name: "Yogurt guide" });
   const openMenu = page.getByRole("button", { name: "Open menu" });
-  const mobile = width < 832;
+  const mobile = width <= 992;
   page.setDefaultTimeout(8000);
   try {
     await page.goto(base);
@@ -36,12 +36,21 @@ async function checkGuide(browser, width) {
     assert(Math.abs(logo.x - intro.x) < 1, "the brand and page share a reading edge");
     await page.locator(".guide-masthead").evaluate(element => { element.dataset.checkPersistence = "yes"; });
 
+    assert.equal(await page.locator(".guide-home-intro .yg-mark").count(), 1);
+    if (mobile) {
+      await openMenu.focus();
+      await page.keyboard.press("Enter");
+      await nav.getByRole("link", { name: "Brand" }).waitFor();
+      assert.equal(await page.evaluate(() => document.activeElement.textContent), "Brand");
+      await page.keyboard.press("Escape");
+      assert.equal(await openMenu.evaluate(el => document.activeElement === el), true);
+    }
     const titleSizes = [];
     for (const [label, path, title] of destinations) {
       if (mobile) await openMenu.click();
       await nav.getByRole("link", { name: label, exact: true }).click();
       await heading(title).waitFor();
-      assert.equal(await page.locator(".guide-content > :is(.catalog, .guide-editorial) .yg-page-header").first().getByRole("heading", { level: 1 }).count(), 1);
+      assert.equal(await page.locator(".guide-content > :is(.catalog, .guide-editorial, .guide-brand) .yg-page-header").first().getByRole("heading", { level: 1 }).count(), 1);
       if (label !== "Brand") titleSizes.push(await heading(title).evaluate(el => getComputedStyle(el).fontSize));
       assert.equal(new URL(page.url()).pathname, path);
       assert.equal(await page.locator(".guide-masthead").getAttribute("data-check-persistence"), "yes");
@@ -103,8 +112,8 @@ async function checkGuide(browser, width) {
 (async () => {
   const browser = await chromium.launch({ channel: "chrome" });
   try {
-    await Promise.all([checkGuide(browser, 320), checkGuide(browser, 1440)]);
-    console.log("Guide shell passed at 320px and 1440px.");
+    await Promise.all([checkGuide(browser, 320), checkGuide(browser, 900), checkGuide(browser, 1440)]);
+    console.log("Guide shell passed at 320px, 900px and 1440px.");
   } finally {
     await browser.close();
   }

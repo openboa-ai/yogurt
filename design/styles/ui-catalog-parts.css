@@ -956,12 +956,12 @@
   font: var(--yg-font-label);
 }
 .yg-nav-list[data-orientation="horizontal"] a[aria-current] { color: var(--yg-text); }
-@media (max-width: 52rem) {
+@media (max-width: 62rem) {
   .yg-navbar[data-variant="sections"] { gap: var(--yg-gap-inline); }
   .yg-navbar[data-variant="sections"] .yg-navbar-toggle { display: inline-flex; }
-  .yg-navbar[data-variant="sections"] > .yg-nav-list { display: none; order: 1; flex: 0 0 100%; }
+  .yg-navbar[data-variant="sections"] > .yg-nav-list { display: none; order: 1; flex: 0 0 100%; flex-direction: column; }
   .yg-navbar[data-variant="sections"] > .yg-nav-list[data-expanded="true"] { display: flex; }
-  .yg-navbar[data-variant="sections"] .yg-nav-list a { min-block-size: var(--yg-size-touch); }
+  .yg-navbar[data-variant="sections"] .yg-nav-list a { inline-size: 100%; min-block-size: var(--yg-size-touch); }
 }
 .yg-carousel {
   min-width: 0;

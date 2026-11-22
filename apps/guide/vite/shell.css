@@ -79,17 +79,10 @@ body { margin: 0; }
   max-inline-size: 62ch;
   margin-block-end: var(--yg-gap-section);
 }
-.guide-shell #identity.guide-company-story {
-  background: var(--boa-color-gray-green-50);
-  color: var(--boa-color-gray-green-950);
-  border-radius: var(--yg-radius-panel);
-  padding: clamp(var(--boa-space-24), 5vi, var(--boa-space-64));
-}
-.guide-company-story .copy-label { color: var(--boa-color-gray-green-700); }
-.guide-editorial-intro { margin-block-end: var(--yg-gap-section); }
+.guide-editorial-intro, .guide-chapters { margin-block-end: var(--yg-gap-section); }
 .guide-editorial-copy :is(.system-title, .guide-opening, .pb-title) { padding-block-start: 0; }
 
-@media (max-width: 52rem) {
+@media (max-width: 62rem) {
   .guide-masthead { padding-block: var(--yg-gap-inline); }
 }
 @media (max-width: 48rem) {

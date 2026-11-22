@@ -6735,6 +6735,12 @@ function Sidebar({
 function Navbar(props2) {
   const navigationId = useId2();
   const toggle = useRef4(null);
+  const sectionsOpen = props2.variant === "sections" && props2.expanded;
+  useLayoutEffect3(() => {
+    if (sectionsOpen && document.activeElement === toggle.current) {
+      document.getElementById(navigationId)?.querySelector("a")?.focus();
+    }
+  }, [navigationId, sectionsOpen]);
   const className = cx("yg-navbar", props2.className);
   if (props2.variant === "sections") {
     return /* @__PURE__ */ jsxs("header", { className, "data-variant": "sections", onKeyDown: (event) => {
