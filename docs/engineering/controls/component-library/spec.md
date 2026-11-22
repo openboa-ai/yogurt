@@ -24,6 +24,10 @@ The follow-up selects the existing OpenAI Apps SDK UI implementations for matchi
 
 Data comes from the consumer. Display and dismissal generate no external effects. An explicit command invokes only the supplied callback. A composition retains the host's original ID, current revision and response generation. Keep the saved-view study, stable catalog IDs and prior standalone kit working. Verification belongs in [the local evidence record](verification.md).
 
+### Native code field focus and shared source checks
+
+Keep the six-cell Native code field borderless on pointer and keyboard focus, with a visible keyboard focus cue inside the control. Keep its public entry, accessible label and digit editing contract. Verify click, Tab and typing in the running guide using the installed control. The Required CI aggregate must fail when Shared UI sources fails, is skipped or is cancelled.
+
 ### Select when open
 
 The owner reported that the opened Select looks out of place. Apply requirements 1–3 and 6 to the option list in the web SDK, component gallery and brand guide. Align option text to the field value, match the field width, and leave a 4 px gap. Use an opaque material surface, a quiet active row and a trailing ink-blue check for the current value. Keep the field and rows at least 44 px tall on touch screens. The list can open above a field near the bottom of a viewport and scroll through longer choices.

@@ -1,5 +1,11 @@
 # Local SDK verification
 
+## Native code field focus and shared source checks
+
+In the running macOS guide, clicking the installed code field and returning to it with Shift+Tab reproduced the SDK focus ring around all six cells. The public typed renderer now makes that ring transparent for the OTP alone. A fresh guide build accepted pointer focus and keyboard traversal, and typing a digit after returning to the field advanced the active cell without drawing an outer box. The empty focused field still needs a visible keyboard cue.
+
+The existing shared source suite passed locally. The Required CI shell step accepted a successful Shared UI sources result and rejected failure, cancellation and skip. This check covers the aggregate logic locally. Native focus was exercised separately in the running app.
+
 ## Shared UI sources
 
 In an isolated checkout fixture, changing `card-inset-regular` from 18 to 21 changed the rendered SDK Card's computed padding from 18 px to 21 px in a browser fixture using the guide's Vite configuration and changed the generated Native card's default padding to 21. The design source in the working checkout retains 18.

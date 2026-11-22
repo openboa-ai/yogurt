@@ -62,6 +62,7 @@ pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEdit
                     .background = transparent,
                     .foreground = transparent,
                     .border = transparent,
+                    .focus_ring = transparent,
                     .stroke_width = 0,
                     .radius = tokens.otp_slot_radius,
                 },

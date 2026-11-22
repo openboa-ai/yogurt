@@ -108,7 +108,7 @@ jobs:
 
   required:
     name: Required CI
-    needs: [naming, hygiene]
+    needs: [naming, hygiene, design-sources]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 2
@@ -117,7 +117,8 @@ jobs:
         env:
           NAMING: ${{ needs.naming.result }}
           HYGIENE: ${{ needs.hygiene.result }}
+          DESIGN_SOURCES: ${{ needs.design-sources.result }}
         shell: bash
         run: |
-          printf 'Contribution names=%s, Repository hygiene=%s\n' "$NAMING" "$HYGIENE"
-          [[ "$NAMING" == success && "$HYGIENE" == success ]]
+          printf 'Contribution names=%s, Repository hygiene=%s, Shared UI sources=%s\n' "$NAMING" "$HYGIENE" "$DESIGN_SOURCES"
+          [[ "$NAMING" == success && "$HYGIENE" == success && "$DESIGN_SOURCES" == success ]]
