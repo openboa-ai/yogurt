@@ -62,8 +62,9 @@ rm -rf .zig-cache/native-sdk-automation
 mkdir -p zig-out/bin
 if [[ ! -f zig-out/bin/consumer ]]; then printf 'Existing development output\n' >zig-out/bin/consumer; fi
 cp zig-out/bin/consumer "$scratch/dev-binary"
-node ../sdk/bin/yogurt.mjs native package --signing none --output "$scratch/managed-release"
-test -x "$scratch/managed-release/Contents/MacOS/consumer"
+node ../sdk/bin/yogurt.mjs native package --signing none
+managed=(zig-out/yogurt-releases/*/consumer.app/Contents/MacOS/consumer)
+test -x "${managed[0]}"
 cmp zig-out/bin/consumer "$scratch/dev-binary"
 
 # The SDK-generated app-owned build must receive the same patched framework.

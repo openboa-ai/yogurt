@@ -1,4 +1,4 @@
-import { chmodSync, copyFileSync, cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, copyFileSync, cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { fork, spawnSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { homedir, tmpdir } from "node:os";
@@ -40,12 +40,14 @@ export async function runNative(kit, [verb, ...args]) {
   }
   const packaging = verb === "package";
   let name;
+  let release;
   if (packaging) {
     if (process.platform !== "darwin" || flags.some(flag => /^--(?:target|binary)(?:=|$)/.test(flag))) {
       throw Error("yogurt native package supports the host macOS target and chooses the freshly built binary.");
     }
     ({ name } = JSON.parse(readFileSync(join(project, "app.json"), "utf8")));
     if (typeof name !== "string" || !/^[a-zA-Z0-9_-]+$/.test(name)) throw Error("Invalid app.json executable name.");
+    release = releaseDestination(project, name, flags.filter(flag => !flag.startsWith("-D")));
   }
   const source = nativeFramework();
   if (!existsSync(join(source, "build.zig"))) throw Error("NATIVE_SDK_PATH must point to the Native SDK framework.");
@@ -78,11 +80,29 @@ export async function runNative(kit, [verb, ...args]) {
     if (!packaging || status !== 0) return status;
     const binary = join(prefix, "bin", name);
     if (!existsSync(binary)) throw Error("The release build did not produce " + binary);
-    return await runCommand(["package", "--target", "macos", "--binary", binary, ...flags.filter(flag => !flag.startsWith("-D"))],
+    mkdirSync(dirname(release.output), { recursive: true });
+    mkdirSync(release.output);
+    return await runCommand(["package", "--target", "macos", "--binary", binary, "--output", release.output, ...release.flags],
       { env, cwd: project }, state);
   } finally {
     try { state?.finish(); } finally { rmSync(scratch, { recursive: true, force: true }); }
   }
+}
+
+function releaseDestination(project, name, args) {
+  let output;
+  const flags = [];
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "--output" || args[i].startsWith("--output=")) {
+      if (output) throw Error("Specify one release output directory.");
+      const value = args[i] === "--output" ? args[++i] : args[i].slice("--output=".length);
+      if (!value || value.startsWith("-")) throw Error("Specify a path for --output.");
+      output = resolve(project, value);
+    } else flags.push(args[i]);
+  }
+  output ??= join(project, "zig-out/yogurt-releases", randomUUID(), name + ".app");
+  if (existsSync(output)) throw Error("Release output already exists. Select a new --output path.");
+  return { output, flags };
 }
 
 function runCommand(args, options, state, marker) {
