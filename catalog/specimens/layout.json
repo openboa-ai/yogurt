@@ -1,0 +1,44 @@
+{
+  "compact": [
+    "button",
+    "icon-button",
+    "button-group",
+    "toggle",
+    "toggle-group",
+    "pagination",
+    "badge",
+    "status",
+    "spinner",
+    "project-mark",
+    "avatar",
+    "tooltip",
+    "link",
+    "kbd",
+    "segmented-control",
+    "checkbox",
+    "radio",
+    "icon",
+    "gaze"
+  ],
+  "wide": [
+    "table",
+    "data-table",
+    "chart",
+    "bar-chart",
+    "grid-list",
+    "resizable",
+    "sidebar",
+    "sidebar-layout",
+    "agent-sidebar",
+    "project-sidebar",
+    "agent-avatar",
+    "transcript",
+    "navbar",
+    "navigation-menu",
+    "menubar"
+  ],
+  "wideFamilies": [
+    "Blocks",
+    "Workspaces"
+  ]
+}

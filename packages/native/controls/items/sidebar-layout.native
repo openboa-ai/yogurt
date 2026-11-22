@@ -4,11 +4,9 @@
   </row>
 </template>
 <template name="yg-sidebar-panel" args="label">
-  <panel label="{label}" padding="18">
-    <column gap="12">
-      <slot/>
-    </column>
-  </panel>
+  <column label="{label}" background="background" radius="xl" padding="14" gap="12">
+    <slot/>
+  </column>
 </template>
 <template name="yg-sidebar-drawer" args="label">
   <sheet label="{label}" on-dismiss="close_sidebar">

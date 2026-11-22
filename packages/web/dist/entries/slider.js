@@ -1,7 +1,7 @@
 "use client";
 import {
   Slider
-} from "../shared/chunk-R4SDQHBK.js";
+} from "../shared/chunk-KUUVY2TG.js";
 import "../shared/chunk-SUL3CV2Q.js";
 import "../shared/chunk-5GJUJT3P.js";
 import "../shared/chunk-LTCB3AU4.js";

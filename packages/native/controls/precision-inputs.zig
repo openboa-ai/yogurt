@@ -38,7 +38,7 @@ pub fn editCode(editor: *CodeEditor, event: canvas.TextInputEvent) void {
 pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEditor, title: []const u8, help: []const u8, on_input: canvas.Ui(Msg).InputMsgFn) canvas.Ui(Msg).Node {
     const value = editor.text();
     var slots: [6]canvas.Ui(Msg).Node = undefined;
-    const active_slot = @min(editor.selection.focus, slots.len - 1);
+    const active_slot: ?usize = if (value.len > 0 and value.len < slots.len) @min(editor.selection.focus, slots.len - 1) else null;
     for (&slots, 0..) |*slot, index| {
         const digit = if (index < value.len) value[index .. index + 1] else "";
         slot.* = ui.column(.{
@@ -47,10 +47,10 @@ pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEdit
             .height = tokens.otp_slot_height,
             .main = .center,
             .style = .{ .radius = tokens.otp_slot_radius },
-            .style_tokens = .{ .background = if (index == active_slot) .surface_pressed else .surface_subtle },
+            .style_tokens = .{ .background = if (active_slot == index) .surface_pressed else .surface_subtle },
         }, .{ui.text(.{ .size = .heading, .text_alignment = .center }, digit)});
     }
-    return ui.column(.{ .gap = 6, .max_width = 320 }, .{
+    return ui.column(.{ .gap = 6, .max_width = tokens.otp_control_max_width }, .{
         ui.text(.{ .size = .sm }, title),
         ui.stack(.{}, .{
             ui.row(.{ .gap = tokens.otp_slot_gap }, @as([]const canvas.Ui(Msg).Node, &slots)),
@@ -62,7 +62,6 @@ pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEdit
                     .background = transparent,
                     .foreground = transparent,
                     .border = transparent,
-                    .focus_ring = transparent,
                     .stroke_width = 0,
                     .radius = tokens.otp_slot_radius,
                 },

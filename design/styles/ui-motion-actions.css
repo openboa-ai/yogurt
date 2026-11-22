@@ -293,12 +293,13 @@
 
 /* Keep one native input, with stable digit metrics while its slots join. */
 .yg-field:has(> .yg-otp) { min-inline-size: 0; max-inline-size: 100%; grid-template-columns: minmax(0, 1fr); }
+.yg-field:has(> .yg-otp) > .yg-label { font: var(--yg-font-help); }
 .yg-otp {
   --yg-otp-size: var(--yg-otp-slot-width);
   --yg-otp-gap: var(--yg-otp-slot-gap);
   --yg-otp-merge: 0;
   --yg-otp-confirm: 0;
-  inline-size: clamp(0px, calc(var(--yg-digits) * var(--yg-otp-size) + (var(--yg-digits) - 1) * var(--yg-otp-gap)), 320px);
+  inline-size: clamp(0px, calc(var(--yg-digits) * var(--yg-otp-size) + (var(--yg-digits) - 1) * var(--yg-otp-gap)), var(--yg-otp-control-max-width));
   max-inline-size: 100%;
   position: relative;
 }
@@ -312,14 +313,14 @@
 .yg-otp-slots > span {
   position: relative;
   min-inline-size: 0;
-  --yg-otp-join: calc(1px + var(--yg-otp-gap) * var(--yg-otp-merge));
+  --yg-otp-join: calc((1px + var(--yg-otp-gap)) * var(--yg-otp-merge));
   min-block-size: var(--yg-otp-slot-height);
   border: 0;
   border-radius: calc(var(--yg-otp-slot-radius) * (1 - var(--yg-otp-merge)));
   background: transparent;
-  font-size: 22px;
+  font: var(--yg-font-heading);
   line-height: 1;
-  font-weight: 650;
+  font-weight: var(--boa-role-weight-body);
   font-variant-numeric: tabular-nums;
 
 }
@@ -334,20 +335,13 @@
 }
 .yg-otp-slots > span:first-child { border-start-start-radius: var(--yg-otp-slot-radius); border-end-start-radius: var(--yg-otp-slot-radius); }
 .yg-otp-slots > span:last-child { --yg-otp-join: 0px; border-start-end-radius: var(--yg-otp-slot-radius); border-end-end-radius: var(--yg-otp-slot-radius); }
-.yg-otp:focus-within [data-cursor] { outline: none; }
-.yg-otp:not([data-verified]):focus-within [data-cursor]::before { background: var(--yg-hover); }
-.yg-otp:not([data-verified]):focus-within [data-cursor]:not([data-filled])::after {
-  content: "";
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: calc(50% + var(--yg-otp-join) / 2);
-  translate: -50% -50%;
-  inline-size: 2px;
-  block-size: 22px;
-  border-radius: 1px;
-  background: var(--yg-text);
+/* The field owns focus, while a partial code retains its insertion slot. */
+.yg-otp:focus-within {
+  outline: var(--boa-stroke-focus) solid var(--yg-text);
+  outline-offset: var(--boa-space-2);
+  border-radius: var(--yg-otp-slot-radius);
 }
-.yg-otp:dir(rtl) [data-cursor]::after { translate: 50% -50%; }
+.yg-otp[data-partial] [data-cursor]::before { background: var(--yg-hover); }
 .yg-otp-ink { position: relative; inset-inline-start: calc(var(--yg-otp-join) / 2); opacity: calc(1 - var(--yg-otp-confirm)); }
 .yg-otp-digit { display: block; }
 .yg-otp-confirmation {

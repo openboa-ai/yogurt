@@ -6,6 +6,10 @@ Use `yogurt add <id> --target native` to install a markup template, its Zig sour
 
 Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`. Existing markup templates retain their original call signatures.
 
+## Drawer
+
+The installed Zig drawer view adds a drag handle to the same lower-edge surface. Pass a typed dismissal message and a drag message carrying `drawer-surface.zig`'s `Drag` record. Forward the SDK canvas event through `withTravel` while the drawer is open to keep the displacement from pointer down. Pass the typed drag message to `shouldDismiss` and close on a true result. Existing markup consumers can continue to use the close action and Escape.
+
 ## Agent presence
 
 For a visible avatar in a Vercel Native GPU canvas, install `agent-avatar` and retain one `Playback` per avatar. The shared poses move the body and both eyes with affine transforms. Every pose uses the original body path and one eye outline shared by both eyes. Each update supplies at most three path fills with stable host IDs and zero encoded frames.

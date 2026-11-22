@@ -631,7 +631,7 @@
   overflow: auto;
 }
 .yg-anchored-panel {
-  min-width: min(11rem, 80vw);
+  min-width: min(var(--yg-anchored-menu-min-width), 80vw);
 }
 .yg-popover {
   padding: var(--boa-space-12);
@@ -867,6 +867,7 @@
 .yg-modal-header > .yg-heading {
   font: var(--yg-font-heading);
   font-weight: var(--boa-role-weight-body);
+  letter-spacing: normal;
 }
 .yg-dialog > .yg-field > .yg-label {
   font: var(--yg-font-help);

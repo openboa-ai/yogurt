@@ -81,6 +81,7 @@ function InputOTP({
     {
       className: "yg-otp",
       "data-complete": value.length >= count || void 0,
+      "data-partial": value.length > 0 && value.length < count || void 0,
       "data-verified": confirmed || void 0,
       "data-disabled": disabled || void 0,
       style: { "--yg-digits": count, "--yg-otp-merge": Number(confirmed), "--yg-otp-confirm": Number(confirmed) },

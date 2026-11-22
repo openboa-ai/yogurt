@@ -238,20 +238,7 @@ export function ExtendedExample({
         />
       );
     case "bar-chart":
-      return (
-        <Y.BarChart
-          title="Net change"
-          points={[
-            { id: "a", label: "Mon", value: 4 },
-            { id: "b", label: "Tue", value: -2 },
-            { id: "c", label: "Wed", value: null },
-          ]}
-          unit="views"
-          source="Local sample"
-          asOf="2026-11-20"
-          timeLabel="Nov 20"
-        />
-      );
+      return <Y.BarChart {...samples["bar-chart"]} />;
     case "avatar":
       return (
         <Y.Inline>
@@ -357,10 +344,10 @@ export function ExtendedExample({
     case "slider":
       return (
         <Y.Slider
-          label="Preview volume"
+          label={samples.slider.label}
           value={number * 10}
           onValueChange={(v) => setNumber(v / 10)}
-          unit="%"
+          unit={samples.slider.unit}
           presentation={variation ? "card" : "inline"}
         />
       );

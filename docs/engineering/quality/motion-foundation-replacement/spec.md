@@ -71,3 +71,11 @@ Compare the paired catalog in its existing guides. Align resting, selected, disa
 ### Matched component states
 
 Use the current web component as the visual target. Align Native label placement, intrinsic sizes, type hierarchy, surface treatment and action order using the installed SDK controls. Where the SDK cannot preserve an existing control's geometry and interaction together, adopt its supported geometry on the web after checking both renderers. Compare identical example content and state before reporting equivalence. Preserve public component IDs, existing host contracts and keyboard actions. This scope covers presentation and guide fixtures.
+
+### Equal presentation across the catalog
+
+Keep the browser rendering as the starting point for each component. Reuse one specimen layout inventory so frames, available widths and data are comparable across adapters. Keep the native implementation on the SDK's authored controls. Use the best supported Native treatment as the shared presentation when an SDK boundary prevents matching the browser. Verify each supported route in the catalog, including the published composition blocks, and distinguish observed final states from available or unexercised states.
+
+Draw the same drawer grip and retain both the close action and the drag threshold. The Native gesture may use the SDK dismissal lifecycle and measures from pointer down and keeps the drawer open if the drag is short or cancelled. Keep existing markup consumers compatible. An empty one-time code has six equivalent neutral slots. Provide visible keyboard focus and show the next digit position consistently on an incomplete code. Keep one editable field, sanitized digits, and host-owned confirmation.
+
+The Native font bundle uses static instances of the approved body and action weights from the same variable font used by the web. Retain the variable master and the installed filenames. Compare text, control sizing and clipping after regenerating the instances.

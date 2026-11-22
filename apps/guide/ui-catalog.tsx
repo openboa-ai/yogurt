@@ -16,6 +16,7 @@ import {
   type Material,
 } from "@openboa/yogurt";
 import catalog from "../../catalog/components.json";
+import specimenLayout from "../../catalog/specimens/layout.json";
 import motion from "../../catalog/motion.json";
 import motionCatalog from "../../catalog/motion-components.json";
 import blocks from "../../catalog/blocks.json";
@@ -61,17 +62,12 @@ function foldName(name: string) {
 function compactName(name: string) {
   return name.replace(/[\s_\p{Dash_Punctuation}]+/gu, "");
 }
-const compactPreviews = new Set([
-  "button", "icon-button", "button-group", "toggle", "toggle-group", "pagination",
-  "badge", "status", "spinner", "project-mark", "avatar", "tooltip", "link", "kbd",
-]);
-const widePreviews = new Set([
-  "table", "data-table", "chart", "bar-chart", "grid-list", "resizable", "sidebar",
-  "sidebar-layout", "agent-sidebar", "project-sidebar", "agent-avatar", "transcript", "navbar", "navigation-menu", "menubar",
-]);
+const compactPreviews = new Set(specimenLayout.compact);
+const widePreviews = new Set(specimenLayout.wide);
+const wideFamilies = new Set(specimenLayout.wideFamilies);
 function previewLayout(entry: {id: string; family: string}) {
   if (compactPreviews.has(entry.id)) return "compact";
-  if (entry.family === "Blocks" || entry.family === "Workspaces" || widePreviews.has(entry.id)) return "wide";
+  if (wideFamilies.has(entry.family) || widePreviews.has(entry.id)) return "wide";
   return "field";
 }
 const motionEntries = motionCatalog.components.filter(component => component.examples.length).map(component => ({

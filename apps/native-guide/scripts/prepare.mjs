@@ -19,7 +19,9 @@ if (result.status !== 0) throw Error("Native catalog fixture generation failed."
 const gallery = join(kit, "apps/native-guide");
 copyFileSync(join(gallery, "app.json"), join(host, "app.json"));
 copyFileSync(join(gallery, "src/main.zig"), join(host, "src/main.zig"));
-copyFileSync(join(kit, "packages/native/controls/precision-inputs.zig"), join(host, "src/yogurt/precision-inputs.zig"));
+for (const name of ["precision-inputs.zig", "drawer-surface.zig"]) {
+  copyFileSync(join(kit, "packages/native/controls", name), join(host, "src/yogurt", name));
+}
 copyFileSync(join(gallery, "src/agent-preview.zig"), join(host, "src/agent-preview.zig"));
 mkdirSync(join(host, "src/yogurt/models"), { recursive: true });
 for (const name of ["agent-vector.zig", "avatar-pose-data.zig", "agent-family-data.zig"]) {
@@ -59,12 +61,6 @@ for (const id of ["agent-avatar", "gaze"]) {
   if (!source.includes('<column>') || !source.includes('label="Weekly review"') || !source.includes('image_id="{picture}"')) throw Error(`Missing agent specimen binding in ${id}.`);
   writeFileSync(file, source.replace('<column>', '<column cross="center">').replace('label="Weekly review"', 'label="{agent_label}"').replace('image_id="{picture}"', 'image_id="{picture}" size="72"'));
 }
-{
-  const file = join(host, "src/yogurt-catalog-test/agent-row-test.native");
-  const source = readFileSync(file, "utf8");
-  if (!source.includes('label="Weekly review"')) throw Error("Missing agent row label.");
-  writeFileSync(file, source.replace('label="Weekly review"', 'label="Kai"'));
-}
 for (const id of ["text-field", "textarea", "search-field", "input-group", "combobox"]) {
   const file = join(host, "src/yogurt-catalog-test", `${id}-test.native`);
   const source = readFileSync(file, "utf8");
@@ -95,21 +91,33 @@ const findLine = (prefix) => {
   if (matches.length !== 1) throw Error(`Expected one ${prefix} declaration in the generated catalog.`);
   return matches[0];
 };
-const model = findLine("const Model = struct {").replace("days: []const Choice = &sample", "days: []const Choice = &november_days").replace("const Model = struct {", "pub const Model = struct { gallery_days: [31]Choice = december_days, gallery_choices: [2]Choice = sample, gallery_date_value: []const u8 = \"Choose a date\", project_picture: u32 = 0, sourdough_picture: u32 = 0, meatball_picture: u32 = 0, project_missing: bool = true, sourdough_missing: bool = true, meatball_missing: bool = true, gallery_selected: u32 = 0, gallery_list_open: bool = true, gallery_dark: bool = false, gallery_status: []const u8 = \"Ready\", gallery_picker_open: bool = false, gallery_count: u8 = 0, gallery_count_text: []const u8 = \"0\", gallery_page: u8 = 0, gallery_page_text: []const u8 = \"1 of 2\", gallery_page_one: bool = true, gallery_page_two: bool = false, gallery_detail_title: []const u8 = \"\", gallery_detail_body: []const u8 = \"\", gallery_workspace_query: canvas.TextBuffer(128) = .{}, gallery_picker_query: canvas.TextBuffer(128) = .{}, gallery_profile_name: canvas.TextBuffer(128) = canvas.TextBuffer(128).init(\"Kai\"), gallery_profile_instructions: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"Review the release notes.\"), gallery_notification_mask: [2]bool = .{ true, true }, gallery_notification_rows: [2]Choice = sample, gallery_sidebar_query: canvas.TextBuffer(128) = .{}, gallery_sidebar_filtered: [3]Choice = .{ sample[0], sample[1], .{ .id = 3, .title = \"New sample view\" } }, gallery_sidebar_added: bool = false, gallery_sidebar_new_selected: bool = false, gallery_composer_mask: [2]bool = .{ true, true }, gallery_composer_visible: [2]Choice = sample, gallery_tool_selected: bool = false, gallery_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"Weekly\"), gallery_first_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"415\"), gallery_last_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"0182\"),");
+const model = findLine("const Model = struct {").replace("days: []const Choice = &sample", "days: []const Choice = &november_days").replace("const Model = struct {", "pub const Model = struct { gallery_days: [31]Choice = december_days, gallery_choices: [2]Choice = sample, gallery_date_value: []const u8 = \"Choose a date\", project_missing: bool = true, sourdough_missing: bool = true, meatball_missing: bool = true, gallery_selected: u32 = 0, gallery_progress_count: u32 = 1, gallery_list_open: bool = true, gallery_dark: bool = false, gallery_status: []const u8 = \"Ready\", gallery_picker_open: bool = false, gallery_count: u8 = 0, gallery_count_text: []const u8 = \"0\", gallery_page: u8 = 0, gallery_page_text: []const u8 = \"1 of 2\", gallery_page_one: bool = true, gallery_page_two: bool = false, gallery_detail_title: []const u8 = \"\", gallery_detail_body: []const u8 = \"\", gallery_workspace_query: canvas.TextBuffer(128) = .{}, gallery_picker_query: canvas.TextBuffer(128) = .{}, gallery_profile_name: canvas.TextBuffer(128) = canvas.TextBuffer(128).init(\"Kai\"), gallery_profile_instructions: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"Review the release notes.\"), gallery_notification_mask: [2]bool = .{ true, true }, gallery_notification_rows: [2]Choice = sample, gallery_sidebar_query: canvas.TextBuffer(128) = .{}, gallery_sidebar_filtered: [5]Choice = .{ sample[0], sample[1], sample[0], sample[1], sample[0] }, gallery_sidebar_added: bool = false, gallery_sidebar_new_selected: bool = false, gallery_composer_mask: [2]bool = .{ true, true }, gallery_composer_visible: [2]Choice = sample, gallery_tool_selected: bool = false, gallery_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"Weekly\"), gallery_first_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"415\"), gallery_last_editor: canvas.TextBuffer(1024) = canvas.TextBuffer(1024).init(\"0182\"),");
 const brandModel = model.replace("project_image: u32 = 1", "project_image: u32 = 0")
+  .replace("project_picture: u32 = 1", "project_picture: u32 = 0")
+  .replace("sourdough_picture: u32 = 2", "sourdough_picture: u32 = 0")
+  .replace("meatball_picture: u32 = 3", "meatball_picture: u32 = 0")
   .replace("sidebar_destinations: []const Choice = &sample", "sidebar_destinations: []const Choice = &sidebar_sample")
   .replace("pub const Model = struct {", "pub const Model = struct { agent_playback: ?agent_vector.Playback = null, agent_sol_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_sol_next_ms: u64 = 0, agent_kai_picture: u32 = 0, agent_sol_picture: u32 = 0, agent_kai_error: bool = false, agent_sol_error: bool = false, agent_error: bool = false, gallery_agent_choices: [2]Choice = .{ .{ .id = 1, .title = \"Kai\", .selected = true, .detail = \"Ready\", .summary = \"Ready\", .image_id = 0 }, .{ .id = 2, .title = \"Sol\", .detail = \"Working\", .summary = \"Working\", .image_id = 0 } }, code_editor: canvas.TextBuffer(6) = .{}, rating_score: u32 = 3, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
-const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { agent_tick: u64, agent_set_state: u8, agent_set_kind: u8, agent_reduce_motion: bool, gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance, gallery_close_detail,");
+const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { agent_tick: u64, agent_set_state: u8, agent_set_kind: u8, agent_reduce_motion: bool, gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance, gallery_close_detail, drawer_drag: @import(\"yogurt/drawer-surface.zig\").Drag,");
 const zigString = (value) => JSON.stringify(value);
-const { dialog: editView } = JSON.parse(readFileSync(join(kit, "catalog/specimens/components.json"), "utf8"));
+const specimenContent = JSON.parse(readFileSync(join(kit, "catalog/specimens/components.json"), "utf8"));
+const editView = specimenContent.dialog;
+const specimenLayout = JSON.parse(readFileSync(join(kit, "catalog/specimens/layout.json"), "utf8"));
 const lines = [
   'const std = @import("std");',
   'const canvas = @import("native_sdk").canvas;',
   'const agent_vector = @import("yogurt/models/agent-vector.zig");',
-  findLine("const Choice = struct {"), findLine("const sample = "), findLine("const sidebar_sample = "),
+  findLine("const Choice = struct {"), findLine("const sample = "), findLine("const sidebar_sample = "), findLine("const project_destinations = "),
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_days' : 'november_days'} = [_]Choice{ ${Array.from({ length: count }, (_, i) => `.{ .id = ${i + 1}, .title = \"${i + 1}\" }`).join(', ')} };`), brandModel, msg,
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_labels' : 'november_labels'} = [_][]const u8{ ${Array.from({ length: count }, (_, i) => `\"${index ? 'Dec' : 'Nov'} ${i + 1}, 2026\"`).join(', ')} };`),
   "pub const Ui = canvas.Ui(Msg);",
+  `pub const percentages = [_][]const u8{ ${Array.from({ length: 101 }, (_, index) => zigString(index + "%")).join(", ")} };`,
+  "pub const PreviewLayout = enum { compact, field, wide };",
+  `pub const preview_layouts = [_]PreviewLayout{ ${catalog.map((entry) => specimenLayout.compact.includes(entry.id) ? ".compact" : specimenLayout.wide.includes(entry.id) || specimenLayout.wideFamilies.includes(entry.family) ? ".wide" : ".field").join(", ")} };`,
+  `pub const project_sidebar_title = ${zigString(specimenContent["project-sidebar"].title)};`,
+  `pub const edit_view_title = ${zigString(editView.title)};`,
+  `pub const edit_view_label = ${zigString(editView.label)};`,
+  `pub const edit_view_submit = ${zigString(editView.submit)};`,
   `pub const edit_view_value = ${zigString(editView.value)};`,
   `pub const edit_view_saved = ${zigString(editView.saved)};`,
   `pub const names = [_][]const u8{ ${catalog.map((entry) => zigString(entry.name)).join(", ")} };`,

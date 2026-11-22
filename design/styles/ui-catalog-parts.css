@@ -548,10 +548,6 @@
   background: var(--yg-field);
   font: var(--yg-font-action);
 }
-.yg-otp:focus-within [data-cursor] {
-  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
-  outline-offset: -2px;
-}
 .yg-split-inputs,
 .yg-split-inputs > span,
 .yg-key-actions,
@@ -1183,12 +1179,14 @@
   translate: 0 var(--yg-drag-distance, 0);
 }
 .yg-drawer > :not(.yg-drawer-grip) {
-  inline-size: min(100%, 31rem);
+  inline-size: min(100%, var(--yg-drawer-content-width));
   justify-self: center;
 }
 .yg-drawer-grip {
   position: absolute;
   inset: 0 0 auto;
+  inline-size: var(--yg-drawer-grip-target);
+  margin-inline: auto;
   display: grid;
   place-items: center;
   height: var(--boa-space-24);

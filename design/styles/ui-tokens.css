@@ -87,6 +87,15 @@
   --yg-task-measure: 260px;
   --yg-storage-measure: 300px;
   --yg-drop-measure: 296px;
+  --yg-specimen-min-height: 205px;
+  --yg-specimen-content-width: 496px;
+  --yg-specimen-inset: var(--boa-space-24);
+  --yg-specimen-wide-inset: var(--boa-space-16);
+  --yg-drawer-content-width: 496px;
+  --yg-drawer-grip-target: 112px;
+  --yg-drawer-dismiss-distance: 64px;
+  --yg-anchored-menu-min-width: 176px;
+  --yg-otp-control-max-width: 328px;
   --yg-otp-slot-width: 48px;
   --yg-otp-slot-height: 56px;
   --yg-otp-slot-gap: 8px;

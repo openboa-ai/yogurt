@@ -114,7 +114,7 @@ function run() {
     add("src/yogurt/" + item.id + ".zig", Buffer.from(entry));
     add(
       "src/yogurt/rethink-sans.ttf",
-      readFileSync(join(kit, "design/assets/fonts/rethink-sans/rethink-sans.ttf")),
+      readFileSync(join(kit, "packages/native/controls/rethink-sans.ttf")),
     );
     add(
       "src/yogurt/OFL.txt",
@@ -161,6 +161,9 @@ function run() {
       "src/yogurt/models/" + helper,
       readFileSync(join(kit, "packages/native/controls/" + helper)),
     );
+  }
+  if (target === "native" && item.id === "drawer") {
+    add("src/yogurt/drawer-surface.zig", readFileSync(join(kit, "packages/native/controls/drawer-surface.zig")));
   }
   if (target === "native" && ["input-otp", "rating"].includes(item.id)) {
     add("src/yogurt/precision-inputs.zig", readFileSync(join(kit, "packages/native/controls/precision-inputs.zig")));

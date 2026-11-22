@@ -82,7 +82,8 @@ test "catalog list and fixture state stay bounded" {
     try std.testing.expectEqual(last, model.gallery_selected);
     try std.testing.expectEqual(@as(u32, 2001), model.project_picture);
     try std.testing.expectEqual(@as(u32, 2002), model.sourdough_picture);
-    try std.testing.expectEqual(@as(u32, 2002), model.project_image);
+    try std.testing.expectEqualStrings(gallery.project_sidebar_title, model.project_name);
+    try std.testing.expectEqual(@as(u32, 0), model.project_image);
     try std.testing.expectEqual(@as(u32, 0), model.meatball_picture);
     try std.testing.expect(!model.project_missing);
     try std.testing.expect(!model.sourdough_missing);
@@ -189,4 +190,13 @@ test "dates, menu and text update local state" {
     try std.testing.expect(model.is_open);
     app.update(&model, .dismiss, &effects);
     try std.testing.expect(!model.is_open);
+}
+
+test "drawer requires a completed downward gesture past its threshold" {
+    const surface = @import("yogurt/drawer-surface.zig");
+    try std.testing.expect(!surface.shouldDismiss(.{ .y = 90 }));
+    try std.testing.expect(!surface.shouldDismiss(.{ .phase = 1, .y = -90 }));
+    try std.testing.expect(!surface.shouldDismiss(.{ .phase = 1, .y = 63 }));
+    try std.testing.expect(!surface.shouldDismiss(.{ .phase = 2, .y = 90 }));
+    try std.testing.expect(surface.shouldDismiss(.{ .phase = 1, .y = 64 }));
 }

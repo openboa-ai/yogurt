@@ -85,6 +85,17 @@ check_interaction() {
         click_named button Done "$after" &&
         "$cli" automate assert --timeout-ms 5000 --absent 'role=dialog name="Edit view"' &&
         snapshot_after 'View updated[.]' || return 1
+      if [ "$id" = drawer ]; then
+        click_named button 'Edit view' "$after" &&
+          snapshot_after 'role=group name="Drawer handle".*actions=\[drag\]' || return 1
+        local handle_id
+        handle_id="$(sed -nE 's/^.*widget @w1\/main-canvas#([0-9]+) role=group name="Drawer handle".*$/\1/p' "$after")"
+        "$cli" automate widget-drag main-canvas "$handle_id" 0.5 0.5 0.5 1.25 &&
+          snapshot_after 'role=dialog name="Edit view"' &&
+          "$cli" automate widget-drag main-canvas "$handle_id" 0.5 0.5 0.5 3.5 &&
+          "$cli" automate assert --timeout-ms 5000 --absent 'role=dialog name="Edit view"' &&
+          snapshot_after 'role=text name="Closed"' || return 1
+      fi
       ;;
     card)
       click_named button 'Pin view' "$before" &&
@@ -100,8 +111,31 @@ check_interaction() {
         snapshot_after 'name="Yogurt".*state=\[[^]]*selected' || return 1
       ;;
     input-otp)
-      action_named textbox 'Verification code' set_text '12-34567' "$before" &&
+      action_named textbox 'Verification code' focus '' "$before" &&
+        snapshot_after 'role=textbox name="Verification code".*focused=true' &&
+        "$cli" automate screenshot main-canvas >/dev/null &&
+        cp "$automation/screenshot-main-canvas.png" "$output/$prefix-focused.png" &&
+        action_named textbox 'Verification code' set_text '12-34567' "$after" &&
         snapshot_after 'text="123456"' || return 1
+      ;;
+    action-menu)
+      click_named button 'View actions' "$before" &&
+        snapshot_after 'role=menu name="View actions"' &&
+        "$cli" automate screenshot main-canvas >/dev/null &&
+        cp "$automation/screenshot-main-canvas.png" "$output/$prefix-open.png" &&
+        click_named menuitem 'Duplicate view' "$after" &&
+        snapshot_after 'View duplicated[.]' || return 1
+      ;;
+    progress)
+      rg -q 'role=progressbar name="Reviewed records".*value=0\.2' "$before" &&
+        click_named button 'Review next record' "$before" &&
+        snapshot_after 'role=progressbar name="Reviewed records".*value=0\.4' || return 1
+      ;;
+    chart)
+      rg -q 'name="View readings"' "$before" &&
+        ! rg -q 'name="No reading"' "$before" &&
+        action_named group 'View readings' toggle '' "$before" &&
+        snapshot_after 'name="No reading"' || return 1
       ;;
     rating)
       click_named radio '4 of 5' "$before" &&
@@ -115,14 +149,22 @@ check_interaction() {
         ! rg -q 'role=text name="Unavailable"' "$before" &&
         cp "$before" "$after" || return 1
       ;;
+    agent-row)
+      rg -q 'role=text name="Waiting for you"' "$before" &&
+        rg -q 'role=text name="9:41 AM"' "$before" &&
+        click_named listitem Kai "$before" &&
+        snapshot_after 'role=listitem name="Kai".*state=\[[^]]*selected' &&
+        rg -q 'role=text name="Kai selected"' "$after" || return 1
+      ;;
     project-sidebar)
       rg -q 'role=image name="Project mark"' "$before" &&
-        rg -q 'role=listitem name="Overview".*state=\[[^]]*selected' "$before" &&
-        rg -q 'role=listitem name="Reviews"' "$before" &&
-        click_named listitem Reviews "$before" && snapshot_after 'Reviews selected' &&
-        rg -q 'role=listitem name="Reviews".*state=\[[^]]*selected' "$after" &&
-        click_named listitem 'Project views' "$after" && snapshot_after 'Project views collapsed' &&
-        ! rg -q 'role=listitem name="Reviews"' "$after" || return 1
+        rg -q 'role=listitem name="Reviews".*state=\[[^]]*selected' "$before" &&
+        click_named listitem 'Run history' "$before" &&
+        snapshot_after 'role=listitem name="Run history".*state=\[[^]]*selected' &&
+        click_named listitem Delivery "$after" &&
+        snapshot_after 'Project views collapsed' &&
+        ! rg -q 'role=listitem name="Run history"' "$after" &&
+        rg -q 'role=listitem name="Sources"' "$after" || return 1
       ;;
     text-field|textarea|input-group|search-field)
       local label='View name'
@@ -155,7 +197,7 @@ check_interaction() {
       ;;
     accordion|disclosure-row)
       local label='About this view' detail='This view includes notes saved in the last seven days.'
-      if [ "$id" = disclosure-row ]; then label='View details'; detail='Three records are ready to review.'; fi
+      if [ "$id" = disclosure-row ]; then label='Review details'; detail='Saved on Friday in Sourdough.'; fi
       rg -Fq "role=text name=\"$detail\"" "$before" &&
         action_named group "$label" toggle '' "$before" && snapshot_after 'setting changed' &&
         ! rg -Fq "role=text name=\"$detail\"" "$after" || return 1
@@ -190,10 +232,10 @@ check_interaction() {
         "$cli" automate snapshot > "$after" || return 1
       ;;
     slider)
-      rg -q 'role=slider name="Review progress".*value=0\.3([[:space:]]|$)' "$before" &&
-        action_named slider 'Review progress' increment '' "$before" && snapshot_after 'value changed' &&
-        rg -q 'role=slider name="Review progress".*value=' "$after" &&
-        ! rg -q 'role=slider name="Review progress".*value=0\.3([[:space:]]|$)' "$after" || return 1
+      rg -q 'role=slider name="Preview volume".*value=0\.3([[:space:]]|$)' "$before" &&
+        action_named slider 'Preview volume' increment '' "$before" && snapshot_after 'value changed' &&
+        rg -q 'role=slider name="Preview volume".*value=' "$after" &&
+        ! rg -q 'role=slider name="Preview volume".*value=0\.3([[:space:]]|$)' "$after" || return 1
       ;;
     calendar)
       rg -q 'role=text name="November 2026"' "$before" &&
@@ -346,7 +388,7 @@ while IFS=$'\t' read -r id name; do
         failed=1
       fi
       ;;
-    dialog|drawer|sheet|card|segmented-control|input-otp|rating|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row)
+    dialog|drawer|sheet|card|segmented-control|input-otp|action-menu|progress|chart|rating|agent-row|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row)
       if [ "$render" = PRESENTED_UNVERIFIED ] && check_interaction; then
         interaction=PASS
         if [ "$id" = calendar ] || [ "$id" = project-mark ]; then interaction=PARTIAL; fi

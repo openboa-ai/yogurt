@@ -11,18 +11,8 @@ const observation = {
   asOf: "2026-11-20T09:00:00Z",
   timeLabel: "Nov 20, 09:00 UTC",
 };
-const points = [
-  { id: "m", label: "Mon", value: 4 },
-  { id: "t", label: "Tue", value: 8 },
-  { id: "w", label: "Wed", value: null },
-  { id: "h", label: "Thu", value: 6 },
-  { id: "f", label: "Fri", value: 10 },
-];
-const records = [
-  { id: "a", title: "Field notes", day: "Today" },
-  { id: "b", title: "Release checklist", day: "Thu" },
-  { id: "c", title: "Weekly review", day: "Wed" },
-];
+const points = samples.readings.points;
+const records = samples.records;
 const titles = Array.from({ length: 8 }, (_, i) => "Review " + (i + 1));
 export function Example({
   id,
@@ -105,12 +95,12 @@ export function Example({
   ];
   const sampleTable = (
     <Y.DataTable
-      caption="Weekly readings"
+      caption={samples.readings.label}
       columns={[
-        { id: "label", label: "Day" },
+        { id: "label", label: samples.readings.day },
         {
           id: "value",
-          label: "Reviews",
+          label: samples.readings.reviews,
           numeric: true,
           sortValue: (row) =>
             typeof row.cells.value === "number" ? row.cells.value : null,
@@ -137,16 +127,16 @@ export function Example({
     case "text":
       return (
         <Y.Stack gap={4}>
-          <Y.Text>Weekly review</Y.Text>
-          <Y.Text variant="help">Shared with your team</Y.Text>
-          <Y.Text variant="meta">Updated Friday</Y.Text>
+          <Y.Text>{samples.text.body}</Y.Text>
+          <Y.Text variant="help">{samples.text.help}</Y.Text>
+          <Y.Text variant="meta">{samples.text.meta}</Y.Text>
         </Y.Stack>
       );
     case "heading":
       return (
         <Y.Stack gap={4}>
-          <Y.Heading>Saved views</Y.Heading>
-          <Y.Text variant="help">Three views in Sourdough.</Y.Text>
+          <Y.Heading>{samples.heading.title}</Y.Heading>
+          <Y.Text variant="help">{samples.heading.help}</Y.Text>
         </Y.Stack>
       );
     case "icon":
@@ -462,20 +452,16 @@ export function Example({
       return <Y.Pagination page={count} pages={5} onPageChange={setCount} />;
     case "disclosure-row":
       return (
-        <Y.Disclosure label="Review details">
-          <Y.Text variant="help">Saved on Friday in Sourdough.</Y.Text>
+        <Y.Disclosure label={samples["disclosure-row"].label}>
+          <Y.Text variant="help">{samples["disclosure-row"].body}</Y.Text>
         </Y.Disclosure>
       );
     case "action-menu":
       return (
         <Y.Stack>
           <Y.ActionMenu
-            label="View actions"
-            items={[
-              { id: "rename", label: "Rename view" },
-              { id: "duplicate", label: "Duplicate view" },
-              { id: "archive", label: "Archive view", disabled: variation },
-            ]}
+            label={samples.menu.label}
+            items={samples.menu.items.map((item) => ({ ...item, disabled: variation && item.id === "archive" }))}
             onSelect={(id) =>
               setNote(
                 {
@@ -615,12 +601,12 @@ export function Example({
     case "progress":
       return (
         <Y.Stack>
-          <Y.Progress label="Reviewed records" value={count} max={5} />
+          <Y.Progress label={samples.progress.label} value={count} max={5} />
           <Y.Button
             emphasis="soft"
             onClick={() => setCount((n) => (n >= 5 ? 0 : n + 1))}
           >
-            {count >= 5 ? "Reset" : "Review next record"}
+            {count >= 5 ? samples.progress.reset : samples.progress.next}
           </Y.Button>
         </Y.Stack>
       );
@@ -655,12 +641,12 @@ export function Example({
       return sampleTable;
     case "table":
       return (
-        <Y.Table caption="Weekly readings">
+        <Y.Table caption={samples.readings.label}>
           <thead>
             <tr>
-              <th scope="col">Day</th>
+              <th scope="col">{samples.readings.day}</th>
               <th scope="col" data-numeric>
-                Reviews
+                {samples.readings.reviews}
               </th>
             </tr>
           </thead>
@@ -668,7 +654,7 @@ export function Example({
             {points.map((p) => (
               <tr key={p.id}>
                 <th scope="row">{p.label}</th>
-                <td data-numeric>{p.value ?? "No reading"}</td>
+                <td data-numeric>{p.value ?? samples.readings.missing}</td>
               </tr>
             ))}
           </tbody>

@@ -4,6 +4,8 @@ const runner = @import("runner");
 const gallery = @import("gallery-generated.zig");
 const navigation = @import("navigation.zig");
 const workspace_fixtures = @import("workspace-fixtures.zig");
+const drawer_surface = @import("yogurt/drawer-surface.zig");
+const layout_tokens = @import("yogurt/tokens.zig");
 const precision = @import("yogurt/precision-inputs.zig");
 const theme = @import("yogurt/theme.zig");
 const agent_vector = @import("yogurt/models/agent-vector.zig");
@@ -70,7 +72,8 @@ fn syncPage(m: *Model) void {
 
 fn syncSidebar(m: *Model) void {
     const is_agent = std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-sidebar");
-    const rows = if (is_agent) &m.gallery_agent_choices else &m.gallery_sidebar_choices;
+    const is_project = std.mem.eql(u8, gallery.ids[m.gallery_selected], "project-sidebar");
+    const rows = if (is_project) m.gallery_project_destinations[0..] else if (is_agent) m.gallery_agent_choices[0..] else m.gallery_sidebar_choices[0..];
     var count: usize = 0;
     for (rows) |row| {
         if (std.ascii.findIgnoreCase(row.title, m.sidebar_query) == null) continue;
@@ -78,7 +81,7 @@ fn syncSidebar(m: *Model) void {
         count += 1;
     }
     if (m.gallery_sidebar_added and std.ascii.findIgnoreCase("New sample view", m.sidebar_query) != null) {
-        m.gallery_sidebar_filtered[count] = .{ .id = 3, .title = "New sample view", .selected = m.gallery_sidebar_new_selected };
+        m.gallery_sidebar_filtered[count] = .{ .id = if (is_project) 5 else 3, .title = "New sample view", .selected = m.gallery_sidebar_new_selected };
         count += 1;
     }
     m.sidebar_destinations = m.gallery_sidebar_filtered[0..count];
@@ -118,6 +121,11 @@ fn selectComponent(m: *Model, index: u32) void {
     m.meatball_missing = meatball_missing;
     m.gallery_selected = index;
     const id = gallery.ids[index];
+    if (std.mem.eql(u8, id, "project-sidebar")) {
+        m.project_name = gallery.project_sidebar_title;
+        m.project_image = meatball_picture;
+        syncSidebar(m);
+    }
     if (std.mem.eql(u8, id, "stepper")) {
         m.gallery_choices[0].title = "Prepare";
         m.gallery_choices[1].title = "Review";
@@ -179,7 +187,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             if (isAgentComposition(m)) {
                 const size: f32 = if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-sidebar")) 24 else 40;
                 const multiple_agents = !std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-row");
-                if (m.agent_playback == null) m.agent_playback = agent_vector.Playback.init(.kai, size, .ready, now_ms);
+                if (m.agent_playback == null) m.agent_playback = agent_vector.Playback.init(.kai, size, if (multiple_agents) .ready else .waiting, now_ms);
                 if (multiple_agents and m.agent_sol_playback == null) m.agent_sol_playback = agent_vector.Playback.init(.sol, size, .working, now_ms);
                 if (!multiple_agents) m.agent_sol_next_ms = std.math.maxInt(u64);
                 var pixels: [agent_preview.side * agent_preview.side * 4]u8 = undefined;
@@ -258,6 +266,28 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .gallery_list => m.gallery_list_open = !m.gallery_list_open,
         .gallery_appearance => m.gallery_dark = !m.gallery_dark,
         .gallery_close_detail => m.gallery_detail_title = "",
+        .drawer_drag => |drag| {
+            if (drawer_surface.shouldDismiss(drag)) {
+                m.is_open = false;
+                m.gallery_status = "Closed";
+            }
+        },
+        .gallery_menu => |choice| {
+            m.is_open = false;
+            m.gallery_status = switch (choice) {
+                1 => "Renaming view.",
+                2 => "View duplicated.",
+                3 => "View archived.",
+                else => "",
+            };
+        },
+        .gallery_toggle_chart => m.gallery_chart_open = !m.gallery_chart_open,
+        .advance_progress => {
+            m.gallery_progress_count = if (m.gallery_progress_count >= 5) 0 else m.gallery_progress_count + 1;
+            m.gallery_progress_fraction = @as(f32, @floatFromInt(m.gallery_progress_count)) / 5;
+            m.gallery_progress_full = m.gallery_progress_count == 5;
+            m.gallery_progress_label = gallery.percentages[m.gallery_progress_count * 20];
+        },
         .gallery_select_option => |id| {
             if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "segmented-control")) {
                 if (id < 1 or id > 3) return;
@@ -300,6 +330,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         .open_menu => { m.is_open = true; m.gallery_status = "Menu opened"; },
         .select_agent => |id| {
             if (!isAgentComposition(m) or id == 0 or id > 2) return;
+            m.gallery_agent_row_selected = true;
             m.gallery_agent_choices[0].selected = id == 1;
             m.gallery_agent_choices[1].selected = id == 2;
             m.agent_name = if (id == 1) "Kai" else "Sol";
@@ -309,11 +340,23 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         },
         .pick_profile_kai => { m.profile_kai = true; m.profile_sol = false; m.profile_image = m.agent_kai_picture; },
         .pick_profile_sol => { m.profile_kai = false; m.profile_sol = true; m.profile_image = m.agent_sol_picture; },
+        .toggle_sidebar_resources => m.gallery_sidebar_resources_open = !m.gallery_sidebar_resources_open,
+        .toggle_project_sidebar => m.gallery_sidebar_visible = !m.gallery_sidebar_visible,
         .toggle_sidebar_group => {
             m.sidebar_group_open = !m.sidebar_group_open;
             m.gallery_status = if (m.sidebar_group_open) "Project views expanded" else "Project views collapsed";
         },
         .select_sidebar_item => |id| {
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "project-sidebar")) {
+                const count = m.gallery_project_destinations.len;
+                if (id == 0 or id > count + @intFromBool(m.gallery_sidebar_added)) return;
+                for (&m.gallery_project_destinations) |*row| row.selected = row.id == id;
+                m.gallery_sidebar_new_selected = id > count;
+                m.gallery_sidebar_active = if (m.gallery_sidebar_new_selected) "New sample view" else m.gallery_project_destinations[id - 1].title;
+                syncSidebar(m);
+                m.gallery_status = m.gallery_sidebar_active;
+                return;
+            }
             if (id == 0 or id > 3 or (id == 3 and !m.gallery_sidebar_added)) return;
             m.gallery_sidebar_new_selected = id == 3;
             if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "agent-sidebar")) {
@@ -447,6 +490,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
                 return;
             }
             m.amount = std.math.clamp(value, 0, 1);
+            m.gallery_slider_label = gallery.percentages[@intFromFloat(@round(m.amount * 100))];
             m.gallery_status = "value changed";
         },
         .edit => |event| {
@@ -479,7 +523,7 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
             const id = gallery.ids[m.gallery_selected];
             if (std.mem.eql(u8, id, "dialog") or std.mem.eql(u8, id, "drawer") or std.mem.eql(u8, id, "sheet")) {
                 m.is_open = false;
-                m.gallery_status = gallery.edit_view_saved;
+                    m.gallery_status = gallery.edit_view_saved;
             } else if (std.mem.eql(u8, id, "form")) {
                 m.gallery_status = if (std.mem.trim(u8, m.value, " \t").len > 0) "Sample view saved" else "Enter a view name";
             } else if (std.mem.eql(u8, id, "stepper")) {
@@ -498,26 +542,23 @@ pub fn tokens(m: *const Model) canvas.DesignTokens {
     return theme.theme(m.gallery_dark, .neutral, false, m.agent_reduced_motion);
 }
 
-fn previewWidth(id: []const u8) f32 {
-    if (std.mem.eql(u8, id, "switch") or std.mem.eql(u8, id, "card")) return 496;
-    const wide = [_][]const u8{ "chart", "bar-chart", "table", "data-table", "table-row", "data-grid", "grid-list" };
-    for (wide) |item| if (std.mem.eql(u8, id, item)) return 560;
-    const compact = [_][]const u8{ "button", "icon-button", "toggle", "checkbox", "radio", "badge" };
-    for (compact) |item| if (std.mem.eql(u8, id, item)) return 240;
-    return 360;
-}
-
-fn compactPreview(id: []const u8) bool {
-    const compact = [_][]const u8{ "button", "icon-button", "toggle", "checkbox", "radio", "badge", "segmented-control", "project-mark", "icon", "avatar", "agent-avatar", "gaze" };
-    for (compact) |item| if (std.mem.eql(u8, id, item)) return true;
-    return false;
-}
-
 fn chooseRating(score: u32) Msg {
     return .{ .choose = score };
 }
 
 fn specimen(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
+    if (std.mem.eql(u8, id, "drawer")) {
+        return ui.column(.{ .cross = .start }, .{
+            ui.button(.{ .variant = .secondary, .on_press = .open_choices }, gallery.edit_view_title),
+            if (m.is_open) drawer_surface.view(Msg, ui, gallery.edit_view_title, .dismiss, .{ .drawer_drag = .{} }, ui.column(.{ .gap = layout_tokens.gap_stack }, .{
+                ui.column(.{ .gap = 6 }, .{
+                    ui.text(.{ .size = .sm }, gallery.edit_view_label),
+                    ui.textField(.{ .text = m.value, .semantics = .{ .label = gallery.edit_view_label }, .on_input = AppUi.inputMsg(.edit) }),
+                }),
+                ui.button(.{ .variant = .primary, .on_press = .activate }, gallery.edit_view_submit),
+            })) else ui.column(.{}, .{}),
+        });
+    }
     if (std.mem.eql(u8, id, "input-otp"))
         return precision.codeView(Msg, ui, &m.code_editor, "Verification code", "Enter the six digits from your email.", AppUi.inputMsg(.edit));
     if (std.mem.eql(u8, id, "rating"))
@@ -531,7 +572,7 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
     const agent_composition = isAgentComposition(m);
     const selected_agent_state: agent_vector.State = if (m.agent_pending) |pending| pending else if (m.agent_playback) |playback| playback.state else .ready;
     const has_agent = !animated_agent and !agent_composition and std.mem.startsWith(u8, gallery.ids[index], "agent-");
-    const compact = compactPreview(gallery.ids[index]);
+    const layout = gallery.preview_layouts[index];
     const preview = ui.scroll(.{ .grow = 1, .semantics = .{ .label = "Component preview" } }, .{
         ui.column(.{ .padding = 24, .gap = 20 }, .{
             ui.column(.{ .gap = 6 }, .{
@@ -542,12 +583,18 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
             if (has_agent) ui.text(.{}, "Animation unavailable") else ui.column(.{}, .{}),
             if ((animated_agent or agent_composition) and m.agent_error) ui.text(.{}, "Animation unavailable") else ui.column(.{}, .{}),
             ui.text(.{ .size = .sm }, "Preview"),
-            ui.stack(.{ .style_tokens = .{ .background = .surface, .radius = .xl } }, .{
-                ui.column(.{ .height = 200 }, .{}),
-                ui.row(.{ .padding = 24, .height = if (compact) 200 else 0, .main = .center, .cross = .center }, .{
-                    ui.column(.{ .grow = 1, .max_width = previewWidth(gallery.ids[index]), .cross = if (compact) .center else .stretch }, .{
-                        specimen(ui, m, gallery.ids[index]),
-                    }),
+            ui.stack(.{ .style = .{ .radius = layout_tokens.radius_sheet }, .style_tokens = .{ .background = .surface } }, .{
+                ui.column(.{ .height = layout_tokens.specimen_min_height }, .{}),
+                ui.row(.{
+                    .padding = if (layout == .wide) layout_tokens.specimen_wide_inset else layout_tokens.specimen_inset,
+                    .main = .center,
+                    .cross = .center,
+                }, .{
+                    ui.column(.{
+                        .grow = 1,
+                        .max_width = if (layout == .wide) 0 else layout_tokens.specimen_content_width,
+                        .cross = if (layout == .compact) .center else .stretch,
+                    }, .{specimen(ui, m, gallery.ids[index])}),
                 }),
             }),
             if (animated_agent) ui.column(.{ .gap = 8 }, .{
@@ -594,10 +641,17 @@ pub fn rootView(ui: *AppUi, m: *const Model) AppUi.Node {
     });
 }
 
+const GuideApp = sdk.UiApp(Model, Msg);
+
+fn guideEvent(context: *anyopaque, runtime: *sdk.Runtime, event: sdk.Event) anyerror!void {
+    const app: *GuideApp = @ptrCast(@alignCast(context));
+    const drawer_open = app.model.is_open and std.mem.eql(u8, gallery.ids[app.model.gallery_selected], "drawer");
+    try app.app().event(runtime, if (drawer_open) drawer_surface.withTravel(event) else event);
+}
+
 pub fn main(init: std.process.Init) !void {
     precision.registerRatingIcons();
-    const App = sdk.UiApp(Model, Msg);
-    const app = try App.create(std.heap.page_allocator, .{
+    const app = try GuideApp.create(std.heap.page_allocator, .{
         .name = app_name, .scene = .{ .windows = &windows }, .canvas_label = "main-canvas",
         .init_fx = registerProjectMark, .update_fx = update, .tokens_fn = tokens, .view = rootView, .on_frame = agentFrame, .on_appearance = agentAppearance,
         .fonts = &.{
@@ -607,7 +661,9 @@ pub fn main(init: std.process.Init) !void {
     });
     defer app.destroy();
     app.model = initialModel();
-    try runner.runWithOptions(app.app(), .{
+    var native_app = app.app();
+    native_app.event_fn = guideEvent;
+    try runner.runWithOptions(native_app, .{
         .app_name = app_name, .window_title = title, .bundle_id = "dev.openboa.yogurt.native-guide",
         .icon_path = "assets/icon.png", .default_frame = sdk.geometry.RectF.init(0, 0, 900, 650),
         .js_window_api = false,

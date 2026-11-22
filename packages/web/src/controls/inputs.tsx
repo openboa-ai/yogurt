@@ -97,6 +97,7 @@ export function InputOTP({
         <div
           className="yg-otp"
           data-complete={value.length >= count || undefined}
+          data-partial={value.length > 0 && value.length < count || undefined}
           data-verified={confirmed || undefined}
           data-disabled={disabled || undefined}
           style={{ "--yg-digits": count, "--yg-otp-merge": Number(confirmed), "--yg-otp-confirm": Number(confirmed) } as CSSProperties}

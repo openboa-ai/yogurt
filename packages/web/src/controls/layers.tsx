@@ -361,7 +361,10 @@ function Modal({
           onPointerUp={(event) => {
             const start = drag.current;
             if (start?.id !== event.pointerId) return;
-            if (event.clientY - start.origin >= 64) onOpenChange(false);
+            const drawer = ref.current;
+            if (!drawer) return;
+            const threshold = parseFloat(getComputedStyle(drawer).getPropertyValue("--yg-drawer-dismiss-distance"));
+            if (event.clientY - start.origin >= threshold) onOpenChange(false);
             event.currentTarget.releasePointerCapture(event.pointerId);
           }}
           onLostPointerCapture={() => {

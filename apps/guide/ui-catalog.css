@@ -93,15 +93,15 @@ body {
 .specimen {
   background: var(--yg-surface);
   border-radius: var(--yg-radius-sheet);
-  min-height: 205px;
-  padding: clamp(var(--boa-space-20), 3.5vw, 44px);
+  min-height: var(--yg-specimen-min-height);
+  padding: var(--yg-specimen-inset);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
 }
 .specimen-inner {
   min-width: 0;
-  inline-size: min(100%, 31rem);
+  inline-size: min(100%, var(--yg-specimen-content-width));
   margin-inline: auto;
 }
 .specimen[data-layout="compact"] .specimen-inner {
@@ -109,7 +109,7 @@ body {
   max-inline-size: 100%;
 }
 .specimen[data-layout="wide"] {
-  padding: clamp(var(--boa-space-8), 2vw, var(--yg-inset-sheet));
+  padding: var(--yg-specimen-wide-inset);
 }
 .specimen[data-layout="wide"] .specimen-inner {
   inline-size: 100%;
