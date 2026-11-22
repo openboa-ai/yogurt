@@ -307,6 +307,7 @@
     "panel": 260,
     "expand": 320,
     "busy": 800,
+    "placeholder-sweep": 1000,
     "reveal": 420
   },
   "motionProfiles": {
@@ -398,6 +399,7 @@
   },
   "easing": {
     "settle": "cubic-bezier(.2, 0, 0, 1)",
+    "control-settle": "cubic-bezier(.333333, 0, .666667, 1)",
     "arrive": "cubic-bezier(.23, 1, .32, 1)",
     "selection": "cubic-bezier(.2, .76, .26, 1.08)"
   },

@@ -19,7 +19,7 @@ if (result.status !== 0) throw Error("Native catalog fixture generation failed."
 const gallery = join(kit, "apps/native-guide");
 copyFileSync(join(gallery, "app.json"), join(host, "app.json"));
 copyFileSync(join(gallery, "src/main.zig"), join(host, "src/main.zig"));
-for (const name of ["precision-inputs.zig", "drawer-surface.zig"]) {
+for (const name of ["precision-inputs.zig", "drawer-surface.zig", "interface-motion.zig"]) {
   copyFileSync(join(kit, "packages/native/controls", name), join(host, "src/yogurt", name));
 }
 copyFileSync(join(gallery, "src/agent-preview.zig"), join(host, "src/agent-preview.zig"));
@@ -97,8 +97,8 @@ const brandModel = model.replace("project_image: u32 = 1", "project_image: u32 =
   .replace("sourdough_picture: u32 = 2", "sourdough_picture: u32 = 0")
   .replace("meatball_picture: u32 = 3", "meatball_picture: u32 = 0")
   .replace("sidebar_destinations: []const Choice = &sample", "sidebar_destinations: []const Choice = &sidebar_sample")
-  .replace("pub const Model = struct {", "pub const Model = struct { agent_playback: ?agent_vector.Playback = null, agent_sol_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_sol_next_ms: u64 = 0, agent_kai_picture: u32 = 0, agent_sol_picture: u32 = 0, agent_kai_error: bool = false, agent_sol_error: bool = false, agent_error: bool = false, gallery_agent_choices: [2]Choice = .{ .{ .id = 1, .title = \"Kai\", .selected = true, .detail = \"Ready\", .summary = \"Ready\", .image_id = 0 }, .{ .id = 2, .title = \"Sol\", .detail = \"Working\", .summary = \"Working\", .image_id = 0 } }, code_editor: canvas.TextBuffer(6) = .{}, rating_score: u32 = 3, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
-const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { agent_tick: u64, agent_set_state: u8, agent_set_kind: u8, agent_reduce_motion: bool, gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance, gallery_close_detail, drawer_drag: @import(\"yogurt/drawer-surface.zig\").Drag,");
+  .replace("pub const Model = struct {", "pub const Model = struct { interface_motion: @import(\"yogurt/interface-motion.zig\").Tween = .{}, drawer_distance: f32 = 0, drawer_dragging: bool = false, agent_playback: ?agent_vector.Playback = null, agent_sol_playback: ?agent_vector.Playback = null, agent_kind: agent_vector.Agent = .kai, agent_label: []const u8 = \"Kai\", agent_pending: ?agent_vector.State = null, agent_reduced_motion: bool = false, agent_next_ms: u64 = 0, agent_sol_next_ms: u64 = 0, agent_kai_picture: u32 = 0, agent_sol_picture: u32 = 0, agent_kai_error: bool = false, agent_sol_error: bool = false, agent_error: bool = false, gallery_agent_choices: [2]Choice = .{ .{ .id = 1, .title = \"Kai\", .selected = true, .detail = \"Ready\", .summary = \"Ready\", .image_id = 0 }, .{ .id = 2, .title = \"Sol\", .detail = \"Working\", .summary = \"Working\", .image_id = 0 } }, code_editor: canvas.TextBuffer(6) = .{}, rating_score: u32 = 3, brand_picture: u32 = 0, gallery_sidebar_choices: [2]Choice = sidebar_sample,");
+const msg = findLine("const Msg = union(enum) {").replace("const Msg = union(enum) {", "pub const Msg = union(enum) { interface_tick: u64, agent_tick: u64, agent_set_state: u8, agent_set_kind: u8, agent_reduce_motion: bool, gallery_select: u32, gallery_previous, gallery_next, gallery_list, gallery_appearance, gallery_close_detail, drawer_drag: @import(\"yogurt/drawer-surface.zig\").Drag,");
 const zigString = (value) => JSON.stringify(value);
 const specimenContent = JSON.parse(readFileSync(join(kit, "catalog/specimens/components.json"), "utf8"));
 const editView = specimenContent.dialog;
@@ -116,6 +116,13 @@ const lines = [
   `pub const preview_layouts = [_]PreviewLayout{ ${catalog.map((entry) => specimenLayout.compact.includes(entry.id) ? ".compact" : specimenLayout.wide.includes(entry.id) || specimenLayout.wideFamilies.includes(entry.family) ? ".wide" : ".field").join(", ")} };`,
   `pub const composer_attachments_names = [_][]const u8{ ${[specimenContent.composer.attachment, specimenContent.composer.additionalAttachment].map(zigString).join(", ")} };`,
   `pub const project_sidebar_title = ${zigString(specimenContent["project-sidebar"].title)};`,
+  `pub const action_menu_label = ${zigString(specimenContent.menu.label)};`,
+  `pub const action_menu_items = [_][]const u8{ ${specimenContent.menu.items.map(item => zigString(item.label)).join(", ")} };`,
+  `pub const popover_label = ${zigString(specimenContent.popover.label)};`,
+  `pub const popover_body = ${zigString(specimenContent.popover.body)};`,
+  `pub const progress_label = ${zigString(specimenContent.progress.label)};`,
+  `pub const progress_next = ${zigString(specimenContent.progress.next)};`,
+  `pub const progress_reset = ${zigString(specimenContent.progress.reset)};`,
   `pub const edit_view_title = ${zigString(editView.title)};`,
   `pub const edit_view_label = ${zigString(editView.label)};`,
   `pub const edit_view_submit = ${zigString(editView.submit)};`,

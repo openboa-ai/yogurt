@@ -2,6 +2,12 @@
 
 Use `yogurt add <id> --target native` to install a markup template, its Zig source entry, the theme and fonts. Pass the same material, appearance and semantic roles as the web. The host owns its typed model, user preferences and effects. [Installation](../../docs/using-yogurt.md) · [Running macOS example](../../examples/native-ui/README.md) · [Target evidence](../../docs/engineering/controls/component-library/verification.md)
 
+## Interface motion
+
+The Native installer includes `src/yogurt/interface-motion.zig` for animated surfaces and progress. Retain a `Tween` in the host model. Initialize it with `snap`, retarget it from the last displayed value after a state change, and call `advance` on presented frames while it is active. Use one monotonic clock for both calls. Snap to the target when motion is reduced or the view leaves. Use the shared `travel_ms`, `panel_ms`, `settle_curve` and `arrive_curve` from the Zig tokens.
+
+`progressView` accepts the semantic value and the animated fill separately. `surfaceOptions` supplies translation and opacity to an SDK surface. `drawer-surface.zig` also exposes `present` for the same built-in drawer with those options. Existing markup keeps its arguments and immediate value semantics. The host continues to handle activation, dismissal, and the lifetime of each surface.
+
 ## Verification code and rating
 
 Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`. Existing markup templates retain their original call signatures.

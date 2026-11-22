@@ -90,8 +90,12 @@ check_interaction() {
           snapshot_after 'role=group name="Drawer handle".*actions=\[drag\]' || return 1
         local handle_id
         handle_id="$(sed -nE 's/^.*widget @w1\/main-canvas#([0-9]+) role=group name="Drawer handle".*$/\1/p' "$after")"
+        # Automation targets the settled accessibility frame while pointer
+        # hit testing follows the drawer's actual translated handle.
+        sleep 0.3
         "$cli" automate widget-drag main-canvas "$handle_id" 0.5 0.5 0.5 1.25 &&
           snapshot_after 'role=dialog name="Edit view"' &&
+          sleep 0.26 &&
           "$cli" automate widget-drag main-canvas "$handle_id" 0.5 0.5 0.5 3.5 &&
           "$cli" automate assert --timeout-ms 5000 --absent 'role=dialog name="Edit view"' &&
           snapshot_after 'role=text name="Closed"' || return 1

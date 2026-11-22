@@ -67,11 +67,8 @@
   :is(.yg-checkbox [role="checkbox"], .yg-radio [role="radio"], .yg-toggle-item, .yg-rating label) {
     transition: background-color var(--yg-press) var(--yg-settle);
   }
-  .yg-switch [role="switch"] {
-    transition: background-color var(--yg-change) var(--yg-settle);
-  }
   .yg-switch [role="switch"] > span {
-    transition: transform var(--yg-motion-switch-travel), background-color var(--yg-change) var(--yg-settle);
+    transition: transform var(--yg-change) var(--yg-control-settle);
   }
   .yg-checkbox [role="checkbox"] {
     transition: background-color var(--yg-press) var(--yg-settle), transform var(--yg-press) var(--yg-settle);
@@ -288,7 +285,7 @@
     animation: yg-result-arrive var(--yg-layer) var(--yg-arrive) both;
   }
 
-  .yg-skeleton span { animation: yg-skeleton-breathe calc(2 * var(--yg-busy)) var(--yg-settle) infinite alternate; }
+  .yg-skeleton span { animation: yg-skeleton-breathe var(--yg-placeholder-sweep) var(--yg-control-settle) infinite alternate; }
 
   .yg-flyout[data-state="open"] {
     transform-origin: var(--radix-popper-transform-origin, top center);
@@ -325,7 +322,7 @@
   }
 }
 
-@keyframes yg-skeleton-breathe { from { opacity: 1; } to { opacity: .48; } }
+@keyframes yg-skeleton-breathe { from { opacity: 1; } to { opacity: .5; } }
 
 @keyframes yg-result-arrive {
   from { translate: 0 var(--boa-space-4); }

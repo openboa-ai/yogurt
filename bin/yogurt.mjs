@@ -162,6 +162,9 @@ function run() {
       readFileSync(join(kit, "packages/native/controls/" + helper)),
     );
   }
+  if (target === "native" && [item.id, ...(block?.native ?? [])].some(id => ["dialog", "drawer", "sheet", "progress", "toast", "popover", "action-menu"].includes(id))) {
+    add("src/yogurt/interface-motion.zig", readFileSync(join(kit, "packages/native/controls/interface-motion.zig")));
+  }
   if (target === "native" && item.id === "drawer") {
     add("src/yogurt/drawer-surface.zig", readFileSync(join(kit, "packages/native/controls/drawer-surface.zig")));
   }

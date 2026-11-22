@@ -144,8 +144,10 @@
   --yg-panel: 260ms;
   --yg-expand: 320ms;
   --yg-busy: 800ms;
+  --yg-placeholder-sweep: 1000ms;
   --yg-reveal: 420ms;
   --yg-settle: cubic-bezier(.2, 0, 0, 1);
+  --yg-control-settle: cubic-bezier(.333333, 0, .666667, 1);
   --yg-arrive: cubic-bezier(.23, 1, .32, 1);
   --yg-selection: cubic-bezier(.2, .76, .26, 1.08);
   --yg-motion-menu-height: 470ms var(--yg-settle);

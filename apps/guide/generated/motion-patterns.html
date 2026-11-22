@@ -494,8 +494,10 @@
   --yg-panel: 260ms;
   --yg-expand: 320ms;
   --yg-busy: 800ms;
+  --yg-placeholder-sweep: 1000ms;
   --yg-reveal: 420ms;
   --yg-settle: cubic-bezier(.2, 0, 0, 1);
+  --yg-control-settle: cubic-bezier(.333333, 0, .666667, 1);
   --yg-arrive: cubic-bezier(.23, 1, .32, 1);
   --yg-selection: cubic-bezier(.2, .76, .26, 1.08);
   --yg-motion-menu-height: 470ms var(--yg-settle);
@@ -3306,11 +3308,8 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   :is(.yg-checkbox [role="checkbox"], .yg-radio [role="radio"], .yg-toggle-item, .yg-rating label) {
     transition: background-color var(--yg-press) var(--yg-settle);
   }
-  .yg-switch [role="switch"] {
-    transition: background-color var(--yg-change) var(--yg-settle);
-  }
   .yg-switch [role="switch"] > span {
-    transition: transform var(--yg-motion-switch-travel), background-color var(--yg-change) var(--yg-settle);
+    transition: transform var(--yg-change) var(--yg-control-settle);
   }
   .yg-checkbox [role="checkbox"] {
     transition: background-color var(--yg-press) var(--yg-settle), transform var(--yg-press) var(--yg-settle);
@@ -3527,7 +3526,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
     animation: yg-result-arrive var(--yg-layer) var(--yg-arrive) both;
   }
 
-  .yg-skeleton span { animation: yg-skeleton-breathe calc(2 * var(--yg-busy)) var(--yg-settle) infinite alternate; }
+  .yg-skeleton span { animation: yg-skeleton-breathe var(--yg-placeholder-sweep) var(--yg-control-settle) infinite alternate; }
 
   .yg-flyout[data-state="open"] {
     transform-origin: var(--radix-popper-transform-origin, top center);
@@ -3564,7 +3563,7 @@ button.yg-workspace-row-body:focus-visible { outline: var(--boa-stroke-focus) so
   }
 }
 
-@keyframes yg-skeleton-breathe { from { opacity: 1; } to { opacity: .48; } }
+@keyframes yg-skeleton-breathe { from { opacity: 1; } to { opacity: .5; } }
 
 @keyframes yg-result-arrive {
   from { translate: 0 var(--boa-space-4); }

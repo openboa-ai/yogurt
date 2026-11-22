@@ -36,7 +36,21 @@ pub fn view(
     drag: Msg,
     body: canvas.Ui(Msg).Node,
 ) canvas.Ui(Msg).Node {
-    return ui.el(.drawer, .{ .padding = 0, .on_dismiss = dismiss, .semantics = .{ .label = title } }, .{
+    return present(Msg, ui, title, dismiss, drag, body, .{ .on_dismiss = dismiss, .semantics = .{ .label = title } });
+}
+
+pub fn present(
+    comptime Msg: type,
+    ui: *canvas.Ui(Msg),
+    title: []const u8,
+    dismiss: Msg,
+    drag: Msg,
+    body: canvas.Ui(Msg).Node,
+    options: canvas.Ui(Msg).ElementOptions,
+) canvas.Ui(Msg).Node {
+    var outer = options;
+    outer.padding = 0;
+    return ui.el(.drawer, outer, .{
         ui.stack(.{}, .{
             ui.row(.{ .padding = tokens.inset_sheet, .main = .center }, .{
                 ui.column(.{ .grow = 1, .max_width = tokens.drawer_content_width, .gap = tokens.gap_stack }, .{

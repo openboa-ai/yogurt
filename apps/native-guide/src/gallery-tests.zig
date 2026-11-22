@@ -200,3 +200,20 @@ test "drawer requires a completed downward gesture past its threshold" {
     try std.testing.expect(!surface.shouldDismiss(.{ .phase = 2, .y = 90 }));
     try std.testing.expect(surface.shouldDismiss(.{ .phase = 1, .y = 64 }));
 }
+
+test "progress publishes its target while its fill is still at the prior value" {
+    var model = app.initialModel();
+    var effects: sdk.Effects(gallery.Msg) = .{ .allocator = std.testing.allocator };
+    for (gallery.ids, 0..) |id, index| {
+        if (std.mem.eql(u8, id, "progress")) app.update(&model, .{ .gallery_select = @intCast(index) }, &effects);
+    }
+    app.update(&model, .advance_progress, &effects);
+    try std.testing.expectEqual(@as(f32, 0.4), model.gallery_progress_fraction);
+    try std.testing.expectEqual(@as(f32, 0.2), model.interface_motion.value);
+    const middle = model.interface_motion.start_ns + 80 * std.time.ns_per_ms;
+    app.update(&model, .{ .interface_tick = middle }, &effects);
+    try std.testing.expect(model.interface_motion.value > 0.2 and model.interface_motion.value < 0.4);
+    app.update(&model, .{ .agent_reduce_motion = true }, &effects);
+    try std.testing.expectEqual(model.gallery_progress_fraction, model.interface_motion.value);
+    try std.testing.expect(!model.interface_motion.active());
+}
