@@ -112,7 +112,7 @@ export function AttentionInbox({
                 {current && <Receipt record={current} />}
                 {(item.unread || item.attention || canReview) && (
                   <div className="yg-operations-line">
-                    {item.unread && <Badge tone="brand">Unread</Badge>}
+                    {item.unread && <Badge>Unread</Badge>}
                     {item.attention && <Text variant="help">Needs attention</Text>}
                     {canReview && item.review && (
                       <Button

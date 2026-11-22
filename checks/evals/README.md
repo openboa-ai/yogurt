@@ -13,6 +13,8 @@ Use `--sdk <archive>` for the installed-web fixture. The runner installs the arc
 
 Use `--legacy-sdk <archive>` for `decide-installed-only`. The runner checks the archive digest against the fixture's recorded revision and verifies the installed guide and known missing resources. The agent sees the installed project and prompt. The expected inventory stays with the evaluator.
 
+Run `compose-first-screen` with `--sdk <archive>` to check selection and composition from a task that names no controls. The fixture has a locked Web package and a Native consumer whose archive digest is recorded in its config. The grader covers pattern selection, public bindings, retained host state and recovery. Measure actual Web and Native behavior in the client runtimes.
+
 Run `build-review-decision` with `--sdk <archive>` and Chrome available. The agent returns a component. The browser grader bundles it against the fixture's installed SDK and exercises the decision and receipt with a simulated host. Each attempt saves the host ledger, accessibility evidence and available screenshots. End-to-end time includes browser grading, and the report also gives model time separately.
 
 After changing decision grading, replay completed outputs using `node checks/evals/replay-decision.mjs <previous-report> <same-sdk-archive> <new-output-dir>`. The replay uses the original suite revision and a verified package digest. It saves new browser observations without calling any model.

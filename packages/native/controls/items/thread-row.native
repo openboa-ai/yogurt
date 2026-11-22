@@ -1,11 +1,11 @@
 <template name="yg-thread-row" args="label detail summary item_id selected unread disabled">
   <list-item label="{label}" selected="{selected}" disabled="{disabled}" on-press="open_thread:{item_id}" gap="12" padding="8" cross="center">
-    <column grow="1" gap="4">
-      <text>{label}</text>
-      <text size="sm" foreground="text_muted">{detail}</text>
+    <column grow="1" gap="2">
+      <text wrap="true">{label}</text>
+      <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
     </column>
     <column gap="4">
-      <text size="sm" foreground="text_muted">{summary}</text>
+      <text size="sm" foreground="text_muted" wrap="true">{summary}</text>
       <if test="{unread}"><text size="sm">Unread</text></if>
     </column>
   </list-item>

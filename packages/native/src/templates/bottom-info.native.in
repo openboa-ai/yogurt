@@ -1,0 +1,8 @@
+<template name="yg-bottom-info" args="label">
+  <panel padding="@{inset-regular}">
+    <column gap="@{gap-inline}">
+      <text size="sm" foreground="text_muted">{label}</text>
+      <slot/>
+    </column>
+  </panel>
+</template>

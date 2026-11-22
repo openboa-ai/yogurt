@@ -1,14 +1,12 @@
 <template name="yg-sidebar-layout" args="label">
-  <row gap="16" label="{label}">
+  <row gap="16" cross="stretch" label="{label}">
     <slot/>
   </row>
 </template>
 <template name="yg-sidebar-panel" args="label">
-  <panel label="{label}" padding="8">
-    <column gap="12">
-      <slot/>
-    </column>
-  </panel>
+  <column label="{label}" background="background" radius="xl" padding="14" gap="12">
+    <slot/>
+  </column>
 </template>
 <template name="yg-sidebar-drawer" args="label">
   <sheet label="{label}" on-dismiss="close_sidebar">
@@ -28,12 +26,12 @@
   </column>
 </template>
 <template name="yg-sidebar-items">
-  <list>
+  <list gap="2">
     <slot/>
   </list>
 </template>
 <template name="yg-sidebar-destination" args="label item_id selected">
-  <list-item label="{label}" selected="{selected}" on-press="select_sidebar_item:{item_id}" padding="8">
+  <list-item label="{label}" selected="{selected}" on-press="select_sidebar_item:{item_id}" height="38" padding="8">
     <slot/>
   </list-item>
 </template>

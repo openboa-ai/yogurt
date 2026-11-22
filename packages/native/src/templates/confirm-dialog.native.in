@@ -1,0 +1,12 @@
+<template name="yg-confirm-dialog" args="title consequence choice">
+  <dialog label="{title}" on-dismiss="dismiss" width="@{dialog-width}" padding="@{inset-sheet}">
+  <column gap="@{gap-stack}">
+  <text size="heading">{title}</text>
+  <text wrap="true" foreground="text_muted">{consequence}</text>
+  <row gap="@{gap-inline}" main="end" cross="center">
+  <button variant="ghost" on-press="dismiss">Cancel</button>
+  <button disabled="{unavailable}" variant="destructive" on-press="confirm_current">{choice}</button>
+  </row>
+  </column>
+  </dialog>
+</template>

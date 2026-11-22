@@ -1,0 +1,9 @@
+<template name="yg-code-block" args="label content language">
+  <column gap="@{gap-inline}" padding="@{inset-regular}" background="surface_subtle" radius="md">
+    <row gap="@{gap-stack}" cross="center">
+      <text grow="1" size="sm" foreground="text_muted">{language}</text>
+      <button variant="ghost" on-press="copy">Copy</button>
+    </row>
+    <code label="{label}" source="{content}" language="plain" wrap="false"/>
+  </column>
+</template>

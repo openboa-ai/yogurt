@@ -278,6 +278,19 @@ function gradeReleaseRegression(answer) {
 }
 
 export const outcomeGraders = {
+  "compose-first-screen": answer => {
+    const plan = parseAnswer(answer);
+    const names = (bindings, options) => Array.isArray(bindings) && options.some(id => bindings.includes(id));
+    return [
+      plan?.pattern === "pattern.find-records",
+      names(plan?.web, ["@openboa/yogurt/search-field", "@openboa/yogurt/filter-bar"]) &&
+        names(plan?.web, ["@openboa/yogurt/list-row", "@openboa/yogurt/disclosure-row", "@openboa/yogurt/data-table"]),
+      names(plan?.native, ["yg-search-field", "yg-filter-bar", "yg-collection-browser"]) &&
+        names(plan?.native, ["yg-list", "yg-disclosure-row", "yg-data-table", "yg-collection-browser"]),
+      plan?.stateOwner === "host" && names(plan?.retains, ["query"]) && names(plan?.retains, ["selectedId"]) &&
+        typeof plan?.recovery === "string" && /focus/i.test(plan.recovery) && /clear/i.test(plan.recovery),
+    ];
+  },
   "build-series-rows": gradeSeries,
   "evaluate-efficient-profile": gradeProfile,
   "decide-installed-only": gradeLegacyGuide,
@@ -296,6 +309,9 @@ export const outcomeGraders = {
 const trackedIssue = `Use the simulated issue service through the report_issue tool. Report the observed outcome as JSON with status and url.`;
 
 export const responseContracts = {
+  "compose-first-screen": `Return JSON with pattern (its installed stable ID), web (the selected public import strings),
+native (the selected installed template names), stateOwner (host or SDK), retains (an array of state names) and recovery
+(a short sequence of what to verify). Base both compositions on the actual installed SDK for each target.`,
   "decide-uncertain-print-receipt": `Return JSON with scope (station, job, receipt), stateAfterOtherStationCompletes,
 recovery (action, receipt, resubmit boolean), and confirmation (source, match, visibleState).
 Use unknown or confirmed for states and describe the match as original-receipt if that is what you require.`,

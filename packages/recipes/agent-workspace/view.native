@@ -39,16 +39,19 @@
         </if>
         <else><button variant="ghost" on-press="open_runtime_panel">Computer</button></else>
       </if>
-      <scroll label="Conversation">
-        <column gap="12">
-          <for each="agent_events" key="id" as="item">
-            <if test="{item.is_event}">
-              <use template="yg-work-event" title="{item.title}" detail="{item.detail}" summary="{item.summary}" item_id="{item.id}" can_review="{item.can_review}"/>
-            </if>
-            <else><use template="yg-message" speaker="{item.title}" content="{item.detail}"/></else>
-          </for>
-        </column>
-      </scroll>
+      <stack grow="1">
+        <column height="160"/>
+        <scroll label="Conversation">
+          <column gap="12">
+            <for each="agent_events" key="id" as="item">
+              <if test="{item.is_event}">
+                <use template="yg-work-event" title="{item.title}" detail="{item.detail}" summary="{item.summary}" item_id="{item.id}" can_review="{item.can_review}"/>
+              </if>
+              <else><use template="yg-message" speaker="{item.title}" content="{item.detail}"/></else>
+            </for>
+          </column>
+        </scroll>
+      </stack>
       <use template="yg-composer" label="Message" value="{agent_draft}"/>
     </if>
     <else><text foreground="text_muted">Choose an available agent to open a conversation.</text></else>

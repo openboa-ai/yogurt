@@ -62,7 +62,10 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     await select.evaluate(node => node.scrollIntoView({block: "center"}));
     await select.click();
     assert(await select.evaluate(node => node.matches(":open")));
-    assert.equal(await select.evaluate(node => getComputedStyle(node, "::picker(select)").opacity), "1");
+    await page.waitForFunction(() => {
+      const open = [...document.querySelectorAll("select")].find(node => node.matches(":open"));
+      return open && getComputedStyle(open, "::picker(select)").opacity === "1";
+    });
     await page.keyboard.press("Escape");
     assert(await select.evaluate(node => document.activeElement === node && !node.matches(":open")));
     await select.click();

@@ -1,5 +1,5 @@
 <template name="yg-grid-list" args="label">
-  <grid columns="2" gap="12" label="{label}">
+  <grid columns="2" gap="10" label="{label}">
     <slot/>
   </grid>
 </template>

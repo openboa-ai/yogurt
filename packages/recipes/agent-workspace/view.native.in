@@ -1,0 +1,78 @@
+<import src="agent-row.native"/>
+<import src="composer.native"/>
+<import src="message.native"/>
+<import src="runtime-panel.native"/>
+<import src="work-event.native"/>
+<template name="yg-agent-roster-pane">
+  <column gap="@{gap-inline}">
+    <text size="heading">Agents</text>
+    <search-field label="Search agents" text="{agent_query}" on-input="change_agent_search"/>
+    <if test="{agents_available}">
+      <list label="Agents">
+        <for each="agents" key="id" as="item">
+          <use template="yg-agent-row" label="{item.title}" image_id="{item.image_id}" detail="{item.detail}" summary="{item.summary}" item_id="{item.id}" selected="{item.selected}" unread="{item.unread}" disabled="{item.disabled}"/>
+        </for>
+      </list>
+    </if>
+    <else>
+      <text foreground="text_muted">No agents match this view.</text>
+      <button variant="ghost" on-press="clear_agent_search">Clear search</button>
+    </else>
+  </column>
+</template>
+<template name="yg-agent-conversation-pane">
+  <column gap="@{gap-stack}">
+    <if test="{agent_available}">
+      <row gap="@{gap-stack}" cross="center">
+        <image label="Agent silhouette" image="{agent_image}" width="40" height="40"/>
+        <column grow="1" gap="@{gap-tight}">
+          <text size="heading">{agent_name}</text>
+          <text size="sm" foreground="text_muted">{agent_status}</text>
+        </column>
+      </row>
+      <if test="{runtime_available}">
+        <if test="{runtime_panel_open}">
+          <use template="yg-runtime-panel" title="Computer" summary="{runtime_status}">
+            <image label="Current computer preview" image="{runtime_image}" width="240" height="135"/>
+          </use>
+          <button variant="ghost" on-press="close_runtime_panel">Close computer</button>
+        </if>
+        <else><button variant="ghost" on-press="open_runtime_panel">Computer</button></else>
+      </if>
+      <stack grow="1">
+        <column height="160"/>
+        <scroll label="Conversation">
+          <column gap="@{gap-stack}">
+            <for each="agent_events" key="id" as="item">
+              <if test="{item.is_event}">
+                <use template="yg-work-event" title="{item.title}" detail="{item.detail}" summary="{item.summary}" item_id="{item.id}" can_review="{item.can_review}"/>
+              </if>
+              <else><use template="yg-message" speaker="{item.title}" content="{item.detail}"/></else>
+            </for>
+          </column>
+        </scroll>
+      </stack>
+      <use template="yg-composer" label="Message" value="{agent_draft}"/>
+    </if>
+    <else><text foreground="text_muted">Choose an available agent to open a conversation.</text></else>
+  </column>
+</template>
+<template name="yg-agent-workspace">
+  <column gap="@{gap-stack}">
+    <if test="{workspace_compact}">
+      <if test="{show_agent_roster}">
+        <use template="yg-agent-roster-pane"/>
+      </if>
+      <else>
+        <button variant="ghost" on-press="show_agent_roster_action">Agents</button>
+        <use template="yg-agent-conversation-pane"/>
+      </else>
+    </if>
+    <else>
+      <row gap="@{gap-panel}">
+        <column width="216"><use template="yg-agent-roster-pane"/></column>
+        <column grow="1"><use template="yg-agent-conversation-pane"/></column>
+      </row>
+    </else>
+  </column>
+</template>

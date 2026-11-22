@@ -2,6 +2,54 @@
 
 Use `yogurt add <id> --target native` to install a markup template, its Zig source entry, the theme and fonts. Pass the same material, appearance and semantic roles as the web. The host owns its typed model, user preferences and effects. [Installation](../../docs/using-yogurt.md) · [Running macOS example](../../examples/native-ui/README.md) · [Target evidence](../../docs/engineering/controls/component-library/verification.md)
 
+The installer prints the entry to use. Author markup in `src/templates/*.native.in` and reference a layout token as `@{gap-stack}`. Run `npm run tokens` in the checkout to generate `controls/items/*.native` at their public import paths. `controls/views` holds the typed carousel and layer renderers. The component catalog selects the default for each ID. The Native guide installs those entries through the same code path as a product. It supplies sample content, callbacks and the clock.
+
+`views/carousel.zig` accepts the current slide, its position label, available navigation actions and transition phase. `views/layers.zig` supplies the dialog, sheet, action menu and popover. Pass the panel content or menu items and the current presentation state. The host decides which action to perform.
+
+## Interface motion
+
+The Native installer includes `src/yogurt/interface-motion.zig` for animated surfaces and progress. Retain a `Tween` in the host model. Initialize it with `snap`, retarget it from the last displayed value after a state change, and call `advance` on presented frames while it is active. Use one monotonic clock for both calls. Snap to the target when motion is reduced or the view leaves. Use the shared `travel_ms`, `panel_ms`, `settle_curve` and `arrive_curve` from the Zig tokens.
+
+`progressView` accepts the semantic value and the animated fill separately. `surfaceOptions` supplies translation and opacity to an SDK surface. `drawer-surface.zig` also exposes `present` for the same built-in drawer with those options. Existing markup keeps its arguments and immediate value semantics. The host continues to handle activation, dismissal, and the lifetime of each surface.
+
+## Verification code and rating
+
+### Native SDK dependency
+
+The app pins its Native SDK and uses the standard Native CLI. The typed OTP requires a framework that exposes `WidgetStyle.empty_focus_cell` and paints that cell on focus. The [verified macOS consumer setup](https://github.com/openboa-ai/yogurt/tree/b0628ced3532700a1672c47bfd20d56be05a38e3/checks/fixtures/native-otp) pins Native SDK 0.11.1 and the focus patch in the app's pnpm lockfile.
+
+Start in an empty workspace with Node.js, Zig 0.16.0 and `curl` on PATH. Set `YOGURT_KIT` to the absolute directory of the installed Yogurt package or unpacked SDK archive. The setup below installs the app's own SDK and creates a sample app with an app-owned Zig manifest.
+
+<!-- native-otp-setup -->
+```sh
+native_fixture=https://raw.githubusercontent.com/openboa-ai/yogurt/b0628ced3532700a1672c47bfd20d56be05a38e3/checks/fixtures/native-otp
+mkdir -p patches
+for file in package.json pnpm-workspace.yaml pnpm-lock.yaml patches/native-sdk-cli-0.11.1.patch; do
+  curl -fsSL "$native_fixture/$file" -o "$file"
+done
+npx --yes pnpm@10.24.0 install --frozen-lockfile --ignore-scripts
+export NATIVE_SDK_PATH="$PWD/node_modules/@native-sdk/cli"
+export PATH="$PWD/node_modules/.bin:$PATH"
+native init consumer --template zig-core --framework "$NATIVE_SDK_PATH"
+curl -fsSL "$native_fixture/main.zig" -o consumer/src/main.zig
+node "$YOGURT_KIT/bin/yogurt.mjs" add input-otp --target native --dir consumer
+cd consumer
+native eject .
+```
+
+Start development with `native dev .`. Stop the development process before building and packaging a release:
+
+```sh
+native build .
+native package --target macos --binary zig-out/bin/consumer --output consumer.app
+```
+
+Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`.
+
+## Drawer
+
+The installed Zig drawer view adds a drag handle to the same lower-edge surface. Pass a typed dismissal message and a drag message carrying `drawer-surface.zig`'s `Drag` record. Forward the SDK canvas event through `withTravel` while the drawer is open to keep the displacement from pointer down. Pass the typed drag message to `shouldDismiss` and close on a true result. Existing markup consumers can continue to use the close action and Escape.
+
 ## Agent presence
 
 For a visible avatar in a Vercel Native GPU canvas, install `agent-avatar` and retain one `Playback` per avatar. The shared poses move the body and both eyes with affine transforms. Every pose uses the original body path and one eye outline shared by both eyes. Each update supplies at most three path fills with stable host IDs and zero encoded frames.

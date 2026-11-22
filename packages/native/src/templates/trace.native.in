@@ -1,0 +1,7 @@
+<template name="yg-trace" args="label">
+  <timeline label="{label}">
+    <for each="events" key="id" as="item">
+      <timeline-item title="{item.title}" description="{item.detail}" on-press="choose:{item.id}"/>
+    </for>
+  </timeline>
+</template>

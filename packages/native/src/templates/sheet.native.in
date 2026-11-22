@@ -1,0 +1,12 @@
+<template name="yg-sheet" args="title footer=true">
+  <sheet label="{title}" on-dismiss="dismiss" width="@{dialog-width}" padding="@{inset-sheet}">
+    <column gap="@{gap-stack}">
+      <row gap="@{gap-inline}" cross="center">
+        <text size="heading" grow="1" wrap="true">{title}</text>
+        <button variant="ghost" size="icon" icon="x" label="Close" on-press="dismiss"/>
+      </row>
+      <slot/>
+      <if test="{footer}"><button variant="ghost" on-press="dismiss">Done</button></if>
+    </column>
+  </sheet>
+</template>

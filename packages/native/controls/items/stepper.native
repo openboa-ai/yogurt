@@ -1,10 +1,12 @@
 <template name="yg-stepper" args="label">
-  <column label="{label}" gap="8">
+  <column label="{label}" gap="12">
     <for each="choices" key="id" as="item">
       <row gap="8" cross="center">
+        <column gap="2" grow="1">
+          <text>{item.title}</text>
+          <text size="sm" foreground="text_muted">{item.detail}</text>
+        </column>
         <if test="{item.selected}"><badge>Current</badge></if>
-        <text>{item.title}</text>
-        <text size="sm" foreground="text_muted">{item.detail}</text>
       </row>
     </for>
   </column>

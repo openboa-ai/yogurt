@@ -1,0 +1,5 @@
+<template name="yg-bottom-action" args="label=Actions">
+  <row gap="@{gap-inline}" padding="@{inset-regular}" cross="center" role="group" label="{label}">
+    <slot/>
+  </row>
+</template>

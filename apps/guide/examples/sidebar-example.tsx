@@ -1,3 +1,4 @@
+import samples from "../../../catalog/specimens/components.json";
 import { useState } from "react";
 import {
   Breadcrumb, Button, Heading, Icon, Inline, ProjectMark, SegmentedControl,
@@ -12,16 +13,12 @@ const agents: AgentSummary[] = [
   {id: "kai", name: "Kai", role: "Release lead", state: "waiting", art: "Kai", pinned: true, unread: true},
   {id: "sol", name: "Sol", role: "Research lead", state: "working", art: "Sol"},
 ];
-const sections = [
-  {id: "delivery", title: "Delivery", icon: <Icon name="check" />, items: [
-    {id: "reviews", title: "Reviews", unread: 2},
-    {id: "runs", title: "Run history"},
-  ]},
-  {id: "resources", title: "Resources", icon: <Icon name="copy" />, items: [
-    {id: "sources", title: "Sources"},
-    {id: "decisions", title: "Decisions"},
-  ]},
-];
+const projectSample = samples["project-sidebar"];
+const sections = projectSample.sections.map((section) => ({
+  ...section,
+  icon: <Icon name={section.id === "delivery" ? "check" : "copy"} />,
+}));
+
 
 export function SidebarExample({ id }: { id: string }) {
   const [selected, setSelected] = useState(id === "agent-sidebar" ? "kai" : id === "project-sidebar" ? "reviews" : "overview");
@@ -41,8 +38,8 @@ export function SidebarExample({ id }: { id: string }) {
     <AgentSidebar agents={agents} currentId={selected} onSelect={select}
       onNew={() => setResult("Draft conversation opened in this preview.")} />
   ) : id === "project-sidebar" ? (
-    <ProjectSidebar title="Meatball" mark="meatball" sections={sections} currentId={selected} onSelect={select}
-      onAdd={() => setResult("New view opened in this preview.")} footer={<Text variant="meta">Team workspace</Text>} />
+    <ProjectSidebar title={projectSample.title} mark="meatball" sections={sections} currentId={selected} onSelect={select}
+      onAdd={() => setResult("New view opened in this preview.")} footer={<Text variant="meta">{projectSample.footer}</Text>} />
   ) : (
     <>
       <SidebarHeader compact={<ProjectMark project="yogurt" size={24} label="" />}>
@@ -79,7 +76,7 @@ export function SidebarExample({ id }: { id: string }) {
             <Heading>{active}</Heading>
             <Text variant="help">{id === "agent-sidebar" ? "Read the conversation with " + active + "." : "Review the latest work in " + active + "."}</Text>
           </Stack>
-          {result && <p role="status">{result}</p>}
+          {result && <Text role="status">{result}</Text>}
           {id === "sidebar-layout" && <Button emphasis="quiet" onClick={() => select("overview")}>Return to overview</Button>}
         </Stack>
       </SidebarLayout>

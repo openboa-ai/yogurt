@@ -1,6 +1,6 @@
 "use client";
 import { words } from "../foundation/words.js";
-import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { marks, agents } from "./art-data.js";
 import { agentColors, agentShapes, agentVariants, type AgentColor, type AgentVariant } from "./agent-family-data.js";
 import { eyeMarks } from "./avatar-pose-data.js";
@@ -166,15 +166,19 @@ export function Message({
   avatar,
   time,
   dateTime,
+  variant,
+  actions,
 }: {
   speaker: string;
   children: ReactNode;
   avatar?: ReactNode;
   time?: string;
   dateTime?: string;
+  variant?: "sent" | "received";
+  actions?: ReactNode;
 }) {
   return (
-    <article className="yg-message">
+    <article className="yg-message" data-variant={variant}>
       <Inline gap={8}>
         {avatar}
         <strong>{speaker}</strong>
@@ -184,7 +188,9 @@ export function Message({
           </time>
         )}
       </Inline>
-      <div>{children}</div>
+      <div className="yg-message-body">{variant ? <div className="yg-message-content">{children}</div> : children}
+        {actions && <div className="yg-message-actions">{actions}</div>}
+      </div>
     </article>
   );
 }
@@ -205,18 +211,26 @@ export function Transcript({
   label,
   children,
   revision,
+  readingAnchor = "always",
 }: {
   label: string;
   children: ReactNode;
   revision: string | number;
+  readingAnchor?: "always" | "when-away";
 }) {
   const box = useRef<HTMLDivElement>(null);
   const follow = useRef(true);
+  const [away, setAway] = useState(false);
+  function trackScroll(el: HTMLDivElement) {
+    follow.current = el.scrollHeight - el.clientHeight - el.scrollTop < 8;
+    if (readingAnchor === "when-away") setAway(!follow.current);
+  }
   function latest() {
     const el = box.current;
     if (el) {
       el.scrollTop = el.scrollHeight;
       follow.current = true;
+      setAway(false);
     }
   }
   useLayoutEffect(() => {
@@ -230,14 +244,14 @@ export function Transcript({
         tabIndex={0}
         role="region"
         aria-label={label}
-        onScroll={(e) => {
-          const n = e.currentTarget;
-          follow.current = n.scrollHeight - n.clientHeight - n.scrollTop < 8;
-        }}
+        onScroll={event => trackScroll(event.currentTarget)}
       >
         {children}
       </div>
-      <ReadingAnchor onClick={latest} />
+      {(readingAnchor === "always" || away) && <ReadingAnchor onClick={() => {
+        latest();
+        if (readingAnchor === "when-away") box.current?.focus({ preventScroll: true });
+      }} />}
     </div>
   );
 }

@@ -13,7 +13,7 @@ export const siteLayout = [
   ["packages/native", "packages/native"],
   ["packages/web/README.md", "packages/web/README.md"],
   ["packages/web/src", "packages/web/src"],
-  ...["DESIGN.md", "README.md", "catalog", "docs", "examples"].map(path => [path, path]),
+  ...["DESIGN.md", "README.md", "catalog", "docs", "examples", "registry"].map(path => [path, path]),
 ];
 
 export function sitePath(path) {

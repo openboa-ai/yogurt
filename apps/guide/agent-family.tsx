@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
+import {
+  AgentAvatar, agentPresenceLabels, Button, ButtonGroup, getAgentFamily, Grid,
+  Heading, Inline, PageHeader, Select, Stack, Text, Yogurt, type AgentColor, type AgentVariant,
+} from "@openboa/yogurt";
 import motion from "../../design/assets/agents/avatar-motion.json";
-import { AgentAvatar, getAgentFamily, type AgentColor, type AgentVariant } from "../../packages/web/src/identity/identity.js";
-import { agentPresenceLabels } from "../../packages/web/src/identity/agent-motion-data.js";
 
 const { colors: agentColors, shapes: agentShapes, variants: agentVariants } = getAgentFamily();
 
@@ -13,7 +15,7 @@ const states = Object.keys(agentPresenceLabels) as Presence[];
 const variants = Object.keys(agentVariants) as AgentVariant[];
 const byShape = Object.fromEntries(shapes.map(shape => [shape, variants.filter(id => agentVariants[id].shape === shape)])) as Record<Shape, AgentVariant[]>;
 
-function AgentFamily() {
+export function AgentFamily() {
   const [shape, setShape] = useState<Shape>("kai");
   const [state, setState] = useState<Presence>("ready");
   const [color, setColor] = useState<AgentColor>();
@@ -50,39 +52,36 @@ function AgentFamily() {
 
   return (
     <main data-family>
-      <h1>Agent family</h1>
-      <div className="family-controls">
-        <label>Agent state
-          <select value={state} onChange={event => selectState(event.currentTarget.value as Presence)}>
-            {states.map(id => <option value={id} key={id}>{agentPresenceLabels[id]}</option>)}
-          </select>
-        </label>
-        <label>Color
-          <select value={color ?? ""} onChange={event => setColor((event.currentTarget.value || undefined) as AgentColor | undefined)}>
-            <option value="">Original colors</option>
-            {(Object.keys(agentColors) as AgentColor[]).map(token => <option value={token} key={token}>{token}</option>)}
-          </select>
-        </label>
-        <button type="button" className="family-sequence" onClick={playSequence}>{playing ? "Stop sequence" : "Play sequence"}</button>
-        <button type="button" onClick={() => setReplay(value => value + 1)}>Replay state</button>
-      </div>
+      <PageHeader title="Agent family" detail="Explore the shapes and play through each agent state." />
+      <Grid className="family-controls" gap={12}>
+        <Select label="Agent state" value={state}
+          options={states.map(id => ({ id, label: agentPresenceLabels[id] }))}
+          onChange={event => selectState(event.currentTarget.value as Presence)} />
+        <Select label="Color" value={color ?? ""}
+          options={[{ id: "", label: "Original colors" }, ...Object.keys(agentColors).map(id => ({ id, label: id }))]}
+          onChange={event => setColor(event.currentTarget.value === "" ? undefined : event.currentTarget.value as AgentColor)} />
+        <ButtonGroup label="Agent playback">
+          <Button emphasis="soft" onClick={() => setReplay(value => value + 1)}>Replay state</Button>
+          <Button onClick={playSequence}>{playing ? "Stop sequence" : "Play sequence"}</Button>
+        </ButtonGroup>
+      </Grid>
       <section aria-label="Detail preview" className="family-detail">
-        <h2>{agentShapes[shape].name} <span>96 px</span></h2>
-        <div className="family-detail-pair" key={replay}>
+        <Inline><Heading>{agentShapes[shape].name}</Heading><Text variant="meta">96 px</Text></Inline>
+        <Inline className="family-detail-pair" gap={16} key={replay}>
           {byShape[shape].map(id => (
-            <div key={id} data-detail-variant={id}>
+            <Stack key={id} data-detail-variant={id}>
               <AgentAvatar agent={id} color={color} size={96} state={state} label="" />
-              <span>{agentVariants[id].notch}</span>
-            </div>
+              <Text>{agentVariants[id].notch}</Text>
+            </Stack>
           ))}
-        </div>
+        </Inline>
       </section>
       <section aria-label="Roster preview">
-        <h2>Roster <span>24 px</span></h2>
-        <div className="family-roster">
+        <Inline><Heading>Roster</Heading><Text variant="meta">24 px</Text></Inline>
+        <Grid className="family-roster" gap={8}>
           {shapes.map(id => (
-            <button key={id} type="button" aria-pressed={id === shape} onClick={() => setShape(id)}>
-              <span>{agentShapes[id].name}</span>
+            <Button key={id} emphasis={id === shape ? "soft" : "quiet"} aria-pressed={id === shape} onClick={() => setShape(id)}>
+              <Text>{agentShapes[id].name}</Text>
               <span className="family-notch-row" key={replay}>
                 {byShape[id].map(variant => (
                   <span key={variant} data-roster-variant={variant}>
@@ -90,12 +89,13 @@ function AgentFamily() {
                   </span>
                 ))}
               </span>
-            </button>
+            </Button>
           ))}
-        </div>
+        </Grid>
       </section>
     </main>
   );
 }
 
-createRoot(document.getElementById("yogurt-agent-family")!).render(<AgentFamily />);
+const host = document.getElementById("yogurt-agent-family");
+if (host) createRoot(host).render(<Yogurt><AgentFamily /></Yogurt>);

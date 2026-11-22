@@ -1,20 +1,24 @@
 import { type ComponentProps, type ReactNode } from "react";
-import { type Option } from "../foundation/foundation.js";
+import { type ControlSize, type Option } from "../foundation/foundation.js";
 type Input = Omit<ComponentProps<"input">, "size" | "prefix">;
-export declare function InputGroup({ label, leading, trailing, help, error, id, ...input }: Input & {
+export declare function InputGroup({ label, leading, trailing, help, error, id, size, motion, containerClassName, ...input }: Input & {
     label: string;
     leading?: ReactNode;
     trailing?: ReactNode;
     help?: string;
     error?: string;
+    size?: ControlSize | "featured";
+    motion?: "spring";
+    containerClassName?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function InputOTP({ label, length, value, onValueChange, name, disabled, help, error, }: {
+export declare function InputOTP({ label, length, value, onValueChange, name, disabled, verified, help, error, }: {
     label: string;
     length?: number;
     value: string;
     onValueChange: (v: string) => void;
     name?: string;
     disabled?: boolean;
+    verified?: boolean;
     help?: string;
     error?: string;
 }): import("react/jsx-runtime").JSX.Element;
@@ -30,7 +34,7 @@ export declare function SplitTextField({ label, parts, onValueChange, separator,
     onValueChange: (id: string, value: string) => void;
     separator?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Slider({ label, value, onValueChange, min, max, step, unit, disabled, }: {
+export declare function Slider({ label, value, onValueChange, min, max, step, unit, disabled, presentation, formatValue, }: {
     label: string;
     value: number;
     onValueChange: (value: number) => void;
@@ -39,9 +43,14 @@ export declare function Slider({ label, value, onValueChange, min, max, step, un
     step?: number;
     unit?: string;
     disabled?: boolean;
+    presentation?: "inline" | "card";
+    formatValue?: (value: number) => string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function NumericSpinner({ label, value, min, max, step, onValueChange, disabled, }: {
+export declare function NumericSpinner({ label, help, decreaseLabel, increaseLabel, value, min, max, step, onValueChange, disabled, }: {
     label: string;
+    help?: string;
+    decreaseLabel?: string;
+    increaseLabel?: string;
     value: number;
     min?: number;
     max?: number;
@@ -49,11 +58,12 @@ export declare function NumericSpinner({ label, value, min, max, step, onValueCh
     onValueChange: (value: number) => void;
     disabled?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Rating({ label, value, onValueChange, max, }: {
+export declare function Rating({ label, value, onValueChange, max, showStatus, }: {
     label: string;
     value: number;
     onValueChange?: (value: number) => void;
     max?: number;
+    showStatus?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Agreement({ label, items, selected, onValueChange, }: {
     label: string;

@@ -1,0 +1,3 @@
+<template name="yg-heading" args="label">
+  <text size="heading">{label}</text>
+</template>

@@ -1,3 +1,5 @@
+import samples from "../../../catalog/specimens/components.json";
+import { sectionHref } from "../routing";
 import { useState } from "react";
 import * as Y from "@openboa/yogurt";
 const projects = [
@@ -6,8 +8,8 @@ const projects = [
   { id: "sourdough", label: "Sourdough" },
 ];
 const links = [
-  { id: "calendar", label: "Calendar", href: "#calendar" },
-  { id: "select", label: "Select", href: "#select" },
+  { id: "calendar", label: "Calendar", href: sectionHref("components", "calendar") },
+  { id: "select", label: "Select", href: sectionHref("components", "select") },
 ];
 const stages = [
   { id: "draft", label: "Draft", detail: "Write the change." },
@@ -32,9 +34,9 @@ export function ExtendedExample({
     ]);
   const confirm = (value: string) => setText(value),
     note = text ? (
-      <p role="status" className="yg-help">
+      <Y.Text role="status" variant="help">
         {text}
-      </p>
+      </Y.Text>
     ) : null;
   const mark = <Y.ProjectMark project="yogurt" size={36} />;
   switch (id) {
@@ -58,17 +60,29 @@ export function ExtendedExample({
         </Y.Stack>
       );
     case "card":
+      if (variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "spacious"] as const).map((density) => (
+              <Y.Card key={density} density={density}
+                title={density[0].toUpperCase() + density.slice(1)} description="Weekly review">
+                {samples.card.body}
+              </Y.Card>
+            ))}
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Card
-          title="Weekly review"
-          description="Sourdough"
+          title={samples.card.title}
+          description={samples.card.detail}
           action={
             <Y.Button emphasis="soft" onClick={() => setOn(!on)}>
-              {on ? "Unpin view" : "Pin view"}
+              {on ? samples.card.unpin : samples.card.pin}
             </Y.Button>
           }
         >
-          Release notes and decisions from the week.
+          {samples.card.body}
         </Y.Card>
       );
     case "asset":
@@ -83,7 +97,7 @@ export function ExtendedExample({
       );
     case "gradient":
       return (
-        <Y.Gradient tone={variation ? "accent" : "brand"}>
+        <Y.Gradient tone={variation ? "accent" : "neutral"}>
           <Y.Inline>
             {mark}
             <Y.Heading>Yogurt</Y.Heading>
@@ -107,7 +121,7 @@ export function ExtendedExample({
       return (
         <Y.Post>
           <Y.Heading>Release notes</Y.Heading>
-          <p>Project filters now remember the last view you opened.</p>
+          <Y.Text>Project filters now remember the last view you opened.</Y.Text>
           <ul>
             <li>Choose a project.</li>
             <li>Save the view for next time.</li>
@@ -224,20 +238,7 @@ export function ExtendedExample({
         />
       );
     case "bar-chart":
-      return (
-        <Y.BarChart
-          title="Net change"
-          points={[
-            { id: "a", label: "Mon", value: 4 },
-            { id: "b", label: "Tue", value: -2 },
-            { id: "c", label: "Wed", value: null },
-          ]}
-          unit="views"
-          source="Local sample"
-          asOf="2026-11-20"
-          timeLabel="Nov 20"
-        />
-      );
+      return <Y.BarChart {...samples["bar-chart"]} />;
     case "avatar":
       return (
         <Y.Inline>
@@ -298,6 +299,14 @@ export function ExtendedExample({
         />
       );
     case "input-group":
+      if (variation) return (
+        <Y.Stack gap={12}>
+          {(["compact", "regular", "comfortable", "spacious", "touch", "featured"] as const).map((size) => (
+            <Y.InputGroup key={size} size={size} label={size[0].toUpperCase() + size.slice(1)}
+              placeholder="release-notes" leading={<span className="yg-help">/projects/</span>} />
+          ))}
+        </Y.Stack>
+      );
       return (
         <Y.InputGroup
           label="Project path"
@@ -335,10 +344,11 @@ export function ExtendedExample({
     case "slider":
       return (
         <Y.Slider
-          label="Preview volume"
+          label={samples.slider.label}
           value={number * 10}
           onValueChange={(v) => setNumber(v / 10)}
-          unit="%"
+          unit={samples.slider.unit}
+          presentation={variation ? "card" : "inline"}
         />
       );
     case "numeric-spinner":
@@ -546,7 +556,7 @@ export function ExtendedExample({
             {
               id: "actions",
               label: "Actions",
-              links: [{ id: "button", label: "Button", href: "#button" }],
+              links: [{ id: "button", label: "Button", href: sectionHref("components", "button") }],
             },
           ]}
         />
@@ -555,11 +565,12 @@ export function ExtendedExample({
       return <Y.Sidebar label="Library" current="select" links={links} />;
     case "navbar":
       return (
-        <Y.Stack>
-          <Y.Navbar
-            label={on ? "Projects" : "Weekly review"}
-            onBack={() => setOn(!on)}
-          />
+        <Y.Stack gap={24}>
+          <Y.Navbar variant="sections" label="Workspace sections"
+            identity={<Y.Text>Workspace</Y.Text>}
+            destinations={links}
+            current="calendar" expanded={on} onExpandedChange={setOn} />
+          <Y.Navbar label={on ? "Projects" : "Weekly review"} onBack={() => setOn(!on)} />
         </Y.Stack>
       );
     case "carousel":

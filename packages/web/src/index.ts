@@ -17,3 +17,7 @@ export * from "./patterns/operations.js";
 export * from "./patterns/composer.js";
 export * from "./patterns/sidebar.js";
 export { words } from "./foundation/words.js";
+export { CopyButton, LoadingSuccessButton } from "./patterns/motion-status.js";
+export { HoldButton, SlideConfirm } from "./patterns/motion-confirm.js";
+export { CartButton } from "./patterns/motion-cart.js";
+export { ProfileCard } from "./patterns/motion-cards.js";

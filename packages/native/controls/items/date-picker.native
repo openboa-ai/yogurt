@@ -1,12 +1,15 @@
 <template name="yg-date-picker" args="label value">
-  <stack>
+  <column gap="6">
+    <text size="sm">{label}</text>
+    <stack>
     <select label="{label}" text="{value}" on-press="open_choices"/>
     <if test="{is_open}">
       <card>
         <column gap="8">
           <row gap="8" cross="center">
-            <button variant="ghost" on-press="previous_page">Previous</button>
             <text>{month_label}</text>
+            <spacer grow="1"/>
+            <button variant="ghost" on-press="previous_page">Previous</button>
             <button variant="ghost" on-press="next_page">Next</button>
           </row>
           <grid columns="7" gap="2">
@@ -17,5 +20,6 @@
         </column>
       </card>
     </if>
-  </stack>
+    </stack>
+  </column>
 </template>

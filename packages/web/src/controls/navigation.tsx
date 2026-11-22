@@ -1,12 +1,25 @@
 "use client";
-import { useId, useLayoutEffect, useRef, type ComponentProps, type ReactNode } from "react";
-import { SegmentedControl as SDKSegment } from "@openai/apps-sdk-ui/components/SegmentedControl";
-import { Button } from "./actions.js";
+import { type ComponentProps, type ReactNode } from "react";
+import { SegmentedControl as SDKSegment, SegmentedControlItem, SegmentedControlIndicator } from "@ui-sdk/react/segmented-control";
+import { Tabs as SDKTabs, TabsList, TabsPanel, TabsTab, TabsIndicator } from "@ui-sdk/react/tabs";
+import { Button, type ButtonProps } from "./actions.js";
 import { type Choices } from "./forms.js";
-import { cx, Icon } from "../foundation/foundation.js";
+import { cx, Icon, type IconName } from "../foundation/foundation.js";
 
-export function Link(props: ComponentProps<"a"> & { href: string }) {
-  return <a {...props} className={cx("yg-link", props.className)} />;
+export function Link({
+  emphasis,
+  size = "regular",
+  className,
+  children,
+  ...props
+}: ComponentProps<"a"> & { href: string; emphasis?: ButtonProps["emphasis"]; size?: ButtonProps["size"] }) {
+  if (emphasis) {
+    return <a {...props} className={cx("yg-button", "yg-action-link", className)}
+      data-emphasis={emphasis} data-control-size={size}>
+      <span className="yg-button-label">{children}</span>
+    </a>;
+  }
+  return <a {...props} className={cx("yg-link", className)}>{children}</a>;
 }
 export interface Destination {
   id: string;
@@ -38,95 +51,31 @@ export function Breadcrumb({
   );
 }
 export function NavigationList({
+  id,
   items,
   current,
+  currentKind = "page",
   label,
+  orientation = "vertical",
+  expanded,
 }: {
+  id?: string;
   items: Destination[];
   current: string;
+  currentKind?: "page" | "location";
   label: string;
+  orientation?: "vertical" | "horizontal";
+  expanded?: boolean;
 }) {
   return (
-    <nav aria-label={label} className="yg-nav-list">
-      {items.map((o) => (
-        <a
-          key={o.id}
-          href={o.href}
-          aria-current={o.id === current ? "page" : undefined}
-        >
-          {o.label}
-        </a>
+    <nav id={id} aria-label={label} className="yg-nav-list" data-orientation={orientation} data-expanded={expanded}>
+      {items.map(item => (
+        <Link key={item.id} href={item.href} aria-current={item.id === current ? currentKind : undefined}>
+          {item.label}
+        </Link>
       ))}
     </nav>
   );
-}
-
-function SelectionMarker({ selector }: { selector: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useLayoutEffect(() => {
-    const marker = ref.current;
-    const group = marker?.parentElement;
-    if (!marker || !group) return;
-
-    let previous: {
-      button: HTMLButtonElement;
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    } | undefined;
-    const measure = (allowSlide: boolean) => {
-      const button = group.querySelector<HTMLButtonElement>(selector);
-      if (!button?.offsetWidth || !button.offsetHeight) {
-        marker.removeAttribute("data-ready");
-        marker.removeAttribute("data-slide");
-        previous = undefined;
-        return;
-      }
-
-      const { offsetLeft: x, offsetTop: y, offsetWidth: width, offsetHeight: height } = button;
-      if (previous?.button === button && previous.x === x && previous.y === y &&
-          previous.width === width && previous.height === height) return;
-
-      // A move on the same row follows selection. Reflow and row changes settle immediately.
-      const canSlide = allowSlide && previous && previous.button !== button && previous.y === y;
-      marker.toggleAttribute("data-slide", Boolean(canSlide));
-      marker.style.setProperty("--yg-selection-x", `${x}px`);
-      marker.style.setProperty("--yg-selection-y", `${y}px`);
-      marker.style.setProperty("--yg-selection-width", `${width}px`);
-      marker.style.setProperty("--yg-selection-height", `${height}px`);
-      marker.setAttribute("data-ready", "");
-      previous = { button, x, y, width, height };
-    };
-
-    const sizes = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(() => measure(false));
-    const observeSizes = () => {
-      if (!sizes) return;
-      sizes.disconnect();
-      sizes.observe(group);
-      group.querySelectorAll(":scope > button").forEach((button) => sizes.observe(button));
-    };
-    const changes = new MutationObserver((records) => {
-      if (records.some((record) => record.type === "childList")) observeSizes();
-      measure(true);
-    });
-    changes.observe(group, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      attributeFilter: ["aria-selected", "data-state", "dir"],
-    });
-    observeSizes();
-    measure(false);
-
-    return () => {
-      sizes?.disconnect();
-      changes.disconnect();
-    };
-  }, [selector]);
-
-  return <span ref={ref} className="yg-selection-marker" aria-hidden="true" />;
 }
 
 export function SegmentedControl({
@@ -142,16 +91,17 @@ export function SegmentedControl({
       aria-label={label}
       value={value}
       disabled={disabled}
-      onChange={(v) => {
+      loop={false}
+      onValueChange={(v) => {
         if (v) onValueChange(v);
       }}
-      pill={false}
     >
-      <SelectionMarker selector=':scope > button[data-state="on"]' />
+      <SegmentedControlIndicator className="yg-selection-marker" data-ready="" aria-hidden="true" />
       {options.map((o) => (
-        <SDKSegment.Option key={o.id} value={o.id} disabled={o.disabled}>
+        <SegmentedControlItem key={o.id} value={o.id} disabled={o.disabled}
+          render={(props, state) => <button {...props} data-state={state.checked ? "on" : "off"} />}>
           {o.label}
-        </SDKSegment.Option>
+        </SegmentedControlItem>
       ))}
     </SDKSegment>
   );
@@ -161,69 +111,51 @@ export function Tabs({
   items,
   value,
   onValueChange,
+  presentation = "pill",
 }: {
   label: string;
-  items: { id: string; label: string; panel: ReactNode; disabled?: boolean }[];
+  items: { id: string; label: string; panel: ReactNode; icon?: IconName; disabled?: boolean }[];
   value: string;
   onValueChange: (id: string) => void;
+  presentation?: "pill" | "dock";
 }) {
-  const uid = useId();
-  const refs = useRef(new Map<string, HTMLButtonElement>());
   const enabled = items.filter((o) => !o.disabled);
   const selected = enabled.some((i) => i.id === value) ? value : enabled[0]?.id;
   return (
-    <div className="yg-tabs">
-      <div role="tablist" aria-label={label}>
-        <SelectionMarker selector=':scope > button[aria-selected="true"]' />
+    <SDKTabs className="yg-tabs" data-presentation={presentation} value={selected ?? null}
+      onValueChange={(id) => { if (id !== null) onValueChange(id); }}>
+      <TabsList aria-label={label} onKeyDownCapture={(event) => {
+        const current = (event.target as HTMLElement).closest<HTMLButtonElement>('[role="tab"]');
+        if (!current || !event.currentTarget.contains(current) || !enabled.length ||
+          event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        const index = enabled.findIndex((item) => item.id === current.dataset.ygTabId);
+        if (index < 0) return;
+        const step = getComputedStyle(event.currentTarget).direction === "rtl" ? -1 : 1;
+        const next = ({ ArrowRight: (index + step + enabled.length) % enabled.length,
+          ArrowLeft: (index - step + enabled.length) % enabled.length,
+          Home: 0, End: enabled.length - 1 } as Record<string, number | undefined>)[event.key];
+        if (next === undefined) return;
+        event.preventDefault();
+        const id = enabled[next].id;
+        [...event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')]
+          .find((tab) => tab.dataset.ygTabId === id)?.focus();
+        onValueChange(id);
+      }}>
+        <TabsIndicator className="yg-selection-marker" data-ready="" aria-hidden="true" />
         {items.map((o) => (
-          <button
-            key={o.id}
-            type="button"
-            role="tab"
-            id={uid + "-t-" + o.id}
-            aria-controls={uid + "-p-" + o.id}
-            aria-selected={selected === o.id}
-            tabIndex={selected === o.id ? 0 : -1}
-            disabled={o.disabled}
-            ref={(el) => {
-              if (el) refs.current.set(o.id, el);
-              else refs.current.delete(o.id);
-            }}
-            onClick={() => onValueChange(o.id)}
-            onKeyDown={(e) => {
-              const index = enabled.findIndex((item) => item.id === o.id);
-              const next = (
-                {
-                  ArrowRight: (index + 1) % enabled.length,
-                  ArrowLeft: (index + enabled.length - 1) % enabled.length,
-                  Home: 0,
-                  End: enabled.length - 1,
-                } as Record<string, number | undefined>
-              )[e.key];
-              if (next !== undefined) {
-                e.preventDefault();
-                refs.current.get(enabled[next].id)?.focus();
-                onValueChange(enabled[next].id);
-              }
-            }}
-          >
-            {o.label}
-          </button>
+          <TabsTab key={o.id} value={o.id} disabled={o.disabled} data-yg-tab-id={o.id}
+            onClick={() => { if (o.id === selected) onValueChange(o.id); }}
+            render={(props, state) => <button {...props} disabled={state.disabled} />}>
+            {o.icon ? <><Icon name={o.icon} /><span className="yg-tab-label"><span>{o.label}</span></span></> : o.label}
+          </TabsTab>
         ))}
-      </div>
+      </TabsList>
       {items.map((o) => (
-        <div
-          key={o.id}
-          role="tabpanel"
-          tabIndex={0}
-          id={uid + "-p-" + o.id}
-          aria-labelledby={uid + "-t-" + o.id}
-          hidden={selected !== o.id}
-        >
+        <TabsPanel key={o.id} value={o.id} keepMounted tabIndex={0}>
           {o.panel}
-        </div>
+        </TabsPanel>
       ))}
-    </div>
+    </SDKTabs>
   );
 }
 export function Pagination({
@@ -249,7 +181,7 @@ export function Pagination({
         Previous
       </Button>
       <span className="yg-meta" aria-live="polite">
-        {page} of {pages}
+        <span className="yg-pagination-value" key={page}>{page}</span> of {pages}
       </span>
       <Button
         emphasis="quiet"

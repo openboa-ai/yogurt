@@ -1,0 +1,14 @@
+<template name="yg-keypad" args="label">
+  <column gap="@{gap-inline}" max-width="480">
+    <text size="sm">{label}</text>
+    <grid columns="{key_columns}" gap="@{gap-tight}">
+      <for each="keys" key="id" as="item">
+        <button variant="secondary" disabled="{item.disabled}" on-press="choose:{item.id}">{item.title}</button>
+      </for>
+    </grid>
+    <row gap="@{gap-inline}" cross="center">
+      <button variant="ghost" on-press="backspace">Delete</button>
+      <button variant="ghost" on-press="activate">Done</button>
+    </row>
+  </column>
+</template>

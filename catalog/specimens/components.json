@@ -1,0 +1,210 @@
+{
+  "button": {
+    "label": "Save view"
+  },
+  "switch": {
+    "label": "Record dates",
+    "on": "Friday, November 20",
+    "off": "Dates hidden"
+  },
+  "checkbox": {
+    "label": "Include archived views"
+  },
+  "segmented-control": {
+    "label": "Project",
+    "options": [
+      {
+        "id": "sourdough",
+        "label": "Sourdough"
+      },
+      {
+        "id": "meatball",
+        "label": "Meatball"
+      },
+      {
+        "id": "yogurt",
+        "label": "Yogurt"
+      }
+    ]
+  },
+  "dialog": {
+    "title": "Edit view",
+    "label": "View name",
+    "value": "Weekly review",
+    "submit": "Done",
+    "saved": "View updated."
+  },
+  "popover": {
+    "label": "About this view",
+    "body": "This view includes notes saved in the last seven days."
+  },
+  "card": {
+    "title": "Weekly review",
+    "detail": "Sourdough",
+    "body": "Release notes and decisions from the week.",
+    "pin": "Pin view",
+    "unpin": "Unpin view"
+  },
+  "text": {
+    "body": "Weekly review",
+    "help": "Shared with your team",
+    "meta": "Updated Friday"
+  },
+  "heading": {
+    "title": "Saved views",
+    "help": "Three views in Sourdough."
+  },
+  "slider": {
+    "label": "Preview volume",
+    "value": 30,
+    "unit": "%"
+  },
+  "disclosure-row": {
+    "label": "Review details",
+    "body": "Saved on Friday in Sourdough."
+  },
+  "progress": {
+    "label": "Reviewed records",
+    "next": "Review next record",
+    "reset": "Reset"
+  },
+  "records": [
+    {
+      "id": "a",
+      "title": "Field notes",
+      "day": "Today"
+    },
+    {
+      "id": "b",
+      "title": "Release checklist",
+      "day": "Thu"
+    },
+    {
+      "id": "c",
+      "title": "Weekly review",
+      "day": "Wed"
+    }
+  ],
+  "readings": {
+    "label": "Weekly readings",
+    "day": "Day",
+    "reviews": "Reviews",
+    "missing": "No reading",
+    "points": [
+      {
+        "id": "m",
+        "label": "Mon",
+        "value": 4
+      },
+      {
+        "id": "t",
+        "label": "Tue",
+        "value": 8
+      },
+      {
+        "id": "w",
+        "label": "Wed",
+        "value": null
+      },
+      {
+        "id": "h",
+        "label": "Thu",
+        "value": 6
+      },
+      {
+        "id": "f",
+        "label": "Fri",
+        "value": 10
+      }
+    ]
+  },
+  "menu": {
+    "label": "View actions",
+    "items": [
+      {
+        "id": "rename",
+        "label": "Rename view"
+      },
+      {
+        "id": "duplicate",
+        "label": "Duplicate view"
+      },
+      {
+        "id": "archive",
+        "label": "Archive view"
+      }
+    ]
+  },
+  "bar-chart": {
+    "title": "Net change",
+    "unit": "views",
+    "source": "Local sample",
+    "asOf": "2026-11-20",
+    "timeLabel": "Nov 20",
+    "points": [
+      {
+        "id": "a",
+        "label": "Mon",
+        "value": 4
+      },
+      {
+        "id": "b",
+        "label": "Tue",
+        "value": -2
+      },
+      {
+        "id": "c",
+        "label": "Wed",
+        "value": null
+      }
+    ]
+  },
+  "agent-row": {
+    "name": "Kai",
+    "displayState": "Waiting for you",
+    "preview": "Two release notes need your review.",
+    "time": "9:41 AM"
+  },
+  "project-sidebar": {
+    "title": "Meatball",
+    "footer": "Team workspace",
+    "sections": [
+      {
+        "id": "delivery",
+        "title": "Delivery",
+        "items": [
+          {
+            "id": "reviews",
+            "title": "Reviews",
+            "unread": 2
+          },
+          {
+            "id": "runs",
+            "title": "Run history"
+          }
+        ]
+      },
+      {
+        "id": "resources",
+        "title": "Resources",
+        "items": [
+          {
+            "id": "sources",
+            "title": "Sources"
+          },
+          {
+            "id": "decisions",
+            "title": "Decisions"
+          }
+        ]
+      }
+    ]
+  },
+  "composer": {
+    "label": "Message Kai",
+    "hint": "Type @ to mention someone.",
+    "attachment": "Launch brief.pdf",
+    "additionalAttachment": "Research notes.md",
+    "detail": "Project source"
+  }
+}

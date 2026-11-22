@@ -1,0 +1,7 @@
+# Component usage guidance
+
+The owner wants people and agents to choose Yogurt controls and combine them consistently across products. Store concise per-component usage decisions with the component's stable ID in the installed component catalog. The existing pattern catalog owns complete multi-control tasks; component guidance explains a control's suitable use, useful companions, unsuitable use and states to verify. Product data, layout choices and effects remain with the host.
+
+Expose guidance for explicitly requested component IDs through the existing installed SDK resolver, alongside its existing import and Native template data. Return `guidance: null` when an entry has no guidance. Keep older packages without guidance usable. Validate guidance shape and companion IDs against the installed component catalog. A missing guidance entry is an explicit gap, not permission to invent a rule. Add entries as their contracts are reviewed, then require complete coverage before the overall redesign is complete.
+
+Update discovery and build skills to consult the requested guidance and relevant task pattern before composing a screen. Keep skill instructions short and resolve only relevant IDs. Verify installed Web and Native lookups, compatibility with packages without guidance, invalid references and unknown IDs, plus representative decisions and skill format. Model evaluations report cost and outcomes separately.

@@ -1,14 +1,45 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { generateTokens } from "../tokens/generate.mjs";
 const root = new URL("../..", import.meta.url);
 process.chdir(fileURLToPath(root));
+generateTokens({ check: true });
 const json = (p) => JSON.parse(readFileSync(p, "utf8"));
 const manifest = json("catalog/brand.json"),
   base = json(manifest.sources.primitives),
   ui = json(manifest.sources.roles),
   catalog = json(manifest.sources.components),
   terms = json(manifest.sources.words).terms;
+const webTokens = readFileSync("design/styles/ui-tokens.css", "utf8");
+const nativeTokens = readFileSync("packages/native/controls/tokens.zig", "utf8");
+const { lineHeightScale, lineBoxSize, tracking } = ui.typeMetrics;
+assert.equal(lineHeightScale, 1.25);
+assert.equal(tracking, 0);
+assert(webTokens.includes(`--yg-type-tracking: ${tracking}em;`));
+assert(nativeTokens.includes(`pub const type_tracking: f32 = ${tracking};`));
+for (const [role, [sizeKey, weightKey]] of Object.entries(ui.types)) {
+  const size = base.type.size[sizeKey];
+  const lineHeight = base.type.size[lineBoxSize[role] ?? sizeKey] * lineHeightScale;
+  const weight = base.type.roleWeight[weightKey];
+  const nativeRole = role.replaceAll("-", "_");
+  assert(Number.isFinite(size) && lineHeight >= size, role);
+  assert(["ui", "body"].includes(weightKey), role);
+  assert(webTokens.includes(`--yg-type-${role}-size: ${size / 16}rem;`), role);
+  assert(webTokens.includes(`--yg-type-${role}-line: ${lineHeight / 16}rem;`), role);
+  assert(webTokens.includes(`--yg-font-${role}: ${weight} var(--yg-type-${role}-size)/var(--yg-type-${role}-line) var(--boa-font-family);`), role);
+  assert(nativeTokens.includes(`pub const ${nativeRole}_type: f32 = ${size};`), role);
+  assert(nativeTokens.includes(`pub const ${nativeRole}_line_height: f32 = ${lineHeight};`), role);
+  assert(nativeTokens.includes(`pub const ${nativeRole}_weight: u16 = ${weight};`), role);
+}
+for (const [name, profile] of Object.entries(ui.motionProfiles ?? {})) {
+  assert(Number.isSafeInteger(profile.duration) && profile.duration > 0, name);
+  assert(Object.hasOwn(ui.easing, profile.fallback), name);
+  assert(Array.isArray(profile.samples) && profile.samples.length >= 2 && profile.samples.every(Number.isFinite), name);
+  assert(webTokens.includes(`--yg-motion-${name}: ${profile.duration}ms var(--yg-${profile.fallback});`), name);
+  assert(webTokens.includes(`--yg-motion-${name}: ${profile.duration}ms linear(${profile.samples.join(", ")});`), name);
+  assert(nativeTokens.includes(`pub const ${name.replaceAll("-", "_")}_ms: u32 = ${profile.duration};`), name);
+}
 for (const path of [
   ...Object.values(manifest.sources),
   ...["symbol", "lockup", "wordmark"].map((k) => manifest.signature[k]),
@@ -38,6 +69,7 @@ for (const over of [{}, ...Object.values(ui.materials)]) {
   for (const [fg, bg] of [
     ["text", "canvas"],
     ["text", "field"],
+    ["text", "hover"],
     ["muted", "surface"],
     ["muted", "field"],
     ["on-action", "action"],
@@ -48,6 +80,15 @@ for (const over of [{}, ...Object.values(ui.materials)]) {
     ["success", "success-soft"],
     ["warning", "warning-soft"],
     ["accent", "accent-soft"],
+    ["on-signal-positive", "signal-positive"],
+    ["signal-positive", "signal-positive-soft"],
+    ["signal-warning", "canvas"],
+    ["signal-warning", "surface"],
+    ["signal-warning", "field"],
+    ["signal-limit", "canvas"],
+    ["signal-limit", "surface"],
+    ["signal-limit", "field"],
+    ["signal-rating", "surface"],
   ]) {
     for (let i = 0; i < 2; i++) {
       assert(
@@ -61,8 +102,34 @@ for (const over of [{}, ...Object.values(ui.materials)]) {
 assert.equal(new Set(terms.map((t) => t.id)).size, terms.length);
 assert.equal(new Set(catalog.map((e) => e.id)).size, catalog.length);
 const componentIds = new Set(catalog.map((entry) => entry.id));
+for (const entry of catalog) {
+  if (!entry.guidance) continue;
+  const { useWhen, combineWith, avoid, verify } = entry.guidance;
+  assert(typeof useWhen === "string" && useWhen.trim(), entry.id);
+  assert(typeof avoid === "string" && avoid.trim(), entry.id);
+  assert(Array.isArray(combineWith) && combineWith.every(id => componentIds.has(id) && id !== entry.id), entry.id);
+  assert(Array.isArray(verify) && verify.length > 0 && verify.every(state => typeof state === "string" && state.trim()), entry.id);
+}
 const blocks = json("catalog/blocks.json");
 const motion = json("catalog/motion.json");
+const motionComponents = json("catalog/motion-components.json");
+assert.equal(motionComponents.formatVersion, 1);
+const motionIds = new Set([...componentIds, ...blocks.map(item => item.id), ...json("catalog/patterns.json").patterns.map(item => item.id)]);
+const exportedMotion = await import(new URL("packages/web/dist/motion-patterns.js", root).href);
+const exportNames = Object.keys(exportedMotion).sort();
+assert.deepEqual(motionComponents.components.map(item => item.name).sort(), exportNames);
+for (const item of motionComponents.components) {
+  assert.match(item.id, /^motion-[a-z0-9]+(?:-[a-z0-9]+)*$/);
+  assert(!motionIds.has(item.id), item.id);
+  motionIds.add(item.id);
+  assert.equal(item.entry, "@openboa/yogurt/motion-patterns");
+  assert.equal(item.web, "available");
+  assert.equal(item.native, "unavailable");
+  assert(item.guidance.useWhen.trim() && item.guidance.avoid.trim() && item.guidance.verify.length, item.id);
+  assert.equal(typeof exportedMotion[item.name], "function", item.id);
+  const entry = json("registry/" + item.id + ".json");
+  assert.equal(entry.files[0].content, `"use client";\n\nexport { ${item.name} } from "${item.entry}";\n`);
+}
 assert.deepEqual(
   motion.map(({ id }) => id),
   [...catalog, ...blocks].map(({ id }) => id),
@@ -91,10 +158,10 @@ for (const block of blocks) {
     [...block.native].sort(),
   );
 }
-for (const { id, name, exports = [] } of catalog) {
+for (const { id, name, nativeMarkup, exports = [] } of catalog) {
   assert(existsSync("packages/web/dist/entries/" + id + ".js"));
   assert(existsSync("packages/web/dist/entries/" + id + ".d.ts"));
-  assert(existsSync("packages/native/controls/items/" + id + ".native"));
+  assert.equal(existsSync("packages/native/controls/items/" + id + ".native"), nativeMarkup !== false, id);
   assert(
     json("registry/" + id + ".json").files[0].content.includes(
       "@openboa/yogurt/" + id,

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-plan-switch",
+  "type": "registry:ui",
+  "title": "PlanSwitch",
+  "description": "Choose between described plan options.",
+  "files": [
+    {
+      "path": "ui/motion-plan-switch.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { PlanSwitch } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

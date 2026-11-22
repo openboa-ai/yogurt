@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-profile-card",
+  "type": "registry:ui",
+  "title": "ProfileCard",
+  "description": "Present a named profile and related actions.",
+  "files": [
+    {
+      "path": "ui/motion-profile-card.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { ProfileCard } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

@@ -1,13 +1,19 @@
 <template name="yg-select" args="label value">
-  <select label="{label}" text="{value}" on-press="open_choices"/>
+  <column gap="6">
+    <text size="sm">{label}</text>
+    <select label="{label}" text="{value}" on-press="open_choices"/>
+  </column>
 </template>
 <template name="yg-select-picker" args="label value expanded">
-  <stack>
+  <column gap="6">
+    <text size="sm">{label}</text>
+    <stack>
     <select label="{label}" text="{value}" on-press="open_choices"/>
     <if test="{expanded}">
       <dropdown-menu anchor="below" anchor-alignment="stretch" label="{label}" on-dismiss="dismiss">
         <slot/>
       </dropdown-menu>
     </if>
-  </stack>
+    </stack>
+  </column>
 </template>

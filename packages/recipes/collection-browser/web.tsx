@@ -20,10 +20,12 @@ export function CollectionBrowser({
   title,
   records,
   onOpen,
+  selectedId,
 }: {
   title: string;
   records: BrowserRecord[];
   onOpen: (id: string) => void;
+  selectedId?: string;
 }) {
   const [query, setQuery] = useState(""),
     [archives, setArchives] = useState(false);
@@ -52,6 +54,7 @@ export function CollectionBrowser({
               key={r.id}
               title={r.title}
               description={r.detail}
+              current={r.id === selectedId}
               onActivate={() => onOpen(r.id)}
             />
           ))}

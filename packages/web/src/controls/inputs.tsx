@@ -2,15 +2,19 @@
 import {
   useEffect,
   useId,
+  useLayoutEffect,
+  useRef,
   useState,
   type ComponentProps,
   type CSSProperties,
   type ReactNode,
 } from "react";
-import { ToggleGroup as RadixGroup } from "radix-ui";
+import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
+import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
+import { Radio as SDKRadio, RadioGroup as SDKRadioGroup } from "@ui-sdk/react/radio";
 import { Button, IconButton } from "./actions.js";
-import { Checkbox, Field } from "./forms.js";
-import { cx, type Option } from "../foundation/foundation.js";
+import { Checkbox, Field, SpringTextInput } from "./forms.js";
+import { cx, Icon, type ControlSize, type Option } from "../foundation/foundation.js";
 
 type Input = Omit<ComponentProps<"input">, "size" | "prefix">;
 export function InputGroup({
@@ -20,6 +24,9 @@ export function InputGroup({
   help,
   error,
   id,
+  size = "featured",
+  motion,
+  containerClassName,
   ...input
 }: Input & {
   label: string;
@@ -27,19 +34,39 @@ export function InputGroup({
   trailing?: ReactNode;
   help?: string;
   error?: string;
+  size?: ControlSize | "featured";
+  motion?: "spring";
+  containerClassName?: string;
 }) {
+  const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") &&
+    !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
+  const { onSelect, ...sharedProps } = input;
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <span className="yg-input yg-input-group">
+        <SDKInputGroup className={cx("yg-input yg-input-group", `yg-input-size-${size}`, containerClassName)}>
           {leading}
-          <input {...input} {...binding} />
+          {sharedInput && motion === "spring" && (input.type ?? "text") === "text"
+            ? <SpringTextInput {...input} {...binding} aria-invalid={binding["aria-invalid"] ?? input["aria-invalid"]} aria-describedby={[input["aria-describedby"], binding["aria-describedby"]].filter(Boolean).join(" ") || undefined} />
+            : sharedInput ? <SDKInput {...sharedProps} {...binding}
+            aria-invalid={binding["aria-invalid"] ?? input["aria-invalid"]}
+            aria-describedby={[input["aria-describedby"], binding["aria-describedby"]].filter(Boolean).join(" ") || undefined}
+            render={onSelect ? <input onSelect={onSelect} /> : undefined}
+            value={input.value == null ? undefined : String(input.value)}
+            defaultValue={input.defaultValue == null ? undefined : String(input.defaultValue)}
+            onValueChange={(next, details) => {
+              if (details.reason === "imperative" && input.maxLength !== undefined && input.maxLength >= 0 && next.length > input.maxLength) details.cancel();
+            }} /> : <input {...input} {...binding} />}
           {trailing}
-        </span>
+        </SDKInputGroup>
       )}
     </Field>
   );
 }
+function OtpDigit({ value }: { value: string }) {
+  return <span className="yg-otp-digit">{value}</span>;
+}
+
 export function InputOTP({
   label,
   length = 6,
@@ -47,6 +74,7 @@ export function InputOTP({
   onValueChange,
   name,
   disabled,
+  verified = false,
   help,
   error,
 }: {
@@ -56,42 +84,55 @@ export function InputOTP({
   onValueChange: (v: string) => void;
   name?: string;
   disabled?: boolean;
+  verified?: boolean;
   help?: string;
   error?: string;
 }) {
   const count = Math.max(1, Math.min(12, Math.trunc(length) || 6));
   const [cursor, setCursor] = useState(0);
+  const confirmed = verified && value.length >= count;
   return (
     <Field {...{ label, help, error }}>
       {(binding) => (
         <div
           className="yg-otp"
-          style={{ "--yg-digits": count } as CSSProperties}
+          data-complete={value.length >= count || undefined}
+          data-partial={value.length > 0 && value.length < count || undefined}
+          data-verified={confirmed || undefined}
+          data-disabled={disabled || undefined}
+          style={{ "--yg-digits": count, "--yg-otp-merge": Number(confirmed), "--yg-otp-confirm": Number(confirmed) } as CSSProperties}
         >
-          <input
+          <SDKInput
             {...binding}
             aria-label={label}
+            data-agent-secret=""
             inputMode="numeric"
             autoComplete="one-time-code"
             pattern="[0-9]*"
             name={name}
             disabled={disabled}
             value={value}
-            onSelect={(e) => setCursor(e.currentTarget.selectionStart ?? 0)}
-            onChange={(e) =>
-              onValueChange(e.target.value.replace(/\D/g, "").slice(0, count))
-            }
+            render={<input onSelect={(e) => setCursor(e.currentTarget.selectionStart ?? 0)} />}
+            onChange={(event) => {
+              const next = event.currentTarget.value.replace(/\D/g, "").slice(0, count);
+              setCursor(Math.min(event.currentTarget.selectionStart ?? next.length, next.length));
+              onValueChange(next);
+            }}
           />
           <span className="yg-otp-slots" aria-hidden="true">
             {Array.from({ length: count }, (_, i) => (
               <span
                 key={i}
                 data-cursor={i === Math.min(cursor, count - 1) || undefined}
+                data-filled={!!value[i] || undefined}
               >
-                {value[i]}
+                {value[i] && <span className="yg-otp-ink">
+                  <OtpDigit key={value[i]} value={value[i]} />
+                </span>}
               </span>
             ))}
           </span>
+          {confirmed && <span role="status" className="yg-otp-confirmation"><Icon name="check" /> Verified</span>}
         </div>
       )}
     </Field>
@@ -121,13 +162,18 @@ export function SplitTextField({
         {parts.map((p, i) => (
           <span key={p.id}>
             {i > 0 && <i aria-hidden="true">{separator}</i>}
-            <input
+            <SDKInput
               className="yg-standalone"
               aria-label={p.label}
               value={p.value}
               maxLength={p.maxLength}
               inputMode={p.inputMode}
-              onChange={(e) => onValueChange(p.id, e.target.value)}
+              onValueChange={(next, details) => {
+                if (details.reason === "imperative" && p.maxLength !== undefined && p.maxLength >= 0 && next.length > p.maxLength) details.cancel();
+              }}
+              onChange={(e) => {
+                onValueChange(p.id, e.currentTarget.value);
+              }}
             />
           </span>
         ))}
@@ -144,6 +190,8 @@ export function Slider({
   step = 1,
   unit = "",
   disabled,
+  presentation = "inline",
+  formatValue,
 }: {
   label: string;
   value: number;
@@ -153,8 +201,25 @@ export function Slider({
   step?: number;
   unit?: string;
   disabled?: boolean;
+  presentation?: "inline" | "card";
+  formatValue?: (value: number) => string;
 }) {
   const id = useId();
+  const fill = max > min ? Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100)) : 0;
+  const formatted = formatValue ? formatValue(value) : value + unit;
+  if (presentation === "card") {
+    return (
+      <div className="yg-motion-range" style={{ "--yg-range-fill": `${fill}%` } as CSSProperties}>
+        <div className="yg-motion-range-heading"><label htmlFor={id}>{label}</label></div>
+        <div className="yg-motion-range-area">
+          <span className="yg-motion-range-tip" aria-hidden="true" style={{ insetInlineStart: `${fill}%` }}>{formatted}</span>
+          <input id={id} type="range" min={min} max={max} step={step} value={value} disabled={disabled}
+            aria-valuetext={formatValue || unit ? formatted : undefined}
+            onChange={(event) => onValueChange(event.currentTarget.valueAsNumber)} />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="yg-range">
       <div>
@@ -162,8 +227,7 @@ export function Slider({
           {label}
         </label>
         <output htmlFor={id}>
-          {value}
-          {unit}
+          {formatted}
         </output>
       </div>
       <input
@@ -174,7 +238,8 @@ export function Slider({
         step={step}
         value={value}
         disabled={disabled}
-        aria-valuetext={unit ? value + unit : undefined}
+        style={{ "--yg-range-fill": `${fill}%` } as CSSProperties}
+        aria-valuetext={formatValue || unit ? formatted : undefined}
         onChange={(e) => onValueChange(e.target.valueAsNumber)}
       />
     </div>
@@ -182,6 +247,9 @@ export function Slider({
 }
 export function NumericSpinner({
   label,
+  help,
+  decreaseLabel,
+  increaseLabel,
   value,
   min = 0,
   max = 99,
@@ -190,6 +258,9 @@ export function NumericSpinner({
   disabled,
 }: {
   label: string;
+  help?: string;
+  decreaseLabel?: string;
+  increaseLabel?: string;
   value: number;
   min?: number;
   max?: number;
@@ -198,24 +269,39 @@ export function NumericSpinner({
   disabled?: boolean;
 }) {
   const increment = Math.max(1, Math.floor(step) || 1);
+  const previous = useRef(value);
+  const last = previous.current;
+  useLayoutEffect(() => { previous.current = value; }, [value]);
   return (
     <div className="yg-quantity" role="group" aria-label={label}>
-      <span className="yg-label">{label}</span>
+      <span className="yg-quantity-label">
+        <span className="yg-label">{label}</span>
+        {help && <span className="yg-help">{help}</span>}
+      </span>
       <div>
         <Button
-          emphasis="quiet"
-          aria-label={"Decrease " + label}
+          emphasis="soft"
+          shape="pill"
+          size="comfortable"
+          aria-label={decreaseLabel ?? "Decrease " + label}
           disabled={disabled || value <= min}
           onClick={() => onValueChange(Math.max(min, value - increment))}
         >
           −
         </Button>
-        <output aria-label={label} aria-live="polite">
-          {value}
+        <output aria-label={label} aria-live="polite" data-decreasing={value < last || undefined}>
+          {[min, max, last, value].map((measurement, index) => (
+            <span className="yg-quantity-measure" aria-hidden="true" key={index}>{measurement}</span>
+          ))}
+          {last !== value && <span key={`old-${value}`} className="yg-quantity-out" aria-hidden="true">{last}</span>}
+          <span key={value} className={last !== value ? "yg-quantity-in" : undefined}>{value}</span>
         </output>
         <IconButton
           icon="plus"
-          label={"Increase " + label}
+          label={increaseLabel ?? "Increase " + label}
+          emphasis="soft"
+          shape="pill"
+          size="comfortable"
           disabled={disabled || value >= max}
           onClick={() => onValueChange(Math.min(max, value + increment))}
         />
@@ -228,14 +314,18 @@ export function Rating({
   value,
   onValueChange,
   max = 5,
+  showStatus = false,
 }: {
   label: string;
   value: number;
   onValueChange?: (value: number) => void;
   max?: number;
+  showStatus?: boolean;
 }) {
   const id = useId(),
     count = Math.max(1, Math.min(10, Math.floor(max) || 5));
+  const [hovered, setHovered] = useState(0);
+  const shown = Math.max(0, Math.min(count, hovered || value));
   if (!onValueChange)
     return (
       <span className="yg-score" aria-label={label}>
@@ -243,22 +333,38 @@ export function Rating({
       </span>
     );
   return (
-    <fieldset className="yg-fieldset">
+    <fieldset className="yg-fieldset" style={{ "--yg-rating-shown": shown } as CSSProperties}>
       <legend className="yg-label">{label}</legend>
-      <div className="yg-rating">
+      <SDKRadioGroup className="yg-rating" aria-label={label} name={id} value={String(value)}
+        onValueChange={(next, details) => {
+          const selected = Number(next);
+          if (next === null || !Number.isInteger(selected) || selected < 1 || selected > count) {
+            details.cancel();
+            return;
+          }
+          onValueChange(selected);
+        }} onPointerLeave={() => setHovered(0)}
+        onKeyDown={event => {
+          if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) setHovered(0);
+        }}>
         {Array.from({ length: count }, (_, i) => (
-          <label key={i} data-filled={i < value || undefined}>
-            <input
-              type="radio"
-              name={id}
+          <label key={i} data-filled={i < shown || undefined}
+            onPointerEnter={event => { if (event.pointerType === "mouse") setHovered(i + 1); }}>
+            <SDKRadio
+              value={String(i + 1)}
               aria-label={i + 1 + " of " + count}
-              checked={value === i + 1}
-              onChange={() => onValueChange(i + 1)}
             />
-            <span aria-hidden="true">★</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true" style={{ "--yg-star-fill": i < shown ? "100%" : "0%" } as CSSProperties}>
+              <path d="m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z" />
+            </svg>
           </label>
         ))}
-      </div>
+      </SDKRadioGroup>
+      {showStatus && <span className="yg-help yg-rating-status" role="status"
+        aria-label={value ? `${value} of ${count} selected` : "Choose a rating"}>
+        <span aria-hidden="true">{["Choose a rating", ...Array.from({ length: count }, (_, i) => `${i + 1} of ${count} selected`)]
+          .map(text => <span key={text}>{text}</span>)}</span>
+      </span>}
     </fieldset>
   );
 }
@@ -412,14 +518,18 @@ export function Toggle({
   disabled?: boolean;
 }) {
   return (
-    <Button
-      aria-pressed={pressed}
-      emphasis={pressed ? "soft" : "quiet"}
+    <SDKToggle
+      pressed={pressed}
+      onPressedChange={onPressedChange}
+      className="yg-button"
+      data-emphasis={pressed ? "soft" : "quiet"}
+      data-tone="neutral"
+      data-control-size="regular"
+      data-shape="rounded"
       disabled={disabled}
-      onClick={() => onPressedChange(!pressed)}
     >
-      {children}
-    </Button>
+      <span className="yg-button-inner"><span className="yg-button-label"><span className="yg-button-content">{children}</span></span></span>
+    </SDKToggle>
   );
 }
 export function ToggleGroup({
@@ -435,35 +545,42 @@ export function ToggleGroup({
   onValueChange: (ids: string[]) => void;
   multiple?: boolean;
 }) {
-  const children = items.map((i) => (
-    <RadixGroup.Item
-      className="yg-toggle-item"
-      key={i.id}
-      value={i.id}
-      disabled={i.disabled}
-    >
-      {i.label}
-    </RadixGroup.Item>
-  ));
-  return multiple ? (
-    <RadixGroup.Root
+  return (
+    <SDKToggleGroup
       className="yg-toggle-group"
       aria-label={label}
-      type="multiple"
-      value={value}
-      onValueChange={onValueChange}
+      render={(props) => <div {...props} role={multiple ? "toolbar" : "radiogroup"} />}
+      multiple={multiple}
+      deselectable
+      value={multiple ? value : value.slice(0, 1)}
+      onValueChange={(next) => {
+        if (next.some((id) => !value.includes(id) && !items.some((item) => item.id === id && !item.disabled))) return;
+        const selected = new Set(next);
+        onValueChange(multiple ? [...value.filter((id) => selected.has(id)), ...next.filter((id) => !value.includes(id))] : next);
+      }}
+      onKeyDownCapture={(event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        const current = (event.target as HTMLElement).closest<HTMLButtonElement>("button[data-yg-toggle-id]");
+        const enabled = items.filter((item) => !item.disabled);
+        const index = enabled.findIndex((item) => item.id === current?.dataset.ygToggleId);
+        if (index < 0) return;
+        const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+        const next = ({ ArrowRight: (index + (rtl ? -1 : 1) + enabled.length) % enabled.length,
+          ArrowLeft: (index + (rtl ? 1 : -1) + enabled.length) % enabled.length,
+          Home: 0, End: enabled.length - 1 } as Record<string, number | undefined>)[event.key];
+        if (next === undefined) return;
+        event.preventDefault();
+        [...event.currentTarget.querySelectorAll<HTMLButtonElement>("button[data-yg-toggle-id]")]
+          .find((button) => button.dataset.ygToggleId === enabled[next].id)?.focus();
+      }}
     >
-      {children}
-    </RadixGroup.Root>
-  ) : (
-    <RadixGroup.Root
-      className="yg-toggle-group"
-      aria-label={label}
-      type="single"
-      value={value[0] ?? ""}
-      onValueChange={(v) => onValueChange(v ? [v] : [])}
-    >
-      {children}
-    </RadixGroup.Root>
+      {items.map((item) => <SDKToggle key={item.id} value={item.id} disabled={item.disabled}
+        className="yg-toggle-item" data-yg-toggle-id={item.id}
+        render={(props, state) => <button {...props} disabled={item.disabled}
+          role={multiple ? undefined : "radio"} aria-checked={multiple ? undefined : state.pressed}
+          aria-pressed={multiple ? state.pressed : undefined} data-state={state.pressed ? "on" : "off"} />}>
+        {item.label}
+      </SDKToggle>)}
+    </SDKToggleGroup>
   );
 }

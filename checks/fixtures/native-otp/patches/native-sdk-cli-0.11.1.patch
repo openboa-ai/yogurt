@@ -1,0 +1,69 @@
+diff --git a/src/primitives/canvas/widgets.zig b/src/primitives/canvas/widgets.zig
+--- a/src/primitives/canvas/widgets.zig
++++ b/src/primitives/canvas/widgets.zig
+@@ -512,6 +512,7 @@
+     accent_foreground: ?Color = null,
+     border: ?Color = null,
+     focus_ring: ?Color = null,
++    empty_focus_cell: ?struct { width: f32, remaining_gap: f32, count: u32 } = null,
+     radius: ?f32 = null,
+     stroke_width: ?f32 = null,
+     /// The quiet-surface knob: `true` removes this widget's HOVER wash —
+@@ -1678,10 +1679,10 @@
+
+ test "Widget keeps the reviewed retained footprint with portable component and appearance policies" {
+     // One layout tree holds thousands of Widgets by value. On the 64-bit
+-    // targets that run the renderer, 792 bytes is the reviewed footprint:
++    // targets that run the renderer, 808 bytes is the reviewed footprint:
+     // the 776-byte native widget plus two optional 8-byte policy callbacks.
+     // The callbacks borrow compiled code, with no per-widget allocation.
+     if (@sizeOf(usize) == 8) {
+-        try std.testing.expectEqual(@as(usize, 792), @sizeOf(Widget));
+-    }
+-}
++        try std.testing.expectEqual(@as(usize, 808), @sizeOf(Widget));
++    }
++}
+diff --git a/src/primitives/canvas/widget_render_controls.zig b/src/primitives/canvas/widget_render_controls.zig
+--- a/src/primitives/canvas/widget_render_controls.zig
++++ b/src/primitives/canvas/widget_render_controls.zig
+@@ -440,7 +440,10 @@
+ }
+
+ pub fn emitTextFieldWidget(builder: *Builder, widget: Widget, tokens: DesignTokens) Error!void {
+-    if (tokens.control_command_policy != null) return emitCompiledTextField(builder, widget, tokens);
++    if (tokens.control_command_policy != null) {
++        try emitCompiledTextField(builder, widget, tokens);
++        return emitEmptyFocusCell(builder, widget, tokens, widgetRadius(widget, tokens.radius.md));
++    }
+     const visual = textInputControlVisualTokens(widget, tokens);
+     const radius = controlRadius(widget, visual, tokens.radius.md);
+     const text_size = widgetTextInputSize(widget, tokens);
+@@ -480,6 +483,7 @@
+             .width = controlStrokeWidth(widget, visual, tokens.stroke.regular),
+         },
+     }));
++    try emitEmptyFocusCell(builder, widget, tokens, radius);
+     if (widget.state.focused) try emitWidgetFocusRingForRect(builder, widget, tokens, 7, widget.frame, radius);
+     if (clips_text) try builder.pushClip(.{ .id = widgetPartId(widget.id, 16), .rect = clip_rect, .radius = radius });
+     if (selection_range) |range| {
+@@ -2318,6 +2322,19 @@
+         },
+         else => @panic("unsupported control drawing capability"),
+     };
++}
++
++fn emitEmptyFocusCell(builder: *Builder, widget: Widget, tokens: DesignTokens, radius: Radius) Error!void {
++    const cell = widget.style.empty_focus_cell orelse return;
++    if (!widget.state.focused or widget.text.len != 0 or cell.count == 0) return;
++    const width = @min(cell.width, (widget.frame.width - cell.remaining_gap) / @as(f32, @floatFromInt(cell.count)));
++    if (width <= 0) return;
++    try builder.fillRoundedRect(.{
++        .id = ownedWidgetPartId(tokens, widget.id, 17),
++        .rect = geometry.RectF.init(widget.frame.x, widget.frame.y, width, widget.frame.height),
++        .radius = radius,
++        .fill = colorFill(tokens.colors.surface_pressed),
++    });
+ }
+
+ fn emitCompiledTextField(builder: *Builder, widget: Widget, tokens: DesignTokens) Error!void {

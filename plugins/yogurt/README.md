@@ -3,7 +3,7 @@
 Choose an immutable Git revision of this repository for the Codex marketplace. Install the Yogurt plugin from that revision. The repository's marketplace lives under `.agents/plugins`. Retain that revision and the SDK pin as a working pair before upgrading. The [compatibility list](compatibility.json) records the SDK versions and pattern catalog formats exercised with this plugin.
 
 ```sh
-codex plugin marketplace add openboa-ai/yogurt --ref <plugin-commit>
+codex plugin marketplace add openboa-ai/yogurt --ref "<reviewed-plugin-commit>"
 codex plugin add yogurt@openboa-yogurt
 ```
 
@@ -15,10 +15,10 @@ Use `yogurt-ui` for a design decision, `yogurt-build` for implementation, `yogur
 
 For an installed-resource diagnostic, run `node <plugin-root>/bin/resolve-sdk.mjs <project-root> <web|native> --inspect`. It reports the validated version and revision, available guidance paths, missing paths and compatibility status. Use `web` to inspect files from an npm pin. Use `native` to inspect a declared Native installation. Runtime behavior needs evidence from the rendered application.
 
-Look up selected patterns and components together from the consumer root.
+Give `yogurt-build` a request in the user's terms, such as “Find a record and return from its detail with the same search.” The skill resolves the pin and opens its design entry, where the task map leads to the appropriate pattern or recipe. Once you know the IDs, look them up together from the consumer root.
 
 ```sh
-node <plugin-root>/bin/resolve-sdk.mjs . web --lookup pattern.review-decision pattern.track-request
+node "<plugin-root>/bin/resolve-sdk.mjs" . web --lookup pattern.review-decision pattern.track-request
 ```
 
 The result includes the pinned version, state checks, public imports and exact declaration files. Small declaration modules are included once. A null declaration body points to a file you can read when you need its props. For a Native pin, change `web` to `native` to get the installed templates and their copy commands.

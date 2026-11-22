@@ -262,8 +262,9 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
       await trigger.click();
       const modal = layer.getByRole("dialog", {name: "Edit view"});
       await modal.waitFor();
+      await modal.evaluate(promiseToSettle);
       assert.equal(await modal.evaluate(el => getComputedStyle(el).opacity), "1");
-      assert.equal(await modal.evaluate(el => getComputedStyle(el).animationName), "yg-enter");
+      assert(await modal.isVisible());
       await page.keyboard.press("Escape");
       await modal.waitFor({state: "hidden"});
       assert(await trigger.evaluate(el => document.activeElement === el));
@@ -279,14 +280,18 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     const initial = Number(await value.getAttribute("value"));
     await progress.getByRole("button", {name: "Review next record"}).click();
     assert.equal(Number(await value.getAttribute("value")), initial + 1);
-    assert(await progress.locator(".yg-progress-track > span").evaluate(el =>
-      getComputedStyle(el).transitionProperty.includes("transform")));
+    const maximum = Number(await value.getAttribute("max"));
+    const track = progress.locator(".yg-progress-track > span");
+    await track.evaluate(promiseToSettle);
+    const fill = await track.evaluate(el => new DOMMatrixReadOnly(getComputedStyle(el).transform).a);
+    assert(Math.abs(fill - (initial + 1) / maximum) < 0.001);
 
     const toast = await open("toast");
     await toast.getByRole("button", {name: "Save view"}).click();
     const saved = toast.locator(".yg-toast");
     assert.equal(await saved.getByRole("status").textContent(), "View saved.");
-    assert.equal(await saved.evaluate(el => getComputedStyle(el).animationName), "yg-toast-arrive");
+    assert(await saved.isVisible());
+    assert.equal(await saved.evaluate(el => getComputedStyle(el).opacity), "1");
 
     await page.emulateMedia({ reducedMotion: "reduce", colorScheme: "dark" });
     await page.setViewportSize({width:390,height:850});

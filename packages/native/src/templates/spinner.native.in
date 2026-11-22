@@ -1,0 +1,6 @@
+<template name="yg-spinner" args="label">
+  <row gap="@{gap-inline}" cross="center">
+    <spinner/>
+    <text size="sm">{label}</text>
+  </row>
+</template>

@@ -1,0 +1,38 @@
+<import src="yogurt/items/accordion.native"/>
+<import src="yogurt/items/disclosure-row.native"/>
+<import src="yogurt/items/tabs.native"/>
+<import src="yogurt/items/segmented-control.native"/>
+<import src="yogurt/items/sidebar-layout.native"/>
+<import src="yogurt/items/dialog.native"/>
+<column background="background" padding="24" gap="16">
+  <text size="heading">Navigation preview</text>
+  <use template="yg-sidebar-layout" label="Workspace">
+    <use template="yg-sidebar-panel" label="Navigation">
+      <use template="yg-sidebar-group" label="Workspace">
+        <use template="yg-sidebar-items">
+          <use template="yg-sidebar-destination" label="Home" item_id="{first_id}" selected="{first_selected}"><text>Home</text></use>
+          <use template="yg-sidebar-destination" label="Notes" item_id="{second_id}" selected="{second_selected}"><text>Notes</text></use>
+        </use>
+      </use>
+    </use>
+    <column gap="12" grow="1">
+      <text>{sidebar_label}</text>
+      <use template="yg-tabs" label="Sections">
+        <button selected="{tab_one}" on-press="choose_tab_one">Overview</button>
+        <button selected="{tab_two}" on-press="choose_tab_two">Activity</button>
+      </use>
+      <text>{tab_label}</text>
+      <use template="yg-segmented-control" label="Time range">
+        <segmented-control selected="{day}" on-press="choose_day">Day</segmented-control>
+        <segmented-control selected="{week}" on-press="choose_week">Week</segmented-control>
+      </use>
+      <text>{range_label}</text>
+      <use template="yg-accordion" label="Details" expanded="{expanded}"><text>Accordion content is open.</text></use>
+      <use template="yg-disclosure-row" label="More details" expanded="{expanded}"><text>Disclosure content is open.</text></use>
+      <button variant="secondary" on-press="open_dialog">Open dialog</button>
+    </column>
+  </use>
+  <if test="{dialog_open}">
+    <use template="yg-dialog" title="Navigation dialog"><text>Dialog is open.</text></use>
+  </if>
+</column>

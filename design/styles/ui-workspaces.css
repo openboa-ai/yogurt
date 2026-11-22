@@ -1,15 +1,14 @@
 .yg-composer {
   display: grid;
-  gap: var(--boa-space-8);
+  gap: var(--yg-gap-row);
   min-width: 0;
-  padding: var(--boa-space-12);
-  border: 1px solid var(--yg-hover);
-  border-radius: var(--yg-radius-panel);
-  background: var(--yg-canvas);
-  transition: border-color var(--yg-change) var(--yg-settle);
+  padding: var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-panel);
+  border: 0;
+  border-radius: var(--yg-composer-corner);
+  background: var(--yg-raised-surface);
 }
-.yg-composer:has(textarea:focus-visible) {
-  border-color: var(--yg-muted);
+.yg-composer:focus-within {
+  background: var(--yg-focus-surface);
 }
 .yg-conversation-presence {
   display: flex;
@@ -21,17 +20,39 @@
   font: var(--yg-font-help);
 }
 .yg-composer textarea {
+  box-sizing: border-box;
   width: 100%;
   min-width: 0;
   min-block-size: var(--yg-size-touch);
-  padding: var(--boa-space-4);
+  padding: var(--boa-space-4) var(--boa-space-4) var(--boa-space-4) 0;
   resize: vertical;
   color: var(--yg-text);
   background: transparent;
   border: 0;
-  font: var(--yg-font-body);
+  font: var(--yg-font-editor);
+  caret-color: var(--yg-text);
+}
+.yg-composer textarea:focus-visible { outline: none; }
+@media (forced-colors: active) {
+  .yg-composer textarea:focus-visible { outline: var(--boa-stroke-focus) solid Highlight; }
 }
 .yg-composer textarea::placeholder { color: var(--yg-muted); }
+.yg-composer .yg-composer-editor {
+  block-size: auto;
+  margin-block-end: 0;
+}
+.yg-composer .yg-composer-editor .yg-prompt-measure,
+.yg-composer .yg-composer-editor textarea {
+  padding: var(--boa-space-4) var(--boa-space-4) var(--boa-space-4) 0;
+}
+.yg-composer .yg-composer-editor textarea {
+  block-size: var(--yg-prompt-editor-height, var(--yg-size-touch));
+  min-block-size: calc(2 * var(--boa-line-height-editor) + 2 * var(--boa-space-4));
+  max-block-size: 176px;
+  resize: vertical;
+  overflow-y: auto;
+}
+.yg-composer .yg-composer-editor .yg-prompt-measure { min-block-size: 0; }
 .yg-composer-sources {
   display: grid;
   gap: var(--boa-space-4);
@@ -46,6 +67,15 @@
   flex-wrap: wrap;
 }
 .yg-composer-footer { justify-content: space-between; }
+.yg-composer-footer > .yg-composer-tools:last-child { margin-inline-start: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-prompt-shared .yg-prompt-editor { transition: block-size var(--yg-motion-prompt-editor); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .yg-composer { transition: none; }
+  .yg-prompt-shared :is(.yg-prompt-editor, .yg-prompt-panel, .yg-prompt-action, .yg-prompt-arrow, .yg-prompt-stop),
+  .yg-composer .yg-composer-editor textarea { transition: none; animation: none; }
+}
 .yg-voice {
   padding: var(--boa-space-8);
   border-radius: var(--yg-radius-control);
@@ -53,7 +83,6 @@
 }
 .yg-voice-state {
   font: var(--yg-font-action);
-  transition: color var(--yg-change) var(--yg-settle);
 }
 .yg-voice[data-state=recording] .yg-voice-state { color: var(--yg-danger); }
 .yg-workspace-bar { justify-content: space-between; }
@@ -78,26 +107,29 @@
   flex-wrap: wrap;
   gap: var(--boa-space-8);
   min-width: 0;
-  padding: var(--boa-space-8);
+  padding: var(--boa-space-6) var(--yg-inset-compact);
   border-radius: var(--yg-radius-control);
 }
-.yg-artifact-layout { display: grid; gap: var(--boa-space-12); }
+.yg-artifact-layout { display: grid; gap: var(--yg-gap-panel); }
 .yg-artifact-library { container: yogurt-artifacts / inline-size; }
 @container yogurt-artifacts (width >= 40rem) {
   .yg-artifact-layout[data-preview] {
-    grid-template-columns: minmax(15rem, 2fr) minmax(0, 3fr);
+    grid-template-columns: minmax(14rem, 2fr) minmax(0, 3fr);
     align-items: start;
   }
 }
 .yg-artifact-preview {
-  padding: var(--boa-space-16);
+  padding: var(--boa-space-12);
   min-width: 0;
   overflow-wrap: anywhere;
   border-radius: var(--yg-radius-panel);
   background: var(--yg-canvas);
 }
 .yg-artifact-preview p { margin-bottom: 0; }
-.yg-access-roster li { background: var(--yg-field); overflow-wrap: anywhere; }
+.yg-access-roster li { overflow-wrap: anywhere; border-block-end: 1px solid var(--yg-surface-edge); border-radius: 0; }
+.yg-access-roster li:last-child { border-block-end: 0; }
+.yg-composer-tools, .yg-composer-footer { min-inline-size: 0; }
+.yg-artifact-layout > * { min-inline-size: 0; }
 @media (pointer: coarse) {
   .yg-composer textarea { font: var(--yg-font-touch); }
 }

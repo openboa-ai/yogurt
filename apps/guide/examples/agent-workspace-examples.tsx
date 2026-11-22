@@ -1,5 +1,6 @@
 "use client";
 
+import samples from "../../../catalog/specimens/components.json";
 import { useEffect, useRef, useState } from "react";
 import {
   AgentAvatar,
@@ -21,12 +22,12 @@ import { AgentWorkspace } from "../../../packages/recipes/agent-workspace/web";
 const roster: AgentSummary[] = [
   {
     id: "kai",
-    name: "Kai",
+    name: samples["agent-row"].name,
     art: "Kai",
     role: "Release lead",
     state: "waiting",
-    preview: "Two release notes need your review.",
-    time: "9:41 AM",
+    preview: samples["agent-row"].preview,
+    time: samples["agent-row"].time,
     dateTime: "2026-11-20T09:41:00+09:00",
     pinned: true,
     unread: true,

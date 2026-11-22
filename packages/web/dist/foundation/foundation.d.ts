@@ -3,6 +3,7 @@ export type Appearance = "auto" | "light" | "dark";
 export type Material = "neutral" | "paper" | "mist";
 export type Tone = "neutral" | "brand" | "success" | "warning" | "danger" | "accent";
 export type Size = "compact" | "regular" | "touch";
+export type ControlSize = Size | "comfortable" | "spacious";
 export interface Option {
     id: string;
     label: string;
@@ -41,10 +42,20 @@ declare const paths: {
     plus: string;
     copy: string;
     menu: string;
+    home: string;
+    bookmark: string;
+    person: string;
     moon: string;
     sun: string;
     arrow: string;
     info: string;
+    chat: string;
+    workflow: string;
+    calendar: string;
+    chart: string;
+    puzzle: string;
+    sliders: string;
+    folder: string;
     clock: string;
 };
 export type IconName = keyof typeof paths;

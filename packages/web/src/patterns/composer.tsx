@@ -1,9 +1,11 @@
 "use client";
 
-import { useId, type ReactNode } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
 import { Attachment } from "./editorial.js";
 import { ActionMenu } from "../controls/layers.js";
 import { Button } from "../controls/actions.js";
+import { PromptAction, PromptEditor } from "./prompt-shared.js";
+import { MentionOptions, useMention } from "./mention-controller.js";
 
 export interface DraftAttachment {
   id: string;
@@ -33,6 +35,7 @@ export function Composer({
   toolLabel = "Tools",
   error,
   companion,
+  mentionPeople,
 }: {
   value: string;
   onValueChange: (value: string) => void;
@@ -48,16 +51,20 @@ export function Composer({
   toolLabel?: string;
   error?: string;
   companion?: ReactNode;
+  mentionPeople?: readonly { id: string; label: string }[];
 }) {
   const id = useId();
+  const mention = useMention({ people: mentionPeople, value, onChange: onValueChange, collapsedOnly: true });
+  const composingRef = useRef(false);
+  const [composing, setComposing] = useState(false);
   const text = value.trim();
-  const ready = !pending && (text.length > 0 || attachments.length > 0)
+  const ready = !pending && !composing && (text.length > 0 || attachments.length > 0)
     && attachments.every((item) => item.progress == null || item.progress >= 100);
   return (
-    <form className="yg-composer" aria-label={label + " composer"} aria-busy={pending || undefined}
+    <form className="yg-composer yg-prompt-shared" aria-label={label + " composer"} aria-busy={pending || undefined}
       onSubmit={(event) => {
         event.preventDefault();
-        if (ready) onSend({ text, attachmentIds: attachments.map((item) => item.id) });
+        if (ready && !composingRef.current) onSend({ text, attachmentIds: attachments.map((item) => item.id) });
       }}>
       {attachments.length > 0 && (
         <ul className="yg-composer-sources" aria-label="Attachments">
@@ -69,9 +76,23 @@ export function Composer({
           ))}
         </ul>
       )}
-      <textarea id={id} aria-label={label} aria-describedby={error ? id + "-error" : undefined}
+      <PromptEditor presentation="composer" id={id} aria-label={label} aria-describedby={error ? id + "-error" : undefined}
         placeholder={label} rows={2} value={value}
-        onChange={(event) => onValueChange(event.currentTarget.value)} />
+        {...(mentionPeople === undefined ? {
+          onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => onValueChange(event.currentTarget.value),
+        } : mention.editorProps)}
+        onCompositionStart={event => {
+          composingRef.current = true;
+          setComposing(true);
+          mention.editorProps.onCompositionStart?.(event);
+        }}
+        onCompositionEnd={event => {
+          composingRef.current = false;
+          setComposing(false);
+          mention.editorProps.onCompositionEnd?.(event);
+        }}
+        inputRef={mentionPeople === undefined ? undefined : mention.input}
+        after={mentionPeople === undefined ? undefined : <MentionOptions mention={mention} />} />
       {error && <span className="yg-field-error" id={id + "-error"} role="alert">{error}</span>}
       <div className="yg-composer-footer">
         <div className="yg-composer-tools">
@@ -84,9 +105,10 @@ export function Composer({
         </div>
         <div className="yg-composer-tools">
           {companion}
-          {pending && onStop
-            ? <Button emphasis="soft" onClick={onStop}>Stop</Button>
-            : <Button type="submit" disabled={!ready} pending={pending} pendingLabel="Sending">Send</Button>}
+          <PromptAction presentation="composer" busy={pending} ready={ready} onStop={onStop}
+            renderComposer={(button, stopping) => stopping
+              ? <Button key="stop" ref={button} className="yg-shared-action" emphasis="soft" onClick={onStop}>Stop</Button>
+              : <Button key="send" ref={button} className="yg-shared-action" type="submit" disabled={!ready} pending={pending} pendingLabel="Sending">Send</Button>} />
         </div>
       </div>
     </form>

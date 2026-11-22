@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-detent-dial",
+  "type": "registry:ui",
+  "title": "DetentDial",
+  "description": "Choose one option along a discrete dial.",
+  "files": [
+    {
+      "path": "ui/motion-detent-dial.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { DetentDial } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

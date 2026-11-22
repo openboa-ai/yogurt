@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-cart-button",
+  "type": "registry:ui",
+  "title": "CartButton",
+  "description": "Adjust a host-owned quantity.",
+  "files": [
+    {
+      "path": "ui/motion-cart-button.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { CartButton } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

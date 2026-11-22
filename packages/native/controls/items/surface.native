@@ -1,5 +1,5 @@
 <template name="yg-surface">
-  <column background="surface" radius="lg" padding="16" gap="8">
+  <column background="surface" radius="md" padding="18" gap="8">
   <slot/>
   </column>
 </template>

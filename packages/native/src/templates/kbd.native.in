@@ -1,0 +1,5 @@
+<template name="yg-kbd" args="label value">
+  <row label="{label}">
+    <badge>{value}</badge>
+  </row>
+</template>

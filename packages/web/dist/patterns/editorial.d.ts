@@ -15,7 +15,9 @@ export declare function AspectRatio({ ratio, children, }: Content & {
 export declare function Direction({ dir, children, }: Content & {
     dir?: "ltr" | "rtl";
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Card({ title, description, children, action }: NamedSection): import("react/jsx-runtime").JSX.Element;
+export declare function Card({ title, description, children, action, density }: NamedSection & {
+    density?: "compact" | "regular" | "spacious";
+}): import("react/jsx-runtime").JSX.Element;
 export declare function Asset({ children, size, framed, }: Content & {
     size?: number;
     framed?: boolean;
@@ -48,11 +50,15 @@ export declare function ListHeader({ title, detail, action, }: {
 export declare function ListFooter({ children, action, }: Content & {
     action?: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function PageHeader({ title, detail, eyebrow, action, }: {
+export declare function PageHeader({ title, detail, eyebrow, subtitle, leading, action, featured, className, }: {
     title: string;
     detail?: string;
     eyebrow?: string;
+    subtitle?: string;
+    leading?: ReactNode;
     action?: ReactNode;
+    featured?: boolean;
+    className?: string;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function BottomInfo({ label, children }: Content & {
     label: string;
@@ -61,13 +67,16 @@ export declare function Highlight({ children }: Content): import("react/jsx-runt
 export declare function Spinner({ label }: {
     label?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function ToastStack({ items, onDismiss, label, }: {
+export declare function ToastStack({ items, onDismiss, label, presentation, defaultExpanded, swipe, }: {
     items: {
         id: string;
         message: string;
     }[];
     onDismiss: (id: string) => void;
     label?: string;
+    presentation?: "list" | "stacked";
+    defaultExpanded?: boolean;
+    swipe?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function TableRow({ label, children }: Content & {
     label: string;

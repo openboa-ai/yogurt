@@ -1,0 +1,43 @@
+<import src="routine-row.native"/>
+<template name="yg-operations-library">
+  <column gap="@{gap-stack}">
+    <text size="heading">Operations</text>
+    <tabs label="Operation collections">
+      <toggle-button selected="{operations_routines_active}" on-toggle="show_routines">Routines</toggle-button>
+      <toggle-button selected="{operations_skills_active}" on-toggle="show_skills">Skills</toggle-button>
+      <toggle-button selected="{operations_connections_active}" on-toggle="show_connections">Connections</toggle-button>
+    </tabs>
+    <search-field label="Search this collection" text="{operations_query}" on-input="change_operations_query"/>
+    <if test="{operations_loading}"><status-bar>Loading operations</status-bar></if>
+    <else>
+      <if test="{operations_error}">
+        <status-bar>Could not load this collection.</status-bar>
+        <button variant="secondary" on-press="retry_operations">Try again</button>
+      </if>
+      <else>
+        <if test="{operations_has_results}">
+          <column gap="@{gap-stack}">
+            <for each="operations" key="id" as="item">
+              <if test="{operations_routines_active}">
+                <use template="yg-routine-row" title="{item.title}" summary="{item.summary}" detail="{item.detail}" item_id="{item.id}" can_edit="{item.can_edit}" can_run="{item.can_run}" pending="{item.pending}"/>
+              </if>
+              <else>
+                <list-item label="{item.title}" disabled="{item.disabled}" on-press="open_operation:{item.id}" padding="@{space.8}">
+                  <column gap="@{gap-tight}">
+                    <text>{item.title}</text>
+                    <text size="sm" foreground="text_muted">{item.summary}</text>
+                    <text size="sm" foreground="text_muted">{item.detail}</text>
+                  </column>
+                </list-item>
+              </else>
+            </for>
+          </column>
+        </if>
+        <else>
+          <text foreground="text_muted">No operations match this view.</text>
+          <button variant="ghost" on-press="clear_operations_query">Clear search</button>
+        </else>
+      </else>
+    </else>
+  </column>
+</template>

@@ -1,0 +1,11 @@
+<template name="yg-card" args="title detail padding=@{card-inset-regular}">
+  <card padding="{padding}">
+    <column gap="@{gap-stack}">
+      <column gap="@{gap-card-copy}">
+        <text><span scale="1.142857143">{title}</span></text>
+        <text size="sm" foreground="text_muted">{detail}</text>
+      </column>
+      <slot/>
+    </column>
+  </card>
+</template>

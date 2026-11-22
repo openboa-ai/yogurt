@@ -1,0 +1,5 @@
+<template name="yg-table" args="label">
+  <table label="{label}">
+    <slot/>
+  </table>
+</template>

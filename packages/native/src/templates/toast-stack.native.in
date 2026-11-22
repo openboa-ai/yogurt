@@ -1,0 +1,10 @@
+<template name="yg-toast-stack" args="label">
+  <column label="{label}" gap="@{gap-inline}">
+    <for each="notifications" key="id" as="item">
+      <row gap="@{gap-stack}" padding="@{space.8}" cross="center" background="text" radius="md">
+        <text grow="1" wrap="true" foreground="background">{item.title}</text>
+        <button variant="ghost" foreground="background" label="Dismiss notification" icon="x" on-press="dismiss_item:{item.id}"/>
+      </row>
+    </for>
+  </column>
+</template>

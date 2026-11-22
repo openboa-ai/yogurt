@@ -1,0 +1,3 @@
+<template name="yg-link" args="label">
+  <button variant="ghost" on-press="navigate">{label}</button>
+</template>

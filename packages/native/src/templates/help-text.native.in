@@ -1,0 +1,3 @@
+<template name="yg-help-text" args="label">
+  <text size="sm" foreground="text_muted">{label}</text>
+</template>

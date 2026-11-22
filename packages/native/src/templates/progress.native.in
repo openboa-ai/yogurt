@@ -1,0 +1,9 @@
+<template name="yg-progress" args="label amount detail=">
+  <column gap="@{gap-tight}">
+    <row cross="center">
+      <text grow="1">{label}</text>
+      <text size="sm" foreground="text_muted">{detail}</text>
+    </row>
+    <progress label="{label}" value="{amount}" height="4"/>
+  </column>
+</template>

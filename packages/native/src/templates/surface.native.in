@@ -1,0 +1,5 @@
+<template name="yg-surface">
+  <column background="surface" radius="md" padding="@{inset-panel}" gap="@{gap-inline}">
+  <slot/>
+  </column>
+</template>

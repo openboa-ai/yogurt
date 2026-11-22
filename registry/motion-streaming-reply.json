@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-streaming-reply",
+  "type": "registry:ui",
+  "title": "StreamingReply",
+  "description": "Present an incrementally arriving reply.",
+  "files": [
+    {
+      "path": "ui/motion-streaming-reply.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { StreamingReply } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

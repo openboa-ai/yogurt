@@ -322,34 +322,58 @@
     "size": {
       "caption": 12,
       "ui": 14,
+      "interface": 14,
       "body": 16,
       "subheading": 20,
       "title": 32,
-      "headline": 48,
-      "help": 13
+      "headline": 40,
+      "help": 13,
+      "editor": 15,
+      "card-title": 16,
+      "section": 24,
+      "value": 34
     },
     "lineHeight": {
       "caption": 16,
       "ui": 20,
+      "interface": 20,
       "body": 24,
-      "subheading": 28,
+      "subheading": 26,
       "title": 36,
-      "headline": 52,
-      "help": 18
+      "headline": 44,
+      "help": 18,
+      "editor": 22,
+      "card-title": 22,
+      "section": 30,
+      "value": 40
+    },
+    "tracking": {
+      "body": -0.01,
+      "label": -0.014,
+      "heading": -0.033,
+      "display": -0.042,
+      "meta": 0.007,
+      "value": -0.035
     },
     "roleWeight": {
-      "heading": 525,
-      "body": 425,
-      "ui": 550,
-      "wordmark": 760
+      "heading": 620,
+      "body": 450,
+      "ui": 560,
+      "wordmark": 760,
+      "value": 650
     }
   },
   "space": {
     "2": 2,
     "4": 4,
+    "6": 6,
     "8": 8,
+    "10": 10,
     "12": 12,
+    "14": 14,
     "16": 16,
+    "18": 18,
+    "20": 20,
     "24": 24,
     "32": 32,
     "48": 48,
@@ -358,8 +382,14 @@
   "radius": {
     "control": 8,
     "panel": 12,
+    "surface": 16,
+    "sheet": 24,
+    "card": 20,
     "round": 999,
-    "small": 6
+    "small": 6,
+    "inset": 4,
+    "popover": 18,
+    "feature": 28
   },
   "stroke": {
     "rule": 1,
@@ -368,9 +398,13 @@
   "control": {
     "height": 36,
     "touch": 44,
-    "compact": 28,
+    "compact": 30,
     "icon": 32,
-    "glyph": 18
+    "glyph": 16,
+    "comfort": 40,
+    "row": 38,
+    "spacious": 48,
+    "featured": 52
   },
   "signature": {
     "capHeight": 60,

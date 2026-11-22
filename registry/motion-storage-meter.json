@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-storage-meter",
+  "type": "registry:ui",
+  "title": "StorageMeter",
+  "description": "Show observed storage usage and optional categories.",
+  "files": [
+    {
+      "path": "ui/motion-storage-meter.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { StorageMeter } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

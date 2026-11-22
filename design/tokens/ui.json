@@ -1,13 +1,14 @@
 {
   "schemaVersion": 1,
   "roles": {
+    "overlay-ink": ["neutral.1000", "neutral.1000"],
     "canvas": [
       "neutral.0",
       "neutral.975"
     ],
     "surface": [
-      "gray-green.50",
-      "neutral.950"
+      "neutral.50",
+      "neutral.900"
     ],
     "field": [
       "neutral.100",
@@ -18,12 +19,28 @@
       "neutral.800"
     ],
     "text": [
-      "gray-green.950",
+      "neutral.950",
       "neutral.50"
     ],
     "muted": [
-      "gray-green.700",
+      "neutral.700",
       "neutral.300"
+    ],
+    "inverse": [
+      "neutral.1000",
+      "neutral.50"
+    ],
+    "on-inverse": [
+      "neutral.50",
+      "neutral.1000"
+    ],
+    "inverse-hover": [
+      "neutral.850",
+      "neutral.100"
+    ],
+    "inverse-press": [
+      "neutral.800",
+      "neutral.200"
     ],
     "brand": [
       "slate.750",
@@ -61,37 +78,65 @@
       "neutral.0",
       "neutral.975"
     ],
+    "signal-positive": [
+      "green.700",
+      "green.400"
+    ],
+    "on-signal-positive": [
+      "neutral.0",
+      "green.950"
+    ],
+    "signal-positive-soft": [
+      "green.50",
+      "green.900"
+    ],
+    "signal-warning": [
+      "orange.700",
+      "orange.300"
+    ],
+    "signal-limit": [
+      "red.700",
+      "red.300"
+    ],
+    "signal-rating": [
+      "yellow.700",
+      "yellow.250"
+    ],
+    "signal-category-secondary": [
+      "magenta.600",
+      "magenta.300"
+    ],
     "danger": [
-      "coral.700",
-      "coral.200"
+      "neutral.950",
+      "neutral.25"
     ],
     "danger-soft": [
-      "coral.50",
-      "coral.900"
+      "neutral.200",
+      "neutral.800"
     ],
     "success": [
-      "sage.800",
-      "sage.200"
+      "neutral.700",
+      "neutral.300"
     ],
     "success-soft": [
-      "sage.50",
-      "sage.900"
+      "neutral.100",
+      "neutral.850"
     ],
     "warning": [
-      "ochre.800",
-      "ochre.200"
+      "neutral.800",
+      "neutral.200"
     ],
     "warning-soft": [
-      "ochre.50",
-      "ochre.900"
+      "neutral.200",
+      "neutral.850"
     ],
     "accent": [
-      "violet.700",
-      "violet.200"
+      "neutral.800",
+      "neutral.200"
     ],
     "accent-soft": [
-      "violet.50",
-      "violet.900"
+      "neutral.100",
+      "neutral.850"
     ]
   },
   "materials": {
@@ -152,61 +197,235 @@
     "radius-small": "radius.small",
     "radius-control": "radius.control",
     "radius-panel": "radius.panel",
+    "radius-sheet": "radius.card",
+    "radius-card": "radius.surface",
     "size-compact": "control.compact",
     "size-regular": "control.height",
     "size-touch": "control.touch",
     "size-icon": "control.icon",
     "glyph": "control.glyph",
-    "inset-compact": "space.8",
+    "inset-compact": "space.10",
     "inset-regular": "space.12",
     "inset-roomy": "space.16",
-    "switch-width": 32,
-    "switch-height": 19,
-    "thumb-size": 13,
-    "track-inset": 3
+    "inset-layer": "space.6",
+    "inset-panel": "space.18",
+    "inset-sheet": "space.24",
+    "dialog-width": 400,
+    "gap-tight": "space.4",
+    "gap-inline": "space.8",
+    "gap-stack": "space.12",
+    "gap-section": "space.24",
+    "offset-layer": "space.6",
+    "radius-menu": "radius.panel",
+    "menu-row": "control.height",
+    "layer-shift": "space.4",
+    "switch-width": 44,
+    "switch-height": 24,
+    "thumb-size": 20,
+    "track-inset": 2,
+    "radius-inset": "radius.inset",
+    "radius-popover": "radius.popover",
+    "radius-feature": "radius.card",
+    "radius-pill": "radius.round",
+    "size-comfort": "control.comfort",
+    "size-row": "control.row",
+    "size-spacious": "control.spacious",
+    "size-featured": "control.featured",
+    "field-featured-height": "control.featured",
+    "field-featured-radius": "radius.card",
+    "field-featured-gap": "space.8",
+    "field-featured-inset-start": "space.16",
+    "field-featured-inset-end": "space.10",
+    "field-featured-inset-block": "space.8",
+    "glyph-small": "space.14",
+    "glyph-large": "space.20",
+    "inset-row": "space.14",
+    "gap-control": "space.6",
+    "gap-row": "space.10",
+    "gap-panel": "space.16",
+    "gap-card-copy": "space.4",
+    "task-measure": 260,
+    "storage-measure": 300,
+    "drop-measure": 296,
+    "specimen-min-height": 205,
+    "specimen-content-width": 496,
+    "specimen-inset": "space.24",
+    "specimen-wide-inset": "space.16",
+    "drawer-content-width": 496,
+    "drawer-grip-target": 112,
+    "drawer-dismiss-distance": 64,
+    "anchored-menu-min-width": 176,
+    "otp-control-max-width": 328,
+    "otp-slot-width": 48,
+    "otp-slot-height": 56,
+    "otp-slot-gap": 8,
+    "otp-slot-radius": 14,
+    "tab-pill-padding": 4,
+    "tab-pill-height": "control.height",
+    "segment-track-padding": 4,
+    "segment-option-gap": "space.4",
+    "segment-option-inset-inline": "space.12",
+    "segment-option-height": "control.height",
+    "segment-track-radius": "space.16",
+    "segment-option-radius": "radius.panel",
+    "slider-track-height": "space.4",
+    "slider-thumb-size": 28,
+    "slider-hit-height": "control.touch",
+    "checkbox-size": 20,
+    "checkbox-radius": "radius.control",
+    "quantity-action-size": "control.comfort",
+    "quantity-value-width": "control.comfort",
+    "quantity-card-inset": "space.20",
+    "list-row-height": "control.spacious",
+    "list-row-gap": "space.12",
+    "list-row-inset": "space.12",
+    "card-corner": "radius.surface",
+    "composer-corner": "radius.surface",
+    "card-inset-compact": "space.16",
+    "card-inset-regular": "space.18",
+    "card-inset-spacious": "space.24",
+    "button-radius": "radius.control",
+    "button-pill-radius": "radius.round",
+    "button-compact-radius": "radius.small",
+    "button-inline-inset": "space.12",
+    "button-compact-inset": "space.10",
+    "button-touch-inset": "space.16",
+    "button-size-compact": "control.compact",
+    "button-size-regular": "control.height",
+    "button-size-comfort": "control.comfort",
+    "button-size-spacious": "control.spacious",
+    "button-size-touch": "control.touch"
+  },
+  "opacity": {
+    "overlay-scrim": 40
   },
   "motion": {
-    "press": 80,
-    "layer": 120,
-    "travel": 160,
+    "press": 110,
+    "layer": 160,
+    "layer-exit": 110,
+    "travel": 220,
     "change": 180,
-    "panel": 200,
-    "busy": 750
+    "panel": 260,
+    "expand": 320,
+    "busy": 800,
+    "placeholder-sweep": 1000,
+    "reveal": 420
+  },
+  "motionProfiles": {
+    "menu-height": {"duration": 470,"fallback": "settle","samples": [0.0,0.107,0.312,0.531,0.718,0.857,0.95,1.003,1.029,1.036,1.034,1.027,1.019,1.011,1.006,1.0]},
+    "exposure": {"duration": 400,"fallback": "settle","samples": [0.0,0.15,0.357,0.529,0.659,0.753,0.822,0.872,0.907,0.933,0.952,0.965,0.975,0.982,0.987,1.0]},
+    "wheel": {"duration": 560,"fallback": "settle","samples": [0.0,0.084,0.237,0.396,0.537,0.652,0.743,0.811,0.863,0.901,0.928,0.948,0.963,0.973,0.981,1.0]},
+    "pull-return": {"duration": 535,"fallback": "settle","samples": [0.0,0.151,0.435,0.719,0.933,1.059,1.109,1.108,1.081,1.048,1.019,0.999,0.99,0.987,0.989,1.0]},
+    "storage-reel-fast": {"duration": 450,"fallback": "settle","samples": [0.0,0.103,0.297,0.497,0.669,0.798,0.889,0.947,0.981,0.999,1.007,1.01,1.009,1.007,1.005,1.0]},
+    "storage-reel-medium": {"duration": 435,"fallback": "settle","samples": [0.0,0.099,0.291,0.496,0.676,0.814,0.911,0.971,1.005,1.021,1.025,1.023,1.018,1.013,1.009,1.0]},
+    "storage-reel-slow": {"duration": 420,"fallback": "settle","samples": [0.0,0.095,0.284,0.494,0.682,0.83,0.934,0.999,1.034,1.047,1.046,1.039,1.029,1.019,1.011,1.0]},
+    "file-check": {"duration": 550,"fallback": "settle","samples": [0.0,0.113,0.31,0.503,0.66,0.777,0.858,0.913,0.948,0.97,0.983,0.991,0.995,0.998,0.999,1.0]},
+    "step-check": {"duration": 660,"fallback": "settle","samples": [0.0,0.116,0.323,0.528,0.695,0.816,0.898,0.948,0.978,0.993,1.001,1.003,1.004,1.003,1.003,1.0]},
+    "deck-release": {"duration": 550,"fallback": "settle","samples": [0.0,0.173,0.502,0.822,1.046,1.155,1.17,1.13,1.072,1.019,0.985,0.971,0.972,0.98,0.99,1.0]},
+    "deck-depth": {"duration": 440,"fallback": "settle","samples": [0.0,0.103,0.305,0.523,0.714,0.86,0.957,1.014,1.041,1.047,1.043,1.034,1.023,1.014,1.007,1.0]},
+    "ticket-turn": {"duration": 625,"fallback": "settle","samples": [0.0,0.132,0.361,0.58,0.749,0.865,0.936,0.977,0.997,1.005,1.007,1.006,1.005,1.003,1.002,1.0]},
+    "rating-pop": {"duration": 525,"fallback": "settle","samples": [0.0,0.297,0.832,1.25,1.388,1.282,1.076,0.909,0.85,0.887,0.967,1.033,1.058,1.045,1.014,1.0]},
+    "drag-position": {"duration": 360,"fallback": "settle","samples": [0.0,0.2,0.495,0.727,0.872,0.95,0.986,1.0,1.004,1.004,1.003,1.002,1.001,1.0,1.0,1.0]},
+    "refresh-pull": {"duration": 525,"fallback": "settle","samples": [0.0,0.206,0.568,0.886,1.076,1.143,1.127,1.077,1.028,0.995,0.981,0.98,0.987,0.994,1.0,1.0]},
+    "tag-enter": {"duration": 480,"fallback": "settle","samples": [0.0,0.186,0.553,0.926,1.172,1.261,1.23,1.135,1.034,0.965,0.933,0.937,0.96,0.986,1.007,1.0]},
+    "stepper-spin": {"duration": 480,"fallback": "settle","samples": [0.0,0.219,0.641,1.04,1.261,1.29,1.197,1.064,0.96,0.914,0.919,0.954,0.993,1.018,1.027,1.0]},
+    "pagination": {"duration": 520,"fallback": "settle","samples": [0.0,0.081,0.252,0.435,0.598,0.731,0.832,0.901,0.947,0.977,0.993,1.002,1.006,1.006,1.006,1.0]},
+    "reading-marker": {"duration": 330,"fallback": "settle","samples": [0.0,0.098,0.287,0.481,0.646,0.777,0.864,0.922,0.959,0.981,0.993,0.999,1.002,1.002,1.002,1.0]},
+    "selection-lead": {"duration": 280,"fallback": "settle","samples": [0.0,0.09,0.271,0.466,0.639,0.774,0.871,0.933,0.975,0.997,1.009,1.012,1.012,1.01,1.008,1.0]},
+    "selection-tail": {"duration": 545,"fallback": "settle","samples": [0.0,0.092,0.284,0.495,0.681,0.821,0.922,0.985,1.018,1.032,1.034,1.029,1.022,1.015,1.009,1.0]},
+    "bottom-label": {"duration": 420,"fallback": "settle","samples": [0.0,0.097,0.293,0.504,0.688,0.823,0.919,0.979,1.011,1.024,1.027,1.023,1.018,1.012,1.008,1.0]},
+    "picker-opacity": {"duration": 360,"fallback": "settle","samples": [0.0,0.101,0.287,0.48,0.644,0.771,0.861,0.921,0.959,0.982,0.994,1.001,1.003,1.004,1.003,1.0]},
+    "picker-lift": {"duration": 460,"fallback": "settle","samples": [0.0,0.109,0.316,0.531,0.712,0.847,0.935,0.988,1.014,1.024,1.024,1.02,1.015,1.01,1.006,1.0]},
+    "picker-row": {"duration": 390,"fallback": "settle","samples": [0.0,0.086,0.269,0.476,0.664,0.815,0.922,0.991,1.029,1.045,1.047,1.04,1.031,1.022,1.013,1.0]},
+    "picker-slide": {"duration": 380,"fallback": "settle","samples": [0.0,0.089,0.285,0.494,0.68,0.832,0.932,0.995,1.029,1.041,1.041,1.034,1.026,1.017,1.01,1.0]},
+    "picker-highlight": {"duration": 250,"fallback": "settle","samples": [0.0,0.075,0.236,0.422,0.598,0.745,0.858,0.938,0.989,1.018,1.032,1.035,1.032,1.027,1.02,1.0]},
+    "switch-travel": {"duration": 490,"fallback": "settle","samples": [0.0,0.14,0.441,0.743,0.974,1.112,1.158,1.143,1.099,1.05,1.01,0.985,0.976,0.976,0.983,1.0]},
+    "storage-fill": {"duration": 450,"fallback": "settle","samples": [0.0,0.203,0.618,1.0,1.244,1.305,1.232,1.102,0.989,0.92,0.907,0.933,0.973,1.007,1.026,1.0]},
+    "storage-disclose": {"duration": 460,"fallback": "settle","samples": [0.0,0.096,0.301,0.513,0.701,0.838,0.934,0.989,1.017,1.028,1.028,1.023,1.017,1.011,1.007,1.0]},
+    "storage-lift": {"duration": 420,"fallback": "settle","samples": [0.0,0.097,0.293,0.504,0.688,0.823,0.919,0.979,1.011,1.024,1.027,1.023,1.018,1.012,1.008,1.0]},
+    "letter-progress": {"duration": 430,"fallback": "settle","samples": [0.0,0.099,0.299,0.529,0.724,0.878,0.977,1.035,1.059,1.062,1.053,1.039,1.026,1.014,1.005,1.0]},
+    "prompt-editor": {"duration": 340,"fallback": "settle","samples": [0.0,0.089,0.269,0.452,0.623,0.757,0.855,0.919,0.962,0.987,1.0,1.006,1.008,1.008,1.006,1.0]},
+    "prompt-status": {"duration": 360,"fallback": "settle","samples": [0.0,0.09,0.274,0.474,0.652,0.792,0.891,0.956,0.994,1.013,1.02,1.021,1.018,1.013,1.009,1.0]},
+    "prompt-action": {"duration": 345,"fallback": "settle","samples": [0.0,0.113,0.343,0.585,0.786,0.928,1.013,1.053,1.062,1.054,1.039,1.025,1.012,1.004,0.999,1.0]},
+    "nav-divider": {"duration": 480,"fallback": "settle","samples": [0.0,0.129,0.384,0.66,0.88,1.022,1.09,1.106,1.091,1.063,1.034,1.011,0.997,0.99,0.989,1.0]},
+    "nav-bottom": {"duration": 395,"fallback": "settle","samples": [0.0,0.094,0.294,0.501,0.681,0.818,0.916,0.975,1.006,1.021,1.024,1.022,1.017,1.012,1.008,1.0]},
+    "command-width": {"duration": 420,"fallback": "settle","samples": [0.0,0.097,0.293,0.504,0.688,0.823,0.919,0.979,1.011,1.024,1.027,1.023,1.018,1.012,1.008,1.0]},
+    "command-height": {"duration": 460,"fallback": "settle","samples": [0.0,0.089,0.279,0.479,0.661,0.797,0.897,0.958,0.995,1.013,1.019,1.019,1.016,1.012,1.009,1.0]},
+    "command-highlight": {"duration": 350,"fallback": "settle","samples": [0.0,0.092,0.291,0.498,0.688,0.828,0.924,0.986,1.018,1.031,1.032,1.027,1.021,1.014,1.008,1.0]},
+    "task-check": {"duration": 650,"fallback": "settle","samples": [0.0,0.1,0.286,0.478,0.636,0.759,0.846,0.904,0.943,0.967,0.982,0.99,0.995,0.998,0.999,1.0]},
+    "checklist-strike": {"duration": 550,"fallback": "settle","samples": [0.0,0.086,0.264,0.464,0.637,0.775,0.874,0.94,0.982,1.004,1.014,1.016,1.015,1.012,1.009,1.0]},
+    "file-press": {"duration": 460,"fallback": "settle","samples": [0.0,0.168,0.545,0.923,1.2,1.312,1.288,1.184,1.056,0.958,0.907,0.902,0.93,0.97,1.005,1.0]},
+    "card-open": {"duration": 480,"fallback": "settle","samples": [0.0,0.103,0.308,0.538,0.737,0.884,0.977,1.03,1.051,1.053,1.044,1.032,1.02,1.011,1.004,1.0]},
+    "card-fan": {"duration": 490,"fallback": "settle","samples": [0.0,0.097,0.314,0.549,0.757,0.919,1.02,1.073,1.089,1.083,1.064,1.043,1.024,1.009,0.999,1.0]},
+    "card-lift": {"duration": 385,"fallback": "settle","samples": [0.0,0.123,0.376,0.666,0.911,1.07,1.154,1.17,1.143,1.096,1.049,1.01,0.984,0.973,0.971,1.0]},
+    "card-detail": {"duration": 435,"fallback": "settle","samples": [0.0,0.106,0.328,0.569,0.768,0.92,1.014,1.061,1.074,1.067,1.051,1.034,1.018,1.007,0.999,1.0]},
+    "text-pop": {"duration": 475,"fallback": "settle","samples": [0.0,0.215,0.663,1.055,1.275,1.295,1.194,1.054,0.951,0.907,0.918,0.956,0.997,1.022,1.029,1.0]},
+    "tooltip-arrive": {"duration": 370,"fallback": "settle","samples": [0.0,0.105,0.302,0.518,0.699,0.829,0.92,0.975,1.002,1.015,1.018,1.016,1.013,1.009,1.005,1.0]},
+    "island-expand": {"duration": 410,"fallback": "settle","samples": [0.0,0.093,0.293,0.527,0.728,0.883,0.986,1.047,1.071,1.072,1.061,1.044,1.028,1.015,1.005,1.0]},
+    "step-fill": {"duration": 620,"fallback": "settle","samples": [0.0,0.105,0.302,0.506,0.676,0.798,0.884,0.939,0.971,0.989,0.998,1.002,1.003,1.003,1.003,1.0]},
+    "success-label": {"duration": 375,"fallback": "settle","samples": [0.0,0.102,0.305,0.521,0.706,0.843,0.934,0.988,1.016,1.026,1.026,1.021,1.016,1.01,1.006,1.0]},
+    "surface-focus": {
+      "duration": 360,
+      "fallback": "settle",
+      "samples": [0, 0.101, 0.287, 0.48, 0.644, 0.771, 0.861, 0.921, 0.959, 0.982, 0.994, 1.001, 1.003, 1.004, 1.003, 1]
+    }
   },
   "elevation": {
-    "lift": [[2, 8, 10]],
-    "float": [[1, 3, 12], [6, 20, 12]],
-    "panel": [[12, 48, 18]]
+    "lift": [
+      [
+        1,
+        3,
+        8
+      ]
+    ],
+    "float": [
+      [
+        1,
+        3,
+        9
+      ],
+      [
+        8,
+        24,
+        12
+      ]
+    ],
+    "panel": [
+      [
+        12,
+        36,
+        18
+      ]
+    ]
   },
   "easing": {
     "settle": "cubic-bezier(.2, 0, 0, 1)",
-    "arrive": "cubic-bezier(.24, .8, .3, 1.04)",
-    "selection": "cubic-bezier(.22, .8, .25, 1.1)"
+    "control-settle": "cubic-bezier(.333333, 0, .666667, 1)",
+    "arrive": "cubic-bezier(.23, 1, .32, 1)",
+    "selection": "cubic-bezier(.2, .76, .26, 1.08)"
+  },
+  "typeMetrics": {
+    "lineHeightScale": 1.25,
+    "tracking": 0,
+    "lineBoxSize": {
+      "meta": "help"
+    }
   },
   "types": {
-    "action": [
-      "ui",
-      "medium"
-    ],
-    "body": [
-      "ui",
-      "regular"
-    ],
-    "help": [
-      "help",
-      "regular"
-    ],
-    "meta": [
-      "caption",
-      "regular"
-    ],
-    "heading": [
-      "subheading",
-      "heading"
-    ],
-    "touch": [
-      "body",
-      "regular"
-    ]
+    "action": ["ui", "ui"],
+    "body": ["interface", "body"],
+    "compact": ["help", "ui"],
+    "label": ["help", "body"],
+    "help": ["help", "body"],
+    "meta": ["caption", "body"],
+    "badge": ["caption", "body"],
+    "card-title": ["card-title", "body"],
+    "heading": ["subheading", "body"],
+    "display": ["headline", "body"],
+    "touch": ["body", "body"],
+    "editor": ["editor", "body"],
+    "reading": ["body", "body"],
+    "section": ["section", "body"],
+    "value": ["value", "body"]
   }
 }

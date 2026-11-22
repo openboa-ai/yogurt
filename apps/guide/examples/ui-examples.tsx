@@ -1,30 +1,18 @@
+import samples from "../../../catalog/specimens/components.json";
+import { sectionHref } from "../routing";
 import { useEffect, useRef, useState } from "react";
 import * as Y from "@openboa/yogurt";
 import { AgentMotionExample } from "./agent-motion-example";
 import { ExtendedExample } from "./extended-examples";
 
-const projects: Y.Option[] = [
-  { id: "sourdough", label: "Sourdough" },
-  { id: "meatball", label: "Meatball" },
-  { id: "yogurt", label: "Yogurt" },
-];
+const projects: Y.Option[] = samples["segmented-control"].options;
 const observation = {
   source: "Local sample",
   asOf: "2026-11-20T09:00:00Z",
   timeLabel: "Nov 20, 09:00 UTC",
 };
-const points = [
-  { id: "m", label: "Mon", value: 4 },
-  { id: "t", label: "Tue", value: 8 },
-  { id: "w", label: "Wed", value: null },
-  { id: "h", label: "Thu", value: 6 },
-  { id: "f", label: "Fri", value: 10 },
-];
-const records = [
-  { id: "a", title: "Field notes", day: "Today" },
-  { id: "b", title: "Release checklist", day: "Thu" },
-  { id: "c", title: "Weekly review", day: "Wed" },
-];
+const points = samples.readings.points;
+const records = samples.records;
 const titles = Array.from({ length: 8 }, (_, i) => "Review " + (i + 1));
 export function Example({
   id,
@@ -33,7 +21,7 @@ export function Example({
   id: string;
   variation?: boolean;
 }) {
-  const [value, setValue] = useState("Weekly review"),
+  const [value, setValue] = useState(samples.dialog.value),
     [choice, setChoice] = useState("sourdough"),
     [active, setActive] = useState(true),
     [open, setOpen] = useState(false),
@@ -60,7 +48,7 @@ export function Example({
   }
   const primary = (
     <Y.Button pending={pending} onClick={save}>
-      Save view
+      {samples.button.label}
     </Y.Button>
   );
   const status = (
@@ -70,7 +58,7 @@ export function Example({
   );
   const mode = {
     options: projects,
-    label: "Project",
+    label: samples["segmented-control"].label,
     value: choice,
     onValueChange: setChoice,
   };
@@ -78,7 +66,7 @@ export function Example({
     <Y.Switch
       checked={active}
       onCheckedChange={setActive}
-      label="Record dates"
+      label={samples.switch.label}
       help={variation ? "Show the last change in each row." : undefined}
     />
   );
@@ -107,12 +95,12 @@ export function Example({
   ];
   const sampleTable = (
     <Y.DataTable
-      caption="Weekly readings"
+      caption={samples.readings.label}
       columns={[
-        { id: "label", label: "Day" },
+        { id: "label", label: samples.readings.day },
         {
           id: "value",
-          label: "Reviews",
+          label: samples.readings.reviews,
           numeric: true,
           sortValue: (row) =>
             typeof row.cells.value === "number" ? row.cells.value : null,
@@ -139,16 +127,16 @@ export function Example({
     case "text":
       return (
         <Y.Stack gap={4}>
-          <Y.Text>Weekly review</Y.Text>
-          <Y.Text variant="help">Shared with your team</Y.Text>
-          <Y.Text variant="meta">Updated Friday</Y.Text>
+          <Y.Text>{samples.text.body}</Y.Text>
+          <Y.Text variant="help">{samples.text.help}</Y.Text>
+          <Y.Text variant="meta">{samples.text.meta}</Y.Text>
         </Y.Stack>
       );
     case "heading":
       return (
         <Y.Stack gap={4}>
-          <Y.Heading>Saved views</Y.Heading>
-          <Y.Text variant="help">Three views in Sourdough.</Y.Text>
+          <Y.Heading>{samples.heading.title}</Y.Heading>
+          <Y.Text variant="help">{samples.heading.help}</Y.Text>
         </Y.Stack>
       );
     case "icon":
@@ -202,6 +190,7 @@ export function Example({
               <>
                 <Y.Button
                   emphasis="soft"
+                  shape="pill"
                   onClick={() => setNote("Draft kept.")}
                 >
                   Keep draft
@@ -215,6 +204,17 @@ export function Example({
               </>
             )}
           </Y.ButtonGroup>
+          {variation && <Y.Stack gap={8}>
+            <Y.Inline gap={8}>
+              <Y.Button size="compact" emphasis="soft" onClick={() => setNote("Compact action selected.")}>Compact</Y.Button>
+              <Y.Button size="regular" emphasis="soft" onClick={() => setNote("Regular action selected.")}>Regular</Y.Button>
+              <Y.Button size="comfortable" emphasis="soft" onClick={() => setNote("Comfortable action selected.")}>Comfortable</Y.Button>
+            </Y.Inline>
+            <Y.Inline gap={8}>
+              <Y.Button size="spacious" shape="pill" onClick={() => setNote("Spacious action selected.")}>Spacious</Y.Button>
+              <Y.Button size="touch" emphasis="soft" onClick={() => setNote("Touch action selected.")}>Touch</Y.Button>
+            </Y.Inline>
+          </Y.Stack>}
           {status}
         </Y.Stack>
       );
@@ -269,6 +269,16 @@ export function Example({
     case "help-text":
     case "field-error":
     case "text-field":
+      if (id === "text-field" && variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
+              <Y.TextField key={size} label={size[0].toUpperCase() + size.slice(1)}
+                size={size} placeholder="Name your view" />
+            ))}
+          </Y.Stack>
+        );
+      }
       return (
         <Y.TextField
           ref={field}
@@ -305,6 +315,16 @@ export function Example({
       );
     case "search-field":
     case "filter-bar":
+      if (id === "search-field" && variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
+              <Y.SearchField key={size} label={size[0].toUpperCase() + size.slice(1)}
+                size={size} value={query} onValueChange={setQuery} placeholder="Find a view" />
+            ))}
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Stack>
           <Y.FilterBar
@@ -334,6 +354,17 @@ export function Example({
         </Y.Stack>
       );
     case "select":
+      if (variation) {
+        return (
+          <Y.Stack gap={12}>
+            {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
+              <Y.Select key={size} label={size[0].toUpperCase() + size.slice(1)}
+                controlSize={size} options={projects} value={choice} onChange={(e) => setChoice(e.target.value)} />
+            ))}
+            <Y.Select label="Multiple choice" multiple size={3} options={projects} />
+          </Y.Stack>
+        );
+      }
       return (
         <Y.Select
           label="Project"
@@ -350,9 +381,16 @@ export function Example({
         />
       );
     case "checkbox":
+      if (variation) {
+        return <Y.Stack gap={8}>
+          <form aria-label="Checkbox form"><Y.Checkbox label="Include notes" name="notes" value="include" defaultChecked /></form>
+          <Y.Checkbox label="Some records selected" checked="indeterminate" />
+          <Y.Checkbox label="Unavailable option" disabled />
+        </Y.Stack>;
+      }
       return (
         <Y.Checkbox
-          label="Include archived views"
+          label={samples.checkbox.label}
           checked={active}
           onCheckedChange={(v) => setActive(v === true)}
         />
@@ -364,19 +402,19 @@ export function Example({
         <Y.Stack gap={4}>
           {dates}
           <Y.Text variant="meta">
-            {active ? "Friday, November 20" : "Dates hidden"}
+            {active ? samples.switch.on : samples.switch.off}
           </Y.Text>
         </Y.Stack>
       );
     case "link":
-      return <Y.Link href="#record-facts">View record details</Y.Link>;
+      return <Y.Link href={sectionHref("components", "record-facts")}>View record details</Y.Link>;
     case "breadcrumb":
       return (
         <Y.Breadcrumb
           items={[
-            { id: "home", label: "Library", href: "#button" },
-            { id: "records", label: "Records", href: "#list" },
-            { id: "view", label: "Weekly review", href: "#record-facts" },
+            { id: "home", label: "Library", href: sectionHref("components", "button") },
+            { id: "records", label: "Records", href: sectionHref("components", "list") },
+            { id: "view", label: "Weekly review", href: sectionHref("components", "record-facts") },
           ]}
         />
       );
@@ -386,8 +424,8 @@ export function Example({
           label="Library destinations"
           current="records"
           items={[
-            { id: "records", label: "Records", href: "#list" },
-            { id: "facts", label: "Facts", href: "#record-facts" },
+            { id: "records", label: "Records", href: sectionHref("components", "list") },
+            { id: "facts", label: "Facts", href: sectionHref("components", "record-facts") },
           ]}
         />
       );
@@ -414,20 +452,16 @@ export function Example({
       return <Y.Pagination page={count} pages={5} onPageChange={setCount} />;
     case "disclosure-row":
       return (
-        <Y.Disclosure label="Review details">
-          <Y.Text variant="help">Saved on Friday in Sourdough.</Y.Text>
+        <Y.Disclosure label={samples["disclosure-row"].label}>
+          <Y.Text variant="help">{samples["disclosure-row"].body}</Y.Text>
         </Y.Disclosure>
       );
     case "action-menu":
       return (
         <Y.Stack>
           <Y.ActionMenu
-            label="View actions"
-            items={[
-              { id: "rename", label: "Rename view" },
-              { id: "duplicate", label: "Duplicate view" },
-              { id: "archive", label: "Archive view", disabled: variation },
-            ]}
+            label={samples.menu.label}
+            items={samples.menu.items.map((item) => ({ ...item, disabled: variation && item.id === "archive" }))}
             onSelect={(id) =>
               setNote(
                 {
@@ -443,9 +477,9 @@ export function Example({
       );
     case "popover":
       return (
-        <Y.Popover label="About this view">
+        <Y.Popover label={samples.popover.label}>
           <Y.Text>
-            This view includes notes saved in the last seven days.
+            {samples.popover.body}
           </Y.Text>
         </Y.Popover>
       );
@@ -457,21 +491,21 @@ export function Example({
       return (
         <>
           <Y.Button emphasis="soft" onClick={() => setOpen(true)}>
-            Edit view
+            {samples.dialog.title}
           </Y.Button>
-          <Panel open={open} onOpenChange={setOpen} title="Edit view">
+          <Panel open={open} onOpenChange={setOpen} title={samples.dialog.title}>
             <Y.TextField
-              label="View name"
+              label={samples.dialog.label}
               value={value}
               onChange={(e) => setValue(e.target.value)}
             />
             <Y.Button
               onClick={() => {
                 setOpen(false);
-                setNote("View updated.");
+                setNote(samples.dialog.saved);
               }}
             >
-              Done
+              {samples.dialog.submit}
             </Y.Button>
           </Panel>
           {status}
@@ -547,7 +581,7 @@ export function Example({
     case "notice":
       return (
         <Y.Notice
-          tone={variation ? "warning" : "brand"}
+          tone={variation ? "warning" : "neutral"}
           title={variation ? "Review required" : "View updated"}
         >
           {variation
@@ -567,12 +601,12 @@ export function Example({
     case "progress":
       return (
         <Y.Stack>
-          <Y.Progress label="Reviewed records" value={count} max={5} />
+          <Y.Progress label={samples.progress.label} value={count} max={5} />
           <Y.Button
             emphasis="soft"
             onClick={() => setCount((n) => (n >= 5 ? 0 : n + 1))}
           >
-            {count >= 5 ? "Reset" : "Review next record"}
+            {count >= 5 ? samples.progress.reset : samples.progress.next}
           </Y.Button>
         </Y.Stack>
       );
@@ -607,12 +641,12 @@ export function Example({
       return sampleTable;
     case "table":
       return (
-        <Y.Table caption="Weekly readings">
+        <Y.Table caption={samples.readings.label}>
           <thead>
             <tr>
-              <th scope="col">Day</th>
+              <th scope="col">{samples.readings.day}</th>
               <th scope="col" data-numeric>
-                Reviews
+                {samples.readings.reviews}
               </th>
             </tr>
           </thead>
@@ -620,7 +654,7 @@ export function Example({
             {points.map((p) => (
               <tr key={p.id}>
                 <th scope="row">{p.label}</th>
-                <td data-numeric>{p.value ?? "No reading"}</td>
+                <td data-numeric>{p.value ?? samples.readings.missing}</td>
               </tr>
             ))}
           </tbody>

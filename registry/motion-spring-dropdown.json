@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "motion-spring-dropdown",
+  "type": "registry:ui",
+  "title": "SpringDropdown",
+  "description": "Select an option from an animated anchored list.",
+  "files": [
+    {
+      "path": "ui/motion-spring-dropdown.tsx",
+      "type": "registry:ui",
+      "content": "\"use client\";\n\nexport { SpringDropdown } from \"@openboa/yogurt/motion-patterns\";\n"
+    }
+  ]
+}

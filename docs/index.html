@@ -94,9 +94,9 @@ th{font-weight:var(--boa-role-weight-ui)}td p{margin:0}
 <a href="#J5">J5 · Follow an agent across a roster and a reply</a></div></section>
 </section>
 <article class="read" tabindex="-1" id="using-yogurt"><a class="return" href="#overview">All design records</a><h1>Use Yogurt in a product</h1>
-<p>Start at the <a href="../components.html">component library and brand reference</a>. Each entry has one stable name, an English purpose, an interactive web example, an individual React export and an editable Vercel Native markup template. A project owns its data, navigation and effects.</p>
+<p>Find the control by what the person wants to do. Its stable catalog ID identifies the supported public entry for the project&#39;s SDK pin and target. The Native installer selects the typed view when the catalog specifies one. Follow the entry it prints. The product supplies data, navigation and effects. <a href="../DESIGN.md">Design a screen</a> · <a href="../catalog/components.json">Component catalog</a> · <a href="../components.html">Component gallery</a></p>
 <h2>Install the local SDK</h2>
-<p>Run <code>npm ci &amp;&amp; npm run build &amp;&amp; npm pack</code> at the Yogurt root to produce the archive for the version in <code>package.json</code>. Install that file in a consuming project using its relative path. The package has React and React DOM 19.2 as web peers. A Zig-only project can extract the tarball and invoke its Node CLI during setup. Its app binary has no JavaScript dependency.</p>
+<p>Run <code>npm ci &amp;&amp; npm run build &amp;&amp; npm pack</code> at the Yogurt root to produce the archive for the version in <code>package.json</code>. Install that file in a consuming project using its relative path. The package has React and React DOM 19.2 and the pinned UI SDK core and React adapter as web peers. A Zig-only project can extract the tarball and invoke its Node CLI during setup. Its app binary has no JavaScript dependency.</p>
 <pre><code class="language-sh">npm install ./vendor/openboa-yogurt-0.1.0-local.16.tgz
 npx yogurt list
 npx yogurt add button --target web
@@ -117,6 +117,11 @@ export function SaveView({ onSave }: { onSave: () =&gt; void }) {
 }
 </code></pre>
 <p>For shadcn CLI, supply the local file <code>registry/button.json</code> to <code>shadcn add</code> after installing the pinned package. The resulting editable entry imports the same library component. <code>npx yogurt add</code> is the dependency-light alternative and refuses to replace edited files. Install and pin a new version through the consuming project’s own review.</p>
+<p>Reusable Web motion components are listed in the installed <code>catalog/motion-components.json</code> and demonstrated in the motion guide. For example, resolve <code>motion-task-list</code> or install its import wrapper with <code>npx yogurt add motion-task-list --target web</code>, then import <code>TaskList</code> from <code>@openboa/yogurt/motion-patterns</code>. These entries currently have no Native implementation. Their registry files are editable import wrappers; the implementation stays in the pinned package.</p>
+<h3>Control sizes and action shapes</h3>
+<p>Web <code>Button</code>, <code>TextField</code> and <code>SearchField</code> accept the same size names: <code>compact</code>, <code>regular</code>, <code>comfortable</code>, <code>spacious</code> and <code>touch</code>, corresponding to 30, 36, 40, 48 and 44 px. Use <code>controlSize</code> for the same visual choices on <code>Select</code>; its native <code>size</code> attribute retains its HTML meaning. Regular is the default. Choose the size for the context and provide at least a 44 px target for touch. Buttons support <code>shape=&quot;rounded&quot;</code> and <code>shape=&quot;pill&quot;</code>; filled, soft and quiet describe emphasis rather than size. The component guide demonstrates each option.</p>
+<p>Copy, quantity adjustment, hold confirmation, slide confirmation and loading results have dedicated web controls exported from the package root. They keep their own state and event contracts. Their individual registry entries and corresponding native implementations are not yet available. Generated Zig dimensions do not establish native visual or behavioral parity.</p>
+<p>Web cards accept <code>density=&quot;compact&quot;</code>, <code>&quot;regular&quot;</code> or <code>&quot;spacious&quot;</code>. The insets are 12, 18 and 24 px, with a shared 24 px corner. Choose the inset for the content and surrounding space; a density does not change the card&#39;s purpose or action.</p>
 <p>An <code>AgentAvatar</code> uses the host’s <code>ready</code>, <code>thinking</code>, <code>working</code>, <code>waiting</code>, <code>blocked</code> or <code>done</code> state. Pass the state to roster and conversation components through <code>AgentSummary</code>. Keep a readable status label next to active work, and use <code>animated={false}</code> for archived portraits outside the Message component. Message keeps its portraits still by default. AgentAvatar follows the system motion preference and uses a still version of the current expression when motion is reduced. <a href="#motion">Motion and component behavior</a></p>
 <h2>Zig and Vercel Native SDK</h2>
 <p>The same ID installs an editable markup template, a Zig source entry, the shared theme, English words and Rethink Sans. The installer writes under <code>src/yogurt</code>. Use the installed template from your Native view.</p>
@@ -164,8 +169,17 @@ npx yogurt add switch --target native
 <td>Single-component import or local source installation</td>
 </tr>
 </tbody></table></div>
-<p>Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. The four approved controls provide the proportions for larger compositions. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. <a href="#component-library">Accepted basis</a></p>
-<p>The web adapter uses the actual Button, Input, Textarea, Switch, Checkbox, RadioGroup, SegmentedControl and Badge implementations from OpenAI Apps SDK UI 0.2.2. It binds their anatomy to Yogurt’s own styles. Other entries use platform elements or Yogurt compositions. The built package retains third-party notices.</p>
+<p>Keep all colors on the same numbered palette. Neutral is the approved default. Paper shifts the surroundings warmer and Mist cooler. All three preserve the primary action role and brand master. Shared dimensions are generated from the UI bindings; use the component&#39;s documented roles rather than local copies of measurements. A new role needs a real use and a legible light/dark pair. Add it here and regenerate both targets. <a href="design-system-rules.md#one-source-for-ui">Shared token rules</a></p>
+<p>The web Button, Checkbox, RadioGroup, Switch, TextField, SearchField, Textarea, SegmentedControl, Tabs, Toggle, ToggleGroup, Dialog, Sheet, Drawer, Popover, Accordion, Progress, SplitTextField and Rating use the UI SDK behavior runtime with Yogurt&#39;s own presentation. An application that explicitly connects an agent must resolve its bridge and these controls to the same installed UI SDK core. Yogurt does not start a bridge or grant actions by rendering a component. The host owns access and effects. Other entries continue to use their existing behavior implementations while replacement is in progress. The built package retains third-party notices.</p>
+<p>Web ActionMenu uses shared inline popup and button behaviors with a Yogurt keyboard adapter. Web Tooltip uses shared inline popup state with a Yogurt activation adapter. Web InputOTP uses shared input behavior with an explicit secret mark and retains the Yogurt numeric and cursor adapter. NumericSpinner uses shared buttons with the existing Yogurt quantity adapter. InputGroup uses shared input behavior for text-like fields and retains a native adapter for specialized input types. Complete shared menu, tooltip, one-time-code and numeric behaviors and specialized input integration remain in progress.</p>
+<h3>Connect an agent to web controls</h3>
+<p>Create a bridge only in the browser, when the host has decided who can receive its results. The action policy is required. This example refuses every action until the host supplies its own policy.</p>
+<pre><code class="language-tsx">import { createYogurtAgent } from &quot;@openboa/yogurt/agent&quot;;
+
+const agent = createYogurtAgent({ allow: () =&gt; false });
+const controls = agent.snapshot();
+</code></pre>
+<p>The action policy controls requested changes; it does not filter snapshots or queries. The host must choose what information is exposed and handle any confirmation marks. An action&#39;s result does not authorize or confirm a product operation. A successful request (<code>ok: true</code>) can contain a refused step (<code>result: false</code>); inspect each returned step and the observed host state, including partial results, before reporting an outcome. Importing the entry does not create a bridge or register browser tools. Native agent integration is not supplied by this Web entry.</p>
 <h2>Check a consuming project</h2>
 <p>Follow the <a href="#design-system-rules">design system rules</a> for mandatory reuse, project composition and promotion of shared patterns.</p>
 <p>Commit a <code>yogurt.config.json</code> in the project and run <code>yogurt check</code> in its CI. A mixed host can declare <code>{&quot;surfaces&quot;:{&quot;site&quot;:{&quot;target&quot;:&quot;web&quot;,&quot;root&quot;:&quot;apps/site/src&quot;},&quot;app&quot;:{&quot;target&quot;:&quot;native&quot;,&quot;root&quot;:&quot;apps/app/src&quot;}},&quot;version&quot;:&quot;0.1.0-local.16&quot;}</code>. The command reads only declared presentation directories, checks for the corresponding adapter, known imports and numbered colors, and reports direct vendor imports, literal color declarations and other typefaces with a source location. It leaves the source untouched. Review copy meaning, interaction and product-specific outcomes in the host fixture.</p>
@@ -252,7 +266,7 @@ npx yogurt add project-settings --target native
 </thead>
 <tbody><tr>
 <td>1. One token source</td>
-<td>Resolve component roles into existing numbered palette colors. Ink blue is the default. Validate both appearances and the contrast of alternate surface treatments. Rethink Sans, 14/20 action labels, 36 px regular height, 8 px corners and 44 px touch are the center of the scale.</td>
+<td>Resolve component roles into existing numbered palette colors. Neutral is the default for control fills, hover, and ordinary selection. Reserve Ink blue for major actions that request the brand tone. Validate both appearances and the contrast of alternate surface treatments. Rethink Sans, 14/20 action labels, 36 px regular height, 8 px corners and 44 px touch are the center of the scale.</td>
 </tr>
 <tr>
 <td>2. Basic components first</td>
@@ -281,6 +295,8 @@ npx yogurt add project-settings --target native
 <p>Keep the existing select element and its form contract. Opening, navigating and canceling preserve the committed value. Choosing an enabled option updates the consumer. Exercise pointer, keyboard, disabled options, form reset, light and dark materials, and mobile width in the built distribution.</p>
 <h3>Public component coverage</h3>
 <p>Give each supported component a stable Yogurt ID and named variants where appropriate. Yogurt owns the implementation, terminology, token roles and examples. Keep component imports and the ten original static patterns available.</p>
+<p>The guide, Studio, templates and consuming apps exercise the public renderer for each component on their target. The catalog identifies the default when a Native component also ships compatible markup. The installer and agent lookup must point to that same entry. The Native guide takes its components from the same installation path as a fresh consumer and supplies its own fixture data. Preserve existing imports, edited consumer files and retry behavior. Verify the installed entries against the guide and check that web and Native token outputs reproduce from the design sources.</p>
+<p>Author Native control templates together under <code>packages/native/src/templates</code> and each block&#39;s template with the recipe. Bind component gaps, padding and anchor distances to shared roles or primitives. The build resolves these references into the numeric markup required by the SDK at its existing public paths. Migration preserves every published template byte for the current token values. A spacing change must update the web variables, Zig constants and affected installed markup in one generation pass.</p>
 <p>Calendar values represent local civil dates. A quantity is an integer bounded by the host. OTP and keypad input remain local to the host, with no submission until an explicit action. The default private keypad obscures displayed characters and uses a per-session randomized layout. App authorization and credential processing stay with the host. A questionnaire emits responses keyed by the host&#39;s question and choice IDs. A trace displays host-supplied events. Menus, calendar navigation, split panes, dialogs and accordions retain their keyboard and dismissal conventions. Accessible inputs and configurable primitives supply their own state or typed change events. Measure the actual opened surfaces.</p>
 <p>Each named component has a working gallery example, individual import, editable registry entry and native binding. Verify all Yogurt catalog entries resolve, install from the local package, exercise interactive groups, render every entry in light and dark at desktop and mobile widths, and instantiate native templates against the pinned SDK. Identify host-owned interaction and runtime evidence explicitly.</p>
 <p>Give an edge drawer and a semantic table their own entries. A drawer opens from the lower edge, allows a deliberate downward drag and remains dismissible with its close action and Escape. A short or canceled drag returns to rest. A data table adds column sorting to the semantic table, preserves row identities and keeps missing observations last in either direction. Native uses the SDK drawer and table primitives. Its host owns row ordering.</p>
@@ -289,6 +305,12 @@ npx yogurt add project-settings --target native
 <p><a href="https://github.com/openai/apps-sdk-ui">OpenAI Apps SDK UI</a> · <a href="https://ui.shadcn.com/schema/registry-item.json">Registry item schema</a></p>
 <h2>Agent and project workspaces · local follow-up, revision 2</h2>
 <p>The owner requested an unframed agent silhouette and coverage for agent-first and project-first workflows. Retain stable component IDs, existing consumers and OpenBoa&#39;s artwork, type and palette. Give a named agent&#39;s silhouette its own transparent presentation. Profile avatars can still use a circular crop. Use the same silhouette in lists, messages and the selected agent header. Keep the existing gaze states.</p>
+<p>Native transcript follow-up: the scroll container takes the available height rather than collapsing to zero. Preserve the caller&#39;s label and message slot, and permit the host to constrain the available viewport. Verify visible message content in a flexible parent and scrolling with content taller than a constrained viewport.</p>
+<p>Native sidebar follow-up: the project and agent lists reserve a visible minimum while growing with the host, rather than collapsing their scroll viewport. Nest project destinations inside their disclosure heading, preserve the existing messages and slots, and verify both the visible default list and overflow scrolling.</p>
+<p>Native navigation follow-up: show the sidebar disclosure direction and indent destinations under their parent. Navigation-menu entries align to the start and retain their existing activation and disabled data without requiring new host fields.</p>
+<p>Native data and feedback follow-up: keep the neutral notice surface, icon and insets consistent with the shared roles, and allow descriptive text in records, results, charts and lists to wrap rather than disappear at narrow widths. Preserve existing data, messages and slots.</p>
+<p>Native agent avatar and gaze accept an optional square size, defaulting to the existing 48 points. The guide may use 72 points for its primary sample while smaller roster uses remain available. Preserve the image ID, label and original motion data.</p>
+<p>Native typography resolves the existing display-size token as well as the body, action and heading tokens, so a display text uses the same 40 px scale as the web guide.</p>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
 <thead>
 <tr>
@@ -323,6 +345,8 @@ npx yogurt add project-settings --target native
 <li>Return focus to the opener when dismissing with Escape, a backdrop or the close action. Selecting a destination can close the drawer. Persistent search, selected records, permissions and navigation data belong to the host. These choices carry no service effects.</li>
 <li>Ship two editable compositions with project or agent markup, host search and actions, active state and a narrow alternative. Use OpenBoa artwork and tokens. Native uses typed markup and host-controlled visibility. Exercise wide, rail, right edge, narrow modal, nesting, controlled state, and old props. Verify installed entry points and actual keyboard and pointer behavior.</li>
 </ul>
+<h3>Workspace row and conversation presentation</h3>
+<p>A sidebar item can render a single truncated description beneath its label. The destination name remains the button or link name and the full description is available separately. Rail mode retains its single identity label. Message supports sent and received treatments and an optional action region. Secondary actions remain visible with touch and keyboard focus. Transcript supports an opt-in reading anchor that appears after the reader scrolls away and returns focus to the reading region when used. Existing callers retain their default presentation and reading-anchor behavior. Verify these options through the installed web package, including compact navigation and reduced motion.</p>
 <h2>Motion and visual craft · local follow-up, revision 4</h2>
 <p>The owner requested six distinguishable agent states and a motion review for each component. Review every catalog entry for a useful response to input or state. Apply continuous or transitional motion where it explains real behavior. Static reading, geometry and artwork retain stable content. The agent workspace and project workspace exercise these treatment decisions.</p>
 <p>The host reports ready, thinking, working, waiting, blocked and done. Use the original open silhouettes with a fixed outline and motion confined to the eyes. A state label must remain available. A ready agent stays still. Only active work repeats. Offscreen work can suspend visible frame updates without affecting the host state. Waiting, blocked and completion settle to a readable pose without implying another task or advancing the host state. Reduced motion uses a stable pose. Match both identities at roster and conversation scale. Native hosts can use the same authored keyframe sequence with transparent frames registered into one owned image slot and their own elapsed time.</p>
@@ -442,8 +466,12 @@ npx yogurt add project-settings --target native
 <p>The owner selected the local.14 performances and requested them for the complete existing agent family. Apply the six shared timelines to all 45 fitted outlines across 15 silhouettes. Derive stable variants from the source SVG and notch position. Keep the approved Kai and Sol geometry, durations, eye paths, playback and existing entry points byte-equivalent where their data is generated. Fit body travel, tilt and gaze range per silhouette. Color choices reuse shared palette tokens without allocating more timelines or changing geometry.</p>
 <p>Use the same registry and fitted transforms to render React and the typed Zig canvas. The host supplies identity, state and time. Preserve reduced-motion stills, archived artwork, interrupted transitions and visibility behavior. Validate only registered shapes and notch positions, and keep the core components usable without network or encoded frames. Publish no identity assignments. Keep palette permutations as candidates until their visual distinguishability is reviewed.</p>
 <p>Acceptance enumerates each of the 45 source outlines and exercises the six states at 24 and 96 px. Check interpolated outlines and both visible eye outlines for containment. Inspect the family in an interactive grid and verify the original two agents against local.14. Verify native rendering with stable path IDs and web behavior on narrow and wide screens.</p>
+<p>The Native HoverCard keeps its trigger reachable when expanded. Anchor the content below the trigger and route outside dismissal through the existing toggle message. Verify that the trigger can open and close the card.</p>
 <footer><a href="engineering/controls/component-library/spec.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="sdk-evidence"><a class="return" href="#overview">All design records</a><h1>Local SDK verification</h1>
+<h2>Shared UI sources</h2>
+<p>In an isolated checkout fixture, changing <code>card-inset-regular</code> from 18 to 21 changed the rendered SDK Card&#39;s computed padding from 18 px to 21 px in a browser fixture using the guide&#39;s Vite configuration and changed the generated Native card&#39;s default padding to 21. The design source in the working checkout retains 18.</p>
+<p>With the original values, all 125 control templates and 14 recipe templates generated byte-for-byte identical public markup. The Native guide prepared its 139 specimens from those installed files. Its build and 14 Native tests passed. The packed SDK installer and the agent lookup agreed on all nine default typed Native views, including <code>codeView</code> for OTP and <code>ratingView</code> for rating. This check covers component ownership and installation. Native visual focus behavior needs a separate interaction observation.</p>
 <h2>0.1.0-local.15 · The animated agent family</h2>
 <p><a href="engineering/controls/component-library/spec.md#revision-6-follow-up--animate-the-agent-family">Performance specification</a> · <a href="../agents.html">Interactive family gallery</a> · <a href="engineering/controls/component-library/evidence/agent-family-roster.png">Roster capture</a></p>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
@@ -930,8 +958,8 @@ npx yogurt add project-settings --target native
 <p>The first visual decision remains the button corner. Consumer installation and Vercel Native SDK qualification follow acceptance of the relevant spec.</p>
 <footer><a href="engineering/controls/first-four/README.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="direction"><a class="return" href="#overview">All design records</a><h1>OpenBoa product art direction</h1>
-<p>The <a href="#component-library">approved control basis</a> and <a href="../components.html">live library</a> apply this direction to web and native product work.</p>
-<p>Design revision 1. The system should feel clear enough to use at once and human enough to remember. Someone reviewing a decision should see what is at stake before they notice the styling. The character can have the opposite role in an agent roster, where recognizing an individual is the job. <a href="../index.html">Company guide</a> · <a href="#U21A">Surface composition spec</a></p>
+<p>The <a href="engineering/quality/motion-foundation-replacement/spec.md">component foundation replacement</a> and <a href="../components.html">live library</a> apply this direction to product work. Web and native availability are qualified separately while the replacement is in progress.</p>
+<p>Design revision 2. The system should feel clear enough to use at once and human enough to remember. Someone reviewing a decision should see what is at stake before they notice the styling. The character can have the opposite role in an agent roster, where recognizing an individual is the job. <a href="../index.html">Company guide</a> · <a href="#U21A">Surface composition spec</a></p>
 <h2>What carries the identity</h2>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
 <thead>
@@ -948,12 +976,12 @@ npx yogurt add project-settings --target native
 </tr>
 <tr>
 <td>Rounded geometry with a deliberate cut</td>
-<td>Keep the Upright 9 dimples for the company and a single fitted cut in the contour of a project or agent mark. The <a href="#first-four">first four study</a> starts with an 8 px button corner on a 36 px high action. Compare 6, 8 and 10 px in the same task. The switch keeps a capsule track to convey thumb travel.</td>
+<td>Keep the Upright 9 dimples for the company and a single fitted cut in the contour of a project or agent mark. Use the control&#39;s shared size and shape roles. Keep a 44 px minimum target for touch. The switch keeps a capsule track to convey thumb travel.</td>
 <td>The mark reads as a silhouette on either surface. An ordinary button should read immediately as a button.</td>
 </tr>
 <tr>
 <td>One family, distinct voices at size</td>
-<td>Use Rethink Sans throughout. In the active control study, action and row labels use 500, headings 525 and secondary text 400. The outlined B2 company nameplate uses 760. The existing body is 16/24 and compact interface text 14/20. Use tabular figures where people compare values.</td>
+<td>Use Rethink Sans throughout. Action and row labels use 560, headings use 620, and supporting text uses 450. The outlined B2 company nameplate uses 760. Reading text is 16/24, interface body is 14/20, and action labels are 14/20. Editors use 15/22, compact actions use 13/18, and key metrics use 34/40 at weight 650. Use tabular figures where people compare values.</td>
 <td>Read an actual action label and its consequence together. The label is clear, the paragraph has breathing room, and numbers stay aligned while a result changes.</td>
 </tr>
 <tr>
@@ -963,7 +991,7 @@ npx yogurt add project-settings --target native
 </tr>
 <tr>
 <td>Space as grouping</td>
-<td>The current product study uses 4 units between related lines, 8 between controls and 16–24 between tasks. These are working choices from the existing scale. Density can tighten around comparable rows.</td>
+<td>Use 4–6 px within a label group, 8–10 px between related controls, and 24 px between sections. Use a 16 px minimum inset in compact cards, 18 px in regular cards and 6 px inside anchored menus. Common action, field and choice rows align at 36 px. Grouped cards and composers use a 16 px corner, while menus use 12 px and large overlay surfaces use 20 px. Grouped card titles use 16/22, with a 4 px gap before their descriptions.</td>
 <td>A person can tell which help, error or action belongs to which item at 320 px and at increased text size.</td>
 </tr>
 <tr>
@@ -972,7 +1000,7 @@ npx yogurt add project-settings --target native
 <td>Watch the first frame, interrupt the movement and read the final state. With reduced motion, the same control and outcome remain apparent.</td>
 </tr>
 </tbody></table></div>
-<p>OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, <code>slate.750</code> (#175174). Use the exact color for a main action on paper and a contrast-tested lighter slate on ink. The shared palette has room for colorful art without requiring colorful chrome. <a href="../tokens/brand.json">Token source</a> · <a href="../examples/signature/index.html">Signature study</a></p>
+<p>OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, <code>slate.750</code> (#175174). Use neutral fills and ink for surfaces, routine hover, and selection containers. Use palette signals for data categories, measurable thresholds, and confirmed changes. When a major action needs brand emphasis, use Ink blue on paper and the contrast-tested lighter Slate role on ink. <a href="../tokens/brand.json">Token source</a> · <a href="../examples/signature/index.html">Signature study</a></p>
 <h2>Three surfaces, three first reads</h2>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
 <thead>
@@ -1366,7 +1394,41 @@ npx yogurt add project-sidebar --target native
 <p>The original <code>Sidebar({ label, links, current })</code> remains available for a simple collapsible list. <a href="#using-yogurt">Installation</a></p>
 <footer><a href="sidebar.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="design-system-rules"><a class="return" href="#overview">All design records</a><h1>Design system rules</h1>
-<p>OpenBoa products share Yogurt tokens, basic components and common interaction behavior. Each product combines those parts for its tasks, information and actions.</p>
+<h2>Why Yogurt exists</h2>
+<p>A person who learns to choose an option, dismiss a menu or recover from an error in one OpenBoa product should be able to use that knowledge in the next. A product team should be able to offer that experience by choosing a supported control. The team can then spend its design time on what people came to do.</p>
+<p>Yogurt owns decisions that should change together. A shared decision has one editable source and a public way to use it. Web and Native can draw a control with different APIs. They share its purpose, design roles and promises about what a person can see and do. Products keep their own information, permissions, commands and release schedules. A correction reaches each product when it adopts the corrected SDK revision.</p>
+<p>Use a change to test this boundary. If the inset for regular cards changes, changing its role once should reach both targets. If a six-cell code field gains focus, the field owns the visible cue and keyboard behavior wherever it appears. If one product changes where to send a completed code, only that product should change. Two properties that happen to measure the same today can have different owners.</p>
+<p>Check the system from a team&#39;s first use. Can someone find the control by its purpose, use its default in a real composition and receive a fix by updating one dependency? A copied focus handler, a guide-only style override or a repeated question about the same state gives the maintainer a specific place to investigate. It may expose a hard-to-find entry, a missing option or a defect in the implementation.</p>
+<h2>One source for UI</h2>
+<p>This rule starts inside Yogurt. The guide, Studio, templates and examples are consumers of the same public components that products and agents install.</p>
+<div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
+<thead>
+<tr>
+<th>What changes</th>
+<th>Where to change it</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A shared color, type, spacing, shape or motion value</td>
+<td>Edit the palette and primitives in <code>design/tokens/brand.json</code> or the component roles in <code>design/tokens/ui.json</code>. Run <code>npm run tokens</code> to generate the CSS and Zig outputs together.</td>
+</tr>
+<tr>
+<td>How a control looks, responds or moves in any state</td>
+<td>Edit React in <code>packages/web/src</code> and its shared stylesheet in <code>design/styles</code>. For Native, edit markup in <code>packages/native/src/templates</code> or the catalog&#39;s typed Zig renderer in <code>packages/native/controls</code>. Vite and Next.js use the same web export. The component ID, guidance and default typed Native entry live in <code>catalog/components.json</code>.</td>
+</tr>
+<tr>
+<td>Which words or marks carry a shared meaning</td>
+<td>Use the vocabulary and artwork sources listed in <code>catalog/brand.json</code>. A product supplies its object names, actual outcomes and recovery actions.</td>
+</tr>
+<tr>
+<td>How shared controls work together</td>
+<td>Edit the reusable composition in <code>packages/recipes</code> when it is shared. A screen supplies its own content, layout, state and callbacks.</td>
+</tr>
+</tbody></table></div>
+<p>Native controls and blocks use <code>@{role}</code> references for layout spacing in their authoring templates. Generation resolves these to SDK markup. Edit each block in <code>packages/recipes/&lt;id&gt;/view.native.in</code>. The corresponding <code>view.native</code> and <code>controls/items</code> files are distribution outputs.</p>
+<p>A component preview imports the public entry for its target. Render focused, open, selected, disabled and loading states through that entry&#39;s inputs and events. When the preview needs a missing state or motion, add it to the shared component first. A compatibility entry keeps its existing API. The installer, guide and agent instructions identify the same default for new consumers.</p>
+<p>Verify a shared fix at its public entry in a consumer and exercise the same interaction in the affected example. Record which renderer and state were exercised. A guide-only check covers that guide.</p>
+<p>The Vite development guide watches the token sources. The Native guide launcher regenerates the platform outputs before choosing a cached build. <code>npm run check:tokens</code> compares both targets with the source without writing files. <code>node --test checks/design-sources.mjs</code> changes a token in a disposable copy and checks the guide&#39;s component imports. When an integration exposes a defect, keep the regression check with the lowest layer that owns the decision.</p>
 <h2>Required reuse</h2>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
 <thead>
@@ -1392,16 +1454,30 @@ npx yogurt add project-sidebar --target native
 <td>Own the screen&#39;s layout, content hierarchy, navigation groups and available actions. Combine the shared parts to express the task. An editable preset is a starting point when a known composition fits. Its project-specific details stay in the product.</td>
 </tr>
 </tbody></table></div>
-<p>When a role or state is missing, assemble the closest supported parts and record the gap. Extend the existing shared part when the missing behavior belongs to its contract. A new entry earns its place when it serves a distinct task or interaction.</p>
+<p>Choose the simplest public API that expresses the task. For example, an action menu offers commands such as Rename or Archive. A select remembers the chosen setting. Both may open a list, but a person expects different results after making a choice. Use the appropriate control and let the host perform the command or save the setting.</p>
+<p>When a role or state is missing, identify the input and expected result on the project&#39;s SDK pin. Extend the existing part if the missing behavior belongs to its contract. Use its slots or compose controls when only the arrangement changes. A new public ID earns its place when it serves a distinct interaction. Keep a product-specific composition local until another real use shares its behavior.</p>
+<p>Use a component typography role for copy, fields, labels, actions and values. Web and Native share Rethink Sans, role sizes, natural tracking and line heights. Apply the action face to action labels and the body face to other text. Use the metadata role for compact context and the badge role for single-line indicators. Keep brand and wordmark typography separate from interface roles.</p>
+<h2>Choosing and combining controls</h2>
+<p>The installed component catalog stores each reviewed control&#39;s <code>guidance</code> with its stable ID. It identifies an appropriate use, companion controls, an unsuitable use and states to check. The component guide presents the same guidance. Resolve the relevant IDs through the Yogurt skill&#39;s installed SDK lookup to retrieve the guidance alongside public imports or Native templates. The task pattern catalog describes complete workflows and their host-owned inputs.</p>
+<p>Guidance is being added as components are reviewed. An entry without it is a documented coverage gap. Inspect the current component contract and target support before composing with it. An entry&#39;s guidance does not by itself qualify its renderer or grant an agent access to product data.</p>
+<p>For a new or revised control, document the choices in the order someone makes them. Give the task and public entry first, then a working default, the useful parts or variants, and the input or event the host supplies. Show the states that change a decision, including relevant keyboard, accessibility and motion behavior. A simple control can do this in one example. Keep role values in the token source and support claims in the target record so a guide cannot silently acquire its own specification.</p>
 <h2>When a composition becomes shared</h2>
 <p>Review real examples from the projects that use the same function. Compare inputs, normal use, narrow layouts, keyboard operation and failure recovery. Extract the common input and behavior and keep project context in slots and callbacks. Supply an editable preset when the whole combination recurs. Test the shared result with its actual consuming examples and record which renderers support it.</p>
 <p>Design review checks the reuse decision and the screen. Run <code>yogurt check</code> against the project&#39;s declared presentation paths. That command checks detectable source conventions such as the SDK pin, adapter, literal colors, palette references, typography and known component imports. Review identifies duplicated behavior and inaccessible combinations that require inspection of the screen and its implementation. <a href="using-yogurt.md#check-a-consuming-project">Consumer check</a></p>
 <h2>Lessons applied in Yogurt</h2>
 <ul>
+<li><strong>A working gallery showed the wrong path to adopters.</strong> Native had a six-cell OTP view, while installation and agent guidance directed new consumers to a single-field compatibility entry. The catalog now names the default typed view. For an entry change, compare what the installer, agent and gallery resolve on the same pin. For a focus complaint, focus the installed field and inspect its appearance and keyboard cue. Finding six cells answers a different question. <a href="engineering/controls/component-library/verification.md#shared-ui-sources">Shared UI source verification</a></li>
+<li><strong>A copied number hid a broken connection.</strong> Native templates could look correct with the current spacing while a later role edit reached only some consumers. Templates now bind layout spacing to named roles. Exercise a role change in a disposable copy and inspect the web output and compiled Native markup. For a source-only migration, compare the distributed markup before and after with the original values. <a href="engineering/controls/component-library/verification.md#shared-ui-sources">Shared UI source verification</a></li>
 <li>The sidebar examples share collapse, modal dismissal and focus behavior. The project chooses a directory, agent roster or another composition using the same shell. A fixed sidebar would require each app to work around its fields and menu structure. <a href="#sidebar">Sidebar composition</a></li>
 <li>A profile avatar and an agent silhouette convey different identities. The generic avatar&#39;s background covered the space around the agent&#39;s silhouette when they used the same style. Shared reuse must carry the same meaning as well as comparable geometry. <a href="#workspace-patterns">Workspace patterns</a></li>
 <li>Two projects can have a source with the same local ID. The common project view preserves project scope and leaves authorization and selection with the host. <a href="#sdk-evidence">Workspace verification</a></li>
 </ul>
+<h2>Interface geometry</h2>
+<p>Use the spacing and corner scales in <code>design/tokens/brand.json</code> and give their applications named roles in <code>design/tokens/ui.json</code>. Use the generated CSS or Zig roles in the renderer. Match elevation to the UI layer. Use the low shadow for a raised control, the floating shadow for a picker and the panel shadow for a modal.</p>
+<p>Stack independent rows with the stack gap and group neighboring controls with the inline gap. Use the tight gap for a label and its supporting content. Apply the layer inset to anchored menus, the panel inset to cards and the sheet inset to modal content. Use the inner radius for controls within another control, the control radius for fields and buttons, and the panel or sheet radius for the corresponding surface. Place icons and labels on a common centerline. Keep a control&#39;s hit area and the space it reserves stable while its state changes.</p>
+<h3>Typography</h3>
+<p>Use Rethink Sans for interface text. Apply display and heading roles to titles, the action role to control labels and the body role to reading text. Use help and metadata roles for supporting information. Use the assigned tracking and line height to preserve hierarchy and readability in dense controls.</p>
+<p>Use the <a href="screen-composition.md">desktop composition draft</a> for shell, layout and action defaults, and the <a href="component-composition.md">component selection index</a> to choose parts and editable recipes by purpose.</p>
 <footer><a href="design-system-rules.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="craft"><a class="return" href="#overview">All design records</a><h1>Component craft and motion</h1>
 <p>A person should be able to see what their input did, where the interface moved and when it is ready for the next action.</p>
@@ -1510,7 +1586,7 @@ npx yogurt add project-sidebar --target native
 </tr>
 </tbody></table></div>
 <p>The catalog assigns each of the 139 entries one primary motion role. Shared controls keep that behavior in composed screens. Foundations, reading text and figures with fixed meaning stay in place. Editing and selection keep the active value readable immediately, and a motion cue settles around it. Choose a host result before presenting success or failure. A directly manipulated item stays coupled to the drag until release, even when animated settling is reduced.</p>
-<p>The Web renderer uses 80 ms for press feedback, 120 ms for small anchored cues, 160 ms for travel, 180 ms for changes and 200 ms for larger layers. Actions keep a steady label, menus stay opaque, and selection markers use a small settling overshoot. Carousel arrows keep their center when the slide label changes. The Native host maps its available widget timing slots and uses the shared avatar poses.</p>
+<p>Web controls reuse the motion roles in <code>design/tokens/ui.json</code>. Ordinary feedback uses 110 ms for a press or short exit, 160 ms for anchored reveals, 220 ms for travel and 260 ms for a large layer entering. Switch travel uses the 180 ms standard curve, and the loading placeholder sweeps from full to half opacity over 1,000 ms in each direction. Interaction state updates immediately while the visual change catches up. During a drag, the pointer drives the motion and settling resumes after release. Closing layers restore focus and become inert as their exit plays. The Native host maps its available widget timing slots and uses the shared avatar poses.</p>
 <h2>Eye and body motion</h2>
 <p>The current avatar uses <a href="../assets/agents/avatar-motion.json">six authored clips</a> for its body and two eyes. Direction, posture and rhythm distinguish the states.</p>
 <div class="wrap" role="region" aria-label="Design specification table" tabindex="0"><table>
@@ -1554,9 +1630,10 @@ npx yogurt add project-sidebar --target native
 <footer><a href="motion.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="purpose"><a class="return" href="#overview">All design records</a><h1>Yogurt product intent</h1>
 <p>An OpenBoa product team should be able to start with what a person came to do and build a recognizable, usable screen. Designers, engineers and agents need one source for how OpenBoa looks, speaks and behaves, from a company signature to a receipt after a lost connection. An independent product should be able to pin and use that source on its own.</p>
+<p>A person who already uses one OpenBoa product should recognize how to act in another. A team adopting a Yogurt correction should receive it through the public component it already uses. Yogurt&#39;s own guide and Studio are the first places we expect that promise to hold. <a href="#design-system-rules">Design system rules</a></p>
 <p><strong>Recognizable success.</strong> A new team can use Yogurt to design a revisioned decision or a partially observed record. From the same Yogurt revision, independent projects find the appropriate patterns, English language and supported components or identify a gap on their target. A reader can tell who is speaking, what is known and which action is available. Each project keeps its own facts, commands and release dates.</p>
 <p><strong>Convincing failure.</strong> Two screens share a font and rounded corners, yet both celebrate an unconfirmed result, hide the source of their data, or use an agent mark as the company logo. A gallery of screenshots alone cannot carry the system into a working client.</p>
-<p><strong>Retained decisions.</strong> OpenBoa owns the identity, shared conventions and component support claims. Each product owns its authority, data model, user tasks and production adoption. App clients use Vercel Native SDK as their default stack. The main brand color is the original symbol’s Ink blue, slate.750 (#175174). The production web behavior provider remains under review.</p>
+<p><strong>Retained decisions.</strong> OpenBoa owns the identity, shared conventions and component support claims. Each product owns its authority, data model, user tasks and production adoption. App clients use Vercel Native SDK as their default stack. The main brand color is the original symbol’s Ink blue, slate.750 (#175174). Web controls are moving to the shared UI SDK behavior runtime; components not yet migrated retain their existing behavior. Native support is implemented and verified separately.</p>
 <p><a href="#product">Product specification</a> · <a href="#direction">Visual direction</a> · <a href="../playbook.html">Working product examples</a></p>
 <footer><a href="intent.md">Canonical Markdown</a></footer></article>
 <article class="read" tabindex="-1" id="product"><a class="return" href="#overview">All design records</a><h1>Yogurt product specification</h1>

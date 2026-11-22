@@ -1,4 +1,4 @@
-(() => {
+window.mountYogurtSystem = function () {
   const byId = id => document.getElementById(id);
   const style = getComputedStyle(document.documentElement);
   const prop = key => style.getPropertyValue("--boa-" + key).trim();
@@ -67,6 +67,16 @@
     }
   });
 
+  for (const sample of document.querySelectorAll(".type-scale [data-type]")) {
+    const { type, weight, tracking } = sample.dataset;
+    sample.style.setProperty("--size", prop("size-" + type));
+    sample.style.setProperty("--line", prop("line-height-" + type));
+    sample.style.setProperty("--weight", prop(weight));
+    sample.style.setProperty("--tracking", prop("tracking-" + tracking));
+    sample.querySelector("small").textContent =
+      parseFloat(prop("size-" + type)) + " / " + parseFloat(prop("line-height-" + type)) + " · " + prop(weight);
+  }
+
   const spaces = byId("spaces");
   for (const step of prop("spacing-steps").split(/\s+/)) {
     const sample = document.createElement("li");
@@ -101,4 +111,6 @@
   byId("dark-surface").addEventListener("change", event => {
     byId("roster").dataset.appearance = event.target.checked ? "dark" : "light";
   });
-})();
+};
+
+if (document.currentScript) window.mountYogurtSystem();

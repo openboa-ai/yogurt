@@ -1,0 +1,3 @@
+<template name="yg-checkbox" args="label checked">
+  <checkbox height="@{size-touch}" checked="{checked}" on-toggle="toggle">{label}</checkbox>
+</template>

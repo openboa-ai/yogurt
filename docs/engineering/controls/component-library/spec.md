@@ -15,7 +15,7 @@ The follow-up selects the existing OpenAI Apps SDK UI implementations for matchi
 
 | Requirement | Implementation and observation |
 | --- | --- |
-| 1. One token source | Resolve component roles into existing numbered palette colors. Ink blue is the default. Validate both appearances and the contrast of alternate surface treatments. Rethink Sans, 14/20 action labels, 36 px regular height, 8 px corners and 44 px touch are the center of the scale. |
+| 1. One token source | Resolve component roles into existing numbered palette colors. Neutral is the default for control fills, hover, and ordinary selection. Reserve Ink blue for major actions that request the brand tone. Validate both appearances and the contrast of alternate surface treatments. Rethink Sans, 14/20 action labels, 36 px regular height, 8 px corners and 44 px touch are the center of the scale. |
 | 2. Basic components first | Implement the ten named families. Export typed components, controlled inputs and stable IDs. Baseline and practical variants share the same control. Instantiate every public catalog entry in the working gallery. |
 | 3. Variation by function | Move between compact, regular and touch sizes, filled, soft and quiet emphasis, and the existing Neutral, Paper and Mist surfaces. Preserve keyboard focus, accessible names, state and semantic color across changes. Check field errors, no matches, canceled decisions, interrupted requests and original receipt lookup. |
 | 4. Reusable distribution | Package only component code, styles, relevant assets, notices and tokens. Supply a local read-only check of declared consumer surfaces, editable individual registry entries, the same import to Next.js and Vite and renderer-specific evidence. Keep third-party code and original brand masters identifiable. |
@@ -23,6 +23,18 @@ The follow-up selects the existing OpenAI Apps SDK UI implementations for matchi
 | 6. Direct review | Show real components with working keyboard, pointer, light/dark and touch behavior. Use minimal, English-only copy, task-sized group gaps and shared surfaces. Exercise production bundle, focus, reduced motion and narrow width. |
 
 Data comes from the consumer. Display and dismissal generate no external effects. An explicit command invokes only the supplied callback. A composition retains the host's original ID, current revision and response generation. Keep the saved-view study, stable catalog IDs and prior standalone kit working. Verification belongs in [the local evidence record](verification.md).
+
+### Native code field focus and shared source checks
+
+Keep the six-cell Native code field borderless on pointer and keyboard focus, with only the first cell filled while the field is empty and focused, restoring its resting fill on blur. Keep its public entry, accessible label and digit editing contract. Verify click, Tab and typing in the running guide using the installed control. The Required CI aggregate must fail when Shared UI sources fails, is skipped or is cancelled.
+
+Yogurt supplies the typed OTP, tokens and installer. The consumer owns the Native SDK pin, Zig build graph and release workflow. The OTP requires an SDK with the empty focus cell paint capability and reports the missing capability at compile time.
+
+The macOS OTP consumer declares the exact Native CLI version and source patch in its own package manager lock. The package manager materializes that SDK during dependency installation. The app's Zig dependency points to the installed framework. The same SDK is used for standard Native development, build and packaging commands. None of those commands uses Yogurt to replace the SDK dependency or alter the app's manifest.
+
+Required CI exercises a fresh package install, the typed OTP in a running development app, and a packaged app built with the app-owned Zig dependency. Focus verification compares the resting, click, Tab and blur captures. Verify that the app's declared SDK dependency and its source files stay unchanged during the build, and that the Yogurt archive contains the component and its tokens.
+
+The packaged Native guide links to an immutable revision of the app-owned OTP SDK setup and gives a runnable first-install example. The consumer check executes that setup from the packed guide in a fresh directory, then verifies the standard Native development and release paths. The application owns the downloaded pin and the resulting SDK.
 
 ### Select when open
 
@@ -33,6 +45,10 @@ Keep the existing select element and its form contract. Opening, navigating and 
 ### Public component coverage
 
 Give each supported component a stable Yogurt ID and named variants where appropriate. Yogurt owns the implementation, terminology, token roles and examples. Keep component imports and the ten original static patterns available.
+
+The guide, Studio, templates and consuming apps exercise the public renderer for each component on their target. The catalog identifies the default when a Native component also ships compatible markup. The installer and agent lookup must point to that same entry. The Native guide takes its components from the same installation path as a fresh consumer and supplies its own fixture data. Preserve existing imports, edited consumer files and retry behavior. Verify the installed entries against the guide and check that web and Native token outputs reproduce from the design sources.
+
+Author Native control templates together under `packages/native/src/templates` and each block's template with the recipe. Bind component gaps, padding and anchor distances to shared roles or primitives. The build resolves these references into the numeric markup required by the SDK at its existing public paths. Migration preserves every published template byte for the current token values. A spacing change must update the web variables, Zig constants and affected installed markup in one generation pass.
 
 Calendar values represent local civil dates. A quantity is an integer bounded by the host. OTP and keypad input remain local to the host, with no submission until an explicit action. The default private keypad obscures displayed characters and uses a per-session randomized layout. App authorization and credential processing stay with the host. A questionnaire emits responses keyed by the host's question and choice IDs. A trace displays host-supplied events. Menus, calendar navigation, split panes, dialogs and accordions retain their keyboard and dismissal conventions. Accessible inputs and configurable primitives supply their own state or typed change events. Measure the actual opened surfaces.
 
@@ -49,6 +65,18 @@ The owner also requested ready-made combinations following the individual compon
 ## Agent and project workspaces · local follow-up, revision 2
 
 The owner requested an unframed agent silhouette and coverage for agent-first and project-first workflows. Retain stable component IDs, existing consumers and OpenBoa's artwork, type and palette. Give a named agent's silhouette its own transparent presentation. Profile avatars can still use a circular crop. Use the same silhouette in lists, messages and the selected agent header. Keep the existing gaze states.
+
+Native transcript follow-up: the scroll container takes the available height rather than collapsing to zero. Preserve the caller's label and message slot, and permit the host to constrain the available viewport. Verify visible message content in a flexible parent and scrolling with content taller than a constrained viewport.
+
+Native sidebar follow-up: the project and agent lists reserve a visible minimum while growing with the host, rather than collapsing their scroll viewport. Nest project destinations inside their disclosure heading, preserve the existing messages and slots, and verify both the visible default list and overflow scrolling.
+
+Native navigation follow-up: show the sidebar disclosure direction and indent destinations under their parent. Navigation-menu entries align to the start and retain their existing activation and disabled data without requiring new host fields.
+
+Native data and feedback follow-up: keep the neutral notice surface, icon and insets consistent with the shared roles, and allow descriptive text in records, results, charts and lists to wrap rather than disappear at narrow widths. Preserve existing data, messages and slots.
+
+Native agent avatar and gaze accept an optional square size, defaulting to the existing 48 points. The guide may use 72 points for its primary sample while smaller roster uses remain available. Preserve the image ID, label and original motion data.
+
+Native typography resolves the existing display-size token as well as the body, action and heading tokens, so a display text uses the same 40 px scale as the web guide.
 
 | Surface | Required behavior |
 | --- | --- |
@@ -69,6 +97,10 @@ The owner requested a shared sidebar that each project can compose from independ
 - Keep links navigable, distinguish separate item actions, label each group and expose active identity through `aria-current` on the active destination. Use plain links and buttons for ordinary navigation. Section and submenu disclosure uses keyboard-operable buttons. Collapsing the rail preserves group intent on return. Opening the drawer never changes the route.
 - Return focus to the opener when dismissing with Escape, a backdrop or the close action. Selecting a destination can close the drawer. Persistent search, selected records, permissions and navigation data belong to the host. These choices carry no service effects.
 - Ship two editable compositions with project or agent markup, host search and actions, active state and a narrow alternative. Use OpenBoa artwork and tokens. Native uses typed markup and host-controlled visibility. Exercise wide, rail, right edge, narrow modal, nesting, controlled state, and old props. Verify installed entry points and actual keyboard and pointer behavior.
+
+### Workspace row and conversation presentation
+
+A sidebar item can render a single truncated description beneath its label. The destination name remains the button or link name and the full description is available separately. Rail mode retains its single identity label. Message supports sent and received treatments and an optional action region. Secondary actions remain visible with touch and keyboard focus. Transcript supports an opt-in reading anchor that appears after the reader scrolls away and returns focus to the reading region when used. Existing callers retain their default presentation and reading-anchor behavior. Verify these options through the installed web package, including compact navigation and reduced motion.
 
 ## Motion and visual craft · local follow-up, revision 4
 
@@ -177,3 +209,5 @@ The owner selected the local.14 performances and requested them for the complete
 Use the same registry and fitted transforms to render React and the typed Zig canvas. The host supplies identity, state and time. Preserve reduced-motion stills, archived artwork, interrupted transitions and visibility behavior. Validate only registered shapes and notch positions, and keep the core components usable without network or encoded frames. Publish no identity assignments. Keep palette permutations as candidates until their visual distinguishability is reviewed.
 
 Acceptance enumerates each of the 45 source outlines and exercises the six states at 24 and 96 px. Check interpolated outlines and both visible eye outlines for containment. Inspect the family in an interactive grid and verify the original two agents against local.14. Verify native rendering with stable path IDs and web behavior on narrow and wide screens.
+
+The Native HoverCard keeps its trigger reachable when expanded. Anchor the content below the trigger and route outside dismissal through the existing toggle message. Verify that the trigger can open and close the card.

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>Design system · yogurt</title>
-  <link rel="icon" href="assets/logo/upright-9.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/projects/yogurt.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles/components.css">
   <link rel="stylesheet" href="styles/specimen.css">
   <link rel="stylesheet" href="styles/system.css">
@@ -28,12 +28,18 @@
       <div>
         <p class="section-intro">Choose the role first. A title introduces a page, body text carries the explanation, and an interface label names an action or value. The figures give size and line height in pixels, followed by weight.</p>
         <ul class="type-scale" aria-label="Type size, line height and weight">
-          <li><span style="--size:var(--boa-size-headline);--line:var(--boa-line-height-headline)">Headline</span><small>48 / 52 · 525</small></li>
-          <li><span style="--size:var(--boa-size-title);--line:var(--boa-line-height-title)">Title</span><small>32 / 36 · 525</small></li>
-          <li><span style="--size:var(--boa-size-subheading);--line:var(--boa-line-height-subheading)">Subheading</span><small>20 / 28 · 525</small></li>
-          <li><span style="--size:var(--boa-size-body);--line:var(--boa-line-height-body);--weight:var(--boa-role-weight-body)">Body</span><small>16 / 24 · 425</small></li>
-          <li><span style="--size:var(--boa-size-ui);--line:var(--boa-line-height-ui);--weight:var(--boa-role-weight-ui)">Interface</span><small>14 / 20 · 550</small></li>
-          <li><span style="--size:var(--boa-size-caption);--line:var(--boa-line-height-caption);--weight:var(--boa-role-weight-body)">Caption</span><small>12 / 16 · 425</small></li>
+          <li data-type="headline" data-weight="role-weight-heading" data-tracking="display"><span>Headline</span><small>40 / 44 · 620</small></li>
+          <li data-type="value" data-weight="role-weight-value" data-tracking="value"><span class="boa-numbers">Key metric</span><small>34 / 40 · 650</small></li>
+          <li data-type="title" data-weight="role-weight-heading" data-tracking="heading"><span>Title</span><small>32 / 36 · 620</small></li>
+          <li data-type="section" data-weight="role-weight-heading" data-tracking="heading"><span>Section</span><small>24 / 30 · 620</small></li>
+          <li data-type="subheading" data-weight="role-weight-heading" data-tracking="heading"><span>Subheading</span><small>20 / 26 · 620</small></li>
+          <li data-type="body" data-weight="role-weight-body" data-tracking="body"><span>Body</span><small>16 / 24 · 450</small></li>
+          <li data-type="editor" data-weight="role-weight-body" data-tracking="body"><span>Editor</span><small>15 / 22 · 450</small></li>
+          <li data-type="interface" data-weight="role-weight-body" data-tracking="body"><span>Interface body</span><small>14 / 20 · 450</small></li>
+          <li data-type="ui" data-weight="role-weight-ui" data-tracking="label"><span>Regular action</span><small>14 / 20 · 560</small></li>
+          <li data-type="help" data-weight="role-weight-ui" data-tracking="label"><span>Interface label</span><small>13 / 18 · 560</small></li>
+          <li data-type="help" data-weight="role-weight-body" data-tracking="body"><span>Supporting text</span><small>13 / 18 · 450</small></li>
+          <li data-type="caption" data-weight="weight-regular" data-tracking="meta"><span>Caption</span><small>12 / 16 · 400</small></li>
         </ul>
         <p class="resource-link">Use <code>.boa-numbers</code> on comparable IDs, times and amounts. The company wordmark uses its own outlined 760 artwork. <a href="index.html#logo">Choose a logo master</a></p>
       </div>
@@ -62,12 +68,13 @@
     <section id="dimensions" class="spread" aria-labelledby="dimensions-title">
       <div class="margin"><h2 id="dimensions-title">Dimensions</h2><p>Design pixels</p></div>
       <div>
-        <p class="section-intro">In the roster, 4 px joins a label to its field, 12 px separates the filters, and 24 px frames the panel. On narrow screens the panel inset becomes 16 px. Use the smaller gaps for elements people read together.</p>
+        <p class="section-intro">Use 4–6 px within a label group, 8–10 px between related controls, and 24 px between groups. Inset anchored menus by 6 px, cards by 18 px, and sheets by 24 px.</p>
         <h3>Spacing</h3>
         <ul class="space-scale" id="spaces" aria-label="Spacing scale in pixels"></ul>
         <dl class="dimensions">
-          <div><dt>Corners</dt><dd>Existing kit: 6 px controls · 12 px panels · fully round indicators. <a href="examples/basic-controls/index.html">Compare proposed control shapes</a></dd></div>
-          <div><dt>Controls</dt><dd>40 px height · 44 px on touch</dd></div>
+          <div><dt>Corners</dt><dd>8 px controls · 12 px compact panels · 18 px floating menus · 20 px cards · 24 px sheets. <a href="components.html">Try the controls</a></dd></div>
+          <div><dt>Controls</dt><dd>30 px compact · 36 px regular · 40 px emphasized · 44 px on touch</dd></div>
+          <div><dt>Motion</dt><dd>110 ms press · 160 ms layer · 220 ms selection travel · 320 ms surface expansion. <a href="components.html">Try the components</a></dd></div>
           <div><dt>Lines</dt><dd>1 px rules · 2 px focus outlines</dd></div>
         </dl>
       </div>

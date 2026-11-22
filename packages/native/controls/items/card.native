@@ -1,8 +1,10 @@
-<template name="yg-card" args="title detail">
-  <card>
-    <column gap="8">
-      <text size="heading">{title}</text>
-      <text size="sm">{detail}</text>
+<template name="yg-card" args="title detail padding=18">
+  <card padding="{padding}">
+    <column gap="12">
+      <column gap="4">
+        <text><span scale="1.142857143">{title}</span></text>
+        <text size="sm" foreground="text_muted">{detail}</text>
+      </column>
       <slot/>
     </column>
   </card>

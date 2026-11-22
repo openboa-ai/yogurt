@@ -4,7 +4,7 @@ This directory owns stable IDs and the metadata that the SDK, guide, plugin and 
 
 | File | Responsibility |
 | --- | --- |
-| [Components](components.json) | Public names, uses and target bindings |
+| [Components](components.json) | Public IDs, guidance and target bindings. A Native `nativeView` selects the module and function for a typed control. Other entries use their installed markup. |
 | [Patterns](patterns.json) | Jobs, screen states, component relationships and recovery |
 | [Blocks](blocks.json) | Reusable compositions and their install targets |
 | [Brand](brand.json) | Identity rules and references to canonical artwork and vocabulary |

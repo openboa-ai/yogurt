@@ -1,0 +1,3 @@
+<template name="yg-button" args="label variant=primary size=default">
+  <button variant="{variant}" size="{size}" on-press="activate">{label}</button>
+</template>

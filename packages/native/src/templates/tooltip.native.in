@@ -1,0 +1,6 @@
+<template name="yg-tooltip" args="label">
+  <stack>
+    <slot/>
+    <tooltip anchor="above">{label}</tooltip>
+  </stack>
+</template>

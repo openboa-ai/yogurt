@@ -10,7 +10,7 @@
             <text>{item.title}</text>
             <text size="sm" foreground="text_muted">{item.detail}</text>
           </column>
-          <if test="{item.can_edit}"><button variant="ghost" label="Review access for {item.title}" on-press="review_member_access:{item.id}">Review access</button></if>
+          <if test="{item.can_edit}"><button variant="ghost" label="{'Review access for ' ++ item.title}" on-press="review_member_access:{item.id}">Review access</button></if>
         </row>
       </for>
     </column>

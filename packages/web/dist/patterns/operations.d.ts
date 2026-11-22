@@ -27,7 +27,7 @@ declare const eventKinds: {
 declare const eventStates: {
     running: {
         label: string;
-        tone: "brand";
+        tone: "neutral";
     };
     ready: {
         label: string;
@@ -70,7 +70,7 @@ declare const routineStates: {
     };
     running: {
         label: string;
-        tone: "brand";
+        tone: "neutral";
     };
     failed: {
         label: string;

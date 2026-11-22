@@ -1,0 +1,3 @@
+<template name="yg-gaze" args="label image_id size=48">
+  <image label="{label}" image="{image_id}" width="{size}" height="{size}"/>
+</template>

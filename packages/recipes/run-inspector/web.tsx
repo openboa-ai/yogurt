@@ -18,7 +18,7 @@ import {
 
 const states = {
   queued: { label: "Queued", tone: "neutral" },
-  running: { label: "Running", tone: "brand" },
+  running: { label: "Running", tone: "neutral" },
   blocked: { label: "Blocked", tone: "warning" },
   failed: { label: "Failed", tone: "danger" },
   complete: { label: "Complete", tone: "success" },

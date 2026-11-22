@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   Heading,
+  PageHeader,
   Text,
   Stack,
   ProjectMark,
@@ -22,16 +23,8 @@ export function BrandTokens() {
   };
   return (
     <div className="brand-reference">
-      <header className="catalog-intro">
-        <p className="catalog-family">OpenBoa</p>
-        <h1>Brand &amp; tokens</h1>
-        <p>
-          {
-            language.terms.find((t) => t.id === "repository.yogurt")
-              ?.description
-          }
-        </p>
-      </header>
+      <PageHeader className="catalog-intro" title="Brand & tokens" eyebrow="OpenBoa"
+        detail={language.terms.find(term => term.id === "repository.yogurt")?.description} />
       <Stack gap={24}>
         <section>
           <Heading>{brand.companyLine}</Heading>
@@ -41,7 +34,7 @@ export function BrandTokens() {
             <ProjectMark project="sourdough" />
             <ProjectMark project="meatball" />
           </Inline>
-          <p>{brand.rules[0].body}</p>
+          <Text>{brand.rules[0].body}</Text>
           <Text variant="help">{brand.rules[1].body}</Text>
         </section>
         <section>

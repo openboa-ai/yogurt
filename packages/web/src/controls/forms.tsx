@@ -1,18 +1,20 @@
 "use client";
 import { words } from "../foundation/words.js";
 import {
+  useEffect,
   useId,
+  useLayoutEffect,
   useRef,
   useState,
   type ComponentProps,
   type ReactNode,
 } from "react";
-import { Input as SDKInput } from "@openai/apps-sdk-ui/components/Input";
-import { Textarea as SDKTextarea } from "@openai/apps-sdk-ui/components/Textarea";
-import { Switch as SDKSwitch } from "@openai/apps-sdk-ui/components/Switch";
-import { Checkbox as SDKCheckbox } from "@openai/apps-sdk-ui/components/Checkbox";
-import { RadioGroup as SDKRadio } from "@openai/apps-sdk-ui/components/RadioGroup";
-import { Icon, type Option, cx } from "../foundation/foundation.js";
+import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
+import { Textarea as SDKTextarea, createInputController } from "@ui-sdk/react/textarea";
+import { Switch as SDKSwitch, SwitchThumb } from "@ui-sdk/react/switch";
+import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkbox";
+import { RadioGroup as SDKRadio, Radio as SDKRadioItem, RadioIndicator } from "@ui-sdk/react/radio";
+import { Icon, type ControlSize, type Option, cx } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
 
 export function Label(props: ComponentProps<"label">) {
@@ -35,13 +37,18 @@ interface FieldAttributes {
   "aria-describedby"?: string;
   "aria-invalid"?: true;
 }
+function describedBy(...values: (string | undefined | false)[]) {
+  const ids = values.flatMap(value => typeof value === "string" ? value.trim().split(/\s+/).filter(Boolean) : []);
+  return [...new Set(ids)].join(" ") || undefined;
+}
 export function Field({
   id,
   label,
   help,
   error,
+  labelEnd,
   children,
-}: FieldInfo & { children: (props: FieldAttributes) => ReactNode }) {
+}: FieldInfo & { labelEnd?: ReactNode; children: (props: FieldAttributes) => ReactNode }) {
   const fallback = useId();
   const input = id ?? fallback;
   const description =
@@ -50,7 +57,7 @@ export function Field({
       .join(" ") || undefined;
   return (
     <div className="yg-field">
-      <Label htmlFor={input}>{label}</Label>
+      {labelEnd ? <div className="yg-ghost-head"><Label htmlFor={input}>{label}</Label>{labelEnd}</div> : <Label htmlFor={input}>{label}</Label>}
       {children({
         id: input,
         "aria-describedby": description,
@@ -61,25 +68,47 @@ export function Field({
     </div>
   );
 }
-type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo;
+type InputProps = Omit<ComponentProps<"input">, "size"> & FieldInfo & { size?: ControlSize; motion?: "spring" };
+
+/** Compatibility entry for text inputs using the default SDK interaction. */
+export function SpringTextInput({ value, defaultValue, onSelect, ...props }: Omit<ComponentProps<"input">, "size">) {
+  return <SDKInput {...props}
+    value={value == null ? undefined : String(value)}
+    defaultValue={defaultValue == null ? undefined : String(defaultValue)}
+    render={onSelect ? <input onSelect={onSelect} /> : undefined}
+    onValueChange={(next, details) => {
+      if (details.reason === "imperative" && props.maxLength !== undefined && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+    }} />;
+}
+
 export function TextField({
   id,
   label,
   help,
   error,
   className,
+  value,
+  defaultValue,
+  motion,
+  size = "regular",
   ...props
 }: InputProps) {
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <SDKInput
-          {...props}
-          {...binding}
-          variant="soft"
-          invalid={!!error}
-          className={cx("yg-input", className)}
-        />
+        <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`, className)}>
+          {motion === "spring" && (props.type ?? "text") === "text" && !Array.isArray(value) && !Array.isArray(defaultValue)
+            ? <SpringTextInput {...props} {...binding} aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"])}
+              aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]} value={value} defaultValue={defaultValue} />
+            : <SDKInput {...props} {...binding}
+            aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"])}
+            aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]}
+            value={value == null ? undefined : String(value)}
+            defaultValue={defaultValue == null ? undefined : String(defaultValue)}
+            onValueChange={(next, details) => {
+              if (details.reason === "imperative" && props.maxLength !== undefined && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+            }} />}
+        </SDKInputGroup>
       )}
     </Field>
   );
@@ -94,34 +123,32 @@ export function SearchField({
   placeholder,
   disabled,
   name,
+  onKeyDown,
+  size = "regular",
 }: FieldInfo & {
   value: string;
   onValueChange: (value: string) => void;
   placeholder?: string;
   disabled?: boolean;
   name?: string;
+  onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
+  size?: ControlSize;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <SDKInput
-          {...binding}
-          name={name}
-          ref={ref}
-          type="search"
-          variant="soft"
-          className="yg-input"
-          value={value}
-          disabled={disabled}
-          placeholder={placeholder}
-          onChange={(e) => onValueChange(e.target.value)}
-          startAdornment={<Icon name="search" />}
-          endAdornment={
+        <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`)}>
+          <Icon name="search" />
+          <SDKInput {...binding} name={name} ref={ref} type="search" value={value}
+            disabled={disabled} placeholder={placeholder}
+            onChange={(e) => onValueChange(e.target.value)} onKeyDown={onKeyDown} />
+          {
             value && !disabled ? (
               <IconButton
                 label={"Clear " + label.toLowerCase()}
                 icon="close"
+                size={size === "compact" ? "compact" : "regular"}
                 onClick={() => {
                   onValueChange("");
                   ref.current?.focus();
@@ -129,29 +156,131 @@ export function SearchField({
               />
             ) : undefined
           }
-        />
+        </SDKInputGroup>
       )}
     </Field>
   );
 }
+function SuggestionLetters({ text, interval, cap }: { text: string; interval: number; cap: number }) {
+  return Array.from(text.matchAll(/\s+|\S+/gu), match => {
+    const offset = match.index;
+    return /^\s/u.test(match[0]) ? <span key={offset}>{match[0]}</span>
+      : <span className="yg-ghost-word" key={offset}>{Array.from(match[0], (letter, i) =>
+        <span key={i} style={{ animationDelay: `${Math.min((offset + i) * interval, cap)}ms` }}>{letter}</span>)}</span>;
+  });
+}
+
 export function Textarea({
   id,
   label,
   help,
   error,
   className,
+  value,
+  defaultValue,
+  onSubmit,
+  onSelect,
+  suggestion,
+  rows = 3,
   ...props
-}: FieldInfo & ComponentProps<"textarea">) {
+}: FieldInfo & ComponentProps<"textarea"> & { suggestion?: string }) {
+  const [localValue, setLocalValue] = useState(() => String(defaultValue ?? ""));
+  const [completionController] = useState(createInputController);
+  const [atEnd, setAtEnd] = useState(true);
+  const [accepted, setAccepted] = useState<{ prefix: string; suffix: string } | null>(null);
+  const accepting = useRef(false);
+  const textarea = useRef<HTMLTextAreaElement>(null);
+  const current = value == null ? localValue : String(value);
+  const suffix = current && suggestion?.startsWith(current) ? suggestion.slice(current.length) : "";
+  const available = !!suffix && atEnd && !props.disabled && !props.readOnly &&
+    (props.maxLength == null || props.maxLength < 0 || (suggestion?.length ?? 0) <= props.maxLength);
+  const rolling = !!accepted && accepted.prefix + accepted.suffix === current;
+  useEffect(() => {
+    if (!accepted) return;
+    const timer = setTimeout(() => setAccepted(null), Math.min(400, Array.from(accepted.suffix).length * 16) + 420);
+    return () => clearTimeout(timer);
+  }, [accepted]);
+  useLayoutEffect(() => {
+    const input = textarea.current;
+    if (suggestion === undefined || !input) return;
+    if (value == null) setLocalValue(input.value);
+    setAtEnd(input.ownerDocument.activeElement !== input || (input.selectionStart === input.value.length && input.selectionEnd === input.value.length));
+    setAccepted(null);
+  }, [suggestion]);
+  useEffect(() => {
+    const input = textarea.current;
+    const form = input?.form;
+    if (suggestion === undefined || !input || !form) return;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const reset = (event: Event) => {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (event.defaultPrevented || textarea.current !== input) return;
+        if (value == null) setLocalValue(input.value);
+        setAtEnd(input.ownerDocument.activeElement !== input || (input.selectionStart === input.value.length && input.selectionEnd === input.value.length));
+        setAccepted(null);
+      }, 0);
+    };
+    form.addEventListener("reset", reset);
+    return () => { form.removeEventListener("reset", reset); if (timer) clearTimeout(timer); };
+  }, [suggestion, value, props.form]);
   return (
-    <Field {...{ id, label, help, error }}>
+    <Field {...{ id, label, help, error }} labelEnd={suggestion !== undefined && available ? <span className="yg-ghost-key" aria-hidden="true">Tab ↹</span> : undefined}>
       {(binding) => (
-        <SDKTextarea
-          {...props}
-          {...binding}
-          variant="soft"
-          invalid={!!error}
-          className={cx("yg-input yg-textarea", className)}
-        />
+        <>
+        <SDKInputGroup className={cx("yg-input yg-textarea", suggestion !== undefined && "yg-ghost-input", className)}>
+          {suggestion !== undefined && <div className="yg-ghost-mirror" aria-hidden="true" data-accepted={rolling || undefined}>
+            <span>{rolling ? accepted?.prefix : current}</span>
+            {available && <span className="yg-ghost-suffix"><SuggestionLetters text={suffix} interval={8} cap={200} /></span>}
+            {rolling && accepted && <span className="yg-ghost-accepted"><SuggestionLetters text={accepted.suffix} interval={16} cap={400} /></span>}
+          </div>}
+          <SDKTextarea {...props} {...binding} rows={rows} controller={suggestion !== undefined ? completionController : undefined}
+            aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"], available && `${binding.id}-suggestion`)}
+            aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]} data-accepted={rolling || undefined}
+            value={value == null ? undefined : String(value)}
+            defaultValue={defaultValue == null ? undefined : String(defaultValue)}
+            onChange={suggestion === undefined ? props.onChange : event => {
+              if (!accepting.current) setAccepted(null);
+              setLocalValue(event.currentTarget.value);
+              setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+              props.onChange?.(event);
+            }}
+            onKeyUp={suggestion === undefined ? props.onKeyUp : event => {
+              setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+              props.onKeyUp?.(event);
+            }}
+            onMouseUp={suggestion === undefined ? props.onMouseUp : event => {
+              setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+              props.onMouseUp?.(event);
+            }}
+            onKeyDown={suggestion === undefined ? props.onKeyDown : event => {
+              props.onKeyDown?.(event);
+              const input = event.currentTarget;
+              const keySuffix = input.value && suggestion?.startsWith(input.value) ? suggestion.slice(input.value.length) : "";
+              if (!keySuffix || !suggestion || props.disabled || props.readOnly || (props.maxLength != null && props.maxLength >= 0 && suggestion.length > props.maxLength) ||
+                  event.defaultPrevented || event.nativeEvent.isComposing || event.shiftKey || event.altKey || event.ctrlKey || event.metaKey ||
+                  (event.key !== "Tab" && event.key !== "ArrowRight") || input.selectionStart !== input.value.length || input.selectionEnd !== input.value.length || input.value !== current) return;
+              accepting.current = true;
+              try {
+                const prefix = input.value;
+                if (completionController.setValue(suggestion)) {
+                  event.preventDefault();
+                  setAccepted({ prefix, suffix: keySuffix });
+                  if (value == null) setLocalValue(input.value);
+                }
+              } finally { accepting.current = false; }
+            }}
+            onValueChange={(next, details) => {
+              if (details.reason === "imperative" && props.maxLength !== undefined && props.maxLength >= 0 && next.length > props.maxLength) details.cancel();
+            }}
+            render={<textarea ref={textarea} onSubmit={onSubmit}
+              onSelect={suggestion === undefined ? onSelect : event => {
+                setAtEnd(event.currentTarget.selectionStart === event.currentTarget.value.length && event.currentTarget.selectionEnd === event.currentTarget.value.length);
+                onSelect?.(event);
+              }} />} />
+        </SDKInputGroup>
+        {suggestion !== undefined && <span className="yg-ghost-hint" id={`${binding.id}-suggestion`} aria-hidden={!available} data-visible={available}>Press Tab or right arrow to accept</span>}
+        </>
       )}
     </Field>
   );
@@ -165,9 +294,10 @@ export function Select({
   placeholder,
   onPointerDown,
   onKeyDown,
+  controlSize = "regular",
   ...props
 }: FieldInfo &
-  ComponentProps<"select"> & { options: Option[]; placeholder?: string }) {
+  ComponentProps<"select"> & { options: Option[]; placeholder?: string; controlSize?: ControlSize }) {
   const dropdown = !props.multiple && (props.size ?? 1) <= 1;
   function positionPicker(select: HTMLSelectElement) {
     if (!dropdown || !select.ownerDocument.defaultView?.CSS.supports("appearance", "base-select")) return;
@@ -186,10 +316,12 @@ export function Select({
   return (
     <Field {...{ id, label, help, error }}>
       {(binding) => (
-        <div className="yg-select" data-dropdown={dropdown || undefined}>
+        <div className={cx("yg-select", `yg-input-size-${controlSize}`)} data-dropdown={dropdown || undefined}>
           <select
             {...props}
             {...binding}
+            aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"])}
+            aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]}
             onPointerDown={event => {
               onPointerDown?.(event);
               if (!event.defaultPrevented) positionPicker(event.currentTarget);
@@ -228,6 +360,10 @@ interface Checkable {
 export function Switch({
   label,
   help,
+  id,
+  className,
+  disabled,
+  onCheckedChange,
   ...props
 }: Checkable & {
   help?: string;
@@ -235,34 +371,47 @@ export function Switch({
   defaultChecked?: boolean;
   onCheckedChange?: (value: boolean) => void;
 }) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
   return (
-    <SDKSwitch
-      {...props}
-      labelPosition="start"
-      className={cx("yg-choice yg-switch", props.className)}
-      label={
+    <div className={cx("yg-choice yg-switch", className)} data-disabled={disabled || undefined}>
+      <SDKSwitch {...props} id={inputId} disabled={disabled} onCheckedChange={onCheckedChange}>
+        <SwitchThumb />
+      </SDKSwitch>
+      <label htmlFor={inputId}>
         <span>
           {label}
           {help && <span className="yg-help">{help}</span>}
         </span>
-      }
-    />
+      </label>
+    </div>
   );
 }
 export function Checkbox({
   label,
+  id,
+  className,
+  disabled,
   ...props
 }: Checkable & {
   checked?: boolean | "indeterminate";
   defaultChecked?: boolean | "indeterminate";
   onCheckedChange?: (value: boolean | "indeterminate") => void;
 }) {
+  const generatedId = useId();
+  const inputId = id ?? generatedId;
   return (
-    <SDKCheckbox
-      {...props}
-      label={label}
-      className={cx("yg-choice yg-checkbox", props.className)}
-    />
+    <div className={cx("yg-choice yg-checkbox", className)} data-disabled={disabled || undefined}>
+      <SDKCheckbox {...props} id={inputId} disabled={disabled}>
+        <CheckboxIndicator keepMounted>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path className="yg-checkbox-check" d="M6.24 12.96 10.32 16.8 18.24 7.68" />
+            <path className="yg-checkbox-mixed" d="M7 12h10" />
+          </svg>
+        </CheckboxIndicator>
+      </SDKCheckbox>
+      <label htmlFor={inputId}><span>{label}</span></label>
+    </div>
   );
 }
 export interface Choices {
@@ -273,6 +422,12 @@ export interface Choices {
   disabled?: boolean;
   name?: string;
 }
+type SwatchOption = Option & { color: string; accessibleLabel: string; column?: number };
+type RadioGroupProps = Omit<Choices, "options"> & (
+  | { presentation?: "standard"; options: Option[]; columns?: never }
+  | { presentation: "swatches"; options: SwatchOption[]; columns?: number }
+);
+
 export function RadioGroup({
   label,
   options,
@@ -280,23 +435,33 @@ export function RadioGroup({
   onValueChange,
   disabled,
   name,
-}: Choices) {
+  presentation = "standard",
+  columns,
+}: RadioGroupProps) {
   return (
     <fieldset className="yg-fieldset">
       <legend className="yg-label">{label}</legend>
       <SDKRadio
-        className="yg-radio"
+        className={presentation === "swatches" ? "yg-swatch-list" : "yg-radio"}
+        data-aligned={columns !== undefined || undefined}
+        style={columns === undefined ? undefined : { gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
         aria-label={label}
-        direction="col"
         value={value}
         name={name}
         disabled={disabled}
-        onChange={onValueChange}
+        onValueChange={(next) => { if (next !== null) onValueChange(next); }}
       >
-        {options.map((o) => (
-          <SDKRadio.Item key={o.id} value={o.id} disabled={o.disabled}>
-            {o.label}
-          </SDKRadio.Item>
+        {options.map((option) => presentation === "swatches" && "color" in option ? (
+          <div className="yg-swatch-choice" key={option.id} style={{ gridColumn: option.column }}>
+            <SDKRadioItem value={option.id} disabled={option.disabled}
+              aria-label={option.accessibleLabel} style={{ backgroundColor: option.color }} />
+            {columns === undefined && <span className="yg-meta" aria-hidden="true">{option.label}</span>}
+          </div>
+        ) : (
+          <div key={option.id}><label data-disabled={disabled || option.disabled ? "" : undefined}>
+            <div><SDKRadioItem value={option.id} disabled={option.disabled}><RadioIndicator /></SDKRadioItem></div>
+            {option.label}
+          </label></div>
         ))}
       </SDKRadio>
     </fieldset>
@@ -308,6 +473,7 @@ export function Combobox({
   value,
   onValueChange,
   disabled,
+  name,
   help,
   error,
 }: Choices & Pick<FieldInfo, "help" | "error">) {
@@ -346,6 +512,7 @@ export function Combobox({
     <Field {...{ label, help, error }}>
       {(binding) => (
         <div className="yg-combo">
+          {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
           <input
             {...binding}
             disabled={disabled}

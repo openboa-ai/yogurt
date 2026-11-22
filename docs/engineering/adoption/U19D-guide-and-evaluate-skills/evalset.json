@@ -112,6 +112,25 @@
       "critical": true
     },
     {
+      "id": "compose-first-screen",
+      "kind": "outcome",
+      "split": "development",
+      "context": "consumer",
+      "prompt": "A new product needs a screen where someone can search records by name or ID, open a result, then return to the same search and selection. Show how to combine the installed SDK parts on Web and Native. Make an unmatched search recoverable.",
+      "inputs": {
+        "webProject": ".",
+        "nativeProject": "native-consumer"
+      },
+      "expected_skill": "yogurt-build",
+      "assertions": [
+        "The composition starts from the installed record-search pattern.",
+        "Web resolves public search and row bindings from the installed SDK.",
+        "Native resolves installed templates for search and results.",
+        "The host retains query and selected ID and the recovery check includes clearing and focus."
+      ],
+      "critical": false
+    },
+    {
       "id": "build-review-decision",
       "split": "development",
       "kind": "outcome",

@@ -1,0 +1,25 @@
+<import src="yogurt/items/text-field.native"/>
+<import src="yogurt/items/search-field.native"/>
+<import src="yogurt/items/select.native"/>
+<import src="yogurt/items/switch.native"/>
+<column background="background">
+  <scroll grow="1" label="Input controls">
+    <column padding="24" gap="16">
+      <text size="heading">Input controls</text>
+      <row gap="8">
+        <button variant="secondary" on-press="show_text">Text</button>
+        <button variant="secondary" on-press="show_search">Search</button>
+      </row>
+      <if test="{text_mode}"><use template="yg-text-field" label="Project name" value="{text_value}"/></if>
+      <if test="{search_mode}"><use template="yg-search-field" label="Search projects" value="{search_value}"/></if>
+      <use template="yg-switch" label="Notifications" checked="{enabled}"/>
+      <text size="sm">Selected: {choice_value}</text>
+      <use template="yg-select-picker" label="Workspace" value="{choice_value}" expanded="{choices_open}">
+        <menu-item on-press="choose_personal">Personal</menu-item>
+        <menu-item on-press="choose_team">Team</menu-item>
+      </use>
+      <button variant="ghost" on-press="toggle_dark">Change appearance</button>
+      <text size="sm">{appearance_label}</text>
+    </column>
+  </scroll>
+</column>
