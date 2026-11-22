@@ -74,6 +74,9 @@ body {
   outline: 0;
 }
 .catalog-intro { margin-block-end: var(--yg-gap-section); }
+@media (min-width: 48rem) {
+  .yg-page-header.catalog-intro .yg-page-header-title .yg-heading { font-size: var(--boa-size-headline); }
+}
 .preview-tools,
 .preview-caption {
   display: flex;

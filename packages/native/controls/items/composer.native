@@ -10,7 +10,7 @@
           <button variant="ghost" size="icon" icon="x" label="{'Remove ' ++ item.title}" on-press="remove_attachment:{item.id}"/>
         </row>
       </for>
-      <textarea label="{label}" placeholder="{label}" text="{value}" height="56" background="background" on-input="draft_changed"/>
+      <textarea size="lg" label="{label}" placeholder="{label}" text="{value}" height="56" background="background" on-input="draft_changed"/>
       <row gap="8" cross="center">
         <if test="{composer_can_attach}"><button variant="ghost" on-press="choose_attachment">Attach</button></if>
         <if test="{composer_can_choose_tool}"><button variant="secondary" icon="chevron-down" icon-placement="trailing" on-press="choose_tool">{tool_label}</button></if>

@@ -2,7 +2,7 @@
   <card padding="{padding}">
     <column gap="12">
       <column gap="4">
-        <text size="lg">{title}</text>
+        <text><span scale="1.142857143">{title}</span></text>
         <text size="sm" foreground="text_muted">{detail}</text>
       </column>
       <slot/>

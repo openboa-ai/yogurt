@@ -79,3 +79,5 @@ Keep the browser rendering as the starting point for each component. Reuse one s
 Draw the same drawer grip and retain both the close action and the drag threshold. The Native gesture may use the SDK dismissal lifecycle and measures from pointer down and keeps the drawer open if the drag is short or cancelled. Keep existing markup consumers compatible. An empty one-time code has six equivalent neutral slots. Provide visible keyboard focus and show the next digit position consistently on an incomplete code. Keep one editable field, sanitized digits, and host-owned confirmation.
 
 The Native font bundle uses static instances of the approved body and action weights from the same variable font used by the web. Retain the variable master and the installed filenames. Compare text, control sizing and clipping after regenerating the instances.
+
+Use the display size for desktop catalog titles and preserve the compact title size on narrow web pages. Bind Native composer input, card titles and agent metadata to the equivalent web size roles. Check the rendered titles and text bounds independently from font weight and line height.
