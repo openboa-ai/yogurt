@@ -35,8 +35,8 @@ jobs:
           curl -fsS --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:5273/ > /dev/null
           node checks/web-guide-shell.cjs
 
-  native-otp:
-    name: Native OTP consumer
+  native-sdk-consumer:
+    name: Native SDK consumer
     runs-on: macos-15
     timeout-minutes: 15
     steps:
@@ -55,8 +55,8 @@ jobs:
           mkdir "$RUNNER_TEMP/yogurt-zig"
           tar -xf "$RUNNER_TEMP/zig.tar.xz" -C "$RUNNER_TEMP/yogurt-zig" --strip-components=1
           echo "$RUNNER_TEMP/yogurt-zig" >> "$GITHUB_PATH"
-      - name: Install the consumer SDK and run development and packaged OTP
-        run: bash checks/native-otp-build.sh
+      - name: Install the SDK and exercise the development and packaged app
+        run: bash checks/native-sdk-consumer.sh
 
   naming:
     name: Contribution names
@@ -140,7 +140,7 @@ jobs:
 
   required:
     name: Required CI
-    needs: [naming, hygiene, design-sources, native-otp]
+    needs: [naming, hygiene, design-sources, native-sdk-consumer]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 2
@@ -150,8 +150,8 @@ jobs:
           NAMING: ${{ needs.naming.result }}
           HYGIENE: ${{ needs.hygiene.result }}
           DESIGN_SOURCES: ${{ needs.design-sources.result }}
-          NATIVE_OTP: ${{ needs.native-otp.result }}
+          NATIVE_SDK: ${{ needs.native-sdk-consumer.result }}
         shell: bash
         run: |
-          printf 'Contribution names=%s, Repository hygiene=%s, Shared UI sources=%s, Native OTP consumer=%s\n' "$NAMING" "$HYGIENE" "$DESIGN_SOURCES" "$NATIVE_OTP"
-          [[ "$NAMING" == success && "$HYGIENE" == success && "$DESIGN_SOURCES" == success && "$NATIVE_OTP" == success ]]
+          printf 'Contribution names=%s, Repository hygiene=%s, Shared UI sources=%s, Native SDK consumer=%s\n' "$NAMING" "$HYGIENE" "$DESIGN_SOURCES" "$NATIVE_SDK"
+          [[ "$NAMING" == success && "$HYGIENE" == success && "$DESIGN_SOURCES" == success && "$NATIVE_SDK" == success ]]

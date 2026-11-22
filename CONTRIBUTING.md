@@ -45,7 +45,7 @@ GitHub runs **Contribution names** when you open a PR, push commits, or edit its
 
 All changes to the default branch go through a squash PR. Resolve review conversations before merging. The designated code owner reviews changes to CI, ownership, scanner policy, and security reporting. A push check validates the final subject written to the default branch. GitHub Free allows the merger to edit that subject, so keep the default title in the merge dialog.
 
-For a README change, select **Enable auto-merge** on the PR while checks are pending. GitHub squashes the PR once all branch requirements are met. **Required CI** checks that both naming and hygiene jobs finished successfully. **Shared UI sources** reports the token and Native import regressions separately. Check that result when reviewing a change to either source path.
+For a README change, select **Enable auto-merge** on the PR while checks are pending. GitHub squashes the PR once all branch requirements are met. **Required CI** requires contribution names, repository hygiene, Shared UI sources and the Native SDK consumer. Shared UI sources checks the token and SDK source contracts and exercises the built Vite guide. The [Native SDK consumer](checks/fixtures/native-sdk-consumer/README.md) installs, builds and packages one app and verifies representative input, selection and dialog flows.
 
 The format follows [Conventional Commits 1.0](https://www.conventionalcommits.org/en/v1.0.0/). The [component verification record](docs/engineering/controls/component-library/verification.md) describes SDK and renderer coverage.
 

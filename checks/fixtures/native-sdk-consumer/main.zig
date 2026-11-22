@@ -14,7 +14,7 @@ const window_height: f32 = 480;
 
 const app_permissions = [_][]const u8{ native_sdk.security.permission_command, native_sdk.security.permission_view };
 const shell_views = [_]native_sdk.ShellView{
-    .{ .label = canvas_label, .kind = .gpu_surface, .fill = true, .role = "OTP consumer", .accessibility_label = "OTP consumer", .gpu_backend = .metal, .gpu_pixel_format = .bgra8_unorm, .gpu_present_mode = .timer, .gpu_alpha_mode = .@"opaque", .gpu_color_space = .srgb, .gpu_vsync = true },
+    .{ .label = canvas_label, .kind = .gpu_surface, .fill = true, .role = "Yogurt SDK consumer", .accessibility_label = "Yogurt SDK consumer", .gpu_backend = .metal, .gpu_pixel_format = .bgra8_unorm, .gpu_present_mode = .timer, .gpu_alpha_mode = .@"opaque", .gpu_color_space = .srgb, .gpu_vsync = true },
 };
 const shell_windows = [_]native_sdk.ShellWindow{.{
     .label = "main",
@@ -25,19 +25,75 @@ const shell_windows = [_]native_sdk.ShellWindow{.{
 }};
 const shell_scene: native_sdk.ShellConfig = .{ .windows = &shell_windows };
 
-const otp = @import("yogurt/precision-inputs.zig");
-pub const Model = struct { editor: otp.CodeEditor = .{} };
-pub const Msg = union(enum) { edit: canvas.TextInputEvent, other };
+const inputs = @import("yogurt/precision-inputs.zig");
+const layers = @import("yogurt/views/layers.zig");
+
+pub const Model = struct {
+    editor: inputs.CodeEditor = .{},
+    rating: u32 = 0,
+    save_count: u32 = 0,
+    confirming: bool = false,
+};
+pub const Msg = union(enum) {
+    edit: canvas.TextInputEvent,
+    rate: u32,
+    review,
+    cancel,
+    save,
+    other,
+};
 const Ui = canvas.Ui(Msg);
+
+fn rate(score: u32) Msg {
+    return .{ .rate = score };
+}
+
+fn ratingLabel(score: u32) []const u8 {
+    return switch (score) {
+        1 => "Rating: 1 of 5",
+        2 => "Rating: 2 of 5",
+        3 => "Rating: 3 of 5",
+        4 => "Rating: 4 of 5",
+        5 => "Rating: 5 of 5",
+        else => "No rating selected",
+    };
+}
+
 fn view(ui: *Ui, m: *const Model) Ui.Node {
     return ui.column(.{ .gap = 12 }, .{
         ui.button(.{ .on_press = .other }, "Before"),
-        otp.codeView(Msg, ui, &m.editor, "Verification code", "Enter six digits", Ui.inputMsg(.edit)),
+        inputs.codeView(Msg, ui, &m.editor, "Verification code", "Enter six digits", Ui.inputMsg(.edit)),
         ui.button(.{ .on_press = .other }, "After"),
+        inputs.ratingView(Msg, ui, "Experience rating", m.rating, false, rate),
+        ui.text(.{}, ratingLabel(m.rating)),
+        ui.text(.{}, switch (m.save_count) {
+            0 => "Rating not saved",
+            1 => "Rating saved once",
+            else => "Rating saved more than once",
+        }),
+        ui.button(.{ .on_press = .review, .disabled = m.rating == 0 }, "Review rating"),
+        if (m.confirming)
+            layers.dialogView(Msg, ui, "Save rating?", .cancel, 1, ui.column(.{ .gap = 8 }, .{
+                ui.text(.{}, ratingLabel(m.rating)),
+                ui.button(.{ .on_press = .save }, "Save rating"),
+            }))
+        else
+            ui.column(.{}, .{}),
     });
 }
+
 fn update(m: *Model, msg: Msg, _: *native_sdk.Effects(Msg)) void {
-    switch (msg) { .edit => |event| otp.editCode(&m.editor, event), .other => {} }
+    switch (msg) {
+        .edit => |event| inputs.editCode(&m.editor, event),
+        .rate => |score| m.rating = score,
+        .review => m.confirming = true,
+        .cancel => m.confirming = false,
+        .save => {
+            m.save_count += 1;
+            m.confirming = false;
+        },
+        .other => {},
+    }
 }
 const YogurtApp = native_sdk.UiApp(Model, Msg);
 
@@ -50,6 +106,7 @@ pub fn main(init: std.process.Init) !void {
     // heap-allocates and constructs everything in place, so neither
     // ever rides the stack. Mutate `app_state.model` through the
     // pointer before running if boot state is not the default.
+    inputs.registerRatingIcons();
     const app_state = try YogurtApp.create(std.heap.page_allocator, .{
         .name = "consumer",
         .scene = shell_scene,
