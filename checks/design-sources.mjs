@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
+import { checkProject } from "../bin/check-project.mjs";
 import { generateTokens } from "../scripts/tokens/generate.mjs";
 import { dimension } from "../scripts/tokens/dimension.mjs";
 
@@ -91,4 +92,19 @@ test("the hosted Vite guide composes Yogurt instead of embedding a separate UI",
     assert.doesNotMatch(source, /<(?:button|input|select|textarea|a|details|h[1-6]|p)(?=[\s>])/,
       path + " should use the matching public Yogurt component");
   }
+});
+
+test("Native consumer checks distinguish the installed SDK from edits at the same path", t => {
+  const consumer = scratch(t);
+  const config = {surfaces: {desktop: {target: "native", root: "src"}}};
+  writeFileSync(join(consumer, "yogurt.config.json"), JSON.stringify(config));
+  const cli = join(kit, "bin/yogurt.mjs");
+  for (const id of ["search-field", "input-otp"]) {
+    execFileSync(process.execPath, [cli, "add", id, "--target", "native", "--dir", consumer]);
+  }
+  writeFileSync(join(consumer, "src/app.native"), '<import src="yogurt/items/search-field.native"/>\n');
+  assert.match(checkProject(consumer, kit), /1 declared surfaces/);
+  const theme = join(consumer, "src/yogurt/theme.zig");
+  writeFileSync(theme, read(theme) + "\n");
+  assert.throws(() => checkProject(consumer, kit), /src\/yogurt\/theme\.zig:\d+ · palette/);
 });

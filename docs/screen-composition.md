@@ -1,6 +1,6 @@
 # Desktop screen composition
 
-Design draft for review. Use this guide to choose a Yogurt composition before styling a screen. Use the [component selection index](component-composition.md) for individual controls and the installed catalog for exact imports, properties and renderer support.
+Use this guide to choose a Yogurt composition before styling a screen. Use the [component selection index](component-composition.md) for individual controls and the installed catalog for exact imports, properties and renderer support.
 
 ## Start from the task
 
@@ -61,6 +61,30 @@ Values are design pixels on Web and refer to the equivalent role when mapped to 
 | Settings | PageHeader and grouped fields. Separate immediate preferences from changes that require Save. | Changing an immediate preference affects only that setting. An invalid draft keeps input and reveals the local error and recovery. |
 | Review and inspection | Main work and metadata stay in context. Use a secondary pane or Sheet for artifacts and run steps. Pair summaries with the original detail. | Switch between overview and evidence without losing the selected item. Distinguish loading, unavailable and inspected states. |
 
+## Worked compositions
+
+From the consumer root run `yogurt add <block-id> --target web` or use `--target native`. The [block catalog](../catalog/blocks.json) identifies the editable source. The [installation guide](using-yogurt.md#editable-blocks) explains where it lands. Resolve each supporting control in the target you are using.
+
+### Collections and detail
+
+Start with `collection-browser` when the task begins with search. Put the collection title, labeled query and optional filters on one reading edge. Use ListRow for an item to open. Use a disclosure for related detail that stays in the collection. Expand into a separate detail view or inspector when the record needs substantial space. Give the detail a heading and a clear path back.
+
+Keep query, stable selected ID and list position in the host above the detail view. If the installed collection recipe owns its query locally, keep it mounted or move the query into the host before separating the views. Include the stable ID in matching when people search by ID. On a narrow window, change which region is shown while preserving those values. In markup, register the installed control sources and route their messages to the same host model. Use the public Web entries for the corresponding fields, rows, headings and results.
+
+Check matching by name and ID, open a record, then return focus to its result. Keep the query visible when a search yields nothing. Explain the result and let the person clear that query. Return focus to the search field when clearing it. Native markup can bind the installed SearchField's optional `autofocus` argument to that host state. An empty collection and a failed read have their own copy and recovery.
+
+### Settings
+
+Start with `project-settings` for a saved preference group. Use one heading for the group, labels beside or above fields according to the control and a shared action group at the end. Bind saved and draft values separately. Use a switch for an immediate binary preference and place a Save action with changes that remain a draft.
+
+Check an invalid draft, a successful save and a failed save that preserves inputs. When wrapping the actions in a narrow window, keep their order and the error close to the affected input.
+
+### Conversation and workspace
+
+Start with `conversation-panel` for the transcript and composer. Add `agent-workspace` when switching threads or inspecting work belongs to the same task. Use SidebarLayout for persistent destinations. Give the conversation the main reading region and keep the composer anchored to the transcript it submits to. Keep thread identity, draft, scroll intent and interruption facts in the host.
+
+Exercise send, a pending or interrupted reply and return to an earlier thread. Readable status and recovery belong by the affected reply. At narrow widths, disclose the sidebar or inspector and preserve the selected conversation and draft.
+
 ## Put the guidance to work
 
 1. Resolve the task and renderer against the pinned SDK. Start with a matching editable block when its states and host inputs fit. Compose supported parts otherwise.
@@ -79,7 +103,7 @@ Compare two peer screens at normal desktop size and a narrow desktop window. Ver
 ## Apply this to the Yogurt guide
 
 - **Shared header.** Use a persistent shell with a home link, addressable section destinations and the theme action in its own slot. The same destination order carries into a compact menu.
-- **Brand home.** Project mark beside the Yogurt title, followed by the slogan and the description. Group entry links next to the introduction. Continue into the existing OpenBoa story.
+- **Brand home.** Identify Yogurt as OpenBoa’s design system, then show the title, slogan and plain-language description. Use the project mark in the shared header and give the cover illustration room of its own. Continue into the OpenBoa story.
 - **Foundations and design sources.** Share one content width and title rhythm, then use in-page navigation, readable sections and named asset links.
 - **Component catalog and detail.** Use a searchable grouped directory, PageHeader, one live preview, and guidance in purpose → anatomy → variants → states → platform order. Show supported motion where the control is used.
 - **Project use.** Organize installation and verified recipes by renderer. Route old standalone demo addresses to the relevant supported guidance.

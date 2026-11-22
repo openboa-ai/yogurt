@@ -203,7 +203,7 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
       continue;
     }
     const pattern = catalog.patterns.find(item => item.id === id);
-    if (!pattern) throw Error(`Unknown installed pattern or component: ${id}; it may be unavailable in this SDK version. Use describe-pattern.mjs --list or yogurt list.`);
+    if (!pattern) throw Error(`Unknown installed pattern or component: ${id}. Review ${binding.design} for the task map, run node "${binding.patterns}" --list for pattern IDs, or use yogurt list for component and block IDs.`);
     for (const key of pattern.components) {
       if (!knownComponents.has(key)) throw Error(`Pattern ${id} references unlisted component ${key}.`);
       components.add(key);
@@ -216,9 +216,13 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
     const component = inventory.find(item => item.id === id);
     const guidance = component.guidance ?? null;
     if (target === "web") return { ...webComponent(binding, manifest, id), guidance };
-    const template = optionalFile(binding.kit, `packages/native/controls/items/${id}.native`);
-    if (!template) throw Error(`The installed SDK is missing the Native template for ${id}.`);
+    const template = component.nativeMarkup === false
+      ? null
+      : optionalFile(binding.kit, `packages/native/controls/items/${id}.native`);
     const entry = { id, template, install: `yogurt add ${id} --target native`, guidance };
+    if (!template && (component.nativeMarkup !== false || !component.nativeView)) {
+      throw Error(`The installed SDK is missing the Native template for ${id}.`);
+    }
     if (!component.nativeView) return { ...entry, entry: template };
     const { module, symbol } = component.nativeView;
     if (!/^(?:[a-z][a-z0-9-]*\/)*[a-z][a-z0-9-]*\.zig$/.test(module) || !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(symbol)) {
@@ -266,7 +270,7 @@ function agentGuide(binding) {
   return [
     `## Yogurt ${renderer} UI`,
     "",
-    `This project uses Yogurt \`${version}\`. Start UI changes with \`${local(binding.design)}\` and \`${path("docs/design-system-rules.md")}\`.`,
+    `This project uses Yogurt \`${version}\`. Start with the user task and open the task map in \`${local(binding.design)}\`. Follow \`${path("docs/design-system-rules.md")}\` for shared UI.`,
     `Find the current pattern with \`node "${local(binding.patterns)}" <pattern-id> ${target}\`. Read the relevant section of \`${local(binding.usage)}\` for setup and verification.`,
     "Use the public bindings below. A declaration module supplies types and carries no public import name of its own.",
     "The host owns data, permissions and effects. Check the normal and recovery paths in the target renderer.",
@@ -293,11 +297,16 @@ if (process.argv[1] && pathToFileURL(realpathSync(process.argv[1])).href === imp
       (option && !["--inspect", "--agent-guide"].includes(option)) || extra.length)) {
       throw Error("Usage: node resolve-sdk.mjs <project-root> <web|native> [--inspect | --agent-guide | --lookup <id> [<id> ...]]");
     }
-    const binding = option === "--inspect" ? inspectSdk(root, target) : resolveSdk(root, target);
+    let binding;
+    try {
+      binding = option === "--inspect" ? inspectSdk(root, target) : resolveSdk(root, target);
+    } catch (error) {
+      throw Error(`${error.message} Check the consumer’s compatible SDK and plugin pins. Use --inspect to diagnose a declared installation.`, { cause: error });
+    }
     if (option === "--agent-guide") console.log(agentGuide(binding));
     else console.log(JSON.stringify(option === "--lookup" ? lookupSdk(binding, extra) : binding));
   } catch (error) {
-    console.error(`${error.message} Install or restore the consumer's compatible SDK and plugin pins.`);
+    console.error(error.message);
     process.exitCode = 1;
   }
 }

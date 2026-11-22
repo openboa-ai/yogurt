@@ -87,6 +87,15 @@ try {
   const unknown = result(web, "web", "--lookup", "not-an-installed-component");
   assert.equal(unknown.status, 1);
   assert.match(unknown.stderr, /Unknown installed pattern or component/);
+  assert.match(unknown.stderr, /DESIGN\.md.*--list/);
+  assert.doesNotMatch(unknown.stderr, /Check the consumer’s compatible/);
+  const composition = readFileSync(join(observed.kit, "docs/screen-composition.md"), "utf8");
+  assert.match(composition, /### Collections and detail/);
+  assert.match(composition, /### Settings/);
+  assert.match(composition, /### Conversation and workspace/);
+  const find = result(web, "web", "--lookup", "pattern.find-records", "top", "list-row");
+  assert.equal(find.status, 0, find.stderr);
+  assert.match(find.stdout, /@openboa\/yogurt\/top/);
   const sdkManifest = JSON.parse(readFileSync(join(observed.kit, "package.json"), "utf8"));
   const missingTypes = join(observed.kit, sdkManifest.exports["./*"].types.replace("*", "receipt"));
   renameSync(missingTypes, missingTypes + ".disabled");
@@ -101,6 +110,7 @@ try {
   const incompatible = result(previous, "web");
   assert.equal(incompatible.status, 1);
   assert.match(incompatible.stderr, /SDK 0\.1\.0-local\.15.*Supported pairs/);
+  assert.match(incompatible.stderr, /--inspect/);
   const incomplete = inspect(previous, "web");
   assert.equal(incomplete.version, "0.1.0-local.15");
   assert.equal(incomplete.status, "missing-resources");

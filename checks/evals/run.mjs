@@ -135,12 +135,28 @@ async function provision(project, arm, item) {
   await mkdir(join(project, ".agents", "skills"), { recursive: true });
   await write(join(project, "fixture.json"), item.inputs);
   const legacy = item.id === "decide-installed-only";
+  const firstScreen = item.id === "compose-first-screen";
   if (legacy && legacySdkDigest !== item.fixture.sdkSha256) throw Error("Supply the recorded legacy package with --legacy-sdk.");
-  if (["decide-sidebar-composition", "build-review-decision"].includes(item.id) && !archive) {
+  if ((firstScreen || ["decide-sidebar-composition", "build-review-decision"].includes(item.id)) && !archive) {
     throw Error("Supply --sdk for this installed web case.");
   }
   const packageSource = legacy ? legacyArchive : archive;
   const installation = packageSource && await installSdk(project, packageSource, legacy ? legacySdkDigest : sdkDigest);
+  if (firstScreen) {
+    const native = join(project, "native-consumer");
+    const vendor = join(native, "vendor/yogurt");
+    await mkdir(vendor, { recursive: true });
+    await cp(archive, join(native, "vendor/yogurt.tgz"));
+    execFileSync("tar", ["-xzf", archive, "--strip-components=1", "-C", vendor]);
+    await write(join(native, "yogurt.config.json"), {
+      version: installation.version,
+      surfaces: { desktop: { target: "native", root: "src" } },
+      nativeSdk: {
+        root: "vendor/yogurt", archive: "vendor/yogurt.tgz",
+        revision: "sha256:" + sdkDigest, version: installation.version,
+      },
+    });
+  }
   if (issueCases.has(item.id)) {
     const configPath = join(project, "yogurt.config.json");
     const config = installation ? await json(configPath) : {};

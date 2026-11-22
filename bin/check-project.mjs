@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, realpathSync, statSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, realpathSync, statSync } from "node:fs";
 import { resolve, relative, sep, extname } from "node:path";
 
 // A consumer opts in by declaring its presentation roots. Its data, images,
@@ -77,9 +77,16 @@ export function checkProject(directory, kit) {
           )
         )
           continue;
-        // The native token source is generated from the pin and shared by every installed item.
-        if (rel.replaceAll(sep, "/").endsWith("/yogurt/tokens.zig")) continue;
-        const source = readFileSync(path, "utf8");
+        const bytes = readFileSync(path);
+        // Policy applies to consumer source. Only byte-identical Native SDK files
+        // installed by Yogurt retain the SDK's own palette and rendering rules.
+        const installed = surface.target === "native" &&
+          /(?:^|\/)src\/yogurt\/(.+\.zig)$/.exec(rel.replaceAll(sep, "/"));
+        if (installed) {
+          const original = resolve(kit, "packages/native/controls", installed[1]);
+          if (existsSync(original) && bytes.equals(readFileSync(original))) continue;
+        }
+        const source = bytes.toString("utf8");
         files++;
         if (
           surface.target === "web" &&

@@ -10,14 +10,16 @@ Start with what a person came to do. Yogurt gives them familiar controls, langua
 
 ## Find the task
 
-For desktop screens, start with the [composition draft](docs/screen-composition.md) and look up the chosen parts in the [component selection index](docs/component-composition.md).
+For desktop screens, start with the [screen composition guide](docs/screen-composition.md) and look up the chosen parts in the [component selection index](docs/component-composition.md).
 
-| The person wants to… | Open this pattern |
+| The person wants to… | Start here |
 | --- | --- |
-| Find one item in a collection | `pattern.find-records` |
+| Search a collection and return from a detail | `pattern.find-records` and the [collection browser recipe](docs/screen-composition.md#collections-and-detail) |
 | Understand a record, its source and how current it is | `pattern.inspect-record` |
 | Make a decision that changes something | `pattern.review-decision` |
 | Find out what happened after a command was sent | `pattern.track-request` |
+| Adjust preferences or save a group of changes | [Settings composition](docs/screen-composition.md#settings) |
+| Read a conversation and respond in a workspace | [Conversation composition](docs/screen-composition.md#conversation-and-workspace) |
 
 Run `node scripts/describe-pattern.mjs --list` from the installed SDK root. For example, `node scripts/describe-pattern.mjs pattern.review-decision web` returns the product inputs, parts, state rules, copy, keyboard behavior and acceptance examples. The selected target reports installed file availability alongside the documented support level. Record the chosen pattern IDs and the actual renderer evidence alongside the project's intent. [Pattern catalog](catalog/patterns.json)
 

@@ -28,6 +28,7 @@ try {
   assert.match(entries.find(item => item.id === "combobox").guidance.useWhen, /searchable/);
   assert.deepEqual(entries.find(item => item.id === "accordion").guidance, inventory.find(item => item.id === "accordion").guidance ?? null);
   assert.equal(entries.find(item => item.id === "input-otp")?.symbol, "codeView");
+  assert.equal(entries.find(item => item.id === "input-otp")?.template, null);
   assert.equal(entries.find(item => item.id === "rating")?.symbol, "ratingView");
   for (const { id, nativeView } of views) {
     const item = entries.find(entry => entry.id === id);

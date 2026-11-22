@@ -1,6 +1,6 @@
 # Component selection index
 
-Design draft for review. Use stable IDs below to resolve the exact Web or Native entry in the installed catalog. Read [desktop screen composition](screen-composition.md) first for shell, typography, gaps and action order. Each row explains a choice or combination. The catalog owns the API, individual usage guidance, and renderer availability.
+Use stable IDs below to resolve the exact Web or Native entry in the installed catalog. Read [desktop screen composition](screen-composition.md) first for shell, typography, gaps and action order. Each row explains a choice or combination. The catalog owns the API, individual usage guidance, and renderer availability.
 
 ## Layout and foundations
 
@@ -97,7 +97,7 @@ Use these when the specialized interaction is part of the task. Keep the surroun
 
 ## Editable screen recipes
 
-Choose from the [block catalog](../catalog/blocks.json). A recipe is an editable starting point. Keep shared control behavior and supply the selected object's actual data, access and effects from the product.
+Follow the [worked compositions](screen-composition.md#worked-compositions) for placement and behavior. Choose from the [block catalog](../catalog/blocks.json). A recipe is an editable starting point. Keep shared control behavior and supply the selected object's actual data, access and effects from the product.
 
 | IDs | When to start with them |
 | --- | --- |

@@ -7,6 +7,20 @@ const correct = `function seriesRows(observations,canRead) {
   return canRead ? observations.map(({time,value}) => ({time,label:value===null?"Unavailable":String(value)})) : [];
 }`;
 
+test("the first screen needs both installed target bindings and host recovery", () => {
+  const grade = plan => outcomeGraders["compose-first-screen"](JSON.stringify(plan));
+  const plan = {
+    pattern: "pattern.find-records",
+    web: ["@openboa/yogurt/search-field", "@openboa/yogurt/list-row"],
+    native: ["yg-search-field", "yg-list"],
+    stateOwner: "host",
+    retains: ["query", "selectedId"],
+    recovery: "Clear the unmatched query and check focus returns to search.",
+  };
+  assert.deepEqual(grade(plan), [true, true, true, true]);
+  assert.deepEqual(grade({ ...plan, native: plan.web, recovery: { toString: null } }), [true, true, false, false]);
+});
+
 test("checks zero, missing values, ordering, denied access and frozen inputs", () => {
   const grade = answer => gradeCase(series, { status: "completed", answer });
   assert.equal(grade(correct).status, "passed");
