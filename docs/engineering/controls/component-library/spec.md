@@ -116,7 +116,7 @@ Use one set of authored frames for web and Zig. Verify a fully closed frame and 
 
 ## Eye and body acting · local follow-up, revision 6
 
-The owner asked to implement the approved eye-led 2D performance after the reference study. Kai and Sol retain their own artwork and colors. A turn couples an early gaze with a later body response, a narrower far eye and a wider near eye. The same flat path carries the notch throughout. Both avatars have a restrained version for roster sizes. The six host states and their text labels keep their existing meaning.
+Kai and Sol use eye-led 2D motion and retain their artwork and colors. A turn couples an early gaze with a later body response, a narrower far eye and a wider near eye. The same flat path carries the notch throughout. Both avatars have a restrained version for roster sizes. The six host states and their text labels keep their existing meaning.
 
 Use authored 2D poses to drive the original outline and two eye shapes. The web renderer can hand pose interpolation to the browser, pause outside the visible view, and blend state changes from the displayed pose. Archived portraits and the motion preference retain the neutral face. Rapid status changes and interruption preserve the current pose and the newest label. The views perform no service effects.
 
