@@ -17,21 +17,25 @@ test ! -e sdk/packages/native/controls/sdk-patches
 test ! -e sdk/bin/native-build.mjs
 fixture="$kit/checks/fixtures/native-otp"
 mkdir app-workspace
-cp -R "$fixture/package.json" "$fixture/pnpm-workspace.yaml" "$fixture/pnpm-lock.yaml" "$fixture/patches" app-workspace/
-npx --yes pnpm@10.24.0 --dir app-workspace install --frozen-lockfile --ignore-scripts
-export NATIVE_SDK_PATH="$scratch/app-workspace/node_modules/@native-sdk/cli"
-export PATH="$scratch/app-workspace/node_modules/.bin:$PATH"
-native init app-workspace/consumer --template zig-core --framework "$NATIVE_SDK_PATH"
-cp "$fixture/main.zig" app-workspace/consumer/src/main.zig
-# Keep the consumer on its declared Zig package dependency in both build modes.
-(cd app-workspace/consumer && native eject .)
-yogurt() { node sdk/bin/yogurt.mjs "$@"; }
-yogurt add input-otp --target native --dir app-workspace/consumer
-yogurt add input-otp --target native --dir app-workspace/consumer
-test ! -e app-workspace/consumer/src/yogurt/items/input-otp.native
-test ! -e app-workspace/consumer/src/yogurt/input-otp.zig
+export YOGURT_KIT="$scratch/sdk"
+# Execute the setup in the shipped guide from an empty consumer workspace.
+awk '
+  /^<!-- native-otp-setup -->$/ { setup = 1; next }
+  setup && /^```sh$/ { code = 1; next }
+  code && /^```$/ { exit }
+  code { print }
+' "$YOGURT_KIT/packages/native/README.md" >"$scratch/setup.sh"
+test -s "$scratch/setup.sh"
+cd app-workspace
+source "$scratch/setup.sh"
+for file in package.json pnpm-workspace.yaml pnpm-lock.yaml patches/native-sdk-cli-0.11.1.patch; do
+  cmp "../$file" "$fixture/$file"
+done
+cmp src/main.zig "$fixture/main.zig"
+node "$YOGURT_KIT/bin/yogurt.mjs" add input-otp --target native
+test ! -e src/yogurt/items/input-otp.native
+test ! -e src/yogurt/input-otp.zig
 
-cd app-workspace/consumer
 cp build.zig.zon "$scratch/original.zon"
 manifest_hash="$(shasum -a 256 "$NATIVE_SDK_PATH/build.zig" "$NATIVE_SDK_PATH/src/primitives/canvas/widgets.zig" "$NATIVE_SDK_PATH/src/primitives/canvas/widget_render_controls.zig")"
 otp_scenario() {

@@ -34,6 +34,8 @@ The macOS OTP consumer declares the exact Native CLI version and source patch in
 
 Required CI exercises a fresh package install, the typed OTP in a running development app, and a packaged app built with the app-owned Zig dependency. Focus verification compares the resting, click, Tab and blur captures. Verify that the app's declared SDK dependency and its source files stay unchanged during the build, and that the Yogurt archive contains the component and its tokens.
 
+The packaged Native guide links to an immutable revision of the app-owned OTP SDK setup and gives a runnable first-install example. The consumer check executes that setup from the packed guide in a fresh directory, then verifies the standard Native development and release paths. The application owns the downloaded pin and the resulting SDK.
+
 ### Select when open
 
 The owner reported that the opened Select looks out of place. Apply requirements 1–3 and 6 to the option list in the web SDK, component gallery and brand guide. Align option text to the field value, match the field width, and leave a 4 px gap. Use an opaque material surface, a quiet active row and a trailing ink-blue check for the current value. Keep the field and rows at least 44 px tall on touch screens. The list can open above a field near the bottom of a viewport and scroll through longer choices.

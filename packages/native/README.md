@@ -16,13 +16,32 @@ The Native installer includes `src/yogurt/interface-motion.zig` for animated sur
 
 ### Native SDK dependency
 
-The app pins its Native SDK and uses the standard Native CLI. The typed OTP requires a framework that exposes `WidgetStyle.empty_focus_cell` and paints that cell on focus. Use an SDK release or a pinned SDK source revision that implements this capability. For an app-owned Zig build, point the `native_sdk` dependency in `build.zig.zon` at that installed framework. For a Native CLI-generated build, set `NATIVE_SDK_PATH` to the same framework at setup.
+The app pins its Native SDK and uses the standard Native CLI. The typed OTP requires a framework that exposes `WidgetStyle.empty_focus_cell` and paints that cell on focus. The [verified macOS consumer setup](https://github.com/openboa-ai/yogurt/tree/b0628ced3532700a1672c47bfd20d56be05a38e3/checks/fixtures/native-otp) pins Native SDK 0.11.1 and the focus patch in the app's pnpm lockfile.
+
+Start in an empty workspace with Node.js, Zig 0.16.0 and `curl` on PATH. Set `YOGURT_KIT` to the absolute directory of the installed Yogurt package or unpacked SDK archive. The setup below installs the app's own SDK and creates a sample app with an app-owned Zig manifest.
+
+<!-- native-otp-setup -->
+```sh
+native_fixture=https://raw.githubusercontent.com/openboa-ai/yogurt/b0628ced3532700a1672c47bfd20d56be05a38e3/checks/fixtures/native-otp
+mkdir -p patches
+for file in package.json pnpm-workspace.yaml pnpm-lock.yaml patches/native-sdk-cli-0.11.1.patch; do
+  curl -fsSL "$native_fixture/$file" -o "$file"
+done
+npx --yes pnpm@10.24.0 install --frozen-lockfile --ignore-scripts
+export NATIVE_SDK_PATH="$PWD/node_modules/@native-sdk/cli"
+export PATH="$PWD/node_modules/.bin:$PATH"
+native init consumer --template zig-core --framework "$NATIVE_SDK_PATH"
+curl -fsSL "$native_fixture/main.zig" -o consumer/src/main.zig
+node "$YOGURT_KIT/bin/yogurt.mjs" add input-otp --target native --dir consumer
+cd consumer
+native eject .
+```
+
+Start development with `native dev .`. Stop the development process before building and packaging a release:
 
 ```sh
-npx yogurt add input-otp --target native
-native dev .
 native build .
-native package --target macos --binary zig-out/bin/my-app --output my-app.app
+native package --target macos --binary zig-out/bin/consumer --output consumer.app
 ```
 
 Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`.
