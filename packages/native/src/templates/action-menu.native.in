@@ -1,0 +1,12 @@
+<template name="yg-action-menu" args="label">
+  <row main="start">
+    <stack>
+      <button variant="secondary" icon="chevron-down" icon-placement="trailing" on-press="open_choices">{label}</button>
+      <if test="{is_open}">
+        <dropdown-menu anchor="below" anchor-offset="@{offset-layer}" width="@{anchored-menu-min-width}" padding="@{inset-layer}" label="{label}" on-dismiss="dismiss">
+          <slot/>
+        </dropdown-menu>
+      </if>
+    </stack>
+  </row>
+</template>

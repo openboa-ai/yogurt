@@ -1,4 +1,4 @@
-/* Generated from design/tokens/brand.json by scripts/brand/export-css.mjs. */
+/* Generated from design/tokens/brand.json by scripts/tokens/brand.mjs. */
 :root {
   --boa-palette-hues: neutral paper mist slate blue indigo violet purple magenta rose red coral orange ochre yellow lime green sage teal cyan earth gray-green;
   --boa-spacing-steps: 2 4 6 8 10 12 14 16 18 20 24 32 48 64;

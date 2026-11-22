@@ -72,19 +72,17 @@ function nativeInstallation(root, expected, inspecting) {
     const archive = inside(root, expected.archive);
     const digest = createHash("sha256").update(readFileSync(archive)).digest("hex");
     if ("sha256:" + digest !== revision) throw Error("The Native SDK archive digest differs from the declared pin.");
-    const motionName = "catalog/motion-components.json";
     const archiveMembers = new Set(execFileSync("tar", ["-tzf", archive], { encoding: "utf8" }).split("\n"));
-    const motionInArchive = archiveMembers.has("package/" + motionName);
-    const extractedMotion = optionalFile(kit, motionName);
-    if (motionInArchive !== Boolean(extractedMotion) || (motionInArchive &&
-        !execFileSync("tar", ["-xOf", archive, "package/" + motionName]).equals(readFileSync(extractedMotion)))) {
-      throw Error(`The Native SDK extraction differs from its archive at ${motionName}.`);
+    for (const name of ["catalog/motion-components.json", "bin/install/native.mjs", "bin/install/files.mjs"]) {
+      const present = archiveMembers.has("package/" + name);
+      const file = optionalFile(kit, name);
+      if (present !== Boolean(file) || (present &&
+          !execFileSync("tar", ["-xOf", archive, "package/" + name]).equals(readFileSync(file)))) {
+        throw Error(`The Native SDK extraction differs from its archive at ${name}.`);
+      }
     }
-    const members = inspecting
-      ? new Set(execFileSync("tar", ["-tzf", archive], { encoding: "utf8" }).split("\n"))
-      : null;
     for (const name of ["package.json", ...files, "catalog/components.json"]) {
-      if (members && name !== "package.json" && !members.has("package/" + name) && !optionalFile(kit, name)) continue;
+      if (inspecting && name !== "package.json" && !archiveMembers.has("package/" + name) && !optionalFile(kit, name)) continue;
       const archived = execFileSync("tar", ["-xOf", archive, "package/" + name]);
       if (!archived.equals(readFileSync(inside(kit, name)))) {
         throw Error(`The Native SDK extraction differs from its archive at ${name}.`);
@@ -215,11 +213,20 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
   }
 
   const entries = [...components].map(id => {
-    const guidance = inventory.find(item => item.id === id)?.guidance ?? null;
+    const component = inventory.find(item => item.id === id);
+    const guidance = component.guidance ?? null;
     if (target === "web") return { ...webComponent(binding, manifest, id), guidance };
     const template = optionalFile(binding.kit, `packages/native/controls/items/${id}.native`);
     if (!template) throw Error(`The installed SDK is missing the Native template for ${id}.`);
-    return { id, template, install: `yogurt add ${id} --target native`, guidance };
+    const entry = { id, template, install: `yogurt add ${id} --target native`, guidance };
+    if (!component.nativeView) return { ...entry, entry: template };
+    const { module, symbol } = component.nativeView;
+    if (!/^(?:[a-z][a-z0-9-]*\/)*[a-z][a-z0-9-]*\.zig$/.test(module) || !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(symbol)) {
+      throw Error(`Invalid installed Native view for ${id}.`);
+    }
+    const source = optionalFile(binding.kit, `packages/native/controls/${module}`);
+    if (!source) throw Error(`Missing installed Native view for ${id} at ${module}.`);
+    return { ...entry, entry: source, symbol, importStatement: `const ${symbol} = @import("yogurt/${module}").${symbol};` };
   });
   for (const item of motionEntries) {
     const exported = manifest.exports?.["./motion-patterns"];
@@ -269,11 +276,11 @@ function agentGuide(binding) {
     "| --- | --- |",
     ...catalog.patterns.map(({ name, id }) => `| ${name} | \`${id}\` |`),
     "",
-    target === "web" ? "| Exported names | Installed import |" : "| Component | Installed template |",
+    target === "web" ? "| Exported names | Installed import |" : "| Component | Native entry |",
     "| --- | --- |",
     ...index.components.map(item => target === "web"
       ? `| \`${item.names.join(", ")}\` | \`${item.entry}\` |`
-      : `| \`${item.id}\` | \`${local(item.template)}\` |`),
+      : `| \`${item.id}\` | \`${item.importStatement ?? local(item.entry)}\` |`),
     "",
     `Look up other controls in \`${path("catalog/components.json")}\`. Run \`node "${local(binding.check)}" check\` from this project before review.`,
   ].join("\n");

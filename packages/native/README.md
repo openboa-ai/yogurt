@@ -2,6 +2,10 @@
 
 Use `yogurt add <id> --target native` to install a markup template, its Zig source entry, the theme and fonts. Pass the same material, appearance and semantic roles as the web. The host owns its typed model, user preferences and effects. [Installation](../../docs/using-yogurt.md) · [Running macOS example](../../examples/native-ui/README.md) · [Target evidence](../../docs/engineering/controls/component-library/verification.md)
 
+The installer prints the entry to use. Author markup in `src/templates/*.native.in` and reference a layout token as `@{gap-stack}`. Run `npm run tokens` in the checkout to generate `controls/items/*.native` at their public import paths. `controls/views` holds the typed carousel and layer renderers. The component catalog selects the default for each ID. The Native guide installs those entries through the same code path as a product. It supplies sample content, callbacks and the clock.
+
+`views/carousel.zig` accepts the current slide, its position label, available navigation actions and transition phase. `views/layers.zig` supplies the dialog, sheet, action menu and popover. Pass the panel content or menu items and the current presentation state. The host decides which action to perform.
+
 ## Interface motion
 
 The Native installer includes `src/yogurt/interface-motion.zig` for animated surfaces and progress. Retain a `Tween` in the host model. Initialize it with `snap`, retarget it from the last displayed value after a state change, and call `advance` on presented frames while it is active. Use one monotonic clock for both calls. Snap to the target when motion is reduced or the view leaves. Use the shared `travel_ms`, `panel_ms`, `settle_curve` and `arrive_curve` from the Zig tokens.

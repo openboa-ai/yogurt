@@ -50,7 +50,7 @@ pub fn codeView(comptime Msg: type, ui: *canvas.Ui(Msg), editor: *const CodeEdit
             .style_tokens = .{ .background = if (active_slot == index) .surface_pressed else .surface_subtle },
         }, .{ui.text(.{ .size = .heading, .text_alignment = .center }, digit)});
     }
-    return ui.column(.{ .gap = 6, .max_width = tokens.otp_control_max_width }, .{
+    return ui.column(.{ .gap = tokens.gap_control, .max_width = tokens.otp_control_max_width }, .{
         ui.text(.{ .size = .sm }, title),
         ui.stack(.{}, .{
             ui.row(.{ .gap = tokens.otp_slot_gap }, @as([]const canvas.Ui(Msg).Node, &slots)),

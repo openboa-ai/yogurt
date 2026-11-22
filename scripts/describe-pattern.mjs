@@ -1,6 +1,7 @@
 import { readFile, realpath, stat } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { nativeEntry } from "../bin/install/native.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const catalogPath = "catalog/patterns.json";
@@ -21,6 +22,12 @@ async function readCatalog() {
   }
   if (!Array.isArray(catalog.patterns) || !Array.isArray(catalog.components)) {
     throw Error(`Invalid ${catalogPath}. Expected lists of patterns and components.`);
+  }
+  const inventory = JSON.parse(await readFile(resolve(root, "catalog/components.json"), "utf8"));
+  const byId = new Map(inventory.map(item => [item.id, item]));
+  for (const component of catalog.components) {
+    const item = byId.get(component.id);
+    if (item && component.sdk?.native) Object.assign(component.sdk.native, nativeEntry(item));
   }
   return catalog;
 }

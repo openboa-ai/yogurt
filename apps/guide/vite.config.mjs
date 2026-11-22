@@ -1,11 +1,24 @@
 import { readFileSync } from "node:fs";
-import { basename, resolve } from "node:path";
+import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import { matchGuidePath } from "./guide-routes.mjs";
+import { generateTokens } from "../../scripts/tokens/generate.mjs";
 
 const repo = fileURLToPath(new URL("../..", import.meta.url));
 const root = resolve(repo, "apps/guide/vite");
+
+function watchTokens() {
+  const directory = resolve(repo, "design/tokens");
+  return {
+    name: "yogurt-shared-tokens",
+    apply: "serve",
+    configureServer(server) { server.watcher.add(directory); },
+    handleHotUpdate({ file }) {
+      if (dirname(file) === directory) generateTokens();
+    },
+  };
+}
 
 function guideRoutes() {
   const configure = (server) => server.middlewares.use((request, _response, next) => {
@@ -45,7 +58,7 @@ export default defineConfig({
   base: "/",
   publicDir: resolve(repo, "site"),
   appType: "mpa",
-  plugins: [guideRoutes(), anatomy()],
+  plugins: [guideRoutes(), anatomy(), watchTokens()],
   resolve: { alias: [
     { find: /^@openboa\/yogurt\/motion-patterns$/, replacement: resolve(repo, "packages/web/src/patterns/motion-patterns.ts") },
     { find: /^@openboa\/yogurt$/, replacement: resolve(repo, "packages/web/src/index.ts") },

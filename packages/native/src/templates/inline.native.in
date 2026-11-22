@@ -1,0 +1,5 @@
+<template name="yg-inline">
+  <row gap="@{gap-inline}" cross="center">
+  <slot/>
+  </row>
+</template>

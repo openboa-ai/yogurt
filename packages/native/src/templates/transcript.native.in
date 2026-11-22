@@ -1,0 +1,10 @@
+<template name="yg-transcript" args="label">
+  <stack grow="1">
+    <column height="160"/>
+    <scroll label="{label}">
+      <column gap="@{gap-stack}">
+        <slot/>
+      </column>
+    </scroll>
+  </stack>
+</template>

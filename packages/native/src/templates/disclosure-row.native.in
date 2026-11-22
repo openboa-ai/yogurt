@@ -1,0 +1,5 @@
+<template name="yg-disclosure-row" args="label expanded">
+  <accordion text="{label}" selected="{expanded}" on-toggle="toggle">
+    <slot/>
+  </accordion>
+</template>

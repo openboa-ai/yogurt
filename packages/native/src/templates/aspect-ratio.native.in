@@ -1,0 +1,5 @@
+<template name="yg-aspect-ratio" args="width height">
+  <panel width="{width}" height="{height}">
+    <slot/>
+  </panel>
+</template>

@@ -1,0 +1,9 @@
+<template name="yg-attachment" args="label detail">
+  <row gap="@{gap-inline}" cross="center" background="surface" radius="md" padding="@{inset-regular}">
+    <column grow="1" gap="@{gap-tight}">
+      <button variant="ghost" on-press="activate">{label}</button>
+      <text size="sm" foreground="text_muted">{detail}</text>
+    </column>
+    <button variant="ghost" on-press="dismiss">Remove</button>
+  </row>
+</template>

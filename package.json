@@ -20,11 +20,13 @@
     "packages/web/README.md",
     "bin",
     "catalog/components.json",
+    "catalog/specimens/native-workspaces.mjs",
     "catalog/motion-components.json",
     "catalog/patterns.json",
     "catalog/blocks.json",
     "catalog/motion.json",
     "packages/recipes",
+    "!packages/recipes/*/view.native.in",
     "catalog/brand.json",
     "design/content/terms.json",
     "registry",
@@ -87,6 +89,8 @@
     "./blocks": "./catalog/blocks.json"
   },
   "scripts": {
+    "tokens": "node scripts/tokens/generate.mjs",
+    "check:tokens": "node scripts/tokens/generate.mjs --check",
     "build": "node scripts/build-ui.mjs",
     "guide:dev": "npm run build && node apps/guide/tooling/build-site.mjs --static-only && vite --config apps/guide/vite.config.mjs",
     "guide:build": "npm run build && vite build --config apps/guide/vite.config.mjs && node apps/guide/tooling/build-site.mjs",

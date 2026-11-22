@@ -5,6 +5,8 @@ const gallery = @import("gallery-generated.zig");
 const navigation = @import("navigation.zig");
 const workspace_fixtures = @import("workspace-fixtures.zig");
 const motion = @import("yogurt/interface-motion.zig");
+const layers = @import("yogurt/views/layers.zig");
+const artwork = @import("yogurt/art.zig");
 const drawer_surface = @import("yogurt/drawer-surface.zig");
 const layout_tokens = @import("yogurt/tokens.zig");
 const precision = @import("yogurt/precision-inputs.zig");
@@ -38,19 +40,19 @@ pub fn initialModel() Model {
 }
 
 fn registerProjectMark(m: *Model, fx: *sdk.Effects(Msg)) void {
-    if (fx.registerImageBytes(2000, @embedFile("yogurt-guide-openboa.png"))) |_| {
+    if (artwork.register(fx, 2000, .openboa)) |_| {
         m.brand_picture = 2000;
     } else |_| { m.brand_picture = 0; }
-    if (fx.registerImageBytes(2001, @embedFile("yogurt-guide-yogurt.png"))) |_| {
+    if (artwork.register(fx, 2001, .yogurt)) |_| {
         m.project_picture = 2001;
         m.project_missing = false;
     } else |_| { m.project_picture = 0; m.project_missing = true; }
-    if (fx.registerImageBytes(2002, @embedFile("yogurt-guide-sourdough.png"))) |_| {
+    if (artwork.register(fx, 2002, .sourdough)) |_| {
         m.sourdough_picture = 2002;
         m.project_image = 2002;
         m.sourdough_missing = false;
     } else |_| { m.sourdough_picture = 0; m.project_image = 0; m.sourdough_missing = true; }
-    if (fx.registerImageBytes(2003, @embedFile("yogurt-guide-meatball.png"))) |_| {
+    if (artwork.register(fx, 2003, .meatball)) |_| {
         m.meatball_picture = 2003;
         m.meatball_missing = false;
     } else |_| { m.meatball_picture = 0; m.meatball_missing = true; }
@@ -734,9 +736,6 @@ fn editLayer(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
     const drawer = std.mem.eql(u8, id, "drawer");
     const sheet = std.mem.eql(u8, id, "sheet");
     const phase = m.interface_motion.value;
-    const returning = drawer and m.drawer_distance > 0;
-    const offset = if (drawer) drawerOffset(m) else
-        (if (sheet) layout_tokens.gap_panel else layout_tokens.gap_inline) * (1 - phase);
     const fields = ui.column(.{ .gap = layout_tokens.gap_stack }, .{
         ui.column(.{ .gap = 6 }, .{
             ui.text(.{ .size = .sm }, gallery.edit_view_label),
@@ -745,21 +744,11 @@ fn editLayer(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
         ui.button(.{ .variant = .primary, .on_press = .activate }, gallery.edit_view_submit),
     });
     if (drawer) {
-        const presentation = motion.surfaceOptions(Msg, gallery.edit_view_title, .dismiss, 0, offset, if (returning or m.drawer_dragging) 1 else phase);
-        return drawer_surface.present(Msg, ui, gallery.edit_view_title, .dismiss, .{ .drawer_drag = .{} }, fields, presentation);
+        const presentation = motion.surfaceOptions(Msg, gallery.edit_view_title, .dismiss, 0, drawerOffset(m), if (m.drawer_distance > 0 or m.drawer_dragging) 1 else phase);
+        return gallery.Views.drawer(Msg, ui, gallery.edit_view_title, .dismiss, .{ .drawer_drag = .{} }, fields, presentation);
     }
-    var options = motion.surfaceOptions(Msg, gallery.edit_view_title, .dismiss, if (sheet) offset else 0, if (sheet) 0 else offset, phase);
-    options.width = 400;
-    options.padding = layout_tokens.inset_sheet;
-    return ui.el(if (sheet) .sheet else .dialog, options, .{
-        ui.column(.{ .gap = layout_tokens.gap_stack }, .{
-            ui.row(.{ .gap = layout_tokens.gap_inline, .cross = .center }, .{
-                ui.text(.{ .size = .heading, .grow = 1, .wrap = true }, gallery.edit_view_title),
-                ui.button(.{ .variant = .ghost, .size = .icon, .icon = "x", .semantics = .{ .label = "Close" }, .on_press = .dismiss }, ""),
-            }),
-            fields,
-        }),
-    });
+    return if (sheet) gallery.Views.sheet(Msg, ui, gallery.edit_view_title, .dismiss, phase, fields)
+        else gallery.Views.dialog(Msg, ui, gallery.edit_view_title, .dismiss, phase, fields);
 }
 
 fn isSmallSurface(id: []const u8) bool {
@@ -775,47 +764,33 @@ fn smallSurface(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
             .transform = canvas.Affine.translate(0, layout_tokens.gap_inline * distance) }, .{gallery.specimen(ui, m)});
     }
     const menu = std.mem.eql(u8, id, "action-menu");
-    const label = if (menu) gallery.action_menu_label else gallery.popover_label;
-    var popup = motion.surfaceOptions(Msg, label, .dismiss, 0, -layout_tokens.layer_shift * distance, phase);
-    popup.anchor = .below;
-    popup.anchor_offset = layout_tokens.offset_layer;
-    popup.padding = if (menu) layout_tokens.inset_layer else layout_tokens.inset_regular;
-    popup.width = if (menu) layout_tokens.anchored_menu_min_width else 0;
-    return ui.row(.{ .main = .start }, .{
-        ui.stack(.{}, .{
-            ui.button(.{ .variant = .secondary, .icon = if (menu) "chevron-down" else "", .icon_placement = .trailing,
-                .on_press = .open_choices }, label),
-            if (!m.is_open) ui.column(.{}, .{}) else if (menu) ui.el(.dropdown_menu, popup, .{
-                ui.el(.menu_item, .{ .height = layout_tokens.menu_row, .text = gallery.action_menu_items[0], .on_press = .{ .gallery_menu = 1 } }, .{}),
-                ui.el(.menu_item, .{ .height = layout_tokens.menu_row, .text = gallery.action_menu_items[1], .on_press = .{ .gallery_menu = 2 } }, .{}),
-                ui.el(.menu_item, .{ .height = layout_tokens.menu_row, .text = gallery.action_menu_items[2], .on_press = .{ .gallery_menu = 3 } }, .{}),
-            }) else ui.el(.popover, popup, .{ui.text(.{ .wrap = true }, gallery.popover_body)}),
-        }),
+    const trigger: layers.Trigger(Msg) = .{
+        .label = if (menu) gallery.action_menu_label else gallery.popover_label,
+        .open = .open_choices,
+        .dismiss = .dismiss,
+        .expanded = m.is_open,
+        .phase = phase,
+    };
+    if (menu) return gallery.Views.action_menu(Msg, ui, trigger, .{
+        layers.menuItem(Msg, ui, gallery.action_menu_items[0], .{ .gallery_menu = 1 }),
+        layers.menuItem(Msg, ui, gallery.action_menu_items[1], .{ .gallery_menu = 2 }),
+        layers.menuItem(Msg, ui, gallery.action_menu_items[2], .{ .gallery_menu = 3 }),
     });
-}
-
-fn carouselView(ui: *AppUi, m: *const Model) AppUi.Node {
-    const phase = m.interface_motion.value;
-    const start: f32 = if (m.gallery_page_one) -layout_tokens.gap_panel else layout_tokens.gap_panel;
-    return ui.column(.{ .gap = layout_tokens.gap_stack }, .{
-        ui.text(.{ .opacity = if (m.interface_motion.active()) @max(0.001, phase) else 1,
-            .transform = canvas.Affine.translate(if (m.interface_motion.active()) start * (1 - phase) else 0, 0) },
-            if (m.gallery_page_one) "First sample" else "Second sample"),
-        ui.row(.{ .gap = layout_tokens.gap_tight, .cross = .center }, .{
-            ui.text(.{}, m.gallery_page_text),
-            ui.spacer(1),
-            ui.button(.{ .variant = .ghost, .size = .icon, .icon = "chevron-left", .semantics = .{ .label = "Previous slide" },
-                .on_press = .previous_page, .disabled = m.at_first }, ""),
-            ui.button(.{ .variant = .ghost, .size = .icon, .icon = "chevron-right", .semantics = .{ .label = "Next slide" },
-                .on_press = .next_page, .disabled = m.at_last }, ""),
-            ui.spacer(1),
-        }),
-    });
+    return gallery.Views.popover(Msg, ui, trigger, ui.text(.{ .wrap = true }, gallery.popover_body));
 }
 
 fn specimen(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
     if (isSmallSurface(id)) return smallSurface(ui, m, id);
-    if (std.mem.eql(u8, id, "carousel")) return carouselView(ui, m);
+    if (std.mem.eql(u8, id, "carousel")) {
+        return gallery.Views.carousel(Msg, ui, .{
+            .label = "Slides",
+            .position = m.gallery_page_text,
+            .previous = if (m.at_first) null else .previous_page,
+            .next = if (m.at_last) null else .next_page,
+            .backwards = m.gallery_page_one,
+            .phase = if (m.interface_motion.active()) m.interface_motion.value else 1,
+        }, ui.text(.{}, if (m.gallery_page_one) "First sample" else "Second sample"));
+    }
     if (isEditLayer(id)) {
         return ui.column(.{ .cross = .start }, .{
             ui.button(.{ .variant = .secondary, .on_press = .open_choices }, gallery.edit_view_title),
@@ -824,15 +799,15 @@ fn specimen(ui: *AppUi, m: *const Model, id: []const u8) AppUi.Node {
     }
     if (std.mem.eql(u8, id, "progress")) {
         return ui.column(.{ .gap = layout_tokens.gap_stack }, .{
-            motion.progressView(Msg, ui, gallery.progress_label, m.gallery_progress_label, m.gallery_progress_fraction, m.interface_motion.value),
+            gallery.Views.progress(Msg, ui, gallery.progress_label, m.gallery_progress_label, m.gallery_progress_fraction, m.interface_motion.value),
             ui.row(.{ .main = .start }, .{ui.button(.{ .variant = .secondary, .on_press = .advance_progress },
                 if (m.gallery_progress_full) gallery.progress_reset else gallery.progress_next)}),
         });
     }
     if (std.mem.eql(u8, id, "input-otp"))
-        return precision.codeView(Msg, ui, &m.code_editor, "Verification code", "Enter the six digits from your email.", AppUi.inputMsg(.edit));
+        return gallery.Views.input_otp(Msg, ui, &m.code_editor, "Verification code", "Enter the six digits from your email.", AppUi.inputMsg(.edit));
     if (std.mem.eql(u8, id, "rating"))
-        return precision.ratingView(Msg, ui, "How was the review?", m.rating_score, m.gallery_dark, chooseRating);
+        return gallery.Views.rating(Msg, ui, "How was the review?", m.rating_score, m.gallery_dark, chooseRating);
     return gallery.specimen(ui, m);
 }
 

@@ -658,6 +658,7 @@
   {
     "id": "action-menu",
     "name": "ActionMenu",
+    "nativeView": { "module": "views/layers.zig", "symbol": "actionMenuView" },
     "family": "Layers",
     "module": "layers",
     "description": "Choose a secondary command.",
@@ -678,6 +679,7 @@
   {
     "id": "popover",
     "name": "Popover",
+    "nativeView": { "module": "views/layers.zig", "symbol": "popoverView" },
     "family": "Layers",
     "module": "layers",
     "description": "Read a little more without leaving the task.",
@@ -698,6 +700,7 @@
   {
     "id": "dialog",
     "name": "Dialog",
+    "nativeView": { "module": "views/layers.zig", "symbol": "dialogView" },
     "family": "Layers",
     "module": "layers",
     "description": "Finish one focused task.",
@@ -718,6 +721,7 @@
   {
     "id": "drawer",
     "name": "Drawer",
+    "nativeView": { "module": "drawer-surface.zig", "symbol": "present" },
     "family": "Layers",
     "module": "layers",
     "description": "Pull up a task and dismiss it from its lower-edge surface.",
@@ -739,6 +743,7 @@
   {
     "id": "sheet",
     "name": "Sheet",
+    "nativeView": { "module": "views/layers.zig", "symbol": "sheetView" },
     "family": "Layers",
     "module": "layers",
     "description": "Open more space for a task on a small screen.",
@@ -982,6 +987,7 @@
   {
     "id": "progress",
     "name": "Progress",
+    "nativeView": { "module": "interface-motion.zig", "symbol": "progressView" },
     "family": "Feedback",
     "module": "feedback",
     "description": "Report actual progress against a maximum.",
@@ -1853,6 +1859,7 @@
   {
     "id": "input-otp",
     "name": "InputOTP",
+    "nativeView": { "module": "precision-inputs.zig", "symbol": "codeView" },
     "family": "Forms",
     "module": "inputs",
     "description": "Enter or paste a one-time code into a single labeled field.",
@@ -1924,6 +1931,7 @@
   {
     "id": "rating",
     "name": "Rating",
+    "nativeView": { "module": "precision-inputs.zig", "symbol": "ratingView" },
     "family": "Forms",
     "module": "inputs",
     "description": "Read or set a score on a labeled scale.",
@@ -2202,6 +2210,7 @@
   {
     "id": "carousel",
     "name": "Carousel",
+    "nativeView": { "module": "views/carousel.zig", "symbol": "carouselView" },
     "family": "Navigation",
     "module": "advanced",
     "description": "Move between ordered items at your own pace.",

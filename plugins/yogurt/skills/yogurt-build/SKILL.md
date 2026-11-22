@@ -3,7 +3,7 @@ name: yogurt-build
 description: Implement or change an OpenBoa screen, control or composition with the product's pinned Yogurt SDK on web or Vercel Native. Use when the deliverable is a working product change.
 ---
 
-From the consumer root, run `node "<skill-directory>/../../bin/resolve-sdk.mjs" . <web|native> --lookup <id> [<id> ...]` using the directory of the discovered SKILL.md. Pass the relevant pattern and component IDs together. The result gives the installed public imports, exact declaration paths and short declarations, or Native template paths. Open a declaration without inline text when you need its props. Use the resolver without IDs when you only need the installed guide paths.
+From the consumer root, run `node "<skill-directory>/../../bin/resolve-sdk.mjs" . <web|native> --lookup <id> [<id> ...]` using the directory of the discovered SKILL.md. Pass the relevant pattern and component IDs together. On Native, run the returned `install` command and use its `importStatement` for a typed view or its `template` for a markup control. The SDK's Native README covers host callbacks and initialization. On web, open the returned declaration when you need its props. Use the resolver without IDs when you only need the installed guide paths.
 
 Use each returned component's `guidance` to select it, combine it and verify its relevant states. Use task patterns for complete flows. Missing guidance is an open gap; check the installed contract instead of inventing a rule.
 

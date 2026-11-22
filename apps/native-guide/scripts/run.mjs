@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { generateTokens } from "../../../scripts/tokens/generate.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmdirSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
@@ -20,6 +21,7 @@ function command(program, args, options = {}) {
 }
 version("native", "0.11.1", ["--version"]);
 version("zig", "0.16.0", ["version"]);
+generateTokens();
 const digest = createHash("sha256");
 function hash(path) {
   const stat = statSync(path);
@@ -30,7 +32,7 @@ function hash(path) {
     digest.update(readFileSync(path));
   }
 }
-for (const path of ["apps/native-guide", "catalog", "packages/native/controls", "packages/recipes", "design/assets/fonts/rethink-sans", "design/assets/projects/yogurt.png", "design/assets/projects/sourdough.png", "design/assets/projects/meatball.png", "bin/yogurt.mjs", "bin/check-project.mjs"]) hash(join(root, path));
+for (const path of ["apps/native-guide", "catalog", "packages/native/controls", "packages/recipes", "design/assets/fonts/rethink-sans", "bin/install"]) hash(join(root, path));
 const key = digest.digest("hex").slice(0, 20);
 mkdirSync(cache, { recursive: true });
 let host;

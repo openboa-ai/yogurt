@@ -2,7 +2,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { workspaceArgs, workspaceSlots, workspaceChoiceFields, workspaceModelFields, workspaceActionFields } from "./catalog-workspaces.mjs";
+import { workspaceArgs, workspaceSlots, workspaceChoiceFields, workspaceModelFields, workspaceActionFields } from "../../../catalog/specimens/native-workspaces.mjs";
 const kit = fileURLToPath(new URL("../../../", import.meta.url)),
   host = process.argv[2];
 if (!host) throw Error("Pass an isolated, scaffolded Zig host directory.");
@@ -232,13 +232,7 @@ const tests = [
   "const Ui = canvas.Ui(Msg);",
 ];
 for (const { id, native } of [...catalog, ...blocks]) {
-  const source = readFileSync(
-    native
-      ? kit + "/packages/recipes/" + id + "/view.native"
-      : kit + "/packages/native/controls/items/" + id + ".native",
-    "utf8",
-  );
-  writeFileSync(dir + "/" + id + ".native", source);
+  const source = readFileSync(resolve(host, "src/yogurt/items", id + ".native"), "utf8");
   const keys = (source.match(/args="([^"]*)"/)?.[1] ?? "")
     .split(" ")
     // Optional arguments are supplied by the template's own defaults.
@@ -315,7 +309,7 @@ for (const { id, native } of [...catalog, ...blocks]) {
           (name) =>
             '.{ .path = "' +
             name +
-            '.native", .source = @embedFile("' +
+            '.native", .source = @embedFile("../yogurt/items/' +
             name +
             '.native") }',
         )

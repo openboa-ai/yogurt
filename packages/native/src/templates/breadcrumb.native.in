@@ -1,0 +1,5 @@
+<template name="yg-breadcrumb" args="label">
+  <breadcrumb label="{label}" gap="@{gap-tight}" cross="center">
+  <slot/>
+  </breadcrumb>
+</template>

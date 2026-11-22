@@ -1,0 +1,18 @@
+<template name="yg-sidebar" args="label">
+  <column gap="@{gap-inline}">
+    <row cross="center">
+      <if test="{is_open}"><button variant="ghost" icon="chevron-down" on-press="toggle">{label}</button></if>
+      <else><button variant="ghost" icon="chevron-right" on-press="toggle">{label}</button></else>
+    </row>
+    <if test="{is_open}">
+      <row>
+        <spacer width="32"/>
+        <list grow="1" gap="@{space.2}">
+          <for each="choices" key="id" as="item">
+            <list-item on-press="choose:{item.id}">{item.title}</list-item>
+          </for>
+        </list>
+      </row>
+    </if>
+  </column>
+</template>

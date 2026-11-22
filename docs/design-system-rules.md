@@ -2,6 +2,24 @@
 
 OpenBoa products share Yogurt tokens, basic components and common interaction behavior. Each product combines those parts for its tasks, information and actions.
 
+## One source for UI
+
+This rule starts inside Yogurt. The guide, Studio, templates and examples are consumers of the same public components that products and agents install.
+
+| What changes | Where to change it |
+| --- | --- |
+| A shared color, type, spacing, shape or motion value | Edit the palette and primitives in `design/tokens/brand.json` or the component roles in `design/tokens/ui.json`. Run `npm run tokens` to generate the CSS and Zig outputs together. |
+| How a control looks, responds or moves in any state | Edit React in `packages/web/src` and its shared stylesheet in `design/styles`. For Native, edit markup in `packages/native/src/templates` or the catalog's typed Zig renderer in `packages/native/controls`. Vite and Next.js use the same web export. The component ID, guidance and default typed Native entry live in `catalog/components.json`. |
+| How shared controls work together | Edit the reusable composition in `packages/recipes` when it is shared. A screen supplies its own content, layout, state and callbacks. |
+
+Native controls and blocks use `@{role}` references for layout spacing in their authoring templates. Generation resolves these to SDK markup. Edit each block in `packages/recipes/<id>/view.native.in`. The corresponding `view.native` and `controls/items` files are distribution outputs.
+
+A component preview imports the public entry for its target. Render focused, open, selected, disabled and loading states through that entry's inputs and events. When the preview needs a missing state or motion, add it to the shared component first. A compatibility entry keeps its existing API. The installer, guide and agent instructions identify the same default for new consumers.
+
+Verify a shared fix at its public entry in a consumer and exercise the same interaction in the affected example. Record which renderer and state were exercised. A guide-only check covers that guide.
+
+The Vite development guide watches the token sources. The Native guide launcher regenerates the platform outputs before choosing a cached build. `npm run check:tokens` compares both targets with the source without writing files. `node --test checks/design-sources.mjs` changes a token in a disposable copy and checks the guide's component imports. When an integration exposes a defect, keep the regression check with the lowest layer that owns the decision.
+
 ## Required reuse
 
 | Layer | Product requirement |

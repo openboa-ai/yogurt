@@ -1,0 +1,11 @@
+<template name="yg-questionnaire" args="title detail">
+  <column gap="@{gap-inline}">
+    <text size="heading">{title}</text>
+    <text size="sm">{detail}</text>
+    <slot/>
+    <row gap="@{gap-inline}" cross="center">
+      <button variant="ghost" on-press="previous_page" disabled="{at_first}">Back</button>
+      <button variant="ghost" on-press="next_page" disabled="{unavailable}">Continue</button>
+    </row>
+  </column>
+</template>

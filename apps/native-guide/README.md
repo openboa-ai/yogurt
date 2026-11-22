@@ -32,7 +32,7 @@ native test /tmp/yogurt-native-guide-host
 native dev /tmp/yogurt-native-guide-host
 ```
 
-Preparation installs the current Native theme and fonts, then generates the component examples and typed imports from this checkout's catalog. Rerun it after updating Yogurt; if an installed file conflicts with an updated source, create a fresh scaffold instead of overwriting an existing host. The scaffold, generated sources, build outputs and SDK dependencies are not part of this app's source directory.
+Preparation installs all catalog controls and blocks with the SDK installer. The guide embeds those installed templates, binds the catalog's typed views and generates the sample data separately. Rerun preparation in a fresh scaffold after updating the SDK if an installed file has local edits.
 
 Use the list to choose a component, the previous and next buttons to navigate, and the appearance button to switch themes. Hide the list for a narrow window. AgentAvatar and Gaze provide Kai and Sol previews with the six shared animation states; the agent row, sidebar, workspace and profile examples also use the live playback. Examples are local and some interactions are not yet implemented; loading a component does not establish its visual, accessibility, or motion coverage.
 

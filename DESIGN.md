@@ -39,4 +39,4 @@ Start an app client on Vercel Native SDK, the selected default. Use Next.js or V
 
 A Web CSS entry gives a class and semantic HTML. A web example gives a runnable local specimen. A guide example illustrates state choices with invented facts. A contract describes the intended behavior. The catalog records availability for each target. If the needed adapter is missing, record the gap and the proposed owner. A project may deliver a reviewed local implementation under its own name and evidence.
 
-For a production dependency resolve the owning project’s accepted release and target. The SDK contains typed web exports and native templates. A production release requires the consuming project’s chosen pin and target checks. [Renderer evidence](docs/engineering/controls/component-library/verification.md)
+For a production dependency resolve the owning project’s accepted release and target. The SDK contains typed web exports, Native views and markup templates. A production release requires the consuming project’s chosen pin and target checks. [Renderer evidence](docs/engineering/controls/component-library/verification.md)

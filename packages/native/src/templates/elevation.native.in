@@ -1,0 +1,5 @@
+<template name="yg-elevation" args="label">
+  <card label="{label}" padding="@{inset-panel}">
+    <slot/>
+  </card>
+</template>

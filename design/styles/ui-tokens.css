@@ -51,6 +51,7 @@
   --yg-inset-layer: var(--boa-space-6);
   --yg-inset-panel: var(--boa-space-18);
   --yg-inset-sheet: var(--boa-space-24);
+  --yg-dialog-width: 400px;
   --yg-gap-tight: var(--boa-space-4);
   --yg-gap-inline: var(--boa-space-8);
   --yg-gap-stack: var(--boa-space-12);

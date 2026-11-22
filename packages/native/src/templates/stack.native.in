@@ -1,0 +1,5 @@
+<template name="yg-stack">
+  <column gap="@{gap-inline}">
+  <slot/>
+  </column>
+</template>

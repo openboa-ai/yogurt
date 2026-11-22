@@ -1,0 +1,6 @@
+<template name="yg-gradient" args="image_id label width height">
+  <stack>
+    <image image="{image_id}" label="{label}" width="{width}" height="{height}"/>
+    <slot/>
+  </stack>
+</template>

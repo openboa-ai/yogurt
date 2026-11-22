@@ -1,8 +1,10 @@
 // Prepare the Native gallery inside an already-created disposable SDK host.
-import { readFileSync, writeFileSync, copyFileSync, existsSync, unlinkSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, copyFileSync, existsSync, unlinkSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
+import { nativeFiles } from "../../../bin/install/native.mjs";
+import { installFiles } from "../../../bin/install/files.mjs";
 
 const kit = fileURLToPath(new URL("../../../", import.meta.url));
 const argument = process.argv[2];
@@ -12,34 +14,22 @@ if (host === resolve(kit) || !existsSync(join(host, "src")) || !existsSync(join(
   throw Error("The target must be an isolated, scaffolded Native host.");
 if (!existsSync(join(host, ".yogurt-guide-host")) || readFileSync(join(host, ".yogurt-guide-host"), "utf8").trim() !== "yogurt-native-guide")
   throw Error("Expected an explicitly marked, disposable Native guide scaffold.");
-const install = spawnSync(process.execPath, [join(kit, "bin/yogurt.mjs"), "add", "button", "--target", "native", "--dir", host], { stdio: "inherit" });
-if (install.status !== 0) throw Error("Native theme and font installation failed.");
+const components = JSON.parse(readFileSync(join(kit, "catalog/components.json"), "utf8"));
+const blocks = JSON.parse(readFileSync(join(kit, "catalog/blocks.json"), "utf8"));
+const catalog = [...components, ...blocks.map(block => ({ ...block, family: "Blocks" }))];
+if (new Set(catalog.map(entry => entry.id)).size !== catalog.length) throw Error("Duplicate component or block ID.");
+installFiles(host, nativeFiles(kit, catalog, components));
 const result = spawnSync(process.execPath, [join(kit, "apps/native-guide/scripts/catalog.mjs"), host], { stdio: "inherit" });
 if (result.status !== 0) throw Error("Native catalog fixture generation failed.");
 const gallery = join(kit, "apps/native-guide");
 copyFileSync(join(gallery, "app.json"), join(host, "app.json"));
 copyFileSync(join(gallery, "src/main.zig"), join(host, "src/main.zig"));
-for (const name of ["precision-inputs.zig", "drawer-surface.zig", "interface-motion.zig", "gradient-pixels.zig"]) {
-  copyFileSync(join(kit, "packages/native/controls", name), join(host, "src/yogurt", name));
-}
 copyFileSync(join(gallery, "src/agent-preview.zig"), join(host, "src/agent-preview.zig"));
-mkdirSync(join(host, "src/yogurt/models"), { recursive: true });
-for (const name of ["agent-vector.zig", "avatar-pose-data.zig", "agent-family-data.zig"]) {
-  copyFileSync(join(kit, "packages/native/controls/models", name), join(host, "src/yogurt/models", name));
-}
 copyFileSync(join(gallery, "src/navigation.zig"), join(host, "src/navigation.zig"));
 copyFileSync(join(gallery, "src/workspace-fixtures.zig"), join(host, "src/workspace-fixtures.zig"));
 copyFileSync(join(gallery, "src/gallery-tests.zig"), join(host, "src/gallery-tests.zig"));
 copyFileSync(join(gallery, "src/gallery-tests.zig"), join(host, "src/tests.zig"));
-for (const project of ["yogurt", "sourdough", "meatball"]) {
-  copyFileSync(join(kit, `design/assets/projects/${project}.png`), join(host, `src/yogurt-guide-${project}.png`));
-}
-copyFileSync(join(kit, "packages/native/controls/art/openboa.png"), join(host, "src/yogurt-guide-openboa.png"));
 if (existsSync(join(host, "src/app.native"))) unlinkSync(join(host, "src/app.native"));
-const components = JSON.parse(readFileSync(join(kit, "catalog/components.json"), "utf8"));
-const blocks = JSON.parse(readFileSync(join(kit, "catalog/blocks.json"), "utf8"));
-const catalog = [...components, ...blocks.map((block) => ({ ...block, family: "Blocks" }))];
-if (new Set(catalog.map((entry) => entry.id)).size !== catalog.length) throw Error("Duplicate component or block ID.");
 const markFile = join(host, "src/yogurt-catalog-test/project-mark-test.native");
 const mark = readFileSync(markFile, "utf8");
 if (!mark.includes('image_id="{picture}"')) throw Error("Missing project mark image binding.");
@@ -122,6 +112,10 @@ const lines = [
   ...[30, 31].map((count, index) => `pub const ${index ? 'december_labels' : 'november_labels'} = [_][]const u8{ ${Array.from({ length: count }, (_, i) => `\"${index ? 'Dec' : 'Nov'} ${i + 1}, 2026\"`).join(', ')} };`),
   `pub const number_keys = [_]Choice{ ${Array.from("1234567890", digit => `.{ .id = ${digit.charCodeAt(0)}, .title = "${digit}" }`).join(", ")} };`,
   "pub const Ui = canvas.Ui(Msg);",
+  "pub const Views = struct {",
+  ...components.filter(item => item.nativeView).map(({ id, nativeView }) =>
+    `    pub const ${id.replaceAll("-", "_")} = @import(${zigString("yogurt/" + nativeView.module)}).${nativeView.symbol};`),
+  "};",
   `pub const percentages = [_][]const u8{ ${Array.from({ length: 101 }, (_, index) => zigString(index + "%")).join(", ")} };`,
   "pub const PreviewLayout = enum { compact, field, wide };",
   `pub const preview_layouts = [_]PreviewLayout{ ${catalog.map((entry) => specimenLayout.compact.includes(entry.id) ? ".compact" : specimenLayout.wide.includes(entry.id) || specimenLayout.wideFamilies.includes(entry.family) ? ".wide" : ".field").join(", ")} };`,
@@ -150,7 +144,7 @@ for (const [index, entry] of catalog.entries()) {
   if (!/^[a-z0-9-]+$/.test(entry.id)) throw Error(`Invalid catalog ID: ${entry.id}`);
   lines.push(`const sources_${index} = [_]canvas.ui_markup.SourceFile{`);
   for (const name of [...new Set([`${entry.id}-test.native`, `${entry.id}.native`, ...(entry.native ?? []).map((id) => `${id}.native`)])]) {
-    const embedded = `yogurt-catalog-test/${name}`;
+    const embedded = name === entry.id + "-test.native" ? `yogurt-catalog-test/${name}` : `yogurt/items/${name}`;
     if (!existsSync(join(host, "src", embedded))) throw Error(`Missing specimen source: ${embedded}`);
     lines.push(`    .{ .path = ${zigString(name)}, .source = @embedFile(${zigString(embedded)}) },`);
   }

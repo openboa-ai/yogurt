@@ -1,0 +1,45 @@
+<template name="yg-agent-profile">
+  <column gap="@{gap-panel}">
+    <row gap="@{gap-stack}" cross="center">
+      <image label="Agent silhouette" image="{profile_image}" width="44" height="44"/>
+      <text size="heading">Agent profile</text>
+    </row>
+    <column gap="@{gap-tight}">
+      <text>Name</text>
+      <text-field label="Name" text="{profile_name}" disabled="{profile_locked}" on-input="edit_profile_name"/>
+    </column>
+    <column gap="@{gap-tight}">
+      <text>Silhouette</text>
+      <toggle-group label="Silhouette">
+        <toggle-button selected="{profile_kai}" disabled="{profile_locked}" on-toggle="pick_profile_kai">Kai</toggle-button>
+        <toggle-button selected="{profile_sol}" disabled="{profile_locked}" on-toggle="pick_profile_sol">Sol</toggle-button>
+      </toggle-group>
+    </column>
+    <column gap="@{gap-tight}">
+      <text>Memory scope</text>
+      <stack>
+        <select label="Memory scope" text="{profile_scope}" disabled="{profile_locked}" on-press="open_profile_scope"/>
+        <if test="{profile_scope_open}">
+          <dropdown-menu anchor="below" anchor-alignment="stretch" label="Memory scope" on-dismiss="close_profile_scope">
+            <for each="profile_scopes" key="id" as="item">
+              <menu-item selected="{item.selected}" disabled="{item.disabled}" on-press="pick_profile_scope:{item.id}">{item.title}</menu-item>
+            </for>
+          </dropdown-menu>
+        </if>
+      </stack>
+      <text size="sm" foreground="text_muted">Choose where this agent uses its working context.</text>
+    </column>
+    <column gap="@{gap-tight}">
+      <text>Working instructions</text>
+      <textarea label="Working instructions" text="{profile_instructions}" disabled="{profile_locked}" on-input="edit_profile_instructions"/>
+    </column>
+    <if test="{profile_has_error}"><status-bar>{profile_error}</status-bar></if>
+    <row gap="@{gap-inline}">
+      <if test="{profile_pending}">
+        <button disabled="true">Saving</button>
+      </if>
+      <else><button disabled="{profile_save_disabled}" on-press="save_profile">Save profile</button></else>
+      <button variant="ghost" disabled="{profile_discard_disabled}" on-press="discard_profile">Discard</button>
+    </row>
+  </column>
+</template>

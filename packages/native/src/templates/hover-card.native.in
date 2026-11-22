@@ -1,0 +1,10 @@
+<template name="yg-hover-card" args="label">
+  <stack>
+    <button variant="ghost" on-press="toggle">{label}</button>
+    <if test="{is_open}">
+      <popover anchor="below" label="{label}" padding="@{inset-roomy}" on-dismiss="toggle">
+        <slot/>
+      </popover>
+    </if>
+  </stack>
+</template>

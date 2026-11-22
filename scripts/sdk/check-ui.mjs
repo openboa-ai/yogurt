@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { generateTokens } from "../tokens/generate.mjs";
 const root = new URL("../..", import.meta.url);
 process.chdir(fileURLToPath(root));
+generateTokens({ check: true });
 const json = (p) => JSON.parse(readFileSync(p, "utf8"));
 const manifest = json("catalog/brand.json"),
   base = json(manifest.sources.primitives),

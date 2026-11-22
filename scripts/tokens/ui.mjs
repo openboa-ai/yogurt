@@ -1,0 +1,162 @@
+import { dimension } from "./dimension.mjs";
+
+function webTokens(ui, types, palette) {
+  const { lineHeightScale, tracking } = ui.typeMetrics;
+  const variable = (p) => "var(--boa-color-" + p.replace(".", "-") + ")";
+  function roleRules(roles) {
+    return Object.entries(roles).map(([key, pair]) => {
+      pair.forEach(palette);
+      return (
+        "  --yg-" + key + ": light-dark(" + pair.map(variable).join(", ") + ");"
+      );
+    });
+  }
+  const css = [
+    "/* Generated from design/tokens/brand.json and design/tokens/ui.json. */",
+    ".yg-root {",
+    ...roleRules(ui.roles),
+  ];
+  for (const [k, v] of Object.entries(ui.geometry))
+    css.push(
+      "  --yg-" +
+        k +
+        ": " +
+        (typeof v === "number"
+          ? v + "px"
+          : "var(--boa-" + v.replace(".", "-") + ")") +
+        ";",
+    );
+  for (const [k, v] of Object.entries(ui.opacity))
+    css.push(`  --yg-${k}: ${v}%;`);
+  for (const [k, v] of Object.entries(ui.motion))
+    css.push("  --yg-" + k + ": " + v + "ms;");
+  for (const [role, curve] of Object.entries(ui.easing))
+    css.push("  --yg-" + role + ": " + curve + ";");
+  for (const [role, profile] of Object.entries(ui.motionProfiles ?? {})) {
+    if (!Number.isSafeInteger(profile.duration) || profile.duration <= 0 ||
+        !Object.hasOwn(ui.easing, profile.fallback) || !Array.isArray(profile.samples) ||
+        profile.samples.length < 2 || profile.samples.some(value => !Number.isFinite(value))) {
+      throw Error("Invalid motion profile " + role);
+    }
+    css.push(`  --yg-motion-${role}: ${profile.duration}ms var(--yg-${profile.fallback});`);
+  }
+  for (const [name, layers] of Object.entries(ui.elevation)) {
+    const shadows = layers.map(([y, blur, opacity]) =>
+      "0 " + y + "px " + blur + "px color-mix(in srgb, " +
+        variable("neutral.1000") + " " + opacity + "%, transparent)"
+    );
+    css.push("  --yg-" + name + "-shadow: " + shadows.join(", ") + ";");
+  }
+  css.push(`  --yg-type-leading: ${lineHeightScale};`, `  --yg-type-tracking: ${tracking}em;`);
+  for (const { role, size, lineHeight, weight } of types) {
+    css.push(
+      `  --yg-type-${role}-size: ${size / 16}rem;`,
+      `  --yg-type-${role}-line: ${lineHeight / 16}rem;`,
+      `  --yg-font-${role}: ${weight} var(--yg-type-${role}-size)/var(--yg-type-${role}-line) var(--boa-font-family);`,
+    );
+  }
+  css.push("}");
+  css.push("@supports (animation-timing-function: linear(0, 1)) {", "  .yg-root {");
+  for (const [role, profile] of Object.entries(ui.motionProfiles ?? {}))
+    css.push(`    --yg-motion-${role}: ${profile.duration}ms linear(${profile.samples.join(", ")});`);
+  css.push("  }", "}");
+  for (const [m, roles] of Object.entries(ui.materials))
+    css.push('.yg-root[data-material="' + m + '"] {', ...roleRules(roles), "}");
+  return css.join("\n") + "\n";
+}
+
+function nativeTokens(brand, ui, types, palette) {
+  const { lineHeightScale, tracking } = ui.typeMetrics;
+  function rgb(p) {
+    const hex = palette(p);
+    return (
+      "C.rgb8(" +
+      [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(", ") +
+      ")"
+    );
+  }
+  const group = (keys, expression) =>
+    keys.map((k) => "    " + k + ": " + expression + ",").join("\n");
+  const id = (s) => s.replaceAll("-", "_");
+  const colors = Object.keys(ui.roles);
+  const rows = [];
+  const materials = { neutral: {}, ...ui.materials };
+  for (const [m, over] of Object.entries(materials)) {
+    const roles = { ...ui.roles, ...over };
+    rows.push(
+      "        ." + id(m) + " => if (dark) .{",
+      ...colors.map(
+        (k) => "            ." + id(k) + " = " + rgb(roles[k][1]) + ",",
+      ),
+      "        } else .{",
+      ...colors.map(
+        (k) => "            ." + id(k) + " = " + rgb(roles[k][0]) + ",",
+      ),
+      "        },",
+    );
+  }
+  const nativeEasing = Object.entries(ui.easing).map(([name, easing]) => {
+    const curve = easing.match(/^cubic-bezier\(([^)]+)\)$/);
+    const points = curve?.[1].split(",").map(Number);
+    if (points?.length !== 4 || points.some(point => !Number.isFinite(point))) {
+      throw Error("Invalid shared easing " + name);
+    }
+    return `pub const ${id(name)}_curve = [4]f32{ ${points.join(", ")} };`;
+  });
+  const zig = [
+    "// Generated from design/tokens/brand.json and design/tokens/ui.json.",
+    'const canvas = @import("native_sdk").canvas;',
+    "const C = canvas.Color;",
+    `pub const Material = enum { ${Object.keys(materials).map(id).join(", ")} };`,
+    "pub const Roles = struct {",
+    group(colors.map(id), "C"),
+    "};",
+    "pub fn roles(dark: bool, material: Material) Roles {",
+    "    return switch (material) {",
+    ...rows,
+    "    };",
+    "}",
+    ...Object.keys(ui.geometry).map(
+      (k) => "pub const " + id(k) + ": f32 = " + dimension(brand, ui.geometry, k) + ";",
+    ),
+    ...Object.entries(ui.opacity).map(
+      ([k, v]) => "pub const " + id(k) + "_alpha: f32 = " + v / 100 + ";",
+    ),
+    ...nativeEasing,
+    ...Object.entries(ui.motion).map(
+      ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v + ";",
+    ),
+    ...Object.entries(ui.motionProfiles ?? {}).map(
+      ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v.duration + ";",
+    ),
+    `pub const type_leading: f32 = ${lineHeightScale};`,
+    `pub const type_tracking: f32 = ${tracking};`,
+    ...types.flatMap(({ role, size, lineHeight, weight }) => [
+      `pub const ${id(role)}_type: f32 = ${size};`,
+      `pub const ${id(role)}_line_height: f32 = ${lineHeight};`,
+      `pub const ${id(role)}_weight: u16 = ${weight};`,
+    ]),
+    ...Object.keys(brand.type.tracking).map(
+      (role) => `pub const ${id(role)}_tracking: f32 = type_tracking;`,
+    ),
+  ];
+  return zig.join("\n") + "\n";
+}
+
+export function uiTokens(brand, ui) {
+  const find = (obj, path) =>
+    path.split(".").reduce((value, key) => value?.[key], obj);
+  function palette(path) {
+    const color = find(brand.color, path);
+    if (!color) throw Error("Unknown palette reference " + path);
+    return color;
+  }
+  const { lineHeightScale, lineBoxSize } = ui.typeMetrics;
+  const types = Object.entries(ui.types).map(([role, [sizeKey, weightKey]]) => ({
+    role,
+    size: brand.type.size[sizeKey],
+    lineHeight: brand.type.size[lineBoxSize[role] ?? sizeKey] * lineHeightScale,
+    weight: brand.type.weight[weightKey] ?? brand.type.roleWeight[weightKey],
+  }));
+  return { css: webTokens(ui, types, palette), zig: nativeTokens(brand, ui, types, palette) };
+}

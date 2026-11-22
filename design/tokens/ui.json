@@ -210,6 +210,7 @@
     "inset-layer": "space.6",
     "inset-panel": "space.18",
     "inset-sheet": "space.24",
+    "dialog-width": 400,
     "gap-tight": "space.4",
     "gap-inline": "space.8",
     "gap-stack": "space.12",

@@ -1,0 +1,12 @@
+<template name="yg-bar-chart" args="label source default_series=true">
+  <column gap="@{gap-inline}">
+    <text wrap="true">{label}</text>
+    <if test="{default_series}">
+      <chart label="{label}" height="160">
+        <series kind="bar" values="{samples}" color="text" label="{label}"/>
+      </chart>
+      <text size="sm" foreground="text_muted" wrap="true">{source}</text>
+    </if>
+    <slot/>
+  </column>
+</template>

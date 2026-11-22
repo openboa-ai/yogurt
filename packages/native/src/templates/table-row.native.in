@@ -1,0 +1,7 @@
+<template name="yg-table-row" args="label value">
+  <row gap="@{gap-inline}" cross="center">
+    <text size="sm" foreground="text_muted">{label}</text>
+    <spacer grow="1"/>
+    <text>{value}</text>
+  </row>
+</template>

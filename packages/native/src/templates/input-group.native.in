@@ -1,0 +1,9 @@
+<template name="yg-input-group" args="label value">
+  <column gap="@{gap-control}">
+    <text size="sm">{label}</text>
+    <row gap="@{gap-inline}" cross="center">
+      <text-field grow="1" label="{label}" text="{value}" on-input="edit"/>
+      <slot/>
+    </row>
+  </column>
+</template>
