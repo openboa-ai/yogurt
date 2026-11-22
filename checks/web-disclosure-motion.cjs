@@ -87,7 +87,7 @@ const fixtureBundle = buildSync({
       await summary.focus();
       await page.keyboard.press("Enter");
       assert.equal(await disclosure.evaluate(node => node.open), true);
-      assert.equal(await disclosure.locator(":scope > div").isVisible(), true);
+      await disclosure.locator(":scope > div").waitFor({ state: "visible" });
       await page.keyboard.press("Enter");
       assert.equal(await disclosure.evaluate(node => node.open), false);
       await page.goto(gallery + "#skeleton");

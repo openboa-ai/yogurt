@@ -262,6 +262,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
       await trigger.click();
       const modal = layer.getByRole("dialog", {name: "Edit view"});
       await modal.waitFor();
+      await modal.evaluate(promiseToSettle);
       assert.equal(await modal.evaluate(el => getComputedStyle(el).opacity), "1");
       assert(await modal.isVisible());
       await page.keyboard.press("Escape");
@@ -280,8 +281,9 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     await progress.getByRole("button", {name: "Review next record"}).click();
     assert.equal(Number(await value.getAttribute("value")), initial + 1);
     const maximum = Number(await value.getAttribute("max"));
-    const fill = await progress.locator(".yg-progress-track > span").evaluate(el =>
-      new DOMMatrixReadOnly(getComputedStyle(el).transform).a);
+    const track = progress.locator(".yg-progress-track > span");
+    await track.evaluate(promiseToSettle);
+    const fill = await track.evaluate(el => new DOMMatrixReadOnly(getComputedStyle(el).transform).a);
     assert(Math.abs(fill - (initial + 1) / maximum) < 0.001);
 
     const toast = await open("toast");

@@ -36,7 +36,19 @@ const bundle = buildSync({stdin:{resolveDir:process.cwd(),loader:'jsx',contents:
       assert.equal(await panel.getAttribute('aria-hidden'),'true');
       assert.equal(await panel.evaluate(node => node.inert),true);
       assert.equal(await host.getByRole('button',{name:'Overview'}).count(),0);
-      assert((await panel.boundingBox()).width < 1, 'hidden panel releases its layout width');
+      const closing = await layout.evaluate(node => {
+        const tween = node.getAnimations().find(animation => animation.transitionProperty === 'grid-template-columns');
+        if (!tween) return null;
+        const duration = tween.effect.getTiming().duration;
+        tween.currentTime = duration / 2;
+        return node.querySelector('.yg-sidebar-panel').getBoundingClientRect().width;
+      });
+      if (reducedMotion === 'reduce') {
+        assert.equal(closing, null);
+        assert((await panel.boundingBox()).width < 1, 'reduced motion releases its layout width immediately');
+      } else {
+        assert(closing > 1 && closing < width, 'a closing sidebar has a visible intermediate width');
+      }
       await host.getByRole('button',{name:'Expand navigation'}).click();
       assert.equal(await layout.getAttribute('data-panel'),'full');
       assert.equal(await panel.evaluate(node => node.inert),false);

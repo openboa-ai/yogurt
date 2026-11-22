@@ -11,7 +11,7 @@
   --yg-sidebar-track: minmax(0, var(--yg-sidebar-width));
 }
 .yg-sidebar-layout[data-panel="rail"] {
-  --yg-sidebar-track: calc(var(--yg-size-touch) + 2 * var(--boa-space-8));
+  --yg-sidebar-track: minmax(0, calc(var(--yg-size-touch) + 2 * var(--boa-space-8)));
 }
 .yg-sidebar-layout[data-compact="false"][data-panel="hidden"] {
   --yg-sidebar-track: minmax(0, 0px);
@@ -240,4 +240,32 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .yg-sidebar-item {
+    transition: background-color var(--yg-press) var(--yg-settle), color var(--yg-press) var(--yg-settle);
+  }
+  .yg-sidebar-chevron {
+    transition: rotate var(--yg-travel) var(--yg-settle);
+  }
+  .yg-sidebar-layout[data-compact="false"][data-edge] {
+    transition: grid-template-columns var(--yg-travel) var(--yg-settle), gap var(--yg-travel) var(--yg-settle);
+  }
+  .yg-sidebar-layout[data-compact="false"] > .yg-sidebar-panel {
+    overflow: clip;
+    transition: opacity var(--yg-layer) var(--yg-settle), padding-inline var(--yg-travel) var(--yg-settle);
+  }
+  .yg-sidebar-submenu-content,
+  .yg-sidebar > nav {
+    transition: grid-template-rows var(--yg-travel) var(--yg-settle), opacity var(--yg-layer) var(--yg-settle);
+  }
+  .yg-sidebar-drawer[open] {
+    --yg-enter-x: calc(-1 * var(--boa-space-16));
+    animation: yg-enter var(--yg-panel) var(--yg-arrive);
+  }
+  .yg-sidebar-layout[data-edge="end"]:dir(ltr) .yg-sidebar-drawer[open],
+  .yg-sidebar-layout[data-edge="start"]:dir(rtl) .yg-sidebar-drawer[open] {
+    --yg-enter-x: var(--boa-space-16);
+  }
 }

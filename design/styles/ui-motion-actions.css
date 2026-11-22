@@ -44,6 +44,7 @@
 }
 .yg-progress > span { min-inline-size: 0; flex-wrap: wrap; overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: no-preference) {
+  .yg-pagination-value { animation: yg-pagination-arrive var(--yg-change) var(--yg-arrive) both; }
   @keyframes yg-pagination-arrive {
     from { opacity: .72; translate: 0 var(--boa-space-4); }
     to { opacity: 1; translate: 0 0; }
@@ -58,10 +59,40 @@
   .yg-checkbox-mixed {
     stroke-dasharray: 10;
     stroke-dashoffset: 10;
-
   }
   .yg-checkbox :is([data-state="indeterminate"], [data-indeterminate]) .yg-checkbox-mixed {
     stroke-dashoffset: 0;
+  }
+  :is(.yg-input, .yg-select, .yg-standalone),
+  :is(.yg-checkbox [role="checkbox"], .yg-radio [role="radio"], .yg-toggle-item, .yg-rating label) {
+    transition: background-color var(--yg-press) var(--yg-settle);
+  }
+  .yg-switch [role="switch"] {
+    transition: background-color var(--yg-change) var(--yg-settle);
+  }
+  .yg-switch [role="switch"] > span {
+    transition: transform var(--yg-motion-switch-travel), background-color var(--yg-change) var(--yg-settle);
+  }
+  .yg-checkbox [role="checkbox"] {
+    transition: background-color var(--yg-press) var(--yg-settle), transform var(--yg-press) var(--yg-settle);
+  }
+  .yg-checkbox-check, .yg-checkbox-mixed {
+    transition: stroke-dashoffset var(--yg-change) var(--yg-settle);
+  }
+  .yg-radio [role="radio"] > span {
+    transition: opacity var(--yg-press) var(--yg-settle), scale var(--yg-change) var(--yg-settle);
+  }
+  .yg-toggle-item {
+    transition: background-color var(--yg-press) var(--yg-settle), transform var(--yg-press) var(--yg-settle);
+  }
+  .yg-otp-slots > span::before {
+    transition: background-color var(--yg-press) var(--yg-settle);
+  }
+  .yg-input:not(.yg-input-group):has(> input[type="search"]) > .yg-icon-button {
+    animation: yg-search-clear-arrive var(--yg-layer) var(--yg-arrive) both;
+  }
+  .yg-field > .yg-error {
+    animation: yg-field-error-arrive var(--yg-layer) var(--yg-arrive) both;
   }
   @keyframes yg-search-clear-arrive {
     from { opacity: .65; scale: .86; }
@@ -166,7 +197,7 @@
 
 .yg-root .yg-button:where(:not([data-motion-baseline] *)) {
   box-shadow: inset 0 0 transparent;
-
+  transition: background-color var(--yg-press) var(--yg-settle), box-shadow var(--yg-press) var(--yg-settle);
 }
 .yg-root .yg-button:where(:not([data-motion-baseline] *)):active:not(:disabled, [aria-disabled="true"]) {
   box-shadow: inset 0 2px color-mix(in srgb, var(--boa-color-neutral-950) 28%, transparent);
@@ -187,7 +218,7 @@
   }
   .yg-root .yg-select[data-dropdown]:where(:not([data-motion-baseline] *)) select:open::picker(select) {
     transform-origin: var(--yg-picker-origin);
-
+    animation: yg-picker-arrive var(--yg-layer) var(--yg-arrive);
   }
 }
 
@@ -241,18 +272,36 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .yg-progress progress[value] + .yg-progress-track > span {
+    transition: transform var(--yg-travel) var(--yg-settle);
+  }
+  .yg-toast {
+    animation: yg-toast-arrive var(--yg-change) var(--yg-arrive);
+  }
+  .yg-carousel-strip:not([data-dragging]) {
+    transition: translate var(--yg-travel) var(--yg-settle);
+  }
+  .yg-carousel-strip:not([data-dragging]) .yg-carousel-card {
+    transition: scale var(--yg-travel) var(--yg-settle), translate var(--yg-travel) var(--yg-settle);
+  }
+  .yg-button[aria-busy="true"] .yg-button-pending, .yg-result {
+    animation: yg-result-arrive var(--yg-layer) var(--yg-arrive) both;
+  }
 
   .yg-skeleton span { animation: yg-skeleton-breathe calc(2 * var(--yg-busy)) var(--yg-settle) infinite alternate; }
 
   .yg-flyout[data-state="open"] {
     transform-origin: var(--radix-popper-transform-origin, top center);
-
+    animation: yg-floating-arrive var(--yg-layer) var(--yg-arrive) both;
   }
 
   .yg-accordion-content {
     height: var(--accordion-panel-height);
     overflow: clip;
-
+    transition: height var(--yg-travel) var(--yg-settle), opacity var(--yg-layer) var(--yg-settle);
+  }
+  :is(.yg-accordion h3 button, .yg-disclosure summary) > .yg-icon {
+    transition: rotate var(--yg-travel) var(--yg-settle);
   }
   .yg-accordion-content:is([data-starting-style], [data-ending-style]) {
     height: 0;
@@ -269,7 +318,8 @@
     .yg-disclosure::details-content {
       block-size: 0;
       overflow: clip;
-
+      transition: block-size var(--yg-travel) var(--yg-settle),
+        content-visibility var(--yg-travel) allow-discrete;
     }
     .yg-disclosure[open]::details-content { block-size: auto; }
   }

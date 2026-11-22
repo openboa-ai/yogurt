@@ -200,7 +200,7 @@ function ActionMenu({
             ]
           }
         ),
-        (open || expanding) && /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsx(
           PopoverContent,
           {
             inline: true,
@@ -219,7 +219,8 @@ function ActionMenu({
                 role: "menu",
                 "aria-label": label,
                 tabIndex: -1,
-                hidden: false,
+                hidden: expanding ? false : props.hidden,
+                "aria-hidden": !open || void 0,
                 inert: !open
               }
             ),
@@ -314,7 +315,9 @@ function Popover({
             className: "yg-anchored-panel yg-popover",
             role: "region",
             "aria-label": label,
-            tabIndex: -1
+            tabIndex: -1,
+            "aria-hidden": !open || void 0,
+            inert: !open
           }
         ), children })
       ]
@@ -353,6 +356,8 @@ function Modal({
       ref,
       "aria-labelledby": id,
       "aria-describedby": description ? id + "-desc" : void 0,
+      "aria-hidden": !open || void 0,
+      inert: !open,
       className: "yg-dialog" + (drawer ? " yg-drawer" : sheet ? " yg-sheet" : ""),
       onCancel: (e) => {
         e.preventDefault();

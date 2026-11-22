@@ -676,6 +676,27 @@
   transform: translate(calc(-50% + var(--yg-tip-shift, 0px)), 0) scale(1);
 
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-tip {
+    transition: opacity var(--yg-layer-exit) var(--yg-settle), transform var(--yg-layer-exit) var(--yg-settle),
+      visibility var(--yg-layer-exit) allow-discrete;
+  }
+  .yg-tip[data-open="true"] {
+    transition: opacity var(--yg-layer) var(--yg-arrive), transform var(--yg-layer) var(--yg-arrive);
+  }
+  .yg-anchored-panel:is([data-slot="popover-content"], [data-slot="combobox-content"]) {
+    animation: none;
+    opacity: 1;
+    translate: 0 0;
+    transition: opacity var(--yg-layer-exit) var(--yg-settle), translate var(--yg-layer-exit) var(--yg-settle);
+  }
+  .yg-anchored-panel[data-open] { transition-duration: var(--yg-layer); }
+  .yg-anchored-panel:is([data-starting-style], [data-ending-style]) {
+    opacity: 0;
+    translate: 0 var(--yg-menu-shift);
+  }
+  .yg-anchored-panel[data-ending-style] { pointer-events: none; }
+}
 .yg-tip[data-side="below"] {
   inset-block-start: calc(100% + var(--boa-space-12));
   inset-block-end: auto;
@@ -693,8 +714,8 @@
 @keyframes yg-reveal {
   from { opacity: .78; }
 }
-.yg-disclosure[open] > div {
-  animation: yg-reveal var(--yg-layer) var(--yg-settle);
+@supports not (interpolate-size: allow-keywords) {
+  .yg-disclosure[open] > div { animation: yg-reveal var(--yg-layer) var(--yg-settle); }
 }
 .yg-options [role="option"],
 .yg-anchored-panel [role="menuitem"],
@@ -838,10 +859,10 @@
   border: 0;
   border-radius: var(--yg-radius-sheet);
   box-shadow: var(--yg-panel-shadow);
+  gap: var(--yg-gap-stack);
 }
 .yg-dialog[open] {
   display: grid;
-  gap: var(--yg-gap-stack);
   --yg-enter-y: var(--boa-space-8);
   animation: yg-enter var(--yg-panel) var(--yg-arrive);
 }
@@ -887,6 +908,50 @@
     max-height: 85dvh;
     padding-bottom: max(var(--boa-space-24), env(safe-area-inset-bottom));
     border-radius: var(--yg-radius-panel) var(--yg-radius-panel) 0 0;
+  }
+}
+@supports (overlay: auto) {
+  @media (prefers-reduced-motion: no-preference) {
+    .yg-dialog {
+      --yg-modal-x: 0px;
+      --yg-modal-y: var(--boa-space-8);
+      opacity: 0;
+      translate: var(--yg-modal-x) var(--yg-modal-y);
+      transition: opacity var(--yg-layer) var(--yg-settle), translate var(--yg-layer) var(--yg-settle),
+        overlay var(--yg-layer) allow-discrete, display var(--yg-layer) allow-discrete;
+    }
+    .yg-dialog[open] {
+      opacity: 1;
+      translate: 0 0;
+      animation: none;
+      transition-duration: var(--yg-panel);
+    }
+    .yg-dialog[open]::backdrop {
+      opacity: 1;
+      animation: none;
+    }
+    .yg-dialog::backdrop {
+      opacity: 0;
+      transition: opacity var(--yg-travel) var(--yg-settle), overlay var(--yg-layer) allow-discrete,
+        display var(--yg-layer) allow-discrete;
+    }
+    .yg-dialog:not([open]), .yg-dialog:not([open])::backdrop { pointer-events: none; }
+    .yg-dialog.yg-drawer { --yg-modal-y: var(--boa-space-16); translate: 0 var(--yg-modal-y); }
+    .yg-dialog.yg-drawer[open] { translate: 0 var(--yg-drag-distance, 0px); }
+    .yg-dialog.yg-drawer[data-dragging] { transition: none; }
+    .yg-dialog.yg-sheet { --yg-modal-x: var(--boa-space-16); --yg-modal-y: 0px; }
+    .yg-dialog.yg-sheet:dir(rtl) { --yg-modal-x: calc(-1 * var(--boa-space-16)); }
+    @media (max-width: 38rem) {
+      .yg-dialog.yg-sheet, .yg-dialog.yg-sheet:dir(rtl) {
+        --yg-modal-x: 0px;
+        --yg-modal-y: var(--boa-space-16);
+      }
+    }
+    @starting-style {
+      .yg-dialog[open] { opacity: 0; translate: var(--yg-modal-x) var(--yg-modal-y); }
+      .yg-dialog.yg-drawer[open] { translate: 0 var(--yg-modal-y); }
+      .yg-dialog[open]::backdrop { opacity: 0; }
+    }
   }
 }
 .yg-filter {

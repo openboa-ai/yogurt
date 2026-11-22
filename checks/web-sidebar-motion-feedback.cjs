@@ -3,6 +3,8 @@ const { resolve } = require("node:path");
 const { pathToFileURL } = require("node:url");
 const assert = require("node:assert/strict");
 
+const settle = (node) => node.evaluate(el => Promise.allSettled(el.getAnimations().map(animation => animation.finished)));
+
 const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/components.html")).href;
 
 (async () => {
@@ -21,15 +23,18 @@ const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/compon
     assert.equal(await submenuButton.getAttribute("aria-expanded"), "false");
     assert.equal(await submenu.getAttribute("aria-hidden"), "true");
     assert.equal(await submenu.evaluate(node => node.inert), true);
+    await settle(submenu);
     assert.equal(await submenu.evaluate(node => getComputedStyle(node).opacity), "0");
     await submenuButton.press("Enter");
     assert.equal(await submenuButton.getAttribute("aria-expanded"), "true");
     assert.equal(await submenu.evaluate(node => node.inert), false);
+    await settle(submenu);
     assert.equal(await submenu.evaluate(node => getComputedStyle(node).opacity), "1");
     const expandedWidth = (await panel.boundingBox()).width;
     await root.getByRole("button", { name: "Collapse navigation" }).click();
     assert.equal(await layout.getAttribute("data-panel"), "rail");
     assert.equal(await submenu.evaluate(node => node.inert), true);
+    await settle(layout);
     assert((await panel.boundingBox()).width < expandedWidth, "collapsed rail is narrower than the expanded panel");
     await root.getByRole("button", { name: "Expand navigation" }).click();
     assert.equal(await layout.getAttribute("data-panel"), "full");
@@ -57,6 +62,7 @@ const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/compon
     await basic.getByRole("button", { name: "Collapse navigation" }).click();
     assert.equal(await basicNav.getAttribute("aria-hidden"), "true");
     assert.equal(await basicNav.evaluate(node => node.inert), true);
+    await settle(basicNav);
     assert.equal(await basicNav.evaluate(node => getComputedStyle(node).opacity), "0");
     await basic.getByRole("button", { name: "Expand navigation" }).click();
     assert.equal(await basicNav.getAttribute("aria-hidden"), "false");

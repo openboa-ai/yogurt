@@ -185,3 +185,8 @@
 @media (prefers-reduced-motion: reduce) {
   .yg-message-actions { transition: none; }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  .yg-ghost-suffix { animation: yg-ghost-appear var(--yg-layer) var(--yg-arrive) both; }
+}
+@keyframes yg-ghost-appear { from { opacity: 0; } }

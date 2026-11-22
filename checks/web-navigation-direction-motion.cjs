@@ -58,6 +58,7 @@ const bundle = buildSync({stdin:{resolveDir:process.cwd(),loader:'jsx',contents:
       const box=await menuButton.boundingBox();
       assert(box && box.width > 0 && box.height > 0, 'menu trigger has a visible hit target');
       await menuButton.hover();
+      await menuButton.evaluate(node => Promise.allSettled(node.getAnimations().map(animation => animation.finished)));
       assert.notEqual(await menuButton.evaluate(el=>getComputedStyle(el).backgroundColor),beforeHover,'hover highlights the menu trigger');
       await page.close();
     }

@@ -13,7 +13,7 @@ Use motion to make input, changes and current work legible. The [component motio
 
 The catalog assigns each of the 139 entries one primary motion role. Shared controls keep that behavior in composed screens. Foundations, reading text and figures with fixed meaning stay in place. Editing and selection keep the active value readable immediately, and a motion cue settles around it. Choose a host result before presenting success or failure. A directly manipulated item stays coupled to the drag until release, even when animated settling is reduced.
 
-The Web renderer uses 80 ms for press feedback, 120 ms for small anchored cues, 160 ms for travel, 180 ms for changes and 200 ms for larger layers. Actions keep a steady label, menus stay opaque, and selection markers use a small settling overshoot. Carousel arrows keep their center when the slide label changes. The Native host maps its available widget timing slots and uses the shared avatar poses.
+Web controls reuse the motion roles in `design/tokens/ui.json`. Ordinary feedback uses 110 ms for a press or short exit, 160 ms for anchored reveals, 220 ms for travel and 260 ms for a large layer entering. Switch travel uses its own spring profile. Interaction state updates immediately while the visual change catches up. During a drag, the pointer drives the motion and settling resumes after release. Closing layers restore focus and become inert as their exit plays. The Native host maps its available widget timing slots and uses the shared avatar poses.
 
 ## Eye and body motion
 

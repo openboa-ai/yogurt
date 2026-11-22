@@ -194,57 +194,55 @@ export function ActionMenu({
         {triggerText}
         {expanding ? <span className="yg-action-menu-glyph" aria-hidden="true"><i /><i /></span> : <Icon name="down" />}
       </Button>
-      {(open || expanding) && (
-        <PopoverContent inline
-          keepMounted={expanding}
-          id={menu}
-          role="menu"
-          aria-label={label}
-          tabIndex={-1}
-          inert={!open}
-          className={expanding ? "yg-action-menu-fold" : "yg-anchored-panel"}
-          render={(props) => <div {...props} id={menu} role="menu" aria-label={label}
-            tabIndex={-1} hidden={false} inert={!open} />}
-          onKeyDownCapture={(e) => {
-            const index = enabled.findIndex((o) => o.id === current?.id);
-            if (e.key === "Escape") {
-              e.preventDefault();
-              e.stopPropagation();
-              close(true);
-              return;
-            }
-            if (e.key === "Tab") {
-              trigger.current?.focus();
-              close();
-              return;
-            }
-            if (!enabled.length) return;
-            const move = (
-              {
-                ArrowDown: (index + 1) % enabled.length,
-                ArrowUp: (index - 1 + enabled.length) % enabled.length,
-                Home: 0,
-                End: enabled.length - 1,
-              } as Record<string, number | undefined>
-            )[e.key];
-            if (move !== undefined) {
-              e.preventDefault();
-              setActive(enabled[move].id);
-            } else if (e.key.length === 1) {
-              const ordered = [
-                ...enabled.slice(index + 1),
-                ...enabled.slice(0, index + 1),
-              ];
-              const match = ordered.find((o) =>
-                o.label.toLowerCase().startsWith(e.key.toLowerCase()),
-              );
-              if (match) setActive(match.id);
-            }
-          }}
-        >
-          {expanding ? <div className="yg-action-menu-options">{options}</div> : options}
-        </PopoverContent>
-      )}
+      <PopoverContent inline
+        keepMounted={expanding}
+        id={menu}
+        role="menu"
+        aria-label={label}
+        tabIndex={-1}
+        inert={!open}
+        className={expanding ? "yg-action-menu-fold" : "yg-anchored-panel"}
+        render={(props) => <div {...props} id={menu} role="menu" aria-label={label}
+          tabIndex={-1} hidden={expanding ? false : props.hidden} aria-hidden={!open || undefined} inert={!open} />}
+        onKeyDownCapture={(e) => {
+          const index = enabled.findIndex((o) => o.id === current?.id);
+          if (e.key === "Escape") {
+            e.preventDefault();
+            e.stopPropagation();
+            close(true);
+            return;
+          }
+          if (e.key === "Tab") {
+            trigger.current?.focus();
+            close();
+            return;
+          }
+          if (!enabled.length) return;
+          const move = (
+            {
+              ArrowDown: (index + 1) % enabled.length,
+              ArrowUp: (index - 1 + enabled.length) % enabled.length,
+              Home: 0,
+              End: enabled.length - 1,
+            } as Record<string, number | undefined>
+          )[e.key];
+          if (move !== undefined) {
+            e.preventDefault();
+            setActive(enabled[move].id);
+          } else if (e.key.length === 1) {
+            const ordered = [
+              ...enabled.slice(index + 1),
+              ...enabled.slice(0, index + 1),
+            ];
+            const match = ordered.find((o) =>
+              o.label.toLowerCase().startsWith(e.key.toLowerCase()),
+            );
+            if (match) setActive(match.id);
+          }
+        }}
+      >
+        {expanding ? <div className="yg-action-menu-options">{options}</div> : options}
+      </PopoverContent>
     </div>
     </SDKPopover>
   );
@@ -294,7 +292,7 @@ export function Popover({
       </Button>
       <PopoverContent inline ref={content} render={(props) => <div {...props}
         id={id} className="yg-anchored-panel yg-popover" role="region"
-        aria-label={label} tabIndex={-1} />}>
+        aria-label={label} tabIndex={-1} aria-hidden={!open || undefined} inert={!open} />}>
         {children}
       </PopoverContent>
     </div>
@@ -338,6 +336,7 @@ function Modal({
     <SDKDialog open={open} onOpenChange={onOpenChange}>
     <DialogContent keepMounted inline render={<dialog ref={ref}
       aria-labelledby={id} aria-describedby={description ? id + "-desc" : undefined}
+      aria-hidden={!open || undefined} inert={!open}
       className={"yg-dialog" + (drawer ? " yg-drawer" : sheet ? " yg-sheet" : "")}
       onCancel={(e) => { e.preventDefault(); onOpenChange(false); }} />}>
       {drawer && (

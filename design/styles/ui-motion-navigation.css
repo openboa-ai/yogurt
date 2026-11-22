@@ -52,6 +52,12 @@
   pointer-events: none;
 }
 @media (prefers-reduced-motion: no-preference) {
+  .yg-menu-bar > button, .yg-navigation-menu li > button {
+    transition: background-color var(--yg-press) var(--yg-settle), color var(--yg-press) var(--yg-settle);
+  }
+  .yg-navigation-menu li > button > .yg-icon {
+    transition: rotate var(--yg-travel) var(--yg-settle);
+  }
   .yg-selection-marker {
     transition:
       translate var(--yg-change) var(--yg-settle),
