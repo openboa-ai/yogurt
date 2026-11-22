@@ -38,8 +38,6 @@ jobs:
         shell: bash
         run: |
           npm install --prefix "$RUNNER_TEMP/yogurt-native" --no-audit --no-fund @native-sdk/cli@0.11.1
-          sdk="$RUNNER_TEMP/yogurt-native/node_modules/@native-sdk/cli"
-          echo "NATIVE_SDK_PATH=$sdk" >> "$GITHUB_ENV"
           echo "$RUNNER_TEMP/yogurt-native/node_modules/.bin" >> "$GITHUB_PATH"
           curl -fsSL https://ziglang.org/download/index.json -o "$RUNNER_TEMP/zig-index.json"
           arch="$(uname -m)"

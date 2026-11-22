@@ -16,7 +16,7 @@ The Native installer includes `src/yogurt/interface-motion.zig` for animated sur
 
 ### OTP focus on SDK 0.11.1
 
-Set `NATIVE_SDK_PATH` to the original Native SDK 0.11.1 framework, then use the Yogurt package command in your app's build script and CI.
+Install Native SDK 0.11.1 and use the Yogurt package command in your app build and CI. Yogurt finds the framework from the Native executable on PATH. Set `NATIVE_SDK_PATH` for a custom framework location.
 
 ```sh
 npx yogurt add input-otp --target native
@@ -27,7 +27,7 @@ The build command copies the framework, applies the bundled patch automatically 
 
 Use `npx yogurt native package .` for macOS releases. It builds against the patched framework and passes that binary to the packager. Put this command in the app's release job. Projects with custom packaging can package the output of `yogurt native build .` directly.
 
-Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`. Existing markup templates retain their original call signatures.
+Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`.
 
 ## Drawer
 

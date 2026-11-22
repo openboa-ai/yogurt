@@ -50,12 +50,12 @@ export function nativeFiles(kit, selected, catalog) {
   for (const id of componentIds) {
     const component = byId.get(id);
     if (!component) throw Error(`Unknown Native component ${id}.`);
-    copy("items/" + id + ".native");
+    if (component.nativeMarkup !== false) copy("items/" + id + ".native");
     if (component.nativeView) copy(component.nativeView.module, join(kit, nativeEntry(component).entry));
   }
   for (const item of selected) {
     if (item.native) copy("items/" + item.id + ".native", join(kit, "packages/recipes", item.id, "view.native"));
-    files.set("src/yogurt/" + item.id + ".zig", zigEntry(item));
+    if (item.nativeMarkup !== false) files.set("src/yogurt/" + item.id + ".zig", zigEntry(item));
   }
   if (uses(artConsumers)) {
     copy("art.zig");

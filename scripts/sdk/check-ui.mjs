@@ -158,10 +158,10 @@ for (const block of blocks) {
     [...block.native].sort(),
   );
 }
-for (const { id, name, exports = [] } of catalog) {
+for (const { id, name, nativeMarkup, exports = [] } of catalog) {
   assert(existsSync("packages/web/dist/entries/" + id + ".js"));
   assert(existsSync("packages/web/dist/entries/" + id + ".d.ts"));
-  assert(existsSync("packages/native/controls/items/" + id + ".native"));
+  assert.equal(existsSync("packages/native/controls/items/" + id + ".native"), nativeMarkup !== false, id);
   assert(
     json("registry/" + id + ".json").files[0].content.includes(
       "@openboa/yogurt/" + id,

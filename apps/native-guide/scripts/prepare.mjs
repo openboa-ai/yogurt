@@ -142,6 +142,7 @@ const lines = [
 ];
 for (const [index, entry] of catalog.entries()) {
   if (!/^[a-z0-9-]+$/.test(entry.id)) throw Error(`Invalid catalog ID: ${entry.id}`);
+  if (entry.nativeMarkup === false) continue;
   lines.push(`const sources_${index} = [_]canvas.ui_markup.SourceFile{`);
   for (const name of [...new Set([`${entry.id}-test.native`, `${entry.id}.native`, ...(entry.native ?? []).map((id) => `${id}.native`)])]) {
     const embedded = name === entry.id + "-test.native" ? `yogurt-catalog-test/${name}` : `yogurt/items/${name}`;
@@ -151,7 +152,7 @@ for (const [index, entry] of catalog.entries()) {
   lines.push("};", `const View_${index} = canvas.CompiledMarkupImports(Model, Msg, ${zigString(entry.id + "-test.native")}, &sources_${index});`);
 }
 lines.push("pub fn specimen(ui: *Ui, model: *const Model) Ui.Node {", "    return switch (model.gallery_selected) {");
-for (const [index] of catalog.entries()) lines.push(`        ${index} => View_${index}.build(ui, model),`);
+for (const [index, entry] of catalog.entries()) if (entry.nativeMarkup !== false) lines.push(`        ${index} => View_${index}.build(ui, model),`);
 lines.push("        else => ui.text(.{}, \"Unknown component\"),", "    };", "}", "");
 writeFileSync(join(host, "src/gallery-generated.zig"), lines.join("\n"));
 console.log(`Prepared ${catalog.length} Native gallery specimens in ${host}.`);

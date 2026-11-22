@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { nativeFramework } from "../../../bin/native-build.mjs";
 import { generateTokens } from "../../../scripts/tokens/generate.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmdirSync, statSync, writeFileSync } from "node:fs";
@@ -21,7 +22,7 @@ function command(program, args, options = {}) {
 }
 version("native", "0.11.1", ["--version"]);
 version("zig", "0.16.0", ["version"]);
-if (!process.env.NATIVE_SDK_PATH) throw Error("Set NATIVE_SDK_PATH to the Native SDK 0.11.1 framework.");
+const framework = nativeFramework();
 generateTokens();
 const digest = createHash("sha256");
 function hash(path) {
@@ -48,7 +49,7 @@ for (let attempt = 0; attempt < 100; attempt++) {
   try { mkdirSync(lock); } catch (error) { if (error.code === "EEXIST") continue; throw error; }
   try {
     if (existsSync(candidate)) continue;
-    command("native", ["init", candidate, "--template", "zig-core", "--framework", resolve(process.env.NATIVE_SDK_PATH)]);
+    command("native", ["init", candidate, "--template", "zig-core", "--framework", framework]);
     writeFileSync(join(candidate, ".yogurt-guide-host"), "yogurt-native-guide\n", { flag: "wx" });
     command(process.execPath, [join(root, "apps/native-guide/scripts/prepare.mjs"), candidate]);
     writeFileSync(ready, `${key}\n`, { flag: "wx" });

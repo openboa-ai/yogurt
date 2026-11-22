@@ -4,7 +4,7 @@ The Native guide is a local macOS application for exploring the Yogurt component
 
 ## Run
 
-Use macOS, Node.js, Zig 0.16.0 and Native SDK 0.11.1. Set `NATIVE_SDK_PATH` to the original SDK framework. The guide launcher uses the [Yogurt Native build command](../../packages/native/README.md#otp-focus-on-sdk-0111). From the repository root, start the guide with:
+Use macOS, Node.js, Zig 0.16.0 and Native SDK 0.11.1. The guide launcher uses the [Yogurt Native build command](../../packages/native/README.md#otp-focus-on-sdk-0111). From the repository root, start the guide with:
 
 ```sh
 node apps/native-guide/scripts/run.mjs

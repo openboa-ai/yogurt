@@ -57,7 +57,8 @@ const tests = [
   `const Msg = union(enum) { activate, edit: canvas.TextInputEvent, edit_first: canvas.TextInputEvent, edit_last: canvas.TextInputEvent, clear, open_choices, toggle, navigate, previous_page, next_page, dismiss, confirm_current, lookup_original, jump_to_latest, choose: u32, dismiss_item: u32, open_menu: u32, adjust: f32, copy, decrement, increment, toggle_all, backspace, discard, stop, ${workspaceActionFields} };`,
   "const Ui = canvas.Ui(Msg);",
 ];
-for (const { id, native } of [...catalog, ...blocks]) {
+for (const { id, native, nativeMarkup } of [...catalog, ...blocks]) {
+  if (nativeMarkup === false) continue;
   const source = readFileSync(
     native
       ? kit + "/packages/recipes/" + id + "/view.native"

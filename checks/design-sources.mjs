@@ -61,8 +61,12 @@ test("the Native guide embeds the installed controls and recipes and calls the p
   for (const item of [...components, ...blocks]) {
     const template = item.id + ".native";
     const source = item.native ? `packages/recipes/${item.id}/view.native` : `packages/native/controls/items/${template}`;
-    assert.equal(read(join(host, "src/yogurt/items", template)), read(join(kit, source)));
-    assert(gallery.includes(`@embedFile("yogurt/items/${template}")`), item.id);
+    if (item.nativeMarkup === false) {
+      assert(!existsSync(join(host, "src/yogurt/items", template)), item.id);
+    } else {
+      assert.equal(read(join(host, "src/yogurt/items", template)), read(join(kit, source)));
+      assert(gallery.includes(`@embedFile("yogurt/items/${template}")`), item.id);
+    }
     assert(!existsSync(join(host, "src/yogurt-catalog-test", template)), item.id);
     if (item.nativeView) {
       const { module, symbol } = item.nativeView;

@@ -1,20 +1,50 @@
 #!/usr/bin/env bash
 set -euo pipefail
 kit="$(cd "$(dirname "$0")/.." && pwd)"
-framework="${NATIVE_SDK_PATH:?Set NATIVE_SDK_PATH to Native SDK 0.11.1}"
+unset NATIVE_SDK_PATH
 scratch="$(mktemp -d)"
-trap 'rm -rf "$scratch"' EXIT
+pid=
+cleanup() {
+  if [[ -n "$pid" ]]; then kill "$pid" 2>/dev/null || true; wait "$pid" || true; fi
+  rm -rf "$scratch"
+}
+trap cleanup EXIT
 
 archive="$(cd "$kit" && npm pack --ignore-scripts --silent --pack-destination "$scratch")"
 cd "$scratch"
 mkdir sdk
 tar -xzf "$archive" -C sdk --strip-components=1
-native init consumer --template zig-core --framework "$framework"
+native init consumer --template zig-core
 cp "$kit/checks/fixtures/native-otp/main.zig" consumer/src/main.zig
 yogurt() { node sdk/bin/yogurt.mjs "$@"; }
 yogurt add input-otp --target native --dir consumer
 yogurt add input-otp --target native --dir consumer
 yogurt native build consumer -Doptimize=Debug
-yogurt native package consumer --signing none --output "$scratch/release"
+yogurt native package consumer -Dautomation=true --signing none --output "$scratch/release"
 test -x "$scratch/release/Contents/MacOS/consumer"
 cmp consumer/zig-out/bin/consumer "$scratch/release/Contents/MacOS/consumer"
+test ! -e consumer/src/yogurt/items/input-otp.native
+test ! -e consumer/src/yogurt/input-otp.zig
+
+cd consumer
+"$scratch/release/Contents/MacOS/consumer" >"$scratch/consumer.log" 2>&1 &
+pid=$!
+native automate assert --timeout-ms 15000 'gpu_nonblank=true' 'role=textbox name="Verification code"'
+otp="$(native automate snapshot | sed -nE 's/.*#([0-9]+) role=textbox name="Verification code".*/\1/p')"
+shot() {
+  native automate screenshot main-canvas 1
+  cp .zig-cache/native-sdk-automation/screenshot-main-canvas.png "$scratch/$1.png"
+}
+shot idle
+native automate widget-click main-canvas "$otp"
+shot click
+native automate widget-key main-canvas Tab
+native automate assert --timeout-ms 5000 'role=button name="After".*focused=true'
+shot blur
+native automate widget-key main-canvas shift+Tab
+native automate widget-key main-canvas shift+Tab
+native automate assert --timeout-ms 5000 'role=button name="Before".*focused=true'
+native automate widget-key main-canvas Tab
+native automate assert --timeout-ms 5000 'role=textbox name="Verification code".*focused=true'
+shot tab
+swift "$kit/checks/fixtures/native-otp/focus-pixels.swift" "$scratch"

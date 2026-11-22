@@ -89,7 +89,6 @@ const examples = {
   "text-field": { label: "View name" },
   textarea: { label: "Notes" },
   "input-group": { label: "View name" },
-  "input-otp": { label: "Verification code", value: "{value}" },
   badge: { label: "Draft" },
   status: { label: "Saved" },
   notice: { title: "View updated", detail: "Your team can use the new view." },
@@ -231,7 +230,8 @@ const tests = [
   `const Msg = union(enum) { gallery_select_option: u32, gallery_toggle_option: u32, gallery_menu: u32, gallery_toggle_chart, toggle_sidebar_resources, toggle_project_sidebar, advance_progress, activate, edit: canvas.TextInputEvent, edit_first: canvas.TextInputEvent, edit_last: canvas.TextInputEvent, clear, open_choices, toggle, navigate, previous_page, next_page, dismiss, confirm_current, lookup_original, jump_to_latest, choose: u32, dismiss_item: u32, open_menu: u32, adjust: f32, copy, decrement, increment, toggle_all, backspace, discard, stop, ${workspaceActionFields} };`,
   "const Ui = canvas.Ui(Msg);",
 ];
-for (const { id, native } of [...catalog, ...blocks]) {
+for (const { id, native, nativeMarkup } of [...catalog, ...blocks]) {
+  if (nativeMarkup === false) continue;
   const source = readFileSync(resolve(host, "src/yogurt/items", id + ".native"), "utf8");
   const keys = (source.match(/args="([^"]*)"/)?.[1] ?? "")
     .split(" ")

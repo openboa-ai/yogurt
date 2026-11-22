@@ -14,7 +14,8 @@ export function nativeTemplates(root, brand, geometry, components, blocks) {
     if (markup.includes("@{")) throw Error(`Invalid design token reference in ${source}.`);
     outputs.set(destination, markup);
   }
-  for (const { id } of components) {
+  for (const { id, nativeMarkup } of components) {
+    if (nativeMarkup === false) continue;
     compile(`packages/native/src/templates/${id}.native.in`, `packages/native/controls/items/${id}.native`);
   }
   for (const { id } of blocks) {

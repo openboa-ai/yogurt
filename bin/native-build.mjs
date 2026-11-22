@@ -1,7 +1,23 @@
 import { cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { basename, join, resolve } from "node:path";
+import { basename, delimiter, dirname, join, resolve } from "node:path";
+
+export function nativeFramework() {
+  if (process.env.NATIVE_SDK_PATH) return realpathSync(process.env.NATIVE_SDK_PATH);
+  for (const directory of (process.env.PATH ?? "").split(delimiter)) {
+    const command = resolve(directory, "native");
+    if (!existsSync(command)) continue;
+    let root = dirname(realpathSync(command));
+    for (let depth = 0; depth < 4; depth++, root = dirname(root)) {
+      for (const candidate of [root, join(root, "@native-sdk/cli"), join(root, "cli")]) {
+        if (existsSync(join(candidate, "build.zig")) && existsSync(join(candidate, "src/root.zig"))) return candidate;
+      }
+    }
+    break;
+  }
+  throw Error("Install Native SDK 0.11.1 or set NATIVE_SDK_PATH to its framework directory.");
+}
 
 export function runNative(kit, [verb, app = ".", ...flags]) {
   if (!["build", "dev", "test", "check", "package"].includes(verb)) {
@@ -18,9 +34,7 @@ export function runNative(kit, [verb, app = ".", ...flags]) {
     if (typeof name !== "string" || !/^[a-zA-Z0-9_-]+$/.test(name)) throw Error("Invalid app.json executable name.");
     binary = join(project, "zig-out/bin", name);
   }
-  const configured = process.env.NATIVE_SDK_PATH;
-  if (!configured) throw Error("Set NATIVE_SDK_PATH to the unpatched Native SDK 0.11.1 framework.");
-  const source = realpathSync(configured);
+  const source = nativeFramework();
   if (!existsSync(join(source, "build.zig"))) throw Error("NATIVE_SDK_PATH must point to the Native SDK framework.");
   const version = spawnSync("native", ["--version"], { encoding: "utf8" });
   if (version.error) throw version.error;
@@ -43,10 +57,10 @@ export function runNative(kit, [verb, app = ".", ...flags]) {
       env: { ...process.env, NATIVE_SDK_PATH: framework },
       stdio: "inherit",
     };
-    const build = spawnSync("native", packaging ? ["build", project] : [verb, project, ...flags], options);
+    const build = spawnSync("native", packaging ? ["build", project, ...flags.filter(flag => flag.startsWith("-D"))] : [verb, project, ...flags], options);
     if (build.error) throw build.error;
     if (!packaging || build.status !== 0) return build.status ?? 1;
-    const release = spawnSync("native", ["package", "--target", "macos", "--binary", binary, ...flags], {
+    const release = spawnSync("native", ["package", "--target", "macos", "--binary", binary, ...flags.filter(flag => !flag.startsWith("-D"))], {
       ...options, cwd: project,
     });
     if (release.error) throw release.error;

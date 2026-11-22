@@ -40,7 +40,6 @@ const windows = [_]native_sdk.ShellWindow{.{
 const sources = [_]native_sdk.canvas.ui_markup.SourceFile{
     @import("yogurt/text-field.zig").file,
     @import("yogurt/search-field.zig").file,
-    @import("yogurt/input-otp.zig").file,
     @import("yogurt/select.zig").file,
     @import("yogurt/switch.zig").file,
 };
