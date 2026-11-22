@@ -28,6 +28,7 @@
     "packages/recipes",
     "!packages/recipes/*/view.native.in",
     "catalog/brand.json",
+    "design/content/agent-names.json",
     "design/content/terms.json",
     "registry",
     "examples/native-ui",
@@ -79,6 +80,7 @@
       "types": "./packages/web/dist/agent.d.ts",
       "import": "./packages/web/dist/agent.js"
     },
+    "./agent-names": "./design/content/agent-names.json",
     "./styles.css": "./design/styles/ui.css",
     "./tokens": "./design/tokens/ui.json",
     "./palette": "./design/tokens/brand.json",
