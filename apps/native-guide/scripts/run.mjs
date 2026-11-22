@@ -3,7 +3,7 @@ import { generateTokens } from "../../../scripts/tokens/generate.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmdirSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
@@ -21,6 +21,7 @@ function command(program, args, options = {}) {
 }
 version("native", "0.11.1", ["--version"]);
 version("zig", "0.16.0", ["version"]);
+if (!process.env.NATIVE_SDK_PATH) throw Error("Set NATIVE_SDK_PATH to the Native SDK 0.11.1 framework.");
 generateTokens();
 const digest = createHash("sha256");
 function hash(path) {
@@ -47,7 +48,7 @@ for (let attempt = 0; attempt < 100; attempt++) {
   try { mkdirSync(lock); } catch (error) { if (error.code === "EEXIST") continue; throw error; }
   try {
     if (existsSync(candidate)) continue;
-    command("native", ["init", candidate, "--template", "zig-core"]);
+    command("native", ["init", candidate, "--template", "zig-core", "--framework", resolve(process.env.NATIVE_SDK_PATH)]);
     writeFileSync(join(candidate, ".yogurt-guide-host"), "yogurt-native-guide\n", { flag: "wx" });
     command(process.execPath, [join(root, "apps/native-guide/scripts/prepare.mjs"), candidate]);
     writeFileSync(ready, `${key}\n`, { flag: "wx" });
@@ -57,4 +58,4 @@ for (let attempt = 0; attempt < 100; attempt++) {
 }
 if (!host) throw Error(`No free guide cache slot in ${cache}; existing files were left untouched.`);
 console.log(`Running Yogurt Native guide from ${host}`);
-command("native", ["dev", host], { cwd: dirname(host) });
+command(process.execPath, [join(root, "bin/yogurt.mjs"), "native", "dev", host]);

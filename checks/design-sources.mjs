@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -71,4 +71,31 @@ test("the Native guide embeds the installed controls and recipes and calls the p
       assert(app.includes(`gallery.Views.${name}(`), item.id);
     }
   }
+});
+
+test("the Native build uses a patched copy and propagates a build failure", t => {
+  const root = scratch(t);
+  const source = join(root, "sdk");
+  const path = join(root, "bin");
+  mkdirSync(source);
+  mkdirSync(path);
+  writeFileSync(join(source, "build.zig"), "");
+  writeFileSync(join(path, "git"), '#!/bin/sh\n[ "$1" = apply ] && [ -f "$2" ] && touch patched\n', { mode: 0o755 });
+  writeFileSync(join(path, "native"), `#!/bin/sh
+if [ "$1" = --version ]; then echo "native 0.11.1"; exit 0; fi
+[ -f "$NATIVE_SDK_PATH/patched" ] && [ "$NATIVE_SDK_PATH" != "$ORIGINAL_SDK" ] || exit 90
+printf '%s' "$NATIVE_SDK_PATH" > "$FRAMEWORK_RECORD"
+exit 17
+`, { mode: 0o755 });
+  const record = join(root, "framework-used");
+  const result = spawnSync(process.execPath, [join(kit, "bin/yogurt.mjs"), "native", "build", root], {
+    env: {
+      ...process.env, PATH: path + ":" + process.env.PATH,
+      NATIVE_SDK_PATH: source, ORIGINAL_SDK: source, FRAMEWORK_RECORD: record,
+    },
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 17, result.stderr);
+  assert(!existsSync(join(source, "patched")));
+  assert(!existsSync(read(record)));
 });

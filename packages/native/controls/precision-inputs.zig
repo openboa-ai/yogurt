@@ -75,13 +75,13 @@ fn codeFieldStyle(comptime count: usize) canvas.WidgetStyle {
         .stroke_width = 0,
         .radius = tokens.otp_slot_radius,
     };
-    if (@hasField(canvas.WidgetStyle, "empty_focus_cell")) {
-        style.empty_focus_cell = .{
-            .width = tokens.otp_slot_width,
-            .remaining_gap = tokens.otp_slot_gap * (count - 1),
-            .count = count,
-        };
-    }
+    if (!@hasField(canvas.WidgetStyle, "empty_focus_cell"))
+        @compileError("Build Native OTP with yogurt native build (or yogurt native dev).");
+    style.empty_focus_cell = .{
+        .width = tokens.otp_slot_width,
+        .remaining_gap = tokens.otp_slot_gap * (count - 1),
+        .count = count,
+    };
     return style;
 }
 

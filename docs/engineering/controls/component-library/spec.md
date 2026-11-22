@@ -28,6 +28,8 @@ Data comes from the consumer. Display and dismissal generate no external effects
 
 Keep the six-cell Native code field borderless on pointer and keyboard focus, with only the first cell filled while the field is empty and focused, restoring its resting fill on blur. Keep its public entry, accessible label and digit editing contract. Verify click, Tab and typing in the running guide using the installed control. The Required CI aggregate must fail when Shared UI sources fails, is skipped or is cancelled.
 
+The Yogurt Native build command applies the versioned OTP patch to a disposable framework copy and builds against that copy. The supplied framework and consumer sources stay untouched. A mismatched SDK or unappliable patch stops the build. The same command prepares the guide and fresh consumers. Verify the installed command, including build failure propagation and the actual empty-field click, Tab and blur states in a fresh consumer.
+
 ### Select when open
 
 The owner reported that the opened Select looks out of place. Apply requirements 1–3 and 6 to the option list in the web SDK, component gallery and brand guide. Align option text to the field value, match the field width, and leave a 4 px gap. Use an opaque material surface, a quiet active row and a trailing ink-blue check for the current value. Keep the field and rows at least 44 px tall on touch screens. The list can open above a field near the bottom of a viewport and scroll through longer choices.

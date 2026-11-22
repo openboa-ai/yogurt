@@ -4,7 +4,7 @@ The Native guide is a local macOS application for exploring the Yogurt component
 
 ## Run
 
-Use macOS, Node.js, Zig 0.16.0 and Native SDK 0.11.1. For empty OTP focus, apply the [Native SDK patch](../../packages/native/README.md#otp-focus-on-sdk-0111) and set `NATIVE_SDK_PATH` to the patched framework. From the repository root, start the guide with:
+Use macOS, Node.js, Zig 0.16.0 and Native SDK 0.11.1. Set `NATIVE_SDK_PATH` to the original SDK framework. The guide launcher uses the [Yogurt Native build command](../../packages/native/README.md#otp-focus-on-sdk-0111). From the repository root, start the guide with:
 
 ```sh
 node apps/native-guide/scripts/run.mjs
@@ -28,8 +28,8 @@ Then return to the repository root and run:
 
 ```sh
 node apps/native-guide/scripts/prepare.mjs /tmp/yogurt-native-guide-host
-native test /tmp/yogurt-native-guide-host
-native dev /tmp/yogurt-native-guide-host
+node bin/yogurt.mjs native test /tmp/yogurt-native-guide-host
+node bin/yogurt.mjs native dev /tmp/yogurt-native-guide-host
 ```
 
 Preparation installs all catalog controls and blocks with the SDK installer. The guide embeds those installed templates, binds the catalog's typed views and generates the sample data separately. Rerun preparation in a fresh scaffold after updating the SDK if an installed file has local edits.
@@ -38,7 +38,7 @@ Use the list to choose a component, the previous and next buttons to navigate, a
 
 ## Verify the catalog
 
-Build a disposable guide host with `native build /tmp/yogurt-native-guide-host -Doptimize=Debug -Dautomation=true`. Keep the guide in the foreground during the run so keyboard input and animation frames reach the window.
+Build a disposable guide host with `node bin/yogurt.mjs native build /tmp/yogurt-native-guide-host -Doptimize=Debug -Dautomation=true`. Keep the guide in the foreground during the run so keyboard input and animation frames reach the window.
 
 ```sh
 bash checks/native-gallery-journey.sh "$(command -v native)" /tmp/yogurt-native-guide-host /tmp/yogurt-review-light

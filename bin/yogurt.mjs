@@ -2,6 +2,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { runNative } from "./native-build.mjs";
 import { checkProject } from "./check-project.mjs";
 import { nativeEntry, nativeFiles } from "./install/native.mjs";
 import { installFiles } from "./install/files.mjs";
@@ -24,6 +25,10 @@ for (const item of motion) {
 const usage =
   "yogurt check [--dir project] | yogurt list | yogurt add <component-or-block> --target web|native [--dir project]";
 function run() {
+  if (args[0] === "native") {
+    process.exitCode = runNative(kit, args.slice(1));
+    return;
+  }
   if (args[0] === "check") {
     const at = args.indexOf("--dir");
     console.log(checkProject(resolve(at < 0 ? "." : args[at + 1]), kit));
