@@ -6,6 +6,8 @@ In the running macOS guide, clicking the installed code field and returning to i
 
 The existing shared source suite passed locally. The Required CI shell step accepted a successful Shared UI sources result and rejected failure, cancellation and skip. This check covers the aggregate logic locally. Native focus was exercised separately in the running app.
 
+The consumer check installs its locked Native SDK before starting the standard Native toolchain. It exercises the same OTP interaction in development and in the macOS package, compares the declared Zig manifest before and after each build, and checks that the installed SDK sources stay byte-identical. The packaged Yogurt archive supplies the OTP view and tokens.
+
 ## Shared UI sources
 
 In an isolated checkout fixture, changing `card-inset-regular` from 18 to 21 changed the rendered SDK Card's computed padding from 18 px to 21 px in a browser fixture using the guide's Vite configuration and changed the generated Native card's default padding to 21. The design source in the working checkout retains 18.

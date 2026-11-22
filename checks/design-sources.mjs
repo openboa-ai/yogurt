@@ -1,7 +1,5 @@
 import assert from "node:assert/strict";
-import { execFileSync, spawn, spawnSync } from "node:child_process";
-import { once } from "node:events";
-import { setTimeout as delay } from "node:timers/promises";
+import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -77,97 +75,4 @@ test("the Native guide embeds the installed controls and recipes and calls the p
       assert(app.includes(`gallery.Views.${name}(`), item.id);
     }
   }
-});
-
-test("the Native build uses a patched copy and propagates a build failure", t => {
-  const root = scratch(t);
-  const source = join(root, "sdk");
-  const path = join(root, "bin");
-  mkdirSync(source);
-  mkdirSync(path);
-  writeFileSync(join(source, "build.zig"), "");
-  writeFileSync(join(path, "git"), '#!/bin/sh\n[ "$1" = apply ] && [ -f "$2" ] && touch patched\n', { mode: 0o755 });
-  writeFileSync(join(path, "native"), `#!/bin/sh
-if [ "$1" = --version ]; then echo "native 0.11.1"; exit 0; fi
-[ -f "$NATIVE_SDK_PATH/patched" ] && [ "$NATIVE_SDK_PATH" != "$ORIGINAL_SDK" ] || exit 90
-printf '%s' "$NATIVE_SDK_PATH" > "$FRAMEWORK_RECORD"
-exit 17
-`, { mode: 0o755 });
-  const record = join(root, "framework-used");
-  const result = spawnSync(process.execPath, [join(kit, "bin/yogurt.mjs"), "native", "build", root], {
-    env: {
-      ...process.env, PATH: path + ":" + process.env.PATH,
-      NATIVE_SDK_PATH: source, ORIGINAL_SDK: source, FRAMEWORK_RECORD: record,
-    },
-    encoding: "utf8",
-  });
-  assert.equal(result.status, 17, result.stderr);
-  assert(!existsSync(join(source, "patched")));
-  assert(!existsSync(read(record)));
-});
-
-test("owned Native builds recover after a killed owner and preserve external edits", { timeout: 15000 }, async t => {
-  const root = scratch(t);
-  const sdk = join(root, "sdk");
-  const tools = join(root, "tools");
-  mkdirSync(sdk);
-  mkdirSync(tools);
-  writeFileSync(join(sdk, "build.zig"), "pub fn build(b: *std.Build) void {}");
-  writeFileSync(join(root, "build.zig"), "");
-  const manifest = join(root, "build.zig.zon");
-  const original = '.{ .dependencies = .{ .native_sdk = .{ .path = "sdk" } } }\n';
-  writeFileSync(manifest, original);
-  writeFileSync(join(tools, "git"), "#!/bin/sh\nexit 0\n", { mode: 0o755 });
-  writeFileSync(join(tools, "native"), `#!/usr/bin/env node
-if (process.argv[2] === "--version") console.log("native 0.11.1");
-else if (process.env.STARTED) {
-  require("node:fs").writeFileSync(process.env.STARTED, "");
-  setInterval(() => {}, 1000);
-} else process.exit(Number(process.env.NATIVE_EXIT || 0));
-`, { mode: 0o755 });
-  const cli = join(kit, "bin/yogurt.mjs");
-  const env = { ...process.env, PATH: tools + ":" + process.env.PATH, NATIVE_SDK_PATH: sdk };
-  const call = (verb, extra) => spawnSync(process.execPath, [cli, "native", verb, root], {
-    env: { ...env, ...extra }, encoding: "utf8",
-  });
-
-  assert.equal(call("build", { NATIVE_EXIT: "17" }).status, 17);
-  assert.equal(read(manifest), original);
-  assert.match(call("build").stderr, /did not load the patched native_sdk/);
-  assert.equal(read(manifest), original);
-
-  const started = join(root, "started");
-  const owner = spawn(process.execPath, [cli, "native", "build", root], {
-    env: { ...env, STARTED: started }, stdio: "ignore",
-  });
-  t.after(() => owner.kill("SIGTERM"));
-  for (let attempt = 0; !existsSync(started) && attempt < 200; attempt++) await delay(20);
-  assert(existsSync(started));
-  const bound = read(manifest);
-  assert.notEqual(bound, original);
-  assert.match(call("build").stderr, /already exists|acquired the app lock/);
-  assert.match(call("recover").stderr, /still has a running process/);
-  const stopped = once(owner, "close");
-  owner.kill("SIGKILL");
-  await stopped;
-  const state = join(root, ".yogurt-native-build");
-  assert.equal(read(join(state, "original.zon")), original);
-  assert.equal(read(manifest), bound);
-
-  const edited = bound + "// Product edit\n";
-  writeFileSync(manifest, edited);
-  let attempt;
-  for (let i = 0; i < 100; i++) {
-    attempt = call("recover");
-    if (!attempt.stderr.includes("running process")) break;
-    await delay(30);
-  }
-  assert.match(attempt.stderr, /was changed/);
-  assert.equal(read(manifest), edited);
-  assert.equal(read(join(state, "original.zon")), original);
-
-  writeFileSync(manifest, bound);
-  assert.equal(call("recover").status, 0);
-  assert.equal(read(manifest), original);
-  assert(!existsSync(state));
 });

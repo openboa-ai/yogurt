@@ -48,7 +48,7 @@ An `AgentAvatar` uses the host’s `ready`, `thinking`, `working`, `waiting`, `b
 
 ## Zig and Vercel Native SDK
 
-When using the typed OTP, install Native SDK 0.11.1 and run `npx yogurt native build .` in the consumer. The build automatically applies the focus patch to an isolated copy. [Native build instructions](../packages/native/README.md#otp-focus-on-sdk-0111)
+The app pins its Native SDK and builds with the standard Native CLI. For the typed OTP, choose a framework with empty focus cell support. [Native SDK dependency](../packages/native/README.md#native-sdk-dependency)
 
 The same ID installs an editable markup template, a Zig source entry, the shared theme, English words and Rethink Sans. The installer writes under `src/yogurt`. Use the entry the installer prints. For InputOTP, mount the Zig `codeView`.
 

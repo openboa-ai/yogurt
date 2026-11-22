@@ -1,0 +1,8 @@
+{
+  "name": "yogurt-native-otp-consumer",
+  "private": true,
+  "packageManager": "pnpm@10.24.0",
+  "dependencies": {
+    "@native-sdk/cli": "0.11.1"
+  }
+}

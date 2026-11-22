@@ -14,20 +14,16 @@ The Native installer includes `src/yogurt/interface-motion.zig` for animated sur
 
 ## Verification code and rating
 
-### OTP focus on SDK 0.11.1
+### Native SDK dependency
 
-Install Native SDK 0.11.1 and use the Yogurt package command in your app build and CI. Yogurt finds the framework from the Native executable on PATH. Set `NATIVE_SDK_PATH` for a custom framework location.
+The app pins its Native SDK and uses the standard Native CLI. The typed OTP requires a framework that exposes `WidgetStyle.empty_focus_cell` and paints that cell on focus. Use an SDK release or a pinned SDK source revision that implements this capability. For an app-owned Zig build, point the `native_sdk` dependency in `build.zig.zon` at that installed framework. For a Native CLI-generated build, set `NATIVE_SDK_PATH` to the same framework at setup.
 
 ```sh
 npx yogurt add input-otp --target native
-npx yogurt native build .
+native dev .
+native build .
+native package --target macos --binary zig-out/bin/my-app --output my-app.app
 ```
-
-The build command copies the framework, applies the bundled patch automatically and builds against that copy. It removes the temporary framework when the command exits. The original SDK remains available for other projects. Use `yogurt native dev .`, `yogurt native test .` or `yogurt native check . --strict` for the corresponding Native commands. Compiling the public OTP renderer against an unpatched framework reports an error with the build command to use.
-
-When running inside the app directory, options can immediately follow the verb, such as `npx yogurt native dev -Doptimize=Debug`. For an app-owned `build.zig`, including one created by `native eject`, Yogurt temporarily binds the patched framework to the `native_sdk` dependency in `build.zig.zon` and restores the manifest when the command exits. Yogurt checks that the app-owned graph loads that patched dependency during the build. After an interruption, run `npx yogurt native recover .` once the build has stopped. Recovery restores the original only if the current manifest still matches the recorded temporary version. If it has been edited, review it against `.yogurt-native-build/original.zon`; both files are preserved.
-
-Use `npx yogurt native package .` for macOS releases. It builds against the patched framework in a private release prefix and passes that binary to the packager. The release build leaves the development executable in `zig-out` untouched. Packages default to a new directory under `zig-out/yogurt-releases` for each invocation. An explicit `--output` must point to an unused path. Put this command in the app's release job. Projects with custom packaging can package the output of `yogurt native build .` directly.
 
 Installing `input-otp` or `rating` also installs `src/yogurt/precision-inputs.zig`. Use `codeView` with a persistent `CodeEditor` and forward its input events to `editCode`. The editor accepts six digits and the host owns verification. Use `ratingView` with the host's current score and a typed selection callback. Register the rating icons once at application startup with `registerRatingIcons`.
 

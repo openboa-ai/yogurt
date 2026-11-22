@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 kit="$(cd "$(dirname "$0")/.." && pwd)"
-unset NATIVE_SDK_PATH
 scratch="$(mktemp -d)"
 pid=
 cleanup() {
@@ -14,15 +13,27 @@ archive="$(cd "$kit" && npm pack --ignore-scripts --silent --pack-destination "$
 cd "$scratch"
 mkdir sdk
 tar -xzf "$archive" -C sdk --strip-components=1
-native init consumer --template zig-core
-cp "$kit/checks/fixtures/native-otp/main.zig" consumer/src/main.zig
+test ! -e sdk/packages/native/controls/sdk-patches
+test ! -e sdk/bin/native-build.mjs
+fixture="$kit/checks/fixtures/native-otp"
+mkdir app-workspace
+cp -R "$fixture/package.json" "$fixture/pnpm-workspace.yaml" "$fixture/pnpm-lock.yaml" "$fixture/patches" app-workspace/
+npx --yes pnpm@10.24.0 --dir app-workspace install --frozen-lockfile --ignore-scripts
+export NATIVE_SDK_PATH="$scratch/app-workspace/node_modules/@native-sdk/cli"
+export PATH="$scratch/app-workspace/node_modules/.bin:$PATH"
+native init app-workspace/consumer --template zig-core --framework "$NATIVE_SDK_PATH"
+cp "$fixture/main.zig" app-workspace/consumer/src/main.zig
+# Keep the consumer on its declared Zig package dependency in both build modes.
+(cd app-workspace/consumer && native eject .)
 yogurt() { node sdk/bin/yogurt.mjs "$@"; }
-yogurt add input-otp --target native --dir consumer
-yogurt add input-otp --target native --dir consumer
-test ! -e consumer/src/yogurt/items/input-otp.native
-test ! -e consumer/src/yogurt/input-otp.zig
+yogurt add input-otp --target native --dir app-workspace/consumer
+yogurt add input-otp --target native --dir app-workspace/consumer
+test ! -e app-workspace/consumer/src/yogurt/items/input-otp.native
+test ! -e app-workspace/consumer/src/yogurt/input-otp.zig
 
-cd consumer
+cd app-workspace/consumer
+cp build.zig.zon "$scratch/original.zon"
+manifest_hash="$(shasum -a 256 "$NATIVE_SDK_PATH/build.zig" "$NATIVE_SDK_PATH/src/primitives/canvas/widgets.zig" "$NATIVE_SDK_PATH/src/primitives/canvas/widget_render_controls.zig")"
 otp_scenario() {
   native automate assert --timeout-ms 120000 'gpu_nonblank=true' 'role=textbox name="Verification code"'
   otp="$(native automate snapshot | sed -nE 's/.*#([0-9]+) role=textbox name="Verification code".*/\1/p')"
@@ -45,35 +56,25 @@ otp_scenario() {
   swift "$kit/checks/fixtures/native-otp/focus-pixels.swift" "$scratch"
 }
 
-# Exercise the default project directory with flags immediately after the verb.
-node ../sdk/bin/yogurt.mjs native dev -Dautomation=true >"$scratch/dev.log" 2>&1 &
+native dev . -Dautomation=true >"$scratch/dev.log" 2>&1 &
 pid=$!
 if ! native automate assert --timeout-ms 120000 'gpu_nonblank=true'; then
   cat "$scratch/dev.log"
   exit 1
 fi
 otp_scenario
+cmp build.zig.zon "$scratch/original.zon"
 kill "$pid"
 wait "$pid" || true
 pid=
 rm -rf .zig-cache/native-sdk-automation
 
-# Release builds must leave the development binary untouched.
-mkdir -p zig-out/bin
-if [[ ! -f zig-out/bin/consumer ]]; then printf 'Existing development output\n' >zig-out/bin/consumer; fi
-cp zig-out/bin/consumer "$scratch/dev-binary"
-node ../sdk/bin/yogurt.mjs native package --signing none
-managed=(zig-out/yogurt-releases/*/consumer.app/Contents/MacOS/consumer)
-test -x "${managed[0]}"
-cmp zig-out/bin/consumer "$scratch/dev-binary"
-
-# The SDK-generated app-owned build must receive the same patched framework.
-native eject .
-cp build.zig.zon "$scratch/original.zon"
-node ../sdk/bin/yogurt.mjs native package -Dautomation=true --signing none --output "$scratch/release"
-cmp build.zig.zon "$scratch/original.zon"
+native build . -Dautomation=true
+native package --target macos --binary zig-out/bin/consumer --signing none --output "$scratch/release"
 test -x "$scratch/release/Contents/MacOS/consumer"
-cmp zig-out/bin/consumer "$scratch/dev-binary"
+cmp zig-out/bin/consumer "$scratch/release/Contents/MacOS/consumer"
 "$scratch/release/Contents/MacOS/consumer" >"$scratch/consumer.log" 2>&1 &
 pid=$!
 otp_scenario
+cmp build.zig.zon "$scratch/original.zon"
+test "$manifest_hash" = "$(shasum -a 256 "$NATIVE_SDK_PATH/build.zig" "$NATIVE_SDK_PATH/src/primitives/canvas/widgets.zig" "$NATIVE_SDK_PATH/src/primitives/canvas/widget_render_controls.zig")"

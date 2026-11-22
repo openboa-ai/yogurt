@@ -1,3 +1,4 @@
+diff --git a/src/primitives/canvas/widgets.zig b/src/primitives/canvas/widgets.zig
 --- a/src/primitives/canvas/widgets.zig
 +++ b/src/primitives/canvas/widgets.zig
 @@ -512,6 +512,7 @@
@@ -23,6 +24,7 @@
 +        try std.testing.expectEqual(@as(usize, 808), @sizeOf(Widget));
 +    }
 +}
+diff --git a/src/primitives/canvas/widget_render_controls.zig b/src/primitives/canvas/widget_render_controls.zig
 --- a/src/primitives/canvas/widget_render_controls.zig
 +++ b/src/primitives/canvas/widget_render_controls.zig
 @@ -440,7 +440,10 @@

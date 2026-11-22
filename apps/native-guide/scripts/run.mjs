@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { nativeFramework } from "../../../bin/native-build.mjs";
 import { generateTokens } from "../../../scripts/tokens/generate.mjs";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmdirSync, statSync, writeFileSync } from "node:fs";
@@ -22,7 +21,9 @@ function command(program, args, options = {}) {
 }
 version("native", "0.11.1", ["--version"]);
 version("zig", "0.16.0", ["version"]);
-const framework = nativeFramework();
+if (!process.env.NATIVE_SDK_PATH) throw Error("Set NATIVE_SDK_PATH to the app's pinned Native SDK framework.");
+const framework = resolve(process.env.NATIVE_SDK_PATH);
+const env = { ...process.env, NATIVE_SDK_PATH: framework };
 generateTokens();
 const digest = createHash("sha256");
 function hash(path) {
@@ -59,4 +60,4 @@ for (let attempt = 0; attempt < 100; attempt++) {
 }
 if (!host) throw Error(`No free guide cache slot in ${cache}; existing files were left untouched.`);
 console.log(`Running Yogurt Native guide from ${host}`);
-command(process.execPath, [join(root, "bin/yogurt.mjs"), "native", "dev", host]);
+command("native", ["dev", host], { env });

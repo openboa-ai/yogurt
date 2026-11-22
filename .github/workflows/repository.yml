@@ -34,11 +34,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Install pinned Native and Zig
+      - name: Install pinned Zig
         shell: bash
         run: |
-          npm install --prefix "$RUNNER_TEMP/yogurt-native" --no-audit --no-fund @native-sdk/cli@0.11.1
-          echo "$RUNNER_TEMP/yogurt-native/node_modules/.bin" >> "$GITHUB_PATH"
           curl -fsSL https://ziglang.org/download/index.json -o "$RUNNER_TEMP/zig-index.json"
           arch="$(uname -m)"
           if [[ "$arch" == arm64 ]]; then arch=aarch64; fi
@@ -48,7 +46,7 @@ jobs:
           mkdir "$RUNNER_TEMP/yogurt-zig"
           tar -xf "$RUNNER_TEMP/zig.tar.xz" -C "$RUNNER_TEMP/yogurt-zig" --strip-components=1
           echo "$RUNNER_TEMP/yogurt-zig" >> "$GITHUB_PATH"
-      - name: Apply the SDK patch, compile and package a consumer
+      - name: Install the consumer SDK and run development and packaged OTP
         run: bash checks/native-otp-build.sh
 
   naming:
