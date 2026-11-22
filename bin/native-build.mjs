@@ -1,7 +1,10 @@
-import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { spawn, spawnSync } from "node:child_process";
-import { tmpdir } from "node:os";
-import { basename, delimiter, dirname, join, relative, resolve } from "node:path";
+import { chmodSync, copyFileSync, cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { fork, spawnSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
+import { homedir, tmpdir } from "node:os";
+import { basename, delimiter, dirname, join, resolve } from "node:path";
+
+import { recoverBuild, startBuild } from "./native-build-state.mjs";
 
 export function nativeFramework() {
   if (process.env.NATIVE_SDK_PATH) return realpathSync(process.env.NATIVE_SDK_PATH);
@@ -20,24 +23,29 @@ export function nativeFramework() {
 }
 
 export async function runNative(kit, [verb, ...args]) {
-  if (!["build", "dev", "test", "check", "package"].includes(verb)) {
-    throw Error("Usage: yogurt native build|dev|test|check|package [app-dir] [Native flags]");
+  if (!["build", "dev", "test", "check", "package", "recover"].includes(verb)) {
+    throw Error("Usage: yogurt native build|dev|test|check|package|recover [app-dir] [Native flags]");
   }
   const project = resolve(args[0] && !args[0].startsWith("-") ? args.shift() : ".");
   const flags = args;
+  if (verb === "recover") {
+    if (flags.length) throw Error("Usage: yogurt native recover [app-dir]");
+    recoverBuild(project);
+    console.log("Recovered the interrupted Native build.");
+    return 0;
+  }
   const ownedBuild = verb !== "check" && existsSync(join(project, "build.zig"));
   if (flags.some(flag => /^(?:-Dnative-sdk-path|--fork|--build-file)(?:=|$)/.test(flag))) {
     throw Error("Yogurt selects the patched SDK and build file. Use NATIVE_SDK_PATH to select the original framework.");
   }
   const packaging = verb === "package";
-  let binary;
+  let name;
   if (packaging) {
     if (process.platform !== "darwin" || flags.some(flag => /^--(?:target|binary)(?:=|$)/.test(flag))) {
       throw Error("yogurt native package supports the host macOS target and chooses the freshly built binary.");
     }
-    const { name } = JSON.parse(readFileSync(join(project, "app.json"), "utf8"));
+    ({ name } = JSON.parse(readFileSync(join(project, "app.json"), "utf8")));
     if (typeof name !== "string" || !/^[a-zA-Z0-9_-]+$/.test(name)) throw Error("Invalid app.json executable name.");
-    binary = join(project, "zig-out/bin", name);
   }
   const source = nativeFramework();
   if (!existsSync(join(source, "build.zig"))) throw Error("NATIVE_SDK_PATH must point to the Native SDK framework.");
@@ -48,8 +56,9 @@ export async function runNative(kit, [verb, ...args]) {
   }
 
   const scratch = mkdtempSync(join(tmpdir(), "yogurt-native-"));
-  let restoreDependency;
+  let state;
   try {
+    state = startBuild(project);
     const framework = join(scratch, "framework");
     cpSync(source, framework, {
       recursive: true,
@@ -59,68 +68,79 @@ export async function runNative(kit, [verb, ...args]) {
     const apply = spawnSync("git", ["apply", patch], { cwd: framework, stdio: "inherit" });
     if (apply.error) throw apply.error;
     if (apply.status !== 0) throw Error("Could not apply Yogurt's OTP patch to the SDK copy. Use the original SDK 0.11.1 framework.");
-    const options = {
-      env: { ...process.env, NATIVE_SDK_PATH: framework },
-      stdio: "inherit",
-    };
-    const buildFlags = packaging ? flags.filter(flag => flag.startsWith("-D")) : [...flags];
-    if (ownedBuild) restoreDependency = bindOwnedFramework(project, framework);
-    const buildArgs = [packaging ? "build" : verb, project, ...buildFlags];
-    if (verb === "dev") return await runDevelopment(buildArgs, options);
-    const build = spawnSync("native", buildArgs, options);
-    if (build.error) throw build.error;
-    if (!packaging || build.status !== 0) return build.status ?? 1;
-    const release = spawnSync("native", ["package", "--target", "macos", "--binary", binary, ...flags.filter(flag => !flag.startsWith("-D"))], {
-      ...options, cwd: project,
-    });
-    if (release.error) throw release.error;
-    return release.status ?? 1;
+    const env = { ...process.env, NATIVE_SDK_PATH: framework };
+    const marker = ownedBuild ? markFramework(framework) : null;
+    const prefix = packaging ? join(scratch, "release-build") : null;
+    if (prefix) useReleasePrefix(scratch, prefix, env);
+    if (ownedBuild) state.bind(framework);
+    const buildFlags = packaging ? flags.filter(flag => flag.startsWith("-D")) : flags;
+    const status = await runCommand([packaging ? "build" : verb, project, ...buildFlags], { env }, state, marker);
+    if (!packaging || status !== 0) return status;
+    const binary = join(prefix, "bin", name);
+    if (!existsSync(binary)) throw Error("The release build did not produce " + binary);
+    return await runCommand(["package", "--target", "macos", "--binary", binary, ...flags.filter(flag => !flag.startsWith("-D"))],
+      { env, cwd: project }, state);
   } finally {
-    try { restoreDependency?.(); } finally { rmSync(scratch, { recursive: true, force: true }); }
+    try { state?.finish(); } finally { rmSync(scratch, { recursive: true, force: true }); }
   }
 }
 
-function runDevelopment(args, options) {
+function runCommand(args, options, state, marker) {
   return new Promise((resolve, reject) => {
-    const child = spawn("native", args, options);
-    const handlers = ["SIGINT", "SIGTERM", "SIGHUP"].map(signal => [signal, () => child.kill(signal)]);
-    for (const [signal, handler] of handlers) process.once(signal, handler);
-    child.on("error", reject);
-    child.on("close", code => {
-      for (const [signal, handler] of handlers) process.removeListener(signal, handler);
-      resolve(code ?? 1);
+    const child = fork(new URL("./native-worker.mjs", import.meta.url), args, {
+      ...options, stdio: ["inherit", "inherit", "pipe", "ipc"],
     });
+    const handlers = ["SIGINT", "SIGTERM", "SIGHUP"].map(signal => [signal, () => child.kill(signal)]);
+    for (const [signal, handler] of handlers) process.on(signal, handler);
+    let tail = "";
+    let verified = !marker;
+    let failure;
+    child.stderr.setEncoding("utf8");
+    child.stderr.on("data", chunk => {
+      process.stderr.write(chunk);
+      if (verified) return;
+      const segment = tail + chunk;
+      verified = segment.includes(marker);
+      tail = segment.slice(-marker.length);
+    });
+    child.once("error", error => { failure = error; });
+    child.once("close", code => {
+      for (const [signal, handler] of handlers) process.removeListener(signal, handler);
+      if (failure) reject(failure);
+      else if (code === 0 && !verified) reject(Error("App-owned build did not load the patched native_sdk dependency."));
+      else resolve(code ?? 1);
+    });
+    try {
+      state.recordWorker(child.pid);
+      child.send("start", error => {
+        if (error) { failure = error; child.kill("SIGTERM"); }
+      });
+    } catch (error) {
+      failure = error;
+      if (child.connected) child.disconnect();
+    }
   });
 }
 
-function bindOwnedFramework(project, framework) {
-  const manifest = join(project, "build.zig.zon");
-  const info = lstatSync(manifest);
-  if (!info.isFile()) throw Error("build.zig.zon must be a regular file.");
-  const original = readFileSync(manifest, "utf8");
-  const dependency = /\.native_sdk\s*=\s*\.\{\s*(?:\.(?:path|url|hash)\s*=\s*"(?:[^"\\]|\\.)*"\s*,?\s*)+\}/g;
-  if ([...original.matchAll(dependency)].length !== 1) {
-    throw Error("Expected one native_sdk dependency with a path or URL in build.zig.zon.");
-  }
-  const bound = original.replace(dependency, ".native_sdk = .{ .path = " + JSON.stringify(relative(project, framework)) + " }");
-  const lock = join(project, ".yogurt-native-build");
-  mkdirSync(lock);
-  const backup = join(lock, "original.zon");
-  const replacement = join(lock, "bound.zon");
-  try {
-    writeFileSync(backup, original, { mode: info.mode });
-    writeFileSync(replacement, bound, { mode: info.mode });
-    if (readFileSync(manifest, "utf8") !== original) throw Error("build.zig.zon changed while preparing the build.");
-    renameSync(replacement, manifest);
-  } catch (error) {
-    rmSync(lock, { recursive: true, force: true });
-    throw error;
-  }
-  return () => {
-    if (readFileSync(manifest, "utf8") !== bound) {
-      throw Error("build.zig.zon changed during the build. The original is at " + backup);
-    }
-    renameSync(backup, manifest);
-    rmSync(lock, { recursive: true });
-  };
+function markFramework(framework) {
+  const file = join(framework, "build.zig");
+  const original = readFileSync(file, "utf8");
+  const entry = "pub fn build(b: *std.Build) void {";
+  if (!original.includes(entry)) throw Error("Cannot mark the pinned Native SDK build entry.");
+  const marker = "Yogurt patched Native SDK " + randomUUID();
+  writeFileSync(file, original.replace(entry, entry + '\n    std.debug.print("' + marker + '\\n", .{});'));
+  return marker;
+}
+
+function useReleasePrefix(scratch, prefix, env) {
+  const zig = env.NATIVE_SDK_ZIG || "zig";
+  const probe = spawnSync(zig, ["version"], { encoding: "utf8" });
+  const managed = join(env.NATIVE_SDK_HOME || join(homedir(), ".native"), "toolchains/zig-0.16.0/zig");
+  env.YOGURT_REAL_ZIG = probe.status === 0 && probe.stdout.trim() === "0.16.0" ? zig : managed;
+  if (env.YOGURT_REAL_ZIG === managed && !existsSync(managed)) throw Error("Install Zig 0.16.0 before packaging.");
+  env.YOGURT_RELEASE_PREFIX = prefix;
+  const launcher = join(scratch, "yogurt-zig.mjs");
+  copyFileSync(new URL("./native-release-zig.mjs", import.meta.url), launcher);
+  chmodSync(launcher, 0o700);
+  env.NATIVE_SDK_ZIG = launcher;
 }

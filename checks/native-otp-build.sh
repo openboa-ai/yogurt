@@ -58,13 +58,21 @@ wait "$pid" || true
 pid=
 rm -rf .zig-cache/native-sdk-automation
 
+# Release builds must leave the development binary untouched.
+mkdir -p zig-out/bin
+if [[ ! -f zig-out/bin/consumer ]]; then printf 'Existing development output\n' >zig-out/bin/consumer; fi
+cp zig-out/bin/consumer "$scratch/dev-binary"
+node ../sdk/bin/yogurt.mjs native package --signing none --output "$scratch/managed-release"
+test -x "$scratch/managed-release/Contents/MacOS/consumer"
+cmp zig-out/bin/consumer "$scratch/dev-binary"
+
 # The SDK-generated app-owned build must receive the same patched framework.
 native eject .
 cp build.zig.zon "$scratch/original.zon"
 node ../sdk/bin/yogurt.mjs native package -Dautomation=true --signing none --output "$scratch/release"
 cmp build.zig.zon "$scratch/original.zon"
 test -x "$scratch/release/Contents/MacOS/consumer"
-cmp zig-out/bin/consumer "$scratch/release/Contents/MacOS/consumer"
+cmp zig-out/bin/consumer "$scratch/dev-binary"
 "$scratch/release/Contents/MacOS/consumer" >"$scratch/consumer.log" 2>&1 &
 pid=$!
 otp_scenario
