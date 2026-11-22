@@ -199,5 +199,12 @@
         ]
       }
     ]
+  },
+  "composer": {
+    "label": "Message Kai",
+    "hint": "Type @ to mention someone.",
+    "attachment": "Launch brief.pdf",
+    "additionalAttachment": "Research notes.md",
+    "detail": "Project source"
   }
 }

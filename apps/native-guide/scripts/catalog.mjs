@@ -40,6 +40,7 @@ const examples = {
   button: samples.button,
   "project-sidebar": { custom_navigation: "true" },
   "icon-button": { label: "Add a view" },
+  composer: { label: samples.composer.label, value: "{value}", attachment_detail: samples.composer.detail },
   "agent-row": {
     label: samples["agent-row"].name,
     detail: samples["agent-row"].displayState,
@@ -142,8 +143,8 @@ function sidebarGroup(index) {
   const toggle = index === 0 ? "toggle_sidebar_group" : "toggle_sidebar_resources";
   const destination = '<use template="yg-sidebar-destination" label="{item.title}" item_id="{item.id}" selected="{item.selected}">' +
     '<row cross="center" gap="4"><text grow="1">{item.title}</text><text size="sm" foreground="text_muted">{item.detail}</text></row></use>';
-  return `<column gap="4"><if test="{${flag}}"><list-item icon="chevron-up" on-press="${toggle}">${group.title}</list-item></if>
-    <else><list-item icon="chevron-down" on-press="${toggle}">${group.title}</list-item></else>
+  return `<column gap="4"><if test="{${flag}}"><list-item icon="chevron-up" height="38" on-press="${toggle}">${group.title}</list-item></if>
+    <else><list-item icon="chevron-down" height="38" on-press="${toggle}">${group.title}</list-item></else>
     <if test="{${flag}}"><row><spacer width="20"/><list grow="1" gap="2">
       <for each="sidebar_destinations" key="id" as="item"><if test="{item.is_event}">${index === 1 ? destination : ""}</if>
       <else>${index === 0 ? destination : ""}</else></for>
@@ -258,6 +259,8 @@ for (const { id, native } of [...catalog, ...blocks]) {
   const dismissibleLayer = ["dialog", "drawer", "sheet", "confirm-dialog"].includes(id);
   const specimen = id === "text"
     ? `<column gap="4">${use}<text size="sm" foreground="text_muted">${samples.text.help}</text><text size="sm" foreground="text_muted">${samples.text.meta}</text></column>`
+    : id === "composer"
+      ? `<column gap="12">${use}<text size="sm" foreground="text_muted">${samples.composer.hint}</text></column>`
     : id === "project-sidebar"
       ? `<row gap="16"><if test="{gallery_sidebar_visible}"><column width="256">${use}</column></if>
         <column grow="1" background="background" radius="lg" padding="16" gap="16">

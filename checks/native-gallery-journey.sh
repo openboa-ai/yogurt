@@ -149,6 +149,13 @@ check_interaction() {
         ! rg -q 'role=text name="Unavailable"' "$before" &&
         cp "$before" "$after" || return 1
       ;;
+    composer)
+      action_named textbox 'Message Kai' set_text 'Check the release notes' "$before" &&
+        snapshot_after 'text="Check the release notes"' &&
+        click_named button Send "$after" &&
+        snapshot_after 'role=text name="Draft sent"' &&
+        ! rg -q 'name="Launch brief[.]pdf"|text="Check the release notes"' "$after" || return 1
+      ;;
     agent-row)
       rg -q 'role=text name="Waiting for you"' "$before" &&
         rg -q 'role=text name="9:41 AM"' "$before" &&
@@ -158,7 +165,7 @@ check_interaction() {
       ;;
     project-sidebar)
       rg -q 'role=image name="Project mark"' "$before" &&
-        rg -q 'role=listitem name="Reviews".*state=\[[^]]*selected' "$before" &&
+        rg -q 'role=listitem name="Reviews".*bounds=\([^)]*x38\).*state=\[[^]]*selected' "$before" &&
         click_named listitem 'Run history' "$before" &&
         snapshot_after 'role=listitem name="Run history".*state=\[[^]]*selected' &&
         click_named listitem Delivery "$after" &&
@@ -388,7 +395,7 @@ while IFS=$'\t' read -r id name; do
         failed=1
       fi
       ;;
-    dialog|drawer|sheet|card|segmented-control|input-otp|action-menu|progress|chart|rating|agent-row|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row)
+    dialog|drawer|sheet|card|segmented-control|input-otp|action-menu|progress|chart|rating|agent-row|composer|project-mark|project-sidebar|switch|text-field|textarea|input-group|search-field|split-text-field|checkbox|toggle|accordion|disclosure-row|sidebar|tooltip|hover-card|slider|calendar|numeric-spinner|pagination|carousel|field|label|help-text|field-error|scroll-area|resizable|form|stepper|icon-button|list-row)
       if [ "$render" = PRESENTED_UNVERIFIED ] && check_interaction; then
         interaction=PASS
         if [ "$id" = calendar ] || [ "$id" = project-mark ]; then interaction=PARTIAL; fi

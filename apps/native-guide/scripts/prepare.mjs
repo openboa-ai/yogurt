@@ -114,6 +114,7 @@ const lines = [
   `pub const percentages = [_][]const u8{ ${Array.from({ length: 101 }, (_, index) => zigString(index + "%")).join(", ")} };`,
   "pub const PreviewLayout = enum { compact, field, wide };",
   `pub const preview_layouts = [_]PreviewLayout{ ${catalog.map((entry) => specimenLayout.compact.includes(entry.id) ? ".compact" : specimenLayout.wide.includes(entry.id) || specimenLayout.wideFamilies.includes(entry.family) ? ".wide" : ".field").join(", ")} };`,
+  `pub const composer_attachments_names = [_][]const u8{ ${[specimenContent.composer.attachment, specimenContent.composer.additionalAttachment].map(zigString).join(", ")} };`,
   `pub const project_sidebar_title = ${zigString(specimenContent["project-sidebar"].title)};`,
   `pub const edit_view_title = ${zigString(editView.title)};`,
   `pub const edit_view_label = ${zigString(editView.label)};`,

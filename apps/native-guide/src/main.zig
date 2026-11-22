@@ -126,6 +126,13 @@ fn selectComponent(m: *Model, index: u32) void {
         m.project_image = meatball_picture;
         syncSidebar(m);
     }
+    if (std.mem.eql(u8, id, "composer")) {
+        m.gallery_editor.clear();
+        m.value = m.gallery_editor.text();
+        m.gallery_composer_mask = .{ true, false };
+        for (&m.gallery_choices, gallery.composer_attachments_names) |*item, name| item.title = name;
+        syncComposerAttachments(m);
+    }
     if (std.mem.eql(u8, id, "stepper")) {
         m.gallery_choices[0].title = "Prepare";
         m.gallery_choices[1].title = "Review";
@@ -477,6 +484,15 @@ pub fn update(m: *Model, msg: Msg, fx: *sdk.Effects(Msg)) void {
         },
         .send_message => {
             if (m.composer_pending or m.composer_send_disabled) return;
+            if (std.mem.eql(u8, gallery.ids[m.gallery_selected], "composer")) {
+                m.gallery_editor.clear();
+                m.value = m.gallery_editor.text();
+                m.gallery_composer_mask = .{ false, false };
+                syncComposerAttachments(m);
+                m.composer_send_disabled = true;
+                m.gallery_status = "Draft sent";
+                return;
+            }
             m.composer_pending = true;
             m.gallery_status = "Preparing a sample reply";
         },

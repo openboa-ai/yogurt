@@ -1,3 +1,4 @@
+import samples from "../../../catalog/specimens/components.json";
 import { useState } from "react";
 import {
   Composer, VoiceControl, Stack, Status,
@@ -18,7 +19,7 @@ export function WorkspaceExample({ id }: { id: string }) {
   const [voice, setVoice] = useState<VoiceState>("idle");
   const [draft, setDraft] = useState("");
   const [files, setFiles] = useState<DraftAttachment[]>([
-    { id: "brief", name: "Launch brief.pdf", detail: "Project source" },
+    { id: "brief", name: samples.composer.attachment, detail: samples.composer.detail },
   ]);
   const [result, setResult] = useState("");
   const [tool, setTool] = useState("Tools");
@@ -42,10 +43,10 @@ export function WorkspaceExample({ id }: { id: string }) {
   );
   if (id === "composer") return (
     <Stack gap={12}>
-      <Composer label="Message Kai" value={draft} onValueChange={setDraft}
+      <Composer label={samples.composer.label} value={draft} onValueChange={setDraft}
         mentionPeople={[{id: "maya", label: "Maya Chen"}, {id: "jules", label: "Jules Reed"}]}
         attachments={files} onRemoveAttachment={(id) => setFiles((all) => all.filter((item) => item.id !== id))}
-        onAddAttachment={() => setFiles((all) => all.some((item) => item.id === "notes") ? all : [...all, {id: "notes", name: "Research notes.md", detail: "Project source"}])}
+        onAddAttachment={() => setFiles((all) => all.some((item) => item.id === "notes") ? all : [...all, {id: "notes", name: samples.composer.additionalAttachment, detail: samples.composer.detail}])}
         toolLabel={tool} tools={[{id:"search",label:"Search sources"},{id:"research",label:"Research mode"}]}
         onTool={(id) => setTool(id === "search" ? "Search sources" : "Research mode")}
         onSend={({text,attachmentIds}) => {
@@ -53,7 +54,7 @@ export function WorkspaceExample({ id }: { id: string }) {
           setDraft("");
           setFiles([]);
         }} />
-      <p className="yg-help">Type @ to mention someone.</p>
+      <p className="yg-help">{samples.composer.hint}</p>
       {result && <Status>{result}</Status>}
     </Stack>
   );

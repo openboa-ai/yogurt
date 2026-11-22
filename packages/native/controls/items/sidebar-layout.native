@@ -31,7 +31,7 @@
   </list>
 </template>
 <template name="yg-sidebar-destination" args="label item_id selected">
-  <list-item label="{label}" selected="{selected}" on-press="select_sidebar_item:{item_id}" padding="10">
+  <list-item label="{label}" selected="{selected}" on-press="select_sidebar_item:{item_id}" height="38" padding="8">
     <slot/>
   </list-item>
 </template>
