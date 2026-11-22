@@ -1,7 +1,7 @@
-import { cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync } from "node:fs";
+import { cpSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { spawn, spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
-import { basename, delimiter, dirname, join, resolve } from "node:path";
+import { basename, delimiter, dirname, join, relative, resolve } from "node:path";
 
 export function nativeFramework() {
   if (process.env.NATIVE_SDK_PATH) return realpathSync(process.env.NATIVE_SDK_PATH);
@@ -25,8 +25,9 @@ export async function runNative(kit, [verb, ...args]) {
   }
   const project = resolve(args[0] && !args[0].startsWith("-") ? args.shift() : ".");
   const flags = args;
-  if (flags.some(flag => /^-Dnative-sdk-path(?:=|$)/.test(flag))) {
-    throw Error("Yogurt sets -Dnative-sdk-path. Use NATIVE_SDK_PATH to select the original framework.");
+  const ownedBuild = verb !== "check" && existsSync(join(project, "build.zig"));
+  if (flags.some(flag => /^(?:-Dnative-sdk-path|--fork|--build-file)(?:=|$)/.test(flag))) {
+    throw Error("Yogurt selects the patched SDK and build file. Use NATIVE_SDK_PATH to select the original framework.");
   }
   const packaging = verb === "package";
   let binary;
@@ -47,6 +48,7 @@ export async function runNative(kit, [verb, ...args]) {
   }
 
   const scratch = mkdtempSync(join(tmpdir(), "yogurt-native-"));
+  let restoreDependency;
   try {
     const framework = join(scratch, "framework");
     cpSync(source, framework, {
@@ -62,9 +64,7 @@ export async function runNative(kit, [verb, ...args]) {
       stdio: "inherit",
     };
     const buildFlags = packaging ? flags.filter(flag => flag.startsWith("-D")) : [...flags];
-    if (verb !== "check" && existsSync(join(project, "build.zig"))) {
-      buildFlags.push("-Dnative-sdk-path=" + framework);
-    }
+    if (ownedBuild) restoreDependency = bindOwnedFramework(project, framework);
     const buildArgs = [packaging ? "build" : verb, project, ...buildFlags];
     if (verb === "dev") return await runDevelopment(buildArgs, options);
     const build = spawnSync("native", buildArgs, options);
@@ -76,7 +76,7 @@ export async function runNative(kit, [verb, ...args]) {
     if (release.error) throw release.error;
     return release.status ?? 1;
   } finally {
-    rmSync(scratch, { recursive: true, force: true });
+    try { restoreDependency?.(); } finally { rmSync(scratch, { recursive: true, force: true }); }
   }
 }
 
@@ -91,4 +91,36 @@ function runDevelopment(args, options) {
       resolve(code ?? 1);
     });
   });
+}
+
+function bindOwnedFramework(project, framework) {
+  const manifest = join(project, "build.zig.zon");
+  const info = lstatSync(manifest);
+  if (!info.isFile()) throw Error("build.zig.zon must be a regular file.");
+  const original = readFileSync(manifest, "utf8");
+  const dependency = /\.native_sdk\s*=\s*\.\{\s*(?:\.(?:path|url|hash)\s*=\s*"(?:[^"\\]|\\.)*"\s*,?\s*)+\}/g;
+  if ([...original.matchAll(dependency)].length !== 1) {
+    throw Error("Expected one native_sdk dependency with a path or URL in build.zig.zon.");
+  }
+  const bound = original.replace(dependency, ".native_sdk = .{ .path = " + JSON.stringify(relative(project, framework)) + " }");
+  const lock = join(project, ".yogurt-native-build");
+  mkdirSync(lock);
+  const backup = join(lock, "original.zon");
+  const replacement = join(lock, "bound.zon");
+  try {
+    writeFileSync(backup, original, { mode: info.mode });
+    writeFileSync(replacement, bound, { mode: info.mode });
+    if (readFileSync(manifest, "utf8") !== original) throw Error("build.zig.zon changed while preparing the build.");
+    renameSync(replacement, manifest);
+  } catch (error) {
+    rmSync(lock, { recursive: true, force: true });
+    throw error;
+  }
+  return () => {
+    if (readFileSync(manifest, "utf8") !== bound) {
+      throw Error("build.zig.zon changed during the build. The original is at " + backup);
+    }
+    renameSync(backup, manifest);
+    rmSync(lock, { recursive: true });
+  };
 }

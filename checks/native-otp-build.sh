@@ -60,7 +60,9 @@ rm -rf .zig-cache/native-sdk-automation
 
 # The SDK-generated app-owned build must receive the same patched framework.
 native eject .
+cp build.zig.zon "$scratch/original.zon"
 node ../sdk/bin/yogurt.mjs native package -Dautomation=true --signing none --output "$scratch/release"
+cmp build.zig.zon "$scratch/original.zon"
 test -x "$scratch/release/Contents/MacOS/consumer"
 cmp zig-out/bin/consumer "$scratch/release/Contents/MacOS/consumer"
 "$scratch/release/Contents/MacOS/consumer" >"$scratch/consumer.log" 2>&1 &

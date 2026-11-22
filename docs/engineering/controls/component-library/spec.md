@@ -34,7 +34,7 @@ The Native OTP has one public Zig view. Discover the framework from the installe
 
 At initial adoption, install the typed OTP from the packaged kit into a new consumer. Reinstalling the same revision is safe. Product edits are preserved when the installer encounters a conflicting file. For macOS releases, package only a binary freshly built with the patched framework. Required CI exercises the installed package, Debug build and release artifact.
 
-Native builds default to the current app directory when options follow the verb. App-owned Zig builds must accept the SDK's native-sdk-path build option so Yogurt can bind the patched framework explicitly. The check runs the empty OTP interaction in both a development app and a packaged app.
+Native builds default to the current app directory when options follow the verb. App-owned Zig builds bind the patched framework in the native_sdk dependency for the command's lifetime. Restore the manifest after the build, preserve concurrent edits, and retain a recovery copy if interrupted. The check runs the empty OTP interaction in both a development app and a packaged app.
 
 ### Select when open
 
