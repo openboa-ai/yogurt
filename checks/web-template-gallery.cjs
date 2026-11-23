@@ -12,36 +12,29 @@ async function checkGallery(browser, width) {
   const errors = [];
   page.on("pageerror", error => errors.push(error.message));
   try {
-    await page.goto(origin + "/templates");
-    await page.getByRole("heading", { name: "Templates", exact: true }).waitFor();
-    const boardSizes = await page.locator("[data-template-board]").evaluateAll(boards => boards.map(board => board.querySelectorAll("[data-template-specimen]").length));
-    assert.deepEqual(boardSizes, [33, 31]);
-    const cards = await page.locator("[data-template-specimen]").evaluateAll(items => items.map(item => ({
-      id: item.id,
-      hasContent: Boolean(item.querySelector(":scope > :not(.yg-heading)")),
-      title: item.getAttribute("aria-label"),
+    await page.goto(origin + "/patterns");
+    await page.getByRole("heading", { name: "Patterns", exact: true }).waitFor();
+    const expected = require("../catalog/blocks.json").map(block => block.id).sort();
+    const cards = await page.locator("[data-pattern]").evaluateAll(items => items.map(item => ({
+      id: item.dataset.pattern,
+      path: item.querySelector("a")?.pathname,
     })));
-    assert.equal(new Set(cards.map(card => card.id)).size, 64);
-    assert(cards.every(card => card.hasContent && card.title));
-    assert.equal(await page.locator("main a[href^='/templates/']").count(), 0);
-    assert.equal(await page.getByRole("combobox", { name: "Example", exact: true }).count(), 0);
-    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), "gallery overflows horizontally");
+    assert.deepEqual(cards.map(card => card.id).sort(), expected);
+    assert(cards.every(card => card.path === "/patterns/" + card.id));
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), "patterns overflow horizontally");
     const columns = await page.locator(".template-gallery-board").first().evaluate(board => new Set([...board.children].map(card => Math.round(card.getBoundingClientRect().x))).size);
     assert(width >= 1000 ? columns > 1 : columns === 1);
 
-    const inlineInvite = page.locator("#invite");
-    await inlineInvite.getByRole("textbox", { name: "Work email" }).fill("alex@example.test");
-    await inlineInvite.getByRole("button", { name: "Send invitation" }).click();
-    await inlineInvite.getByText("Invitation prepared.").waitFor();
-    assert.equal(await page.locator("#no-members").getByText("Invitation prepared.").count(), 0);
-    const loading = page.locator("#loading-card");
-    await loading.getByRole("button", { name: "Reload workspace" }).click();
-    await loading.getByText("Workspace ready.").waitFor();
-    await page.locator("#not-found").scrollIntoViewIfNeeded();
-    assert.equal(new URL(page.url()).pathname, "/templates");
+    await page.getByRole("link", { name: "Open Project Settings" }).click();
+    await page.getByRole("heading", { name: "ProjectSettings", level: 1 }).waitFor();
+    await page.getByRole("heading", { name: "When to use it", exact: true }).waitFor();
+    await page.getByText(/Use this when changes need an explicit save/).waitFor();
+    await page.getByRole("switch", { name: "Send a digest" }).click();
+    await page.getByRole("button", { name: "Save changes" }).click();
+    await page.getByText("Settings saved", { exact: true }).waitFor();
 
     const stage = page.locator(".template-stage");
-    await page.goto(origin + "/templates/invite");
+    await page.goto(origin + "/patterns/invite");
     await stage.getByRole("textbox", { name: "Work email" }).fill("alex@example.test");
     await stage.getByRole("combobox", { name: "Access" }).selectOption("Viewer");
     await stage.getByRole("button", { name: "Send invitation" }).click();
@@ -52,16 +45,16 @@ async function checkGallery(browser, width) {
     const documented = await page.locator(".template-component-links a").evaluateAll(links => links.map(link => link.pathname));
     assert(documented.length > 0 && documented.every(path => componentPaths.has(path)), "missing component page");
 
-    await page.goto(origin + "/templates/faq");
+    await page.goto(origin + "/patterns/faq");
     await stage.getByRole("button", { name: "Who can see my drafts?" }).focus();
     await page.keyboard.press("Enter");
     await stage.getByText("Drafts stay private until you share them with the workspace.").waitFor();
 
-    await page.goto(origin + "/templates/access");
+    await page.goto(origin + "/patterns/access");
     await stage.getByRole("textbox", { name: "Verification code" }).fill("123456");
     await stage.getByText("Sample access verified.").waitFor();
 
-    await page.goto(origin + "/templates/compose");
+    await page.goto(origin + "/patterns/compose");
     await stage.getByRole("combobox", { name: "Density" }).selectOption("compact");
     await stage.locator('.yg-card[data-density="compact"]').waitFor();
     await stage.getByRole("combobox", { name: "Surface" }).selectOption("paper");
@@ -74,22 +67,22 @@ async function checkGallery(browser, width) {
     await page.getByRole("button", { name: "Reset preview" }).click();
     await stage.locator('.yg-card[data-density="regular"]').waitFor();
 
-    await page.goto(origin + "/templates/type");
+    await page.goto(origin + "/patterns/type");
     await stage.getByRole("combobox", { name: "Content" }).selectOption("conversation");
     await stage.getByRole("heading", { name: "Review notes" }).waitFor();
 
-    await page.goto(origin + "/templates/chart");
+    await page.goto(origin + "/patterns/chart");
     await stage.getByRole("radio", { name: "Missing readings", exact: true }).click();
     await stage.getByText("The source has no reading for Tue.").waitFor();
 
-    await page.goto(origin + "/templates/nested-panes");
+    await page.goto(origin + "/patterns/nested-panes");
     if (width < 630) await stage.getByRole("button", { name: "Toggle projects" }).click();
     await stage.getByRole("button", { name: "Operations", exact: true }).click();
     if (width < 810) await stage.getByRole("button", { name: "Toggle documents" }).click();
     await stage.getByRole("button", { name: "Archive", exact: true }).click();
     await stage.getByRole("heading", { name: "Archive", exact: true }).waitFor();
 
-    await page.goto(origin + "/templates/signup-split");
+    await page.goto(origin + "/patterns/signup-split");
     await stage.getByRole("button", { name: "Create account" }).click();
     await stage.getByText("Enter a valid email address.").waitFor();
     await stage.getByRole("textbox", { name: "Name", exact: true }).fill("Alex");
@@ -99,15 +92,15 @@ async function checkGallery(browser, width) {
     await stage.getByText("Preview complete").waitFor();
     assert.equal(await stage.getByLabel("Password").count(), 0);
 
-    await page.goto(origin + "/templates/release-dashboard");
+    await page.goto(origin + "/patterns/release-dashboard");
     await stage.getByRole("searchbox", { name: "Find a release" }).fill("2.4");
     await stage.getByRole("cell", { name: "Workspace 2.4" }).waitFor();
     assert.equal(await stage.getByRole("cell", { name: "Workspace 2.3" }).count(), 0);
 
-    await page.goto(origin + "/templates/files");
+    await page.goto(origin + "/patterns/files");
     await page.getByRole("heading", { name: "File tree", exact: true }).waitFor();
 
-    await page.goto(origin + "/templates/dialog");
+    await page.goto(origin + "/patterns/dialog");
     const picker = stage.getByRole("button", { name: "Find a destination" });
     await picker.click();
     await stage.getByRole("dialog").waitFor();
@@ -125,7 +118,7 @@ async function checkGallery(browser, width) {
     await stage.getByRole("button", { name: "Send", exact: true }).click();
     await stage.getByText(/Sample response:/).waitFor();
     assert.deepEqual(errors, []);
-    console.log(width + "px: 64 inline compositions, studies and workspace interactions passed.");
+    console.log(width + "px: recommended patterns and workspace interactions passed.");
   } finally {
     await page.close();
   }

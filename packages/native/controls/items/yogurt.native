@@ -1,5 +1,0 @@
-<template name="yg-yogurt">
-  <column background="surface" radius="md" padding="18" gap="8">
-  <slot/>
-  </column>
-</template>

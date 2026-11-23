@@ -1,8 +1,0 @@
-<template name="yg-numeric-spinner" args="label value">
-  <row gap="8" cross="center">
-    <text size="sm">{label}</text>
-    <button size="icon" variant="secondary" label="Decrease" on-press="decrement" disabled="{at_first}">−</button>
-    <text>{value}</text>
-    <button size="icon" variant="secondary" icon="plus" label="Increase" on-press="increment" disabled="{at_last}"/>
-  </row>
-</template>

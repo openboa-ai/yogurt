@@ -75,7 +75,7 @@ export default function Playbook() {
               const component = components.get(id)!;
               return <Text key={id}><strong>{component.name}.</strong> {component.use} ({component.web.replaceAll("-", " ")})</Text>;
             })}
-            <Text>Web. {pattern.support.web.detail} Native. {pattern.support.native.detail}</Text>
+            <Text>{pattern.support.web.detail}</Text>
           </Stack>
         </Disclosure>
       </Stack>

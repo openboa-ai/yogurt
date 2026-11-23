@@ -3,7 +3,6 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { brandCss } from "./brand.mjs";
 import { uiTokens } from "./ui.mjs";
-import { nativeTemplates } from "./native-templates.mjs";
 
 const repository = fileURLToPath(new URL("../../", import.meta.url));
 
@@ -15,12 +14,7 @@ export function generateTokens({ root = repository, check = false, target = "all
   if (target !== "ui") outputs.set("design/styles/tokens.css", brandCss(brand));
   if (target !== "brand") {
     const ui = readJson(sources.roles);
-    const { css, zig } = uiTokens(brand, ui);
-    outputs.set("design/styles/ui-tokens.css", css);
-    outputs.set("packages/native/controls/tokens.zig", zig);
-    for (const [path, markup] of nativeTemplates(root, brand, ui.geometry, readJson(sources.components), readJson("catalog/blocks.json"))) {
-      outputs.set(path, markup);
-    }
+    outputs.set("design/styles/ui-tokens.css", uiTokens(brand, ui));
   }
   const changed = [];
   for (const [path, source] of outputs) {

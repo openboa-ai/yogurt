@@ -117,7 +117,7 @@ function Roster() {
 }
 
 export default function SystemGuide() {
-  return <GuidePage title="Design system" detail="The colors, type and dimensions behind OpenBoa products. See how they come together in the live agent roster." chapters={chapters}>
+  return <GuidePage title="Tokens" detail="The colors, type and dimensions behind OpenBoa products. See how they come together in the live agent roster." chapters={chapters}>
     <GuideSection id="color" title="Color">
       <Text>Compare lightness across color families. Blank cells indicate an unused step. Each color keeps its value across themes.</Text>
       <Palette />
@@ -153,7 +153,7 @@ export default function SystemGuide() {
     <GuideSection id="screen-composition" title="Screen composition">
       <Text>Use PageHeader for the screen’s title and context. Align the title, body and actions to one reading edge.</Text>
       <Text>In an action group, put alternatives first and the single filled action last. Use links to open destinations and buttons to change state.</Text>
-      <Inline gap={16}><Link href="/components/top">Inspect PageHeader</Link><Link href="/docs/design-system-rules.md">Web and Native composition rules</Link></Inline>
+      <Inline gap={16}><Link href="/components/top">Inspect PageHeader</Link><Link href="/docs/design-system-rules.md">React composition rules</Link></Inline>
     </GuideSection>
     <GuideSection id="controls" title="Controls">
       <Text>Keep the field label visible as someone types. Use Select for a short fixed list, Checkbox for an independent choice and Disclosure for details that can open in place.</Text>
@@ -161,7 +161,7 @@ export default function SystemGuide() {
     </GuideSection>
     <GuideSection id="catalog" title="Component catalog">
       <Text>Begin with a familiar control. Compose around the task and document what happens when the data, available width or input changes.</Text>
-      <Inline gap={16}><Link href="/components">Component library</Link><Link href="/templates">Compositions</Link><Link href="/playbook">Screen patterns</Link></Inline>
+      <Inline gap={16}><Link href="/components">Component library</Link><Link href="/patterns">Patterns</Link></Inline>
     </GuideSection>
     <GuideSection id="components" title="Find an agent">
       <Text>Search narrows the list by name or ID. Status filters the same results. Open a row to reveal the agent’s ID.</Text>
@@ -172,7 +172,7 @@ export default function SystemGuide() {
     </GuideSection>
     <GuideSection id="handoff" title="Use in an app">
       <CodeBlock language="TSX" code={'import { Button } from "@openboa/yogurt";\n\n<Button>Save changes</Button>'} />
-      <Inline gap={16}><Link href="/adoption#platforms">Web and Native setup</Link><Link href="/#files">Files and font license</Link></Inline>
+      <Inline gap={16}><Link href="/adoption#platforms">Browser and desktop setup</Link><Link href="/#files">Files and font license</Link></Inline>
     </GuideSection>
   </GuidePage>;
 }

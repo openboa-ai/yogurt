@@ -83,7 +83,7 @@ export default function DesignSources() {
       <Card title="Company opener" action={<Link href="/assets/applications/company-opener.svg" download>Download editable SVG</Link>}>
         <img src="/assets/applications/company-opener.svg" alt="OpenBoa cover reading Every limit has a shelf life." width={640} height={360} loading="lazy" />
       </Card>
-      <Link href="/system#catalog">Product component catalog</Link>
+      <Link href="/tokens#catalog">Product component catalog</Link>
     </GuideSection>
     <GuideSection id="emoji" title="Project emoji">
       <Text>A peeled lid identifies yogurt. One long score identifies sourdough. Three flecks of cracked pepper finish the round meatball.</Text>

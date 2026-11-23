@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Verify tokens and Web and Native guide composition
+      - name: Verify tokens and React guide composition
         run: node --test checks/design-sources.mjs
       - name: Exercise the built Vite guide in Chrome
         run: |
@@ -35,28 +35,20 @@ jobs:
           curl -fsS --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:5273/ > /dev/null
           node checks/web-guide-shell.cjs
 
-  native-otp:
-    name: Native OTP consumer
+  webkit:
+    name: WebKit interactions
     runs-on: macos-15
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - name: Install pinned Zig
-        shell: bash
-        run: |
-          curl -fsSL https://ziglang.org/download/index.json -o "$RUNNER_TEMP/zig-index.json"
-          arch="$(uname -m)"
-          if [[ "$arch" == arm64 ]]; then arch=aarch64; fi
-          entry="$(jq -cer --arg key "$arch-macos" '.["0.16.0"][$key]' "$RUNNER_TEMP/zig-index.json")"
-          curl -fsSL "$(jq -er .tarball <<< "$entry")" -o "$RUNNER_TEMP/zig.tar.xz"
-          printf '%s  %s\n' "$(jq -er .shasum <<< "$entry")" "$RUNNER_TEMP/zig.tar.xz" | shasum -a 256 -c -
-          mkdir "$RUNNER_TEMP/yogurt-zig"
-          tar -xf "$RUNNER_TEMP/zig.tar.xz" -C "$RUNNER_TEMP/yogurt-zig" --strip-components=1
-          echo "$RUNNER_TEMP/yogurt-zig" >> "$GITHUB_PATH"
-      - name: Install the consumer SDK and run development and packaged OTP
-        run: bash checks/native-otp-build.sh
+      - run: npm ci
+      - run: npx --no-install playwright-core install webkit
+      - run: npm run build
+      - run: npm run gallery -- --motion-patterns
+      - run: node checks/web-otp-motion.cjs webkit
+      - run: node checks/web-spring-dropdown-motion.cjs webkit
 
   naming:
     name: Contribution names
@@ -140,7 +132,7 @@ jobs:
 
   required:
     name: Required CI
-    needs: [naming, hygiene, design-sources, native-otp]
+    needs: [naming, hygiene, design-sources, webkit]
     if: ${{ always() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 2
@@ -150,8 +142,8 @@ jobs:
           NAMING: ${{ needs.naming.result }}
           HYGIENE: ${{ needs.hygiene.result }}
           DESIGN_SOURCES: ${{ needs.design-sources.result }}
-          NATIVE_OTP: ${{ needs.native-otp.result }}
+          WEBKIT: ${{ needs.webkit.result }}
         shell: bash
         run: |
-          printf 'Contribution names=%s, Repository hygiene=%s, Shared UI sources=%s, Native OTP consumer=%s\n' "$NAMING" "$HYGIENE" "$DESIGN_SOURCES" "$NATIVE_OTP"
-          [[ "$NAMING" == success && "$HYGIENE" == success && "$DESIGN_SOURCES" == success && "$NATIVE_OTP" == success ]]
+          printf 'Contribution names=%s, Repository hygiene=%s, Shared UI sources=%s, WebKit interactions=%s\n' "$NAMING" "$HYGIENE" "$DESIGN_SOURCES" "$WEBKIT"
+          [[ "$NAMING" == success && "$HYGIENE" == success && "$DESIGN_SOURCES" == success && "$WEBKIT" == success ]]

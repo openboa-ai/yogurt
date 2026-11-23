@@ -13,7 +13,7 @@ Use motion to make input, changes and current work legible. The [component motio
 
 The catalog assigns each of the 139 entries one primary motion role. Shared controls keep that behavior in composed screens. Foundations, reading text and figures with fixed meaning stay in place. Editing and selection keep the active value readable immediately, and a motion cue settles around it. Choose a host result before presenting success or failure. A directly manipulated item stays coupled to the drag until release, even when animated settling is reduced.
 
-Web controls reuse the motion roles in `design/tokens/ui.json`. Ordinary feedback uses 110 ms for a press or short exit, 160 ms for anchored reveals, 220 ms for travel and 260 ms for a large layer entering. Switch travel uses the 180 ms standard curve, and the loading placeholder sweeps from full to half opacity over 1,000 ms in each direction. Interaction state updates immediately while the visual change catches up. During a drag, the pointer drives the motion and settling resumes after release. Closing layers restore focus and become inert as their exit plays. The Native host maps its available widget timing slots and uses the shared avatar poses.
+Web controls reuse the motion roles in `design/tokens/ui.json`. Ordinary feedback uses 110 ms for a press or short exit, 160 ms for anchored reveals, 220 ms for travel and 260 ms for a large layer entering. Switch travel uses the 180 ms standard curve, and the loading placeholder sweeps from full to half opacity over 1,000 ms in each direction. Interaction state updates immediately while the visual change catches up. During a drag, the pointer drives the motion and settling resumes after release. Closing layers restore focus and become inert as their exit plays.
 
 ## Eye and body motion
 
@@ -30,7 +30,7 @@ The current avatar uses [six authored clips](../design/assets/agents/avatar-moti
 
 Waiting uses the widest roll and Thinking holds the highest gaze. Blocked settles low, and Finished compresses at the launch and landing of each jump. Kai moves slightly more than Sol. Both have a restrained scale at 32 points and below. A state change blends for 112 ms from the pose already displayed. Reduced motion holds a representative body and face pose and preserves the state label. The original open pair is used for archived portraits.
 
-The web implementation interpolates the shared poses. The Zig renderer samples the same authored poses and reuses stable path data.
+The web implementation interpolates the shared poses.
 
 ## Agent family
 

@@ -7,7 +7,6 @@
   "files": [
     "packages/web/dist",
     "design/tokens",
-    "packages/native/controls",
     "design/assets/fonts/rethink-sans/*.woff2",
     "design/assets/fonts/rethink-sans/OFL.txt",
     "design/assets/logo/upright-9.svg",
@@ -20,19 +19,15 @@
     "packages/web/README.md",
     "bin",
     "catalog/components.json",
-    "catalog/specimens/native-workspaces.mjs",
     "catalog/motion-components.json",
     "catalog/patterns.json",
     "catalog/blocks.json",
     "catalog/motion.json",
     "packages/recipes",
-    "!packages/recipes/*/view.native.in",
     "catalog/brand.json",
     "design/content/agent-names.json",
     "design/content/terms.json",
     "registry",
-    "examples/native-ui",
-    "design/assets/fonts/rethink-sans/rethink-sans.ttf",
     "design/assets/logo/openboa-lockup.svg",
     "design/assets/logo/openboa-wordmark.svg",
     "design/assets/projects/emoji.json",
@@ -43,12 +38,11 @@
     "DESIGN.md",
     "scripts/describe-pattern.mjs",
     "docs/native-stack.md",
+    "docs/engineering/renderers/react-ui/spec.md",
     "docs/using-yogurt.md",
     "docs/motion.md",
     "apps/guide/generated/components.html",
-    "packages/native/README.md",
     "docs/engineering/controls/component-library",
-    "checks/native-catalog*.mjs",
     "docs/workspace-patterns.md",
     "docs/sidebar.md",
     "docs/design-system-rules.md",
@@ -85,7 +79,6 @@
     "./tokens": "./design/tokens/ui.json",
     "./palette": "./design/tokens/brand.json",
     "./art/*": "./design/assets/*",
-    "./native/*": "./packages/native/controls/*",
     "./brand": "./catalog/brand.json",
     "./terms": "./design/content/terms.json",
     "./blocks": "./catalog/blocks.json"
@@ -103,9 +96,11 @@
     "check:ui": "node scripts/check-ui.mjs",
     "check:web": "node checks/web-library.cjs && node checks/web-button-sizes.cjs && node checks/web-action-layer-calibration.cjs && node checks/web-field-sizes.cjs && node checks/web-field-aria.cjs && node checks/web-form-feedback-motion.cjs && node checks/web-mention-caret.cjs && node checks/web-composer-mentions.cjs && node checks/web-combobox-form.cjs && node checks/web-card-density.cjs && node checks/web-profile-disclosure.cjs && node checks/web-slider-foundation.cjs && node checks/web-checkbox-foundation.cjs && node checks/web-rating-foundation.cjs && node checks/web-quantity-foundation.cjs && node checks/web-spinner-width.cjs && node checks/web-list-foundation.cjs && node checks/web-collection-long-content.cjs && node checks/web-avatar-foundation.cjs && node checks/web-text-data-foundation.cjs && node checks/web-attachment-foundation.cjs && node checks/web-pagination-motion.cjs && node checks/web-calendar-foundation.cjs && node checks/web-keypad-foundation.cjs && node checks/web-tooltip-motion.cjs && node checks/web-anchored-layers.cjs && node checks/web-composer-foundation.cjs && node checks/web-spring-input-foundation.cjs && node checks/web-toast-stack-motion.cjs && node checks/web-toast-swipe.cjs && node checks/web-toast-exit.cjs && node checks/web-top-spacing.cjs && node checks/web-disclosure-motion.cjs && node checks/web-restored-motion.cjs && node checks/web-sidebar-motion-feedback.cjs && node checks/web-sidebar-hide-motion.cjs && node checks/web-chart-foundation.cjs && node checks/web-agent-controls-layout.cjs && node checks/web-conversation-media-layout.cjs && node checks/web-ghost-textarea.cjs && node checks/web-records-layout.cjs && node checks/web-disclosure-toolbar.cjs && node checks/web-date-choice-foundation.cjs && node checks/web-guide-composition.cjs && node checks/web-navigation-feedback-layout.cjs && node checks/web-navigation-long-content.cjs && node checks/web-navigation-direction-motion.cjs && node checks/web-data-long-content.cjs && node checks/web-segmented.cjs && node checks/web-select.cjs && node checks/web-select-picker-motion.cjs && node checks/web-workspaces.cjs && node checks/web-sidebars.cjs && node checks/web-motion.cjs && node checks/web-motion-comparison.cjs && node checks/web-motion-patterns.cjs && node checks/web-action-menu.cjs && node checks/web-otp-motion.cjs && node checks/web-slide-confirm-direction.cjs && node checks/web-copy-action.cjs && node checks/web-motion-gallery-interactions.cjs && node checks/web-workflows.cjs"
   },
-  "peerDependencies": {
+  "dependencies": {
     "@ui-sdk/core": "0.1.0-beta.13",
-    "@ui-sdk/react": "0.1.0-beta.13",
+    "@ui-sdk/react": "0.1.0-beta.13"
+  },
+  "peerDependencies": {
     "react": ">=19.2.0 <20",
     "react-dom": ">=19.2.0 <20"
   },
@@ -113,8 +108,6 @@
     "@openai/apps-sdk-ui": "0.2.2",
     "@types/react": "19.2.10",
     "@types/react-dom": "19.2.2",
-    "@ui-sdk/core": "0.1.0-beta.13",
-    "@ui-sdk/react": "0.1.0-beta.13",
     "esbuild": "0.28.2",
     "playwright-core": "1.62.1",
     "radix-ui": "1.8.1",

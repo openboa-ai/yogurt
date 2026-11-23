@@ -10,7 +10,6 @@ export const siteLayout = [
   ["design/tokens", "tokens"],
   ["packages/recipes", "blocks"],
   ["packages/README.md", "packages/README.md"],
-  ["packages/native", "packages/native"],
   ["packages/web/README.md", "packages/web/README.md"],
   ["packages/web/src", "packages/web/src"],
   ...["DESIGN.md", "README.md", "catalog", "docs", "examples", "registry"].map(path => [path, path]),

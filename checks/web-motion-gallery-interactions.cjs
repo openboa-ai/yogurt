@@ -121,23 +121,22 @@ const actions = {
     assert.equal(await root.locator(".utility-greeting .motion-extra-sr").textContent(), "Yogurt");
   },
   "elastic-slider": async (root, page) => {
-    const rail = root.locator(".yg-elastic-rail");
+    const rail = root.locator("[data-slot=slider-control]");
+    const slider = root.getByRole("slider", {name:"Intensity"});
+    await rail.scrollIntoViewIfNeeded();
     const bounds = await rail.boundingBox();
-    const y = bounds.y + 16;
+    const y = bounds.y + bounds.height / 2;
     await page.mouse.move(bounds.x + bounds.width * .5, y);
     await page.mouse.down();
     try {
-      await page.mouse.move(bounds.x + bounds.width + 34, y, {steps: 8});
-      await page.waitForFunction(() => {
-        const node = document.querySelector(".yg-elastic-rail");
-        return node && parseFloat(node.style.getPropertyValue("--yg-elastic-thumb")) > node.clientWidth - 10;
-      });
+      await page.mouse.move(bounds.x + bounds.width + 34, y, {steps:8});
+      await rail.locator("[data-slot=slider-thumb][data-dragging]").waitFor();
+      assert.equal(await slider.inputValue(), "100");
     } finally {
       await page.mouse.up();
     }
-    const slider = root.getByRole("slider");
-    assert.equal(await slider.getAttribute("aria-valuenow"), "100");
-    await press(slider, "Home", "0");
+    await slider.press("Home");
+    assert.equal(await slider.inputValue(), "0");
   },
   "expand-card": async root => { await root.locator("summary").click(); await byText(root,"See the source, changes and next action.").waitFor(); },
   "activity-island": async root => { const item=root.getByRole("button");await item.click();await selected(item,"aria-expanded"); },
@@ -307,7 +306,7 @@ const actions = {
         width: node.getBoundingClientRect().width,
         slot: slots.firstElementChild.getBoundingClientRect().width,
         gap: parseFloat(getComputedStyle(slots).columnGap),
-        ring: getComputedStyle(slots.querySelector("[data-cursor]")).outlineStyle,
+        ring: getComputedStyle(slots.querySelector("[data-active]")).outlineStyle,
       };
     });
     const editing = await measure();
@@ -468,7 +467,11 @@ const actions = {
   "parallax-ticket": async root => {await click(root,"Show ticket details");await selected(button(root,"Show ticket front"),"aria-pressed");},
   "undo-action": root => show(root,"Remove","You can undo this change"),
   "unlock-state": async root => {await click(root,"Simulate unlock");await byText(root,"Checking preview").waitFor();await byText(root,"Preview unlocked").waitFor({timeout:3800});},
-  "volume-control": root => show(root,"Mute","Muted"),
+  "volume-control": async root => {
+    await click(root,"Mute");
+    assert.equal(await root.getByRole("status").textContent(), "Muted");
+    assert.equal(await root.getByRole("slider", {name:"Preview volume"}).inputValue(), "0");
+  },
   "wheel-picker": async (root, page) => {
     const wheel = root.getByRole("listbox");
     await wheel.press("ArrowDown");

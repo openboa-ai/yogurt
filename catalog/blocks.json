@@ -12,10 +12,7 @@
       "field-error",
       "stack"
     ],
-    "native": [
-      "switch",
-      "select"
-    ]
+    "guidance": "Use this when changes need an explicit save. Group related fields in one form, keep Save and Discard together, and show validation beside the affected field before applying the draft."
   },
   {
     "id": "collection-browser",
@@ -31,11 +28,7 @@
       "stack",
       "toggle"
     ],
-    "native": [
-      "empty-result",
-      "filter-bar",
-      "list"
-    ]
+    "guidance": "Use this for a collection that can outgrow a short list. Keep search, filters and the result count together above the list so users can see what changed. Give a filtered empty result a way back to the full collection."
   },
   {
     "id": "decision-review",
@@ -49,11 +42,7 @@
       "status",
       "table-row"
     ],
-    "native": [
-      "record-facts",
-      "table-row",
-      "confirm-dialog"
-    ]
+    "guidance": "Use this when an action depends on the state a person reviewed. Show the relevant facts beside the decision, then confirm the action against the reviewed revision and report its outcome in place."
   },
   {
     "id": "conversation-panel",
@@ -67,11 +56,7 @@
       "textarea",
       "transcript"
     ],
-    "native": [
-      "message",
-      "textarea",
-      "transcript"
-    ]
+    "guidance": "Use this for an ongoing thread. Place the composer after the transcript, preserve drafts across unrelated updates, and surface Stop beside the composer while a reply is in progress."
   },
   {
     "id": "agent-workspace",
@@ -87,13 +72,7 @@
       "runtime-panel",
       "stack"
     ],
-    "native": [
-      "agent-row",
-      "composer",
-      "message",
-      "runtime-panel",
-      "work-event"
-    ]
+    "guidance": "Use this when people switch between multiple agents in one session. Keep the agent roster available as they work, scope the transcript and draft to the selected agent, and reveal the runtime inspector on demand."
   },
   {
     "id": "project-workspace",
@@ -114,11 +93,7 @@
       "thread-row",
       "sidebar-layout"
     ],
-    "native": [
-      "resource-row",
-      "thread-row",
-      "composer"
-    ]
+    "guidance": "Use this when conversations, sources and instructions share a project boundary. Keep the project identity in view and use tabs for peer views so the user can change views without changing projects."
   },
   {
     "id": "operations-library",
@@ -138,9 +113,7 @@
       "tabs",
       "text"
     ],
-    "native": [
-      "routine-row"
-    ]
+    "guidance": "Use this when people browse several types of reusable operations. Give each type a stable tab, put search inside that context, and open editing only after a routine has been selected."
   },
   {
     "id": "attention-inbox",
@@ -160,9 +133,7 @@
       "text",
       "work-event"
     ],
-    "native": [
-      "work-event"
-    ]
+    "guidance": "Use this when people need to distinguish unread updates from work that needs a decision. Keep the unread filter over the list, confirm consequential actions and place their receipts beside the reviewed item."
   },
   {
     "id": "artifact-library",
@@ -178,9 +149,7 @@
       "select",
       "stack"
     ],
-    "native": [
-      "resource-row"
-    ]
+    "guidance": "Use this when people reopen outputs across sessions. Keep type and text filters together, reveal a selected artifact without losing the result list, and show the pinned state on the artifact itself."
   },
   {
     "id": "project-access",
@@ -196,7 +165,7 @@
       "stack",
       "text-field"
     ],
-    "native": []
+    "guidance": "Use this when a project has its own members and permissions. Keep invitations separate from editing existing roles and ask for confirmation when a change alters someone else’s access."
   },
   {
     "id": "agent-profile",
@@ -213,7 +182,7 @@
       "textarea",
       "text-field"
     ],
-    "native": []
+    "guidance": "Use this when identity and instructions are editable together. Place the live identity preview beside the identity fields and place scope and instructions in a separate group so users can review what each change affects."
   },
   {
     "id": "run-inspector",
@@ -232,11 +201,7 @@
       "text",
       "trace"
     ],
-    "native": [
-      "list",
-      "status",
-      "trace"
-    ]
+    "guidance": "Use this when people need to diagnose or act on one run. Show the current status and result before the trace, and group Retry or Cancel with the run they affect."
   },
   {
     "id": "agent-sidebar",
@@ -253,9 +218,7 @@
       "sidebar-layout",
       "text"
     ],
-    "native": [
-      "sidebar-layout"
-    ]
+    "guidance": "Use this for switching among agents and teams within a workspace. Keep the search at the top, group agents by team and show the selected agent on the entire row."
   },
   {
     "id": "project-sidebar",
@@ -272,8 +235,6 @@
       "sidebar-layout",
       "text"
     ],
-    "native": [
-      "sidebar-layout"
-    ]
+    "guidance": "Use this when views belong to distinct projects. Nest each view under its project, preserve the active view when a group opens, and keep workspace-wide actions outside the project groups."
   }
 ]

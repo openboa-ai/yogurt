@@ -1,6 +1,0 @@
-<template name="yg-status" args="label">
-  <row gap="8" cross="center">
-    <icon name="circle-dot" width="6" height="6" foreground="text_muted"/>
-    <text size="sm" foreground="text_muted">{label}</text>
-  </row>
-</template>

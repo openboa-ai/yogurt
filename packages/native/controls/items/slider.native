@@ -1,9 +1,0 @@
-<template name="yg-slider" args="label amount detail=">
-  <column gap="6">
-    <row cross="center">
-      <text size="sm" grow="1">{label}</text>
-      <text size="sm" foreground="text_muted">{detail}</text>
-    </row>
-    <slider label="{label}" value="{amount}" on-change="adjust"/>
-  </column>
-</template>

@@ -6,7 +6,7 @@ const chapters = [
   ["ownership", "Ownership"], ["checks", "Verification"], ["releases", "Adopt and upgrade"], ["improve", "Improve"],
 ] as const;
 const config = {
-  surfaces: {site: {target: "web", root: "apps/site"}, desktop: {target: "native", root: "apps/desktop"}},
+  surfaces: {site: {target: "web", root: "apps/site"}, desktop: {target: "web", root: "apps/desktop"}},
   englishCopy: ["content/en"],
   intents: ["docs/intents"],
 };
@@ -20,16 +20,15 @@ export default function AdoptionGuide() {
     <GuideSection id="setup" title="Bind a project once">
       <Text>Put <code>yogurt.config.json</code> at the project root. Name the surfaces to check and where the project keeps English copy and intents.</Text>
       <CodeBlock language="JSON" code={JSON.stringify(config, null, 2)} />
-      <Text>Pin Yogurt in the consumer. Keep the web lockfile and Native build inputs consistent with the version the project has reviewed.</Text>
+      <Text>Pin Yogurt in the consumer. Keep the dependency lock and shell build inputs consistent with the version the project has reviewed.</Text>
       <Inline gap={16}><Link href="/docs/using-yogurt.md#first-screen">First screen setup</Link><Link href="/docs/using-yogurt.md#set-up-an-agent">Set up the Yogurt plugin</Link></Inline>
     </GuideSection>
     <GuideSection id="platforms" title="Build the client">
       <GuideGrid>
         <Card title="Next.js and Vite"><Text>Install the Web entry and load its shared styles and fonts. Import components from the public package.</Text></Card>
-        <Card title="Vercel Native SDK"><Text>Use the supported SDK pin in the app’s dependency manifest. Install the Yogurt components and tokens, then use the app’s standard Native build.</Text></Card>
-        <Card title="Embedded web content"><Text>Use the Web entry in a WebView. The app handles native navigation and focus handoff.</Text></Card>
+        <Card title="Desktop WebView"><Text>Load the same React UI in a WebView. The application shell handles windows and operating-system integration.</Text></Card>
       </GuideGrid>
-      <Inline gap={16}><Link href="/docs/using-yogurt.md#web">Web installation</Link><Link href="/docs/using-yogurt.md#zig-and-vercel-native-sdk">Native SDK pin, build and packaging</Link></Inline>
+      <Inline gap={16}><Link href="/docs/using-yogurt.md#web">Web installation</Link><Link href="/docs/native-stack.md">Desktop application stack</Link></Inline>
     </GuideSection>
     <GuideSection id="brief" title="Bring a product task">
       <Text>Start with what someone needs to do. Ask the agent to build a screen to find a record, open it and return with the same search. The agent uses the task map to select a composition from your pinned SDK.</Text>
@@ -52,10 +51,10 @@ export default function AdoptionGuide() {
     <GuideSection id="ownership" title="What travels together">
       <GuideGrid>
         <Card title="Identity and words"><Text>Use the logo masters, project emoji, approved company copy and contextual English terms from one release.</Text></Card>
-        <Card title="Design and behavior"><Text>Use shared type, dimensions, palette and component states across web and native renderers.</Text></Card>
+        <Card title="Design and behavior"><Text>Use shared type, dimensions, palette and component states in the browser and desktop WebView.</Text></Card>
         <Card title="Authoring and checks"><Text>Use the same rule IDs and examples for product authoring and CI.</Text></Card>
       </GuideGrid>
-      <Inline gap={16}><Link href="/content/terms.json">English terms</Link><Link href="/#files">Artwork and fonts</Link><Link href="/system">Design system</Link></Inline>
+      <Inline gap={16}><Link href="/content/terms.json">English terms</Link><Link href="/#files">Artwork and fonts</Link><Link href="/tokens">Design system</Link></Inline>
     </GuideSection>
     <GuideSection id="checks" title="What a release must prove">
       <Text>Exercise the default, empty and recovered states. Check keyboard access, accessible names, visible focus, contrast and actual screens in both appearances on each supported renderer.</Text>

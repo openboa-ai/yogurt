@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-detent-dial.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { DetentDial } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { DetentDial } from \"@openboa/yogurt/motion-detent-dial\";\n"
     }
   ]
 }

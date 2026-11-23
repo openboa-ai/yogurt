@@ -1,9 +1,0 @@
-<template name="yg-list-header" args="title detail">
-  <row gap="@{gap-stack}" cross="center">
-    <column grow="1" gap="@{gap-tight}">
-      <text size="heading" wrap="true">{title}</text>
-      <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
-    </column>
-    <slot/>
-  </row>
-</template>

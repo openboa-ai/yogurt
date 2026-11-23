@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-expand-card.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { ExpandCard } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { ExpandCard } from \"@openboa/yogurt/motion-expand-card\";\n"
     }
   ]
 }

@@ -4,7 +4,7 @@
 
 A person who learns to choose an option, dismiss a menu or recover from an error in one OpenBoa product should be able to use that knowledge in the next. A product team should be able to offer that experience by choosing a supported control. The team can then spend its design time on what people came to do.
 
-Yogurt owns decisions that should change together. A shared decision has one editable source and a public way to use it. Web and Native can draw a control with different APIs. They share its purpose, design roles and promises about what a person can see and do. Products keep their own information, permissions, commands and release schedules. A correction reaches each product when it adopts the corrected SDK revision.
+Yogurt owns decisions that should change together. A shared decision has one editable source and a public way to use it. The browser and desktop WebView use the same React control and state contract. Products keep their own information, permissions, commands and release schedules. A correction reaches each product when it adopts the corrected SDK revision.
 
 Use a change to test this boundary. If the inset for regular cards changes, changing its role once should reach both targets. If a six-cell code field gains focus, the field owns the visible cue and keyboard behavior wherever it appears. If one product changes where to send a completed code, only that product should change. Two properties that happen to measure the same today can have different owners.
 
@@ -16,18 +16,18 @@ This rule starts inside Yogurt. The guide, Studio, templates and examples are co
 
 | What changes | Where to change it |
 | --- | --- |
-| A shared color, type, spacing, shape or motion value | Edit the palette and primitives in `design/tokens/brand.json` or the component roles in `design/tokens/ui.json`. Run `npm run tokens` to generate the CSS and Zig outputs together. |
-| How a control looks, responds or moves in any state | Edit React in `packages/web/src` and its shared stylesheet in `design/styles`. For Native, edit markup in `packages/native/src/templates` or the catalog's typed Zig renderer in `packages/native/controls`. Vite and Next.js use the same web export. The component ID, guidance and default typed Native entry live in `catalog/components.json`. |
+| A shared color, type, spacing, shape or motion value | Edit the palette and primitives in `design/tokens/brand.json` or the component roles in `design/tokens/ui.json`. Run `npm run tokens` to generate the CSS outputs. |
+| How a control looks, responds or moves in any state | Edit React in `packages/web/src` and its shared stylesheet in `design/styles`. Vite, Next.js and the desktop WebView use the same React export. The component ID and guidance live in `catalog/components.json`. |
 | Which words or marks carry a shared meaning | Use the vocabulary and artwork sources listed in `catalog/brand.json`. A product supplies its object names, actual outcomes and recovery actions. |
 | How shared controls work together | Edit the reusable composition in `packages/recipes` when it is shared. A screen supplies its own content, layout, state and callbacks. |
 
-Native controls and blocks use `@{role}` references for layout spacing in their authoring templates. Generation resolves these to SDK markup. Edit each block in `packages/recipes/<id>/view.native.in`. The corresponding `view.native` and `controls/items` files are distribution outputs.
-
 A component preview imports the public entry for its target. Render focused, open, selected, disabled and loading states through that entry's inputs and events. When the preview needs a missing state or motion, add it to the shared component first. A compatibility entry keeps its existing API. The installer, guide and agent instructions identify the same default for new consumers.
+
+When two controls accept the same input and return the same result, give the interaction one owner under `packages/web/src/controls`. Keep SDK parts and their keyboard, focus and value contracts together. Apply styles to documented part and state attributes, pass changing measurements as CSS custom properties, and keep reusable geometry in the token source. A compatibility export calls the owner. A composition in `packages/web/src/patterns` passes labels and domain data to that owner. The guide uses `apps/guide/component-previews.ts` for variant navigation and derives its compatibility redirects from the same entries.
 
 Verify a shared fix at its public entry in a consumer and exercise the same interaction in the affected example. Record which renderer and state were exercised. A guide-only check covers that guide.
 
-The Vite development guide watches the token sources. The Native guide launcher regenerates the platform outputs before choosing a cached build. `npm run check:tokens` compares both targets with the source without writing files. `node --test checks/design-sources.mjs` changes a token in a disposable copy and checks the guide's component imports. When an integration exposes a defect, keep the regression check with the lowest layer that owns the decision.
+The Vite development guide watches the token sources. `npm run check:tokens` compares the generated styles with the source without writing files. `node --test checks/design-sources.mjs` changes a token in a disposable copy and checks the guide’s component imports. Keep a regression check with the layer that owns the decision.
 
 ## Required reuse
 

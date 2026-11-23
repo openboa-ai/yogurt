@@ -349,7 +349,7 @@
         {
           "path": "ui/radio-group.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { RadioGroup } from \"@openboa/yogurt/radio-group\";\n"
+          "content": "\"use client\";\n\nexport { RadioGroup, FocusPicker, PlanSwitch } from \"@openboa/yogurt/radio-group\";\n"
         }
       ]
     },
@@ -545,7 +545,7 @@
         {
           "path": "ui/tooltip.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { Tooltip } from \"@openboa/yogurt/tooltip\";\n"
+          "content": "\"use client\";\n\nexport { Tooltip, MorphTooltip } from \"@openboa/yogurt/tooltip\";\n"
         }
       ]
     },
@@ -1324,12 +1324,12 @@
       "name": "slider",
       "type": "registry:ui",
       "title": "Slider",
-      "description": "Choose a numeric value within a range.",
+      "description": "Choose a bounded value or interval.",
       "files": [
         {
           "path": "ui/slider.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { Slider } from \"@openboa/yogurt/slider\";\n"
+          "content": "\"use client\";\n\nexport { Slider, RangeSlider } from \"@openboa/yogurt/slider\";\n"
         }
       ]
     },
@@ -1973,7 +1973,7 @@
         {
           "path": "ui/motion-mention-picker.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { MentionPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { MentionPicker } from \"@openboa/yogurt/motion-mention-picker\";\n"
         }
       ]
     },
@@ -1987,7 +1987,7 @@
         {
           "path": "ui/motion-file-drop.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { FileDrop } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { FileDrop } from \"@openboa/yogurt/motion-file-drop\";\n"
         }
       ]
     },
@@ -2001,7 +2001,7 @@
         {
           "path": "ui/motion-focus-picker.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { FocusPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { FocusPicker } from \"@openboa/yogurt/motion-focus-picker\";\n"
         }
       ]
     },
@@ -2015,7 +2015,7 @@
         {
           "path": "ui/motion-plan-switch.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { PlanSwitch } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { PlanSwitch } from \"@openboa/yogurt/motion-plan-switch\";\n"
         }
       ]
     },
@@ -2029,7 +2029,7 @@
         {
           "path": "ui/motion-letter-limit.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { LetterLimit } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { LetterLimit } from \"@openboa/yogurt/motion-letter-limit\";\n"
         }
       ]
     },
@@ -2043,7 +2043,7 @@
         {
           "path": "ui/motion-morph-tooltip.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { MorphTooltip } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { MorphTooltip } from \"@openboa/yogurt/motion-morph-tooltip\";\n"
         }
       ]
     },
@@ -2057,7 +2057,7 @@
         {
           "path": "ui/motion-spring-dropdown.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { SpringDropdown } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { SpringDropdown } from \"@openboa/yogurt/motion-spring-dropdown\";\n"
         }
       ]
     },
@@ -2071,7 +2071,7 @@
         {
           "path": "ui/motion-command-button.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { CommandButton } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { CommandButton } from \"@openboa/yogurt/motion-command-button\";\n"
         }
       ]
     },
@@ -2085,7 +2085,7 @@
         {
           "path": "ui/motion-morph-tooltip-bar.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { MorphTooltipBar } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { MorphTooltipBar } from \"@openboa/yogurt/motion-morph-tooltip-bar\";\n"
         }
       ]
     },
@@ -2099,7 +2099,7 @@
         {
           "path": "ui/motion-storage-meter.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { StorageMeter } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { StorageMeter } from \"@openboa/yogurt/motion-storage-meter\";\n"
         }
       ]
     },
@@ -2113,7 +2113,7 @@
         {
           "path": "ui/motion-activity-island.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { ActivityIsland } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { ActivityIsland } from \"@openboa/yogurt/motion-activity-island\";\n"
         }
       ]
     },
@@ -2127,7 +2127,7 @@
         {
           "path": "ui/motion-loading-success-button.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { LoadingSuccessButton } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { LoadingSuccessButton } from \"@openboa/yogurt/motion-loading-success-button\";\n"
         }
       ]
     },
@@ -2141,7 +2141,7 @@
         {
           "path": "ui/motion-copy-button.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { CopyButton } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { CopyButton } from \"@openboa/yogurt/motion-copy-button\";\n"
         }
       ]
     },
@@ -2155,7 +2155,7 @@
         {
           "path": "ui/motion-streaming-reply.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { StreamingReply } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { StreamingReply } from \"@openboa/yogurt/motion-streaming-reply\";\n"
         }
       ]
     },
@@ -2169,7 +2169,7 @@
         {
           "path": "ui/motion-ghost-suggestion.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { GhostSuggestion } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { GhostSuggestion } from \"@openboa/yogurt/motion-ghost-suggestion\";\n"
         }
       ]
     },
@@ -2183,7 +2183,7 @@
         {
           "path": "ui/motion-prompt-box.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { PromptBox } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { PromptBox } from \"@openboa/yogurt/motion-prompt-box\";\n"
         }
       ]
     },
@@ -2197,7 +2197,7 @@
         {
           "path": "ui/motion-thinking-indicator.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { ThinkingIndicator } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { ThinkingIndicator } from \"@openboa/yogurt/motion-thinking-indicator\";\n"
         }
       ]
     },
@@ -2211,7 +2211,7 @@
         {
           "path": "ui/motion-expand-card.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { ExpandCard } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { ExpandCard } from \"@openboa/yogurt/motion-expand-card\";\n"
         }
       ]
     },
@@ -2225,7 +2225,7 @@
         {
           "path": "ui/motion-fan-cards.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { FanCards } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { FanCards } from \"@openboa/yogurt/motion-fan-cards\";\n"
         }
       ]
     },
@@ -2239,7 +2239,7 @@
         {
           "path": "ui/motion-stat-card.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { StatCard } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { StatCard } from \"@openboa/yogurt/motion-stat-card\";\n"
         }
       ]
     },
@@ -2253,7 +2253,7 @@
         {
           "path": "ui/motion-profile-card.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { ProfileCard } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { ProfileCard } from \"@openboa/yogurt/motion-profile-card\";\n"
         }
       ]
     },
@@ -2267,7 +2267,7 @@
         {
           "path": "ui/motion-range-slider.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { RangeSlider } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { RangeSlider } from \"@openboa/yogurt/motion-range-slider\";\n"
         }
       ]
     },
@@ -2281,7 +2281,7 @@
         {
           "path": "ui/motion-password-strength.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { PasswordStrength } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { PasswordStrength } from \"@openboa/yogurt/motion-password-strength\";\n"
         }
       ]
     },
@@ -2295,7 +2295,7 @@
         {
           "path": "ui/motion-checkbox-list.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { CheckboxList } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { CheckboxList } from \"@openboa/yogurt/motion-checkbox-list\";\n"
         }
       ]
     },
@@ -2309,7 +2309,7 @@
         {
           "path": "ui/motion-detent-dial.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { DetentDial } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { DetentDial } from \"@openboa/yogurt/motion-detent-dial\";\n"
         }
       ]
     },
@@ -2323,7 +2323,7 @@
         {
           "path": "ui/motion-hold-button.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { HoldButton } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { HoldButton } from \"@openboa/yogurt/motion-hold-button\";\n"
         }
       ]
     },
@@ -2337,7 +2337,7 @@
         {
           "path": "ui/motion-slide-confirm.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { SlideConfirm } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { SlideConfirm } from \"@openboa/yogurt/motion-slide-confirm\";\n"
         }
       ]
     },
@@ -2351,7 +2351,7 @@
         {
           "path": "ui/motion-task-list.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { TaskList } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { TaskList } from \"@openboa/yogurt/motion-task-list\";\n"
         }
       ]
     },
@@ -2365,7 +2365,7 @@
         {
           "path": "ui/motion-cart-button.tsx",
           "type": "registry:ui",
-          "content": "\"use client\";\n\nexport { CartButton } from \"@openboa/yogurt/motion-patterns\";\n"
+          "content": "\"use client\";\n\nexport { CartButton } from \"@openboa/yogurt/motion-cart-button\";\n"
         }
       ]
     }

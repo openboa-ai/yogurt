@@ -1,44 +1,63 @@
+import blocks from "../../../catalog/blocks.json";
 import { useState } from "react";
 import {
-  Button, Card, Heading, Inline, Link, NavigationList, PageHeader, Select, Stack,
+  Button, Card, Heading, Inline, Link, PageHeader, Select, Stack,
 } from "@openboa/yogurt";
 import { FormRecipe } from "../examples/templates/recipe-forms";
 import { MetricRecipe, RecordRecipe } from "../examples/templates/recipe-data";
 import { FoundationRecipe, StateRecipe } from "../examples/templates/recipe-states";
-import { getRecipe, recipeBoards, recipeFamilies, type Recipe } from "../examples/templates/recipes";
+import { dashboard, studies } from "../examples/templates/catalog";
+import { recipeFamilies, type Recipe } from "../examples/templates/recipes";
 
-export function TemplateGallery({ appearance }: { appearance: "light" | "dark" }) {
+const recommendedGroups = [
+  { id: "workspace", title: "Workspace", patterns: [
+    "agent-workspace", "project-workspace", "agent-sidebar", "project-sidebar", "project-settings", "project-access",
+  ] },
+  { id: "records", title: "Records and decisions", patterns: [
+    "collection-browser", "decision-review", "operations-library", "artifact-library", "run-inspector",
+  ] },
+  { id: "collaboration", title: "Collaboration", patterns: [
+    "conversation-panel", "attention-inbox", "agent-profile",
+  ] },
+];
+
+export function PatternGallery() {
   return <main className="guide-templates template-gallery">
     <Stack gap={32}>
-      <PageHeader title="Templates" detail="Explore working compositions for navigation, forms, data and everyday product states." />
-      <NavigationList label="Template boards" orientation="horizontal" current=""
-        items={recipeBoards.map(board => ({ id: board.id, label: board.title, href: "#" + board.id + "-templates" }))} />
-      {recipeBoards.map(board => <section key={board.id} aria-labelledby={board.id + "-templates"} data-template-board={board.id}>
-        <Heading level={2} id={board.id + "-templates"}>{board.title}</Heading>
+      <PageHeader title="Patterns" detail="Recommended component combinations for recurring product tasks." />
+      {recommendedGroups.map(group => <section key={group.id} aria-labelledby={"patterns-" + group.id}>
+        <Heading level={2} id={"patterns-" + group.id}>{group.title}</Heading>
         <div className="template-gallery-board">
-          {board.specimens.map(id => {
-            const { family, recipe } = getRecipe(id);
-            const span = recipe.components.some(part => ["data-table", "sidebar-layout"].includes(part)) ? "board"
-              : recipe.components.some(part => ["bar-chart", "chart"].includes(part)) ? "plot" : undefined;
-            const hasCaption = recipe.components.some(part =>
-              ["bar-chart", "chart", "data-table", "record-facts", "result"].includes(part));
-            return <article key={id} id={id} className="template-specimen" data-template-specimen={id} data-span={span} aria-label={recipe.title}>
-              {!hasCaption && <Heading level={3}>{recipe.title}</Heading>}
-              <Preview family={family} recipe={recipe} appearance={appearance} inGallery />
+          {group.patterns.map(id => {
+            const block = blocks.find(item => item.id === id)!;
+            const title = id.split("-").map(word => word[0].toUpperCase() + word.slice(1)).join(" ");
+            return <article key={id} className="guide-pattern-item" data-pattern={id}>
+              <Card title={title} description={block.description}>
+                <Link href={"/patterns/" + id} aria-label={"Open " + title}>Open preview</Link>
+              </Card>
             </article>;
           })}
         </div>
       </section>)}
+      <section aria-labelledby="pattern-practice">
+        <Stack gap={12}>
+          <Heading level={2} id="pattern-practice">Build a screen</Heading>
+          <Inline className="template-component-links">
+            {[...recipeFamilies.map(family => ({ id: family.id, title: family.title })), ...studies, dashboard].map(item =>
+              <Link key={item.id} href={"/patterns/" + item.id}>{item.title}</Link>)}
+          </Inline>
+        </Stack>
+      </section>
     </Stack>
   </main>;
 }
 
-function Preview({ family, recipe, appearance, inGallery = false }: { family: string; recipe: Recipe; appearance: "light" | "dark"; inGallery?: boolean }) {
+function Preview({ family, recipe, appearance }: { family: string; recipe: Recipe; appearance: "light" | "dark" }) {
   if (family === "forms") return <FormRecipe recipe={recipe} />;
   if (family === "records") return <RecordRecipe recipe={recipe} />;
   if (family === "metrics") return <MetricRecipe recipe={recipe} />;
   if (family === "states") return <StateRecipe recipe={recipe} />;
-  return <FoundationRecipe recipe={recipe} appearance={appearance} inGallery={inGallery} />;
+  return <FoundationRecipe recipe={recipe} appearance={appearance} />;
 }
 
 export function TemplateFamily({ family, initialId, appearance }: {
@@ -51,7 +70,7 @@ export function TemplateFamily({ family, initialId, appearance }: {
 
   return <main className="guide-templates">
     <Stack gap={24}>
-      <PageHeader title={family.title} action={<Link href="/templates">All templates</Link>} />
+      <PageHeader title={family.title} action={<Link href="/patterns">All patterns</Link>} />
       <div className="template-family-controls">
         <Select label="Example" value={recipe.id} options={family.recipes.map(item => ({ id: item.id, label: item.title }))}
           onChange={event => setSelected(event.target.value)} />

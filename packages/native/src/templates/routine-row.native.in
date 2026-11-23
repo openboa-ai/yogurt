@@ -1,9 +1,0 @@
-<template name="yg-routine-row" args="title detail summary item_id can_edit can_run pending">
-  <column gap="@{gap-inline}" background="background" radius="lg" padding="@{inset-regular}">
-    <button variant="ghost" on-press="open_routine:{item_id}">{title}</button>
-    <text size="sm" foreground="text_muted" wrap="true">{summary}</text>
-    <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
-    <if test="{can_edit}"><button variant="ghost" disabled="{pending}" on-press="edit_routine:{item_id}">Edit schedule</button></if>
-    <if test="{can_run}"><button variant="secondary" disabled="{pending}" on-press="run_routine:{item_id}">Run now</button></if>
-  </column>
-</template>

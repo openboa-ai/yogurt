@@ -1,5 +1,0 @@
-<template name="yg-data-table" args="label">
-  <data-grid label="{label}">
-    <slot/>
-  </data-grid>
-</template>

@@ -111,11 +111,11 @@ for (const [agent, sizes] of Object.entries(output)) {
 }
 trackLines.push("} as const;");
 
-const pathVerbs = { M: ["move_to", 2], L: ["line_to", 2], Q: ["quad_to", 4], Z: ["close", 0] };
+const pathArity = { M: 2, L: 2, Q: 4, Z: 0 };
 for (const [name, commands] of Object.entries(eyeMarks)) {
   if (commands[0]?.[0] !== "M" || commands.at(-1)?.[0] !== "Z" ||
-      commands.some(([verb, ...points]) => !Object.hasOwn(pathVerbs, verb) ||
-        points.length !== pathVerbs[verb][1] || points.some(value => !Number.isFinite(value) || Math.abs(value) > 1))) {
+      commands.some(([verb, ...points]) => !Object.hasOwn(pathArity, verb) ||
+        points.length !== pathArity[verb] || points.some(value => !Number.isFinite(value) || Math.abs(value) > 1))) {
     throw Error("Invalid outline for " + name);
   }
 }
@@ -134,78 +134,3 @@ const types = [
   ...trackLines,
 ];
 writeFileSync("packages/web/src/identity/avatar-pose-data.ts", types.join("\n") + "\n");
-
-const colors = (value) => [0, 2, 4].map((index) => parseInt(value.slice(1 + index, 3 + index), 16)).join(", ");
-const zig = [
-  "// Generated from the original SVG masters and avatar-motion.json.",
-  'const canvas = @import("native_sdk").canvas;',
-  "pub const Agent = enum { " + Object.keys(agents).join(", ") + " };",
-  "pub const EyeMark = enum { round, " + Object.keys(eyeMarks).join(", ") + " };",
-  "pub const State = enum { " + states.join(", ") + " };",
-  "pub const roster_max: f32 = " + rosterMax + ";",
-  "pub const transition_ms: u64 = " + transitionMs + ";",
-  "pub const Transform = [5]f32;",
-  "pub const Pose = [3]Transform;",
-  "pub const Frame = struct { at: u32, pose: Pose };",
-  "pub const Clip = struct { duration: u32, loop: bool, still: usize, mark: EyeMark, mark_at: u32, frames: []const Frame };",
-  "pub const Art = struct { path: []const canvas.PathElement, fill: canvas.Color, ink: canvas.Color, center_x: f32, center_y: f32 };",
-  "",
-  "pub fn get(agent: Agent, roster: bool, state: State) Clip {",
-  "    const table = switch (agent) {",
-  ...Object.keys(agents).map((agent) => "        ." + agent + " => if (roster) &" + agent + "_roster else &" + agent + "_detail,"),
-  "    };",
-  "    return table[@intFromEnum(state)];",
-  "}",
-  "",
-  "pub fn art(agent: Agent) Art {",
-  "    return switch (agent) {",
-];
-
-const paths = [];
-for (const agent of Object.keys(agents)) {
-  const master = read("design/assets/agents/" + agent + ".svg");
-  const [, id, fill] = master.match(/<use href="#([^"]+)" fill="([^"]+)"/);
-  const [, path] = master.match(new RegExp('<path id="' + id + '" d="([^"]+)"'));
-  const [, ink, cx, cy] = master.match(/<g id="eyes" fill="([^"]+)">\s*<circle cx="([^"]+)" cy="([^"]+)"/);
-  const words = [...path.matchAll(/([ML])(-?[\d.]+)\s+(-?[\d.]+)|Z/g)];
-  if (words.map((match) => match[0]).join("") !== path) throw Error("Unsupported outline format for " + agent);
-  zig.push("        ." + agent + " => .{ .path = &" + agent + "_outline, .fill = canvas.Color.rgb8(" +
-    colors(fill) + "), .ink = canvas.Color.rgb8(" + colors(ink) + "), .center_x = " + (Number(cx) + 13) +
-    ", .center_y = " + cy + " },");
-  paths.push("const " + agent + "_outline = [_]canvas.PathElement{");
-  for (const [, verb, x, y] of words) {
-    paths.push(verb
-      ? "    .{ .verb = ." + (verb === "M" ? "move_to" : "line_to") +
-        ", .points = .{ .{ .x = " + x + ", .y = " + y + " }, .{}, .{} } },"
-      : "    .{ .verb = .close },");
-  }
-  paths.push("};");
-}
-zig.push("    };", "}", "", ...paths);
-for (const [name, commands] of Object.entries(eyeMarks)) {
-  zig.push("", "pub const eye_" + name + " = [_]canvas.PathElement{");
-  for (const [verb, ...points] of commands) {
-    const pair = offset => points.length > offset
-      ? ".{ .x = " + points[offset] + ", .y = " + points[offset + 1] + " }"
-      : ".{}";
-    zig.push("    .{ .verb = ." + pathVerbs[verb][0] +
-      (points.length ? ", .points = .{ " + [0, 2, 4].map(pair).join(", ") + " }" : "") + " },");
-  }
-  zig.push("};");
-}
-const zigPose = (pose) => ".{ " + pose.map(transform => ".{ " + transform.join(", ") + " }").join(", ") + " }";
-
-for (const [agent, sizes] of Object.entries(output)) {
-  for (const [size, records] of Object.entries(sizes)) {
-    zig.push("", "const " + agent + "_" + size + " = [_]Clip{");
-    for (const [state, { duration, loop, still, mark, markAt, frames }] of Object.entries(records)) {
-      zig.push("    // " + state, "    .{ .duration = " + duration + ", .loop = " + loop + ", .still = " + still + ", .mark = ." + mark + ", .mark_at = " + markAt + ", .frames = &.{");
-      for (const [at, pose] of frames) {
-        zig.push("        .{ .at = " + at + ", .pose = " + zigPose(pose) + " },");
-      }
-      zig.push("    } },");
-    }
-    zig.push("};");
-  }
-}
-writeFileSync("packages/native/controls/models/avatar-pose-data.zig", zig.join("\n") + "\n");

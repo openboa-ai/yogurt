@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ComponentType, type MouseEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ComponentType, type MouseEvent } from "react";
 import {
   Yogurt,
   PageHeader,
@@ -27,35 +27,9 @@ import blocks from "../../catalog/blocks.json";
 import { BlockExample } from "./examples/block-examples";
 import { BrandTokens } from "./brand-tokens";
 import { Example } from "./examples/ui-examples";
-import { AgentWorkspaceExample } from "./examples/agent-workspace-examples";
-import { ProjectWorkspaceExample } from "./examples/project-workspace-examples";
-import { OperationsExample } from "./examples/operations-examples";
-import { WorkspaceExample } from "./examples/workspace-examples";
-import { AgentProfileExample } from "./examples/agent-profile-example";
-import { RunInspectorExample } from "./examples/run-inspector-example";
-import { SidebarExample } from "./examples/sidebar-example";
+import { scopedExamples } from "./examples/scoped-examples";
+import { componentAliases, componentPreviews, previewExport } from "./component-previews";
 import { guideHref, locationId, navigateSection, sectionHref } from "./routing";
-const scopedExamples = {
-  "agent-row": AgentWorkspaceExample,
-  "runtime-panel": AgentWorkspaceExample,
-  "agent-workspace": AgentWorkspaceExample,
-  "resource-row": ProjectWorkspaceExample,
-  "thread-row": ProjectWorkspaceExample,
-  "project-workspace": ProjectWorkspaceExample,
-  "work-event": OperationsExample,
-  "routine-row": OperationsExample,
-  "operations-library": OperationsExample,
-  "attention-inbox": OperationsExample,
-  "composer": WorkspaceExample,
-  "voice-control": WorkspaceExample,
-  "artifact-library": WorkspaceExample,
-  "project-access": WorkspaceExample,
-  "agent-profile": AgentProfileExample,
-  "run-inspector": RunInspectorExample,
-  "sidebar-layout": SidebarExample,
-  "agent-sidebar": SidebarExample,
-  "project-sidebar": SidebarExample,
-};
 const entries = [
   ...catalog,
   ...blocks.map((block) => ({ ...block, family: "Blocks", module: "blocks" })),
@@ -74,18 +48,35 @@ function previewLayout(entry: {id: string; family: string}) {
   if (wideFamilies.has(entry.family) || widePreviews.has(entry.id)) return "wide";
   return "field";
 }
+const previewName = (id: string) => id[0].toUpperCase() + id.slice(1).replaceAll("-", " ");
+const motionFamily: Record<string, string> = {
+  "motion-cart-button": "Actions", "motion-copy-button": "Actions", "motion-hold-button": "Actions",
+  "motion-slide-confirm": "Actions", "motion-loading-success-button": "Actions",
+  "motion-mention-picker": "Forms", "motion-file-drop": "Forms", "motion-focus-picker": "Forms",
+  "motion-plan-switch": "Forms", "motion-letter-limit": "Forms", "motion-spring-dropdown": "Forms",
+  "motion-range-slider": "Forms", "motion-checkbox-list": "Forms", "motion-detent-dial": "Forms",
+  "motion-password-strength": "Forms", "motion-ghost-suggestion": "Forms",
+  "motion-morph-tooltip": "Layers", "motion-command-button": "Layers",
+  "motion-morph-tooltip-bar": "Layers",
+  "motion-storage-meter": "Data", "motion-stat-card": "Data",
+  "motion-prompt-box": "Workspaces", "motion-streaming-reply": "Identity & conversation",
+  "motion-expand-card": "Foundations", "motion-fan-cards": "Foundations",
+  "motion-profile-card": "Identity & conversation", "motion-task-list": "Collections",
+};
 const motionEntries = motionCatalog.components.filter(component => component.examples.length).map(component => ({
   ...component,
-  family: "Interactive patterns",
+  family: motionFamily[component.id] ?? "Feedback",
   description: component.guidance.useWhen,
   guidance: { ...component.guidance, combineWith: [] as string[] },
 }));
-const hostedEntries = [...entries, ...motionEntries];
-const searchIndex = hostedEntries.map((entry) => {
+const offlineEntries = [...entries, ...motionEntries];
+const hostedEntries = [...catalog, ...motionEntries.filter(entry => !componentAliases.has(entry.id))];
+const searchIndex = offlineEntries.map((entry) => {
   const names = [
     entry.name,
     entry.family,
     entry.id,
+    ...(componentPreviews[entry.id] ?? []),
   ].map(foldName);
   return { entry, text: names.join(" "), aliases: names.map(compactName) };
 });
@@ -146,12 +137,13 @@ function submitPreviewForm(event: MouseEvent<HTMLDivElement>) {
   if (!form.noValidate && !submitter.formNoValidate && !form.reportValidity()) return;
   form.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true, submitter }));
 }
-export function Catalog({ inlinePreview = false, guideAppearance, motionPreview: MotionPreview }: {
+export function Catalog({ inlinePreview = false, guideAppearance, motionPreview: MotionPreview, route }: {
   inlinePreview?: boolean;
   guideAppearance?: "light" | "dark";
   motionPreview?: ComponentType<{ id: string }>;
+  route?: { id: string; preview: string | null };
 }) {
-  const [id, select] = useState(keyFromHash),
+  const [standaloneId, select] = useState(keyFromHash),
     [search, setSearch] = useState(""),
     [expanded, expand] = useState<string[]>(["Actions"]),
     [menu, setMenu] = useState(false),
@@ -162,14 +154,23 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
     [compare, setCompare] = useState(false),
     [showCode, setShowCode] = useState(false);
   const navigation = useRef<HTMLElement>(null);
-  const availableEntries = MotionPreview ? hostedEntries : entries;
+  const menuTrigger = useRef<HTMLButtonElement>(null);
+  const lastRevealed = useRef<string>(null);
+  const navigationId = useId();
+  const id = route?.id ?? standaloneId;
+  const availableEntries = guideAppearance ? hostedEntries : MotionPreview ? offlineEntries : entries;
   const families = [...new Set(availableEntries.map(item => item.family))];
   const entry = availableEntries.find(item => item.id === id) ?? availableEntries[0];
   const motionEntry = "examples" in entry ? entry : undefined;
-  const guidance = "guidance" in entry ? entry.guidance : undefined;
+  const previewChoices = guideAppearance ? componentPreviews[id] : undefined;
+  const previewId = route?.preview;
+  const activePreview = previewId && previewChoices?.includes(previewId) ? previewId : undefined;
+  const guidance = "guidance" in entry && typeof entry.guidance === "object" ? entry.guidance : undefined;
   const missing = id !== "brand" && !availableEntries.some((item) => item.id === id);
-  const ScopedExample = scopedExamples[id as keyof typeof scopedExamples];
+  const ScopedExample = scopedExamples[id];
+  const hosted = Boolean(route);
   useEffect(() => {
+    if (hosted) return;
     const listener = () => {
       const next = keyFromHash();
       if (next === "yg-inspect") return;
@@ -180,32 +181,44 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
     addEventListener("hashchange", listener);
     addEventListener("popstate", listener);
     return () => { removeEventListener("hashchange", listener); removeEventListener("popstate", listener); };
-  }, []);
+  }, [hosted]);
+  useEffect(() => {
+    setMenu(false);
+    setShowCode(false);
+  }, [id]);
   useEffect(() => {
     expand((all) =>
       all.includes(entry.family) ? all : [...all, entry.family],
     );
   }, [entry.family]);
   useEffect(() => {
-    const sidebar = navigation.current;
-    const active = sidebar?.querySelector("a[aria-current=page]");
-    if (!sidebar?.clientHeight || !active || search) return;
-    const available = sidebar.getBoundingClientRect();
+    const list = navigation.current?.querySelector("nav");
+    if (!list?.clientHeight || search) {
+      lastRevealed.current = null;
+      return;
+    }
+    const active = list.querySelector("a[aria-current=page]");
+    if (!active || active.closest("[inert]") || lastRevealed.current === id) return;
+    lastRevealed.current = id;
+    const available = list.getBoundingClientRect();
     const row = active.getBoundingClientRect();
-    if (row.top < available.top) sidebar.scrollTop += row.top - available.top;
-    if (row.bottom > available.bottom) sidebar.scrollTop += row.bottom - available.bottom;
+    if (row.top < available.top) list.scrollTop += row.top - available.top;
+    if (row.bottom > available.bottom) list.scrollTop += row.bottom - available.bottom;
   }, [id, expanded, menu, search]);
+  useEffect(() => {
+    if (menu && hosted) navigation.current?.querySelector("input")?.focus({ preventScroll: true });
+  }, [menu, hosted]);
   const matches = useMemo(() => {
     const term = foldName(search.trim());
     const compact = compactName(term);
     return searchIndex
-      .filter(({ entry }) => MotionPreview || entry.family !== "Interactive patterns")
+      .filter(({ entry }) => availableEntries.includes(entry))
       .filter(({ text, aliases }) =>
         text.includes(term) ||
         (compact.length > 0 && aliases.some((alias) => alias.includes(compact))),
       )
       .map(({ entry }) => entry);
-  }, [search, MotionPreview]);
+  }, [search, availableEntries]);
   function go(next: string) {
     select(next);
     setMenu(false);
@@ -213,14 +226,12 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
     navigateSection("components", next);
   }
   const appearance = guideAppearance ?? (dark ? "dark" : "light");
-  const tokenLabel =
-    id === "button"
-      ? "14 / 20 type · 36 px high · 8 px corners"
-      : entry.family === "Forms"
-        ? "14 / 20 type · 44 px touch"
-        : "Rethink Sans · Yogurt palette";
+  const tokenLabel = {
+    button: "Regular action · 36 px high · 8 px corners",
+    "motion-spring-dropdown": "Featured picker · 52 px high · 16 px corners",
+  }[id];
   return (
-    <Yogurt appearance={appearance} className="catalog">
+    <Yogurt appearance={appearance} className="catalog" data-hosted={hosted || undefined}>
       <Link className="skip" href="#yg-inspect">
         Skip to component
       </Link>
@@ -242,7 +253,6 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
           >
             Brand &amp; tokens
           </Button>
-          <Link href={sectionHref("motion")}>Motion</Link>
           <Link href={guideHref("workflows")}>Workflows</Link>
         </nav>
         <div className="header-actions">
@@ -250,8 +260,8 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
             className="menu-toggle"
             label={menu ? "Close navigation" : "Browse components"}
             icon={menu ? "close" : "menu"}
-            onClick={() => setMenu(!menu)}
-            aria-expanded={menu}
+            onClick={() => setMenu(open => !open)}
+            aria-expanded={menu} aria-controls={navigationId}
           />
           <IconButton
             label={dark ? "Use light appearance" : "Use dark appearance"}
@@ -260,9 +270,18 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
           />
         </div>
       </header>}
-      {guideAppearance && <div className="guide-catalog-tools"><Button emphasis="quiet" onClick={() => setMenu(!menu)} aria-expanded={menu}><Icon name={menu ? "close" : "menu"} />Browse components</Button></div>}
+      {guideAppearance && <div className="guide-catalog-tools">
+        <Button ref={menuTrigger} emphasis="quiet" onClick={() => setMenu(open => !open)}
+          aria-expanded={menu} aria-controls={navigationId}>
+          <Icon name={menu ? "close" : "menu"} />Browse components
+        </Button>
+      </div>}
       <div className="catalog-body">
-        <aside ref={navigation} data-open={menu} aria-label="Components">
+        <aside ref={navigation} id={navigationId} data-open={menu} aria-label="Components" onKeyDown={event => {
+          if (event.key !== "Escape" || !menu || !hosted) return;
+          setMenu(false);
+          menuTrigger.current?.focus({ preventScroll: true });
+        }}>
           <div className="catalog-search">
             <SearchField label="Find a component" placeholder="Find a component"
               value={search} onValueChange={setSearch} />
@@ -288,7 +307,7 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
           {missing ? (
             <PageHeader className="catalog-intro" title="Component not found" detail="Choose a component from the index."
               action={<Link href={sectionHref("components", "button")} onClick={event => {
-                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                if (hosted || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
                 event.preventDefault(); go("button");
               }}>Browse components</Link>} />
           ) : id === "brand" ? (
@@ -305,28 +324,35 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                   onValueChange={(v) => setMaterial(v as Material)}
                 />
               </Inline>
+              {previewChoices && <Inline className="preview-caption">
+                <Link href={sectionHref("components", id)} aria-current={!activePreview ? "page" : undefined}>Default</Link>
+                {previewChoices.map(key => <Link key={key} href={sectionHref("components", id) + "?preview=" + key}
+                  aria-current={activePreview === key ? "page" : undefined}>{previewName(key)}</Link>)}
+              </Inline>}
               <Yogurt
                 appearance={appearance}
                 material={material}
                 className="specimen"
                 data-component={id}
                 data-layout={previewLayout(entry)}
-                key={id}
+                key={id + (activePreview ?? "")}
               >
                 <div className="specimen-inner" onClick={inlinePreview ? submitPreviewForm : undefined}>
-                  {ScopedExample ? (
+                  {MotionPreview && activePreview ? (
+                    <MotionPreview id={activePreview} />
+                  ) : entry.family === "Blocks" ? (
+                    <BlockExample id={id} />
+                  ) : ScopedExample ? (
                     <ScopedExample id={id} />
                   ) : MotionPreview && motionEntry ? (
                     <MotionPreview id={motionEntry.examples[0]} />
-                  ) : entry.family === "Blocks" ? (
-                    <BlockExample id={id} />
                   ) : (
                     <Example id={id} />
                   )}
                 </div>
               </Yogurt>
-              <Inline className="preview-caption">
-                <Text variant="meta">{tokenLabel}</Text>
+              <Inline className="preview-caption preview-surface-controls">
+                {tokenLabel && <Text variant="meta">{tokenLabel}</Text>}
                 <Button emphasis="quiet" size="compact"
                   type="button"
                   onClick={() => setCompare(!compare)}
@@ -410,7 +436,7 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                       ["loading-to-success", "Loading result"],
                     ].map(([example, label]) => {
                       const component = motionEntries.find(item => item.examples.includes(example));
-                      const href = MotionPreview && component ? sectionHref("components", component.id) : sectionHref("motion", example);
+                      const href = sectionHref("components", component?.id);
                       return <Link key={example} href={href}>{label}</Link>;
                     })}
                   </div>
@@ -427,12 +453,10 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                 {showCode && <Stack gap={12}>
                   <Text variant="help">From a project with the pinned Yogurt package installed.</Text>
                   <CodeBlock language={entry.family === "Blocks" ? "Shell" : "TypeScript"} code={
-                    motionEntry ? `import { ${motionEntry.name} } from "${motionEntry.entry}";`
+                    motionEntry ? `import { ${motionEntry.name} } from "@openboa/yogurt/${motionEntry.id}";`
                       : entry.family === "Blocks" ? "yogurt add " + id + " --target web"
-                        : `import { ${entry.name} } from "@openboa/yogurt/${entry.id}";`
+                        : `import { ${(activePreview && previewExport(id, activePreview)) || entry.name} } from "@openboa/yogurt/${entry.id}";`
                   } />
-                  {motionEntry ? <Text variant="help">Native implementation unavailable.</Text> :
-                    <CodeBlock language="Native" code={"yogurt add " + entry.id + " --target native"} />}
                   {motion.filter(item => item.id === id).map(item => <Text variant="help" key={item.id}>
                     <strong>{item.role}</strong> · {item.treatment}
                   </Text>)}

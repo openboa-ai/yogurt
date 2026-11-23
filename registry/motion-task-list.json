@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-task-list.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { TaskList } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { TaskList } from \"@openboa/yogurt/motion-task-list\";\n"
     }
   ]
 }

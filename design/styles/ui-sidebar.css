@@ -244,21 +244,21 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .yg-sidebar-item {
-    transition: background-color var(--yg-press) var(--yg-settle), color var(--yg-press) var(--yg-settle);
+    transition: background-color var(--yg-motion-surface-focus), color var(--yg-motion-surface-focus);
   }
   .yg-sidebar-chevron {
-    transition: rotate var(--yg-travel) var(--yg-settle);
+    transition: rotate var(--yg-motion-card-detail);
   }
   .yg-sidebar-layout[data-compact="false"][data-edge] {
-    transition: grid-template-columns var(--yg-travel) var(--yg-settle), gap var(--yg-travel) var(--yg-settle);
+    transition: grid-template-columns var(--yg-motion-nav-divider), gap var(--yg-motion-nav-divider);
   }
   .yg-sidebar-layout[data-compact="false"] > .yg-sidebar-panel {
     overflow: clip;
-    transition: opacity var(--yg-layer) var(--yg-settle), padding-inline var(--yg-travel) var(--yg-settle);
+    transition: opacity var(--yg-motion-surface-focus), padding-inline var(--yg-motion-nav-divider);
   }
   .yg-sidebar-submenu-content,
   .yg-sidebar > nav {
-    transition: grid-template-rows var(--yg-travel) var(--yg-settle), opacity var(--yg-layer) var(--yg-settle);
+    transition: grid-template-rows var(--yg-motion-menu-height), opacity var(--yg-motion-surface-focus);
   }
   .yg-sidebar-drawer[open] {
     --yg-enter-x: calc(-1 * var(--boa-space-16));

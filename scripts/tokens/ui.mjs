@@ -1,5 +1,3 @@
-import { dimension } from "./dimension.mjs";
-
 function webTokens(ui, types, palette) {
   const { lineHeightScale, tracking } = ui.typeMetrics;
   const variable = (p) => "var(--boa-color-" + p.replace(".", "-") + ")";
@@ -65,84 +63,6 @@ function webTokens(ui, types, palette) {
   return css.join("\n") + "\n";
 }
 
-function nativeTokens(brand, ui, types, palette) {
-  const { lineHeightScale, tracking } = ui.typeMetrics;
-  function rgb(p) {
-    const hex = palette(p);
-    return (
-      "C.rgb8(" +
-      [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(", ") +
-      ")"
-    );
-  }
-  const group = (keys, expression) =>
-    keys.map((k) => "    " + k + ": " + expression + ",").join("\n");
-  const id = (s) => s.replaceAll("-", "_");
-  const colors = Object.keys(ui.roles);
-  const rows = [];
-  const materials = { neutral: {}, ...ui.materials };
-  for (const [m, over] of Object.entries(materials)) {
-    const roles = { ...ui.roles, ...over };
-    rows.push(
-      "        ." + id(m) + " => if (dark) .{",
-      ...colors.map(
-        (k) => "            ." + id(k) + " = " + rgb(roles[k][1]) + ",",
-      ),
-      "        } else .{",
-      ...colors.map(
-        (k) => "            ." + id(k) + " = " + rgb(roles[k][0]) + ",",
-      ),
-      "        },",
-    );
-  }
-  const nativeEasing = Object.entries(ui.easing).map(([name, easing]) => {
-    const curve = easing.match(/^cubic-bezier\(([^)]+)\)$/);
-    const points = curve?.[1].split(",").map(Number);
-    if (points?.length !== 4 || points.some(point => !Number.isFinite(point))) {
-      throw Error("Invalid shared easing " + name);
-    }
-    return `pub const ${id(name)}_curve = [4]f32{ ${points.join(", ")} };`;
-  });
-  const zig = [
-    "// Generated from design/tokens/brand.json and design/tokens/ui.json.",
-    'const canvas = @import("native_sdk").canvas;',
-    "const C = canvas.Color;",
-    `pub const Material = enum { ${Object.keys(materials).map(id).join(", ")} };`,
-    "pub const Roles = struct {",
-    group(colors.map(id), "C"),
-    "};",
-    "pub fn roles(dark: bool, material: Material) Roles {",
-    "    return switch (material) {",
-    ...rows,
-    "    };",
-    "}",
-    ...Object.keys(ui.geometry).map(
-      (k) => "pub const " + id(k) + ": f32 = " + dimension(brand, ui.geometry, k) + ";",
-    ),
-    ...Object.entries(ui.opacity).map(
-      ([k, v]) => "pub const " + id(k) + "_alpha: f32 = " + v / 100 + ";",
-    ),
-    ...nativeEasing,
-    ...Object.entries(ui.motion).map(
-      ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v + ";",
-    ),
-    ...Object.entries(ui.motionProfiles ?? {}).map(
-      ([k, v]) => "pub const " + id(k) + "_ms: u32 = " + v.duration + ";",
-    ),
-    `pub const type_leading: f32 = ${lineHeightScale};`,
-    `pub const type_tracking: f32 = ${tracking};`,
-    ...types.flatMap(({ role, size, lineHeight, weight }) => [
-      `pub const ${id(role)}_type: f32 = ${size};`,
-      `pub const ${id(role)}_line_height: f32 = ${lineHeight};`,
-      `pub const ${id(role)}_weight: u16 = ${weight};`,
-    ]),
-    ...Object.keys(brand.type.tracking).map(
-      (role) => `pub const ${id(role)}_tracking: f32 = type_tracking;`,
-    ),
-  ];
-  return zig.join("\n") + "\n";
-}
-
 export function uiTokens(brand, ui) {
   const find = (obj, path) =>
     path.split(".").reduce((value, key) => value?.[key], obj);
@@ -151,12 +71,12 @@ export function uiTokens(brand, ui) {
     if (!color) throw Error("Unknown palette reference " + path);
     return color;
   }
-  const { lineHeightScale, lineBoxSize } = ui.typeMetrics;
+  const { lineHeightScale, lineHeightRoles } = ui.typeMetrics;
   const types = Object.entries(ui.types).map(([role, [sizeKey, weightKey]]) => ({
     role,
     size: brand.type.size[sizeKey],
-    lineHeight: brand.type.size[lineBoxSize[role] ?? sizeKey] * lineHeightScale,
+    lineHeight: brand.type.lineHeight[lineHeightRoles[role]] ?? brand.type.size[sizeKey] * lineHeightScale,
     weight: brand.type.weight[weightKey] ?? brand.type.roleWeight[weightKey],
   }));
-  return { css: webTokens(ui, types, palette), zig: nativeTokens(brand, ui, types, palette) };
+  return webTokens(ui, types, palette);
 }

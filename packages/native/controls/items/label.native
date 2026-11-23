@@ -1,3 +1,0 @@
-<template name="yg-label" args="label">
-  <text size="sm">{label}</text>
-</template>

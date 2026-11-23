@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-storage-meter.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { StorageMeter } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { StorageMeter } from \"@openboa/yogurt/motion-storage-meter\";\n"
     }
   ]
 }

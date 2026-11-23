@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-checkbox-list.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { CheckboxList } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { CheckboxList } from \"@openboa/yogurt/motion-checkbox-list\";\n"
     }
   ]
 }

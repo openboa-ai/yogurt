@@ -12,14 +12,14 @@ import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 import { anatomy } from "./anatomy.mjs";
 import { generateTokens } from "../tokens/generate.mjs";
-import { generateAgentNames } from "../agents/agent-names.mjs";
+import { validateAgentNames } from "../agents/agent-names.mjs";
 process.chdir(fileURLToPath(new URL("../..", import.meta.url)));
 generateTokens();
 await import("./words.mjs");
 await import("../agents/agent-motion.mjs");
 await import("../agents/avatar-motion.mjs");
 await import("../agents/agent-family.mjs");
-generateAgentNames();
+validateAgentNames();
 const read = (p) => readFileSync(p, "utf8");
 const catalog = JSON.parse(read("catalog/components.json"));
 const blocks = JSON.parse(read("catalog/blocks.json"));
@@ -30,11 +30,12 @@ const usedIds = new Set([...catalog, ...blocks, ...JSON.parse(read("catalog/patt
 const motionNames = new Set();
 const declarationSource = read("packages/web/src/patterns/motion-patterns.ts");
 const publicNames = new Set([...declarationSource.matchAll(/export \{ ([^}]+) \} from/g)]
-  .flatMap(match => match[1].split(",").map(name => name.trim()).filter(name => !name.startsWith("type "))));
+  .flatMap(match => match[1].split(",").map(name => name.trim()).filter(name => !name.startsWith("type "))
+    .map(name => name.split(/\s+as\s+/).at(-1))));
 for (const item of motionComponents) {
   if (!/^motion-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id) || usedIds.has(item.id) ||
       !/^[A-Z][A-Za-z0-9]*$/.test(item.name) || motionNames.has(item.name) || !publicNames.has(item.name) ||
-      item.entry !== "@openboa/yogurt/motion-patterns" || item.web !== "available" || item.native !== "unavailable" ||
+      item.entry !== "@openboa/yogurt/motion-patterns" || item.web !== "available" ||
       !item.guidance?.useWhen?.trim() || !item.guidance?.avoid?.trim() || !Array.isArray(item.guidance.verify) ||
       !item.guidance.verify.length || !item.guidance.verify.every(value => typeof value === "string" && value.trim()) ||
       !Array.isArray(item.examples) || !item.examples.every(value => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value))) {
@@ -133,7 +134,9 @@ for (const block of blocks) {
   writeFileSync("registry/" + block.id + ".json", JSON.stringify(item, null, 2) + "\n");
 }
 for (const item of motionComponents) {
-  const content = '"use client";\n\nexport { ' + item.name + ' } from "' + item.entry + '";\n';
+  const srcEntry = src + "/entries/" + item.id + ".ts";
+  writeFileSync(srcEntry, 'export { ' + item.name + ' } from "../patterns/motion-patterns.js";\n');
+  const content = '"use client";\n\nexport { ' + item.name + ' } from "@openboa/yogurt/' + item.id + '";\n';
   writeFileSync("registry/" + item.id + ".json", JSON.stringify({
     $schema: "https://ui.shadcn.com/schema/registry-item.json",
     name: item.id, type: "registry:ui", title: item.name,
@@ -163,7 +166,7 @@ const entryPoints = Object.fromEntries([
   ["index", src + "/index.ts"],
   ["agent", src + "/agent.ts"],
   ["motion-patterns", src + "/patterns/motion-patterns.ts"],
-  ...catalog.map((e) => ["entries/" + e.id, src + "/entries/" + e.id + ".ts"]),
+  ...[...catalog, ...motionComponents].map((e) => ["entries/" + e.id, src + "/entries/" + e.id + ".ts"]),
 ]);
 const built = await build({
   entryPoints,

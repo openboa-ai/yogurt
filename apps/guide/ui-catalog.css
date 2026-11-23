@@ -44,13 +44,19 @@ body {
 }
 .catalog-body > aside {
   position: sticky;
-  top: 12px;
-  max-height: calc(100dvh - 24px);
-  overflow: auto;
+  inset-block-start: var(--yg-gap-stack);
+  max-block-size: calc(100dvh - 2 * var(--yg-gap-stack));
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+.catalog-body > aside > .yg-sidebar-content {
+  padding-inline-end: var(--yg-gap-tight);
   scrollbar-width: thin;
 }
 .catalog-search {
-  margin: 0 0 16px;
+  flex: none;
+  margin-block-end: var(--yg-gap-panel);
 }
 .catalog-search .yg-label {
   position: absolute;
@@ -100,6 +106,7 @@ body {
   inline-size: min(100%, var(--yg-specimen-content-width));
   margin-inline: auto;
 }
+.specimen[data-layout="compact"] { min-height: var(--yg-specimen-compact-height); }
 .specimen[data-layout="compact"] .specimen-inner {
   inline-size: fit-content;
   max-inline-size: 100%;
@@ -120,6 +127,8 @@ body {
 .preview-caption {
   margin-block: var(--boa-space-8) var(--boa-space-24);
 }
+.preview-surface-controls > button { margin-inline-start: auto; }
+.variant-body[data-variant-component="button"] .specimen-inner { inline-size: min(100%, var(--yg-specimen-content-width)); }
 
 .variation {
   margin: 24px 0;
@@ -166,7 +175,7 @@ body {
   background: var(--yg-canvas);
   padding: var(--boa-space-8);
 }
-@media (max-width: 740px) {
+@media (max-width: 48rem) {
   .catalog-header {
     min-height: 54px;
     gap: var(--boa-space-14);
@@ -178,11 +187,11 @@ body {
   .catalog-body > aside {
     display: none;
     position: static;
-    max-height: 48vh;
+    max-block-size: 48dvh;
     padding: 0 var(--boa-space-4) var(--boa-space-8);
   }
   .catalog-body > aside[data-open="true"] {
-    display: block;
+    display: flex;
   }
   .menu-toggle.yg-icon-button {
     display: inline-flex;
@@ -237,10 +246,13 @@ body {
   color: var(--yg-text);
   background: var(--yg-field);
 }
-.specimen[data-component="select"] {
+.specimen:is([data-component="select"], [data-component="motion-spring-dropdown"]) {
   align-items: start;
   min-block-size: calc(4 * var(--yg-size-regular) + var(--boa-space-64) + var(--boa-space-16));
   padding-block: var(--boa-space-24);
+}
+.specimen[data-component="motion-spring-dropdown"] {
+  min-block-size: calc(4 * var(--yg-size-comfort) + 2 * var(--boa-space-64) + var(--boa-space-16));
 }
 .specimen[data-component="select"] .specimen-inner {
   max-inline-size: 20rem;

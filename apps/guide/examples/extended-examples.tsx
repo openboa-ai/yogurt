@@ -121,7 +121,7 @@ export function ExtendedExample({
       return (
         <Y.Post>
           <Y.Heading>Release notes</Y.Heading>
-          <Y.Text>Project filters now remember the last view you opened.</Y.Text>
+          <Y.Text as="p">Project filters now remember the last view you opened.</Y.Text>
           <ul>
             <li>Choose a project.</li>
             <li>Save the view for next time.</li>

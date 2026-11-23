@@ -9,7 +9,8 @@ import {
   ConversationPanel,
   type ThreadMessage,
 } from "../../../packages/recipes/conversation-panel/web";
-import { Stack, Status } from "@openboa/yogurt";
+import { Stack, Status, Text } from "@openboa/yogurt";
+import { scopedExamples } from "./scoped-examples";
 const initial: Preferences = { notify: true, digest: "weekly" };
 const records = [
   { id: "release", title: "Release review", detail: "Sourdough" },
@@ -17,6 +18,11 @@ const records = [
   { id: "archive", title: "October notes", detail: "Yogurt", archived: true },
 ];
 export function BlockExample({ id }: { id: string }) {
+  const ScopedExample = scopedExamples[id];
+  return ScopedExample ? <ScopedExample id={id} /> : <RecipeExample key={id} id={id} />;
+}
+
+function RecipeExample({ id }: { id: string }) {
   const [draft, setDraft] = useState(initial),
     [saved, setSaved] = useState(initial),
     [status, setStatus] = useState(""),
@@ -80,6 +86,7 @@ export function BlockExample({ id }: { id: string }) {
         onConfirm={() => setStatus("Review archived")}
       />
     );
+  if (id !== "conversation-panel") return <Text role="status">Preview unavailable.</Text>;
   return (
     <ConversationPanel
       messages={messages}

@@ -40,12 +40,30 @@ const assert = require("node:assert/strict");
       await page.keyboard.press("Escape");
       assert.equal(await trigger.getAttribute("data-state"), "closed");
       await page.emulateMedia({ reducedMotion: "no-preference" });
+      const chevron = trigger.locator(".yg-icon");
+      async function verifyRotation(target) {
+        const frames = await chevron.evaluate(async node => {
+          const motion = node.getAnimations().find(animation => animation.transitionProperty === "rotate");
+          if (!motion) return [];
+          motion.pause();
+          await motion.ready;
+          const duration = motion.effect.getTiming().duration;
+          const values = [0, .35, 1].map(sample => {
+            motion.currentTime = sample * duration;
+            return getComputedStyle(node).rotate;
+          });
+          motion.finish();
+          return values.map(value => value === "0deg" ? "none" : value);
+        });
+        assert.equal(new Set(frames.slice(0, 3)).size, 3, "the chevron rotates through an intermediate frame");
+        assert.equal(frames[2], target);
+      }
       await trigger.click();
       assert.equal(await trigger.getAttribute("data-state"), "open");
-      assert.equal(await trigger.locator(".yg-icon").evaluate(el => getComputedStyle(el).rotate), "180deg");
+      await verifyRotation("180deg");
       await page.keyboard.press("Escape");
       assert.equal(await trigger.getAttribute("data-state"), "closed");
-      assert.notEqual(await trigger.locator(".yg-icon").evaluate(el => getComputedStyle(el).rotate), "180deg");
+      await verifyRotation("none");
       await page.close();
 
       const touch = await browser.newPage({ viewport: { width, height: 900 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });

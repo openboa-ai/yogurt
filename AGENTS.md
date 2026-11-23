@@ -6,6 +6,6 @@ Use the [shared UI source map](docs/design-system-rules.md#one-source-for-ui) an
 
 Before implementation, identify the accepted spec revision, the scoped plan and the target evidence. Develop against the declared public contract and exercise its positive and recovery cases. Keep exact design review, admission, implementation, observed verification and release as distinct records. Add those records when the corresponding event occurs.
 
-Use [DESIGN.md](DESIGN.md) for product work using the kit. Preserve original masters and stable public IDs. Keep all maintained product copy in English, use the shared palette and Rethink Sans, and report availability per renderer. Default app work to Vercel Native SDK and read the [stack decision](docs/native-stack.md). Next.js and Vite are web hosts. Each product owns its facts, permissions and adoption. [Current evidence](docs/status.md)
+Use [DESIGN.md](DESIGN.md) for product work using the kit. Preserve original masters and stable public IDs. Keep all maintained product copy in English, use the shared palette and Rethink Sans, and verify the shared React components in the browser and in the app WebView. Follow the [stack decision](docs/native-stack.md). Each product owns its facts, permissions and adoption. [Current evidence](docs/status.md)
 
 Keep the repository, guide and package focused on Yogurt’s own components, decisions, examples and verification. Keep required dependency notices and integration instructions with the code they support.

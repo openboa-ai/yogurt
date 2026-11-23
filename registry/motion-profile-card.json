@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-profile-card.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { ProfileCard } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { ProfileCard } from \"@openboa/yogurt/motion-profile-card\";\n"
     }
   ]
 }

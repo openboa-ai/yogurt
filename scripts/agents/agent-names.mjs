@@ -1,9 +1,9 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 
 const root = new URL("../../", import.meta.url);
 const read = path => JSON.parse(readFileSync(new URL(path, root), "utf8"));
 
-export function generateAgentNames({ check = false } = {}) {
+export function validateAgentNames() {
   const { shapes } = read("design/assets/agents/silhouettes.json");
   const { colors } = read("design/assets/agents/animation-fits.json");
   const unmatched = new Set(shapes.flatMap(({ file, positions }) =>
@@ -21,21 +21,5 @@ export function generateAgentNames({ check = false } = {}) {
   }
   if (unmatched.size || identities.length < 1170) {
     throw new Error(`Missing avatar combinations: ${[...unmatched].join(", ")}`);
-  }
-
-  const content = [
-    "// Generated from design/content/agent-names.json.",
-    "pub const Identity = struct { name: []const u8, variant: []const u8, color: []const u8 };",
-    "pub const identities = [_]Identity{",
-    ...identities.map(({ name, variant, color }) =>
-      `    .{ .name = "${name}", .variant = "${variant}", .color = "${color}" },`),
-    "};",
-    "",
-  ].join("\n");
-  const file = new URL("packages/native/controls/agent-names.zig", root);
-  if (check) {
-    if (readFileSync(file, "utf8") !== content) throw new Error("Stale Native agent name table.");
-  } else {
-    writeFileSync(file, content);
   }
 }

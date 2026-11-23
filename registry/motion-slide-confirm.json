@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-slide-confirm.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { SlideConfirm } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { SlideConfirm } from \"@openboa/yogurt/motion-slide-confirm\";\n"
     }
   ]
 }

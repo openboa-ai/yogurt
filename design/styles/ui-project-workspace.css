@@ -30,6 +30,11 @@ button.yg-workspace-row-body {
   cursor: pointer;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .yg-workspace-row,
+  button.yg-workspace-row-body { transition: background-color var(--yg-press) var(--yg-settle); }
+}
+
 @media (hover: hover) {
   button.yg-workspace-row-body:hover { background: var(--yg-field); }
   button.yg-workspace-row-body[aria-current="true"]:hover { background: var(--yg-hover); }

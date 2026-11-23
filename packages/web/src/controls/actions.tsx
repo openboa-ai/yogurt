@@ -51,7 +51,7 @@ export function Button({
         onClick?.(event as React.MouseEvent<HTMLButtonElement>);
       }}
     >
-      <span className="yg-button-inner"><span className="yg-button-label">
+      <span className="yg-button-label">
         <span
           className="yg-button-content"
           aria-hidden={pending && hasPendingLabel ? true : undefined}
@@ -68,7 +68,7 @@ export function Button({
             {pendingLabel}
           </span>
         )}
-      </span></span>
+      </span>
     </SDKButton>
   );
 }
@@ -82,6 +82,7 @@ export function IconButton({
       emphasis="quiet"
       {...props}
       aria-label={label}
+      data-icon-only=""
       className={cx("yg-icon-button", props.className)}
     >
       <Icon name={icon} />

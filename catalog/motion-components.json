@@ -6,7 +6,6 @@
       "name": "MentionPicker",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Insert a selected person mention while editing a note.",
         "avoid": "Do not invent people or send the note without host confirmation.",
@@ -25,7 +24,6 @@
       "name": "FileDrop",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Select or drop files for a host-managed upload.",
         "avoid": "Do not imply that selection completed an upload.",
@@ -44,7 +42,6 @@
       "name": "FocusPicker",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Choose one focus preference from named choices.",
         "avoid": "Do not change notification delivery without host authorization.",
@@ -63,7 +60,6 @@
       "name": "PlanSwitch",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Choose between described plan options.",
         "avoid": "Do not treat a selection as a purchase.",
@@ -82,7 +78,6 @@
       "name": "LetterLimit",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Edit short text with a visible character limit.",
         "avoid": "Do not imply a submitted value was saved.",
@@ -101,7 +96,6 @@
       "name": "MorphTooltip",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Reveal a short contextual explanation.",
         "avoid": "Do not place essential information only in the tooltip.",
@@ -118,7 +112,6 @@
       "name": "SpringDropdown",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Select an option from an animated anchored list.",
         "avoid": "Use a native form control when its form semantics are required.",
@@ -137,7 +130,6 @@
       "name": "CommandButton",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Open and choose a named command.",
         "avoid": "Do not offer commands the host cannot execute.",
@@ -156,7 +148,6 @@
       "name": "MorphTooltipBar",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Choose a named tool from a compact bar with animated detail.",
         "avoid": "Do not rely on an icon alone for the tool name.",
@@ -175,7 +166,6 @@
       "name": "StorageMeter",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Show observed storage usage and optional categories.",
         "avoid": "Do not imply an unavailable capacity is zero.",
@@ -194,7 +184,6 @@
       "name": "ActivityIsland",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Reveal short activity details from a compact summary.",
         "avoid": "Do not hide essential task information in the collapsed surface.",
@@ -213,7 +202,6 @@
       "name": "LoadingSuccessButton",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Show a host-reported action state.",
         "avoid": "Do not claim success before the host reports it.",
@@ -232,7 +220,6 @@
       "name": "CopyButton",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Copy supplied text and report the observed result.",
         "avoid": "Do not display success when copying fails.",
@@ -251,7 +238,6 @@
       "name": "StreamingReply",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Present an incrementally arriving reply.",
         "avoid": "Do not imply a reply has finished while the host reports it active.",
@@ -270,7 +256,6 @@
       "name": "GhostSuggestion",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Offer an inline text completion.",
         "avoid": "Do not accept without an explicit keyboard action.",
@@ -289,7 +274,6 @@
       "name": "PromptBox",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Prepare and submit a short request.",
         "avoid": "Do not send without explicit activation.",
@@ -308,7 +292,6 @@
       "name": "ThinkingIndicator",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Show an active thinking state.",
         "avoid": "Do not use animation as the only status information.",
@@ -327,7 +310,6 @@
       "name": "ExpandCard",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Reveal supporting card details.",
         "avoid": "Do not hide required information only in the expansion.",
@@ -346,7 +328,6 @@
       "name": "FanCards",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Browse a small stack of related cards.",
         "avoid": "Do not use decorative depth to convey required ordering alone.",
@@ -365,7 +346,6 @@
       "name": "StatCard",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Present a labeled metric with a small series.",
         "avoid": "Do not imply that unobserved values are measured.",
@@ -384,7 +364,6 @@
       "name": "ProfileCard",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Present a named profile and related actions.",
         "avoid": "Do not show actions the host cannot perform.",
@@ -403,7 +382,6 @@
       "name": "RangeSlider",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Choose a bounded value or interval.",
         "avoid": "Use a precise input when small discrete differences matter.",
@@ -423,7 +401,6 @@
       "name": "PasswordStrength",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Show password entry and local strength guidance.",
         "avoid": "Do not imply that a visual score guarantees security.",
@@ -442,7 +419,6 @@
       "name": "CheckboxList",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Choose several independent options.",
         "avoid": "Use a single-choice control when only one selection is allowed.",
@@ -461,7 +437,6 @@
       "name": "DetentDial",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Choose one option along a discrete dial.",
         "avoid": "Do not rely only on pointer dragging.",
@@ -480,7 +455,6 @@
       "name": "HoldButton",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Require a deliberate hold before a host action.",
         "avoid": "Do not equate the gesture with a confirmed service outcome.",
@@ -499,7 +473,6 @@
       "name": "SlideConfirm",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Request a deliberate slide or accessible equivalent.",
         "avoid": "Do not equate a completed gesture with a confirmed service outcome.",
@@ -518,7 +491,6 @@
       "name": "TaskList",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Show host-provided task states and details.",
         "avoid": "Do not report unobserved task completion; retry actions belong to the host.",
@@ -539,7 +511,6 @@
       "name": "CartButton",
       "entry": "@openboa/yogurt/motion-patterns",
       "web": "available",
-      "native": "unavailable",
       "guidance": {
         "useWhen": "Adjust a host-owned quantity.",
         "avoid": "Do not treat a quantity change as a completed purchase.",

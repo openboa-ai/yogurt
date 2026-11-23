@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-letter-limit.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { LetterLimit } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { LetterLimit } from \"@openboa/yogurt/motion-letter-limit\";\n"
     }
   ]
 }

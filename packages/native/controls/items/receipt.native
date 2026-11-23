@@ -1,8 +1,0 @@
-<template name="yg-receipt" args="title original_id detail">
-  <column gap="8">
-  <text size="heading">{title}</text>
-  <text size="sm" foreground="text_muted">{original_id}</text>
-  <text>{detail}</text>
-  <button variant="secondary" on-press="lookup_original">Check original request</button>
-  </column>
-</template>

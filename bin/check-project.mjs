@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync, realpathSync, statSync } from "node:fs";
+import { readFileSync, readdirSync, realpathSync, statSync } from "node:fs";
 import { resolve, relative, sep, extname } from "node:path";
 
 // A consumer opts in by declaring its presentation roots. Its data, images,
@@ -17,7 +17,8 @@ export function checkProject(directory, kit) {
   const catalog = JSON.parse(
     readFileSync(resolve(kit, "catalog/components.json")),
   );
-  const entries = new Set(catalog.map((e) => e.id));
+  const motion = JSON.parse(readFileSync(resolve(kit, "catalog/motion-components.json"))).components;
+  const entries = new Set([...catalog, ...motion].map(e => e.id));
   for (const subpath of Object.keys(packageExports)) {
     if (subpath.startsWith("./") && !subpath.includes("*"))
       entries.add(subpath.slice(2));
@@ -41,15 +42,12 @@ export function checkProject(directory, kit) {
     ".git",
     ".next",
     "out",
-    "zig-out",
-    ".native",
-    ".zig-cache",
     "assets",
   ]);
   for (const [name, surface] of surfaces) {
     if (
       !surface ||
-      !["native", "web"].includes(surface.target) ||
+      surface.target !== "web" ||
       typeof surface.root !== "string"
     )
       throw Error("Invalid surface " + name);
@@ -72,32 +70,15 @@ export function checkProject(directory, kit) {
         }
         if (
           !file.isFile() ||
-          ![".css", ".tsx", ".jsx", ".js", ".ts", ".zig", ".native"].includes(
+          ![".css", ".tsx", ".jsx", ".js", ".ts"].includes(
             extname(file.name),
           )
         )
           continue;
-        const bytes = readFileSync(path);
-        // Policy applies to consumer source. Only byte-identical Native SDK files
-        // installed by Yogurt retain the SDK's own palette and rendering rules.
-        const installed = surface.target === "native" &&
-          /(?:^|\/)src\/yogurt\/(.+\.zig)$/.exec(rel.replaceAll(sep, "/"));
-        if (installed) {
-          const original = resolve(kit, "packages/native/controls", installed[1]);
-          if (existsSync(original) && bytes.equals(readFileSync(original))) continue;
-        }
-        const source = bytes.toString("utf8");
+        const source = readFileSync(path, "utf8");
         files++;
         if (
-          surface.target === "web" &&
           /["']@openboa\/yogurt(?:\/[^"']*)?["']/.test(source)
-        )
-          seen = true;
-        if (
-          surface.target === "native" &&
-          /(?:src|@import\()\s*[=(]?\s*"yogurt\/|pub const file = @import\("native_sdk"\)\.canvas\.ui_markup/.test(
-            source,
-          )
         )
           seen = true;
         source.split(/\r?\n/).forEach((line, i) => {
@@ -113,7 +94,7 @@ export function checkProject(directory, kit) {
               "Import the Yogurt component for this surface.",
             );
           if (
-            /(?:\b(?:color|background(?:-color)?|border-color|fill|stroke)\s*[:=]\s*["']?#[\da-f]{3,8}\b|\bColor\.rgb[a]?8\s*\()/i.test(
+            /(?:\b(?:color|background(?:-color)?|border-color|fill|stroke)\s*[:=]\s*["']?#[\da-f]{3,8}\b)/i.test(
               line,
             )
           )

@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-thinking-indicator.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { ThinkingIndicator } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { ThinkingIndicator } from \"@openboa/yogurt/motion-thinking-indicator\";\n"
     }
   ]
 }

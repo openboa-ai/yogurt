@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-focus-picker.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { FocusPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { FocusPicker } from \"@openboa/yogurt/motion-focus-picker\";\n"
     }
   ]
 }

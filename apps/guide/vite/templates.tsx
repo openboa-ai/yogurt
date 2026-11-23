@@ -1,3 +1,5 @@
+import blocks from "../../../catalog/blocks.json";
+import { BlockExample } from "../examples/block-examples";
 import { useState } from "react";
 import {
   Button, Heading, Inline, Link, PageHeader, SidebarContent, SidebarGroup, SidebarItem, SidebarLayout,
@@ -9,10 +11,10 @@ import { DashboardPreview } from "../examples/templates/dashboard";
 import { NavigationPreview } from "../examples/templates/navigation";
 import { ComposeStudy, ChartStudy, TypeStudy } from "../examples/templates/studies";
 import { recipeFamilies } from "../examples/templates/recipes";
-import { TemplateFamily, TemplateGallery } from "./template-directory";
+import { TemplateFamily, PatternGallery } from "./template-directory";
 import "./templates.css";
 
-const paths = (id: string) => "/templates/" + id;
+const paths = (id: string) => "/patterns/" + id;
 const groups = galleryGroups.flatMap(group => group.items);
 const related = {
   compose: ["card", "button-group", "switch", "record-facts"],
@@ -32,12 +34,35 @@ const related = {
 
 export default function Templates({ id = "", appearance }: { id?: string; appearance: "light" | "dark" }) {
   const [reset, setReset] = useState(0);
-  if (!id) return <TemplateGallery appearance={appearance} />;
+  if (!id) return <PatternGallery />;
+  const block = blocks.find(item => item.id === id);
+  if (block) return <main className="guide-templates">
+    <Stack gap={24}>
+      <PageHeader title={block.name} detail={block.description} action={<Link href="/patterns">All patterns</Link>} />
+      <div className="template-preview">
+        <Inline className="template-preview-heading">
+          <Heading level={2}>Live preview</Heading>
+          <Button emphasis="quiet" size="compact" onClick={() => setReset(value => value + 1)}>Reset preview</Button>
+        </Inline>
+        <div className="template-stage" key={id + ":" + reset}><BlockExample id={id} /></div>
+      </div>
+      <Stack gap={8}>
+        <Heading level={2}>When to use it</Heading>
+        <Text>{block.guidance}</Text>
+      </Stack>
+      <Stack gap={8}>
+        <Heading level={2}>Components used</Heading>
+        <Inline className="template-component-links">{block.components.map(component => <Link key={component} href={"/components/" + component}>{component}</Link>)}</Inline>
+        {["agent-workspace", "agent-sidebar", "conversation-panel", "agent-profile"].includes(id) &&
+          <Link href="/examples">See it in Sourdough Studio</Link>}
+      </Stack>
+    </Stack>
+  </main>;
   const family = recipeFamilies.find(group => group.id === id || group.recipes.some(recipe => recipe.id === id));
   if (family) return <TemplateFamily family={family} initialId={id} appearance={appearance} />;
   const entry = groups.find(item => item.id === id);
   if (!entry) return <main className="guide-templates">
-    <PageHeader title="Template not found" action={<Link href="/templates">Browse templates</Link>} />
+    <PageHeader title="Pattern not found" action={<Link href="/patterns">Browse patterns</Link>} />
   </main>;
   const account = id.startsWith("signin-") || id.startsWith("signup-");
   const group = galleryGroups.find(group => group.items.some(item => item.id === id))!;
@@ -45,10 +70,10 @@ export default function Templates({ id = "", appearance }: { id?: string; appear
     : id === "compose" || id === "type" || id === "chart" ? related[id] : [...related.navigation, ...(related.variants[id] ?? [])];
 
   return <main className="guide-templates">
-    <SidebarLayout label="Template directory" variant="flat" width="13rem" compactAt={810}
-      navigation={<SidebarContent label="Template directory">
-        <SidebarGroup label="Templates">
-          <SidebarItem label="All templates" href="/templates" />
+    <SidebarLayout label="Pattern directory" variant="flat" width="13rem" compactAt={810}
+      navigation={<SidebarContent label="Pattern directory">
+        <SidebarGroup label="Patterns">
+          <SidebarItem label="All patterns" href="/patterns" />
           {studies.map(item => <SidebarItem key={item.id} label={item.title} active={item.id === id} href={paths(item.id)} />)}
         </SidebarGroup>
       </SidebarContent>}>
@@ -56,7 +81,7 @@ export default function Templates({ id = "", appearance }: { id?: string; appear
         <PageHeader title={entry.title} detail={entry.detail} eyebrow={group.label} />
         <div className="template-preview">
           <Inline className="template-preview-heading">
-            <Inline><SidebarTrigger label="Browse templates" /><Heading level={2}>Live preview</Heading></Inline>
+            <Inline><SidebarTrigger label="Browse patterns" /><Heading level={2}>Live preview</Heading></Inline>
             <Button emphasis="quiet" size="compact" onClick={() => setReset(value => value + 1)}>Reset preview</Button>
           </Inline>
           <div className="template-stage" key={id + ":" + reset}>

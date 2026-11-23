@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-fan-cards.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { FanCards } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { FanCards } from \"@openboa/yogurt/motion-fan-cards\";\n"
     }
   ]
 }

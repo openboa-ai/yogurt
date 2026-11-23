@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import type {
   ComponentProps,
   CSSProperties,
@@ -40,14 +41,12 @@ export function Yogurt({
     />
   );
 }
-export function Text({
-  variant = "body",
-  className,
-  ...props
-}: ComponentProps<"span"> & { variant?: "body" | "help" | "meta" }) {
-  return (
-    <span {...props} className={cx("yg-text", className)} data-type={variant} />
-  );
+type TextProps = (
+  (ComponentProps<"span"> & { as?: "span" }) | (ComponentProps<"p"> & { as: "p" })
+) & { variant?: "body" | "help" | "meta" };
+
+export function Text({ as = "span", variant = "body", className, ...props }: TextProps) {
+  return createElement(as, { ...props, className: cx("yg-text", className), "data-type": variant });
 }
 export function Heading({
   level = 2,

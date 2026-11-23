@@ -18,6 +18,11 @@
 @media (hover: hover) {
   .yg-focus-choice:hover:not([data-selected]), .yg-plan-choice:hover:not([data-selected]) { background: var(--yg-field); }
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-focus-choice, .yg-plan-choice { transition: background-color var(--yg-change) var(--yg-settle); }
+  .yg-focus-orbit, .yg-choice-check { transition: color var(--yg-change) var(--yg-settle), background-color var(--yg-change) var(--yg-settle), box-shadow var(--yg-change) var(--yg-settle); }
+  [data-selected] .yg-choice-check { animation: yg-choice-confirm var(--yg-panel) var(--yg-selection) both; }
+}
 @media (forced-colors: active) { .yg-focus-choice[data-selected], .yg-plan-choice[data-selected] { outline: 2px solid Highlight; outline-offset: -2px; } }
 
 @keyframes yg-choice-confirm { from { scale: .72; } to { scale: 1; } }
@@ -44,6 +49,7 @@
   border-radius: var(--yg-radius-feature);
   background: var(--yg-raised-surface);
   color: var(--yg-text);
+  transition: background-color var(--yg-change) var(--yg-settle);
   --yg-letter-ink: var(--yg-muted);
 }
 .yg-letter-limit:has(textarea:focus) { background: var(--yg-field); }
@@ -109,5 +115,24 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .yg-plan-choice { transition: background-color var(--yg-change) var(--yg-settle); }
+  .yg-letter-limit { transition: background-color var(--yg-motion-surface-focus); }
+  .yg-letter-meter > circle:last-child {
+    transition: stroke-dashoffset var(--yg-motion-letter-progress), stroke var(--yg-change) var(--yg-settle);
+  }
+  .yg-letter-count { transition: color var(--yg-change) var(--yg-settle); }
+  .yg-letter-rejected { display: block; position: absolute; color: var(--yg-signal-limit); pointer-events: none; }
+  .yg-letter-rejected > span {
+    position: absolute;
+    font: var(--yg-font-reading);
+    animation: yg-letter-fall 560ms ease-in both;
+    animation-delay: calc(12ms * var(--yg-letter-order));
+  }
+}
+@keyframes yg-letter-fall {
+  0% { opacity: 0; transform: translateY(0); }
+  11% { opacity: 1; }
+  27% { transform: translate(-4px, -12px) rotate(-12deg); }
+  73% { opacity: 1; transform: translate(var(--yg-letter-drift), var(--yg-letter-fall)) rotate(18deg); }
+  85% { transform: translate(var(--yg-letter-drift), calc(var(--yg-letter-fall) - 8px)) rotate(14deg); }
+  100% { opacity: 1; transform: translate(var(--yg-letter-drift), var(--yg-letter-fall)) rotate(18deg); }
 }

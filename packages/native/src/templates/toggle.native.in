@@ -1,5 +1,0 @@
-<template name="yg-toggle" args="label checked">
-  <row cross="center">
-    <toggle variant="ghost" checked="{checked}" on-toggle="toggle">{label}</toggle>
-  </row>
-</template>

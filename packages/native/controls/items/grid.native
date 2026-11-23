@@ -1,5 +1,0 @@
-<template name="yg-grid">
-  <grid columns="2" gap="8">
-  <slot/>
-  </grid>
-</template>

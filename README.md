@@ -6,7 +6,7 @@
 ships with live cultures
 <!-- /starter:project -->
 
-Yogurt is OpenBoa’s design system and UI SDK, with shared design tokens, artwork, product language, and components for web and native apps.
+Yogurt is OpenBoa’s design system and UI SDK, with shared design tokens, artwork, product language, and React components for browsers and desktop WebViews.
 
 [Browse the design system](https://yogurt.openboa.ai/)
 
@@ -30,15 +30,6 @@ npm install "git+https://github.com/openboa-ai/yogurt.git#<reviewed-sdk-commit>"
 npx --no-install yogurt list
 ```
 
-For a Zig-only Native app, place the [reviewed SDK archive](docs/using-yogurt.md#install-the-local-sdk) at `vendor/yogurt.tgz`. Unpack it and record its SHA-256 in the app's Yogurt configuration. The app pins its Native framework separately. [Native configuration](docs/using-yogurt.md#zig-and-vercel-native-sdk)
-
-```sh
-mkdir -p vendor/yogurt
-tar -xzf vendor/yogurt.tgz --strip-components=1 -C vendor/yogurt
-shasum -a 256 vendor/yogurt.tgz
-node vendor/yogurt/bin/yogurt.mjs list
-```
-
 ### Install the Codex skills
 
 Use the marketplace commit reviewed with the app's SDK pin. The plugin installs the Yogurt skills for design, implementation, review and feedback. [Plugin setup](docs/using-yogurt.md#set-up-an-agent)
@@ -56,9 +47,8 @@ Ask `yogurt-build` to implement a screen by describing the task and target. Foll
 | --- | --- |
 | [Design sources](https://github.com/openboa-ai/yogurt/blob/main/design/README.md) | Artwork, fonts, tokens and product language |
 | [Catalog](https://github.com/openboa-ai/yogurt/blob/main/catalog/README.md) | Shared component and pattern IDs, contracts and target bindings |
-| [Packages](https://github.com/openboa-ai/yogurt/blob/main/packages/README.md) | React, Native and editable composition recipes |
+| [Packages](https://github.com/openboa-ai/yogurt/blob/main/packages/README.md) | React and editable composition recipes |
 | [Web guide](https://github.com/openboa-ai/yogurt/blob/main/apps/guide/README.md) | Authored pages, interactive examples and generated galleries |
-| `apps/native-guide` | Local macOS component browser for development and inspection |
 | [Plugins](https://github.com/openboa-ai/yogurt/blob/main/plugins/README.md) | Installable agent workflows |
 | [Examples](https://github.com/openboa-ai/yogurt/blob/main/examples/README.md) | Complete screens and integration cases |
 | [Checks](https://github.com/openboa-ai/yogurt/blob/main/checks/README.md) | Runtime verification and [agent evaluations](https://github.com/openboa-ai/yogurt/blob/main/checks/evals/README.md) |
@@ -83,14 +73,6 @@ npm run guide:build
 npm run guide:preview
 npm run check:ui
 ```
-
-To inspect the Native components in a macOS app, install the pinned Native SDK and Zig versions, then run:
-
-```sh
-node apps/native-guide/scripts/run.mjs
-```
-
-See the [Native setup](docs/using-yogurt.md#zig-and-vercel-native-sdk) for prerequisites and current coverage.
 
 Use the [verification guide](https://github.com/openboa-ai/yogurt/blob/main/checks/README.md) to test an installed SDK in an independent project. The generated component galleries can also be opened directly from `apps/guide/generated/`.
 

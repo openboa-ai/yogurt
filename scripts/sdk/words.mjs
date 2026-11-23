@@ -11,18 +11,3 @@ writeFileSync(
     JSON.stringify(words, null, 2) +
     " as const;\n",
 );
-writeFileSync(
-  "packages/native/controls/words.zig",
-  "// Generated from design/content/terms.json.\n" +
-    vocabulary
-      .map(
-        (t) =>
-          "pub const " +
-          t.id.replace(/[.-]/g, "_") +
-          " = " +
-          JSON.stringify(t.term) +
-          ";",
-      )
-      .join("\n") +
-    "\n",
-);

@@ -1,47 +1,6 @@
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
 import { Button } from '../controls/actions.js';
 
-type FocusOption = { id: string; label: string; description: string };
-type PlanOption = FocusOption & { price: string };
-
-type ChoiceProps<T> = {
-  value: string;
-  onChange: (value: string) => void;
-  options: T[];
-};
-
-export function FocusPicker({ value, onChange, options }: ChoiceProps<FocusOption>) {
-  const name = useId();
-  return (
-    <div className="yg-focus-picker" role="radiogroup" aria-label="Focus">
-      {options.map((option) => (
-        <label className="yg-focus-choice" key={option.id} data-selected={value === option.id || undefined}>
-          <input type="radio" name={name} value={option.id} checked={value === option.id} onChange={() => onChange(option.id)} />
-          <span className="yg-focus-orbit" aria-hidden="true" />
-          <span className="yg-choice-copy"><strong>{option.label}</strong><span>{option.description}</span></span>
-          <span className="yg-choice-check" aria-hidden="true">✓</span>
-        </label>
-      ))}
-    </div>
-  );
-}
-
-export function PlanSwitch({ value, onChange, options }: ChoiceProps<PlanOption>) {
-  const name = useId();
-  return (
-    <div className="yg-plan-switch" role="radiogroup" aria-label="Plan">
-      {options.map((option) => (
-        <label className="yg-plan-choice" key={option.id} data-selected={value === option.id || undefined}>
-          <input type="radio" name={name} value={option.id} checked={value === option.id} onChange={() => onChange(option.id)} />
-          <span className="yg-plan-heading"><strong>{option.label}</strong><span className="yg-choice-check" aria-hidden="true">✓</span></span>
-          <span className="yg-plan-price">{option.price}</span>
-          <span className="yg-plan-description">{option.description}</span>
-        </label>
-      ))}
-    </div>
-  );
-}
-
 type LetterLimitProps = {
   label: string;
   value: string;

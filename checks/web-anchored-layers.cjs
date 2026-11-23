@@ -38,7 +38,7 @@ const bundle = buildSync({stdin:{resolveDir:process.cwd(),loader:'jsx',contents:
         const limits=clipping ? await page.locator('.fixture-clip').boundingBox() : {x:0,y:0,width,height:700};
         assert(bounds.x>=limits.x+6 && bounds.x+bounds.width<=limits.x+limits.width-6, `${label} horizontal bounds: ${JSON.stringify({bounds,limits})}`);
         assert(bounds.y>=limits.y+6 && bounds.y+bounds.height<=limits.y+limits.height-6, `${label} vertical bounds: ${JSON.stringify({bounds,limits})}`);
-        assert.equal(await panel.getAttribute('data-side'),'above');
+        assert.equal(await panel.getAttribute('data-side'),role === 'menu' ? 'top' : 'above');
         assert.equal(await trigger.getAttribute('aria-expanded'),'true');
         await page.keyboard.press('Escape');
         await panel.waitFor({state:'hidden'});

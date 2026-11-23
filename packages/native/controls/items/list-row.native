@@ -1,8 +1,0 @@
-<template name="yg-list-row" args="label detail">
-  <list-item on-press="activate" label="{label}" padding="12">
-    <column gap="2">
-      <text wrap="true">{label}</text>
-      <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
-    </column>
-  </list-item>
-</template>

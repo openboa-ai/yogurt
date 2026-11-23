@@ -156,7 +156,7 @@
 .motion-pattern-article[data-wide] .motion-pattern-stage { inline-size: min(100%, 52rem); }
 #otp .motion-pattern-sample > .yg-field { inline-size: min(100%, 320px); }
 #number-stepper .motion-pattern-sample > .yg-quantity { inline-size: min(100%, 320px); }
-#spring-dropdown .motion-pattern-stage { min-block-size: 17.5rem; }
+#spring-dropdown .motion-pattern-stage { min-block-size: 19rem; align-content: start; padding-block-start: 3.5rem; }
 #spring-dropdown .yg-spring-label {
   position: absolute;
   inline-size: 1px;
@@ -501,7 +501,7 @@
   .motion-pattern-stage :is(.motion-invite-entry, .utility-label, .extra-gesture) input:not([type="range"]):focus-visible {
     background-color: var(--yg-hover);
   }
-  .yg-root .motion-pattern-stage .motion-pattern-sample .yg-motion-range-area > [data-thumb]:focus-visible {
+  .yg-root .motion-pattern-stage .motion-pattern-sample .yg-value-slider-thumb:has(:focus-visible) {
     background: radial-gradient(circle, var(--yg-on-inverse) 0 4px, var(--yg-inverse) 4.5px);
     box-shadow: none;
   }
@@ -569,9 +569,6 @@
 .motion-tab-panel-copy { display: grid; align-content: center; min-block-size: 50px; gap: 4px; }
 .motion-tab-panel-copy strong { font: var(--yg-font-action); }
 
-#dynamic-menu .yg-action-menu-expanding > .yg-button { position: relative; padding-inline-end: 44px; }
-#dynamic-menu .yg-action-menu-expanding > .yg-button .yg-button-label { position: static; }
-#dynamic-menu .yg-action-menu-glyph { position: absolute; inset-block-start: 50%; inset-inline-end: 16px; translate: 0 -50%; }
 .yg-root .motion-pattern-stage .motion-pattern-sample .yg-inline-command .yg-command-search > input:focus-visible {
   background-image: none;
   text-decoration: none;
@@ -579,7 +576,7 @@
 .motion-sidebar-content > .yg-button { white-space: nowrap; padding-inline: 8px; }
 
 .motion-elastic-range { inline-size: min(100%, 328px); }
-.motion-elastic-range .yg-elastic-range { box-sizing: border-box; inline-size: 100%; }
+.motion-elastic-range .yg-value-slider { box-sizing: border-box; inline-size: 100%; }
 .motion-pill-tabs { inline-size: fit-content; max-inline-size: 100%; }
 .motion-pill-tabs .yg-tabs [role="tablist"] { flex-wrap: nowrap; max-inline-size: 100%; }
 .motion-pill-tabs .yg-tabs [role="tab"] { min-inline-size: 0; padding-inline: clamp(5px, 1.6vi, 12px); white-space: nowrap; }

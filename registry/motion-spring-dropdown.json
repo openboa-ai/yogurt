@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-spring-dropdown.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { SpringDropdown } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { SpringDropdown } from \"@openboa/yogurt/motion-spring-dropdown\";\n"
     }
   ]
 }

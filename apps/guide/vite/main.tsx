@@ -1,31 +1,44 @@
-import { lazy, startTransition, Suspense, useEffect, useLayoutEffect, useState } from "react";
+import { lazy, startTransition, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { IconButton, Link, Navbar, PageHeader, ProjectMark, Text, Yogurt } from "@openboa/yogurt";
 import "../../../design/styles/brand.css";
 import "../../../design/styles/ui.css";
 import "./shell.css";
 import { guidePages, canonicalGuideUrl, matchGuidePath } from "../guide-routes.mjs";
-import motionCatalog from "../../../catalog/motion-components.json";
+import { componentAliases, componentPreviews, legacyMotionPreviews, motionDestinations } from "../component-previews";
+import blocks from "../../../catalog/blocks.json";
 
-const motionDestinations = new Map(motionCatalog.components.flatMap(component =>
-  component.examples.map(example => [example, component.id] as const)));
-for (const [example, component] of Object.entries({
-  "otp": "input-otp", "toggle-switch": "switch", "smooth-tabs": "tabs",
-  "segmented-control": "segmented-control", "sidebar-collapse": "sidebar-layout",
-  "plan-switch": "motion-plan-switch", "focus-mode": "motion-focus-picker",
-})) motionDestinations.set(example, component);
+const blockIds = new Set(blocks.map(block => block.id));
 
 function hostedUrl(url: URL) {
   const canonical = canonicalGuideUrl(url);
   if (!canonical) return null;
   const next = new URL(canonical, url.origin);
   const page = matchGuidePath(next.pathname);
+  if (page?.id === "components") {
+    const alias = componentAliases.get(next.pathname.split("/")[2]);
+    if (alias) {
+      const preview = next.searchParams.get("preview");
+      if (!preview || !componentPreviews[alias.component]?.includes(preview)) {
+        next.searchParams.set("preview", alias.preview);
+      }
+      return "/components/" + alias.component + next.search + next.hash;
+    }
+  }
   if (page?.id === "workflows") return "/playbook";
+  if (page?.id === "components" && blockIds.has(next.pathname.split("/")[2])) {
+    return "/patterns/" + next.pathname.split("/")[2] + next.search + next.hash;
+  }
   if (page?.id === "motion-comparison") return "/components";
   if (page?.id === "motion") {
-    const example = next.pathname.split("/")[2] || next.hash.slice(1);
+    const legacy = next.pathname.split("/")[2] || next.hash.slice(1);
+    const example = legacyMotionPreviews[legacy] ?? legacy;
     const id = motionDestinations.get(example);
-    return id ? "/components/" + id : example ? canonical : "/components";
+    if (!id) return "/components";
+    if (id.startsWith("motion-")) return "/components/" + id;
+    const search = new URLSearchParams(next.search);
+    search.set("preview", example);
+    return "/components/" + id + "?" + search;
   }
   return canonical;
 }
@@ -40,7 +53,7 @@ const Catalog = lazy(() => import("./components"));
 const Templates = lazy(() => import("./templates"));
 const Examples = lazy(() => import("./examples"));
 const AgentFamily = lazy(() => import("./agents"));
-const destinations = guidePages.filter(page => !page.parent && !page.retired)
+const destinations = guidePages.filter(page => ["system", "components", "templates", "examples"].includes(page.id))
   .map(page => ({ id: page.id, label: page.title, href: page.path }));
 type Appearance = "light" | "dark";
 
@@ -60,6 +73,9 @@ function loadAppearance(): Appearance {
   } catch { /* A private session can still use the system appearance. */ }
   return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
+
+const initialAppearance = loadAppearance();
+document.documentElement.dataset.appearance = initialAppearance;
 
 function alignPage(url: URL, focusHeading: boolean) {
   const main = document.getElementById("guide-content");
@@ -83,23 +99,26 @@ function alignPage(url: URL, focusHeading: boolean) {
 }
 
 function GuideContent({ id, appearance, href }: { id: string; appearance: Appearance; href: string }) {
-  const [initialUrl] = useState(href);
+  const previousHref = useRef(startingUrl);
   useLayoutEffect(() => {
-    const frame = requestAnimationFrame(() => alignPage(new URL(initialUrl, location.origin), initialUrl !== startingUrl));
+    const next = new URL(href, location.origin);
+    const previous = new URL(previousHref.current, location.origin);
+    previousHref.current = href;
+    const frame = requestAnimationFrame(() => alignPage(next, previous.pathname !== next.pathname));
     return () => cancelAnimationFrame(frame);
-  }, [initialUrl]);
+  }, [href]);
 
+  const url = new URL(href, location.origin);
   switch (id) {
     case "brand": return <BrandPage />;
     case "system": return <SystemGuide />;
     case "library": return <DesignSources />;
     case "adoption": return <AdoptionGuide />;
-    case "playbook": return <Playbook />;
-    case "emoji": return <EmojiGallery />;
-    case "components": return <Catalog guideAppearance={appearance} />;
-    case "templates": return <Templates id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
-    case "examples": return <Examples id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
-    case "motion": return <main><PageHeader title="Pattern not found" action={<Link href="/components">Browse components</Link>} /></main>;
+    case "playbook": return <Playbook key={url.search} />;
+    case "emoji": return <EmojiGallery key={url.search} />;
+    case "components": return <Catalog guideAppearance={appearance} url={url} />;
+    case "templates": return <Templates key={url.pathname} id={url.pathname.split("/")[2]} appearance={appearance} />;
+    case "examples": return <Examples key={url.pathname} id={url.pathname.split("/")[2]} appearance={appearance} />;
     case "agents": return <div className="guide-agents"><AgentFamily /></div>;
     default: return <main><PageHeader title="Guide page not found" action={<Link href="/">Go to Yogurt</Link>} /></main>;
   }
@@ -107,11 +126,15 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
 
 function Guide() {
   const [href, setHref] = useState(startingUrl);
-  const [appearance, setAppearance] = useState(loadAppearance);
+  const [appearance, setAppearance] = useState(initialAppearance);
   const [menu, setMenu] = useState(false);
   const url = new URL(href, location.origin);
   const page = matchGuidePath(url.pathname);
   const id = page?.id ?? "missing";
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.appearance = appearance;
+  }, [appearance]);
 
   useEffect(() => {
     function followLocation() {
@@ -128,17 +151,12 @@ function Guide() {
       if (!canonical) return;
 
       event.preventDefault();
-      const previous = new URL(location.href);
-      const next = new URL(canonical, location.origin);
       if (canonical !== currentUrl()) {
         history.pushState(null, "", canonical);
-        window.dispatchEvent(new PopStateEvent("popstate"));
-        if (previous.hash !== next.hash) {
-          window.dispatchEvent(new HashChangeEvent("hashchange", { oldURL: previous.href, newURL: next.href }));
-        }
-      }
-      setMenu(false);
-      if (matchGuidePath(previous.pathname)?.id === matchGuidePath(next.pathname)?.id && previous.search === next.search) {
+        followLocation();
+      } else {
+        setMenu(false);
+        const next = new URL(canonical, location.origin);
         requestAnimationFrame(() => alignPage(next, !next.hash));
       }
     }
@@ -177,7 +195,7 @@ function Guide() {
     />
     <div id="guide-content" className="guide-content" tabIndex={-1}>
       <Suspense fallback={<Text className="guide-loading" role="status">Loading guide…</Text>}>
-        <GuideContent key={(id === "templates" || id === "examples" ? url.pathname : id) + url.search} id={id} appearance={appearance} href={href} />
+        <GuideContent id={id} appearance={appearance} href={href} />
       </Suspense>
     </div>
   </Yogurt>;

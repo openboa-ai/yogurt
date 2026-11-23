@@ -1,6 +1,0 @@
-<template name="yg-message" args="speaker content">
-  <column gap="@{gap-tight}">
-    <text size="sm" foreground="text_muted" wrap="true">{speaker}</text>
-    <text wrap="true">{content}</text>
-  </column>
-</template>

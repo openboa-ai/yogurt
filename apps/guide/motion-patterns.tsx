@@ -2,13 +2,13 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type 
 import { createRoot } from "react-dom/client";
 import {
   ActionMenu, Button, Command, Disclosure, Icon, IconButton, InputOTP,
-  ProjectMark, SearchField, Link, SegmentedControl, SidebarItem, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
+  ProjectMark, RangeSlider, SearchField, Link, SegmentedControl, Select, SidebarItem, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
 } from "@openboa/yogurt";
 import {
-  ActivityIsland, CheckboxList, CommandButton, CopyButton, DetentDial, ExpandCard, FanCards, FileDrop,
+  ActivityIsland, CheckboxList, CopyButton, DetentDial, ExpandCard, FanCards, FileDrop,
   FocusPicker, GhostSuggestion, HoldButton, LetterLimit, LoadingSuccessButton, MentionPicker,
-  MorphTooltip, MorphTooltipBar, PasswordStrength, PlanSwitch, PromptBox, RangeSlider, SlideConfirm,
-  SpringDropdown, StatCard, StorageMeter, StreamingReply, TaskList, ThinkingIndicator,
+  MorphTooltip, MorphTooltipBar, PasswordStrength, PlanSwitch, PromptBox, SlideConfirm,
+  StatCard, StorageMeter, StreamingReply, TaskList, ThinkingIndicator,
 } from "@openboa/yogurt/motion-patterns";
 import { extraCards } from "./examples/motion-extra-cards";
 import { ReviewerProfile } from "./examples/reviewer-profile";
@@ -99,7 +99,7 @@ function ChoiceExample({ kind }: {kind: "plan" | "focus" | "select" | "dial"}) {
   const [value, setValue] = useState({plan: "team", focus: "all", select: "active", dial: "overview"}[kind]);
   if (kind === "plan") return <PlanSwitch options={plans} value={value} onChange={setValue} />;
   if (kind === "focus") return <FocusPicker options={focusOptions} value={value} onChange={setValue} />;
-  if (kind === "select") return <SpringDropdown label="Work status" options={workStatuses} value={value} onChange={setValue} />;
+  if (kind === "select") return <Select presentation="animated" label="Work status" options={workStatuses} value={value} onChange={setValue} />;
   return <DetentDial options={pages} value={value} onChange={setValue} />;
 }
 
@@ -270,7 +270,7 @@ function ConversationExample({ kind }: {kind: "stream" | "prompt" | "thinking"})
 function CommandExample({ kind }: {kind: "button" | "palette" | "menu"}) {
   const [selection, setSelection] = useState("");
   return <div className="motion-sample-stack" data-command-example={kind}>
-    {kind === "button" && <CommandButton label="Run command" items={pages} onSelect={setSelection} />}
+    {kind === "button" && <Command label="Run command" items={pages} onSelect={setSelection} />}
     {kind === "palette" && <Command label="Open command palette" presentation="inline" triggerText="Search" items={[...commands]} onSelect={setSelection} />}
     {kind === "menu" && <ActionMenu label="View actions" presentation="expanding"
       items={pages.map(page => ({...page, disabled: page.id === selection}))} onSelect={setSelection} />}
@@ -649,7 +649,7 @@ export function Gallery({ guideAppearance }: { guideAppearance?: "light" | "dark
             <h2>Use this component</h2>
             <p>{reusable.guidance.useWhen}</p>
             <pre><code>{`import { ${reusable.name} } from "${reusable.entry}";`}</code></pre>
-            <p>Web: available · Native: unavailable</p>
+
             <p>{reusable.guidance.avoid}</p>
           </section>}
           </> : <header className="motion-pattern-intro"><h1 ref={heading} tabIndex={-1}>Pattern not found</h1>

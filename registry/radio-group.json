@@ -8,7 +8,7 @@
     {
       "path": "ui/radio-group.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { RadioGroup } from \"@openboa/yogurt/radio-group\";\n"
+      "content": "\"use client\";\n\nexport { RadioGroup, FocusPicker, PlanSwitch } from \"@openboa/yogurt/radio-group\";\n"
     }
   ]
 }

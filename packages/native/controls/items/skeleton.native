@@ -1,6 +1,0 @@
-<template name="yg-skeleton">
-  <column gap="8">
-  <skeleton width="140" height="12"/>
-  <skeleton width="90" height="12"/>
-  </column>
-</template>

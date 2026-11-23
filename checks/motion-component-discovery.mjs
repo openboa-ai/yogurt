@@ -33,14 +33,14 @@ try {
   const installed = call(cli, "add", "motion-task-list", "--target", "web", "--dir", project);
   assert.equal(installed.status, 0, installed.stderr);
   const destination = join(project, "src/components/ui/motion-task-list.tsx");
-  assert.match(readFileSync(destination, "utf8"), /export \{ TaskList \} from "@openboa\/yogurt\/motion-patterns"/);
+  assert.match(readFileSync(destination, "utf8"), /export \{ TaskList \} from "@openboa\/yogurt\/motion-task-list"/);
   writeFileSync(destination, "// consumer edit\n");
   const conflict = call(cli, "add", "motion-task-list", "--target", "web", "--dir", project);
   assert.notEqual(conflict.status, 0);
   assert.equal(readFileSync(destination, "utf8"), "// consumer edit\n");
   const native = call(cli, "add", "motion-task-list", "--target", "native", "--dir", project);
   assert.notEqual(native.status, 0);
-  assert.match(native.stderr, /not available for Native/);
+  assert.match(native.stderr, /--target web/);
   assert.equal(existsSync(join(project, "src/yogurt/motion-task-list.zig")), false);
   const duplicate = JSON.parse(original); duplicate.components.push(duplicate.components[0]);
   writeFileSync(catalog, JSON.stringify(duplicate));

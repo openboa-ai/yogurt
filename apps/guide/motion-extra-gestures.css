@@ -24,7 +24,6 @@
 .extra-gesture label output { font-variant-numeric: tabular-nums; }
 .extra-disclosure, .extra-gesture-page, .extra-zoom-frame, .extra-card { box-sizing: border-box; border-radius: var(--yg-radius-control); padding: var(--yg-inset-regular); }
 .extra-toolbar { gap: var(--yg-gap-inline); margin-top: 8px; }
-.extra-toolbar > button, .extra-counter button { min-height: 36px; font: inherit; font-size: 13px; line-height: 18px; }
 .extra-counter output { min-width: 20px; text-align: center; font-variant-numeric: tabular-nums; }
 .extra-gesture-page span, .extra-card small { font-size: 12px; line-height: 16px; }
 .extra-gesture-page p { margin-top: 8px; }

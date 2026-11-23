@@ -1,12 +1,11 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import { spawnSync, execFileSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const [candidateConsumer, previousConsumer, archivePath, previousArchivePath] = process.argv.slice(2).map(path => resolve(path));
+const [candidateConsumer, previousConsumer, archivePath] = process.argv.slice(2).map(path => resolve(path));
 if (!candidateConsumer || !previousConsumer || !archivePath) {
   throw Error("Usage: node checks/plugin-sdk.mjs <candidate-npm-project> <previous-npm-project> <candidate-archive>");
 }
@@ -130,53 +129,8 @@ try {
   writeFileSync(catalog, '{"formatVersion":999}');
   assert.equal(inspect(web, "web").status, "incompatible");
 
-  const native = join(root, "native");
-  const extracted = join(native, "sdk");
-  const archive = join(native, "sdk.tgz");
-  mkdirSync(extracted, { recursive: true });
-  cpSync(archivePath, archive);
-  execFileSync("tar", ["-xzf", archive, "-C", extracted, "--strip-components=1"]);
-  const revision = "sha256:" + createHash("sha256").update(readFileSync(archive)).digest("hex");
-  config(native, { nativeSdk: { root: "sdk", archive: "sdk.tgz", revision, version: observed.version } });
-  const bound = result(native, "native");
-  assert.equal(bound.status, 0, bound.stderr);
-  assert.equal(JSON.parse(bound.stdout).revision, revision);
-  assert.equal(inspect(native, "native").status, "compatible");
-  const nativeGuide = result(native, "native", "--agent-guide");
-  assert.equal(nativeGuide.status, 0, nativeGuide.stderr);
-  assert.match(nativeGuide.stdout, /sdk\/packages\/native\/controls\/items\/receipt\.native/);
-  assert(!nativeGuide.stdout.includes(native));
-  assert(!existsSync(join(native, "AGENTS.md")));
-  const markup = result(native, "native", "--lookup", "pattern.review-decision");
-  assert.equal(markup.status, 0, markup.stderr);
-  const nativeReview = JSON.parse(markup.stdout);
-  const nativeDialog = nativeReview.components.find(item => item.id === "confirm-dialog");
-  assert.equal(nativeReview.revision, revision);
-  assert.equal(nativeDialog.template, join(extracted, "packages/native/controls/items/confirm-dialog.native"));
-  assert.equal(nativeDialog.install, "yogurt add confirm-dialog --target native");
-  assert.match(readFileSync(nativeDialog.template, "utf8"), /on-press="confirm_current"/);
-  writeFileSync(join(extracted, "DESIGN.md"), "Unexpected edit");
-  const changed = result(native, "native");
-  assert.equal(changed.status, 1);
-  assert.match(changed.stderr, /differs from its archive at DESIGN\.md/);
-  assert.equal(result(native, "native", "--inspect").status, 1);
-
-  if (previousArchivePath) {
-    const olderNative = join(root, "legacy-native");
-    const contents = join(olderNative, "sdk");
-    const pinnedArchive = join(olderNative, "sdk.tgz");
-    mkdirSync(contents, { recursive: true });
-    cpSync(previousArchivePath, pinnedArchive);
-    execFileSync("tar", ["-xzf", pinnedArchive, "-C", contents, "--strip-components=1"]);
-    const revision = "sha256:" + createHash("sha256").update(readFileSync(pinnedArchive)).digest("hex");
-    config(olderNative, { nativeSdk: { root: "sdk", archive: "sdk.tgz", revision, version: incomplete.version } });
-    const nativeGap = inspect(olderNative, "native");
-    assert.equal(nativeGap.revision, revision);
-    assert.equal(nativeGap.status, "missing-resources");
-    assert.deepEqual(nativeGap.missing, incomplete.missing);
-  }
-
-  console.log("Isolated plugin resolved its pinned Web and Native SDKs, inspected installed guidance, and rejected invalid or edited inputs.");
+  assert.equal(result(web, "native").status, 1);
+  console.log("Isolated plugin resolved its pinned React SDK and rejected invalid or edited inputs.");
 } finally {
   rmSync(root, { recursive: true });
 }

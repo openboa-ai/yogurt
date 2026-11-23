@@ -20,6 +20,19 @@ for(const width of [320,1440]){
  }
  const pill=section.getByRole("button",{name:"Keep draft"});
  assert((await pill.evaluate(node=>parseInt(getComputedStyle(node).borderRadius)))>50);
+ await page.goto(pathToFileURL(join(process.cwd(),"apps/guide/generated/components.html")).href+"#icon-button");
+ const iconSpecimen=page.locator(".variation .specimen");
+ for (const [name,height,glyphWidth] of [["Find a view",30,14],["Add a view",36,16],["Copy a view",40,20],["Save a view",44,20],["Close views",48,20]]) {
+  const button=iconSpecimen.getByRole("button",{name,exact:true});
+  const geometry=await button.evaluate(node=>{
+   const button=node.getBoundingClientRect();
+   const icon=node.querySelector("svg").getBoundingClientRect();
+   return [button.width,button.height,icon.width,Math.abs(button.x+button.width/2-icon.x-icon.width/2),Math.abs(button.y+button.height/2-icon.y-icon.height/2)];
+  });
+  assert.deepEqual(geometry,[height,height,glyphWidth,0,0],name);
+ }
+ await iconSpecimen.getByRole("button",{name:"Copy a view"}).press("Enter");
+ await iconSpecimen.getByRole("status").filter({hasText:"View copied."}).waitFor();
  await page.close();
 }
 console.log("Five button sizes, pill shape and actions verified at 320 and 1440 px.");

@@ -1,6 +1,0 @@
-<template name="yg-textarea" args="label value">
-  <column gap="@{gap-control}">
-    <text size="sm">{label}</text>
-    <textarea size="lg" label="{label}" text="{value}" on-input="edit"/>
-  </column>
-</template>

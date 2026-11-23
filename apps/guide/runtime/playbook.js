@@ -43,7 +43,7 @@ window.mountYogurtPlaybook = function () {
       return row;
     });
     get("pb-parts").replaceChildren(...parts);
-    text("pb-targets", "Web. " + pattern.support.web.detail + " Native. " + pattern.support.native.detail);
+    text("pb-targets", pattern.support.web.detail);
   }
   function choose(sought, patternId) {
     state.replaceChildren(...pick().scenes.map(scene => new Option(scene.label, scene.state)));
