@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ComponentType, type MouseEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState, type ComponentType, type MouseEvent } from "react";
 import {
   Yogurt,
   PageHeader,
@@ -27,36 +27,9 @@ import blocks from "../../catalog/blocks.json";
 import { BlockExample } from "./examples/block-examples";
 import { BrandTokens } from "./brand-tokens";
 import { Example } from "./examples/ui-examples";
-import { AgentWorkspaceExample } from "./examples/agent-workspace-examples";
-import { ProjectWorkspaceExample } from "./examples/project-workspace-examples";
-import { OperationsExample } from "./examples/operations-examples";
-import { WorkspaceExample } from "./examples/workspace-examples";
-import { AgentProfileExample } from "./examples/agent-profile-example";
-import { RunInspectorExample } from "./examples/run-inspector-example";
-import { SidebarExample } from "./examples/sidebar-example";
+import { scopedExamples } from "./examples/scoped-examples";
 import { componentAliases, componentPreviews, previewExport } from "./component-previews";
 import { guideHref, locationId, navigateSection, sectionHref } from "./routing";
-const scopedExamples = {
-  "agent-row": AgentWorkspaceExample,
-  "runtime-panel": AgentWorkspaceExample,
-  "agent-workspace": AgentWorkspaceExample,
-  "resource-row": ProjectWorkspaceExample,
-  "thread-row": ProjectWorkspaceExample,
-  "project-workspace": ProjectWorkspaceExample,
-  "work-event": OperationsExample,
-  "routine-row": OperationsExample,
-  "operations-library": OperationsExample,
-  "attention-inbox": OperationsExample,
-  "composer": WorkspaceExample,
-  "voice-control": WorkspaceExample,
-  "artifact-library": WorkspaceExample,
-  "project-access": WorkspaceExample,
-  "agent-profile": AgentProfileExample,
-  "run-inspector": RunInspectorExample,
-  "sidebar-layout": SidebarExample,
-  "agent-sidebar": SidebarExample,
-  "project-sidebar": SidebarExample,
-};
 const entries = [
   ...catalog,
   ...blocks.map((block) => ({ ...block, family: "Blocks", module: "blocks" })),
@@ -164,12 +137,13 @@ function submitPreviewForm(event: MouseEvent<HTMLDivElement>) {
   if (!form.noValidate && !submitter.formNoValidate && !form.reportValidity()) return;
   form.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true, submitter }));
 }
-export function Catalog({ inlinePreview = false, guideAppearance, motionPreview: MotionPreview }: {
+export function Catalog({ inlinePreview = false, guideAppearance, motionPreview: MotionPreview, route }: {
   inlinePreview?: boolean;
   guideAppearance?: "light" | "dark";
   motionPreview?: ComponentType<{ id: string }>;
+  route?: { id: string; preview: string | null };
 }) {
-  const [id, select] = useState(keyFromHash),
+  const [standaloneId, select] = useState(keyFromHash),
     [search, setSearch] = useState(""),
     [expanded, expand] = useState<string[]>(["Actions"]),
     [menu, setMenu] = useState(false),
@@ -180,17 +154,23 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
     [compare, setCompare] = useState(false),
     [showCode, setShowCode] = useState(false);
   const navigation = useRef<HTMLElement>(null);
+  const menuTrigger = useRef<HTMLButtonElement>(null);
+  const lastRevealed = useRef<string>(null);
+  const navigationId = useId();
+  const id = route?.id ?? standaloneId;
   const availableEntries = guideAppearance ? hostedEntries : MotionPreview ? offlineEntries : entries;
   const families = [...new Set(availableEntries.map(item => item.family))];
   const entry = availableEntries.find(item => item.id === id) ?? availableEntries[0];
   const motionEntry = "examples" in entry ? entry : undefined;
   const previewChoices = guideAppearance ? componentPreviews[id] : undefined;
-  const previewId = new URLSearchParams(location.search).get("preview");
+  const previewId = route?.preview;
   const activePreview = previewId && previewChoices?.includes(previewId) ? previewId : undefined;
   const guidance = "guidance" in entry && typeof entry.guidance === "object" ? entry.guidance : undefined;
   const missing = id !== "brand" && !availableEntries.some((item) => item.id === id);
-  const ScopedExample = scopedExamples[id as keyof typeof scopedExamples];
+  const ScopedExample = scopedExamples[id];
+  const hosted = Boolean(route);
   useEffect(() => {
+    if (hosted) return;
     const listener = () => {
       const next = keyFromHash();
       if (next === "yg-inspect") return;
@@ -201,21 +181,33 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
     addEventListener("hashchange", listener);
     addEventListener("popstate", listener);
     return () => { removeEventListener("hashchange", listener); removeEventListener("popstate", listener); };
-  }, []);
+  }, [hosted]);
+  useEffect(() => {
+    setMenu(false);
+    setShowCode(false);
+  }, [id]);
   useEffect(() => {
     expand((all) =>
       all.includes(entry.family) ? all : [...all, entry.family],
     );
   }, [entry.family]);
   useEffect(() => {
-    const sidebar = navigation.current;
-    const active = sidebar?.querySelector("a[aria-current=page]");
-    if (!sidebar?.clientHeight || !active || search) return;
-    const available = sidebar.getBoundingClientRect();
+    const list = navigation.current?.querySelector("nav");
+    if (!list?.clientHeight || search) {
+      lastRevealed.current = null;
+      return;
+    }
+    const active = list.querySelector("a[aria-current=page]");
+    if (!active || active.closest("[inert]") || lastRevealed.current === id) return;
+    lastRevealed.current = id;
+    const available = list.getBoundingClientRect();
     const row = active.getBoundingClientRect();
-    if (row.top < available.top) sidebar.scrollTop += row.top - available.top;
-    if (row.bottom > available.bottom) sidebar.scrollTop += row.bottom - available.bottom;
+    if (row.top < available.top) list.scrollTop += row.top - available.top;
+    if (row.bottom > available.bottom) list.scrollTop += row.bottom - available.bottom;
   }, [id, expanded, menu, search]);
+  useEffect(() => {
+    if (menu && hosted) navigation.current?.querySelector("input")?.focus({ preventScroll: true });
+  }, [menu, hosted]);
   const matches = useMemo(() => {
     const term = foldName(search.trim());
     const compact = compactName(term);
@@ -239,7 +231,7 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
     "motion-spring-dropdown": "Featured picker · 52 px high · 16 px corners",
   }[id];
   return (
-    <Yogurt appearance={appearance} className="catalog">
+    <Yogurt appearance={appearance} className="catalog" data-hosted={hosted || undefined}>
       <Link className="skip" href="#yg-inspect">
         Skip to component
       </Link>
@@ -268,8 +260,8 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
             className="menu-toggle"
             label={menu ? "Close navigation" : "Browse components"}
             icon={menu ? "close" : "menu"}
-            onClick={() => setMenu(!menu)}
-            aria-expanded={menu}
+            onClick={() => setMenu(open => !open)}
+            aria-expanded={menu} aria-controls={navigationId}
           />
           <IconButton
             label={dark ? "Use light appearance" : "Use dark appearance"}
@@ -278,9 +270,18 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
           />
         </div>
       </header>}
-      {guideAppearance && <div className="guide-catalog-tools"><Button emphasis="quiet" onClick={() => setMenu(!menu)} aria-expanded={menu}><Icon name={menu ? "close" : "menu"} />Browse components</Button></div>}
+      {guideAppearance && <div className="guide-catalog-tools">
+        <Button ref={menuTrigger} emphasis="quiet" onClick={() => setMenu(open => !open)}
+          aria-expanded={menu} aria-controls={navigationId}>
+          <Icon name={menu ? "close" : "menu"} />Browse components
+        </Button>
+      </div>}
       <div className="catalog-body">
-        <aside ref={navigation} data-open={menu} aria-label="Components">
+        <aside ref={navigation} id={navigationId} data-open={menu} aria-label="Components" onKeyDown={event => {
+          if (event.key !== "Escape" || !menu || !hosted) return;
+          setMenu(false);
+          menuTrigger.current?.focus({ preventScroll: true });
+        }}>
           <div className="catalog-search">
             <SearchField label="Find a component" placeholder="Find a component"
               value={search} onValueChange={setSearch} />
@@ -306,7 +307,7 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
           {missing ? (
             <PageHeader className="catalog-intro" title="Component not found" detail="Choose a component from the index."
               action={<Link href={sectionHref("components", "button")} onClick={event => {
-                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                if (hosted || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
                 event.preventDefault(); go("button");
               }}>Browse components</Link>} />
           ) : id === "brand" ? (
@@ -334,17 +335,17 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                 className="specimen"
                 data-component={id}
                 data-layout={previewLayout(entry)}
-                key={id}
+                key={id + (activePreview ?? "")}
               >
                 <div className="specimen-inner" onClick={inlinePreview ? submitPreviewForm : undefined}>
                   {MotionPreview && activePreview ? (
                     <MotionPreview id={activePreview} />
+                  ) : entry.family === "Blocks" ? (
+                    <BlockExample id={id} />
                   ) : ScopedExample ? (
                     <ScopedExample id={id} />
                   ) : MotionPreview && motionEntry ? (
                     <MotionPreview id={motionEntry.examples[0]} />
-                  ) : entry.family === "Blocks" ? (
-                    <BlockExample id={id} />
                   ) : (
                     <Example id={id} />
                   )}

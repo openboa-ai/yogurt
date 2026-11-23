@@ -39,14 +39,20 @@ export default function Templates({ id = "", appearance }: { id?: string; appear
   if (block) return <main className="guide-templates">
     <Stack gap={24}>
       <PageHeader title={block.name} detail={block.description} action={<Link href="/patterns">All patterns</Link>} />
+      <div className="template-preview">
+        <Inline className="template-preview-heading">
+          <Heading level={2}>Live preview</Heading>
+          <Button emphasis="quiet" size="compact" onClick={() => setReset(value => value + 1)}>Reset preview</Button>
+        </Inline>
+        <div className="template-stage" key={id + ":" + reset}><BlockExample id={id} /></div>
+      </div>
       <Stack gap={8}>
         <Heading level={2}>When to use it</Heading>
         <Text>{block.guidance}</Text>
       </Stack>
-      <div className="template-stage"><BlockExample id={id} /></div>
       <Stack gap={8}>
         <Heading level={2}>Components used</Heading>
-        <Inline>{block.components.map(component => <Link key={component} href={"/components/" + component}>{component}</Link>)}</Inline>
+        <Inline className="template-component-links">{block.components.map(component => <Link key={component} href={"/components/" + component}>{component}</Link>)}</Inline>
         {["agent-workspace", "agent-sidebar", "conversation-panel", "agent-profile"].includes(id) &&
           <Link href="/examples">See it in Sourdough Studio</Link>}
       </Stack>

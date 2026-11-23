@@ -9,6 +9,78 @@ const destinations = [
   ["Patterns", "/patterns", "Patterns"],
   ["Examples", "/examples", "Sourdough Studio"],
 ];
+const patternControls = {
+  "project-settings": ["switch", "Send a digest"],
+  "collection-browser": ["searchbox", "Find a view"],
+  "decision-review": ["button", "Archive review"],
+  "conversation-panel": ["textbox", "Message"],
+  "agent-workspace": ["region", "Agent workspace"],
+  "project-workspace": ["region", "Project workspace"],
+  "operations-library": ["searchbox", "Search operations"],
+  "attention-inbox": ["list", "Attention items"],
+  "artifact-library": ["searchbox", "Search library"],
+  "project-access": ["textbox", "Email address"],
+  "agent-profile": ["form", "Agent profile"],
+  "run-inspector": ["list", "Runs"],
+  "agent-sidebar": ["searchbox", "Find an agent"],
+  "project-sidebar": ["searchbox", "Find a view"],
+};
+
+async function checkCanvas(page, appearance) {
+  assert.deepEqual(await page.evaluate(() => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const guideStyle = getComputedStyle(document.querySelector(".guide-shell"));
+    return [documentStyle.colorScheme, documentStyle.colorScheme === guideStyle.colorScheme,
+      documentStyle.backgroundColor === guideStyle.backgroundColor, documentStyle.backgroundColor !== "rgba(0, 0, 0, 0)"];
+  }), [appearance, true, true, true]);
+}
+
+async function checkComponentIndex(browser, width) {
+  const page = await browser.newPage({ viewport: { width, height: 820 }, reducedMotion: "reduce" });
+  try {
+    await page.goto(base + "/components/slider");
+    const toggle = page.getByRole("button", { name: "Browse components" });
+    const search = page.getByRole("searchbox", { name: "Find a component" });
+    const compact = width <= 768;
+    if (compact) {
+      await toggle.click();
+      assert.equal(await search.evaluate(input => input === document.activeElement), true);
+    }
+    const index = page.getByRole("navigation", { name: "Component index" });
+    for (const label of await index.locator('button[aria-expanded="false"]').allTextContents()) {
+      await index.getByRole("button", { name: label.trim(), exact: true }).click();
+    }
+    await index.evaluate(list => { list.scrollTop = 0; });
+    await index.hover({ position: { x: 25, y: 24 } });
+    const start = await search.boundingBox();
+    const pageStart = await page.evaluate(() => window.scrollY);
+    await page.mouse.wheel(0, 440);
+    await page.waitForFunction(() => document.querySelector('nav[aria-label="Component index"]').scrollTop > 0);
+    assert.equal(await page.evaluate(() => window.scrollY), pageStart, "scrolling the index leaves the page in place");
+    assert.equal((await search.boundingBox()).y, start.y, "search stays in place");
+    const last = index.getByRole("link").last();
+    await last.focus();
+    assert(await last.evaluate(link => {
+      const row = link.getBoundingClientRect();
+      const list = link.closest("nav").getBoundingClientRect();
+      return row.top >= list.top - 1 && row.bottom <= list.bottom + 1;
+    }), "keyboard focus can reach the last entry");
+
+    if (compact) {
+      await page.keyboard.press("Escape");
+      await index.waitFor({ state: "hidden" });
+      assert.equal(await toggle.evaluate(button => button === document.activeElement), true);
+    } else {
+      const previous = await index.evaluate(list => list.scrollTop);
+      await page.getByRole("link", { name: "Elastic slider", exact: true }).click();
+      await page.getByRole("slider", { name: "Intensity" }).waitFor();
+      assert.equal(await index.evaluate(list => list.scrollTop), previous, "variant navigation preserves the index position");
+      await page.goBack();
+      await page.getByRole("link", { name: "Default", exact: true }).waitFor();
+      assert.equal(await index.evaluate(list => list.scrollTop), previous);
+    }
+  } finally { await page.close(); }
+}
 
 async function checkGuide(browser, width) {
   const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: "light" });
@@ -22,6 +94,7 @@ async function checkGuide(browser, width) {
   try {
     await page.goto(base);
     await heading("Yogurt").waitFor();
+    await checkCanvas(page, "light");
     assert.equal(await page.locator("link[rel=icon]").getAttribute("href"), "/assets/projects/yogurt.svg");
     await page.locator(".guide-brand-slogan").filter({ hasText: /^ships with live cultures$/ }).waitFor();
     const cover = page.locator(".guide-brand-opening");
@@ -83,9 +156,11 @@ async function checkGuide(browser, width) {
     await page.getByRole("link", { name: "Browse components", exact: true }).click();
     await heading("Button").waitFor();
     assert.equal(await page.locator(".catalog").getAttribute("data-appearance"), "dark");
+    await checkCanvas(page, "dark");
     await page.reload();
     await heading("Button").waitFor();
     assert.equal(await page.locator(".guide-shell").getAttribute("data-appearance"), "dark");
+    await checkCanvas(page, "dark");
 
     await page.goto(base + "/components.html#input-otp");
     await heading("InputOTP").waitFor();
@@ -138,9 +213,33 @@ async function checkGuide(browser, width) {
     const recommended = page.locator("[data-pattern]");
     const listedPatterns = await recommended.evaluateAll(items => items.map(item => item.dataset.pattern).sort());
     assert.deepEqual(listedPatterns, require("../catalog/blocks.json").map(block => block.id).sort());
+    await page.getByRole("link", { name: "Compose a screen" }).click();
+    await page.locator(".template-stage").getByRole("combobox", { name: "Task" }).waitFor();
+    await page.goBack();
+    await heading("Patterns").waitFor();
     await page.getByRole("link", { name: "Open Collection Browser" }).click();
     await heading("CollectionBrowser").waitFor();
     await page.getByRole("link", { name: "filter-bar", exact: true }).waitFor();
+    await page.goto(base + "/components/project-access");
+    await heading("ProjectAccess").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/patterns/project-access");
+    const preview = page.locator(".template-stage");
+    await preview.getByRole("textbox", { name: "Email address" }).fill("new@example.test");
+    await preview.getByRole("button", { name: "Invite", exact: true }).click();
+    await preview.getByRole("list", { name: "People with access" }).getByText("new@example.test", { exact: true }).waitFor();
+    await page.getByRole("button", { name: "Reset preview" }).click();
+    assert.equal(await preview.getByText("new@example.test", { exact: true }).count(), 0);
+    if (width === 1440) {
+      const blocks = require("../catalog/blocks.json");
+      assert.deepEqual(Object.keys(patternControls).sort(), blocks.map(block => block.id).sort());
+      for (const block of blocks) {
+        await page.goto(base + "/patterns/" + block.id);
+        await heading(block.name).waitFor();
+        const [role, name] = patternControls[block.id];
+        await preview.getByRole(role, { name, exact: true }).waitFor();
+        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), block.id);
+      }
+    }
     await page.goto(base + "/system#color");
     const matrix = page.getByRole("region", { name: "Color matrix", exact: true });
     await matrix.getByRole("radiogroup", { name: "slate shades" }).waitFor();
@@ -207,8 +306,9 @@ async function checkGuide(browser, width) {
 (async () => {
   const browser = await chromium.launch({ channel: process.env.YOGURT_BROWSER_CHANNEL ?? "chrome" });
   try {
-    await Promise.all([checkGuide(browser, 320), checkGuide(browser, 900), checkGuide(browser, 1440)]);
-    console.log("Guide shell passed at 320px, 900px and 1440px.");
+    await Promise.all([checkGuide(browser, 320), checkGuide(browser, 900), checkGuide(browser, 1440),
+      ...[320, 760, 900, 1440].map(width => checkComponentIndex(browser, width))]);
+    console.log("Guide navigation, appearance, pattern interaction and index scrolling passed.");
   } finally {
     await browser.close();
   }

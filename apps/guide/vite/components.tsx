@@ -9,6 +9,10 @@ function MotionPreview({ id }: { id: string }) {
   return <Suspense fallback={<Text role="status">Loading preview…</Text>}><Preview id={id} /></Suspense>;
 }
 
-export default function Components({ guideAppearance }: { guideAppearance: "light" | "dark" }) {
-  return <Catalog guideAppearance={guideAppearance} motionPreview={MotionPreview} />;
+export default function Components({ guideAppearance, url }: { guideAppearance: "light" | "dark"; url: URL }) {
+  const path = url.pathname.split("/")[2] ?? "button";
+  let id = path;
+  try { id = decodeURIComponent(path); } catch { /* An invalid path shows the component not found page. */ }
+  return <Catalog guideAppearance={guideAppearance} motionPreview={MotionPreview}
+    route={{ id, preview: url.searchParams.get("preview") }} />;
 }

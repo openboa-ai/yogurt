@@ -1,4 +1,4 @@
-import { lazy, startTransition, Suspense, useEffect, useLayoutEffect, useState } from "react";
+import { lazy, startTransition, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { IconButton, Link, Navbar, PageHeader, ProjectMark, Text, Yogurt } from "@openboa/yogurt";
 import "../../../design/styles/brand.css";
@@ -74,6 +74,9 @@ function loadAppearance(): Appearance {
   return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+const initialAppearance = loadAppearance();
+document.documentElement.dataset.appearance = initialAppearance;
+
 function alignPage(url: URL, focusHeading: boolean) {
   const main = document.getElementById("guide-content");
   let target: HTMLElement | null = null;
@@ -96,22 +99,26 @@ function alignPage(url: URL, focusHeading: boolean) {
 }
 
 function GuideContent({ id, appearance, href }: { id: string; appearance: Appearance; href: string }) {
-  const [initialUrl] = useState(href);
+  const previousHref = useRef(startingUrl);
   useLayoutEffect(() => {
-    const frame = requestAnimationFrame(() => alignPage(new URL(initialUrl, location.origin), initialUrl !== startingUrl));
+    const next = new URL(href, location.origin);
+    const previous = new URL(previousHref.current, location.origin);
+    previousHref.current = href;
+    const frame = requestAnimationFrame(() => alignPage(next, previous.pathname !== next.pathname));
     return () => cancelAnimationFrame(frame);
-  }, [initialUrl]);
+  }, [href]);
 
+  const url = new URL(href, location.origin);
   switch (id) {
     case "brand": return <BrandPage />;
     case "system": return <SystemGuide />;
     case "library": return <DesignSources />;
     case "adoption": return <AdoptionGuide />;
-    case "playbook": return <Playbook />;
-    case "emoji": return <EmojiGallery />;
-    case "components": return <Catalog guideAppearance={appearance} />;
-    case "templates": return <Templates id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
-    case "examples": return <Examples id={new URL(href, location.origin).pathname.split("/")[2]} appearance={appearance} />;
+    case "playbook": return <Playbook key={url.search} />;
+    case "emoji": return <EmojiGallery key={url.search} />;
+    case "components": return <Catalog guideAppearance={appearance} url={url} />;
+    case "templates": return <Templates key={url.pathname} id={url.pathname.split("/")[2]} appearance={appearance} />;
+    case "examples": return <Examples key={url.pathname} id={url.pathname.split("/")[2]} appearance={appearance} />;
     case "agents": return <div className="guide-agents"><AgentFamily /></div>;
     default: return <main><PageHeader title="Guide page not found" action={<Link href="/">Go to Yogurt</Link>} /></main>;
   }
@@ -119,11 +126,15 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
 
 function Guide() {
   const [href, setHref] = useState(startingUrl);
-  const [appearance, setAppearance] = useState(loadAppearance);
+  const [appearance, setAppearance] = useState(initialAppearance);
   const [menu, setMenu] = useState(false);
   const url = new URL(href, location.origin);
   const page = matchGuidePath(url.pathname);
   const id = page?.id ?? "missing";
+
+  useLayoutEffect(() => {
+    document.documentElement.dataset.appearance = appearance;
+  }, [appearance]);
 
   useEffect(() => {
     function followLocation() {
@@ -140,17 +151,12 @@ function Guide() {
       if (!canonical) return;
 
       event.preventDefault();
-      const previous = new URL(location.href);
-      const next = new URL(canonical, location.origin);
       if (canonical !== currentUrl()) {
         history.pushState(null, "", canonical);
-        window.dispatchEvent(new PopStateEvent("popstate"));
-        if (previous.hash !== next.hash) {
-          window.dispatchEvent(new HashChangeEvent("hashchange", { oldURL: previous.href, newURL: next.href }));
-        }
-      }
-      setMenu(false);
-      if (matchGuidePath(previous.pathname)?.id === matchGuidePath(next.pathname)?.id && previous.search === next.search) {
+        followLocation();
+      } else {
+        setMenu(false);
+        const next = new URL(canonical, location.origin);
         requestAnimationFrame(() => alignPage(next, !next.hash));
       }
     }
@@ -189,7 +195,7 @@ function Guide() {
     />
     <div id="guide-content" className="guide-content" tabIndex={-1}>
       <Suspense fallback={<Text className="guide-loading" role="status">Loading guide…</Text>}>
-        <GuideContent key={(id === "templates" || id === "examples" ? url.pathname : id) + url.search} id={id} appearance={appearance} href={href} />
+        <GuideContent id={id} appearance={appearance} href={href} />
       </Suspense>
     </div>
   </Yogurt>;

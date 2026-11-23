@@ -6,6 +6,7 @@ import {
 import { FormRecipe } from "../examples/templates/recipe-forms";
 import { MetricRecipe, RecordRecipe } from "../examples/templates/recipe-data";
 import { FoundationRecipe, StateRecipe } from "../examples/templates/recipe-states";
+import { dashboard, studies } from "../examples/templates/catalog";
 import { recipeFamilies, type Recipe } from "../examples/templates/recipes";
 
 const recommendedGroups = [
@@ -38,6 +39,15 @@ export function PatternGallery() {
           })}
         </div>
       </section>)}
+      <section aria-labelledby="pattern-practice">
+        <Stack gap={12}>
+          <Heading level={2} id="pattern-practice">Build a screen</Heading>
+          <Inline className="template-component-links">
+            {[...recipeFamilies.map(family => ({ id: family.id, title: family.title })), ...studies, dashboard].map(item =>
+              <Link key={item.id} href={"/patterns/" + item.id}>{item.title}</Link>)}
+          </Inline>
+        </Stack>
+      </section>
     </Stack>
   </main>;
 }

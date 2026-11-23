@@ -41,3 +41,13 @@ Choose a single owner for components with the same purpose, input contract and o
 The slider uses one value cue motion for a single value, each end of an interval and the joined label. The SDK thumb and value follow input immediately. The cue trails and leans in motion, settles after release, and tracks immediately with reduced motion. Verify the separation and convergence in browser frames, the tooltip's focus and dismissal in both presentations, and that old guide links load their corresponding previews.
 
 Pack and install the SDK in a fresh consumer. Verify that the agent can resolve the declaration for each public compatibility entry after its implementation moves, including named aliases exported from a sibling folder.
+
+## Guide navigation and previews
+
+Render every catalogued pattern with its matching interactive composition. Share the existing example dispatch between the component gallery and pattern pages. Old component URLs for patterns resolve to the same page and preview. Keep the recommended patterns visible and link the existing composition and layout examples from the pattern index.
+
+The component index has one scroll area. It keeps search within reach while the list scrolls, and users can reach its last item without moving the page. Opening another group or switching preview variants retains the index position and open groups. A newly selected component is brought into view. The compact trigger reveals the same index and gives focus to search. Verify mouse and keyboard scrolling and navigation at compact, intermediate and wide widths.
+
+Across the hosted guide, align section navigation after the destination renders. Preserve direct links, browser history and the same masthead across Brand, Tokens, Components, Patterns and Examples. Verify key layouts at compact and wide widths and check actual pattern controls in addition to page titles.
+
+Apply the guide's resolved appearance and canvas token to the document root. The unoccupied viewport and areas exposed at the scroll edges follow the selected appearance on all routes and after reload.
