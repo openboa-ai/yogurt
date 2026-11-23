@@ -1,7 +1,0 @@
-<template name="yg-record-facts" args="title source as_of">
-  <column gap="@{gap-inline}">
-  <text size="heading" wrap="true">{title}</text>
-  <slot/>
-  <text size="sm" foreground="text_muted" wrap="true">{source} · {as_of}</text>
-  </column>
-</template>

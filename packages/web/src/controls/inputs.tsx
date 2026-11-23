@@ -1,4 +1,5 @@
 "use client";
+import { OTPInput as SDKOTP, OTPInputGroup, OTPInputSlot, createOTPInputController } from "@ui-sdk/react/otp-input";
 import {
   useEffect,
   useId,
@@ -67,6 +68,12 @@ function OtpDigit({ value }: { value: string }) {
   return <span className="yg-otp-digit">{value}</span>;
 }
 
+function insertOTPDigits(field: HTMLInputElement, digits: string, count: number) {
+  const start = field.selectionStart ?? field.value.length;
+  const end = field.selectionEnd ?? start;
+  return (field.value.slice(0, start) + digits + field.value.slice(end)).slice(0, count);
+}
+
 export function InputOTP({
   label,
   length = 6,
@@ -89,51 +96,87 @@ export function InputOTP({
   error?: string;
 }) {
   const count = Math.max(1, Math.min(12, Math.trunc(length) || 6));
-  const [cursor, setCursor] = useState(0);
+  const [controller] = useState(createOTPInputController);
+  const root = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const host = root.current;
+    const field = host?.querySelector("input");
+    if (!host || !field) return;
+    // WebKit truncates replacement text before beforeinput when maxlength is present.
+    field.removeAttribute("maxlength");
+    // Forms can submit a partial code for host validation.
+    field.removeAttribute("minlength");
+    field.pattern = "[0-9]*";
+
+    const cleanReplacement = (event: InputEvent) => {
+      const text = event.data;
+      if (event.defaultPrevented || !event.cancelable || event.isComposing ||
+          !event.inputType.startsWith("insert") || !text || event.target !== field) return;
+      const digits = text.replace(/\D/g, "");
+      if (!digits || digits === text) return;
+
+      // The SDK rejects mixed insertions before an input event can normalize them.
+      event.preventDefault();
+      event.stopPropagation();
+      controller.setValue(insertOTPDigits(field, digits, count), { reason: "input-change", event });
+    };
+
+    host.addEventListener("beforeinput", cleanReplacement, true);
+    return () => host.removeEventListener("beforeinput", cleanReplacement, true);
+  }, [controller, count]);
   const confirmed = verified && value.length >= count;
   return (
     <Field {...{ label, help, error }}>
       {(binding) => (
-        <div
+        <SDKOTP
+          {...binding}
+          ref={root}
+          aria-label={label}
           className="yg-otp"
-          data-complete={value.length >= count || undefined}
+          data-agent-secret=""
           data-partial={value.length > 0 && value.length < count || undefined}
           data-verified={confirmed || undefined}
-          data-disabled={disabled || undefined}
-          style={{ "--yg-digits": count, "--yg-otp-merge": Number(confirmed), "--yg-otp-confirm": Number(confirmed) } as CSSProperties}
+          maxLength={count}
+          pattern="digits"
+          controller={controller}
+          onInputCapture={event => {
+            const field = event.target;
+            if (!(field instanceof HTMLInputElement)) return;
+            const raw = field.value;
+            const digits = raw.replace(/\D/g, "").slice(0, count);
+            if (raw === digits) return;
+
+            event.stopPropagation();
+            field.value = value;
+            controller.setValue(digits, { reason: "input-change", event: event.nativeEvent });
+          }}
+          onPasteCapture={event => {
+            const text = event.clipboardData.getData("text/plain");
+            if (!/[^\d\s-]/.test(text) || !(event.target instanceof HTMLInputElement)) return;
+            const digits = text.replace(/\D/g, "");
+            if (!digits) return;
+            event.stopPropagation();
+            event.preventDefault();
+            controller.setValue(insertOTPDigits(event.target, digits, count),
+              { reason: "paste", event: event.nativeEvent });
+          }}
+          name={name}
+          disabled={disabled}
+          value={value}
+          onValueChange={onValueChange}
+          style={{ "--yg-digits": count } as CSSProperties}
         >
-          <SDKInput
-            {...binding}
-            aria-label={label}
-            data-agent-secret=""
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            pattern="[0-9]*"
-            name={name}
-            disabled={disabled}
-            value={value}
-            render={<input onSelect={(e) => setCursor(e.currentTarget.selectionStart ?? 0)} />}
-            onChange={(event) => {
-              const next = event.currentTarget.value.replace(/\D/g, "").slice(0, count);
-              setCursor(Math.min(event.currentTarget.selectionStart ?? next.length, next.length));
-              onValueChange(next);
-            }}
-          />
-          <span className="yg-otp-slots" aria-hidden="true">
-            {Array.from({ length: count }, (_, i) => (
-              <span
-                key={i}
-                data-cursor={i === Math.min(cursor, count - 1) || undefined}
-                data-filled={!!value[i] || undefined}
-              >
-                {value[i] && <span className="yg-otp-ink">
-                  <OtpDigit key={value[i]} value={value[i]} />
+          <OTPInputGroup className="yg-otp-slots">
+            {Array.from({ length: count }, (_, index) => (
+              <OTPInputSlot key={index} index={index} render={<span />}>
+                {({ char }) => char && <span className="yg-otp-ink">
+                  <OtpDigit key={char} value={char} />
                 </span>}
-              </span>
+              </OTPInputSlot>
             ))}
-          </span>
+          </OTPInputGroup>
           {confirmed && <span role="status" className="yg-otp-confirmation"><Icon name="check" /> Verified</span>}
-        </div>
+        </SDKOTP>
       )}
     </Field>
   );
@@ -181,70 +224,7 @@ export function SplitTextField({
     </fieldset>
   );
 }
-export function Slider({
-  label,
-  value,
-  onValueChange,
-  min = 0,
-  max = 100,
-  step = 1,
-  unit = "",
-  disabled,
-  presentation = "inline",
-  formatValue,
-}: {
-  label: string;
-  value: number;
-  onValueChange: (value: number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-  unit?: string;
-  disabled?: boolean;
-  presentation?: "inline" | "card";
-  formatValue?: (value: number) => string;
-}) {
-  const id = useId();
-  const fill = max > min ? Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100)) : 0;
-  const formatted = formatValue ? formatValue(value) : value + unit;
-  if (presentation === "card") {
-    return (
-      <div className="yg-motion-range" style={{ "--yg-range-fill": `${fill}%` } as CSSProperties}>
-        <div className="yg-motion-range-heading"><label htmlFor={id}>{label}</label></div>
-        <div className="yg-motion-range-area">
-          <span className="yg-motion-range-tip" aria-hidden="true" style={{ insetInlineStart: `${fill}%` }}>{formatted}</span>
-          <input id={id} type="range" min={min} max={max} step={step} value={value} disabled={disabled}
-            aria-valuetext={formatValue || unit ? formatted : undefined}
-            onChange={(event) => onValueChange(event.currentTarget.valueAsNumber)} />
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="yg-range">
-      <div>
-        <label htmlFor={id} className="yg-label">
-          {label}
-        </label>
-        <output htmlFor={id}>
-          {formatted}
-        </output>
-      </div>
-      <input
-        id={id}
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        disabled={disabled}
-        style={{ "--yg-range-fill": `${fill}%` } as CSSProperties}
-        aria-valuetext={formatValue || unit ? formatted : undefined}
-        onChange={(e) => onValueChange(e.target.valueAsNumber)}
-      />
-    </div>
-  );
-}
+export { Slider, RangeSlider } from "./slider.js";
 export function NumericSpinner({
   label,
   help,

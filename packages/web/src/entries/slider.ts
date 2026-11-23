@@ -1,1 +1,1 @@
-export { Slider } from "../controls/inputs.js";
+export { Slider, RangeSlider } from "../controls/inputs.js";

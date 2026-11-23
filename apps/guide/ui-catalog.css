@@ -100,6 +100,7 @@ body {
   inline-size: min(100%, var(--yg-specimen-content-width));
   margin-inline: auto;
 }
+.specimen[data-layout="compact"] { min-height: var(--yg-specimen-compact-height); }
 .specimen[data-layout="compact"] .specimen-inner {
   inline-size: fit-content;
   max-inline-size: 100%;
@@ -120,6 +121,8 @@ body {
 .preview-caption {
   margin-block: var(--boa-space-8) var(--boa-space-24);
 }
+.preview-surface-controls > button { margin-inline-start: auto; }
+.variant-body[data-variant-component="button"] .specimen-inner { inline-size: min(100%, var(--yg-specimen-content-width)); }
 
 .variation {
   margin: 24px 0;
@@ -237,10 +240,13 @@ body {
   color: var(--yg-text);
   background: var(--yg-field);
 }
-.specimen[data-component="select"] {
+.specimen:is([data-component="select"], [data-component="motion-spring-dropdown"]) {
   align-items: start;
   min-block-size: calc(4 * var(--yg-size-regular) + var(--boa-space-64) + var(--boa-space-16));
   padding-block: var(--boa-space-24);
+}
+.specimen[data-component="motion-spring-dropdown"] {
+  min-block-size: calc(4 * var(--yg-size-comfort) + 2 * var(--boa-space-64) + var(--boa-space-16));
 }
 .specimen[data-component="select"] .specimen-inner {
   max-inline-size: 20rem;

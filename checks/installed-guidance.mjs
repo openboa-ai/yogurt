@@ -52,7 +52,7 @@ const listed = call(kit, lookup, "--list");
 assert.equal(listed.status, 0, listed.stderr);
 for (const id of patternIds) {
   assert(listed.stdout.includes(id), id);
-  for (const target of ["web", "native"]) {
+  for (const target of ["web"]) {
     const result = call(kit, lookup, id, target);
     assert.equal(result.status, 0, result.stderr);
     const pattern = JSON.parse(result.stdout);
@@ -89,4 +89,4 @@ try {
 } finally {
   rmSync(broken, { recursive: true });
 }
-console.log(`Yogurt ${version}: installed guides, web and Native paths, and failed lookup cases passed.`);
+console.log(`Yogurt ${version}: installed guides, React paths, and failed lookup cases passed.`);

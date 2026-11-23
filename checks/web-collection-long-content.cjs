@@ -3,6 +3,8 @@ const { chromium } = require("playwright-core");
 const { buildSync } = require("esbuild");
 const { pathToFileURL } = require("node:url");
 const { join } = require("node:path");
+const { geometry } = require("../design/tokens/ui.json");
+const { control } = require("../design/tokens/brand.json");
 
 const fixture = buildSync({
   stdin: { resolveDir: process.cwd(), sourcefile: "collection-long-content.jsx", loader: "jsx", contents: `
@@ -50,11 +52,11 @@ const fixture = buildSync({
         assert(geometry.scroll <= geometry.client + 1, selector + ' content must fit its narrow container: ' + JSON.stringify(geometry));
       }
       const checkbox = host.getByRole('checkbox', { name: /UnbrokenItem/ });
-      assert((await checkbox.boundingBox()).width >= 23, 'long labels must not shrink the checkbox mark');
+      assert.equal((await checkbox.boundingBox()).width, geometry["checkbox-size"], 'long labels must not shrink the checkbox mark');
       const radio = host.getByRole('radio', { name: /UnbrokenItem/ });
       const toggle = host.getByRole('switch', { name: /UnbrokenItem/ });
-      assert((await radio.boundingBox()).width >= 15, 'long labels must not shrink the radio mark');
-      assert((await toggle.boundingBox()).width >= 51, 'long labels must not shrink the switch track');
+      assert.equal((await radio.boundingBox()).width, control.glyph, 'long labels must not shrink the radio mark');
+      assert.equal((await toggle.boundingBox()).width, geometry["switch-width"], 'long labels must not shrink the switch track');
       const switchBounds = await host.locator('.yg-switch').evaluate(node => {
         const box = node.getBoundingClientRect();
         return [...node.children].map(child => {

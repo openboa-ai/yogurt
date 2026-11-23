@@ -1,7 +1,0 @@
-<template name="yg-pagination" args="summary">
-  <pagination gap="8" cross="center">
-  <button variant="ghost" size="sm" disabled="{at_first}" on-press="previous_page">Previous</button>
-  <text>{summary}</text>
-  <button variant="ghost" size="sm" disabled="{at_last}" on-press="next_page">Next</button>
-  </pagination>
-</template>

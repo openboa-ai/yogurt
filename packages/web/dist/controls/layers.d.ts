@@ -6,13 +6,14 @@ export declare function Disclosure({ label, children, initiallyOpen, }: {
     initiallyOpen?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 export { Disclosure as DisclosureRow };
-export declare function ActionMenu({ label, items, onSelect, triggerText, presentation, }: {
+type ActionMenuProps = {
     label: string;
     items: Option[];
     onSelect: (id: string) => void;
     triggerText?: string;
     presentation?: "anchored" | "expanding";
-}): import("react/jsx-runtime").JSX.Element;
+};
+export declare function ActionMenu({ presentation, ...props }: ActionMenuProps): import("react/jsx-runtime").JSX.Element;
 export declare function Popover({ label, children, }: {
     label: string;
     children: ReactNode;
@@ -32,4 +33,8 @@ export declare function Tooltip({ label, children, }: {
     children: (props: {
         "aria-describedby": string;
     }) => ReactNode;
+}): import("react/jsx-runtime").JSX.Element;
+export declare function MorphTooltip({ label, detail }: {
+    label: string;
+    detail: string;
 }): import("react/jsx-runtime").JSX.Element;

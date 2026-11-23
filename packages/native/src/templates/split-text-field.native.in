@@ -1,9 +1,0 @@
-<template name="yg-split-text-field" args="label">
-  <column gap="@{gap-control}">
-    <text size="sm">{label}</text>
-    <row gap="@{gap-inline}">
-      <text-field grow="1" label="{first_label}" text="{first_value}" on-input="edit_first"/>
-      <text-field grow="1" label="{last_label}" text="{last_value}" on-input="edit_last"/>
-    </row>
-  </column>
-</template>

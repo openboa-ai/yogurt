@@ -1,11 +1,10 @@
 import { readFile, realpath, stat } from "node:fs/promises";
 import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
-import { nativeEntry } from "../bin/install/native.mjs";
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const catalogPath = "catalog/patterns.json";
-const usage = "Usage: node scripts/describe-pattern.mjs <pattern-id> [web|native] or --list";
+const usage = "Usage: node scripts/describe-pattern.mjs <pattern-id> [web] or --list";
 
 async function readCatalog() {
   let catalog;
@@ -23,21 +22,13 @@ async function readCatalog() {
   if (!Array.isArray(catalog.patterns) || !Array.isArray(catalog.components)) {
     throw Error(`Invalid ${catalogPath}. Expected lists of patterns and components.`);
   }
-  const inventory = JSON.parse(await readFile(resolve(root, "catalog/components.json"), "utf8"));
-  const byId = new Map(inventory.map(item => [item.id, item]));
-  for (const component of catalog.components) {
-    const item = byId.get(component.id);
-    if (item && component.sdk?.native) Object.assign(component.sdk.native, nativeEntry(item));
-  }
   return catalog;
 }
 
-async function availability(entry, target, kitRoot) {
+async function availability(entry, kitRoot) {
   if (!entry) return { status: "not-declared" };
   try {
-    const candidate = target === "web"
-      ? fileURLToPath(import.meta.resolve(entry))
-      : resolve(kitRoot, entry);
+    const candidate = fileURLToPath(import.meta.resolve(entry));
     const path = await realpath(candidate);
     const local = relative(kitRoot, path);
     if (!isAbsolute(local) && local !== ".." && !local.startsWith(".." + sep) &&
@@ -55,7 +46,7 @@ async function availability(entry, target, kitRoot) {
 async function describe(args) {
   const [id, target, ...rest] = args;
   const list = !id || id === "--list";
-  if (rest.length || (target && (list || !["web", "native"].includes(target)))) {
+  if (rest.length || (target && (list || target !== "web"))) {
     console.error(usage);
     process.exitCode = 2;
     return;
@@ -82,7 +73,7 @@ async function describe(args) {
       name: part.name,
       use: part.use,
       support: { [target]: part[target] },
-      availability: { [target]: await availability(sdk?.entry, target, kitRoot) },
+      availability: { [target]: await availability(sdk?.entry, kitRoot) },
     };
     if (target === "web") {
       picked.source = part.source;

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { copyFile, mkdir, readFile, realpath, writeFile } from "node:fs/promises";
+import { mkdir, readFile, realpath, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { installSdk } from "./fixtures/install-sdk.mjs";
@@ -34,34 +34,18 @@ const previous = await snapshot("previous", previousArg);
 const candidate = await snapshot("candidate", "HEAD");
 assert.notEqual(candidate.version, previous.version);
 
-async function consumer(name, target) {
+async function consumer(name, archive, checksum) {
   const project = join(output, name);
   const profile = join(output, name + "-codex");
   await mkdir(project);
   await mkdir(profile);
-  let lock;
-  if (target === "web") {
-    const install = await installSdk(project, sdk, sdkSha256);
-    lock = { ...install, revision: install.integrity, file: "package-lock.json" };
-  } else {
-    const archive = join(project, "yogurt.tgz");
-    const kit = join(project, "sdk");
-    await mkdir(kit);
-    await copyFile(sdk, archive);
-    assert.equal(await digest(archive), sdkSha256);
-    execFileSync("tar", ["-xzf", archive, "--strip-components=1", "-C", kit]);
-    const { version } = await readJson(join(kit, "package.json"));
-    const revision = "sha256:" + sdkSha256;
-    await writeFile(join(project, "yogurt.config.json"), JSON.stringify({
-      nativeSdk: { root: "sdk", archive: "yogurt.tgz", revision, version },
-    }));
-    lock = { version, revision, file: "yogurt.config.json" };
-  }
-  return { project, profile, target, lock, lockSha256: await digest(join(project, lock.file)) };
+  const install = await installSdk(project, archive, checksum);
+  const lock = { ...install, revision: install.integrity, file: "package-lock.json" };
+  return { project, profile, target: "web", lock, lockSha256: await digest(join(project, lock.file)) };
 }
 
-const web = await consumer("web", "web");
-const native = await consumer("native", "native");
+const web = await consumer("web", sdk, sdkSha256);
+const peer = await consumer("peer", sdk, sdkSha256);
 const receipts = [];
 
 function cli(consumer, ...args) {
@@ -112,12 +96,12 @@ async function observe(phase, consumer, snapshot, root) {
 }
 
 const first = await install(web, previous);
-const steady = await install(native, previous);
+const steady = await install(peer, previous);
 await observe("initial", web, previous, first);
-await observe("initial", native, previous, steady);
+await observe("initial", peer, previous, steady);
 const next = await install(web, candidate, true);
 await observe("upgraded", web, candidate, next);
-await observe("peer-during-upgrade", native, previous, steady);
+await observe("peer-during-upgrade", peer, previous, steady);
 
 const incompleteProject = join(output, "legacy");
 await mkdir(incompleteProject);
@@ -134,9 +118,9 @@ assert(diagnosed.resources["DESIGN.md"]);
 
 const restored = await install(web, previous, true);
 await observe("rolled-back", web, previous, restored);
-await observe("peer-after-rollback", native, previous, steady);
+await observe("peer-after-rollback", peer, previous, steady);
 await writeFile(join(output, "plugin-adoption.json"), JSON.stringify({
   codex: execFileSync("codex", ["--version"], { encoding: "utf8" }).trim(),
   sdkSha256, legacySha256, previous, candidate, diagnosed, observations: receipts,
 }, null, 2) + "\n");
-console.log("Verified installed plugin upgrade and rollback with independent Web and Native SDK pins.");
+console.log("Verified installed plugin upgrade and rollback with independent React installations.");

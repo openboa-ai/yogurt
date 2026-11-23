@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { Button } from "@openboa/yogurt";
+import { Button, Slider } from "@openboa/yogurt";
 import { CartButton } from "@openboa/yogurt/motion-patterns";
 
 function Player() {
@@ -119,7 +119,8 @@ function DynamicText() {
 }
 function Volume() {
   const [volume, setVolume] = useState(60), [muted, setMuted] = useState(false);
-  return <div className="utility-demo"><div className="utility-row"><strong>Preview volume</strong><output>{muted ? "Muted" : `${volume}%`}</output></div><div className="utility-volume" style={{"--volume-level": `${muted ? 0 : volume}%`} as CSSProperties}><span aria-hidden="true" /><input aria-label="Preview volume" type="range" min="0" max="100" value={volume} onChange={event => { setVolume(Number(event.target.value)); setMuted(false); }} /></div><Button size="compact" emphasis="soft" aria-pressed={muted} onClick={() => setMuted(!muted)}>{muted ? "Unmute" : "Mute"}</Button></div>;
+  return <div className="utility-demo"><Slider label="Preview volume" value={muted ? 0 : volume} min={0} max={100}
+    formatValue={value => muted ? "Muted" : `${value}%`} onValueChange={value => { setVolume(value); setMuted(false); }} /><Button size="compact" emphasis="soft" aria-pressed={muted} onClick={() => setMuted(!muted)}>{muted ? "Unmute" : "Mute"}</Button></div>;
 }
 export const extraUtilities: { id: string; title: string; body: ReactNode }[] = [
   { id: "music-player", title: "Music player", body: <Player /> },

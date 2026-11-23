@@ -1,6 +1,0 @@
-<template name="yg-empty-result" args="title">
-  <column gap="@{gap-inline}">
-  <text size="heading" wrap="true">{title}</text>
-  <slot/>
-  </column>
-</template>

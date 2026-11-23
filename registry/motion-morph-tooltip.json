@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-morph-tooltip.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { MorphTooltip } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { MorphTooltip } from \"@openboa/yogurt/motion-morph-tooltip\";\n"
     }
   ]
 }

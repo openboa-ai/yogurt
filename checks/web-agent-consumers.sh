@@ -8,8 +8,6 @@ next_port="${YOGURT_NEXT_PORT:-6472}"
 mkdir -p "$fixture/app"
 npm pack --pack-destination "$fixture" --silent > "$fixture/pack-name"
 archive="$(tail -1 "$fixture/pack-name")"
-node checks/resolve-native-guidance.mjs "$fixture/$archive"
-node checks/motion-native-discovery.mjs "$fixture/$archive"
 cat > "$fixture/package.json" <<'JSON'
 {"name":"yogurt-agent-consumer","private":true,"type":"module"}
 JSON

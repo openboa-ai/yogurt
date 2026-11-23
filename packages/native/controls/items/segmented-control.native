@@ -1,7 +1,0 @@
-<template name="yg-segmented-control" args="label">
-  <row main="start">
-    <column background="surface_subtle" radius="xl">
-      <toggle-group label="{label}" gap="4" padding="4"><slot/></toggle-group>
-    </column>
-  </row>
-</template>

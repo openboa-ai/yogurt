@@ -1,6 +1,0 @@
-<template name="yg-filter-bar" args="label value">
-  <row gap="8" cross="center">
-  <search-field grow="1" label="{label}" text="{value}" on-input="edit"/>
-  <slot/>
-  </row>
-</template>

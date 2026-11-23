@@ -15,10 +15,10 @@ When several controls show the same symptom, trace one all the way from the prod
 
 | Decision under review | Evidence that answers it |
 | --- | --- |
-| A shared design role reaches both targets | Change the role in a disposable fixture. Check a web consumer and the Native output that uses it. For a running layout claim, also inspect the affected control on that target. `npm run tokens` regenerates outputs. `npm run check:tokens` detects stale outputs. |
-| A guide, installer or agent selects the intended control | Resolve the public ID through the affected paths with the same packed SDK and target. Inspect the installed entry and use it in a consumer. `node --test checks/design-sources.mjs` covers token propagation and Native guide imports. |
+| A shared design role reaches the React UI | Change the role in a disposable fixture. Check the generated stylesheet and a running React consumer that uses it. For a running layout claim, also inspect the affected control on that target. `npm run tokens` regenerates outputs. `npm run check:tokens` detects stale outputs. |
+| A guide, installer or agent selects the intended control | Resolve the public ID through the affected paths with the same packed SDK and target. Inspect the installed entry and use it in a consumer. `node --test checks/design-sources.mjs` covers token propagation and public guide imports. |
 | A visible state, interaction or transition works | Trigger the reported state on the affected target. For the borderless OTP, click and Tab into the six-cell field, enter a digit and check the active cell. Verify that keyboard focus is visible within the field and the unwanted outer box stays absent. For a motion change, exercise the transition and its reduced-motion result. |
-| Web and Native meet the same design promise | Use the same content, size variant, theme and interaction. Compare type, inset, alignment, visible focus and the relevant transition at actual size. If a platform cannot express the agreed treatment, record the limit and agree on a shared outcome before updating the renderers. |
+| Browser and desktop WebView run the same design | Use the same React example, size, theme and interaction. Compare visible focus and motion at actual size in the browser and in the packaged app. |
 | A refactor preserves an accepted design | Compare old and new public outputs with the same input and state. Use the accepted behavior or an observation made before the edit as the expectation. A planned appearance change requires its own expectation. |
 
 ### Review and regression rules
@@ -45,7 +45,7 @@ GitHub runs **Contribution names** when you open a PR, push commits, or edit its
 
 All changes to the default branch go through a squash PR. Resolve review conversations before merging. The designated code owner reviews changes to CI, ownership, scanner policy, and security reporting. A push check validates the final subject written to the default branch. GitHub Free allows the merger to edit that subject, so keep the default title in the merge dialog.
 
-For a README change, select **Enable auto-merge** on the PR while checks are pending. GitHub squashes the PR once all branch requirements are met. **Required CI** checks that both naming and hygiene jobs finished successfully. **Shared UI sources** reports the token and Native import regressions separately. Check that result when reviewing a change to either source path.
+For a README change, select **Enable auto-merge** on the PR while checks are pending. GitHub squashes the PR once all branch requirements are met. **Required CI** requires naming, hygiene, shared UI source checks and WebKit interactions to succeed.
 
 The format follows [Conventional Commits 1.0](https://www.conventionalcommits.org/en/v1.0.0/). The [component verification record](docs/engineering/controls/component-library/verification.md) describes SDK and renderer coverage.
 

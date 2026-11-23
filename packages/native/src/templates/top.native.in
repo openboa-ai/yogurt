@@ -1,7 +1,0 @@
-<template name="yg-top" args="title detail">
-  <column gap="@{gap-inline}">
-    <text size="heading">{title}</text>
-    <text>{detail}</text>
-    <slot/>
-  </column>
-</template>

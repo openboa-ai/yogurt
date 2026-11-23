@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-streaming-reply.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { StreamingReply } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { StreamingReply } from \"@openboa/yogurt/motion-streaming-reply\";\n"
     }
   ]
 }

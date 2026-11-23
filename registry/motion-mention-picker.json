@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-mention-picker.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { MentionPicker } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { MentionPicker } from \"@openboa/yogurt/motion-mention-picker\";\n"
     }
   ]
 }

@@ -3,12 +3,12 @@
   "name": "slider",
   "type": "registry:ui",
   "title": "Slider",
-  "description": "Choose a numeric value within a range.",
+  "description": "Choose a bounded value or interval.",
   "files": [
     {
       "path": "ui/slider.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { Slider } from \"@openboa/yogurt/slider\";\n"
+      "content": "\"use client\";\n\nexport { Slider, RangeSlider } from \"@openboa/yogurt/slider\";\n"
     }
   ]
 }

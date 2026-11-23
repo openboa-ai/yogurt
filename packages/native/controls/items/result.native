@@ -1,7 +1,0 @@
-<template name="yg-result" args="title detail">
-  <column gap="8">
-  <text size="heading" wrap="true">{title}</text>
-  <text size="sm" foreground="text_muted" wrap="true">{detail}</text>
-  <slot/>
-  </column>
-</template>

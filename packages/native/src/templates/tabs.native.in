@@ -1,5 +1,0 @@
-<template name="yg-tabs" args="label">
-  <tabs label="{label}" gap="@{space.2}" padding="@{space.4}">
-  <slot/>
-  </tabs>
-</template>

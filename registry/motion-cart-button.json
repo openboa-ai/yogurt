@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-cart-button.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { CartButton } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { CartButton } from \"@openboa/yogurt/motion-cart-button\";\n"
     }
   ]
 }

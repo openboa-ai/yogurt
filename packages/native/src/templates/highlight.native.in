@@ -1,3 +1,0 @@
-<template name="yg-highlight" args="value">
-  <badge variant="secondary">{value}</badge>
-</template>

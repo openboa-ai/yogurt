@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, realpathSync, statSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
@@ -7,7 +6,6 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const catalogPath = "catalog/patterns.json";
 const files = ["DESIGN.md", "docs/using-yogurt.md", "bin/yogurt.mjs", "scripts/describe-pattern.mjs", catalogPath];
 const compatibility = JSON.parse(readFileSync(new URL("../compatibility.json", import.meta.url)));
-const sha = /^[0-9a-f]{40}$/;
 const json = file => JSON.parse(readFileSync(file, "utf8"));
 
 function within(root, path) {
@@ -53,50 +51,11 @@ function webInstallation(root) {
   return { kit, revision, version: declared.version };
 }
 
-function nativeInstallation(root, expected, inspecting) {
-  if (!expected?.root || !expected.version || typeof expected.revision !== "string") {
-    throw Error("Declare nativeSdk.root, nativeSdk.version and nativeSdk.revision in yogurt.config.json.");
-  }
-  const kit = inside(root, expected.root);
-  const revision = expected.revision;
-  if (sha.test(revision)) {
-    const git = args => execFileSync("git", ["-C", kit, ...args], { encoding: "utf8" }).trim();
-    if (git(["rev-parse", "--show-toplevel"]) !== kit || git(["rev-parse", "HEAD"]) !== revision ||
-        git(["status", "--porcelain=v1", "--untracked-files=all"])) {
-      throw Error("The Native SDK checkout differs from the declared pin or has local edits.");
-    }
-  } else {
-    if (!expected.archive || !/^sha256:[0-9a-f]{64}$/.test(revision)) {
-      throw Error("Declare a full Git revision or an SDK archive with its SHA-256.");
-    }
-    const archive = inside(root, expected.archive);
-    const digest = createHash("sha256").update(readFileSync(archive)).digest("hex");
-    if ("sha256:" + digest !== revision) throw Error("The Native SDK archive digest differs from the declared pin.");
-    const archiveMembers = new Set(execFileSync("tar", ["-tzf", archive], { encoding: "utf8" }).split("\n"));
-    for (const name of ["catalog/motion-components.json", "bin/install/native.mjs", "bin/install/files.mjs"]) {
-      const present = archiveMembers.has("package/" + name);
-      const file = optionalFile(kit, name);
-      if (present !== Boolean(file) || (present &&
-          !execFileSync("tar", ["-xOf", archive, "package/" + name]).equals(readFileSync(file)))) {
-        throw Error(`The Native SDK extraction differs from its archive at ${name}.`);
-      }
-    }
-    for (const name of ["package.json", ...files, "catalog/components.json"]) {
-      if (inspecting && name !== "package.json" && !archiveMembers.has("package/" + name) && !optionalFile(kit, name)) continue;
-      const archived = execFileSync("tar", ["-xOf", archive, "package/" + name]);
-      if (!archived.equals(readFileSync(inside(kit, name)))) {
-        throw Error(`The Native SDK extraction differs from its archive at ${name}.`);
-      }
-    }
-  }
-  return { kit, revision, version: expected.version };
-}
-
-function pinnedSdk(project, target, inspecting = false) {
-  if (!["web", "native"].includes(target)) throw Error("Select web or native.");
+function pinnedSdk(project, target) {
+  if (target !== "web") throw Error("Select web for the React SDK.");
   const root = realpathSync(project);
   const config = json(join(root, "yogurt.config.json"));
-  const install = target === "web" ? webInstallation(root) : nativeInstallation(root, config.nativeSdk, inspecting);
+  const install = webInstallation(root);
   const observed = json(inside(install.kit, "package.json"));
   if (observed.name !== compatibility.sdk || install.version !== observed.version ||
       (config.version && config.version !== observed.version)) {
@@ -106,7 +65,7 @@ function pinnedSdk(project, target, inspecting = false) {
 }
 
 export function inspectSdk(project, target) {
-  const install = pinnedSdk(project, target, true);
+  const install = pinnedSdk(project, target);
   const resources = Object.fromEntries(files.map(name => [name, optionalFile(install.kit, name)]));
   const missing = files.filter(name => !resources[name]);
   let formatVersion = null;
@@ -179,7 +138,7 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
   for (const item of motionCatalog.components) {
     if (!/^motion-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.id) || reserved.has(item.id) || motionIds.has(item.id) ||
         !/^[A-Z][A-Za-z0-9]*$/.test(item.name) || item.entry !== `${manifest.name}/motion-patterns` ||
-        item.web !== "available" || item.native !== "unavailable" || !item.guidance ||
+        item.web !== "available" || !item.guidance ||
         typeof item.guidance.useWhen !== "string" || !item.guidance.useWhen.trim() ||
         typeof item.guidance.avoid !== "string" || !item.guidance.avoid.trim() ||
         !Array.isArray(item.guidance.verify) || !item.guidance.verify.length ||
@@ -198,7 +157,6 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
     }
     const motion = motionCatalog.components.find(item => item.id === id);
     if (motion) {
-      if (target !== "web") throw Error(`${id} is unavailable for Native.`);
       motionEntries.push(motion);
       continue;
     }
@@ -215,30 +173,15 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
   const entries = [...components].map(id => {
     const component = inventory.find(item => item.id === id);
     const guidance = component.guidance ?? null;
-    if (target === "web") return { ...webComponent(binding, manifest, id), guidance };
-    const template = component.nativeMarkup === false
-      ? null
-      : optionalFile(binding.kit, `packages/native/controls/items/${id}.native`);
-    const entry = { id, template, install: `yogurt add ${id} --target native`, guidance };
-    if (!template && (component.nativeMarkup !== false || !component.nativeView)) {
-      throw Error(`The installed SDK is missing the Native template for ${id}.`);
-    }
-    if (!component.nativeView) return { ...entry, entry: template };
-    const { module, symbol } = component.nativeView;
-    if (!/^(?:[a-z][a-z0-9-]*\/)*[a-z][a-z0-9-]*\.zig$/.test(module) || !/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(symbol)) {
-      throw Error(`Invalid installed Native view for ${id}.`);
-    }
-    const source = optionalFile(binding.kit, `packages/native/controls/${module}`);
-    if (!source) throw Error(`Missing installed Native view for ${id} at ${module}.`);
-    return { ...entry, entry: source, symbol, importStatement: `const ${symbol} = @import("yogurt/${module}").${symbol};` };
+    return { ...webComponent(binding, manifest, id), guidance };
   });
   for (const item of motionEntries) {
     const exported = manifest.exports?.["./motion-patterns"];
     const js = exported?.import && optionalFile(binding.kit, exported.import);
     const stub = exported?.types && optionalFile(binding.kit, exported.types);
     if (!js || !stub) throw Error(`The installed SDK is missing the entry for ${item.id}.`);
-    const line = [...readFileSync(stub, "utf8").matchAll(/^export \{ ([\w$, ]+) \} from "(\.\/(?:[\w-]+\/)*[\w-]+)\.js";$/gm)]
-      .find(match => match[1].split(", ").includes(item.name));
+    const line = [...readFileSync(stub, "utf8").matchAll(/^export \{ ([\w$, ]+) \} from "(\.\.?\/(?:[\w-]+\/)*[\w-]+)\.js";$/gm)]
+      .find(match => match[1].split(", ").some(name => name.trim().split(/\s+as\s+/).at(-1) === item.name));
     const types = line && optionalFile(binding.kit, resolve(dirname(stub), line[2] + ".d.ts"));
     if (!types) throw Error(`The installed declaration for ${item.id} does not expose ${item.name}.`);
     entries.push({ id: item.id, entry: item.entry, names: [item.name], types, guidance: item.guidance,
@@ -246,7 +189,7 @@ function lookupSdk(binding, ids, includeDeclarations = true) {
   }
 
   const declarations = Object.create(null);
-  if (includeDeclarations && target === "web") {
+  if (includeDeclarations) {
     const files = [...new Set(entries.map(item => item.types))]
       .map(path => ({ path, bytes: statSync(path).size }))
       .sort((a, b) => a.bytes - b.bytes);
@@ -266,7 +209,7 @@ function agentGuide(binding) {
   const path = name => local(inside(kit, name));
   const catalog = json(inside(kit, catalogPath));
   const index = lookupSdk(binding, catalog.patterns.map(pattern => pattern.id), false);
-  const renderer = target === "web" ? "Web" : "Native";
+  const renderer = "React";
   return [
     `## Yogurt ${renderer} UI`,
     "",
@@ -280,11 +223,9 @@ function agentGuide(binding) {
     "| --- | --- |",
     ...catalog.patterns.map(({ name, id }) => `| ${name} | \`${id}\` |`),
     "",
-    target === "web" ? "| Exported names | Installed import |" : "| Component | Native entry |",
+    "| Exported names | Installed import |",
     "| --- | --- |",
-    ...index.components.map(item => target === "web"
-      ? `| \`${item.names.join(", ")}\` | \`${item.entry}\` |`
-      : `| \`${item.id}\` | \`${item.importStatement ?? local(item.entry)}\` |`),
+    ...index.components.map(item => `| \`${item.names.join(", ")}\` | \`${item.entry}\` |`),
     "",
     `Look up other controls in \`${path("catalog/components.json")}\`. Run \`node "${local(binding.check)}" check\` from this project before review.`,
   ].join("\n");
@@ -295,7 +236,7 @@ if (process.argv[1] && pathToFileURL(realpathSync(process.argv[1])).href === imp
     const [root, target, option, ...extra] = process.argv.slice(2);
     if (!root || !target || (option === "--lookup" ? !extra.length :
       (option && !["--inspect", "--agent-guide"].includes(option)) || extra.length)) {
-      throw Error("Usage: node resolve-sdk.mjs <project-root> <web|native> [--inspect | --agent-guide | --lookup <id> [<id> ...]]");
+      throw Error("Usage: node resolve-sdk.mjs <project-root> <web> [--inspect | --agent-guide | --lookup <id> [<id> ...]]");
     }
     let binding;
     try {

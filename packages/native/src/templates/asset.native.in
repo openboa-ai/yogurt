@@ -1,3 +1,0 @@
-<template name="yg-asset" args="image_id label width height">
-  <image image="{image_id}" label="{label}" width="{width}" height="{height}"/>
-</template>

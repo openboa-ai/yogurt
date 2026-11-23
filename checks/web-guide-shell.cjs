@@ -4,13 +4,10 @@ const { color: palette } = require("../design/tokens/brand.json");
 
 const base = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
 const destinations = [
-  ["Design system", "/system", "Design system"],
+  ["Tokens", "/tokens", "Tokens"],
   ["Components", "/components", "Button"],
-  ["Templates", "/templates", "Templates"],
+  ["Patterns", "/patterns", "Patterns"],
   ["Examples", "/examples", "Sourdough Studio"],
-  ["Design sources", "/library", "Design sources"],
-  ["Project use", "/adoption", "Use yogurt in a project"],
-  ["Brand", "/", "Yogurt"],
 ];
 
 async function checkGuide(browser, width) {
@@ -29,7 +26,7 @@ async function checkGuide(browser, width) {
     await page.locator(".guide-brand-slogan").filter({ hasText: /^ships with live cultures$/ }).waitFor();
     const cover = page.locator(".guide-brand-opening");
     await cover.getByText("OpenBoa design system", { exact: true }).waitFor();
-    await cover.getByText(/a UI SDK for web and native apps/).waitFor();
+    await cover.getByText(/a UI SDK for browsers and desktop WebViews/).waitFor();
     const coverMarks = await cover.locator(".yg-mark").evaluateAll(marks => marks.map(mark => mark.getAttribute("src")));
     assert.equal(coverMarks.length, 1, "the original artwork has one position on the cover");
     assert.equal(coverMarks[0], await page.locator(".guide-identity .yg-mark").getAttribute("src"));
@@ -51,8 +48,8 @@ async function checkGuide(browser, width) {
     if (mobile) {
       await openMenu.focus();
       await page.keyboard.press("Enter");
-      await nav.getByRole("link", { name: "Brand" }).waitFor();
-      assert.equal(await page.evaluate(() => document.activeElement.textContent), "Brand");
+      await nav.getByRole("link", { name: "Tokens" }).waitFor();
+      assert.equal(await page.evaluate(() => document.activeElement.textContent), "Tokens");
       await page.keyboard.press("Escape");
       assert.equal(await openMenu.evaluate(el => document.activeElement === el), true);
     }
@@ -76,8 +73,10 @@ async function checkGuide(browser, width) {
     assert.equal(new Set(titleSizes).size, 1, "ordinary screen titles share the same type size");
     assert.equal(await page.locator(".guide-masthead .yg-nav-list a:is([href='/motion'], [href='/workflows'])").count(), 0);
     await page.goBack();
-    await heading("Use yogurt in a project").waitFor();
+    await heading("Patterns").waitFor();
     await page.goForward();
+    await heading("Sourdough Studio").waitFor();
+    await page.getByRole("link", { name: "Yogurt home" }).click();
     await heading("Yogurt").waitFor();
     assert.equal(await page.locator(".guide-masthead").getAttribute("data-check-persistence"), "yes");
     await page.getByRole("button", { name: "Use dark appearance" }).click();
@@ -92,23 +91,41 @@ async function checkGuide(browser, width) {
     await heading("InputOTP").waitFor();
     assert.equal(new URL(page.url()).pathname, "/components/input-otp");
     await page.goto(base + "/motion-patterns.html#plan-switch");
-    await heading("PlanSwitch").waitFor();
-    assert.equal(new URL(page.url()).pathname, "/components/motion-plan-switch");
+    await heading("RadioGroup").waitFor();
+    assert.equal(new URL(page.url()).pathname + new URL(page.url()).search, "/components/radio-group?preview=plan-options");
     const plan = page.locator(".specimen").getByRole("radiogroup", { name: "Plan" });
     const studio = plan.getByRole("radio", { name: /Studio/ });
     await studio.check();
     assert.equal(await studio.isChecked(), true);
     await page.getByRole("button", { name: "Use in a project" }).click();
-    await page.getByText('import { PlanSwitch } from "@openboa/yogurt/motion-patterns";', { exact: true }).waitFor();
+    await page.getByText('import { PlanSwitch } from "@openboa/yogurt/radio-group";', { exact: true }).waitFor();
+    for (const [legacy, next, title, role, name] of [
+      ["/components/motion-spring-dropdown", "/components/select?preview=spring-dropdown", "Select", "combobox", "Work status"],
+      ["/motion/range-slider", "/components/slider?preview=range-slider", "Slider", "slider", "Minimum price"],
+      ["/components/motion-command-button", "/components/command?preview=command-button", "Command", "button", "Run command"],
+      ["/motion/tooltip-detail", "/components/tooltip?preview=tooltip-detail", "Tooltip", "button", "Review scope"],
+    ]) {
+      await page.goto(base + legacy);
+      await heading(title).waitFor();
+      assert.equal(new URL(page.url()).pathname + new URL(page.url()).search, next);
+      await page.locator(".specimen").getByRole(role, { name }).waitFor();
+    }
+    await page.goto(base + "/motion/smooth-tabs");
+    await heading("Tabs").waitFor();
+    assert.equal(new URL(page.url()).searchParams.get("preview"), "smooth-tabs");
+    await page.locator(".specimen").getByRole("tab", { name: "Notes" }).click();
+    await page.locator(".specimen").getByRole("tab", { name: "Notes", selected: true }).waitFor();
     await page.goto(base + "/motion/unrecognized");
-    await heading("Pattern not found").waitFor();
-    assert.equal(new URL(page.url()).pathname, "/motion/unrecognized");
+    await heading("Button").waitFor();
+    assert.equal(new URL(page.url()).pathname, "/components");
     await page.goto(base + "/workflows#records");
     await heading("Product playbook").waitFor();
     assert.equal(new URL(page.url()).pathname, "/playbook");
     for (const [previous, next, title] of [
       ["/docs/index.html", "/adoption", "Use yogurt in a project"],
-      ["/examples/basic-controls/index.html", "/system#controls", "Design system"],
+      ["/examples/basic-controls/index.html", "/tokens#controls", "Tokens"],
+      ["/templates", "/patterns", "Patterns"],
+      ["/components/project-settings", "/patterns/project-settings", "ProjectSettings"],
       ["/examples/signature/index.html", "/#wordmark-study", "Yogurt"],
       ["/patterns/task-states.html", "/components/motion-task-list", "TaskList"],
     ]) {
@@ -116,6 +133,14 @@ async function checkGuide(browser, width) {
       await heading(title).waitFor();
       assert.equal(page.url().slice(base.length), next);
     }
+    await page.goto(base + "/patterns");
+    await heading("Patterns").waitFor();
+    const recommended = page.locator("[data-pattern]");
+    const listedPatterns = await recommended.evaluateAll(items => items.map(item => item.dataset.pattern).sort());
+    assert.deepEqual(listedPatterns, require("../catalog/blocks.json").map(block => block.id).sort());
+    await page.getByRole("link", { name: "Open Collection Browser" }).click();
+    await heading("CollectionBrowser").waitFor();
+    await page.getByRole("link", { name: "filter-bar", exact: true }).waitFor();
     await page.goto(base + "/system#color");
     const matrix = page.getByRole("region", { name: "Color matrix", exact: true });
     await matrix.getByRole("radiogroup", { name: "slate shades" }).waitFor();

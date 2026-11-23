@@ -1,8 +1,0 @@
-<template name="yg-radio-group" args="label">
-  <column gap="6">
-    <text size="sm">{label}</text>
-    <radio-group label="{label}">
-      <slot/>
-    </radio-group>
-  </column>
-</template>

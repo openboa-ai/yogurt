@@ -1,6 +1,6 @@
 # OpenBoa product art direction
 
-The [component foundation replacement](engineering/quality/motion-foundation-replacement/spec.md) and [live library](../apps/guide/generated/components.html) apply this direction to product work. Web and native availability are qualified separately while the replacement is in progress.
+The [component foundation replacement](engineering/quality/motion-foundation-replacement/spec.md) and [live library](../apps/guide/generated/components.html) apply this direction to product work. The guide uses the same React components that run in browsers and desktop WebViews.
 
 Design revision 2. The system should feel clear enough to use at once and human enough to remember. Someone reviewing a decision should see what is at stake before they notice the styling. The character can have the opposite role in an agent roster, where recognizing an individual is the job. [Company guide](https://yogurt-theta.vercel.app/index.html) · [Surface composition spec](engineering/identity/U21A-compose-a-product-surface/spec.md)
 

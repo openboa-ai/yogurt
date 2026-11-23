@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-activity-island.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { ActivityIsland } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { ActivityIsland } from \"@openboa/yogurt/motion-activity-island\";\n"
     }
   ]
 }

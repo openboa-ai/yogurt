@@ -36,6 +36,12 @@
 .yg-toast-stack-slot[data-behind]:nth-child(n + 3) .yg-toast { background: var(--yg-hover); }
 .yg-toast-stack-slot .yg-toast > span { min-inline-size: 0; overflow-wrap: anywhere; }
 @media (prefers-reduced-motion: no-preference) {
+  .yg-toast-stack-stage { transition: height var(--yg-motion-menu-height); }
+  .yg-toast-stack-slot { transition: transform var(--yg-motion-menu-height); }
+  .yg-toast-stack-stage:focus-within,
+  .yg-toast-stack-stage:focus-within .yg-toast-stack-slot { transition: none; }
+}
+@media (prefers-reduced-motion: no-preference) {
   [data-yg-toast-id][data-exiting] {
     pointer-events: none;
     animation: yg-toast-depart var(--yg-change) var(--yg-settle) both;
@@ -129,6 +135,16 @@
   padding: 0 var(--yg-inset-layer) var(--yg-inset-layer) var(--boa-space-32);
   font: var(--yg-font-meta);
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-storage-bar > span {
+    transition: inline-size var(--yg-motion-storage-fill),
+      opacity var(--yg-motion-storage-lift), scale var(--yg-motion-storage-lift);
+  }
+  .yg-storage-reveal { transition: grid-template-rows var(--yg-motion-storage-disclose); }
+  .yg-storage-reel > span { transition: translate var(--yg-motion-storage-reel-fast); transition-delay: calc(min(var(--yg-reel-delay), 4) * 50ms); }
+  .yg-storage-reel:nth-last-child(2) > span { transition: translate var(--yg-motion-storage-reel-medium) 50ms; }
+  .yg-storage-reel:nth-last-child(n+3) > span { transition: translate var(--yg-motion-storage-reel-slow) calc(min(var(--yg-reel-delay), 4) * 50ms); }
+}
 
 .yg-activity-island {
   position: relative; box-sizing: border-box; max-inline-size: 100%;
@@ -153,6 +169,9 @@
 }
 .yg-activity-island > button:hover {
   background: var(--yg-hover);
+}
+.yg-activity-island > button > svg:last-child {
+  transition: rotate var(--yg-change) var(--yg-arrive);
 }
 .yg-island-summary { color: var(--yg-muted); font: var(--yg-font-meta); font-variant-numeric: tabular-nums; }
 .yg-island-reveal { opacity: var(--yg-island-copy, 0); filter: blur(calc((1 - var(--yg-island-copy, 0)) * 3px)); }

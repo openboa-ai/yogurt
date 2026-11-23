@@ -71,14 +71,28 @@
 }
 
 .yg-chart-range {
+  position: relative;
   grid-column: 2;
   min-inline-size: 0;
   padding-inline: 3.333%;
 }
-
+.yg-chart-range:has(.yg-chart-interior-tick) { min-block-size: 2lh; }
 .yg-chart-range > span {
   min-inline-size: 0;
+  max-inline-size: 25%;
   overflow-wrap: anywhere;
+}
+.yg-chart-interior-tick {
+  position: absolute;
+  inset-block-start: 0;
+  left: clamp(38%, var(--yg-chart-tick-position), 62%);
+  translate: -50% 0;
+  text-align: center;
+}
+.yg-chart-interior-tick small {
+  display: block;
+  color: var(--yg-muted);
+  font: inherit;
 }
 
 .yg-chart-range > span:last-child { text-align: end; }

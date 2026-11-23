@@ -34,18 +34,7 @@ export declare function SplitTextField({ label, parts, onValueChange, separator,
     onValueChange: (id: string, value: string) => void;
     separator?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Slider({ label, value, onValueChange, min, max, step, unit, disabled, presentation, formatValue, }: {
-    label: string;
-    value: number;
-    onValueChange: (value: number) => void;
-    min?: number;
-    max?: number;
-    step?: number;
-    unit?: string;
-    disabled?: boolean;
-    presentation?: "inline" | "card";
-    formatValue?: (value: number) => string;
-}): import("react/jsx-runtime").JSX.Element;
+export { Slider, RangeSlider } from "./slider.js";
 export declare function NumericSpinner({ label, help, decreaseLabel, increaseLabel, value, min, max, step, onValueChange, disabled, }: {
     label: string;
     help?: string;
@@ -98,4 +87,3 @@ export declare function ToggleGroup({ label, items, value, onValueChange, multip
     onValueChange: (ids: string[]) => void;
     multiple?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
-export {};

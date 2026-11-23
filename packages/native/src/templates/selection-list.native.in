@@ -1,8 +1,0 @@
-<template name="yg-selection-list" args="label">
-  <column gap="@{gap-control}">
-    <text size="sm">{label}</text>
-    <list label="{label}">
-      <slot/>
-    </list>
-  </column>
-</template>

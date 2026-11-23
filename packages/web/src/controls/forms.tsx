@@ -1,4 +1,5 @@
 "use client";
+import { SelectPicker, type SelectPickerProps } from "./select-picker.js";
 import { words } from "../foundation/words.js";
 import {
   useEffect,
@@ -11,11 +12,17 @@ import {
 } from "react";
 import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
 import { Textarea as SDKTextarea, createInputController } from "@ui-sdk/react/textarea";
+import {
+  Combobox as SDKCombobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList,
+  createComboboxController,
+} from "@ui-sdk/react/combobox";
 import { Switch as SDKSwitch, SwitchThumb } from "@ui-sdk/react/switch";
 import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkbox";
 import { RadioGroup as SDKRadio, Radio as SDKRadioItem, RadioIndicator } from "@ui-sdk/react/radio";
 import { Icon, type ControlSize, type Option, cx } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
+
+export { FocusPicker, PlanSwitch } from "./choice-cards.js";
 
 export function Label(props: ComponentProps<"label">) {
   return <label {...props} className={cx("yg-label", props.className)} />;
@@ -285,7 +292,20 @@ export function Textarea({
     </Field>
   );
 }
-export function Select({
+type NativeSelectProps = FieldInfo & ComponentProps<"select"> & {
+  options: Option[];
+  placeholder?: string;
+  controlSize?: ControlSize;
+};
+
+export function Select(props: (NativeSelectProps & { presentation?: "native" }) |
+  (SelectPickerProps & { presentation: "animated" })) {
+  if (props.presentation === "animated") return <SelectPicker {...props} />;
+  const { presentation: _presentation, ...nativeProps } = props;
+  return <NativeSelect {...nativeProps} />;
+}
+
+function NativeSelect({
   id,
   label,
   help,
@@ -296,8 +316,7 @@ export function Select({
   onKeyDown,
   controlSize = "regular",
   ...props
-}: FieldInfo &
-  ComponentProps<"select"> & { options: Option[]; placeholder?: string; controlSize?: ControlSize }) {
+}: NativeSelectProps) {
   const dropdown = !props.multiple && (props.size ?? 1) <= 1;
   function positionPicker(select: HTMLSelectElement) {
     if (!dropdown || !select.ownerDocument.defaultView?.CSS.supports("appearance", "base-select")) return;
@@ -477,110 +496,38 @@ export function Combobox({
   help,
   error,
 }: Choices & Pick<FieldInfo, "help" | "error">) {
-  const list = useId();
-  const [query, setQuery] = useState<string | null>(null);
-  const [active, setActive] = useState<string | null>(null);
-  const open = query !== null && !disabled;
-  const selected = options.find((o) => o.id === value);
-  const matches = options.filter((o) =>
-    o.label.toLowerCase().includes((query ?? "").toLowerCase()),
-  );
-  const enabled = matches.filter((o) => !o.disabled);
-  const current = enabled.find((o) => o.id === active);
-  function dismiss() {
-    setQuery(null);
-    setActive(null);
-  }
-  function choose(o: Option) {
-    if (!o.disabled) {
-      dismiss();
-      onValueChange(o.id);
-    }
-  }
-  function step(back: boolean) {
-    const idx = enabled.findIndex((o) => o.id === active);
-    const next =
-      idx < 0
-        ? back
-          ? enabled.length - 1
-          : 0
-        : (idx + (back ? -1 : 1) + enabled.length) % enabled.length;
-    setActive(enabled[next]?.id ?? null);
-  }
-  const optionId = (id: string) => list + "-" + encodeURIComponent(id);
+  const [controller] = useState(() => createComboboxController<string>());
   return (
     <Field {...{ label, help, error }}>
-      {(binding) => (
-        <div className="yg-combo">
-          {name && <input type="hidden" name={name} value={value} disabled={disabled} />}
-          <input
-            {...binding}
-            disabled={disabled}
-            className="yg-standalone"
-            role="combobox"
-            autoComplete="off"
-            aria-autocomplete="list"
-            aria-expanded={open}
-            aria-controls={list}
-            aria-activedescendant={
-              open && current ? optionId(current.id) : undefined
+      {binding => (
+        <SDKCombobox controller={controller} value={value || null} name={name} disabled={disabled}
+          itemToLabel={id => options.find(option => option.id === id)?.label ?? ""}
+          onValueChange={(next, details) => {
+            if (next === null) {
+              details.cancel();
+              return;
             }
-            value={open ? (query ?? "") : (selected?.label ?? "")}
-            onFocus={(e) => e.target.select()}
-            onClick={() => {
-              if (!open) setQuery("");
-            }}
-            onBlur={dismiss}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setActive(null);
-            }}
-            onKeyDown={(e) => {
-              if (e.nativeEvent.isComposing) return;
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                e.preventDefault();
-                if (!open) setQuery("");
-                step(e.key === "ArrowUp");
-              }
-              if (open && e.key === "Escape") {
-                e.preventDefault();
-                e.stopPropagation();
-                dismiss();
-              }
-              if (open && e.key === "Enter") {
-                e.preventDefault();
-                if (current) choose(current);
-              }
-            }}
-          />
-          <div
-            id={list}
-            role="listbox"
-            aria-label={label}
-            className="yg-options"
-            hidden={!open}
-          >
-            {matches.map((o) => (
-              <div
-                key={o.id}
-                id={optionId(o.id)}
-                role="option"
-                aria-selected={o.id === value}
-                aria-disabled={o.disabled}
-                data-active={o.id === current?.id || undefined}
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => choose(o)}
-              >
-                {o.label}
-              </div>
-            ))}
-            {matches.length === 0 && (
-              <div role="presentation" className="yg-help">
-                {words["state.no-matches"]}
-              </div>
-            )}
-          </div>
-        </div>
+            onValueChange(next);
+          }}>
+          <ComboboxInput {...binding} className="yg-standalone" autoComplete="off"
+            onFocus={event => event.currentTarget.select()}
+            onClick={event => {
+              if (event.currentTarget.getAttribute("aria-expanded") === "true") return;
+              controller.open();
+              controller.setQuery("");
+            }} />
+          <ComboboxContent className="yg-popup-menu yg-combobox-popup" sideOffset={6} align="start" collisionPadding={8}
+            render={(props, state) => <div {...props} aria-hidden={!state.open || undefined} inert={!state.open} />}>
+            <ComboboxList aria-label={label}>
+              {options.map(option => (
+                <ComboboxItem key={option.id} value={option.id} label={option.label} disabled={option.disabled}>
+                  {option.label}
+                </ComboboxItem>
+              ))}
+            </ComboboxList>
+            <ComboboxEmpty className="yg-help">{words["state.no-matches"]}</ComboboxEmpty>
+          </ComboboxContent>
+        </SDKCombobox>
       )}
     </Field>
   );

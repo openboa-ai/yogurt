@@ -5,7 +5,6 @@
       "id": "button",
       "name": "Button",
       "web": "web-css",
-      "native": "planned",
       "source": "system.html#controls",
       "use": "Give the primary action a verb and an object. Use the secondary variant for a reversible alternative.",
       "webBinding": {
@@ -18,11 +17,6 @@
         "web": {
           "entry": "@openboa/yogurt/button",
           "registry": "registry/button.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/button.native",
-          "install": "yogurt add button --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -30,7 +24,6 @@
       "id": "search-field",
       "name": "Search field",
       "web": "web-css",
-      "native": "planned",
       "source": "system.html#controls",
       "use": "Keep a visible label and a clear way back to the complete collection.",
       "webBinding": {
@@ -43,11 +36,6 @@
         "web": {
           "entry": "@openboa/yogurt/search-field",
           "registry": "registry/search-field.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/search-field.native",
-          "install": "yogurt add search-field --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -55,7 +43,6 @@
       "id": "select",
       "name": "Select",
       "web": "web-css",
-      "native": "planned",
       "source": "system.html#controls",
       "use": "Choose one option from a short, stable list. Keep the selected value visible.",
       "webBinding": {
@@ -68,11 +55,6 @@
         "web": {
           "entry": "@openboa/yogurt/select",
           "registry": "registry/select.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/select.native",
-          "install": "yogurt add select --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -80,7 +62,6 @@
       "id": "disclosure-row",
       "name": "Disclosure row",
       "web": "web-css",
-      "native": "planned",
       "source": "system.html#controls",
       "use": "Keep the row label visible when it opens. Announce whether the details are expanded and keep focus on the same control.",
       "webBinding": {
@@ -93,11 +74,6 @@
         "web": {
           "entry": "@openboa/yogurt/disclosure-row",
           "registry": "registry/disclosure-row.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/disclosure-row.native",
-          "install": "yogurt add disclosure-row --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -105,7 +81,6 @@
       "id": "status",
       "name": "Status text",
       "web": "web-css",
-      "native": "planned",
       "source": "system.html#controls",
       "use": "Name the observed condition in words. Use color as a supporting cue.",
       "webBinding": {
@@ -118,11 +93,6 @@
         "web": {
           "entry": "@openboa/yogurt/status",
           "registry": "registry/status.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/status.native",
-          "install": "yogurt add status --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -130,18 +100,12 @@
       "id": "result",
       "name": "Result message",
       "web": "web-example",
-      "native": "planned",
       "source": "patterns/task-states.html",
       "use": "Explain the result of a read, what remains and an available recovery action.",
       "sdk": {
         "web": {
           "entry": "@openboa/yogurt/result",
           "registry": "registry/result.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/result.native",
-          "install": "yogurt add result --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -149,18 +113,12 @@
       "id": "record-facts",
       "name": "Record facts",
       "web": "contract",
-      "native": "planned",
       "source": "catalog/patterns.json",
       "use": "Pair a short label with a value and its source revision. Omit restricted fields.",
       "sdk": {
         "web": {
           "entry": "@openboa/yogurt/record-facts",
           "registry": "registry/record-facts.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/record-facts.native",
-          "install": "yogurt add record-facts --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -168,18 +126,12 @@
       "id": "confirm-dialog",
       "name": "Confirmation dialog",
       "web": "contract",
-      "native": "planned",
       "source": "catalog/patterns.json",
       "use": "Describe the exact effect before confirmation. Place initial focus on a safe control and restore it on dismissal.",
       "sdk": {
         "web": {
           "entry": "@openboa/yogurt/confirm-dialog",
           "registry": "registry/confirm-dialog.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/confirm-dialog.native",
-          "install": "yogurt add confirm-dialog --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -187,18 +139,12 @@
       "id": "receipt",
       "name": "Request receipt",
       "web": "contract",
-      "native": "planned",
       "source": "catalog/patterns.json",
       "use": "Show the original request reference and the recorded outcome. Keep an uncertain outcome visible until reconciled.",
       "sdk": {
         "web": {
           "entry": "@openboa/yogurt/receipt",
           "registry": "registry/receipt.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/receipt.native",
-          "install": "yogurt add receipt --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     },
@@ -206,7 +152,6 @@
       "id": "action-menu",
       "name": "Action menu",
       "web": "web-dom",
-      "native": "planned",
       "source": "docs/action-menu.md",
       "use": "Group related secondary commands behind a named trigger. Use a select for a persistent field value.",
       "states": [
@@ -232,11 +177,6 @@
         "web": {
           "entry": "@openboa/yogurt/action-menu",
           "registry": "registry/action-menu.json"
-        },
-        "native": {
-          "entry": "packages/native/controls/items/action-menu.native",
-          "install": "yogurt add action-menu --target native",
-          "evidence": "typed Zig widget tree"
         }
       }
     }
@@ -299,10 +239,6 @@
         "web": {
           "level": "guide-example",
           "detail": "Illustrated state and control choices in the local playbook. The shared dialog package is proposed."
-        },
-        "native": {
-          "level": "contract",
-          "detail": "Behavior documented. A renderer and packaged-platform evidence are needed."
         }
       },
       "related": [
@@ -390,10 +326,6 @@
         "web": {
           "level": "guide-example",
           "detail": "State examples in the local playbook. The record-facts component is proposed."
-        },
-        "native": {
-          "level": "contract",
-          "detail": "Behavior documented. A renderer and packaged-platform evidence are needed."
         }
       },
       "related": []
@@ -461,10 +393,6 @@
         "web": {
           "level": "guide-example",
           "detail": "Receipt states can be compared in the Meatball example."
-        },
-        "native": {
-          "level": "contract",
-          "detail": "Behavior documented. A renderer and packaged-platform evidence are needed."
         }
       },
       "related": []
@@ -535,10 +463,6 @@
           "level": "web-example",
           "detail": "The local agent roster and task-list specimens run in an ordinary browser.",
           "source": "system.html#components"
-        },
-        "native": {
-          "level": "contract",
-          "detail": "Behavior documented. A renderer and packaged-platform evidence are needed."
         }
       },
       "related": []

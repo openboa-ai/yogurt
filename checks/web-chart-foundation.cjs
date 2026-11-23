@@ -78,10 +78,11 @@ const { renderToStaticMarkup } = require("react-dom/server");
           assert(dot.width > 0 && Math.abs(dot.width - dot.height) <= 1,
             `plot markers must remain circular at ${width}px`);
         }
-        assert.equal(layout.labels.length, 2);
+        assert.equal(layout.labels.length, 3);
+        assert.match(await chart.locator(".yg-chart-interior-tick").innerText(), /Missing\s+No reading/);
         assert(Math.abs(layout.labels[0].left - layout.dots[0].centerX) <= 2,
           `first label should align with the first point at ${width}px`);
-        assert(Math.abs(layout.labels[1].right - layout.dots[1].centerX) <= 2,
+        assert(Math.abs(layout.labels.at(-1).right - layout.dots[1].centerX) <= 2,
           `last label should align with the last point at ${width}px`);
         await page.close();
       }

@@ -1,3 +1,0 @@
-<template name="yg-count" args="label">
-  <badge>{label}</badge>
-</template>

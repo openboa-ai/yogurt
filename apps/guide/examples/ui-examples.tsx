@@ -183,38 +183,36 @@ export function Example({
       );
     case "button":
       return (
-        <Y.Stack>
-          <Y.ButtonGroup label="View actions">
-            {primary}
-            {variation && (
-              <>
-                <Y.Button
-                  emphasis="soft"
-                  shape="pill"
-                  onClick={() => setNote("Draft kept.")}
-                >
-                  Keep draft
-                </Y.Button>
-                <Y.Button
-                  emphasis="quiet"
-                  onClick={() => setNote("Changes discarded.")}
-                >
-                  Discard
-                </Y.Button>
-              </>
-            )}
-          </Y.ButtonGroup>
-          {variation && <Y.Stack gap={8}>
-            <Y.Inline gap={8}>
-              <Y.Button size="compact" emphasis="soft" onClick={() => setNote("Compact action selected.")}>Compact</Y.Button>
-              <Y.Button size="regular" emphasis="soft" onClick={() => setNote("Regular action selected.")}>Regular</Y.Button>
-              <Y.Button size="comfortable" emphasis="soft" onClick={() => setNote("Comfortable action selected.")}>Comfortable</Y.Button>
-            </Y.Inline>
-            <Y.Inline gap={8}>
-              <Y.Button size="spacious" shape="pill" onClick={() => setNote("Spacious action selected.")}>Spacious</Y.Button>
-              <Y.Button size="touch" emphasis="soft" onClick={() => setNote("Touch action selected.")}>Touch</Y.Button>
-            </Y.Inline>
-          </Y.Stack>}
+        <Y.Stack gap={variation ? 16 : 4}>
+          {variation ? (
+            <>
+              <Y.Stack gap={8}>
+                <Y.Text variant="help">Emphasis</Y.Text>
+                <Y.ButtonGroup label="Button emphasis">
+                  {primary}
+                  <Y.Button emphasis="soft" onClick={() => setNote("Draft kept.")}>Keep as draft</Y.Button>
+                  <Y.Button emphasis="quiet" onClick={() => setNote("Changes discarded.")}>Discard</Y.Button>
+                </Y.ButtonGroup>
+              </Y.Stack>
+              <Y.Stack gap={8}>
+                <Y.Text variant="help">Size</Y.Text>
+                <Y.ButtonGroup label="Button sizes">
+                  {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map(size => {
+                    const label = size[0].toUpperCase() + size.slice(1);
+                    return <Y.Button key={size} size={size} emphasis="soft"
+                      onClick={() => setNote(label + " action selected.")}>{label}</Y.Button>;
+                  })}
+                </Y.ButtonGroup>
+              </Y.Stack>
+              <Y.Stack gap={8}>
+                <Y.Text variant="help">Shape</Y.Text>
+                <Y.ButtonGroup label="Button shapes">
+                  <Y.Button emphasis="soft" onClick={() => setNote("Draft opened.")}>Open draft</Y.Button>
+                  <Y.Button emphasis="soft" shape="pill" onClick={() => setNote("Draft kept.")}>Keep draft</Y.Button>
+                </Y.ButtonGroup>
+              </Y.Stack>
+            </>
+          ) : <Y.ButtonGroup label="View actions">{primary}</Y.ButtonGroup>}
           {status}
         </Y.Stack>
       );
@@ -252,17 +250,19 @@ export function Example({
       );
     case "icon-button":
       return (
-        <Y.Inline>
-          <Y.IconButton
-            label="Add a view"
-            icon="plus"
-            emphasis={variation ? "soft" : "quiet"}
-            onClick={() => setCount((n) => n + 1)}
-          />
-          <Y.Text variant="help">
-            {count} {count === 1 ? "view" : "views"}
-          </Y.Text>
-        </Y.Inline>
+        <Y.Stack gap={12}>
+          <Y.Inline>
+            <Y.IconButton label="Add a view" icon="plus" emphasis="soft"
+              onClick={() => setCount((n) => n + 1)} />
+            {variation && <>
+              <Y.IconButton label="Find a view" icon="search" size="compact" onClick={() => setNote("Search selected.")} />
+              <Y.IconButton label="Copy a view" icon="copy" size="comfortable" emphasis="soft" onClick={() => setNote("View copied.")} />
+              <Y.IconButton label="Save a view" icon="bookmark" size="touch" emphasis="filled" onClick={() => setNote("View saved.")} />
+              <Y.IconButton label="Close views" icon="close" size="spacious" onClick={() => setNote("Views closed.")} />
+            </>}
+          </Y.Inline>
+          <Y.Text variant="help" role="status">{note || `${count} ${count === 1 ? "view" : "views"}`}</Y.Text>
+        </Y.Stack>
       );
     case "field":
     case "label":

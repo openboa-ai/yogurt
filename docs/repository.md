@@ -19,7 +19,7 @@ The [design handbook](index.html) and [canonical portfolio](README.md) connect t
 | --- | --- | --- |
 | Brand and language | [Design sources](../design/README.md), [approved terms](../design/content/terms.json), [numbered palette](../design/tokens/brand.json) and [UI roles](../design/tokens/ui.json) | The guide, SDK, brand CSS and Native theme |
 | Design contracts | [Catalog](../catalog/README.md) and the [paired design records](README.md) | The SDK, pattern lookup, guide and plugin |
-| Public rendering | [Web and Native adapters](../packages/README.md), [composition recipes](../packages/recipes/README.md) and [styles](../design/styles/) | Product apps, the guide and examples |
+| Public rendering | [React components](../packages/README.md), [composition recipes](../packages/recipes/README.md) and [styles](../design/styles/) | Product apps, the guide and examples |
 | Guide presentation | [Guide sources](../apps/guide/README.md), its browser runtime and the design records | Hosted and offline guide, including the generated handbook |
 | Product examples | [Examples](../examples/README.md) | The playbook, developers and design review |
 | Installation and agent workflows | [Consumer CLI](../bin/yogurt.mjs), [agent plugin](../plugins/README.md), [installed design entry](../DESIGN.md) | Products and their agents |
@@ -56,7 +56,7 @@ The proposed release manifest identifies a compatible version of the rules, toke
 
 An intent refers to one or more pattern IDs. It keeps the project-owned state mapping, permission source, effect, and test case. The optional agent skill reads the installed version. A developer can use the same catalog and check without installing a plugin.
 
-Build app clients on Vercel Native SDK by default. The [native stack decision](native-stack.md) describes the markup, typed host messages and first native fixture. Build web clients on the same React DOM/CSS adapter for Next.js and Vite. Support a deliberate WebView as a web surface and test its return to the native host. For native-rendered views, map the common contract to the Native SDK and its supported native-rendered controls. Check keyboard and accessibility on that renderer. One adopting team can upgrade independently of the others. Rehearse the changed screens before switching its pin and retain the preceding working release. [Native SDK](https://github.com/vercel-labs/native) · [Adoption and rollback](https://yogurt-theta.vercel.app/adoption.html#releases)
+Build on the same React package in Next.js and Vite. Desktop app shells load the React assets in their WebView. Each product controls its dependency pin and release timeline. Rehearse the changed screen before switching the pin, and retain the preceding working version. [Presentation stack](native-stack.md)
 
 ## Decide what can be enforced
 

@@ -1,10 +1,11 @@
 "use client";
-import { type ComponentProps, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type ComponentProps, type ReactNode } from "react";
 import { SegmentedControl as SDKSegment, SegmentedControlItem, SegmentedControlIndicator } from "@ui-sdk/react/segmented-control";
 import { Tabs as SDKTabs, TabsList, TabsPanel, TabsTab, TabsIndicator } from "@ui-sdk/react/tabs";
 import { Button, type ButtonProps } from "./actions.js";
 import { type Choices } from "./forms.js";
 import { cx, Icon, type IconName } from "../foundation/foundation.js";
+import { animateTabMarker } from "./tab-motion.js";
 
 export function Link({
   emphasis,
@@ -119,13 +120,19 @@ export function Tabs({
   onValueChange: (id: string) => void;
   presentation?: "pill" | "dock";
 }) {
+  const list = useRef<HTMLDivElement>(null);
+  const marker = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (list.current && marker.current) return animateTabMarker(marker.current, list.current, presentation);
+  }, [presentation]);
   const enabled = items.filter((o) => !o.disabled);
   const selected = enabled.some((i) => i.id === value) ? value : enabled[0]?.id;
   return (
     <SDKTabs className="yg-tabs" data-presentation={presentation} value={selected ?? null}
       onValueChange={(id) => { if (id !== null) onValueChange(id); }}>
-      <TabsList aria-label={label} onKeyDownCapture={(event) => {
+      <TabsList ref={list} aria-label={label} onKeyDownCapture={(event) => {
         const current = (event.target as HTMLElement).closest<HTMLButtonElement>('[role="tab"]');
+        if (!items.some(item => item.disabled)) return;
         if (!current || !event.currentTarget.contains(current) || !enabled.length ||
           event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
         const index = enabled.findIndex((item) => item.id === current.dataset.ygTabId);
@@ -141,7 +148,7 @@ export function Tabs({
           .find((tab) => tab.dataset.ygTabId === id)?.focus();
         onValueChange(id);
       }}>
-        <TabsIndicator className="yg-selection-marker" data-ready="" aria-hidden="true" />
+        <TabsIndicator ref={marker} className="yg-selection-marker" aria-hidden="true" />
         {items.map((o) => (
           <TabsTab key={o.id} value={o.id} disabled={o.disabled} data-yg-tab-id={o.id}
             onClick={() => { if (o.id === selected) onValueChange(o.id); }}

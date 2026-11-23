@@ -178,7 +178,6 @@
 .yg-code header,
 .yg-carousel footer,
 .yg-quantity,
-.yg-range > div,
 .yg-sidebar header,
 .yg-navbar,
 .yg-attachment {
@@ -397,6 +396,11 @@
   .yg-attachment progress::-webkit-progress-value { background: var(--yg-inverse); border-radius: var(--boa-radius-round); }
   .yg-attachment progress::-moz-progress-bar { background: var(--yg-inverse); border-radius: var(--boa-radius-round); }
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-attachment button.yg-file-name { transition: color var(--yg-motion-surface-focus); }
+  .yg-attachment progress::-webkit-progress-value { transition: width var(--yg-motion-letter-progress); }
+  .yg-attachment progress::-moz-progress-bar { transition: width var(--yg-motion-letter-progress); }
+}
 .yg-marker {
   display: flex;
   align-items: center;
@@ -479,6 +483,10 @@
   padding: var(--boa-space-4) var(--yg-list-row-inset) var(--yg-inset-regular);
   overflow-wrap: anywhere;
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-trace summary { transition: background-color var(--yg-press) var(--yg-settle); }
+  .yg-trace details[open] > div { animation: yg-reveal var(--yg-layer) var(--yg-settle); }
+}
 .yg-input-group {
   gap: var(--boa-space-8);
 }
@@ -494,6 +502,11 @@
 }
 .yg-input-group.yg-input-size-featured:focus-within:not(:has([aria-invalid="true"])) {
   background: var(--yg-hover);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-input-group.yg-input-size-featured {
+    transition: background-color var(--yg-motion-surface-focus);
+  }
 }
 .yg-input-group > :not(input) {
   flex: none;
@@ -565,54 +578,6 @@
   font-style: normal;
   color: var(--yg-muted);
 }
-.yg-range {
-  display: grid;
-  gap: var(--boa-space-4);
-}
-.yg-range output {
-  color: var(--yg-inverse);
-  font: var(--yg-font-action);
-  font-variant-numeric: tabular-nums;
-}
-.yg-range input {
-  --yg-range-direction: to right;
-  display: block;
-  width: 100%;
-  margin: 0;
-  min-height: var(--yg-slider-hit-height);
-  accent-color: var(--yg-inverse);
-}
-.yg-range input:dir(rtl) { --yg-range-direction: to left; }
-@media (forced-colors: none) {
-  .yg-range input { appearance: none; background: transparent; }
-  .yg-range input::-webkit-slider-runnable-track {
-    height: var(--yg-slider-track-height);
-    border-radius: var(--boa-radius-round);
-    background: linear-gradient(var(--yg-range-direction), var(--yg-inverse) var(--yg-range-fill), var(--yg-hover) var(--yg-range-fill));
-  }
-  .yg-range input::-moz-range-track {
-    height: var(--yg-slider-track-height);
-    border-radius: var(--boa-radius-round);
-    background: linear-gradient(var(--yg-range-direction), var(--yg-inverse) var(--yg-range-fill), var(--yg-hover) var(--yg-range-fill));
-  }
-  .yg-range input::-webkit-slider-thumb {
-    appearance: none;
-    width: var(--yg-slider-thumb-size);
-    height: var(--yg-slider-thumb-size);
-    margin-top: calc((var(--yg-slider-track-height) - var(--yg-slider-thumb-size)) / 2);
-    border: 0;
-    border-radius: 50%;
-    background: var(--yg-inverse);
-  }
-  .yg-range input::-moz-range-thumb {
-    width: var(--yg-slider-thumb-size);
-    height: var(--yg-slider-thumb-size);
-    border: 0;
-    border-radius: 50%;
-    background: var(--yg-inverse);
-  }
-  .yg-range input:disabled { opacity: .45; }
-}
 .yg-quantity > div {
   display: inline-flex;
   align-items: center;
@@ -658,6 +623,8 @@
 @media (prefers-reduced-motion: no-preference) {
   .yg-quantity output { --yg-quantity-edge: 14px; }
   .yg-quantity output[data-decreasing] { --yg-quantity-edge: -14px; }
+  .yg-quantity-in { animation: yg-quantity-enter var(--yg-motion-stepper-spin) both; }
+  .yg-quantity-out { animation: yg-quantity-exit var(--yg-motion-stepper-spin) both; }
   .yg-root .yg-quantity > div > .yg-button:active:not(:disabled) { transform: scale(.9); box-shadow: none; }
 }
 @keyframes yg-quantity-enter { from { opacity: 0; translate: 0 var(--yg-quantity-edge); } }
@@ -748,6 +715,8 @@
 @media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
   .yg-key-row button {
     box-shadow: inset 0 0 transparent;
+    transition: background-color var(--yg-press) linear,
+      box-shadow var(--yg-press) var(--yg-settle);
   }
   .yg-key-row button:active:not(:disabled) {
     box-shadow: inset 0 2px color-mix(in srgb, var(--boa-color-neutral-950) 28%, transparent);
@@ -799,6 +768,9 @@
 }
 .yg-accordion h3 button[data-state="open"] .yg-icon {
   rotate: 180deg;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .yg-accordion h3 button .yg-icon { transition: rotate var(--yg-motion-picker-slide); }
 }
 .yg-accordion-content {
   padding-block: 0 var(--boa-space-12);
@@ -1044,6 +1016,11 @@
 }
 .yg-date-trigger[data-state="open"] { background: var(--yg-hover); }
 .yg-date-trigger[data-state="open"] .yg-icon { rotate: 180deg; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-date-trigger { transition: background-color var(--yg-motion-surface-focus); }
+  .yg-date-trigger .yg-icon { transition: rotate var(--yg-motion-picker-slide); }
+  .yg-calendar button { transition: background-color var(--yg-motion-surface-focus), color var(--yg-motion-surface-focus); }
+}
 .yg-calendar {
   position: relative;
   width: fit-content;
@@ -1221,6 +1198,9 @@
   .yg-table-sort:hover { color: var(--yg-inverse); }
   .yg-table-sort:hover span { color: inherit; }
 }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-table-sort, .yg-table-sort span { transition: color var(--yg-motion-surface-focus); }
+}
 @media (pointer: coarse) {
   .yg-drawer-grip,
   .yg-table-sort {
@@ -1308,4 +1288,21 @@
   pointer-events: none;
 }
 .yg-inline-command .yg-inline-command-panel > .yg-help { padding: var(--yg-inset-compact) var(--yg-inset-roomy); }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-inline-command {
+    transition: inline-size var(--yg-motion-command-width),
+      block-size var(--yg-motion-command-height), border-radius var(--yg-motion-command-height);
+  }
+  .yg-inline-command-trigger { transition: opacity var(--yg-press) var(--yg-settle); }
+  .yg-inline-command-panel {
+    transition: opacity var(--yg-layer-exit) var(--yg-settle), translate var(--yg-motion-command-highlight);
+    translate: 0 var(--boa-space-8);
+  }
+  .yg-inline-command[data-open="true"] .yg-inline-command-panel {
+    transition-duration: var(--yg-change), var(--yg-change);
+    translate: 0 0;
+  }
+  .yg-inline-command-marker { transition: translate var(--yg-motion-command-highlight); }
+  .yg-inline-command[data-open="true"] [role="option"] { animation: yg-inline-option var(--yg-panel) var(--yg-arrive) both; }
+}
 @keyframes yg-inline-option { from { opacity: 0; translate: 0 4px; } }

@@ -52,6 +52,9 @@
   --yg-inset-panel: var(--boa-space-18);
   --yg-inset-sheet: var(--boa-space-24);
   --yg-dialog-width: 400px;
+  --yg-composer-measure: 640px;
+  --yg-prompt-corner: var(--boa-radius-sheet);
+  --yg-picker-measure: 232px;
   --yg-gap-tight: var(--boa-space-4);
   --yg-gap-inline: var(--boa-space-8);
   --yg-gap-stack: var(--boa-space-12);
@@ -88,7 +91,8 @@
   --yg-task-measure: 260px;
   --yg-storage-measure: 300px;
   --yg-drop-measure: 296px;
-  --yg-specimen-min-height: 205px;
+  --yg-specimen-compact-height: 96px;
+  --yg-specimen-min-height: 144px;
   --yg-specimen-content-width: 496px;
   --yg-specimen-inset: var(--boa-space-24);
   --yg-specimen-wide-inset: var(--boa-space-16);
@@ -104,14 +108,17 @@
   --yg-tab-pill-padding: 4px;
   --yg-tab-pill-height: var(--boa-control-height);
   --yg-segment-track-padding: 4px;
-  --yg-segment-option-gap: var(--boa-space-4);
-  --yg-segment-option-inset-inline: var(--boa-space-12);
+  --yg-segment-option-gap: var(--boa-space-6);
+  --yg-segment-option-inset-inline: var(--boa-space-14);
   --yg-segment-option-height: var(--boa-control-height);
   --yg-segment-track-radius: var(--boa-space-16);
   --yg-segment-option-radius: var(--boa-radius-panel);
   --yg-slider-track-height: var(--boa-space-4);
   --yg-slider-thumb-size: 28px;
   --yg-slider-hit-height: var(--boa-control-touch);
+  --yg-slider-tip-height: var(--boa-control-compact);
+  --yg-slider-tip-lift: var(--boa-space-20);
+  --yg-slider-card-width: 320px;
   --yg-checkbox-size: 20px;
   --yg-checkbox-radius: var(--boa-radius-control);
   --yg-quantity-action-size: var(--boa-control-comfort);
@@ -125,6 +132,9 @@
   --yg-card-inset-compact: var(--boa-space-16);
   --yg-card-inset-regular: var(--boa-space-18);
   --yg-card-inset-spacious: var(--boa-space-24);
+  --yg-action-glyph-compact: var(--boa-space-14);
+  --yg-action-glyph-regular: var(--boa-space-16);
+  --yg-action-glyph-large: var(--boa-space-20);
   --yg-button-radius: var(--boa-radius-control);
   --yg-button-pill-radius: var(--boa-radius-round);
   --yg-button-compact-radius: var(--boa-radius-small);
@@ -151,6 +161,8 @@
   --yg-control-settle: cubic-bezier(.333333, 0, .666667, 1);
   --yg-arrive: cubic-bezier(.23, 1, .32, 1);
   --yg-selection: cubic-bezier(.2, .76, .26, 1.08);
+  --yg-motion-button-release: 280ms var(--yg-settle);
+  --yg-motion-slider-lift: 340ms var(--yg-arrive);
   --yg-motion-menu-height: 470ms var(--yg-settle);
   --yg-motion-exposure: 400ms var(--yg-settle);
   --yg-motion-wheel: 560ms var(--yg-settle);
@@ -210,29 +222,29 @@
   --yg-type-leading: 1.25;
   --yg-type-tracking: 0em;
   --yg-type-action-size: 0.875rem;
-  --yg-type-action-line: 1.09375rem;
+  --yg-type-action-line: 1.25rem;
   --yg-font-action: 560 var(--yg-type-action-size)/var(--yg-type-action-line) var(--boa-font-family);
   --yg-type-body-size: 0.875rem;
-  --yg-type-body-line: 1.09375rem;
+  --yg-type-body-line: 1.25rem;
   --yg-font-body: 450 var(--yg-type-body-size)/var(--yg-type-body-line) var(--boa-font-family);
   --yg-type-compact-size: 0.8125rem;
-  --yg-type-compact-line: 1.015625rem;
+  --yg-type-compact-line: 1.125rem;
   --yg-font-compact: 560 var(--yg-type-compact-size)/var(--yg-type-compact-line) var(--boa-font-family);
   --yg-type-label-size: 0.8125rem;
-  --yg-type-label-line: 1.015625rem;
+  --yg-type-label-line: 1.125rem;
   --yg-font-label: 450 var(--yg-type-label-size)/var(--yg-type-label-line) var(--boa-font-family);
   --yg-type-help-size: 0.8125rem;
-  --yg-type-help-line: 1.015625rem;
+  --yg-type-help-line: 1.125rem;
   --yg-font-help: 450 var(--yg-type-help-size)/var(--yg-type-help-line) var(--boa-font-family);
   --yg-type-meta-size: 0.75rem;
-  --yg-type-meta-line: 1.015625rem;
+  --yg-type-meta-line: 1rem;
   --yg-font-meta: 450 var(--yg-type-meta-size)/var(--yg-type-meta-line) var(--boa-font-family);
   --yg-type-badge-size: 0.75rem;
   --yg-type-badge-line: 0.9375rem;
   --yg-font-badge: 450 var(--yg-type-badge-size)/var(--yg-type-badge-line) var(--boa-font-family);
   --yg-type-card-title-size: 1rem;
-  --yg-type-card-title-line: 1.25rem;
-  --yg-font-card-title: 450 var(--yg-type-card-title-size)/var(--yg-type-card-title-line) var(--boa-font-family);
+  --yg-type-card-title-line: 1.375rem;
+  --yg-font-card-title: 560 var(--yg-type-card-title-size)/var(--yg-type-card-title-line) var(--boa-font-family);
   --yg-type-heading-size: 1.25rem;
   --yg-type-heading-line: 1.5625rem;
   --yg-font-heading: 450 var(--yg-type-heading-size)/var(--yg-type-heading-line) var(--boa-font-family);
@@ -243,10 +255,10 @@
   --yg-type-touch-line: 1.25rem;
   --yg-font-touch: 450 var(--yg-type-touch-size)/var(--yg-type-touch-line) var(--boa-font-family);
   --yg-type-editor-size: 0.9375rem;
-  --yg-type-editor-line: 1.171875rem;
+  --yg-type-editor-line: 1.375rem;
   --yg-font-editor: 450 var(--yg-type-editor-size)/var(--yg-type-editor-line) var(--boa-font-family);
   --yg-type-reading-size: 1rem;
-  --yg-type-reading-line: 1.25rem;
+  --yg-type-reading-line: 1.5rem;
   --yg-font-reading: 450 var(--yg-type-reading-size)/var(--yg-type-reading-line) var(--boa-font-family);
   --yg-type-section-size: 1.5rem;
   --yg-type-section-line: 1.875rem;
@@ -257,6 +269,8 @@
 }
 @supports (animation-timing-function: linear(0, 1)) {
   .yg-root {
+    --yg-motion-button-release: 280ms linear(0, 0.22, 0.59, 0.83, 0.97, 1.016, 1.018, 1.01, 1);
+    --yg-motion-slider-lift: 340ms linear(0, 0.24, 0.56, 0.79, 0.95, 1.04, 1.055, 1.035, 1.01, 1);
     --yg-motion-menu-height: 470ms linear(0, 0.107, 0.312, 0.531, 0.718, 0.857, 0.95, 1.003, 1.029, 1.036, 1.034, 1.027, 1.019, 1.011, 1.006, 1);
     --yg-motion-exposure: 400ms linear(0, 0.15, 0.357, 0.529, 0.659, 0.753, 0.822, 0.872, 0.907, 0.933, 0.952, 0.965, 0.975, 0.982, 0.987, 1);
     --yg-motion-wheel: 560ms linear(0, 0.084, 0.237, 0.396, 0.537, 0.652, 0.743, 0.811, 0.863, 0.901, 0.928, 0.948, 0.963, 0.973, 0.981, 1);

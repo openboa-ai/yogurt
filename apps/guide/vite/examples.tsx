@@ -21,8 +21,8 @@ export default function Examples({ id, appearance }: { id?: string; appearance: 
       <PageHeader title="Sourdough workspace" detail="Work with the research team, review observations and check the source of an agent’s findings." />
       <div className="template-stage"><SourdoughPreview /></div>
       <Inline>
-        <Link href="/templates/compose">Explore the smaller compositions</Link>
-        <Link href="/components/agent-workspace">Inspect AgentWorkspace</Link>
+        <Link href="/patterns">Browse recommended patterns</Link>
+        <Link href="/patterns/agent-workspace">Inspect AgentWorkspace</Link>
         <Link href="/components/composer">Inspect Composer</Link>
       </Inline>
     </Stack>

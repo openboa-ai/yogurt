@@ -12,25 +12,21 @@ const manifest = json("catalog/brand.json"),
   catalog = json(manifest.sources.components),
   terms = json(manifest.sources.words).terms;
 const webTokens = readFileSync("design/styles/ui-tokens.css", "utf8");
-const nativeTokens = readFileSync("packages/native/controls/tokens.zig", "utf8");
-const { lineHeightScale, lineBoxSize, tracking } = ui.typeMetrics;
+const { lineHeightScale, lineHeightRoles, tracking } = ui.typeMetrics;
 assert.equal(lineHeightScale, 1.25);
 assert.equal(tracking, 0);
 assert(webTokens.includes(`--yg-type-tracking: ${tracking}em;`));
-assert(nativeTokens.includes(`pub const type_tracking: f32 = ${tracking};`));
 for (const [role, [sizeKey, weightKey]] of Object.entries(ui.types)) {
   const size = base.type.size[sizeKey];
-  const lineHeight = base.type.size[lineBoxSize[role] ?? sizeKey] * lineHeightScale;
+  const lineHeightRole = lineHeightRoles[role];
+  if (lineHeightRole) assert(Object.hasOwn(base.type.lineHeight, lineHeightRole), role);
+  const lineHeight = lineHeightRole ? base.type.lineHeight[lineHeightRole] : size * lineHeightScale;
   const weight = base.type.roleWeight[weightKey];
-  const nativeRole = role.replaceAll("-", "_");
   assert(Number.isFinite(size) && lineHeight >= size, role);
   assert(["ui", "body"].includes(weightKey), role);
   assert(webTokens.includes(`--yg-type-${role}-size: ${size / 16}rem;`), role);
   assert(webTokens.includes(`--yg-type-${role}-line: ${lineHeight / 16}rem;`), role);
   assert(webTokens.includes(`--yg-font-${role}: ${weight} var(--yg-type-${role}-size)/var(--yg-type-${role}-line) var(--boa-font-family);`), role);
-  assert(nativeTokens.includes(`pub const ${nativeRole}_type: f32 = ${size};`), role);
-  assert(nativeTokens.includes(`pub const ${nativeRole}_line_height: f32 = ${lineHeight};`), role);
-  assert(nativeTokens.includes(`pub const ${nativeRole}_weight: u16 = ${weight};`), role);
 }
 for (const [name, profile] of Object.entries(ui.motionProfiles ?? {})) {
   assert(Number.isSafeInteger(profile.duration) && profile.duration > 0, name);
@@ -38,7 +34,6 @@ for (const [name, profile] of Object.entries(ui.motionProfiles ?? {})) {
   assert(Array.isArray(profile.samples) && profile.samples.length >= 2 && profile.samples.every(Number.isFinite), name);
   assert(webTokens.includes(`--yg-motion-${name}: ${profile.duration}ms var(--yg-${profile.fallback});`), name);
   assert(webTokens.includes(`--yg-motion-${name}: ${profile.duration}ms linear(${profile.samples.join(", ")});`), name);
-  assert(nativeTokens.includes(`pub const ${name.replaceAll("-", "_")}_ms: u32 = ${profile.duration};`), name);
 }
 for (const path of [
   ...Object.values(manifest.sources),
@@ -124,11 +119,12 @@ for (const item of motionComponents.components) {
   motionIds.add(item.id);
   assert.equal(item.entry, "@openboa/yogurt/motion-patterns");
   assert.equal(item.web, "available");
-  assert.equal(item.native, "unavailable");
   assert(item.guidance.useWhen.trim() && item.guidance.avoid.trim() && item.guidance.verify.length, item.id);
   assert.equal(typeof exportedMotion[item.name], "function", item.id);
+  const individual = await import("@openboa/yogurt/" + item.id);
+  assert.equal(individual[item.name], exportedMotion[item.name], item.id);
   const entry = json("registry/" + item.id + ".json");
-  assert.equal(entry.files[0].content, `"use client";\n\nexport { ${item.name} } from "${item.entry}";\n`);
+  assert.equal(entry.files[0].content, `"use client";\n\nexport { ${item.name} } from "@openboa/yogurt/${item.id}";\n`);
 }
 assert.deepEqual(
   motion.map(({ id }) => id),
@@ -142,7 +138,7 @@ for (const entry of motion) {
 }
 for (const block of blocks) {
   assert(!componentIds.has(block.id), block.id);
-  for (const id of [...block.components, ...block.native])
+  for (const id of [...block.components])
     assert(componentIds.has(id), id);
   const entry = json("registry/" + block.id + ".json");
   assert.equal(entry.type, "registry:block");
@@ -150,18 +146,10 @@ for (const block of blocks) {
     entry.files[0].content,
     readFileSync("packages/recipes/" + block.id + "/web.tsx", "utf8"),
   );
-  const native = readFileSync("packages/recipes/" + block.id + "/view.native", "utf8");
-  assert.deepEqual(
-    [...native.matchAll(/<import src="([^"]+)\.native"/g)]
-      .map((match) => match[1])
-      .sort(),
-    [...block.native].sort(),
-  );
 }
-for (const { id, name, nativeMarkup, exports = [] } of catalog) {
+for (const { id, name, exports = [] } of catalog) {
   assert(existsSync("packages/web/dist/entries/" + id + ".js"));
   assert(existsSync("packages/web/dist/entries/" + id + ".d.ts"));
-  assert.equal(existsSync("packages/native/controls/items/" + id + ".native"), nativeMarkup !== false, id);
   assert(
     json("registry/" + id + ".json").files[0].content.includes(
       "@openboa/yogurt/" + id,
@@ -178,7 +166,7 @@ assert(
 );
 console.log(
   catalog.length +
-    " paired components, " +
+    " React components, " +
     blocks.length +
     " editable blocks, " +
     pairs +

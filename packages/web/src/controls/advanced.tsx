@@ -3,13 +3,15 @@ import {
   useContext, useId, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode,
 } from "react";
 import {
-  ContextMenu as C,
   Menubar as M,
   NavigationMenu as N,
   Popover as P,
   HoverCard as H,
 } from "radix-ui";
+import { Button as SDKButton } from "@ui-sdk/react/button";
 import { Accordion as SDKAccordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionPanel } from "@ui-sdk/react/accordion";
+import { Command as SDKCommand, CommandEmpty, CommandInput, CommandItem, CommandList } from "@ui-sdk/react/command";
+import { Menu, MenuContent, MenuContextTrigger, MenuItem } from "@ui-sdk/react/menu";
 import { DayPicker } from "react-day-picker";
 import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import { cx, Icon, type IconName, type Option } from "../foundation/foundation.js";
@@ -83,43 +85,18 @@ export function ContextMenu({
   children,
 }: CommandProps & { children: ReactNode }) {
   return (
-    <C.Root>
-      <C.Trigger asChild>
-        <div
-          className="yg-context-target"
-          tabIndex={0}
-          aria-label={label}
-          aria-haspopup="menu"
-          onKeyDown={(e) => {
-            if (e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) {
-              e.preventDefault();
-              const rect = e.currentTarget.getBoundingClientRect();
-              e.currentTarget.dispatchEvent(
-                new MouseEvent("contextmenu", {
-                  bubbles: true,
-                  cancelable: true,
-                  clientX: rect.left + 12,
-                  clientY: rect.bottom,
-                }),
-              );
-            }
-          }}
-        >
-          {children}
-        </div>
-      </C.Trigger>
-      <C.Content className="yg-flyout" aria-label={label}>
-        {items.map((i) => (
-          <C.Item
-            key={i.id}
-            disabled={i.disabled}
-            onSelect={() => onSelect(i.id)}
-          >
-            {i.label}
-          </C.Item>
+    <Menu loop>
+      <MenuContextTrigger className="yg-context-target" tabIndex={0} aria-label={label}>
+        {children}
+      </MenuContextTrigger>
+      <MenuContent className="yg-popup-menu" aria-label={label} collisionPadding={8}
+        render={(props, state) => <div {...props} aria-hidden={!state.open || undefined} inert={!state.open} />}>
+        {items.map(item => (
+          <MenuItem key={item.id} value={item.id} label={item.label} disabled={item.disabled}
+            render={<SDKButton type="button" />} onSelect={() => onSelect(item.id)}>{item.label}</MenuItem>
         ))}
-      </C.Content>
-    </C.Root>
+      </MenuContent>
+    </Menu>
   );
 }
 export function HoverCard({
@@ -165,15 +142,13 @@ export function Command({
   const trigger = useRef<HTMLButtonElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const previousOpen = useRef(false);
-  const [open, setOpen] = useState(false),
-    [query, setQuery] = useState(""),
-    [active, setActive] = useState(""),
-    list = useId();
-  const shown = items.filter((i) =>
-      i.label.toLowerCase().includes(query.trim().toLowerCase()),
-    ),
-    enabled = shown.filter((i) => !i.disabled);
-  const current = enabled.find((i) => i.id === active) ?? enabled[0];
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [highlighted, setHighlighted] = useState<string | null>(null);
+  const panelId = useId();
+  const shown = inline ? items.filter(item => item.label.toLowerCase().includes(query.trim().toLowerCase())) : [];
+  const marker = shown.findIndex(item => item.id === highlighted);
+
   useLayoutEffect(() => {
     if (!inline) return;
     if (open) input.current?.focus();
@@ -183,107 +158,52 @@ export function Command({
 
   function start() {
     setQuery("");
-    setActive("");
+    setHighlighted(null);
     setOpen(true);
   }
 
-  function choose(item?: Option) {
-    if (item && !item.disabled) {
-      setOpen(false);
-      onSelect(item.id);
-    }
-  }
-  function move(direction: number) {
-    if (!enabled.length) return;
-    const index = enabled.findIndex((i) => i.id === current?.id);
-    const next = enabled[(index + direction + enabled.length) % enabled.length];
-    setActive(next.id);
-    document
-      .getElementById(list + next.id)
-      ?.scrollIntoView({ block: "nearest" });
-  }
-  const panel = <>
-    <div className="yg-command-search">
-      <Icon name="search" />
-      <input
-        ref={input}
-        autoFocus={!inline}
-        role="combobox"
-        aria-label="Find a command"
-        placeholder={inline ? "Type a command" : "Find a command"}
-        aria-expanded={open}
-        aria-controls={list}
-        aria-autocomplete="list"
-        aria-activedescendant={current ? list + current.id : undefined}
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          setActive("");
-        }}
-        onKeyDown={(e) => {
-          if (e.nativeEvent.isComposing) return;
-          if (inline && e.key === "Escape") {
-            e.stopPropagation();
-            setOpen(false);
-          }
-          if (inline && e.altKey) {
-            const key = e.code.startsWith("Key") ? e.code.slice(3) : e.key;
-            const shortcut = shown.find(item => !item.disabled && item.shortcut?.toLowerCase() === key.toLowerCase());
-            if (shortcut) {
-              e.preventDefault();
-              choose(shortcut);
-              return;
+  const panel = (inline || open) && (
+    <SDKCommand query={query} onQueryChange={setQuery} onValueChange={inline ? setHighlighted : undefined} filter="contains" loop
+      onAction={id => {
+        if (!open) return;
+        setOpen(false);
+        onSelect(id);
+      }}
+      style={inline ? {
+        "--yg-command-index": marker < 0 ? shown.findIndex(item => !item.disabled) : marker,
+      } as CSSProperties : undefined}>
+      <div className="yg-command-search">
+        <Icon name="search" />
+        <CommandInput ref={input} autoFocus={!inline} aria-label="Find a command"
+          placeholder={inline ? "Type a command" : "Find a command"}
+          onKeyDown={event => {
+            if (!event.nativeEvent.isComposing && inline && event.key === "Escape") {
+              event.stopPropagation();
+              setOpen(false);
             }
-          }
-          if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-            e.preventDefault();
-            move(e.key === "ArrowDown" ? 1 : -1);
-          }
-          if (e.key === "Enter") {
-            e.preventDefault();
-            choose(current);
-          }
-        }}
-      />
-    </div>
-    <div
-      className="yg-command-list"
-      id={list}
-      role="listbox"
-      aria-label="Commands"
-      style={inline && current ? { "--yg-command-index": shown.indexOf(current) } as CSSProperties : undefined}
-    >
-      {inline && current && <span className="yg-inline-command-marker" aria-hidden="true" />}
-      {shown.map((i) => (
-        <div
-          key={i.id}
-          id={list + i.id}
-          role="option"
-          aria-label={i.label}
-          aria-describedby={i.hint ? list + i.id + "-hint" : undefined}
-          aria-selected={current?.id === i.id}
-          aria-disabled={i.disabled}
-          aria-keyshortcuts={inline && i.shortcut ? `Alt+${i.shortcut}` : undefined}
-          onPointerMove={() => !i.disabled && setActive(i.id)}
-          onMouseDown={(e) => e.preventDefault()}
-          onClick={() => choose(i)}
-        >
-          {!inline && i.icon && <Icon name={i.icon} />}
-          <span className="yg-command-copy">
-            <span>{i.label}</span>
-            {i.hint && <span className="yg-help" id={list + i.id + "-hint"} hidden={inline}>{i.hint}</span>}
-          </span>
-          {inline && i.shortcut ? <kbd aria-hidden="true" title={`Alt + ${i.shortcut}`}>{i.shortcut}</kbd>
-            : current?.id === i.id && <kbd aria-hidden="true">↵</kbd>}
-        </div>
-      ))}
-    </div>
-    {!shown.length && (
-      <p className="yg-help" role="status">
-        No matching commands
-      </p>
-    )}
-  </>;
+          }} />
+      </div>
+      <CommandList className="yg-command-list" aria-label="Commands">
+        {inline && shown.some(item => !item.disabled) && <span className="yg-inline-command-marker" aria-hidden="true" />}
+        {items.map(item => (
+          <CommandItem key={item.id} value={item.id} label={item.label} disabled={item.disabled}
+            shortcut={inline && open && item.shortcut ? `alt+${item.shortcut}` : undefined}
+            aria-describedby={!inline && item.hint ? panelId + "-" + item.id : undefined}>
+            {({ highlighted }) => <>
+              {!inline && item.icon && <Icon name={item.icon} />}
+              <span className="yg-command-copy">
+                <span>{item.label}</span>
+                {!inline && item.hint && <span className="yg-help" id={panelId + "-" + item.id}>{item.hint}</span>}
+              </span>
+              {inline && item.shortcut ? <kbd aria-hidden="true" title={`Alt + ${item.shortcut}`}>{item.shortcut}</kbd>
+                : highlighted && <kbd aria-hidden="true">↵</kbd>}
+            </>}
+          </CommandItem>
+        ))}
+      </CommandList>
+      <CommandEmpty className="yg-help">No matching commands</CommandEmpty>
+    </SDKCommand>
+  );
 
   if (inline) return <div className="yg-inline-command" data-open={open} onKeyDown={event => {
     if (event.key.toLowerCase() === "k" && (event.metaKey || event.ctrlKey)) {
@@ -293,10 +213,10 @@ export function Command({
     }
   }}>
     <button ref={trigger} className="yg-inline-command-trigger" type="button" onClick={start}
-      inert={open} aria-label={label} aria-expanded={open} aria-controls={list + "-panel"} aria-keyshortcuts="Meta+K Control+K">
+      inert={open} aria-label={label} aria-expanded={open} aria-controls={panelId} aria-keyshortcuts="Meta+K Control+K">
       <Icon name="search" /><span>{triggerText}</span><kbd>⌘K</kbd>
     </button>
-    <div className="yg-inline-command-panel" id={list + "-panel"} inert={!open}>{panel}</div>
+    <div className="yg-inline-command-panel" id={panelId} inert={!open} aria-hidden={!open || undefined} data-agent-hidden={!open || undefined}>{panel}</div>
   </div>;
 
   return <>

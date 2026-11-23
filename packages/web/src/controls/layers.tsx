@@ -3,6 +3,7 @@ import { words } from "../foundation/words.js";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Dialog as SDKDialog, DialogContent } from "@ui-sdk/react/dialog";
 import { Popover as SDKPopover, PopoverContent } from "@ui-sdk/react/popover";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@ui-sdk/react/menu";
 import { Button as SDKButton } from "@ui-sdk/react/button";
 import { Icon, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
@@ -110,28 +111,41 @@ function useAnchoredPlacement(ref: React.RefObject<HTMLDivElement | null>, open:
     };
   }, [ref, open]);
 }
-export function ActionMenu({
-  label,
-  items,
-  onSelect,
-  triggerText = label,
-  presentation = "anchored",
-}: {
+type ActionMenuProps = {
   label: string;
   items: Option[];
   onSelect: (id: string) => void;
   triggerText?: string;
   presentation?: "anchored" | "expanding";
-}) {
+};
+
+export function ActionMenu({ presentation = "anchored", ...props }: ActionMenuProps) {
+  if (presentation === "expanding") return <ExpandingActionMenu {...props} />;
+  const { label, items, onSelect, triggerText = label } = props;
+  return (
+    <Menu loop>
+      <MenuTrigger aria-label={label} render={<Button emphasis="soft" />}>
+        {triggerText}<Icon name="down" />
+      </MenuTrigger>
+      <MenuContent className="yg-popup-menu" aria-label={label} align="start" sideOffset={6} collisionPadding={8}
+        render={(props, state) => <div {...props} aria-hidden={!state.open || undefined} inert={!state.open} />}>
+        {items.map(item => (
+          <MenuItem key={item.id} value={item.id} label={item.label} disabled={item.disabled}
+            render={<SDKButton type="button" />} onSelect={() => onSelect(item.id)}>{item.label}</MenuItem>
+        ))}
+      </MenuContent>
+    </Menu>
+  );
+}
+
+function ExpandingActionMenu({ label, items, onSelect, triggerText = label }: ActionMenuProps) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string | undefined>();
   const area = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const menu = useId();
-  const expanding = presentation === "expanding";
   const enabled = items.filter((i) => !i.disabled);
   const current = enabled.find((i) => i.id === active) ?? enabled[0];
-  useAnchoredPlacement(area, open && !expanding);
   function show(last = false) {
     setActive((last ? enabled.at(-1) : enabled[0])?.id);
     setOpen(true);
@@ -170,8 +184,8 @@ export function ActionMenu({
     <SDKPopover open={open} onOpenChange={setOpen} dismissible={false}>
     <div
       ref={area}
-      className={expanding ? "yg-action-menu-expanding" : "yg-anchor"}
-      data-open={expanding ? open : undefined}
+      className="yg-action-menu-expanding"
+      data-open={open}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) close();
       }}
@@ -192,18 +206,18 @@ export function ActionMenu({
         }}
       >
         {triggerText}
-        {expanding ? <span className="yg-action-menu-glyph" aria-hidden="true"><i /><i /></span> : <Icon name="down" />}
+        <span className="yg-action-menu-glyph" aria-hidden="true"><i /><i /></span>
       </Button>
       <PopoverContent inline
-        keepMounted={expanding}
+        keepMounted
         id={menu}
         role="menu"
         aria-label={label}
         tabIndex={-1}
         inert={!open}
-        className={expanding ? "yg-action-menu-fold" : "yg-anchored-panel"}
+        className="yg-action-menu-fold"
         render={(props) => <div {...props} id={menu} role="menu" aria-label={label}
-          tabIndex={-1} hidden={expanding ? false : props.hidden} aria-hidden={!open || undefined} inert={!open} />}
+          tabIndex={-1} hidden={false} aria-hidden={!open || undefined} inert={!open} />}
         onKeyDownCapture={(e) => {
           const index = enabled.findIndex((o) => o.id === current?.id);
           if (e.key === "Escape") {
@@ -241,7 +255,7 @@ export function ActionMenu({
           }
         }}
       >
-        {expanding ? <div className="yg-action-menu-options">{options}</div> : options}
+        <div className="yg-action-menu-options">{options}</div>
       </PopoverContent>
     </div>
     </SDKPopover>
@@ -489,4 +503,10 @@ export function Tooltip({
     </span>
     </SDKPopover>
   );
+}
+
+export function MorphTooltip({ label, detail }: { label: string; detail: string }) {
+  return <Tooltip label={detail}>{props =>
+    <Button emphasis="soft" {...props}>{label}<span className="yg-tooltip-info" aria-hidden="true">i</span></Button>
+  }</Tooltip>;
 }

@@ -51,9 +51,9 @@ export default function BrandPage() {
       </Stack>
       <Stack className="guide-brand-intro" gap={16}>
         <Text className="guide-brand-slogan">ships with <strong>live cultures</strong></Text>
-        <Text className="guide-brand-description">Shared design tokens, original artwork, product language, and a UI SDK for web and native apps.</Text>
+        <Text className="guide-brand-description">Shared design tokens, original artwork, product language, and a UI SDK for browsers and desktop WebViews.</Text>
         <ButtonGroup label="Explore Yogurt">
-          <Link href="/system" emphasis="soft" size="touch">Explore the design system</Link>
+          <Link href="/tokens" emphasis="soft" size="touch">Explore the design system</Link>
           <Link href="/components" emphasis="filled" size="touch">Browse components</Link>
         </ButtonGroup>
       </Stack>
@@ -123,7 +123,7 @@ export default function BrandPage() {
       <GuideSection id="type" title="Type and color">
         <Text>Use Rethink Sans for headings, paragraphs and interface labels. Use weight {tokens.type.roleWeight.heading} for headings, {tokens.type.roleWeight.body} for paragraphs and {tokens.type.roleWeight.ui} for interface labels. The outlined OpenBoa signature uses weight {tokens.type.roleWeight.wordmark}. Use tabular figures for IDs and times.</Text>
         <Text>Upright 9 defines OpenBoa’s primary color, Ink blue (<code>slate.750</code>). Kai’s sage and Sol’s coral come from the same numbered palette as the interface.</Text>
-        <Inline gap={16}><Link href="/system#type">Type scale</Link><Link href="/system#color">Shared palette</Link><Link href="/#wordmark-study">Wordmark study</Link></Inline>
+        <Inline gap={16}><Link href="/tokens#type">Type scale</Link><Link href="/tokens#color">Shared palette</Link><Link href="/#wordmark-study">Wordmark study</Link></Inline>
       </GuideSection>
       <GuideSection id="files" title="Files">
         <Grid className="guide-brand-cards" gap={24}>

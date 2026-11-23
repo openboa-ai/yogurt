@@ -1,5 +1,7 @@
+import { type SelectPickerProps } from "./select-picker.js";
 import { type ComponentProps, type ReactNode } from "react";
 import { type ControlSize, type Option } from "../foundation/foundation.js";
+export { FocusPicker, PlanSwitch } from "./choice-cards.js";
 export declare function Label(props: ComponentProps<"label">): import("react/jsx-runtime").JSX.Element;
 export declare function HelpText(props: ComponentProps<"p">): import("react/jsx-runtime").JSX.Element;
 export declare function FieldError(props: ComponentProps<"p">): import("react/jsx-runtime").JSX.Element;
@@ -37,11 +39,16 @@ export declare function SearchField({ id, label, help, error, value, onValueChan
 export declare function Textarea({ id, label, help, error, className, value, defaultValue, onSubmit, onSelect, suggestion, rows, ...props }: FieldInfo & ComponentProps<"textarea"> & {
     suggestion?: string;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Select({ id, label, help, error, options, placeholder, onPointerDown, onKeyDown, controlSize, ...props }: FieldInfo & ComponentProps<"select"> & {
+type NativeSelectProps = FieldInfo & ComponentProps<"select"> & {
     options: Option[];
     placeholder?: string;
     controlSize?: ControlSize;
-}): import("react/jsx-runtime").JSX.Element;
+};
+export declare function Select(props: (NativeSelectProps & {
+    presentation?: "native";
+}) | (SelectPickerProps & {
+    presentation: "animated";
+})): import("react/jsx-runtime").JSX.Element;
 interface Checkable {
     id?: string;
     label: string;
@@ -88,4 +95,3 @@ type RadioGroupProps = Omit<Choices, "options"> & ({
 });
 export declare function RadioGroup({ label, options, value, onValueChange, disabled, name, presentation, columns, }: RadioGroupProps): import("react/jsx-runtime").JSX.Element;
 export declare function Combobox({ label, options, value, onValueChange, disabled, name, help, error, }: Choices & Pick<FieldInfo, "help" | "error">): import("react/jsx-runtime").JSX.Element;
-export {};

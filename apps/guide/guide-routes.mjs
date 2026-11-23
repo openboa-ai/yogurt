@@ -1,8 +1,8 @@
 export const guidePages = [
   { id: "brand", path: "/", legacy: "index.html", title: "Brand" },
-  { id: "system", path: "/system", legacy: "system.html", title: "Design system" },
+  { id: "system", path: "/tokens", alias: "/system", legacy: "system.html", title: "Tokens" },
   { id: "components", path: "/components", legacy: "components.html", title: "Components", detail: true },
-  { id: "templates", path: "/templates", legacy: "templates.html", title: "Templates", detail: true },
+  { id: "templates", path: "/patterns", alias: "/templates", legacy: "templates.html", title: "Patterns", detail: true },
   { id: "examples", path: "/examples", legacy: "examples.html", title: "Examples", detail: ["sourdough"] },
   { id: "motion", path: "/motion", legacy: "motion-patterns.html", title: "Motion", detail: true, retired: true },
   { id: "workflows", path: "/workflows", legacy: "workflows.html", title: "Workflows", retired: true },
@@ -16,7 +16,7 @@ export const guidePages = [
 
 export const guideAliases = {
   "/docs/index.html": "/adoption",
-  "/examples/basic-controls/index.html": "/system#controls",
+  "/examples/basic-controls/index.html": "/tokens#controls",
   "/examples/signature/index.html": "/#wordmark-study",
   "/patterns/task-states.html": "/components/motion-task-list",
 };
@@ -24,8 +24,8 @@ export const guideAliases = {
 export function matchGuidePath(pathname) {
   const path = pathname.replace(/\/$/, "") || "/";
   return guidePages.find(page =>
-    path === page.path || path === "/" + page.legacy ||
-    (page.detail && path.startsWith(page.path + "/") && path.split("/").length === 3 &&
+    path === page.path || path === page.alias || path === "/" + page.legacy ||
+    (page.detail && (path.startsWith(page.path + "/") || (page.alias && path.startsWith(page.alias + "/"))) && path.split("/").length === 3 &&
       (page.detail === true || page.detail.includes(path.split("/")[2])))
   );
 }
@@ -42,5 +42,8 @@ export function canonicalGuideUrl(url) {
   if (legacy && page.detail && hash.length > 1 && hash !== "#yg-inspect") {
     return page.path + "/" + hash.slice(1) + search;
   }
-  return (legacy ? page.path : pathname.replace(/\/$/, "") || "/") + search + hash;
+  const path = pathname.replace(/\/$/, "") || "/";
+  const canonical = page.alias && (path === page.alias || path.startsWith(page.alias + "/"))
+    ? page.path + path.slice(page.alias.length) : path;
+  return (legacy ? page.path : canonical) + search + hash;
 }

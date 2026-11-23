@@ -52,21 +52,16 @@
   pointer-events: none;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .yg-menu-bar > button, .yg-navigation-menu li > button {
-    transition: background-color var(--yg-press) var(--yg-settle), color var(--yg-press) var(--yg-settle);
-  }
-  .yg-navigation-menu li > button > .yg-icon {
-    transition: rotate var(--yg-travel) var(--yg-settle);
-  }
   .yg-selection-marker {
     transition:
-      translate var(--yg-change) var(--yg-settle),
-      width var(--yg-change) var(--yg-settle),
-      height var(--yg-change) var(--yg-settle);
+      translate var(--yg-motion-picker-highlight),
+      width var(--yg-motion-picker-highlight),
+      height var(--yg-motion-picker-highlight);
   }
 }
 
 .yg-tabs .yg-selection-marker {
+  transition: none;
   --yg-selection-x: var(--active-tab-left, 0px);
   --yg-selection-y: var(--active-tab-top, 0px);
   --yg-selection-width: var(--active-tab-width, 0px);
@@ -82,7 +77,7 @@
   border-radius: var(--yg-segment-option-radius);
 }
 
-.yg-tabs [role="tab"], .yg-segment > button { min-block-size: var(--yg-size-regular); }
+.yg-tabs [role="tab"] { min-block-size: var(--yg-size-regular); }
 .yg-tabs [role="tab"]:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: -2px; }
 .yg-segment > button:focus-visible {
   text-decoration: underline;
@@ -94,7 +89,7 @@
   .yg-selection-marker[data-ready] {
     display: block;
   }
-  .yg-tabs [role="tablist"]:has(> .yg-selection-marker[data-ready][style*="--active-tab-width"]) > [aria-selected="true"],
+  .yg-tabs [role="tablist"]:has(> .yg-selection-marker[data-ready]) > [aria-selected="true"],
   .yg-segment:has(> .yg-selection-marker[data-ready][style*="--segmented-control-indicator-width"]) > button[data-state="on"] {
     background: transparent;
   }
@@ -111,6 +106,20 @@
 
 .yg-sidebar-layout[data-panel="rail"] {
   --yg-sidebar-track: minmax(0, calc(var(--yg-size-touch) + 2 * var(--boa-space-8)));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .yg-menu-bar > button, .yg-navigation-menu li > button {
+    transition: background-color var(--yg-motion-surface-focus), color var(--yg-motion-surface-focus);
+  }
+  .yg-navigation-menu li > button > .yg-icon { transition: rotate var(--yg-motion-card-detail); }
+  .yg-tabs [role="tabpanel"]:not([hidden]) {
+    animation: yg-section-arrive var(--yg-change) var(--yg-settle);
+  }
+}
+
+@keyframes yg-section-arrive {
+  from { translate: 0 var(--boa-space-4); }
 }
 
 /* The pill is the shared resting and selected presentation. */
@@ -144,7 +153,7 @@
   background: var(--yg-inverse);
 }
 @media (forced-colors: none) {
-  .yg-tabs[data-presentation="pill"] [role="tablist"]:has(> .yg-selection-marker[data-ready][style*="--active-tab-width"]) > [aria-selected="true"] {
+  .yg-tabs[data-presentation="pill"] [role="tablist"]:has(> .yg-selection-marker[data-ready]) > [aria-selected="true"] {
     background: transparent;
   }
 }

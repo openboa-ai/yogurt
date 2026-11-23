@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-stat-card.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { StatCard } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { StatCard } from \"@openboa/yogurt/motion-stat-card\";\n"
     }
   ]
 }

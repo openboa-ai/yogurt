@@ -1,0 +1,508 @@
+"use client";
+import {
+  Checkbox,
+  Field,
+  SpringTextInput
+} from "./chunk-YFEC5KYD.js";
+import {
+  Button,
+  IconButton
+} from "./chunk-JHTLYLR5.js";
+import {
+  Icon,
+  cx
+} from "./chunk-A5HC7UHE.js";
+
+// packages/web/src/controls/inputs.tsx
+import { OTPInput as SDKOTP, OTPInputGroup, OTPInputSlot, createOTPInputController } from "@ui-sdk/react/otp-input";
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState
+} from "react";
+import { Toggle as SDKToggle, ToggleGroup as SDKToggleGroup } from "@ui-sdk/react/toggle";
+import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
+import { Radio as SDKRadio, RadioGroup as SDKRadioGroup } from "@ui-sdk/react/radio";
+import { jsx, jsxs } from "react/jsx-runtime";
+function InputGroup({
+  label,
+  leading,
+  trailing,
+  help,
+  error,
+  id,
+  size = "featured",
+  motion,
+  containerClassName,
+  ...input
+}) {
+  const sharedInput = ["text", "search", "email", "url", "tel", "password"].includes(input.type ?? "text") && !Array.isArray(input.value) && !Array.isArray(input.defaultValue);
+  const { onSelect, ...sharedProps } = input;
+  return /* @__PURE__ */ jsx(Field, { ...{ id, label, help, error }, children: (binding) => /* @__PURE__ */ jsxs(SDKInputGroup, { className: cx("yg-input yg-input-group", `yg-input-size-${size}`, containerClassName), children: [
+    leading,
+    sharedInput && motion === "spring" && (input.type ?? "text") === "text" ? /* @__PURE__ */ jsx(SpringTextInput, { ...input, ...binding, "aria-invalid": binding["aria-invalid"] ?? input["aria-invalid"], "aria-describedby": [input["aria-describedby"], binding["aria-describedby"]].filter(Boolean).join(" ") || void 0 }) : sharedInput ? /* @__PURE__ */ jsx(
+      SDKInput,
+      {
+        ...sharedProps,
+        ...binding,
+        "aria-invalid": binding["aria-invalid"] ?? input["aria-invalid"],
+        "aria-describedby": [input["aria-describedby"], binding["aria-describedby"]].filter(Boolean).join(" ") || void 0,
+        render: onSelect ? /* @__PURE__ */ jsx("input", { onSelect }) : void 0,
+        value: input.value == null ? void 0 : String(input.value),
+        defaultValue: input.defaultValue == null ? void 0 : String(input.defaultValue),
+        onValueChange: (next, details) => {
+          if (details.reason === "imperative" && input.maxLength !== void 0 && input.maxLength >= 0 && next.length > input.maxLength) details.cancel();
+        }
+      }
+    ) : /* @__PURE__ */ jsx("input", { ...input, ...binding }),
+    trailing
+  ] }) });
+}
+function OtpDigit({ value }) {
+  return /* @__PURE__ */ jsx("span", { className: "yg-otp-digit", children: value });
+}
+function insertOTPDigits(field, digits, count) {
+  const start = field.selectionStart ?? field.value.length;
+  const end = field.selectionEnd ?? start;
+  return (field.value.slice(0, start) + digits + field.value.slice(end)).slice(0, count);
+}
+function InputOTP({
+  label,
+  length = 6,
+  value,
+  onValueChange,
+  name,
+  disabled,
+  verified = false,
+  help,
+  error
+}) {
+  const count = Math.max(1, Math.min(12, Math.trunc(length) || 6));
+  const [controller] = useState(createOTPInputController);
+  const root = useRef(null);
+  useLayoutEffect(() => {
+    const host = root.current;
+    const field = host?.querySelector("input");
+    if (!host || !field) return;
+    field.removeAttribute("maxlength");
+    field.removeAttribute("minlength");
+    field.pattern = "[0-9]*";
+    const cleanReplacement = (event) => {
+      const text = event.data;
+      if (event.defaultPrevented || !event.cancelable || event.isComposing || !event.inputType.startsWith("insert") || !text || event.target !== field) return;
+      const digits = text.replace(/\D/g, "");
+      if (!digits || digits === text) return;
+      event.preventDefault();
+      event.stopPropagation();
+      controller.setValue(insertOTPDigits(field, digits, count), { reason: "input-change", event });
+    };
+    host.addEventListener("beforeinput", cleanReplacement, true);
+    return () => host.removeEventListener("beforeinput", cleanReplacement, true);
+  }, [controller, count]);
+  const confirmed = verified && value.length >= count;
+  return /* @__PURE__ */ jsx(Field, { ...{ label, help, error }, children: (binding) => /* @__PURE__ */ jsxs(
+    SDKOTP,
+    {
+      ...binding,
+      ref: root,
+      "aria-label": label,
+      className: "yg-otp",
+      "data-agent-secret": "",
+      "data-partial": value.length > 0 && value.length < count || void 0,
+      "data-verified": confirmed || void 0,
+      maxLength: count,
+      pattern: "digits",
+      controller,
+      onInputCapture: (event) => {
+        const field = event.target;
+        if (!(field instanceof HTMLInputElement)) return;
+        const raw = field.value;
+        const digits = raw.replace(/\D/g, "").slice(0, count);
+        if (raw === digits) return;
+        event.stopPropagation();
+        field.value = value;
+        controller.setValue(digits, { reason: "input-change", event: event.nativeEvent });
+      },
+      onPasteCapture: (event) => {
+        const text = event.clipboardData.getData("text/plain");
+        if (!/[^\d\s-]/.test(text) || !(event.target instanceof HTMLInputElement)) return;
+        const digits = text.replace(/\D/g, "");
+        if (!digits) return;
+        event.stopPropagation();
+        event.preventDefault();
+        controller.setValue(
+          insertOTPDigits(event.target, digits, count),
+          { reason: "paste", event: event.nativeEvent }
+        );
+      },
+      name,
+      disabled,
+      value,
+      onValueChange,
+      style: { "--yg-digits": count },
+      children: [
+        /* @__PURE__ */ jsx(OTPInputGroup, { className: "yg-otp-slots", children: Array.from({ length: count }, (_, index) => /* @__PURE__ */ jsx(OTPInputSlot, { index, render: /* @__PURE__ */ jsx("span", {}), children: ({ char }) => char && /* @__PURE__ */ jsx("span", { className: "yg-otp-ink", children: /* @__PURE__ */ jsx(OtpDigit, { value: char }, char) }) }, index)) }),
+        confirmed && /* @__PURE__ */ jsxs("span", { role: "status", className: "yg-otp-confirmation", children: [
+          /* @__PURE__ */ jsx(Icon, { name: "check" }),
+          " Verified"
+        ] })
+      ]
+    }
+  ) });
+}
+function SplitTextField({
+  label,
+  parts,
+  onValueChange,
+  separator = "\u2013"
+}) {
+  return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset", children: [
+    /* @__PURE__ */ jsx("legend", { className: "yg-label", children: label }),
+    /* @__PURE__ */ jsx("div", { className: "yg-split-inputs", children: parts.map((p, i) => /* @__PURE__ */ jsxs("span", { children: [
+      i > 0 && /* @__PURE__ */ jsx("i", { "aria-hidden": "true", children: separator }),
+      /* @__PURE__ */ jsx(
+        SDKInput,
+        {
+          className: "yg-standalone",
+          "aria-label": p.label,
+          value: p.value,
+          maxLength: p.maxLength,
+          inputMode: p.inputMode,
+          onValueChange: (next, details) => {
+            if (details.reason === "imperative" && p.maxLength !== void 0 && p.maxLength >= 0 && next.length > p.maxLength) details.cancel();
+          },
+          onChange: (e) => {
+            onValueChange(p.id, e.currentTarget.value);
+          }
+        }
+      )
+    ] }, p.id)) })
+  ] });
+}
+function NumericSpinner({
+  label,
+  help,
+  decreaseLabel,
+  increaseLabel,
+  value,
+  min = 0,
+  max = 99,
+  step = 1,
+  onValueChange,
+  disabled
+}) {
+  const increment = Math.max(1, Math.floor(step) || 1);
+  const previous = useRef(value);
+  const last = previous.current;
+  useLayoutEffect(() => {
+    previous.current = value;
+  }, [value]);
+  return /* @__PURE__ */ jsxs("div", { className: "yg-quantity", role: "group", "aria-label": label, children: [
+    /* @__PURE__ */ jsxs("span", { className: "yg-quantity-label", children: [
+      /* @__PURE__ */ jsx("span", { className: "yg-label", children: label }),
+      help && /* @__PURE__ */ jsx("span", { className: "yg-help", children: help })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsx(
+        Button,
+        {
+          emphasis: "soft",
+          shape: "pill",
+          size: "comfortable",
+          "aria-label": decreaseLabel ?? "Decrease " + label,
+          disabled: disabled || value <= min,
+          onClick: () => onValueChange(Math.max(min, value - increment)),
+          children: "\u2212"
+        }
+      ),
+      /* @__PURE__ */ jsxs("output", { "aria-label": label, "aria-live": "polite", "data-decreasing": value < last || void 0, children: [
+        [min, max, last, value].map((measurement, index) => /* @__PURE__ */ jsx("span", { className: "yg-quantity-measure", "aria-hidden": "true", children: measurement }, index)),
+        last !== value && /* @__PURE__ */ jsx("span", { className: "yg-quantity-out", "aria-hidden": "true", children: last }, `old-${value}`),
+        /* @__PURE__ */ jsx("span", { className: last !== value ? "yg-quantity-in" : void 0, children: value }, value)
+      ] }),
+      /* @__PURE__ */ jsx(
+        IconButton,
+        {
+          icon: "plus",
+          label: increaseLabel ?? "Increase " + label,
+          emphasis: "soft",
+          shape: "pill",
+          size: "comfortable",
+          disabled: disabled || value >= max,
+          onClick: () => onValueChange(Math.min(max, value + increment))
+        }
+      )
+    ] })
+  ] });
+}
+function Rating({
+  label,
+  value,
+  onValueChange,
+  max = 5,
+  showStatus = false
+}) {
+  const id = useId(), count = Math.max(1, Math.min(10, Math.floor(max) || 5));
+  const [hovered, setHovered] = useState(0);
+  const shown = Math.max(0, Math.min(count, hovered || value));
+  if (!onValueChange)
+    return /* @__PURE__ */ jsxs("span", { className: "yg-score", "aria-label": label, children: [
+      value,
+      " / ",
+      count
+    ] });
+  return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset", style: { "--yg-rating-shown": shown }, children: [
+    /* @__PURE__ */ jsx("legend", { className: "yg-label", children: label }),
+    /* @__PURE__ */ jsx(
+      SDKRadioGroup,
+      {
+        className: "yg-rating",
+        "aria-label": label,
+        name: id,
+        value: String(value),
+        onValueChange: (next, details) => {
+          const selected = Number(next);
+          if (next === null || !Number.isInteger(selected) || selected < 1 || selected > count) {
+            details.cancel();
+            return;
+          }
+          onValueChange(selected);
+        },
+        onPointerLeave: () => setHovered(0),
+        onKeyDown: (event) => {
+          if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) setHovered(0);
+        },
+        children: Array.from({ length: count }, (_, i) => /* @__PURE__ */ jsxs(
+          "label",
+          {
+            "data-filled": i < shown || void 0,
+            onPointerEnter: (event) => {
+              if (event.pointerType === "mouse") setHovered(i + 1);
+            },
+            children: [
+              /* @__PURE__ */ jsx(
+                SDKRadio,
+                {
+                  value: String(i + 1),
+                  "aria-label": i + 1 + " of " + count
+                }
+              ),
+              /* @__PURE__ */ jsx("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", style: { "--yg-star-fill": i < shown ? "100%" : "0%" }, children: /* @__PURE__ */ jsx("path", { d: "m12 3 2.8 5.8 6.4.9-4.6 4.5 1.1 6.4-5.7-3-5.7 3 1.1-6.4-4.6-4.5 6.4-.9z" }) })
+            ]
+          },
+          i
+        ))
+      }
+    ),
+    showStatus && /* @__PURE__ */ jsx(
+      "span",
+      {
+        className: "yg-help yg-rating-status",
+        role: "status",
+        "aria-label": value ? `${value} of ${count} selected` : "Choose a rating",
+        children: /* @__PURE__ */ jsx("span", { "aria-hidden": "true", children: ["Choose a rating", ...Array.from({ length: count }, (_, i) => `${i + 1} of ${count} selected`)].map((text) => /* @__PURE__ */ jsx("span", { children: text }, text)) })
+      }
+    )
+  ] });
+}
+function Agreement({
+  label,
+  items,
+  selected,
+  onValueChange
+}) {
+  const enabled = items.filter((i) => !i.disabled), chosen = enabled.filter((i) => selected.includes(i.id)), all = enabled.length > 0 && chosen.length === enabled.length;
+  function update(ids, on) {
+    const keys = new Set(selected);
+    ids.forEach((id) => on ? keys.add(id) : keys.delete(id));
+    onValueChange([...keys]);
+  }
+  return /* @__PURE__ */ jsxs("fieldset", { className: "yg-fieldset yg-agreement", children: [
+    /* @__PURE__ */ jsx("legend", { className: "yg-label", children: label }),
+    /* @__PURE__ */ jsx(
+      Checkbox,
+      {
+        label: "Select all",
+        disabled: !enabled.length,
+        checked: all ? true : chosen.length ? "indeterminate" : false,
+        onCheckedChange: () => update(
+          enabled.map((i) => i.id),
+          !all
+        )
+      }
+    ),
+    items.map((i) => /* @__PURE__ */ jsxs("div", { children: [
+      /* @__PURE__ */ jsx(
+        Checkbox,
+        {
+          label: i.label,
+          disabled: i.disabled,
+          checked: selected.includes(i.id),
+          onCheckedChange: (v) => update([i.id], v === true)
+        }
+      ),
+      i.detail
+    ] }, i.id))
+  ] });
+}
+function keypadRows(mode, upper) {
+  const letters = ["qwertyuiop", "asdfghjkl", "zxcvbnm"].map(
+    (row) => upper ? row.toUpperCase() : row
+  );
+  return mode === "number" ? ["123", "456", "789", "0"] : mode === "alphabet" ? letters : ["1234567890", ...letters];
+}
+function Keypad({
+  label,
+  mode = "number",
+  onKey,
+  onDelete,
+  onSubmit,
+  disabled = false
+}) {
+  const [upper, setUpper] = useState(false), [gaps, setGaps] = useState([]);
+  useEffect(() => {
+    if (mode === "private")
+      setGaps(Array.from(crypto.getRandomValues(new Uint32Array(4))));
+  }, [mode]);
+  return /* @__PURE__ */ jsxs("div", { className: "yg-keypad", role: "group", "aria-label": label, "data-mode": mode, children: [
+    (mode === "private" && !gaps.length ? [] : keypadRows(mode, upper)).map(
+      (row, i) => {
+        const keys = Array.from(row);
+        if (mode === "private" && gaps[i] !== void 0)
+          keys.splice(gaps[i] % (keys.length + 1), 0, null);
+        return /* @__PURE__ */ jsx("div", { className: "yg-key-row", children: keys.map(
+          (key, j) => key === null ? /* @__PURE__ */ jsx("span", { "aria-hidden": "true" }, "gap" + j) : /* @__PURE__ */ jsx(
+            "button",
+            {
+              type: "button",
+              disabled,
+              onClick: () => onKey(key),
+              children: key
+            },
+            key
+          )
+        ) }, i);
+      }
+    ),
+    /* @__PURE__ */ jsxs("div", { className: "yg-key-actions", children: [
+      mode !== "number" && /* @__PURE__ */ jsx(
+        Button,
+        {
+          emphasis: "quiet",
+          disabled,
+          "aria-pressed": upper,
+          onClick: () => setUpper(!upper),
+          children: "Shift"
+        }
+      ),
+      /* @__PURE__ */ jsx(Button, { emphasis: "quiet", disabled, onClick: onDelete, children: "Delete" }),
+      onSubmit && /* @__PURE__ */ jsx(Button, { disabled, onClick: onSubmit, children: "Done" })
+    ] })
+  ] });
+}
+function Form({
+  label,
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsx("form", { ...props, "aria-label": label, className: cx("yg-stack", className) });
+}
+function Toggle({
+  pressed,
+  onPressedChange,
+  children,
+  disabled
+}) {
+  return /* @__PURE__ */ jsx(
+    SDKToggle,
+    {
+      pressed,
+      onPressedChange,
+      className: "yg-button",
+      "data-emphasis": pressed ? "soft" : "quiet",
+      "data-tone": "neutral",
+      "data-control-size": "regular",
+      "data-shape": "rounded",
+      disabled,
+      children: /* @__PURE__ */ jsx("span", { className: "yg-button-inner", children: /* @__PURE__ */ jsx("span", { className: "yg-button-label", children: /* @__PURE__ */ jsx("span", { className: "yg-button-content", children }) }) })
+    }
+  );
+}
+function ToggleGroup({
+  label,
+  items,
+  value,
+  onValueChange,
+  multiple = false
+}) {
+  return /* @__PURE__ */ jsx(
+    SDKToggleGroup,
+    {
+      className: "yg-toggle-group",
+      "aria-label": label,
+      render: (props) => /* @__PURE__ */ jsx("div", { ...props, role: multiple ? "toolbar" : "radiogroup" }),
+      multiple,
+      deselectable: true,
+      value: multiple ? value : value.slice(0, 1),
+      onValueChange: (next) => {
+        if (next.some((id) => !value.includes(id) && !items.some((item) => item.id === id && !item.disabled))) return;
+        const selected = new Set(next);
+        onValueChange(multiple ? [...value.filter((id) => selected.has(id)), ...next.filter((id) => !value.includes(id))] : next);
+      },
+      onKeyDownCapture: (event) => {
+        if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        const current = event.target.closest("button[data-yg-toggle-id]");
+        const enabled = items.filter((item) => !item.disabled);
+        const index = enabled.findIndex((item) => item.id === current?.dataset.ygToggleId);
+        if (index < 0) return;
+        const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+        const next = {
+          ArrowRight: (index + (rtl ? -1 : 1) + enabled.length) % enabled.length,
+          ArrowLeft: (index + (rtl ? 1 : -1) + enabled.length) % enabled.length,
+          Home: 0,
+          End: enabled.length - 1
+        }[event.key];
+        if (next === void 0) return;
+        event.preventDefault();
+        [...event.currentTarget.querySelectorAll("button[data-yg-toggle-id]")].find((button) => button.dataset.ygToggleId === enabled[next].id)?.focus();
+      },
+      children: items.map((item) => /* @__PURE__ */ jsx(
+        SDKToggle,
+        {
+          value: item.id,
+          disabled: item.disabled,
+          className: "yg-toggle-item",
+          "data-yg-toggle-id": item.id,
+          render: (props, state) => /* @__PURE__ */ jsx(
+            "button",
+            {
+              ...props,
+              disabled: item.disabled,
+              role: multiple ? void 0 : "radio",
+              "aria-checked": multiple ? void 0 : state.pressed,
+              "aria-pressed": multiple ? state.pressed : void 0,
+              "data-state": state.pressed ? "on" : "off"
+            }
+          ),
+          children: item.label
+        },
+        item.id
+      ))
+    }
+  );
+}
+
+export {
+  InputGroup,
+  InputOTP,
+  SplitTextField,
+  NumericSpinner,
+  Rating,
+  Agreement,
+  Keypad,
+  Form,
+  Toggle,
+  ToggleGroup
+};

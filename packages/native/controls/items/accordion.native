@@ -1,5 +1,0 @@
-<template name="yg-accordion" args="label expanded">
-  <accordion text="{label}" selected="{expanded}" on-toggle="toggle">
-    <slot/>
-  </accordion>
-</template>

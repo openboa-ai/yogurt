@@ -45,7 +45,7 @@ async function run(browser) {
     if (output && width !== 768) await page.screenshot({path: join(output, `yogurt-motion-patterns-${width}.png`)});
     const links = page.locator('[aria-label="Pattern index"] a');
     const ids = await links.evaluateAll(nodes => nodes.map(node => node.hash.slice(1)));
-    assert.equal(ids.length, 78, "The retained patterns are indexed");
+    assert.equal(ids.length, 79, "The retained patterns are indexed");
     assert.equal(ids.length, new Set(ids).size, "Gallery IDs are unique");
     for (const id of ["expressive", "rubber-dock", "pull-cord", "magnetic-press", "attention-ring"])
       assert(!ids.includes(id), `Retired entry remains: ${id}`);
@@ -77,7 +77,7 @@ async function run(browser) {
       return {
         widths: cells.map(cell => cell.offsetWidth),
         right: cells.at(-1).getBoundingClientRect().right,
-        outline: getComputedStyle(node.querySelector("[data-cursor]")).outlineStyle,
+        outline: getComputedStyle(node.querySelector("[data-active]")).outlineStyle,
         pageWidth: document.documentElement.scrollWidth,
       };
     });
@@ -89,15 +89,26 @@ async function run(browser) {
     const high = interval.getByRole("slider", {name:"Maximum price"});
     await high.press("End");
     await low.press("End");
-    await page.waitForFunction(() => Number(document.querySelector("#range-slider .yg-motion-range").style.getPropertyValue("--yg-tip-merge")) > .95);
-    const boundary = await interval.locator(".yg-motion-range").evaluate(node => {
-      const tip = node.querySelector('[data-tip="joined"]').getBoundingClientRect();
+    const boundary = await interval.locator(".yg-value-slider").evaluate(async node => {
+      const tips = [...node.querySelectorAll("[data-tip]")];
+      await Promise.allSettled(tips.flatMap(tip => tip.getAnimations().map(animation => animation.finished)));
+      const visible = tips.filter(tip => Number(getComputedStyle(tip).opacity) > .95);
       const min = node.querySelector('[data-thumb="start"]').getBoundingClientRect();
       const max = node.querySelector('[data-thumb="end"]').getBoundingClientRect();
       const card = node.getBoundingClientRect();
-      return {gap: max.left - min.left, left: tip.left - card.left, right: card.right - tip.right};
+      const boxes = visible.map(tip => tip.getBoundingClientRect());
+      return {
+        gap: max.left - min.left,
+        joined: node.hasAttribute("data-joined"),
+        count: visible.length,
+        left: Math.min(...boxes.map(box => box.left)) - card.left,
+        right: card.right - Math.max(...boxes.map(box => box.right)),
+        clearance: boxes.length === 2 ? boxes[1].left - boxes[0].right : null,
+      };
     });
-    assert(boundary.gap >= 31 && boundary.left >= 0 && boundary.right >= 0, JSON.stringify({width, ...boundary}));
+    assert(boundary.gap >= 31 && boundary.count === (boundary.joined ? 1 : 2) &&
+      boundary.left >= 0 && boundary.right >= 0 && (boundary.clearance === null || boundary.clearance >= 0),
+      JSON.stringify({width, ...boundary}));
     await page.goto(gallery("motion-patterns") + "#task-list");
     const indexToggle = page.getByRole("button", {name: "Browse patterns"});
     if (await indexToggle.isVisible()) await indexToggle.click();
@@ -166,7 +177,7 @@ async function run(browser) {
     await options.waitFor();
     assert.equal(await trigger.getAttribute("aria-expanded"), "true");
     await page.keyboard.press("ArrowDown");
-    await page.waitForFunction(() => document.activeElement?.textContent.includes("In review"));
+    await page.waitForFunction(() => document.querySelector(".yg-spring-option[data-highlighted]")?.textContent.includes("In review"));
     await page.keyboard.press("Escape");
     await options.waitFor({state:"hidden"});
     await page.waitForFunction(() => document.activeElement === document.querySelector(".yg-spring-trigger"));
@@ -180,7 +191,7 @@ async function run(browser) {
     assert.equal(await view.getAttribute("aria-expanded"), "false");
     await view.click();
     const selectedReview = options.getByRole("option", {name:"In review"});
-    assert.equal(await selectedReview.getAttribute("data-state"), "checked");
+    assert.equal(await selectedReview.getAttribute("aria-selected"), "true");
     assert.equal(await selectedReview.locator(".yg-spring-check path").evaluate(node =>
       parseFloat(getComputedStyle(node).strokeDashoffset)), 0);
     await page.keyboard.press("Escape");
@@ -207,11 +218,11 @@ async function run(browser) {
     assert.deepEqual(await wifi.evaluate(node => {
       const {width, height} = node.getBoundingClientRect();
       return [width, height];
-    }), [52, 32]);
+    }), [44, 24]);
     await wifi.evaluate(node => Promise.allSettled(node.getAnimations({subtree:true}).map(animation => animation.finished)));
     const rightInset = await wifi.evaluate(node =>
       Math.round(node.getBoundingClientRect().right - node.querySelector("span").getBoundingClientRect().right));
-    assert.equal(rightInset, 3, "The checked thumb remains inside the track");
+    assert.equal(rightInset, 2, "The checked thumb keeps its inset inside the track");
     await wifi.press("Space");
     assert.equal(await wifi.getAttribute("aria-checked"), "false");
     assert.equal(await wifi.evaluate(node => node === document.activeElement), true);
@@ -253,7 +264,11 @@ async function run(browser) {
     await letterField.fill("a".repeat(38));
     assert.equal(await letterControl.getAttribute("data-limit-state"), "near");
     assert.equal(await letterCount.innerText(), "10 remaining");
-    const nearColor = await letterCount.evaluate(node => getComputedStyle(node).color);
+    const countColor = () => letterCount.evaluate(async node => {
+      await Promise.allSettled(node.getAnimations().map(animation => animation.finished));
+      return getComputedStyle(node).color;
+    });
+    const nearColor = await countColor();
     await letterField.fill("a".repeat(60));
     assert.equal(await letterField.inputValue(), "a".repeat(48));
     assert.equal(await letterControl.getAttribute("data-limit-state"), "full");
@@ -261,7 +276,7 @@ async function run(browser) {
     assert.equal(await letterField.inputValue(), "a".repeat(48));
     assert.equal(await letterCount.innerText(), "0 remaining");
     assert(await letterCount.isVisible());
-    assert.notEqual(await letterCount.evaluate(node => getComputedStyle(node).color), nearColor);
+    assert.notEqual(await countColor(), nearColor);
     await letterLimit.getByRole("button", {name: "Post"}).click();
     assert.equal(await letterField.inputValue(), "");
 
@@ -300,16 +315,16 @@ async function run(browser) {
     const minimum = price.getByRole("slider", {name:"Minimum price"});
     const maximum = price.getByRole("slider", {name:"Maximum price"});
     await minimum.press("ArrowRight");
-    assert.equal(await minimum.getAttribute("aria-valuenow"), "200");
+    assert.equal(await minimum.inputValue(), "200");
     await maximum.press("ArrowLeft");
-    assert.equal(await maximum.getAttribute("aria-valuenow"), "750");
+    assert.equal(await maximum.inputValue(), "750");
     await minimum.press("End");
-    assert.equal(await minimum.getAttribute("aria-valuenow"), await minimum.getAttribute("aria-valuemax"));
-    assert(Number(await minimum.getAttribute("aria-valuenow")) < 750);
-    assert.equal(await maximum.getAttribute("aria-valuemin"), "750");
-    assert.equal(await price.locator(".yg-motion-range-area").getAttribute("data-joined"), "true");
+    assert.equal(await minimum.inputValue(), await minimum.getAttribute("max"));
+    assert(Number(await minimum.inputValue()) < 750);
+    assert(Number(await maximum.getAttribute("min")) >= Number(await minimum.inputValue()));
+    assert.equal(await price.locator(".yg-value-slider[data-interval]").count(), 1);
     await minimum.press("Home");
-    assert.equal(await minimum.getAttribute("aria-valuenow"), "0");
+    assert.equal(await minimum.inputValue(), "0");
 
     const otp = (await demo("otp")).getByRole("textbox");
     await otp.fill("12a34567");
@@ -526,7 +541,10 @@ async function checkColorRoles(browser, colorScheme) {
     await expectRole(currentMarker, "signal-warning");
     await view.click();
     await neutral(page.getByRole("listbox"));
-    await neutral(page.locator(".yg-spring-option[data-highlighted]"));
+    const highlight = page.locator(".yg-spring-highlight[data-ready]");
+    await highlight.waitFor();
+    await page.locator(".yg-spring-option[data-selected]").waitFor();
+    await neutral(highlight);
     const review = page.getByRole("option", {name: "In review"});
     await expectRole(review.locator(".yg-spring-symbol"), "action");
     await review.click();

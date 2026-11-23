@@ -1,4 +1,4 @@
-import { useId, useState, type ReactNode } from "react";
+import { useId, useState, type CSSProperties, type ReactNode } from "react";
 import { Heading, Stack } from "../foundation/foundation.js";
 
 export interface Fact {
@@ -192,6 +192,10 @@ export function Chart({
     8 + (224 * i) / Math.max(1, points.length - 1),
     67 - (60 * (v / magnitude - scaledLower)) / range,
   ];
+  const interior = points.slice(1, -1);
+  const missingIndex = interior.findIndex(point => point.value === null || !Number.isFinite(point.value));
+  const tickIndex = (missingIndex < 0 ? Math.floor(interior.length / 2) : missingIndex) + 1;
+  const tick = points.length > 2 ? points[tickIndex] : undefined;
   let path = "",
     start = true;
   const dots: { id: string; x: number; y: number }[] = [];
@@ -236,7 +240,15 @@ export function Chart({
         {numeric.length === 0 && <span className="yg-chart-empty">No readings</span>}
         <div className="yg-chart-range" aria-hidden="true">
           <span>{points[0]?.label}</span>
-          <span>{points.at(-1)?.label}</span>
+          {tick && numeric.length > 0 && (
+            <span className="yg-chart-interior-tick" style={{
+              "--yg-chart-tick-position": `${100 * xy(0, tickIndex)[0] / 240}%`,
+            } as CSSProperties}>
+              {tick.label}
+              {missingIndex >= 0 && <small>No reading</small>}
+            </span>
+          )}
+          <span>{points.length > 1 ? points.at(-1)?.label : undefined}</span>
         </div>
       </div>
       <p className="yg-meta">

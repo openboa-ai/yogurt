@@ -11,7 +11,7 @@
 .yg-streaming-cursor { display: inline-block; inline-size: .45em; block-size: 1em; margin-inline-start: .15em; vertical-align: -.12em; border-radius: var(--boa-radius-round); background: currentColor; animation: yg-streaming-pulse 1s ease-in-out infinite alternate; }
 .yg-ghost-field { display: grid; gap: var(--yg-gap-inline); min-inline-size: 0; }
 .yg-ghost-field label { font: var(--yg-font-label); }
-.yg-ghost-input { position: relative; overflow: hidden; border: 0; border-radius: var(--yg-radius-control); background: var(--yg-field); }
+.yg-ghost-input { position: relative; overflow: hidden; border: 0; border-radius: var(--yg-radius-control); background: var(--yg-field); transition: background-color var(--yg-change) var(--yg-settle); }
 .yg-ghost-input textarea, .yg-ghost-mirror { box-sizing: border-box; width: 100%; min-height: var(--yg-size-regular); padding: var(--boa-space-8) var(--yg-inset-regular); font: var(--yg-font-body); white-space: pre; }
 .yg-ghost-input textarea { position: relative; display: block; border: 0; outline: 0; color: transparent; caret-color: var(--yg-text); background: transparent; }
 .yg-ghost-mirror { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
@@ -26,14 +26,16 @@
   min-inline-size: 0;
   padding: var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-compact) var(--yg-inset-panel);
   border: 0;
-  border-radius: var(--yg-radius-sheet);
+  border-radius: var(--yg-prompt-corner);
   background: var(--yg-raised-surface);
+  transition: background-color var(--yg-change) var(--yg-settle);
 }
 .yg-prompt-panel {
   grid-column: 1 / -1;
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
+  transition: grid-template-rows var(--yg-expand) var(--yg-arrive), opacity var(--yg-change) var(--yg-settle);
 }
 .yg-prompt-box[aria-busy="true"] .yg-prompt-panel { grid-template-rows: 1fr; opacity: 1; }
 .yg-prompt-status-slot { min-block-size: 0; overflow: hidden; }
@@ -57,6 +59,7 @@
   min-inline-size: 0;
   block-size: var(--yg-prompt-editor-height, var(--yg-type-editor-line));
   margin-block-end: 5px;
+  transition: block-size var(--yg-expand) var(--yg-arrive);
 }
 .yg-prompt-measure, .yg-prompt-editor textarea {
   box-sizing: border-box;
@@ -115,6 +118,11 @@
 .yg-prompt-action[data-busy] .yg-prompt-arrow { rotate: 90deg; scale: 0; }
 .yg-prompt-action[data-busy] .yg-prompt-stop { scale: 1; }
 @media (prefers-reduced-motion: no-preference) {
+  .yg-prompt-editor { transition: block-size var(--yg-motion-prompt-editor); }
+  .yg-prompt-panel { transition: grid-template-rows var(--yg-motion-prompt-status), opacity var(--yg-motion-prompt-status); }
+  .yg-prompt-action { transition: scale var(--yg-press) var(--yg-settle), background-color var(--yg-change) var(--yg-settle), color var(--yg-change) var(--yg-settle); }
+  .yg-prompt-arrow, .yg-prompt-stop { transition: scale var(--yg-motion-prompt-action), rotate var(--yg-motion-prompt-action); }
+  .yg-prompt-action:not(:disabled):active { scale: .9; }
   .yg-prompt-indicator { animation: yg-prompt-pulse 1s ease-in-out infinite; }
 }
 @keyframes yg-prompt-pulse { 50% { scale: .55; opacity: .55; } }
@@ -187,6 +195,7 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .yg-streaming-reply[data-streaming] .yg-streaming-word { animation: yg-reply-word var(--yg-motion-picker-slide) both; }
   .yg-ghost-suffix { animation: yg-ghost-appear var(--yg-layer) var(--yg-arrive) both; }
 }
 @keyframes yg-ghost-appear { from { opacity: 0; } }

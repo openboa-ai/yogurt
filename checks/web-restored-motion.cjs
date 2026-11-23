@@ -15,9 +15,23 @@ async function openSpecimen(page, id) {
   return root;
 }
 
+async function openMotionSpecimen(page, id, example) {
+  if (origin) {
+    const url = new URL("/components/" + id, origin);
+    if (!id.startsWith("motion-")) url.searchParams.set("preview", example);
+    await page.goto(url.href);
+    return page.locator(`.specimen[data-component="${id}"]`);
+  }
+  const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/motion-patterns.html"));
+  await page.goto(gallery.href + "#" + example);
+  return page.locator(".motion-pattern-article");
+}
+
 async function sampleTween(locator, property) {
   return locator.evaluate(async (node, prop) => {
-    const find = () => node.getAnimations().find(animation => animation.transitionProperty === prop);
+    const physical = { "block-size": "height", "inline-size": "width" }[prop];
+    const find = () => node.getAnimations().find(animation => [prop, physical].includes(animation.transitionProperty) &&
+      typeof animation.transitionProperty === "string");
     for (let i = 0; i < 6 && !find(); i++) await new Promise(requestAnimationFrame);
     const animation = find();
     if (!animation) return null;
@@ -29,7 +43,7 @@ async function sampleTween(locator, property) {
       return getComputedStyle(node).getPropertyValue(prop);
     });
     animation.currentTime = duration * .22;
-    return { duration, samples };
+    return { duration, samples, property: animation.transitionProperty };
   }, property);
 }
 
@@ -44,7 +58,7 @@ async function verifyTween(root, selector, property, reduced, id) {
     if (capture) await root.screenshot({ path: join(capture, `${id}-intermediate.png`) });
     await node.evaluate((el, prop) => {
       el.getAnimations().find(animation => animation.transitionProperty === prop)?.finish();
-    }, property);
+    }, result.property);
   }
 }
 
@@ -124,14 +138,49 @@ async function verifyTween(root, selector, property, reduced, id) {
       root = await openSpecimen(page, "action-menu");
       const menu = root.getByRole("button", { name: "View actions" });
       await menu.press("Enter");
-      await verifyTween(root, ".yg-anchored-panel", "opacity", reduced, "action-menu");
+      await verifyTween(root, ".yg-popup-menu", "opacity", reduced, "action-menu");
       await page.keyboard.press("Escape");
       assert.equal(await menu.getAttribute("aria-expanded"), "false");
       assert.equal(await menu.evaluate(node => node === document.activeElement), true);
       assert.equal(await root.getByRole("menuitem").count(), 0);
+      root = await openSpecimen(page, "button");
+      const action = root.getByRole("button").first();
+      await action.scrollIntoViewIfNeeded();
+      const press = await action.boundingBox();
+      await page.mouse.move(press.x + press.width / 2, press.y + press.height / 2);
+      await page.mouse.down();
+      try {
+        await verifyTween(root, ".yg-button", "scale", reduced, "button-press");
+      } finally {
+        await page.mouse.up();
+      }
+      await root.getByRole("status").filter({ hasText: "View saved." }).waitFor();
+      assert.equal(await action.evaluate(node => Number(getComputedStyle(node).scale) || 1), 1,
+        "a released action settles to its original scale");
+
+      root = await openMotionSpecimen(page, "command", "command-palette");
+      const command = root.getByRole("button", { name: "Open command palette" });
+      await command.click();
+      const field = root.getByRole("combobox", { name: "Find a command" });
+      await field.waitFor();
+      await verifyTween(root, ".yg-inline-command", "block-size", reduced, "command-open");
+      await field.press("Escape");
+      assert.equal(await command.getAttribute("aria-expanded"), "false");
+      assert.equal(await command.evaluate(node => node === document.activeElement), true);
+      assert.equal(await root.locator(".yg-inline-command-panel").evaluate(node => node.inert), true);
+      await verifyTween(root, ".yg-inline-command", "block-size", reduced, "command-close");
+
+      root = await openMotionSpecimen(page, "motion-storage-meter", "storage-meter");
+      await root.getByRole("button", { name: "Add files" }).click();
+      await verifyTween(root, ".yg-storage-bar > span", "inline-size", reduced, "storage-fill");
+
+      root = await openMotionSpecimen(page, "motion-letter-limit", "letter-limit");
+      await root.getByRole("textbox", { name: "Short bio" }).fill("A note for the next review.");
+      await verifyTween(root, ".yg-letter-meter > circle:last-child", "stroke-dashoffset", reduced, "letter-meter");
+
       await page.close();
     }
-    console.log("Switch, checkbox, accordion, carousel, progress, layers and reduced motion verified.");
+    console.log("Press, choice, disclosure, carousel, progress, layers, command, meters and reduced motion verified.");
   } finally {
     await browser.close();
   }

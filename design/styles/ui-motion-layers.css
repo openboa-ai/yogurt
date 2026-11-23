@@ -1,107 +1,3 @@
-.yg-morph-tooltip { position: relative; display: inline-flex; }
-.yg-morph-tooltip-trigger {
-  display: inline-flex; align-items: center; gap: var(--yg-gap-inline);
-  min-block-size: var(--yg-size-regular); padding: var(--yg-inset-layer) var(--yg-inset-regular); border: 0;
-  border-radius: var(--yg-radius-control); background: var(--yg-field); color: var(--yg-text);
-  font: var(--yg-font-action); cursor: pointer;
-
-}
-.yg-morph-tooltip-trigger:hover { background: var(--yg-hover); }
-.yg-morph-tooltip-trigger:active { background: var(--yg-hover); }
-.yg-morph-tooltip-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 3px; }
-.yg-morph-tooltip-trigger span { display: inline-grid; place-items: center; inline-size: 16px; block-size: 16px; color: var(--yg-muted); border: 1px solid currentColor; border-radius: 50%; font-size: 11px; font-weight: 700; line-height: 1; box-sizing: border-box;  }
-.yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span { color: var(--yg-text); }
-.yg-morph-tooltip-card {
-  position: absolute; z-index: 10; inset-block-end: calc(100% + 12px); inset-inline-start: 50%;
-  box-sizing: border-box; width: max-content; max-width: min(240px, 80vw); padding: 8px 12px;
-  border: 0; border-radius: 11px; background: var(--yg-inverse); color: var(--yg-on-inverse);
-  font: var(--yg-font-label); overflow-wrap: anywhere; pointer-events: none;
-  opacity: 0; visibility: hidden; transform: translate(-50%, var(--yg-layer-shift)) scale(.96);
-  transform-origin: 50% 140%;
-}
-.yg-morph-tooltip-card::after {
-  content: ""; position: absolute; left: calc(50% - 5px); bottom: -4px; width: 10px; height: 10px;
-  border-radius: 2px; background: inherit; transform: rotate(45deg);
-}
-.yg-morph-tooltip-card[data-open="true"] { opacity: 1; visibility: visible; transform: translate(-50%, 0) scale(1); }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-morph-tooltip-card {
-    transition:
-      opacity var(--yg-layer-exit) var(--yg-arrive),
-      transform var(--yg-layer-exit) var(--yg-arrive),
-      visibility var(--yg-layer-exit);
-  }
-  .yg-morph-tooltip-card[data-open="true"] { transition-duration: var(--yg-layer); }
-}
-.yg-spring-dropdown { display: grid; gap: var(--yg-gap-control); inline-size: min(100%, 232px); min-inline-size: 0; }
-.yg-spring-label { color: var(--yg-muted); font: var(--yg-font-label); }
-.yg-spring-trigger {
-  box-sizing: border-box; display: flex; align-items: center; gap: var(--yg-gap-inline); inline-size: 100%; min-block-size: var(--yg-size-regular);
-  padding: 0 var(--yg-inset-regular); border: 0; border-radius: var(--yg-radius-control);
-  background: var(--yg-field); color: var(--yg-text); font: inherit; text-align: start; cursor: pointer;
-
-}
-.yg-spring-trigger:hover { background: var(--yg-hover); }
-.yg-spring-trigger[data-state="open"] { background: var(--yg-field); }
-.yg-spring-trigger:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
-.yg-spring-symbol { display: block; flex: none; inline-size: 10px; block-size: 10px; border-radius: 50%; background: var(--yg-muted); }
-.yg-spring-symbol[data-marker="in-progress"] { background: var(--yg-signal-warning); }
-.yg-spring-symbol[data-marker="review"] { background: var(--yg-action); }
-.yg-spring-symbol[data-marker="done"] { background: var(--yg-signal-positive); }
-.yg-spring-value { flex: 1; display: grid; min-inline-size: 0; block-size: 100%; overflow: hidden; white-space: nowrap; font: var(--yg-font-body); }
-.yg-spring-value-roll { display: flex; grid-area: 1 / 1; min-inline-size: 0; align-items: center; gap: var(--yg-gap-row); }
-.yg-spring-value-roll[data-outgoing] { visibility: hidden; }
-.yg-spring-value-label { min-inline-size: 0; overflow: hidden; text-overflow: ellipsis; }
-.yg-spring-chevron { display: grid; place-items: center; flex: none; inline-size: var(--yg-glyph); block-size: var(--yg-glyph); color: var(--yg-muted); font-size: var(--yg-glyph); line-height: 1;  }
-.yg-spring-trigger[data-state="open"] .yg-spring-chevron { transform: rotate(180deg); }
-.yg-spring-menu { z-index: 100; box-sizing: border-box; inline-size: var(--radix-select-trigger-width); max-block-size: var(--radix-select-content-available-height); overflow: hidden; border: 0; border-radius: var(--yg-radius-menu); background: var(--yg-raised-surface); box-shadow: var(--yg-float-shadow); color: var(--yg-text); transform-origin: var(--radix-select-content-transform-origin); }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-spring-menu[data-state="open"] {
-    animation: yg-spring-menu-in var(--yg-layer) var(--yg-arrive) both;
-  }
-  .yg-spring-chevron {
-    transition: transform var(--yg-change) var(--yg-settle);
-  }
-}
-@keyframes yg-spring-menu-in {
-  from { opacity: 0; translate: 0 var(--yg-spring-shift, calc(-1 * var(--yg-layer-shift))); }
-}
-.yg-spring-menu[data-side="top"] { --yg-spring-shift: var(--yg-layer-shift); }
-.yg-spring-viewport { position: relative; isolation: isolate; padding: var(--yg-inset-layer); }
-.yg-spring-option { position: relative; display: flex; align-items: center; gap: var(--yg-gap-row); min-block-size: var(--yg-menu-row); padding: 0 var(--yg-inset-compact); border-radius: var(--yg-radius-control); font: var(--yg-font-body); outline: none; cursor: pointer; box-sizing: border-box; }
-.yg-spring-option[data-state="checked"] { background: var(--yg-field); }
-.yg-spring-option[data-highlighted] { background: var(--yg-hover); }
-@media (pointer: coarse) {
-  .yg-spring-option { min-block-size: var(--yg-size-touch); }
-}
-.yg-spring-option:focus-visible { outline: none; }
-.yg-spring-highlight {
-  position: absolute;
-  inset: 0 var(--yg-inset-layer) auto;
-  opacity: var(--yg-spring-opacity, 0);
-  block-size: var(--yg-spring-active-height, 0px);
-  translate: 0 var(--yg-spring-active-y, 0px);
-  border-radius: var(--yg-radius-panel);
-  background: var(--yg-hover);
-  pointer-events: none;
-}
-@media (forced-colors: none) {
-  .yg-spring-viewport:has(.yg-spring-highlight[data-ready]) > .yg-spring-option[data-highlighted] { background: transparent; }
-}
-@media (forced-colors: active) {
-  .yg-spring-option:focus-visible { outline: var(--boa-stroke-focus) solid Highlight; outline-offset: -2px; }
-}
-
-.yg-spring-check { flex: none; margin-inline-start: auto; inline-size: 18px; block-size: 18px; color: var(--yg-text); }
-.yg-spring-check path { stroke-dasharray: 22; stroke-dashoffset: 22; }
-.yg-spring-option[data-state="checked"] .yg-spring-check path { stroke-dashoffset: 0; }
-.yg-command-button .yg-button:hover { background: var(--yg-hover); }
-.yg-command-button .yg-button:active { transform: scale(.98); }
-@media (prefers-reduced-motion: reduce) {
-  .yg-spring-menu[data-state], .yg-spring-menu[data-state] .yg-spring-option, .yg-spring-value-roll { animation: none; }
-  .yg-morph-tooltip-card {  transform: translate(-50%, 0); }
-  .yg-morph-tooltip:has([data-open="true"]) .yg-morph-tooltip-trigger span, .yg-spring-dropdown .yg-select:focus-within, .yg-command-button .yg-button:hover, .yg-command-button .yg-button:active { transform: none; }
-}
 .yg-action-menu-expanding {
   inline-size: min(150px, 100%);
   border-radius: 26px;
@@ -111,11 +7,20 @@
 .yg-action-menu-expanding > .yg-button {
   justify-content: space-between;
   inline-size: 100%;
-  block-size: 52px;
-  padding-inline: 18px;
+  block-size: var(--yg-size-featured);
+  padding-inline: var(--yg-inset-panel);
   border-radius: inherit;
 }
 .yg-action-menu-fold { display: grid; grid-template-rows: 0fr; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-action-menu-expanding {
+    transition: inline-size var(--yg-motion-picker-lift), border-radius var(--yg-motion-picker-lift);
+  }
+  .yg-action-menu-fold { transition: grid-template-rows var(--yg-motion-menu-height); }
+  .yg-action-menu-glyph i {
+    transition: translate var(--yg-motion-picker-highlight), rotate var(--yg-motion-picker-highlight);
+  }
+}
 .yg-action-menu-expanding[data-open="true"] .yg-action-menu-fold { grid-template-rows: 1fr; }
 .yg-action-menu-options { min-block-size: 0; overflow: clip; }
 .yg-action-menu-options > button {
@@ -131,8 +36,30 @@
 .yg-action-menu-glyph i { grid-area: 1 / 1; inline-size: 14px; block-size: 2px; border-radius: 2px; background: currentColor; }
 .yg-action-menu-glyph i:first-child { translate: 0 -4px; }
 .yg-action-menu-glyph i:last-child { translate: 0 4px; }
+.yg-action-menu-expanding > .yg-button { position: relative; padding-inline-end: var(--yg-size-touch); }
+.yg-action-menu-expanding > .yg-button .yg-button-label { position: static; }
+.yg-action-menu-expanding .yg-action-menu-glyph {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: var(--yg-inset-roomy);
+  translate: 0 -50%;
+}
 .yg-action-menu-expanding[data-open="true"] .yg-action-menu-glyph i:first-child { translate: 0 0; rotate: 45deg; }
 .yg-action-menu-expanding[data-open="true"] .yg-action-menu-glyph i:last-child { translate: 0 0; rotate: -45deg; }
+@media (prefers-reduced-motion: no-preference) {
+  .yg-action-menu-options > button {
+    opacity: 0;
+    translate: 0 var(--boa-space-8);
+    transition: opacity var(--yg-change) var(--yg-settle), translate var(--yg-motion-picker-row);
+  }
+  .yg-action-menu-expanding[data-open="true"] .yg-action-menu-options > button {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .yg-action-menu-expanding[data-open="true"] .yg-action-menu-options > [aria-disabled="true"] {
+    opacity: .45;
+  }
+}
 .yg-tooltip-bar {
   position: relative; isolation: isolate;
   display: grid; gap: 4px; box-sizing: border-box; inline-size: min(100%, 288px);

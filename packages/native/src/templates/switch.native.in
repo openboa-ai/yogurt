@@ -1,6 +1,0 @@
-<template name="yg-switch" args="label checked">
-  <row gap="@{gap-inline}" cross="center" radius="md" on-press="toggle">
-    <text grow="1" wrap="true">{label}</text>
-    <switch label="{label}" width="@{size-touch}" height="@{size-touch}" checked="{checked}" on-toggle="toggle"/>
-  </row>
-</template>

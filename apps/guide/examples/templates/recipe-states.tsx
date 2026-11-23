@@ -88,36 +88,15 @@ export function StateRecipe({ recipe }: { recipe: Recipe }) {
   }
 }
 
-export function FoundationRecipe({ recipe, appearance, inGallery }: { recipe: Recipe; appearance: "light" | "dark"; inGallery: boolean }) {
+export function FoundationRecipe({ recipe, appearance }: { recipe: Recipe; appearance: "light" | "dark" }) {
   const [action, setAction] = useState("");
-  const [viewName, setViewName] = useState("Studio review");
-  const [volume, setVolume] = useState(64);
-  const [material, setMaterial] = useState<Y.Material>("neutral");
   switch (recipe.id) {
     case "appearance":
-      return inGallery ? <Y.Stack gap={12}>
-        <Y.Select label="Surface" options={["neutral", "paper", "mist"].map(id => ({ id, label: id[0].toUpperCase() + id.slice(1) }))}
-          value={material} onChange={event => setMaterial(event.target.value as Y.Material)} />
-        <Y.Yogurt appearance={appearance} material={material} className="template-style-sample">
-          <Y.Stack gap={8}><Y.Text>Workspace preferences</Y.Text><Y.Switch label="Reminders" defaultChecked /></Y.Stack>
-        </Y.Yogurt>
-      </Y.Stack> : <ComposeStudy guideAppearance={appearance} />;
+      return <ComposeStudy guideAppearance={appearance} />;
     case "type-specimen":
-      return inGallery ? <Y.Stack gap={8}>
-        <Y.Heading level={4} className="template-type-display">Field notes</Y.Heading>
-        <Y.Heading level={5}>Studio review</Y.Heading>
-        <Y.Text>Make the next step clear, even when the work is still in progress.</Y.Text>
-        <Y.Text variant="help">Updated November 21</Y.Text>
-      </Y.Stack> : <TypeStudy />;
+      return <TypeStudy />;
     case "controls":
-      return inGallery ? <Y.Stack gap={12}>
-        <Y.TextField label="View name" value={viewName} onChange={event => { setViewName(event.target.value); setAction(""); }} />
-        <Y.Inline><Y.Button emphasis="soft" onClick={() => { setViewName(""); setAction("Draft cleared."); }}>Clear</Y.Button><Y.Button disabled={!viewName.trim()} onClick={() => setAction("View saved.")}>Save view</Y.Button></Y.Inline>
-        <Y.Switch label="Two-step verification" defaultChecked />
-        <Y.Slider label="Volume" value={volume} onValueChange={setVolume} unit="%" />
-        <Y.Inline><Y.Badge>Draft</Y.Badge><Y.Badge tone="success">Ready</Y.Badge></Y.Inline>
-        {action && <Y.Status>{action}</Y.Status>}
-      </Y.Stack> : <SampleForm id="controls" />;
+      return <SampleForm id="controls" />;
     case "icons":
       return <Y.Stack gap={12}><Y.Inline>
         <Y.IconButton label="Save view" icon="bookmark" onClick={() => setAction("View saved.")} />

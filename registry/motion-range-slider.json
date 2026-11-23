@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-range-slider.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { RangeSlider } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { RangeSlider } from \"@openboa/yogurt/motion-range-slider\";\n"
     }
   ]
 }

@@ -1,2 +1,0 @@
-patchedDependencies:
-  '@native-sdk/cli@0.11.1': patches/native-sdk-cli-0.11.1.patch

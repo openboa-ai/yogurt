@@ -161,8 +161,12 @@ const esbuild = require("esbuild");
       await page.emulateMedia({ reducedMotion: "no-preference" });
       await controlledHost.getByTestId("forward").click();
       assert.equal(await result.locator("span:last-child").textContent(), "100000");
-      assert.equal(await result.locator("span:last-child").evaluate(el => getComputedStyle(el).animationName), "none", "updated values settle immediately");
-      assert.equal(await result.locator(".yg-quantity-out").isVisible(), false, "the previous value stays hidden");
+      const rolling = result.locator(".yg-quantity-in");
+      assert.equal(await rolling.evaluate(el => getComputedStyle(el).animationName), "yg-quantity-enter");
+      const outgoing = result.locator(".yg-quantity-out");
+      assert.equal(await outgoing.getAttribute("aria-hidden"), "true");
+      await outgoing.evaluate(node => Promise.allSettled(node.getAnimations().map(animation => animation.finished)));
+      assert.equal(await outgoing.evaluate(node => getComputedStyle(node).opacity), "0");
       await page.close();
     }
     console.log(JSON.stringify({ measurements, failures }));

@@ -8,7 +8,7 @@
     {
       "path": "ui/motion-prompt-box.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { PromptBox } from \"@openboa/yogurt/motion-patterns\";\n"
+      "content": "\"use client\";\n\nexport { PromptBox } from \"@openboa/yogurt/motion-prompt-box\";\n"
     }
   ]
 }
