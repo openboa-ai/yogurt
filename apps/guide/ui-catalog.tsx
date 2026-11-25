@@ -20,6 +20,7 @@ import {
   type Material,
 } from "@openboa/yogurt";
 import catalog from "../../catalog/components.json";
+import brandTokens from "../../design/tokens/brand.json";
 import specimenLayout from "../../catalog/specimens/layout.json";
 import motion from "../../catalog/motion.json";
 import motionCatalog from "../../catalog/motion-components.json";
@@ -70,7 +71,7 @@ const motionEntries = motionCatalog.components.filter(component => component.exa
   guidance: { ...component.guidance, combineWith: [] as string[] },
 }));
 const offlineEntries = [...entries, ...motionEntries];
-const hostedEntries = [...catalog, ...motionEntries.filter(entry => !componentAliases.has(entry.id))];
+const hostedEntries = [...catalog];
 const searchIndex = offlineEntries.map((entry) => {
   const names = [
     entry.name,
@@ -86,18 +87,13 @@ const materials = [
   { id: "mist", label: "Mist" },
 ];
 const variants = new Set([
-  "stepper",
-  "gradient",
-  "elevation",
   "button",
   "card",
-  "bottom-action",
   "icon-button",
   "stack",
   "inline",
   "grid",
   "text-field",
-  "input-group",
   "textarea",
   "search-field",
   "select",
@@ -114,7 +110,6 @@ const variants = new Set([
   "notice",
   "skeleton",
   "agent-avatar",
-  "gaze",
   "field",
   "help-text",
 ]);
@@ -137,9 +132,11 @@ function submitPreviewForm(event: MouseEvent<HTMLDivElement>) {
   if (!form.noValidate && !submitter.formNoValidate && !form.reportValidity()) return;
   form.dispatchEvent(new SubmitEvent("submit", { bubbles: true, cancelable: true, submitter }));
 }
-export function Catalog({ inlinePreview = false, guideAppearance, motionPreview: MotionPreview, route }: {
+export function Catalog({ inlinePreview = false, guideAppearance, guideMaterial, onGuideMaterialChange, motionPreview: MotionPreview, route }: {
   inlinePreview?: boolean;
   guideAppearance?: "light" | "dark";
+  guideMaterial?: Material;
+  onGuideMaterialChange?: (next: Material) => void;
   motionPreview?: ComponentType<{ id: string }>;
   route?: { id: string; preview: string | null };
 }) {
@@ -150,9 +147,11 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
     [dark, setDark] = useState(
       () => matchMedia("(prefers-color-scheme:dark)").matches,
     ),
-    [material, setMaterial] = useState<Material>("neutral"),
+    [localMaterial, setLocalMaterial] = useState<Material>("neutral"),
     [compare, setCompare] = useState(false),
     [showCode, setShowCode] = useState(false);
+  const material = guideMaterial ?? localMaterial;
+  const setMaterial = onGuideMaterialChange ?? setLocalMaterial;
   const navigation = useRef<HTMLElement>(null);
   const menuTrigger = useRef<HTMLButtonElement>(null);
   const lastRevealed = useRef<string>(null);
@@ -227,11 +226,11 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
   }
   const appearance = guideAppearance ?? (dark ? "dark" : "light");
   const tokenLabel = {
-    button: "Regular action · 36 px high · 8 px corners",
-    "motion-spring-dropdown": "Featured picker · 52 px high · 16 px corners",
+    button: `Regular action · ${brandTokens.control.height} px high · pill corners`,
+    "motion-spring-dropdown": `Featured picker · ${brandTokens.control.comfort} px high · ${brandTokens.radius.panel} px corners`,
   }[id];
   return (
-    <Yogurt appearance={appearance} className="catalog" data-hosted={hosted || undefined}>
+    <Yogurt appearance={appearance} material={material} className="catalog" data-hosted={hosted || undefined}>
       <Link className="skip" href="#yg-inspect">
         Skip to component
       </Link>
@@ -324,9 +323,9 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                   onValueChange={(v) => setMaterial(v as Material)}
                 />
               </Inline>
-              {previewChoices && <Inline className="preview-caption">
-                <Link href={sectionHref("components", id)} aria-current={!activePreview ? "page" : undefined}>Default</Link>
-                {previewChoices.map(key => <Link key={key} href={sectionHref("components", id) + "?preview=" + key}
+              {previewChoices && <Inline className="preview-variant-links" gap={8}>
+                <Link className="guide-chip-link" href={sectionHref("components", id)} aria-current={!activePreview ? "page" : undefined}>Default</Link>
+                {previewChoices.map(key => <Link key={key} className="guide-chip-link" href={sectionHref("components", id) + "?preview=" + key}
                   aria-current={activePreview === key ? "page" : undefined}>{previewName(key)}</Link>)}
               </Inline>}
               <Yogurt
@@ -407,10 +406,10 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
                   <Text variant="help">{guidance.avoid}</Text>
                   {guidance.combineWith.length > 0 && <>
                     <Heading level={3}>Works with</Heading>
-                    <Inline className="catalog-guidance-links" gap={12}>
+                    <Inline className="catalog-guidance-links" gap={8}>
                       {guidance.combineWith.map(companion => {
                         const component = catalog.find(item => item.id === companion);
-                        return <Link key={companion} href={sectionHref("components", companion)}
+                        return <Link key={companion} className="guide-chip-link" href={sectionHref("components", companion)}
                           onClick={event => {
                             if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
                             event.preventDefault(); go(companion);
@@ -426,19 +425,23 @@ export function Catalog({ inlinePreview = false, guideAppearance, motionPreview:
               {id === "button" && (
                 <section className="related-actions">
                   <Heading>Related actions</Heading>
-                  <Text variant="help">Use a dedicated action when the interaction has its own state.</Text>
+                  <Text variant="help">Use a dedicated control when the action has its own state or menu.</Text>
                   <div>
-                    {[
-                      ["copy-button", "Copy"],
-                      ["cart-button", "Quantity"],
-                      ["hold-button", "Hold to confirm"],
-                      ["slide-confirm", "Slide to confirm"],
-                      ["loading-to-success", "Loading result"],
-                    ].map(([example, label]) => {
-                      const component = motionEntries.find(item => item.examples.includes(example));
-                      const href = sectionHref("components", component?.id);
-                      return <Link key={example} href={href}>{label}</Link>;
-                    })}
+                    {(hosted ? [
+                      ["icon-button", "IconButton"],
+                      ["button-group", "ButtonGroup"],
+                      ["action-menu", "ActionMenu"],
+                      ["toggle", "Toggle"],
+                      ["confirm-dialog", "ConfirmDialog"],
+                    ] : [
+                      ["motion-copy-button", "Copy"],
+                      ["motion-cart-button", "Quantity"],
+                      ["motion-hold-button", "Hold to confirm"],
+                      ["motion-slide-confirm", "Slide to confirm"],
+                      ["motion-loading-success-button", "Loading result"],
+                    ]).map(([targetId, label]) => (
+                      <Link key={targetId} className="guide-chip-link" href={sectionHref("components", targetId)}>{label}</Link>
+                    ))}
                   </div>
                 </section>
               )}

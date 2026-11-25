@@ -12,6 +12,7 @@ export interface Decision {
   consequence: string;
   confirmLabel: string;
   available: boolean;
+  destructive?: boolean;
 }
 export interface DecisionRef {
   id: string;
@@ -56,12 +57,12 @@ export function ConfirmDialog({
             This decision changed. Close and review it again.
           </p>
         )}
-        <ButtonGroup label="Decision">
+        <ButtonGroup label="Decision" justify="end">
           <Button emphasis="quiet" onClick={() => onOpenChange(false)}>
             {words["action.cancel"]}
           </Button>
           <Button
-            tone="danger"
+            tone={decision.destructive ? "danger" : "brand"}
             pending={pending}
             disabled={!decision.available || !!changed}
             onClick={() => {
@@ -107,7 +108,7 @@ export function Receipt({
   };
   return (
     <Stack className="yg-receipt" gap={8}>
-      <Heading level={3}>{titles[record.state]}</Heading>
+      <Heading level={5}>{titles[record.state]}</Heading>
       <span className="yg-meta">Request {record.id}</span>
       <div>{record.description}</div>
       {onLookup && (

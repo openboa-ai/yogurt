@@ -18,10 +18,10 @@ export function RecordFacts({
   source,
   asOf,
   timeLabel,
-}: Observation & { title: string; facts: Fact[] }) {
+}: Observation & { title?: string; facts: Fact[] }) {
   return (
     <section className="yg-facts">
-      <Heading level={3}>{title}</Heading>
+      {title && <Heading level={3}>{title}</Heading>}
       <dl>
         {facts.map((f) => (
           <div key={f.id}>
@@ -39,9 +39,13 @@ export function RecordFacts({
     </section>
   );
 }
+export type DataColumnKind = "identity" | "text" | "numeric" | "role" | "actions";
+
 export interface DataColumn {
   id: string;
   label: string;
+  kind?: DataColumnKind;
+  align?: "start" | "end";
   numeric?: boolean;
   sortValue?: (row: DataRow) => string | number | null | undefined;
 }
@@ -96,54 +100,72 @@ export function DataTable({
           return sort.descending ? -comparison : comparison;
         })
       : rows;
+  const colMeta = (c: DataColumn) => {
+    const isNumeric = c.numeric ?? c.kind === "numeric";
+    const align = c.align ?? (isNumeric || c.kind === "actions" ? "end" : "start");
+    return { isNumeric, align };
+  };
   return (
     <Table caption={caption}>
       <thead>
         <tr>
-          {columns.map((c) => (
-            <th
-              key={c.id}
-              scope="col"
-              data-numeric={c.numeric}
-              aria-sort={
-                sort?.id === c.id && c.sortValue
-                  ? sort.descending
-                    ? "descending"
-                    : "ascending"
-                  : undefined
-              }
-            >
-              {c.sortValue ? (
-                <button
-                  type="button"
-                  className="yg-table-sort"
-                  onClick={() =>
-                    setSort((last) => ({
-                      id: c.id,
-                      descending: last?.id === c.id && !last.descending,
-                    }))
-                  }
-                >
-                  {c.label}
-                  <span aria-hidden="true">
-                    {sort?.id === c.id ? (sort.descending ? "↓" : "↑") : "↕"}
-                  </span>
-                </button>
-              ) : (
-                c.label
-              )}
-            </th>
-          ))}
+          {columns.map((c) => {
+            const { isNumeric, align } = colMeta(c);
+            return (
+              <th
+                key={c.id}
+                scope="col"
+                data-kind={c.kind}
+                data-align={align}
+                data-numeric={isNumeric || undefined}
+                aria-sort={
+                  sort?.id === c.id && c.sortValue
+                    ? sort.descending
+                      ? "descending"
+                      : "ascending"
+                    : undefined
+                }
+              >
+                {c.sortValue ? (
+                  <button
+                    type="button"
+                    className="yg-table-sort"
+                    onClick={() =>
+                      setSort((last) => ({
+                        id: c.id,
+                        descending: last?.id === c.id && !last.descending,
+                      }))
+                    }
+                  >
+                    {c.label}
+                    <span aria-hidden="true">
+                      {sort?.id === c.id ? (sort.descending ? "↓" : "↑") : "↕"}
+                    </span>
+                  </button>
+                ) : (
+                  c.label
+                )}
+              </th>
+            );
+          })}
         </tr>
       </thead>
       <tbody>
         {ordered.map((r) => (
           <tr key={r.id}>
-            {columns.map((c) => (
-              <td key={c.id} data-numeric={c.numeric}>
-                {r.cells[c.id] ?? "No reading"}
-              </td>
-            ))}
+            {columns.map((c) => {
+              const { isNumeric, align } = colMeta(c);
+              return (
+                <td
+                  key={c.id}
+                  data-kind={c.kind}
+                  data-align={align}
+                  data-numeric={isNumeric || undefined}
+                >
+                  {r.cells[c.id] ?? "No reading"}
+                </td>
+              );
+            })}
           </tr>
         ))}
       </tbody>
@@ -238,17 +260,36 @@ export function Chart({
           ))}
         </svg>
         {numeric.length === 0 && <span className="yg-chart-empty">No readings</span>}
-        <div className="yg-chart-range" aria-hidden="true">
-          <span>{points[0]?.label}</span>
-          {tick && numeric.length > 0 && (
-            <span className="yg-chart-interior-tick" style={{
-              "--yg-chart-tick-position": `${100 * xy(0, tickIndex)[0] / 240}%`,
-            } as CSSProperties}>
-              {tick.label}
-              {missingIndex >= 0 && <small>No reading</small>}
-            </span>
+        <div className="yg-chart-range" data-dense={points.length <= 7 || undefined} aria-hidden="true">
+          {points.length <= 7 && numeric.length > 0 ? (
+            points.map((point, index) => {
+              const isMissing = point.value === null || !Number.isFinite(point.value);
+              const isInteriorTarget = index === tickIndex && tick;
+              return (
+                <span
+                  key={point.id}
+                  className={isInteriorTarget ? "yg-chart-interior-tick yg-chart-tick" : "yg-chart-tick"}
+                  style={isInteriorTarget ? ({ "--yg-chart-tick-position": `${100 * xy(0, index)[0] / 240}%` } as CSSProperties) : undefined}
+                >
+                  {point.label}
+                  {isMissing && <small>No reading</small>}
+                </span>
+              );
+            })
+          ) : (
+            <>
+              <span>{points[0]?.label}</span>
+              {tick && numeric.length > 0 && (
+                <span className="yg-chart-interior-tick" style={{
+                  "--yg-chart-tick-position": `${100 * xy(0, tickIndex)[0] / 240}%`,
+                } as CSSProperties}>
+                  {tick.label}
+                  {missingIndex >= 0 && <small>No reading</small>}
+                </span>
+              )}
+              <span>{points.length > 1 ? points.at(-1)?.label : undefined}</span>
+            </>
           )}
-          <span>{points.length > 1 ? points.at(-1)?.label : undefined}</span>
         </div>
       </div>
       <p className="yg-meta">

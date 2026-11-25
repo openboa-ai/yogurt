@@ -7,11 +7,11 @@ const { pathToFileURL } = require('node:url');
 const bundle = buildSync({ stdin: { resolveDir: process.cwd(), loader: 'jsx', contents: `
   import React from 'react';
   import {createRoot} from 'react-dom/client';
-  import {ProfileCard} from './packages/web/dist/index.js';
+  import {ProfileCard} from './packages/web/dist/entries/motion-profile-card.js';
   import {ProfileCard as MotionProfileCard} from './packages/web/dist/motion-patterns.js';
   window.sameProfileExport = ProfileCard === MotionProfileCard;
   window.profileActions = 0;
-  createRoot(document.getElementById('profile-fixture')).render(<>
+  createRoot(document.getElementById('profile-fixture'), { identifierPrefix: 'prof-' }).render(<>
     <ProfileCard name="Alexandra Morgan with a long name" detail="Research and documentation" initials="AM"
       actions={<button onClick={() => window.profileActions++}>Open profile</button>}>
       <p>Reviews long documents and provides detailed observations to the team.</p>
@@ -43,7 +43,7 @@ loader:{'.css':'empty','.module.css':'empty'} }).outputFiles[0].text;
       assert.equal(await cards.last().locator('details').count(), 0, 'no disclosure is rendered without details');
       assert.equal(await summary.innerText(), 'More about Alexandra Morgan with a long name');
       assert.equal(await details.evaluate(node => node.open), false);
-      assert((await summary.boundingBox()).height >= 44, 'summary has a 44px target');
+      assert((await summary.boundingBox()).height >= 32, 'summary has a compact desktop target');
       assert.equal(await details.evaluate(node => getComputedStyle(node).borderBlockStartWidth), '0px');
       const hostBox = await host.boundingBox(), cardBox = await card.boundingBox();
       assert(cardBox.x >= hostBox.x - 1 && cardBox.x + cardBox.width <= hostBox.x + hostBox.width + 1, 'card stays in the host');
@@ -68,6 +68,18 @@ loader:{'.css':'empty','.module.css':'empty'} }).outputFiles[0].text;
       assert.equal(await summary.evaluate(node => node === document.activeElement), true);
       await page.close();
     }
-    console.log('Profile disclosure exports, keyboard reversal, host actions, widths and reduced motion verified.');
+    const touchPage = await browser.newPage({ viewport: { width: 390, height: 900 }, isMobile: true, hasTouch: true });
+    await touchPage.goto(pathToFileURL(join(process.cwd(), 'apps/guide/generated/components.html')).href);
+    await touchPage.evaluate(() => {
+      const host = document.createElement('div'); host.id = 'profile-fixture'; host.className = 'yg-root';
+      Object.assign(host.style, { position: 'fixed', top: '20px', left: '20px', width: '280px', zIndex: '9999' });
+      document.body.append(host);
+    });
+    await touchPage.addScriptTag({ content: bundle });
+    const touchSummary = touchPage.locator('#profile-fixture .yg-profile-card details.yg-disclosure summary').first();
+    await touchSummary.waitFor();
+    assert((await touchSummary.boundingBox()).height >= 44, 'coarse profile disclosure summary >= 44px');
+    await touchPage.close();
+    console.log('Profile disclosure exports, keyboard reversal, host actions, coarse targets, widths and reduced motion verified.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

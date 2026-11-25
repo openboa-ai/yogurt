@@ -4,6 +4,7 @@ export type Material = "neutral" | "paper" | "mist";
 export type Tone = "neutral" | "brand" | "success" | "warning" | "danger" | "accent";
 export type Size = "compact" | "regular" | "touch";
 export type ControlSize = Size | "comfortable" | "spacious";
+export type Density = "compact" | "regular" | "spacious";
 export interface Option {
     id: string;
     label: string;
@@ -20,11 +21,11 @@ type TextProps = ((ComponentProps<"span"> & {
 }) | (ComponentProps<"p"> & {
     as: "p";
 })) & {
-    variant?: "body" | "help" | "meta";
+    variant?: "body" | "help" | "meta" | "cap";
 };
 export declare function Text({ as, variant, className, ...props }: TextProps): import("react").DetailedReactHTMLElement<{
     className: string;
-    "data-type": "body" | "meta" | "help";
+    "data-type": "body" | "meta" | "help" | "cap";
     ref?: import("react").Ref<HTMLSpanElement> | undefined;
     key?: import("react").Key | null | undefined;
     defaultChecked?: boolean | undefined;
@@ -310,14 +311,27 @@ export declare function Text({ as, variant, className, ...props }: TextProps): i
 export declare function Heading({ level, className, ...props }: HTMLAttributes<HTMLHeadingElement> & {
     level?: 1 | 2 | 3 | 4 | 5 | 6;
 }): import("react/jsx-runtime").JSX.Element;
+type GapStep = 2 | 4 | 6 | 8 | 12 | 16 | 24 | 32 | 48 | 64;
 type Layout = Box & {
-    gap?: 2 | 4 | 8 | 12 | 16 | 24 | 32 | 48 | 64;
+    gap?: GapStep;
 };
-export declare function Stack({ gap, className, style, ...props }: Layout): import("react/jsx-runtime").JSX.Element;
-export declare function Inline({ gap, className, style, ...props }: Layout): import("react/jsx-runtime").JSX.Element;
+export declare function Stack({ gap, align, className, style, ...props }: Layout & {
+    align?: "stretch" | "start" | "center" | "end";
+}): import("react/jsx-runtime").JSX.Element;
+export declare function Inline({ gap, align, justify, wrap, className, style, ...props }: Layout & {
+    align?: "start" | "center" | "end" | "baseline" | "stretch";
+    justify?: "start" | "center" | "end" | "between";
+    wrap?: boolean;
+}): import("react/jsx-runtime").JSX.Element;
 export declare function Grid({ gap, className, style, ...props }: Layout): import("react/jsx-runtime").JSX.Element;
-export declare function Surface({ className, ...props }: Box): import("react/jsx-runtime").JSX.Element;
-export declare function Divider(): import("react/jsx-runtime").JSX.Element;
+export declare function Surface({ density, variant, className, ...props }: Box & {
+    density?: Density;
+    variant?: "surface" | "raised" | "canvas" | "outlined";
+}): import("react/jsx-runtime").JSX.Element;
+export declare function Divider({ orientation, className, }?: {
+    orientation?: "horizontal" | "vertical";
+    className?: string;
+}): import("react/jsx-runtime").JSX.Element;
 export declare function ScrollArea({ label, className, ...props }: Box & {
     label: string;
 }): import("react/jsx-runtime").JSX.Element;
@@ -331,12 +345,14 @@ declare const paths: {
     plus: string;
     copy: string;
     menu: string;
+    more: string;
     home: string;
     bookmark: string;
     person: string;
     moon: string;
     sun: string;
     arrow: string;
+    send: string;
     info: string;
     chat: string;
     workflow: string;

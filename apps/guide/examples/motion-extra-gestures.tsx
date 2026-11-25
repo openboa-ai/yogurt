@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode } from "react";
-import { Button, DatePicker, Icon, Rating as SharedRating } from "@openboa/yogurt";
+import { Button, Calendar, Icon, Popover, RadioGroup } from "@openboa/yogurt";
 import { playSprings, spring } from "../../../packages/web/src/foundation/spring-motion.js";
 
 function Exposure() {
@@ -82,10 +82,15 @@ function Toolbar() {
   </details><p className="extra-format-sample" style={{fontWeight: bold ? 700 : 400, fontStyle: italic ? "italic" : "normal"}}>A little room for ideas.</p></div>;
 }
 function Rating() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState("");
   return <div className="extra-gesture">
-    <SharedRating label="Rate this view" value={value} onValueChange={setValue} showStatus />
-    <Button size="compact" emphasis="quiet" onClick={() => setValue(0)}>Clear</Button>
+    <RadioGroup
+      label="Rate this view"
+      value={value}
+      onValueChange={setValue}
+      options={[1, 2, 3, 4, 5].map((n) => ({ id: String(n), label: `${n} of 5` }))}
+    />
+    <Button size="compact" emphasis="quiet" onClick={() => setValue("")}>Clear</Button>
   </div>;
 }
 function Quantity() {
@@ -106,8 +111,16 @@ function MaskedField() {
 }
 function Schedule() {
   const [date, setDate] = useState("2026-11-20");
+  const [open, setOpen] = useState(false);
   return <div className="extra-gesture extra-date-choice">
-    <DatePicker label="Choose a date" value={date || undefined} onValueChange={setDate} />
+    <Popover
+      label="Choose a date"
+      open={open}
+      onOpenChange={setOpen}
+      trigger={<Button emphasis="soft">{date || "Choose a date"}</Button>}
+    >
+      <Calendar label="Choose a date" value={date || undefined} onValueChange={(next) => { setDate(next); setOpen(false); }} />
+    </Popover>
     <p role="status" className="extra-date-result"><span key={date}>{date ? `Selected: ${date}` : "No date selected"}</span></p>
     <Button size="compact" emphasis="quiet" onClick={() => setDate("")}>Clear</Button>
   </div>;

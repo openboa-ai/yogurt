@@ -53,15 +53,15 @@ export default function BrandPage() {
         <Text className="guide-brand-slogan">ships with <strong>live cultures</strong></Text>
         <Text className="guide-brand-description">Shared design tokens, original artwork, product language, and a UI SDK for browsers and desktop WebViews.</Text>
         <ButtonGroup label="Explore Yogurt">
-          <Link href="/tokens" emphasis="soft" size="touch">Explore the design system</Link>
-          <Link href="/components" emphasis="filled" size="touch">Browse components</Link>
+          <Link href="/tokens" emphasis="soft" size="regular">Explore the design system</Link>
+          <Link href="/components" emphasis="filled" tone="brand" size="regular">Browse components</Link>
         </ButtonGroup>
       </Stack>
       <Surface className="guide-brand-artwork" aria-hidden="true">
-        <ProjectMark project="yogurt" label="" size={456} />
+        <ProjectMark project="yogurt" label="" size={240} />
       </Surface>
     </Grid>
-    <Stack gap={64} className="guide-brand-body">
+    <Stack gap={36} className="guide-brand-body">
       <NavigationList label="Brand guide sections" items={chapters} current="" orientation="horizontal" />
       <section id="identity" className="guide-company-story" aria-label="OpenBoa company introduction">
         <Grid className="guide-company-layout" gap={32}>
@@ -122,7 +122,7 @@ export default function BrandPage() {
       </GuideSection>
       <GuideSection id="type" title="Type and color">
         <Text>Use Rethink Sans for headings, paragraphs and interface labels. Use weight {tokens.type.roleWeight.heading} for headings, {tokens.type.roleWeight.body} for paragraphs and {tokens.type.roleWeight.ui} for interface labels. The outlined OpenBoa signature uses weight {tokens.type.roleWeight.wordmark}. Use tabular figures for IDs and times.</Text>
-        <Text>Upright 9 defines OpenBoa’s primary color, Ink blue (<code>slate.750</code>). Kai’s sage and Sol’s coral come from the same numbered palette as the interface.</Text>
+        <Text>Upright 9 defines OpenBoa’s primary color, Ink blue (<code>slate.700</code>). Kai’s sage and Sol’s terracotta come from the same numbered palette as the interface.</Text>
         <Inline gap={16}><Link href="/tokens#type">Type scale</Link><Link href="/tokens#color">Shared palette</Link><Link href="/#wordmark-study">Wordmark study</Link></Inline>
       </GuideSection>
       <GuideSection id="files" title="Files">

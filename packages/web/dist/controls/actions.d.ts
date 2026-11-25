@@ -15,8 +15,9 @@ export declare function IconButton({ label, icon, ...props }: Omit<ButtonProps, 
     label: string;
     icon: IconName;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function ButtonGroup({ label, children, }: {
+export declare function ButtonGroup({ label, justify, children, }: {
     label: string;
+    justify?: "start" | "center" | "end" | "between";
     children: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
 export declare function BottomAction({ children, label, fixed, }: {

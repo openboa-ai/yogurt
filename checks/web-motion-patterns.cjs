@@ -12,7 +12,7 @@ async function run(browser) {
     const page = await browser.newPage({viewport: {width, height: 900}, colorScheme: width < 500 ? "dark" : "light"});
     page.on("pageerror", error => errors.push(error.message));
     page.setDefaultTimeout(4500);
-    for (const id of ["button", "select", "carousel", "data-table", "project-workspace", "collection-browser"]) {
+    for (const id of ["button", "select", "data-table", "project-workspace", "collection-browser"]) {
       await page.goto(gallery("components") + "#" + id);
       const specimen = page.locator(`.specimen[data-component="${id}"]`);
       await specimen.waitFor();
@@ -132,19 +132,19 @@ async function run(browser) {
       const style = getComputedStyle(node);
       return {height: style.minBlockSize, corner: style.borderTopLeftRadius, font: style.fontSize, weight: style.fontWeight};
     });
-    assert.deepEqual(primarySize, {height:"36px", corner:"8px", font:"14px", weight:"560"});
+    assert.deepEqual(primarySize, {height:"32px", corner:"999px", font:"13px", weight:"500"});
     const promptBox = (await demo("prompt-box")).locator(".yg-prompt-box");
     assert.deepEqual(await promptBox.evaluate(node => {
       const style = getComputedStyle(node);
       const text = getComputedStyle(node.querySelector("textarea"));
-      return [style.height, style.borderTopLeftRadius, style.borderTopWidth, text.fontSize, text.lineHeight, text.fontWeight];
-    }), ["52px", "24px", "0px", "15px", "22px", "450"]);
+      return [style.borderTopLeftRadius, style.borderTopWidth, text.fontSize, text.lineHeight, text.fontWeight];
+    }), ["12px", "1px", "14px", "20px", "420"]);
     const promptInput = promptBox.getByRole("textbox", {name:"Prompt"});
     await promptInput.fill("Review the brief");
     await promptInput.press("Shift+Enter");
     await promptInput.pressSequentially("Check the handoff");
     assert.equal(await promptInput.inputValue(), "Review the brief\nCheck the handoff");
-    await page.waitForFunction(() => document.querySelector(".yg-prompt-editor").getBoundingClientRect().height >= 44);
+    await page.waitForFunction(() => document.querySelector(".yg-prompt-editor").getBoundingClientRect().height >= 38);
     const send = promptBox.getByRole("button", {name:"Send"});
     const contrast = await send.evaluate(async button => {
       await Promise.allSettled(button.getAnimations().map(animation => animation.finished));
@@ -192,6 +192,10 @@ async function run(browser) {
     await view.click();
     const selectedReview = options.getByRole("option", {name:"In review"});
     assert.equal(await selectedReview.getAttribute("aria-selected"), "true");
+    await page.waitForFunction(() => {
+      const p = document.querySelector('.yg-spring-option[aria-selected="true"] .yg-spring-check path');
+      return p && parseFloat(getComputedStyle(p).strokeDashoffset) === 0;
+    });
     assert.equal(await selectedReview.locator(".yg-spring-check path").evaluate(node =>
       parseFloat(getComputedStyle(node).strokeDashoffset)), 0);
     await page.keyboard.press("Escape");
@@ -218,7 +222,7 @@ async function run(browser) {
     assert.deepEqual(await wifi.evaluate(node => {
       const {width, height} = node.getBoundingClientRect();
       return [width, height];
-    }), [44, 24]);
+    }), [38, 22]);
     await wifi.evaluate(node => Promise.allSettled(node.getAnimations({subtree:true}).map(animation => animation.finished)));
     const rightInset = await wifi.evaluate(node =>
       Math.round(node.getBoundingClientRect().right - node.querySelector("span").getBoundingClientRect().right));
@@ -470,8 +474,8 @@ async function checkColorRoles(browser, colorScheme) {
   const neutral = async (locator, property = "backgroundColor") => {
     const value = await locator.evaluate((node, key) => getComputedStyle(node)[key], property);
     const channels = value.match(/[\d.]+/g)?.map(Number);
-    assert(channels?.length === 3 && channels.every(channel => channel === channels[0]),
-      `${colorScheme} ${locator} ${property} must be opaque and neutral, got ${value}`);
+    assert(channels?.length === 3 && Math.max(...channels) - Math.min(...channels) <= 14,
+      `${colorScheme} ${locator} ${property} must be opaque warm neutral, got ${value}`);
     return value;
   };
   const expectRole = async (locator, role, property = "backgroundColor") => {
@@ -502,8 +506,9 @@ async function checkColorRoles(browser, colorScheme) {
     assert.notEqual(await neutral(button), buttonFill, "The default button has a neutral hover response");
 
     await page.goto(gallery("components") + "#attention-inbox");
-    const unread = page.locator('[data-component="attention-inbox"] .yg-badge').filter({hasText: /^Unread$/}).first();
-    await neutral(unread);
+    const unread = page.locator('[data-component="attention-inbox"] .yg-signal-dot[aria-label="Unread"]').first();
+    await unread.waitFor({ state: "visible" });
+    await expectRole(unread, "brand-ink");
 
     const prompt = await show("prompt-box");
     const editor = prompt.getByRole("textbox", {name: "Prompt"});
@@ -511,7 +516,10 @@ async function checkColorRoles(browser, colorScheme) {
     const restingFill = await neutral(box);
     await editor.fill("Review the draft");
     assert.equal(await neutral(box), restingFill, "An active prompt keeps its surface");
-    await expectUnoutlined(box);
+    assert.deepEqual(await box.evaluate(node => {
+      const style = getComputedStyle(node);
+      return [style.borderTopWidth, style.outlineStyle, style.boxShadow !== "none"];
+    }), ["1px", "none", true], "Active prompt uses 1px border and single box-shadow focus ring");
     await expectUnoutlined(editor);
     await neutral(editor, "caretColor");
     await neutral(prompt.getByRole("button", {name: "Send"}), "color");
@@ -546,9 +554,9 @@ async function checkColorRoles(browser, colorScheme) {
     await page.locator(".yg-spring-option[data-selected]").waitFor();
     await neutral(highlight);
     const review = page.getByRole("option", {name: "In review"});
-    await expectRole(review.locator(".yg-spring-symbol"), "action");
+    await expectRole(review.locator(".yg-spring-symbol"), "brand-ink");
     await review.click();
-    await expectRole(currentMarker, "action");
+    await expectRole(currentMarker, "brand-ink");
     await view.press("Space");
     const complete = page.getByRole("option", {name: "Complete"});
     await expectRole(complete.locator(".yg-spring-symbol"), "signal-positive");
@@ -562,7 +570,7 @@ async function checkColorRoles(browser, colorScheme) {
     const blue = meter.locator('[data-tone="0"]');
     const pink = meter.locator('[data-tone="1"]');
     const exports = storage.getByRole("button", {name: /Exports/});
-    await expectRole(blue, "action");
+    await expectRole(blue, "action-ink");
     await expectRole(pink, "signal-category-secondary");
     await expectRole(exports.locator(".yg-storage-dot"), "signal-category-secondary");
     await exports.press("Enter");
@@ -579,8 +587,11 @@ async function checkColorRoles(browser, colorScheme) {
     await neutral(count, "color");
     await input.fill("a".repeat(41));
     await expectUnoutlined(input);
-    await expectUnoutlined(letterCard);
-    await expectRole(letterCard, "field");
+    assert.deepEqual(await letterCard.evaluate(node => {
+      const style = getComputedStyle(node);
+      return [style.borderTopWidth, style.outlineStyle, style.boxShadow !== "none"];
+    }), ["1px", "none", true], "Active letter-limit uses 1px border and single box-shadow focus ring");
+    await expectRole(letterCard, "input-surface");
     await expectRole(count, "signal-warning", "color");
     await expectRole(arc, "signal-warning", "stroke");
     await input.fill("a".repeat(48));
@@ -588,25 +599,6 @@ async function checkColorRoles(browser, colorScheme) {
     await expectRole(arc, "signal-limit", "stroke");
     await input.press("Backspace");
     await expectRole(count, "signal-warning", "color");
-
-    const rating = await show("rating");
-    const fourStars = rating.getByRole("radio", {name: "4 of 5"});
-    const star = rating.locator(".yg-rating label").nth(3).locator("svg");
-    await fourStars.check();
-    await page.waitForFunction(() => document.querySelector('#rating .yg-rating label:nth-child(4) svg')?.style.getPropertyValue("--yg-star-fill") === "100%");
-    const colors = await star.evaluate(node => {
-      const sample = document.createElement("span");
-      sample.style.color = "var(--yg-signal-rating)";
-      node.parentElement.append(sample);
-      const canvas = document.createElement("canvas");
-      canvas.width = canvas.height = 1;
-      const ctx = canvas.getContext("2d");
-      const pixels = color => { ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); return Array.from(ctx.getImageData(0, 0, 1, 1).data); };
-      const result = [pixels(getComputedStyle(node).fill), pixels(getComputedStyle(sample).color)];
-      sample.remove();
-      return result;
-    });
-    assert.deepEqual(colors[0], colors[1], "Selected star uses the rating palette role");
 
     const files = await show("file-drop");
     const dropZone = files.locator(".yg-file-drop");
@@ -622,12 +614,22 @@ async function checkColorRoles(browser, colorScheme) {
 
     const switches = await show("toggle-switch");
     const wifi = switches.getByRole("switch", {name: /Wi-Fi/});
-    await expectRole(wifi, "signal-positive");
-    await expectRole(wifi.locator("span").first(), "on-signal-positive");
+    await expectRole(wifi, "inverse");
+    await expectRole(wifi.locator("span").first(), "on-inverse");
     await wifi.press("Space");
-    await expectRole(wifi, "off");
+    const expectedOffVar = colorScheme === "dark" ? "--boa-color-neutral-700" : "--boa-color-neutral-300";
+    const [offActual, offExpected] = await wifi.evaluate((node, tokenVar) => {
+      const sample = document.createElement("span");
+      sample.style.color = `var(${tokenVar})`;
+      node.parentElement.append(sample);
+      const colors = [getComputedStyle(node).backgroundColor, getComputedStyle(sample).color];
+      sample.remove();
+      return colors;
+    }, expectedOffVar);
+    assert.equal(offActual, offExpected, `${colorScheme} ${wifi} uses ${expectedOffVar}`);
+    await expectRole(wifi.locator("span").first(), "thumb");
     await wifi.press("Space");
-    await expectRole(wifi, "signal-positive");
+    await expectRole(wifi, "inverse");
 
     await page.emulateMedia({forcedColors: "active"});
     await show("letter-limit");

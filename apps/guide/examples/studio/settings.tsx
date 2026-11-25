@@ -93,28 +93,45 @@ const fields: Record<string, { choices?: Record<string, string[]>; toggles?: str
 export function Settings({ onAppearance }: { onAppearance: (value: "light" | "dark" | undefined) => void }) {
   const [current, setCurrent] = useState("General");
   const [saved, setSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
   const [values, setValues] = useState<Record<string, string>>({ "Display name": "Mina Park" });
+  const [savedValues, setSavedValues] = useState<Record<string, string>>({ "Display name": "Mina Park" });
   const [enabled, setEnabled] = useState<Record<string, boolean>>({});
+  const [savedEnabled, setSavedEnabled] = useState<Record<string, boolean>>({});
   const section = fields[current];
   return <div className="studio-settings">
-    <Y.Surface><Y.Stack gap={12}>{settings.map(group => <Y.Stack key={group.label} gap={4}>
-      <Y.Text variant="meta">{group.label}</Y.Text>
+    <Y.Surface className="studio-settings-nav"><Y.Stack gap={12}>{settings.map(group => <Y.Stack key={group.label} gap={4}>
+      <Y.Text variant="meta" className="studio-settings-cap">{group.label}</Y.Text>
       <Y.List label={group.label}>{group.values.map(title => <Y.ListRow key={title} title={title} current={current === title}
         onActivate={() => { setCurrent(title); setSaved(false); }} />)}</Y.List>
     </Y.Stack>)}</Y.Stack></Y.Surface>
-    <div className="studio-detail" key={current}><Y.Card title={current} description={section?.detail}><Y.Stack gap={16}>
+    <div className="studio-detail" key={current}><Y.Card title={current} description={section?.detail}
+      headerAction={saved ? <Y.Status tone="success">Preferences saved.</Y.Status> : undefined}
+      action={<Y.ButtonGroup label="Preference actions" justify="end">
+        <Y.Button emphasis="quiet" disabled={!dirty} onClick={() => {
+          setValues(savedValues);
+          setEnabled(savedEnabled);
+          setDirty(false);
+          setSaved(false);
+        }}>Discard</Y.Button>
+        <Y.Button emphasis="filled" tone="brand" disabled={!dirty} onClick={() => {
+          setSavedValues(values);
+          setSavedEnabled(enabled);
+          setDirty(false);
+          setSaved(true);
+        }}>Save preferences</Y.Button>
+      </Y.ButtonGroup>}><Y.Stack gap={12}>
       {current === "Profile" && <Y.TextField label="Display name" value={values["Display name"]} onChange={event => {
-        setValues(previous => ({ ...previous, "Display name": event.target.value })); setSaved(false);
+        setValues(previous => ({ ...previous, "Display name": event.target.value })); setDirty(true); setSaved(false);
       }} />}
       {Object.entries(section?.choices ?? {}).map(([label, choices]) => <Y.Select key={label} label={label} options={options(...choices)} value={values[label] ?? choices[0]}
-        onChange={event => { const next = event.target.value; setValues(previous => ({ ...previous, [label]: next })); setSaved(false);
+        onValueChange={next => { setValues(previous => ({ ...previous, [label]: next })); setDirty(true); setSaved(false);
           if (label === "Color scheme") onAppearance(next === "Dark" ? "dark" : next === "Light" ? "light" : undefined); }} />)}
       {(section?.toggles ?? []).map(label => <Y.Switch key={label} label={label} checked={!!enabled[label]} onCheckedChange={checked => {
-        setEnabled(previous => ({ ...previous, [label]: checked })); setSaved(false);
+        setEnabled(previous => ({ ...previous, [label]: checked })); setDirty(true); setSaved(false);
       }} />)}
       {current === "Invites" && <Y.CodeBlock language="Sample invitation code" code="STUDIO-REVIEW" />}
       {current === "Mobile connection" && enabled["Allow sample pairing"] && <Y.CodeBlock language="Sample pairing code" code="452-801" />}
-      <Y.Inline><Y.Button onClick={() => setSaved(true)}>Save preferences</Y.Button>{saved && <Y.Status tone="success">Preferences saved.</Y.Status>}</Y.Inline>
     </Y.Stack></Y.Card></div>
   </div>;
 }
@@ -123,6 +140,12 @@ export function Help() {
   const [draft, setDraft] = useState("");
   const [sent, setSent] = useState(false);
   return <Y.Stack gap={16}>
+    <Y.Card title="Keyboard shortcuts" density="compact">
+      <Y.List label="Keyboard shortcuts" divided>
+        <Y.ListRow title="Search workspace" trailing={<span className="studio-kbd">⌘K</span>} />
+        <Y.ListRow title="Send message" trailing={<span className="studio-kbd">⌘↵</span>} />
+      </Y.List>
+    </Y.Card>
     <Y.Card title="What’s new" density="compact"><Y.Accordion label="Recent updates" items={[
       { id: "review", title: "Review a workflow result", content: "Open Workflows, choose Morning brief and run the sample to see its review decision." },
       { id: "files", title: "Find an observation file", content: "Use the Files view and filter by owner or file type." },

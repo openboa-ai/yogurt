@@ -11,12 +11,15 @@ export interface Observation {
     timeLabel?: string;
 }
 export declare function RecordFacts({ title, facts, source, asOf, timeLabel, }: Observation & {
-    title: string;
+    title?: string;
     facts: Fact[];
 }): import("react/jsx-runtime").JSX.Element;
+export type DataColumnKind = "identity" | "text" | "numeric" | "role" | "actions";
 export interface DataColumn {
     id: string;
     label: string;
+    kind?: DataColumnKind;
+    align?: "start" | "end";
     numeric?: boolean;
     sortValue?: (row: DataRow) => string | number | null | undefined;
 }

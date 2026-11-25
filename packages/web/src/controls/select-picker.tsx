@@ -14,20 +14,23 @@ type PickerOption = {
 export type SelectPickerProps = {
   label: string;
   value: string;
-  onChange: (value: string) => void;
+  onValueChange?: (value: string) => void;
+  onChange?: (value: string) => void;
   options: readonly PickerOption[];
 };
 
-export function SelectPicker({ label, value, onChange, options }: SelectPickerProps) {
+export function SelectPicker({ label, value, onValueChange, onChange, options }: SelectPickerProps) {
   const id = useId();
   const root = useRef<HTMLDivElement>(null);
   const motion = useRef<ReturnType<typeof animateSpringPicker> | null>(null);
   const [open, setOpen] = useState(false);
   const previousValue = useRef(value);
   const [roll, setRoll] = useState<{ current: string; previous?: string }>({ current: value });
-  if (value !== roll.current) setRoll({ current: value, previous: roll.current });
   const selected = options.find(option => option.id === value);
   const previous = options.find(option => option.id === roll.previous);
+  useLayoutEffect(() => {
+    setRoll(prev => (prev.current === value ? prev : { current: value, previous: prev.current }));
+  }, [value]);
   useLayoutEffect(() => {
     if (!root.current) return;
     motion.current = animateSpringPicker(root.current);
@@ -41,7 +44,7 @@ export function SelectPicker({ label, value, onChange, options }: SelectPickerPr
   return <div ref={root} className="yg-spring-dropdown" data-open={open} data-value={value}>
     <span id={id} className="yg-spring-label">{label}</span>
     <Select value={value} open={open} onOpenChange={setOpen}
-      onValueChange={next => { if (next !== null && next !== value) onChange(next); }}>
+      onValueChange={next => { if (next !== null && next !== value) (onValueChange ?? onChange)?.(next); }}>
       <SelectTrigger className="yg-spring-trigger" aria-labelledby={id}
         onPointerDown={() => motion.current?.press(.965)}>
         <span className="yg-spring-value">

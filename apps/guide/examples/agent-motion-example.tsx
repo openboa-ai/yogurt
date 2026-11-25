@@ -59,9 +59,9 @@ export function AgentMotionExample({ both = false, variation = false }) {
       )}
       <Text variant="help" className="agent-motion-status" role="status">{agentPresenceLabels[state]}</Text>
       <div className="agent-motion-tools">
-        <Select label="Agent state" options={options} value={state} onChange={(event) => {
+        <Select label="Agent state" options={options} value={state} onValueChange={(next) => {
           stop();
-          setState(event.currentTarget.value as AgentPresence);
+          setState(next as AgentPresence);
         }} />
         <Button emphasis="soft" onClick={play}>{playing ? "Stop sequence" : "Play sequence"}</Button>
       </div>

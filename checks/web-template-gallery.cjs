@@ -1,12 +1,49 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const http = require("node:http");
+const path = require("node:path");
 const { chromium } = require("playwright-core");
 const components = require("../catalog/components.json");
 const motionComponents = require("../catalog/motion-components.json").components;
 const componentPaths = new Set([...components, ...motionComponents].map(item => "/components/" + item.id));
 
-const origin = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
+const rootDir = path.resolve(__dirname, "..");
+const siteDir = path.join(rootDir, "site");
+const mimeTypes = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".woff2": "font/woff2",
+  ".ttf": "font/ttf",
+  ".png": "image/png",
+  ".md": "text/markdown; charset=utf-8",
+  ".txt": "text/plain; charset=utf-8",
+};
+function startSiteServer() {
+  return new Promise((resolve, reject) => {
+    const server = http.createServer((req, res) => {
+      const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
+      let filePath = path.join(siteDir, urlPath === "/" ? "index.html" : urlPath.replace(/^\/+/, ""));
+      if (!filePath.startsWith(siteDir)) { res.writeHead(403); res.end(); return; }
+      if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) filePath = path.join(filePath, "index.html");
+      if (!fs.existsSync(filePath)) filePath = path.join(siteDir, "index.html");
+      const ext = path.extname(filePath).toLowerCase();
+      res.writeHead(200, { "Content-Type": mimeTypes[ext] || "application/octet-stream" });
+      fs.createReadStream(filePath).pipe(res);
+    });
+    server.on("error", reject);
+    server.listen(0, "127.0.0.1", () => resolve({ server, origin: `http://127.0.0.1:${server.address().port}` }));
+  });
+}
 
-async function checkGallery(browser, width) {
+async function chooseSelect(page, combobox, optionName) {
+  await combobox.click();
+  await page.getByRole("option", { name: optionName, exact: true }).click();
+}
+
+async function checkGallery(browser, origin, width) {
   const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: width >= 1000 ? "light" : "dark" });
   page.setDefaultTimeout(6000);
   const errors = [];
@@ -36,7 +73,7 @@ async function checkGallery(browser, width) {
     const stage = page.locator(".template-stage");
     await page.goto(origin + "/patterns/invite");
     await stage.getByRole("textbox", { name: "Work email" }).fill("alex@example.test");
-    await stage.getByRole("combobox", { name: "Access" }).selectOption("Viewer");
+    await chooseSelect(page, stage.getByRole("combobox", { name: "Access" }), "Viewer");
     await stage.getByRole("button", { name: "Send invitation" }).click();
     await stage.getByText("Invitation prepared.").waitFor();
     await page.getByRole("button", { name: "Reset preview" }).click();
@@ -55,11 +92,11 @@ async function checkGallery(browser, width) {
     await stage.getByText("Sample access verified.").waitFor();
 
     await page.goto(origin + "/patterns/compose");
-    await stage.getByRole("combobox", { name: "Density" }).selectOption("compact");
+    await chooseSelect(page, stage.getByRole("combobox", { name: "Density" }), "Compact");
     await stage.locator('.yg-card[data-density="compact"]').waitFor();
-    await stage.getByRole("combobox", { name: "Surface" }).selectOption("paper");
+    await chooseSelect(page, stage.getByRole("combobox", { name: "Surface" }), "Paper");
     assert.equal(await stage.locator(".template-composition-canvas").getAttribute("data-material"), "paper");
-    await stage.getByRole("combobox", { name: "Task" }).selectOption("settings");
+    await chooseSelect(page, stage.getByRole("combobox", { name: "Task" }), "Settings");
     await stage.getByRole("switch", { name: "Review reminders" }).click();
     await stage.getByRole("button", { name: "Save preferences" }).click();
     await stage.getByText("Preferences saved", { exact: true }).waitFor();
@@ -68,7 +105,7 @@ async function checkGallery(browser, width) {
     await stage.locator('.yg-card[data-density="regular"]').waitFor();
 
     await page.goto(origin + "/patterns/type");
-    await stage.getByRole("combobox", { name: "Content" }).selectOption("conversation");
+    await chooseSelect(page, stage.getByRole("combobox", { name: "Content" }), "Conversation");
     await stage.getByRole("heading", { name: "Review notes" }).waitFor();
 
     await page.goto(origin + "/patterns/chart");
@@ -125,10 +162,14 @@ async function checkGallery(browser, width) {
 }
 
 (async () => {
+  const hosted = process.env.YOGURT_GUIDE_URL
+    ? { server: null, origin: process.env.YOGURT_GUIDE_URL }
+    : await startSiteServer();
   const browser = await chromium.launch({ channel: "chrome" });
   try {
-    await Promise.all([checkGallery(browser, 1440), checkGallery(browser, 390)]);
+    await Promise.all([checkGallery(browser, hosted.origin, 1440), checkGallery(browser, hosted.origin, 390)]);
   } finally {
     await browser.close();
+    hosted.server?.close();
   }
 })().catch(error => { console.error(error); process.exitCode = 1; });

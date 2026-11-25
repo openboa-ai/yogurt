@@ -10,7 +10,7 @@ const assert = require("node:assert/strict");
       const page = await browser.newPage({ viewport: { width, height: 950 }, colorScheme: width === 320 ? "dark" : "light" });
       await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#text-field");
       const section = page.locator(".variation .specimen");
-      for (const [label, height] of Object.entries({ Compact: 30, Regular: 36, Comfortable: 40, Spacious: 48, Touch: 44 })) {
+      for (const [label, height] of Object.entries({ Compact: 28, Regular: 32, Comfortable: 36, Spacious: 44, Touch: 44 })) {
         const input = section.getByRole("textbox", { name: label, exact: true });
         await input.waitFor();
         const wrapper = input.locator("xpath=..");
@@ -18,24 +18,9 @@ const assert = require("node:assert/strict");
         await input.fill(label);
         assert.equal(await input.inputValue(), label);
       }
-      await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#input-group");
-      const groups = page.locator(".variation .specimen");
-      for (const [label, height] of Object.entries({ Compact: 30, Regular: 36, Comfortable: 40, Spacious: 48, Touch: 44, Featured: 52 })) {
-        const input = groups.getByRole("textbox", { name: label, exact: true });
-        await input.waitFor();
-        const wrapper = input.locator("xpath=..");
-        assert.equal(Math.round((await wrapper.boundingBox()).height), height, label);
-        await input.fill("docs");
-        assert.equal(await input.inputValue(), "docs");
-      }
-      const featured = groups.getByRole("textbox", {name:"Featured"}).locator("xpath=..");
-      assert.equal(await featured.evaluate(node => getComputedStyle(node).borderTopLeftRadius), "20px");
-      await page.emulateMedia({reducedMotion:"reduce"});
-      assert.equal(await featured.evaluate(node => getComputedStyle(node).transitionDuration), "0s");
-      await page.emulateMedia({reducedMotion:"no-preference"});
       await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#search-field");
       const searches = page.locator(".variation .specimen");
-      for (const [label, height] of Object.entries({ Compact: 30, Regular: 36, Comfortable: 40, Spacious: 48, Touch: 44 })) {
+      for (const [label, height] of Object.entries({ Compact: 28, Regular: 32, Comfortable: 36, Spacious: 44, Touch: 44 })) {
         const input = searches.getByRole("searchbox", { name: label, exact: true });
         await input.waitFor();
         assert.equal(Math.round((await input.locator("xpath=..").boundingBox()).height), height, label);
@@ -47,20 +32,19 @@ const assert = require("node:assert/strict");
       }
       await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#select");
       const selects = page.locator(".variation .specimen");
-      for (const [label, height] of Object.entries({ Compact: 30, Regular: 36, Comfortable: 40, Spacious: 48, Touch: 44 })) {
-        const input = selects.getByRole("combobox", { name: label, exact: true });
-        await input.waitFor();
-        assert.equal(Math.round((await input.locator("xpath=..").boundingBox()).height), height, label);
-        await input.selectOption("yogurt");
-        assert.equal(await input.inputValue(), "yogurt");
+      for (const [label, height] of Object.entries({ Compact: 28, Regular: 32, Comfortable: 36, Spacious: 44, Touch: 44 })) {
+        const trigger = selects.getByRole("combobox", { name: label, exact: true });
+        await trigger.waitFor();
+        assert.equal(Math.round((await trigger.boundingBox()).height), height, label);
+        await trigger.click();
+        const popup = page.locator(".yg-select-popup[data-open]");
+        await popup.waitFor();
+        await popup.getByRole("option", { name: "Yogurt", exact: true }).click();
+        await popup.waitFor({ state: "hidden" });
+        assert.match(await trigger.innerText(), /Yogurt/);
       }
-      const multiple = selects.getByRole("listbox", { name: "Multiple choice" });
-      assert.equal(await multiple.getAttribute("size"), "3");
-      assert.equal(await multiple.getAttribute("multiple"), "");
-      await multiple.selectOption(["sourdough", "yogurt"]);
-      assert.deepEqual(await multiple.evaluate(el => Array.from(el.selectedOptions, o => o.value)), ["sourdough", "yogurt"]);
       await page.close();
     }
-    console.log("Text, input-group, search and select sizes verified at 320 and 1440 px.");
+    console.log("Text, search and select sizes verified at 320 and 1440 px.");
   } finally { await browser.close(); }
 })().catch((error) => { console.error(error); process.exitCode = 1; });

@@ -87,25 +87,29 @@ async function checkWorkspaces(browser, width, theme) {
     assert.equal(await root.getByText("Draft approved in this preview.", { exact: true }).count(), 0);
     await button(root, "Review Release note drafted");
     await button(root, "Approve draft");
-    await root.getByText("Draft approved in this preview.", { exact: true }).waitFor();
+    await root.getByText("Draft approved in this preview.", { exact: true }).first().waitFor();
 
     root = await show("operations-library");
     await button(root, "Edit Workspace digest");
-    await root.getByRole("combobox", { name: "Run schedule" }).selectOption("Monday at 10:00");
+    await root.getByRole("combobox", { name: "Run schedule" }).click();
+    await page.getByRole("option", { name: "Monday at 10:00", exact: true }).click();
     await button(root, "Save schedule");
     await root.getByText("Monday at 10:00", { exact: true }).waitFor();
 
     root = await show("artifact-library");
     await button(root, "Open November review, Page");
     await root.getByRole("region", { name: "November review preview" }).waitFor();
-    await root.getByRole("combobox", { name: "Type" }).selectOption("file");
+    await root.getByRole("combobox", { name: "Type" }).click();
+    await page.getByRole("option", { name: "Files", exact: true }).click();
     assert.equal(await root.getByRole("region", { name: "November review preview" }).count(), 0);
 
     root = await show("project-access");
-    await button(root, "Remove Jules Reed");
+    await root.getByRole("button", { name: "Actions for Jules Reed", exact: true }).click();
+    await page.getByRole("menuitem", { name: "Remove", exact: true }).click();
     await button(root, "Cancel");
-    await root.getByText("Jules Reed", { exact: true }).waitFor();
-    await button(root, "Remove Jules Reed");
+    await root.getByText("Jules Reed", { exact: true }).first().waitFor();
+    await root.getByRole("button", { name: "Actions for Jules Reed", exact: true }).click();
+    await page.getByRole("menuitem", { name: "Remove", exact: true }).click();
     await button(root, "Remove access");
     await root.getByText("Access removed.", { exact: true }).waitFor();
     assert.equal(await root.getByText("Jules Reed", { exact: true }).count(), 0);
@@ -116,7 +120,8 @@ async function checkWorkspaces(browser, width, theme) {
     await button(root, "Discard");
     assert.equal(await name.inputValue(), "Kai");
     await name.fill("Kai · Release lead");
-    await root.getByRole("combobox", { name: "Silhouette" }).selectOption("Sol");
+    await root.getByRole("combobox", { name: "Silhouette" }).click();
+    await page.getByRole("option", { name: "Sol", exact: true }).click();
     await button(root, "Save profile");
     await root.getByText("Profile saved", { exact: true }).waitFor();
 

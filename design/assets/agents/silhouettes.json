@@ -8,7 +8,7 @@
   "eyes": {
     "offsetX": 13,
     "radius": 2.45,
-    "color": "gray-green.950"
+    "color": "neutral.950"
   },
   "shapes": [
     {
@@ -40,7 +40,7 @@
         "left"
       ],
       "defaultPosition": "bottom",
-      "color": "coral.300",
+      "color": "terracotta.300",
       "eyeCenter": [
         50,
         49
@@ -177,7 +177,7 @@
         "left"
       ],
       "defaultPosition": "top",
-      "color": "coral.200",
+      "color": "terracotta.200",
       "eyeCenter": [
         50,
         55

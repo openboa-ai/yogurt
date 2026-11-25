@@ -30,7 +30,7 @@ const fixture = buildSync({
       </form>;
     }
     const node = document.createElement('div'); node.id = 'spring-input-fixture';
-    document.querySelector('.specimen[data-component="input-group"]').appendChild(node);
+    document.querySelector('.specimen[data-component="text-field"]').appendChild(node);
     createRoot(node, {identifierPrefix:'spring-fixture-'}).render(<App />);
   ` }, bundle: true, write: false, format: "iife", platform: "browser",
   loader: { ".css": "empty", ".module.css": "empty" },
@@ -41,8 +41,8 @@ const fixture = buildSync({
   try {
     for (const width of [320, 1440]) {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
-      await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#input-group");
-      await page.locator('.specimen[data-component="input-group"]').waitFor();
+      await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#text-field");
+      await page.locator('.specimen[data-component="text-field"]').waitFor();
       await page.addScriptTag({ content: fixture });
       const host = page.locator("#spring-input-fixture");
       const controlled = host.getByRole("textbox", { name: "Controlled spring", exact: true });

@@ -92,8 +92,17 @@ function TagInput() {
 }
 function Stepper() {
   const [value, setValue] = useState(3);
-  return <Y.NumericSpinner label="Guests" help="Choose up to 12 guests" value={value} min={0} max={12}
-    decreaseLabel="Remove guest" increaseLabel="Add guest" onValueChange={setValue} />;
+  return <div className="yg-quantity" role="group" aria-label="Guests">
+    <span className="yg-quantity-label">
+      <span className="yg-label">Guests</span>
+      <span className="yg-help">Choose up to 12 guests</span>
+    </span>
+    <div>
+      <Y.Button emphasis="soft" shape="pill" size="comfortable" aria-label="Remove guest" disabled={value <= 0} onClick={() => setValue(v => Math.max(0, v - 1))}>−</Y.Button>
+      <output aria-label="Guests" aria-live="polite">{value}</output>
+      <Y.IconButton icon="plus" label="Add guest" emphasis="soft" shape="pill" size="comfortable" disabled={value >= 12} onClick={() => setValue(v => Math.min(12, v + 1))} />
+    </div>
+  </div>;
 }
 const times = ["Morning", "Midday", "Afternoon", "Evening"];
 const wheelRowHeight = 36;
@@ -366,8 +375,15 @@ function Toolbar() {
   </div>;
 }
 function Rating() {
-  const [value, setValue] = useState(0);
-  return <div className="motion-extra"><Y.Rating label="How was your experience?" value={value} onValueChange={setValue} showStatus /></div>;
+  const [value, setValue] = useState("0");
+  return <div className="motion-extra">
+    <Y.RadioGroup
+      label="How was your experience?"
+      value={value}
+      onValueChange={setValue}
+      options={[1, 2, 3, 4, 5].map((n) => ({ id: String(n), label: `${n} of 5` }))}
+    />
+  </div>;
 }
 export const extraControls: { id: string; title: string; body: ReactNode }[] = [
   { id: "invite-people", title: "Invite people", body: <InvitePeople /> },

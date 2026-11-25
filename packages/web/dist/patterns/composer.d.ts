@@ -10,7 +10,12 @@ export interface ComposerTool {
     label: string;
     disabled?: boolean;
 }
-export declare function Composer({ value, onValueChange, onSend, attachments, onRemoveAttachment, onAddAttachment, tools, onTool, pending, onStop, label, toolLabel, error, companion, mentionPeople, }: {
+export interface ComposerContextChip {
+    id: string;
+    label: string;
+    tone?: "neutral" | "brand" | "accent" | "warning";
+}
+export declare function Composer({ value, onValueChange, onSend, attachments, onRemoveAttachment, onAddAttachment, tools, onTool, pending, onStop, label, placeholder, toolLabel, sendTone, error, companion, header, contextChips, shortcutHint, mentionPeople, }: {
     value: string;
     onValueChange: (value: string) => void;
     onSend: (message: {
@@ -25,9 +30,14 @@ export declare function Composer({ value, onValueChange, onSend, attachments, on
     pending?: boolean;
     onStop?: () => void;
     label?: string;
+    placeholder?: string;
     toolLabel?: string;
+    sendTone?: "brand" | "neutral";
     error?: string;
     companion?: ReactNode;
+    header?: ReactNode;
+    contextChips?: readonly ComposerContextChip[];
+    shortcutHint?: string;
     mentionPeople?: readonly {
         id: string;
         label: string;

@@ -1,86 +1,188 @@
-.yg-work-event,
-.yg-routine-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: start;
-  column-gap: var(--yg-gap-stack);
-  row-gap: var(--yg-gap-inline);
-  min-width: 0;
-  padding: var(--boa-space-12);
-  border-radius: var(--yg-radius-panel);
-  background: var(--yg-canvas);
-}
+@layer yg.patterns {
+  .yg-work-event,
+  .yg-routine-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    column-gap: var(--yg-gap-stack);
+    row-gap: var(--yg-gap-inline);
+    min-width: 0;
+    padding: var(--boa-space-10) var(--boa-space-12);
+    border: 1px solid var(--yg-border-subtle);
+    border-radius: var(--yg-radius-panel);
+    background: var(--yg-raised);
+  }
 
-.yg-work-event-icon {
-  flex: none;
-  display: grid;
-  place-items: center;
-  inline-size: var(--boa-control-compact);
-  block-size: var(--boa-control-compact);
-  border-radius: var(--yg-radius-control);
-  background: var(--yg-field);
-  color: var(--yg-inverse);
-  transition: background-color var(--yg-change) var(--yg-settle);
-}
-.yg-work-event[data-state="running"] .yg-work-event-icon {
-  background: var(--yg-field);
-}
+  .yg-work-event-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: var(--boa-control-compact);
+    block-size: var(--boa-control-compact);
+    border-radius: var(--yg-radius-control);
+    background: var(--yg-field);
+    color: var(--yg-inverse);
+    transition: background-color var(--yg-change) var(--yg-settle);
+  }
+  .yg-work-event[data-state="running"] .yg-work-event-icon {
+    background: var(--yg-field);
+  }
 
-.yg-work-event-content {
-  flex: 1 1 9rem;
-  min-width: 0;
-  display: grid;
-  align-content: start;
-  gap: var(--boa-space-2);
-  overflow-wrap: anywhere;
-}
+  .yg-work-event-content {
+    flex: 1 1 9rem;
+    min-width: 0;
+    display: grid;
+    align-content: start;
+    gap: var(--boa-space-2);
+    overflow-wrap: anywhere;
+  }
 
-.yg-work-event-content > strong {
-  color: var(--yg-text);
-  font: var(--yg-font-action);
-}
+  .yg-work-event-content > strong,
+  .yg-operations-title-line > strong {
+    color: var(--yg-text);
+    font: var(--yg-font-action);
+    letter-spacing: var(--yg-tracking-action);
+  }
 
-.yg-operations-line,
-.yg-operations-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--boa-space-4) var(--boa-space-8);
-  min-width: 0;
-}
+  .yg-operations-title-line {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--boa-space-6);
+    min-width: 0;
+  }
 
-.yg-operations-actions {
-  margin-inline-start: auto;
-}
+  .yg-operations-line,
+  .yg-operations-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--boa-space-4) var(--boa-space-8);
+    min-width: 0;
+  }
 
-.yg-operations-list {
-  display: grid;
-  gap: var(--yg-gap-inline);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
+  .yg-operations-line {
+    font-variant-numeric: tabular-nums;
+  }
 
-.yg-operations-list > li {
-  min-width: 0;
-}
+  .yg-operations-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--boa-space-10);
+    flex-wrap: wrap;
+    min-inline-size: 0;
+  }
 
-.yg-attention-card {
-  display: grid;
-  gap: var(--yg-gap-row);
-  padding: var(--yg-inset-panel);
-  border-radius: var(--yg-radius-card);
-  background: var(--yg-canvas);
-}
+  .yg-operations-toolbar > .yg-section-line {
+    flex: 0 0 auto;
+    gap: var(--boa-space-8);
+  }
 
-.yg-attention-card > .yg-work-event {
-  padding: 0;
-  background: transparent;
-}
+  .yg-operations-toolbar > .yg-filter {
+    flex: 1 1 12rem;
+    max-inline-size: 20rem;
+  }
 
-.yg-operations-library .yg-tabs [role="tabpanel"] {
-  padding-block-start: var(--boa-space-12);
-}
+  .yg-run-inspector {
+    container-type: inline-size;
+    min-inline-size: 0;
+  }
 
-.yg-operations-list :is(.yg-work-event, .yg-routine-row) { border-radius: 0; background: transparent; }
-.yg-operations-actions { align-self: center; }
+  .yg-run-inspector-layout {
+    display: grid;
+    gap: var(--boa-space-12);
+    align-items: start;
+    min-inline-size: 0;
+  }
+
+  @container (width >= 42rem) {
+    .yg-run-inspector-layout {
+      grid-template-columns: minmax(14rem, 17rem) minmax(0, 1fr);
+    }
+  }
+
+  .yg-operations-actions {
+    margin-inline-start: auto;
+    align-self: center;
+  }
+
+  .yg-operations-list {
+    display: grid;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .yg-operations-list > li {
+    min-width: 0;
+  }
+
+  .yg-operations-list > li + li:not(.yg-attention-card) {
+    border-block-start: 1px solid var(--yg-border-subtle);
+  }
+
+  .yg-operations-list:has(> .yg-attention-card) {
+    gap: var(--yg-gap-inline);
+  }
+
+  .yg-attention-card {
+    display: grid;
+    gap: var(--yg-gap-row);
+    padding: var(--yg-inset-regular);
+    border-radius: var(--yg-radius-card);
+    background: var(--yg-raised);
+    border: 1px solid var(--yg-border-subtle);
+  }
+
+  .yg-attention-card > .yg-work-event {
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .yg-attention-item {
+    display: grid;
+    gap: var(--yg-gap-row);
+  }
+
+  .yg-operations-library.yg-card {
+    padding-block-start: var(--boa-space-8);
+  }
+
+  .yg-operations-library > .yg-card-body > .yg-stack {
+    gap: var(--boa-space-4);
+  }
+
+  .yg-operations-library .yg-tabs {
+    gap: 0;
+  }
+
+  .yg-operations-library .yg-tabs [role="tablist"] {
+    padding-block: 0;
+  }
+
+  .yg-operations-library .yg-tabs [role="tab"] {
+    min-block-size: 28px;
+    padding-block: var(--boa-space-4);
+  }
+
+  .yg-operations-library .yg-tabs [role="tabpanel"] {
+    padding-block-start: var(--boa-space-4);
+  }
+
+  .yg-attention-inbox .yg-tabs [role="tabpanel"] {
+    padding-block-start: var(--boa-space-6);
+  }
+
+  .yg-operations-list :is(.yg-work-event, .yg-routine-row) {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: var(--boa-space-8) var(--boa-space-10);
+  }
+  .yg-attention-card > .yg-work-event {
+    padding-inline: 0;
+  }
+}

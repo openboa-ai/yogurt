@@ -1,9 +1,11 @@
+import type * as Y from "@openboa/yogurt";
+
 export const workspaceViews = [
   { id: "conversations", label: "Conversations", icon: "chat" },
-  { id: "tasks", label: "Tasks", icon: "check" },
-  { id: "workflows", label: "Workflows", icon: "workflow" },
+  { id: "tasks", label: "Tasks", icon: "check", count: "4" },
+  { id: "workflows", label: "Workflows", icon: "workflow", count: "2" },
   { id: "schedule", label: "Schedule", icon: "calendar" },
-  { id: "library", label: "Files", icon: "folder" },
+  { id: "library", label: "Files", icon: "folder", count: "18" },
   { id: "usage", label: "Usage", icon: "chart" },
   { id: "customers", label: "Customers", icon: "person" },
   { id: "extensions", label: "Extensions", icon: "puzzle" },
@@ -13,14 +15,71 @@ export const workspaceViews = [
 ] as const;
 
 export type View = typeof workspaceViews[number]["id"];
-export type Conversation = { id: string; name: string; role: string; summary: string; kind: "agent" | "channel"; art: "Kai" | "Sol" };
+export type Conversation = {
+  id: string;
+  name: string;
+  role: string;
+  topic: string;
+  time: string;
+  summary: string;
+  kind: "agent" | "channel";
+  art: "Kai" | "Sol" | Y.AgentVariant;
+  color?: Y.AgentColor;
+};
 export type Entry = { id: string; author: string; text: string };
 
 export const conversations: Conversation[] = [
-  { id: "kai", name: "Kai", role: "Research lead", summary: "The morning brief is ready for a source check.", kind: "agent", art: "Kai" },
-  { id: "sol", name: "Sol", role: "Evidence review", summary: "I reconciled the observation log.", kind: "agent", art: "Sol" },
-  { id: "release", name: "Studio releases", role: "Channel", summary: "Two checks remain before the release.", kind: "channel", art: "Sol" },
-  { id: "field-notes", name: "Field notes", role: "Channel", summary: "Friday’s readings are now in the register.", kind: "channel", art: "Kai" },
+  {
+    id: "kai",
+    name: "Kai",
+    role: "Research lead",
+    topic: "Morning brief",
+    time: "9:41",
+    summary: "I reconciled three of the four readings on my computer and drafted the update. One field sensor entry is still missing a source timestamp, so I paused before publishing.",
+    kind: "agent",
+    art: "Kai",
+  },
+  {
+    id: "sol",
+    name: "Sol",
+    role: "Evidence review",
+    topic: "Observation log",
+    time: "Live",
+    summary: "I reconciled the observation log and flagged one delayed station entry for follow-up.",
+    kind: "agent",
+    art: "Sol",
+  },
+  {
+    id: "noa",
+    name: "Noa",
+    role: "Release notes",
+    topic: "Weekly release notes",
+    time: "Tue",
+    summary: "Weekly release notes are drafted and ready for handoff whenever the morning brief clears.",
+    kind: "agent",
+    art: "wide-oval-top",
+    color: "slate.300",
+  },
+  {
+    id: "release",
+    name: "Studio releases",
+    role: "Channel",
+    topic: "Release handoff",
+    time: "Mon",
+    summary: "Two checks remain before the release.",
+    kind: "channel",
+    art: "Sol",
+  },
+  {
+    id: "field-notes",
+    name: "Field notes",
+    role: "Channel",
+    topic: "Sensor register",
+    time: "Fri",
+    summary: "Friday’s readings are now in the register.",
+    kind: "channel",
+    art: "Kai",
+  },
 ];
 
 export const studioFiles = [

@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 import {
   Badge,
   Button,
+  Card,
   ConfirmDialog,
   Count,
   ListHeader,
   Receipt,
   Result,
-  SegmentedControl,
   Skeleton,
   Stack,
-  Text,
+  Tabs,
   WorkEvent,
   type DecisionRef,
   type ReceiptRecord,
@@ -83,93 +83,119 @@ export function AttentionInbox({
   useEffect(() => {
     if (preview && !canShowPreview) setPreview(null);
   }, [canShowPreview, preview]);
-  return (
-    <Stack gap={12} className="yg-attention-inbox">
-      <ListHeader
-        title="Attention"
-        action={!loading && <Count label="items" value={visible.length} />}
-      />
-      <SegmentedControl
-        label="Filter attention"
-        value={filter}
-        onValueChange={setFilter}
-        options={filters}
-      />
-      {loading ? (
-        <Skeleton label="Loading attention items" />
-      ) : visible.length > 0 ? (
-        <ul className="yg-operations-list" aria-label="Attention items">
-          {visible.map((item) => {
-            const current = receiptFor(item);
-            const canReview =
-              item.review &&
-              onReview &&
-              current?.state !== "pending" &&
-              current?.state !== "confirmed";
-            return (
-              <li className="yg-attention-card" key={item.id}>
-                <WorkEvent event={item} />
-                {current && <Receipt record={current} />}
-                {(item.unread || item.attention || canReview) && (
-                  <div className="yg-operations-line">
-                    {item.unread && <Badge>Unread</Badge>}
-                    {item.attention && <Text variant="help">Needs attention</Text>}
-                    {canReview && item.review && (
-                      <Button
-                        emphasis="soft"
-                        size="compact"
-                        aria-label={`Review ${item.title}`}
-                        onClick={() => {
-                          if (item.review) setPreview({ id: item.id, revision: item.review.revision });
-                        }}
-                      >
-                        Review
-                      </Button>
-                    )}
-                    {item.unread && onMarkRead && (
-                      <Button
-                        emphasis="quiet"
-                        size="compact"
-                        aria-label={`Mark ${item.title} as read`}
-                        onClick={() => onMarkRead(item.id)}
-                      >
-                        Mark read
-                      </Button>
-                    )}
-                  </div>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
+  function renderList(tabId: string) {
+    const filtered = items.filter(
+      (item) =>
+        tabId === "all" ||
+        (tabId === "unread" && item.unread) ||
+        (tabId === "attention" && item.attention),
+    );
+    if (loading) return <Skeleton label="Loading attention items" />;
+    if (filtered.length === 0) {
+      return (
         <Result
           title={
-            filter === "all"
+            tabId === "all"
               ? "You're all caught up"
-              : filter === "unread"
+              : tabId === "unread"
                 ? "No unread items"
                 : "Nothing needs attention"
           }
           action={
-            filter !== "all" && (
+            tabId !== "all" && (
               <Button emphasis="soft" onClick={() => setFilter("all")}>
                 Show all
               </Button>
             )
           }
         />
-      )}
-      {decision && onReview && (
-        <ConfirmDialog
-          decision={decision}
-          open
-          onOpenChange={(open) => {
-            if (!open) setPreview(null);
-          }}
-          onConfirm={onReview}
+      );
+    }
+    return (
+      <ul className="yg-operations-list" aria-label="Attention items">
+        {filtered.map((item) => {
+          const current = receiptFor(item);
+          const canReview =
+            item.review &&
+            onReview &&
+            current?.state !== "pending" &&
+            current?.state !== "confirmed";
+          const inlineStatus = (item.unread || item.attention) ? (
+            <>
+              {item.attention && <Badge tone="warning">Needs attention</Badge>}
+              {item.unread && <span className="yg-signal-dot" role="img" aria-label="Unread" />}
+            </>
+          ) : undefined;
+          const rowActions = (canReview || (item.unread && onMarkRead)) ? (
+            <>
+              {item.unread && onMarkRead && (
+                <Button
+                  emphasis="quiet"
+                  size="compact"
+                  aria-label={`Mark ${item.title} as read`}
+                  onClick={() => onMarkRead(item.id)}
+                >
+                  Mark read
+                </Button>
+              )}
+              {canReview && item.review && (
+                <Button
+                  emphasis="soft"
+                  size="compact"
+                  aria-label={`Review ${item.title}`}
+                  onClick={() => {
+                    if (item.review) setPreview({ id: item.id, revision: item.review.revision });
+                  }}
+                >
+                  Review
+                </Button>
+              )}
+            </>
+          ) : undefined;
+          return (
+            <li className="yg-attention-item" key={item.id}>
+              <WorkEvent
+                event={item}
+                hideStateBadge={item.attention}
+                inlineMeta={inlineStatus}
+                actions={rowActions}
+              />
+              {current && <Receipt record={current} />}
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+  return (
+    <Card className="yg-attention-inbox">
+      <Stack gap={12}>
+        <ListHeader
+          title="Attention"
+          action={!loading && <Count label="items" value={visible.length} />}
         />
-      )}
-    </Stack>
+        <Tabs
+          label="Filter attention"
+          presentation="underline"
+          value={filter}
+          onValueChange={setFilter}
+          items={filters.map((entry) => ({
+            id: entry.id,
+            label: entry.label,
+            panel: renderList(entry.id),
+          }))}
+        />
+        {decision && onReview && (
+          <ConfirmDialog
+            decision={decision}
+            open
+            onOpenChange={(open) => {
+              if (!open) setPreview(null);
+            }}
+            onConfirm={onReview}
+          />
+        )}
+      </Stack>
+    </Card>
   );
 }

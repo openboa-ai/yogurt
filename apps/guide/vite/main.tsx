@@ -1,14 +1,33 @@
-import { lazy, startTransition, Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { lazy, startTransition, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { IconButton, Link, Navbar, PageHeader, ProjectMark, Text, Yogurt } from "@openboa/yogurt";
+import {
+  ActionMenu, Button, Dialog, EmptyResult, IconButton, Inline, Link, List, ListRow, Navbar,
+  PageHeader, ProjectMark, ScrollArea, SearchField, SegmentedControl, Stack, Text, Yogurt,
+} from "@openboa/yogurt";
 import "../../../design/styles/brand.css";
 import "../../../design/styles/ui.css";
 import "./shell.css";
 import { guidePages, canonicalGuideUrl, matchGuidePath } from "../guide-routes.mjs";
 import { componentAliases, componentPreviews, legacyMotionPreviews, motionDestinations } from "../component-previews";
 import blocks from "../../../catalog/blocks.json";
+import catalogComponents from "../../../catalog/components.json";
+import motionCatalog from "../../../catalog/motion-components.json";
 
 const blockIds = new Set(blocks.map(block => block.id));
+type SurfaceMaterial = "neutral" | "paper" | "mist";
+const materials = [
+  { id: "neutral", label: "Neutral" },
+  { id: "paper", label: "Paper" },
+  { id: "mist", label: "Mist" },
+] as const;
+
+const globalSearchItems = [
+  ...catalogComponents.map(item => ({ id: "c:" + item.id, title: item.name, detail: "Component · " + item.group, href: "/components/" + item.id })),
+  ...motionCatalog.components.map(item => ({ id: "m:" + item.id, title: item.name, detail: "Motion · " + item.group, href: "/components/" + item.id })),
+  ...blocks.map(item => ({ id: "p:" + item.id, title: item.name, detail: "Pattern · " + item.description, href: "/patterns/" + item.id })),
+  { id: "g:tokens", title: "Tokens", detail: "Guide · Color, type, spacing and surfaces", href: "/tokens" },
+  { id: "g:examples", title: "Sourdough Studio", detail: "Example · Multi-pane AI agent cockpit", href: "/examples" },
+];
 
 function hostedUrl(url: URL) {
   const canonical = canonicalGuideUrl(url);
@@ -98,7 +117,13 @@ function alignPage(url: URL, focusHeading: boolean) {
   window.scrollTo(0, 0);
 }
 
-function GuideContent({ id, appearance, href }: { id: string; appearance: Appearance; href: string }) {
+function GuideContent({ id, appearance, material, onMaterialChange, href }: {
+  id: string;
+  appearance: Appearance;
+  material: SurfaceMaterial;
+  onMaterialChange: (next: SurfaceMaterial) => void;
+  href: string;
+}) {
   const previousHref = useRef(startingUrl);
   useLayoutEffect(() => {
     const next = new URL(href, location.origin);
@@ -116,9 +141,9 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
     case "adoption": return <AdoptionGuide />;
     case "playbook": return <Playbook key={url.search} />;
     case "emoji": return <EmojiGallery key={url.search} />;
-    case "components": return <Catalog guideAppearance={appearance} url={url} />;
+    case "components": return <Catalog guideAppearance={appearance} guideMaterial={material} onGuideMaterialChange={onMaterialChange} url={url} />;
     case "templates": return <Templates key={url.pathname} id={url.pathname.split("/")[2]} appearance={appearance} />;
-    case "examples": return <Examples key={url.pathname} id={url.pathname.split("/")[2]} appearance={appearance} />;
+    case "examples": return <Examples key={url.pathname} id={url.pathname.split("/")[2]} appearance={appearance} material={material} />;
     case "agents": return <div className="guide-agents"><AgentFamily /></div>;
     default: return <main><PageHeader title="Guide page not found" action={<Link href="/">Go to Yogurt</Link>} /></main>;
   }
@@ -127,7 +152,10 @@ function GuideContent({ id, appearance, href }: { id: string; appearance: Appear
 function Guide() {
   const [href, setHref] = useState(startingUrl);
   const [appearance, setAppearance] = useState(initialAppearance);
+  const [material, setMaterial] = useState<SurfaceMaterial>("neutral");
   const [menu, setMenu] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const url = new URL(href, location.origin);
   const page = matchGuidePath(url.pathname);
   const id = page?.id ?? "missing";
@@ -135,6 +163,33 @@ function Guide() {
   useLayoutEffect(() => {
     document.documentElement.dataset.appearance = appearance;
   }, [appearance]);
+
+  function navigateTo(nextHref: string) {
+    if (nextHref !== currentUrl()) {
+      history.pushState(null, "", nextHref);
+      startTransition(() => setHref(currentUrl()));
+    }
+    setMenu(false);
+    setSearchOpen(false);
+    setSearchQuery("");
+  }
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== "k") return;
+      if (id === "examples") return;
+      event.preventDefault();
+      setSearchOpen(true);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [id]);
+
+  const searchResults = useMemo(() => {
+    const term = searchQuery.trim().toLowerCase();
+    if (!term) return globalSearchItems.slice(0, 14);
+    return globalSearchItems.filter(item => (item.title + " " + item.detail).toLowerCase().includes(term)).slice(0, 20);
+  }, [searchQuery]);
 
   useEffect(() => {
     function followLocation() {
@@ -182,22 +237,60 @@ function Guide() {
   }
 
   const active = page?.parent ?? id;
-  return <Yogurt appearance={appearance} className="guide-shell">
+  return <Yogurt appearance={appearance} material={material} className="guide-shell">
     <Link className="guide-skip" href="#guide-content">Skip to content</Link>
-    <Navbar variant="sections" className="guide-masthead" label="Yogurt guide"
-      destinations={destinations} current={active} currentKind={active === id ? "page" : "location"}
-      expanded={menu} onExpandedChange={setMenu}
-      identity={<Link href="/" className="guide-identity" aria-label="Yogurt home">
-        <ProjectMark project="yogurt" label="" size={30} />Yogurt
-      </Link>}
-      action={<IconButton icon={appearance === "dark" ? "sun" : "moon"}
-        label={appearance === "dark" ? "Use light appearance" : "Use dark appearance"} onClick={toggleAppearance} />}
-    />
+    <div className="guide-masthead-wrap">
+      <Navbar variant="sections" className="guide-masthead" label="Yogurt guide"
+        destinations={destinations} current={active} currentKind={active === id ? "page" : "location"}
+        expanded={menu} onExpandedChange={setMenu}
+        identity={<Link href="/" className="guide-identity" aria-label="Yogurt home">
+          <ProjectMark project="yogurt" label="" size={24} />Yogurt
+        </Link>}
+        action={<Inline gap={6} wrap={false} align="center" className="guide-global-controls">
+          <Button emphasis="soft" size="compact" className="guide-kbd-button" aria-label="Search guide" onClick={() => setSearchOpen(true)}>⌘K</Button>
+          <span className="guide-material-desktop">
+            <SegmentedControl
+              label="Surface material"
+              value={material}
+              onValueChange={next => setMaterial(next as SurfaceMaterial)}
+              options={[...materials]}
+            />
+          </span>
+          <span className="guide-material-compact">
+            <ActionMenu
+              label="Surface material"
+              triggerText={materials.find(item => item.id === material)?.label ?? "Neutral"}
+              triggerSize="compact"
+              items={[...materials]}
+              onSelect={next => setMaterial(next as SurfaceMaterial)}
+            />
+          </span>
+          <IconButton size="compact" icon={appearance === "dark" ? "sun" : "moon"}
+            label={appearance === "dark" ? "Use light appearance" : "Use dark appearance"} onClick={toggleAppearance} />
+        </Inline>}
+      />
+    </div>
     <div id="guide-content" className="guide-content" tabIndex={-1}>
       <Suspense fallback={<Text className="guide-loading" role="status">Loading guide…</Text>}>
-        <GuideContent id={id} appearance={appearance} href={href} />
+        <GuideContent id={id} appearance={appearance} material={material} onMaterialChange={setMaterial} href={href} />
       </Suspense>
     </div>
+    <Dialog title="Search Yogurt" open={searchOpen} onOpenChange={setSearchOpen}>
+      <Stack gap={12}>
+        <SearchField label="Search components, patterns and guides" placeholder="Search components, patterns, tokens…" hiddenLabel size="compact" value={searchQuery} onValueChange={setSearchQuery} />
+        {searchResults.length ? (
+          <ScrollArea label="Guide search results" className="guide-search-results">
+            <List label="Matching guide pages" divided>
+              {searchResults.map(item => (
+                <ListRow key={item.id} title={item.title} description={item.detail} onActivate={() => navigateTo(item.href)} />
+              ))}
+            </List>
+          </ScrollArea>
+        ) : (
+          <EmptyResult query={searchQuery} onClear={() => setSearchQuery("")} />
+        )}
+      </Stack>
+    </Dialog>
   </Yogurt>;
 }
 

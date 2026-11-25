@@ -1,109 +1,148 @@
-.yg-chart {
-  display: grid;
-  min-inline-size: 0;
-  gap: var(--yg-gap-stack);
-}
+@layer yg.patterns {
+  .yg-chart {
+    display: grid;
+    min-inline-size: 0;
+    gap: var(--yg-gap-stack);
+  }
 
-.yg-chart figcaption {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--yg-gap-inline) var(--yg-gap-stack);
-  min-inline-size: 0;
-}
+  .yg-chart figcaption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--yg-gap-inline) var(--yg-gap-stack);
+    min-inline-size: 0;
+  }
 
-.yg-chart figcaption > * {
-  min-inline-size: 0;
-  overflow-wrap: anywhere;
-}
+  .yg-chart figcaption > * {
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
 
-.yg-chart-plot {
-  --yg-plot-height: clamp(8rem, 22vi, 14rem);
-  display: grid;
-  grid-template-columns: fit-content(30%) minmax(0, 1fr);
-  column-gap: var(--yg-gap-inline);
-  row-gap: var(--yg-gap-tight);
-  min-inline-size: 0;
-}
+  .yg-chart-plot {
+    --yg-plot-height: clamp(8rem, 22vi, 14rem);
+    display: grid;
+    grid-template-columns: fit-content(30%) minmax(0, 1fr);
+    column-gap: var(--yg-gap-inline);
+    row-gap: var(--yg-gap-tight);
+    min-inline-size: 0;
+  }
 
-.yg-chart-scale {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: end;
-  min-inline-size: 0;
-  padding-block: max(0px, calc(var(--yg-plot-height) * 0.092 - 0.5lh)) max(0px, calc(var(--yg-plot-height) * 0.118 - 0.5lh));
-  color: var(--yg-muted);
-  font: var(--yg-font-meta);
-  font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
-}
+  .yg-chart-scale {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: end;
+    min-inline-size: 0;
+    padding-block: max(0px, calc(var(--yg-plot-height) * 0.092 - 0.5lh)) max(0px, calc(var(--yg-plot-height) * 0.118 - 0.5lh));
+    color: var(--yg-muted);
+    font: var(--yg-font-meta);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
 
-.yg-chart-plot > svg {
-  display: block;
-  grid-column: 2;
-  grid-row: 1;
-  inline-size: 100%;
-  block-size: var(--yg-plot-height);
-  color: var(--yg-inverse);
-}
+  .yg-chart-plot > svg {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+    inline-size: 100%;
+    block-size: var(--yg-plot-height);
+    color: var(--yg-brand-ink);
+  }
 
-.yg-chart-empty {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: center;
-  justify-self: center;
-  color: var(--yg-muted);
-  font: var(--yg-font-help);
-}
+  .yg-chart-empty {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    color: var(--yg-muted);
+    font: var(--yg-font-help);
+  }
 
-.yg-chart-grid {
-  fill: none;
-  stroke: var(--yg-hover);
-  stroke-width: var(--boa-stroke-rule);
-}
+  .yg-chart-grid {
+    fill: none;
+    stroke: var(--yg-hover);
+    stroke-width: var(--boa-stroke-rule);
+  }
 
-.yg-chart-point {
-  fill: currentColor;
-  stroke: currentColor;
-  stroke-width: 5px;
-}
+  .yg-chart-point {
+    fill: currentColor;
+    stroke: currentColor;
+    stroke-width: 5px;
+  }
 
-.yg-chart-range {
-  position: relative;
-  grid-column: 2;
-  min-inline-size: 0;
-  padding-inline: 3.333%;
-}
-.yg-chart-range:has(.yg-chart-interior-tick) { min-block-size: 2lh; }
-.yg-chart-range > span {
-  min-inline-size: 0;
-  max-inline-size: 25%;
-  overflow-wrap: anywhere;
-}
-.yg-chart-interior-tick {
-  position: absolute;
-  inset-block-start: 0;
-  left: clamp(38%, var(--yg-chart-tick-position), 62%);
-  translate: -50% 0;
-  text-align: center;
-}
-.yg-chart-interior-tick small {
-  display: block;
-  color: var(--yg-muted);
-  font: inherit;
-}
+  .yg-chart-range {
+    position: relative;
+    grid-column: 2;
+    min-inline-size: 0;
+    padding-inline: 3.333%;
+  }
+  .yg-chart-range:has(.yg-chart-interior-tick) { min-block-size: 2lh; }
+  .yg-chart-range > span {
+    min-inline-size: 0;
+    max-inline-size: 25%;
+    overflow-wrap: anywhere;
+  }
+  .yg-chart-interior-tick {
+    position: absolute;
+    inset-block-start: 0;
+    left: clamp(38%, var(--yg-chart-tick-position), 62%);
+    translate: -50% 0;
+    text-align: center;
+  }
+  .yg-chart-interior-tick small {
+    display: block;
+    color: var(--yg-muted);
+    font: inherit;
+  }
 
-.yg-chart-range > span:last-child { text-align: end; }
-.yg-chart > .yg-meta { margin: 0; overflow-wrap: anywhere; }
-.yg-chart details { margin: 0; }
-.yg-chart summary { cursor: pointer; }
-.yg-chart summary:focus-visible {
-  outline: var(--boa-stroke-focus) solid var(--yg-inverse);
-  outline-offset: var(--boa-space-2);
-  border-radius: var(--yg-radius-small);
-}
+  .yg-chart-range[data-dense="true"] {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .yg-chart-range[data-dense="true"] > .yg-chart-tick {
+    position: static;
+    translate: none;
+    max-inline-size: none;
+    text-align: center;
+  }
+  .yg-chart-range[data-dense="true"] > .yg-chart-tick:first-child { text-align: start; }
+  .yg-chart-range[data-dense="true"] > .yg-chart-tick:last-child { text-align: end; }
+  .yg-chart-range > span:last-child { text-align: end; }
+  .yg-chart > .yg-meta { margin: 0; overflow-wrap: anywhere; }
+  .yg-chart details { margin: 0; }
+  .yg-chart summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    padding: 4px 12px;
+    border-radius: var(--boa-radius-round);
+    border: 1px solid var(--yg-border-subtle);
+    background: var(--yg-raised);
+    color: var(--yg-muted);
+    font: var(--yg-font-compact);
+    cursor: pointer;
+    transition: background-color var(--yg-press) var(--yg-settle), color var(--yg-press) var(--yg-settle);
+  }
+  .yg-chart summary::-webkit-details-marker { display: none; }
+  @media (hover: hover) {
+    .yg-chart summary:hover { background: var(--yg-hover); color: var(--yg-text); }
+  }
+  .yg-chart summary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 1.5px var(--yg-focus-ring), 0 0 0 3.5px var(--yg-focus-halo);
+    border-radius: var(--yg-radius-small);
+  }
+  @media (forced-colors: active) {
+    .yg-chart summary:focus-visible {
+      outline: var(--boa-stroke-focus) solid Highlight;
+      outline-offset: var(--boa-space-2);
+      box-shadow: none;
+    }
+  }
 
-.yg-bars { min-inline-size: 0; }
-.yg-bars :is(figcaption, small) { overflow-wrap: anywhere; }
+  .yg-bars { min-inline-size: 0; }
+  .yg-bars :is(figcaption, small) { overflow-wrap: anywhere; }
+}

@@ -7,56 +7,59 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type ComponentProps,
   type PointerEvent,
   type ReactNode,
 } from "react";
-import { Direction as ReadingDirection } from "radix-ui";
-import { Heading, Icon, Stack, cx, type Tone } from "../foundation/foundation.js";
-import { Button, IconButton } from "../controls/actions.js";
-import { Toast } from "../controls/feedback.js";
+import { Heading, Icon, cx, type Tone } from "../foundation/foundation.js";
+import { Button } from "../controls/actions.js";
+import { Badge, Toast } from "../controls/feedback.js";
 import { playSprings, snap, spring } from "../foundation/spring-motion.js";
 import { CopyButton } from "./motion-status.js";
-import type { Observation, Reading } from "../controls/data.js";
 
 type Content = { children: ReactNode };
 type NamedSection = Content & {
-  title: string;
+  title?: string;
   description?: string;
+  headerAction?: ReactNode;
   action?: ReactNode;
 };
-export function AspectRatio({
-  ratio = 16 / 9,
+export function Card({
+  title,
+  description,
+  headerAction,
   children,
-}: Content & { ratio?: number }) {
+  action,
+  density = "regular",
+  variant = "raised",
+  className,
+  "data-state": dataState,
+}: NamedSection & {
+  density?: "compact" | "regular" | "spacious";
+  variant?: "raised" | "outlined" | "subtle";
+  className?: string;
+  "data-state"?: string;
+}) {
+  const hasHeader = Boolean(title || description || headerAction);
   return (
-    <div
-      className="yg-aspect"
-      style={{ aspectRatio: Number.isFinite(ratio) && ratio > 0 ? ratio : 1 }}
+    <section
+      className={cx("yg-card", className)}
+      data-density={density}
+      data-variant={variant}
+      data-state={dataState}
     >
-      {children}
-    </div>
-  );
-}
-export function Direction({
-  dir = "ltr",
-  children,
-}: Content & { dir?: "ltr" | "rtl" }) {
-  return (
-    <ReadingDirection.Provider dir={dir}>
-      <div dir={dir}>{children}</div>
-    </ReadingDirection.Provider>
-  );
-}
-export function Card({ title, description, children, action, density = "regular" }: NamedSection & { density?: "compact" | "regular" | "spacious" }) {
-  return (
-    <section className="yg-card" data-density={density}>
-      <header className="yg-card-header">
-        <Heading level={3}>{title}</Heading>
-        {description && <p className="yg-help">{description}</p>}
-      </header>
-      <div>{children}</div>
-      {action && <footer>{action}</footer>}
+      {hasHeader && (
+        <header className="yg-card-header">
+          <div className="yg-card-header-copy">
+            {title && <Heading level={3}>{title}</Heading>}
+            {description && <p className="yg-help">{description}</p>}
+          </div>
+          {headerAction && (
+            <div className="yg-card-header-action">{headerAction}</div>
+          )}
+        </header>
+      )}
+      <div className="yg-card-body">{children}</div>
+      {action && <footer className="yg-card-footer">{action}</footer>}
     </section>
   );
 }
@@ -73,53 +76,6 @@ export function Asset({
     >
       {children}
     </span>
-  );
-}
-export function Gradient({
-  children,
-  tone = "neutral",
-}: {
-  children?: ReactNode;
-  tone?: Tone;
-}) {
-  return (
-    <div className="yg-gradient" data-tone={tone}>
-      {children}
-    </div>
-  );
-}
-export function Elevation({
-  children,
-  level = "raised",
-}: Content & { level?: "flat" | "raised" | "floating" }) {
-  return (
-    <div className="yg-elevation" data-level={level}>
-      {children}
-    </div>
-  );
-}
-export function KeyboardShortcut({
-  keys,
-  label,
-}: {
-  keys: string[];
-  label: string;
-}) {
-  return (
-    <span className="yg-shortcut" role="img" aria-label={label}>
-      {keys.map((key, index) => (
-        <kbd key={index} aria-hidden="true">
-          {key}
-        </kbd>
-      ))}
-    </span>
-  );
-}
-export function Post({ children, ...props }: ComponentProps<"article">) {
-  return (
-    <article {...props} className={cx("yg-post", props.className)}>
-      {children}
-    </article>
   );
 }
 export function GridList({
@@ -162,17 +118,6 @@ export function ListHeader({
     </header>
   );
 }
-export function ListFooter({
-  children,
-  action,
-}: Content & { action?: ReactNode }) {
-  return (
-    <footer className="yg-section-line yg-help">
-      {children}
-      {action}
-    </footer>
-  );
-}
 export function PageHeader({
   title,
   detail,
@@ -206,16 +151,6 @@ export function PageHeader({
       {action && <div className="yg-page-header-actions">{action}</div>}
     </header>
   );
-}
-export function BottomInfo({ label, children }: Content & { label: string }) {
-  return (
-    <aside className="yg-bottom-info" aria-label={label}>
-      {children}
-    </aside>
-  );
-}
-export function Highlight({ children }: Content) {
-  return <mark className="yg-highlight">{children}</mark>;
 }
 export function Spinner({ label = "Loading" }: { label?: string }) {
   return (
@@ -496,83 +431,7 @@ export function ToastStack({
     </section>
   );
 }
-export function TableRow({ label, children }: Content & { label: string }) {
-  return (
-    <dl className="yg-value-row">
-      <dt>{label}</dt>
-      <dd>{children}</dd>
-    </dl>
-  );
-}
-export function AmountTop({
-  label,
-  value,
-  unit,
-  detail,
-}: {
-  label: string;
-  value: string;
-  unit?: string;
-  detail?: string;
-}) {
-  return (
-    <section className="yg-amount">
-      <span className="yg-help">{label}</span>
-      <strong>
-        {value}
-        {unit && <small> {unit}</small>}
-      </strong>
-      {detail && <span className="yg-meta">{detail}</span>}
-    </section>
-  );
-}
-export function BarChart({
-  title,
-  points,
-  unit,
-  source,
-  asOf,
-  timeLabel,
-}: Observation & { title: string; points: Reading[]; unit: string }) {
-  const finite = points.flatMap((p) =>
-    p.value !== null && Number.isFinite(p.value) ? [p.value] : [],
-  );
-  const min = Math.min(0, ...finite),
-    max = Math.max(0, ...finite),
-    range = max - min || 1,
-    zero = (-min / range) * 100;
-  return (
-    <figure className="yg-bars">
-      <figcaption>{title}</figcaption>
-      <ul>
-        {points.map((p) => {
-          const n =
-            p.value !== null && Number.isFinite(p.value) ? p.value : null;
-          return (
-            <li key={p.id}>
-              <span>{p.label}</span>
-              <span className="yg-bar-track" aria-hidden="true">
-                <i
-                  style={{
-                    insetInlineStart:
-                      (n !== null && n < 0 ? ((n - min) / range) * 100 : zero) +
-                      "%",
-                    inlineSize:
-                      (n === null ? 0 : (Math.abs(n) / range) * 100) + "%",
-                  }}
-                />
-              </span>
-              <span>{n === null ? "No reading" : n + " " + unit}</span>
-            </li>
-          );
-        })}
-      </ul>
-      <small>
-        {source} · <time dateTime={asOf}>{timeLabel ?? asOf}</time>
-      </small>
-    </figure>
-  );
-}
+const avatarSizes = { compact: 26, regular: 36, large: 44 } as const;
 export function Avatar({
   label,
   src,
@@ -580,8 +439,9 @@ export function Avatar({
 }: {
   label: string;
   src?: string;
-  size?: number;
+  size?: number | keyof typeof avatarSizes;
 }) {
+  const px = typeof size === "number" ? size : avatarSizes[size];
   const [failed, setFailed] = useState<string>();
   const initials = label
     .trim()
@@ -595,7 +455,7 @@ export function Avatar({
       role="img"
       aria-label={label}
       className="yg-avatar"
-      style={{ inlineSize: size, blockSize: size }}
+      style={{ inlineSize: px, blockSize: px }}
     >
       {src && failed !== src ? (
         <img src={src} alt="" onError={() => setFailed(src)} />
@@ -603,67 +463,6 @@ export function Avatar({
         <span aria-hidden="true">{initials}</span>
       )}
     </span>
-  );
-}
-export function Bubble({
-  children,
-  outgoing = false,
-}: Content & { outgoing?: boolean }) {
-  return (
-    <div className="yg-bubble" data-outgoing={outgoing || undefined}>
-      {children}
-    </div>
-  );
-}
-export function Attachment({
-  name,
-  detail,
-  preview,
-  onOpen,
-  onRemove,
-  progress,
-}: {
-  name: string;
-  detail?: string;
-  preview?: ReactNode;
-  onOpen?: () => void;
-  onRemove?: () => void;
-  progress?: number;
-}) {
-  const info = (
-    <>
-      <strong>{name}</strong>
-      {detail && <small>{detail}</small>}
-    </>
-  );
-  return (
-    <div className="yg-attachment">
-      {preview && <Asset>{preview}</Asset>}
-      {onOpen ? (
-        <button type="button" className="yg-file-name" onClick={onOpen}>
-          {info}
-        </button>
-      ) : (
-        <span className="yg-file-name">{info}</span>
-      )}
-      {progress !== undefined && (
-        <progress aria-label={"Upload " + name} value={progress} max={100} />
-      )}{" "}
-      {onRemove && (
-        <IconButton icon="close" label={"Remove " + name} onClick={onRemove} />
-      )}
-    </div>
-  );
-}
-export function Marker({
-  children,
-  tone = "neutral",
-}: Content & { tone?: Tone }) {
-  return (
-    <div className="yg-marker" data-tone={tone}>
-      <span aria-hidden="true" className="yg-status-dot" />
-      {children}
-    </div>
   );
 }
 export function CodeBlock({
@@ -691,8 +490,16 @@ export interface TraceEvent {
   id: string;
   title: string;
   detail: ReactNode;
-  state?: "working" | "complete" | "failed";
+  state?: "working" | "complete" | "failed" | "flagged";
+  latency?: string;
+  index?: string;
 }
+const traceStateMeta: Record<NonNullable<TraceEvent["state"]>, { label: string; tone: Tone }> = {
+  working: { label: "Running", tone: "brand" },
+  complete: { label: "Done", tone: "success" },
+  failed: { label: "Failed", tone: "danger" },
+  flagged: { label: "Flagged", tone: "warning" },
+};
 export function Trace({
   label,
   events,
@@ -703,21 +510,33 @@ export function Trace({
   const id = useId();
   return (
     <section className="yg-trace" aria-labelledby={id}>
-      <Heading id={id} level={3}>
-        {label}
-      </Heading>
+      <div className="yg-trace-header">
+        <Heading id={id} level={4}>
+          {label}
+        </Heading>
+        <span className="yg-trace-count">
+          {events.length} {events.length === 1 ? "step" : "steps"}
+        </span>
+      </div>
       <ol>
-        {events.map((e) => (
-          <li key={e.id}>
-            <details>
-              <summary>
-                {e.title}
-                {e.state && <small>{e.state}</small>}
-              </summary>
-              <div>{e.detail}</div>
-            </details>
-          </li>
-        ))}
+        {events.map((e, i) => {
+          const state = e.state && traceStateMeta[e.state];
+          const stepIndex = e.index ?? String(i + 1).padStart(2, "0");
+          return (
+            <li key={e.id}>
+              <details>
+                <summary>
+                  <span className="yg-trace-index">{stepIndex}</span>
+                  <span className="yg-trace-title">{e.title}</span>
+                  {e.latency && <span className="yg-trace-latency">{e.latency}</span>}
+                  {state && <Badge tone={state.tone}>{state.label}</Badge>}
+                  <Icon name="down" />
+                </summary>
+                <div>{e.detail}</div>
+              </details>
+            </li>
+          );
+        })}
       </ol>
     </section>
   );

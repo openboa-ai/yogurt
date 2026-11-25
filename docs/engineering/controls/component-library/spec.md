@@ -9,7 +9,7 @@ The owner selected the first-four proportions and asked to carry the design thro
 | Text field | 60b5d22de8edb35e37c3fba91e9575d3b1016e50ed5b5c055336ffe84a75f123 |
 | Switch | 0fa8591537c90fa1f0f3c2b1a3694111219f2a73425efee005b9d716229abffa |
 
-The follow-up selects the existing OpenAI Apps SDK UI implementations for matching web parts. Bind those parts to owned palette and geometry aliases. Add only missing primitives such as supporting type, duration and switch geometry. Keep the source palette intact.
+The `0.2.0` foundation rebuild standardizes web interactive controls on `@ui-sdk/react` headless primitives and pure Yogurt CSS inside five `@layer` buckets (`yg.tokens`, `yg.base`, `yg.components`, `yg.patterns`, `yg.utilities`), bound to Warm Neutral surfaces, Warm Ink monochrome controls, Ink Blue brand/focus accents, and Soft-Precision geometry (`9px`/`12px`/`16px`/`999px`; `32px`/`36px`/`40px`/`44px`).
 
 ## Scope and evidence
 
@@ -60,7 +60,7 @@ Give an edge drawer and a semantic table their own entries. A drawer opens from 
 
 The owner also requested ready-made combinations following the individual components. Supply four common tasks from the existing settings, collection, decision and conversation intents. A block installs editable composition source for the chosen platform. Its shared parts come from the same package pin. The website operates that source with local example data. A consuming host supplies saved values, authorization, submission, messages and results. Test dismissal, empty and pending states, the installed source, repeat installs and conflict preservation.
 
-[OpenAI Apps SDK UI](https://github.com/openai/apps-sdk-ui) · [Registry item schema](https://ui.shadcn.com/schema/registry-item.json)
+[Yogurt 0.2.0 Foundations Spec](../../foundations/yogurt-0-2-rebuild/spec.md) · [Registry item schema](https://ui.shadcn.com/schema/registry-item.json)
 
 ## Agent and project workspaces · local follow-up, revision 2
 

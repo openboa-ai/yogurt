@@ -1,4 +1,5 @@
 import { type CSSProperties, type ReactNode } from "react";
+import { type ControlSize } from "../foundation/foundation.js";
 export declare function SidebarLayout({ label, navigation, children, edge, variant, collapse, collapsed, defaultCollapsed, onCollapsedChange, width, compactAt, className, style, }: {
     label: string;
     navigation: ReactNode;
@@ -14,9 +15,10 @@ export declare function SidebarLayout({ label, navigation, children, edge, varia
     className?: string;
     style?: CSSProperties;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function SidebarTrigger({ label, showLabel, }: {
+export declare function SidebarTrigger({ label, showLabel, size, }: {
     label?: string;
     showLabel?: boolean;
+    size?: ControlSize;
 }): import("react/jsx-runtime").JSX.Element | null;
 export declare function SidebarHeader({ children, compact }: {
     children: ReactNode;

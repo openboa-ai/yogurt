@@ -1,5 +1,5 @@
 "use client";
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
 import { Button } from "../controls/actions.js";
 import { Badge } from "../controls/feedback.js";
 import { Icon, Text, type IconName, type Tone } from "../foundation/foundation.js";
@@ -34,13 +34,20 @@ export interface WorkEventRecord {
 export function WorkEvent({
   event,
   onOpen,
+  inlineMeta,
+  actions,
+  hideStateBadge = false,
 }: {
   event: WorkEventRecord;
   onOpen?: (id: string) => void;
+  inlineMeta?: ReactNode;
+  actions?: ReactNode;
+  hideStateBadge?: boolean;
 }) {
   const titleId = useId();
   const kind = eventKinds[event.kind];
-  const state = event.state && eventStates[event.state];
+  const state = !hideStateBadge && event.state ? eventStates[event.state] : undefined;
+  const hasActions = Boolean(onOpen || actions);
   return (
     <article className="yg-work-event" aria-labelledby={titleId} data-state={event.state}>
       <span className="yg-work-event-icon">
@@ -50,20 +57,27 @@ export function WorkEvent({
         <div className="yg-operations-line">
           <Text variant="meta">{kind.label}</Text>
           {event.time && (
-            <time className="yg-meta" dateTime={event.dateTime}>
-              {event.time}
-            </time>
+            <>
+              <Text variant="meta" aria-hidden="true">·</Text>
+              <time className="yg-meta" dateTime={event.dateTime}>
+                {event.time}
+              </time>
+            </>
           )}
         </div>
-        <strong id={titleId}>{event.title}</strong>
+        <div className="yg-operations-title-line">
+          <strong id={titleId}>{event.title}</strong>
+          {state && <Badge tone={state.tone}>{state.label}</Badge>}
+          {inlineMeta}
+        </div>
         {event.detail && <Text variant="help">{event.detail}</Text>}
       </div>
-      {(state || onOpen) && (
+      {hasActions && (
         <div className="yg-operations-actions">
-          {state && <Badge tone={state.tone}>{state.label}</Badge>}
+          {actions}
           {onOpen && (
             <Button
-              emphasis="quiet"
+              emphasis="soft"
               size="compact"
               aria-label={`Open ${event.title}`}
               onClick={() => onOpen(event.id)}
@@ -107,15 +121,22 @@ export function RoutineRow({
 }) {
   const titleId = useId();
   const state = routineStates[routine.state];
+  const hasActions = Boolean(onInspect || onEdit || onRun);
   return (
     <article className="yg-routine-row" aria-labelledby={titleId}>
       <div className="yg-work-event-content">
-        <strong id={titleId}>{routine.title}</strong>
+        <div className="yg-operations-title-line">
+          <strong id={titleId}>{routine.title}</strong>
+          <Badge tone={state.tone}>{state.label}</Badge>
+        </div>
         <Text variant="help">{routine.cadence}</Text>
         {(routine.nextRun || routine.lastRun) && (
           <div className="yg-operations-line">
             {routine.nextRun && (
               <Text variant="meta">Next · {routine.nextRun}</Text>
+            )}
+            {routine.nextRun && routine.lastRun && (
+              <Text variant="meta" aria-hidden="true">·</Text>
             )}
             {routine.lastRun && (
               <Text variant="meta">Last · {routine.lastRun}</Text>
@@ -123,40 +144,41 @@ export function RoutineRow({
           </div>
         )}
       </div>
-      <div className="yg-operations-actions">
-        <Badge tone={state.tone}>{state.label}</Badge>
-        {onInspect && (
-          <Button
-            emphasis="quiet"
-            size="compact"
-            aria-label={`Inspect ${routine.title}`}
-            onClick={() => onInspect(routine.id)}
-          >
-            Details
-          </Button>
-        )}
-        {onEdit && (
-          <Button
-            emphasis="quiet"
-            size="compact"
-            aria-label={`Edit ${routine.title}`}
-            onClick={() => onEdit(routine.id)}
-          >
-            Edit
-          </Button>
-        )}
-        {onRun && (
-          <Button
-            emphasis="soft"
-            size="compact"
-            aria-label={`Run ${routine.title}`}
-            disabled={routine.canRun === false || routine.state === "running"}
-            onClick={() => onRun(routine.id)}
-          >
-            Run now
-          </Button>
-        )}
-      </div>
+      {hasActions && (
+        <div className="yg-operations-actions">
+          {onInspect && (
+            <Button
+              emphasis="quiet"
+              size="compact"
+              aria-label={`Inspect ${routine.title}`}
+              onClick={() => onInspect(routine.id)}
+            >
+              Details
+            </Button>
+          )}
+          {onEdit && (
+            <Button
+              emphasis="quiet"
+              size="compact"
+              aria-label={`Edit ${routine.title}`}
+              onClick={() => onEdit(routine.id)}
+            >
+              Edit
+            </Button>
+          )}
+          {onRun && (
+            <Button
+              emphasis="soft"
+              size="compact"
+              aria-label={`Run ${routine.title}`}
+              disabled={routine.canRun === false || routine.state === "running"}
+              onClick={() => onRun(routine.id)}
+            >
+              Run now
+            </Button>
+          )}
+        </div>
+      )}
     </article>
   );
 }

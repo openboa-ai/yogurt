@@ -70,7 +70,7 @@ async function verifyTween(root, selector, property, reduced, id) {
       const page = await browser.newPage({ viewport: { width, height: 900 },
         reducedMotion: reduced ? "reduce" : "no-preference" });
       let root = await openSpecimen(page, "switch");
-      const toggle = root.getByRole("switch");
+      const toggle = root.getByRole("switch", { name: "Record dates" });
       const startingValue = await toggle.getAttribute("aria-checked");
       await toggle.press("Space");
       assert.notEqual(await toggle.getAttribute("aria-checked"), startingValue);
@@ -80,7 +80,7 @@ async function verifyTween(root, selector, property, reduced, id) {
       assert.notEqual(await toggle.getAttribute("aria-checked"), startingValue);
 
       root = await openSpecimen(page, "checkbox");
-      await root.getByRole("checkbox").press("Space");
+      await root.getByRole("checkbox", { name: "Include archived views" }).press("Space");
       await verifyTween(root, ".yg-checkbox-check", "stroke-dashoffset", reduced, "checkbox");
 
       root = await openSpecimen(page, "accordion");
@@ -113,15 +113,11 @@ async function verifyTween(root, selector, property, reduced, id) {
         assert(heights.opening.some(height => height > 0 && height < heights.expanded));
       }
 
-      root = await openSpecimen(page, "carousel");
-      await root.getByRole("button", { name: "Next slide" }).click();
-      await verifyTween(root, ".yg-carousel-strip", "translate", reduced, "carousel");
-
       root = await openSpecimen(page, "progress");
       await root.getByRole("button", { name: "Review next record" }).click();
       await verifyTween(root, ".yg-progress-track > span", "transform", reduced, "progress");
 
-      for (const id of ["dialog", "drawer", "sheet"]) {
+      for (const id of ["dialog", "sheet"]) {
         root = await openSpecimen(page, id);
         const trigger = root.getByRole("button", { name: "Edit view" });
         await trigger.click();

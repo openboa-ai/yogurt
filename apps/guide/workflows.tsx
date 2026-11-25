@@ -37,7 +37,7 @@ function RecordsWorkflow() {
   return <div className="workflow-records" data-show-detail={showDetail}>
     <section ref={list} tabIndex={-1} className="workflow-record-list" aria-label="Record list">
       <div className="workflow-sort">
-        <Select label="Sort records" value={order} onChange={(event) => setOrder(event.target.value)} options={[
+        <Select label="Sort records" value={order} onValueChange={setOrder} options={[
           {id: "updated", label: "Last updated"}, {id: "title", label: "Title"},
         ]} />
       </div>

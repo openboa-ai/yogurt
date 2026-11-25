@@ -1,3 +1,4 @@
+@layer yg.patterns {
 .motion-patterns-page {
   min-block-size: 100vh;
 }
@@ -414,7 +415,7 @@
   flex-wrap: nowrap;
   gap: var(--yg-gap-tight);
   padding: var(--yg-gap-inline);
-  border-radius: 26px;
+  border-radius: var(--yg-radius-pill);
   background: var(--yg-raised-surface);
 }
 .motion-bottom-bar .yg-tabs [role="tab"] {
@@ -488,7 +489,7 @@
   }
   .yg-root .motion-pattern-stage .motion-pattern-sample
     :is(button, summary, select, [role="combobox"]):focus-visible {
-    background-image: linear-gradient(color-mix(in srgb, currentColor 16%, transparent) 0 0);
+    box-shadow: 0 0 0 1.5px var(--yg-focus-ring), 0 0 0 3.5px var(--yg-focus-halo);
     text-decoration: underline;
     text-underline-offset: .2em;
   }
@@ -502,8 +503,8 @@
     background-color: var(--yg-hover);
   }
   .yg-root .motion-pattern-stage .motion-pattern-sample .yg-value-slider-thumb:has(:focus-visible) {
-    background: radial-gradient(circle, var(--yg-on-inverse) 0 4px, var(--yg-inverse) 4.5px);
-    box-shadow: none;
+    background: var(--yg-inverse);
+    box-shadow: 0 0 0 1.5px var(--yg-focus-ring), 0 0 0 3.5px var(--yg-focus-halo);
   }
   .motion-pattern-stage .motion-wheel:focus-visible .motion-wheel-highlight {
     background-color: var(--yg-hover);
@@ -580,3 +581,4 @@
 .motion-pill-tabs { inline-size: fit-content; max-inline-size: 100%; }
 .motion-pill-tabs .yg-tabs [role="tablist"] { flex-wrap: nowrap; max-inline-size: 100%; }
 .motion-pill-tabs .yg-tabs [role="tab"] { min-inline-size: 0; padding-inline: clamp(5px, 1.6vi, 12px); white-space: nowrap; }
+}

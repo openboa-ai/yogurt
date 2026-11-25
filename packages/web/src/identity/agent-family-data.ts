@@ -1,8 +1,8 @@
 // Generated from the agent SVG masters, silhouettes and animation fits.
 export type AgentMotionFit = readonly [slide: number, lift: number, tilt: number, gazeX: number, gazeY: number];
 export const agentColors = {
-  "slate.300": "#A1B5C5",
-  "slate.400": "#8195A3",
+  "slate.300": "#79B3D6",
+  "slate.400": "#5C9BC2",
   "blue.300": "#86C0FE",
   "blue.400": "#60A7F5",
   "indigo.300": "#A6B4F7",
@@ -13,13 +13,13 @@ export const agentColors = {
   "rose.300": "#D1ABBB",
   "rose.400": "#BE94A7",
   "red.400": "#FF7E77",
-  "coral.200": "#E8C1B0",
-  "coral.300": "#D5A59A",
+  "terracotta.200": "#E7B9AE",
+  "terracotta.300": "#D88F7D",
   "orange.400": "#F69A57",
   "earth.300": "#C5B59F",
   "ochre.200": "#E0CE9D",
   "ochre.300": "#D6BB84",
-  "yellow.250": "#FFDC63",
+  "yellow.300": "#E9D985",
   "lime.300": "#BED68F",
   "sage.300": "#B0BEAB",
   "sage.400": "#97AB91",
@@ -47,7 +47,7 @@ export const agentShapes = {
   },
   "sol": {
     "name": "Sol",
-    "color": "coral.300",
+    "color": "terracotta.300",
     "center": [
       50,
       49
@@ -175,7 +175,7 @@ export const agentShapes = {
   },
   "tilted-oval": {
     "name": "Tilted oval",
-    "color": "coral.200",
+    "color": "terracotta.200",
     "center": [
       50,
       55

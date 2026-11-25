@@ -21,7 +21,7 @@ const { chromium } = require("playwright-core");
       for (const item of await menu.getByRole("menuitem").all()) {
         assert.equal(await item.isVisible(), true);
         const box = await item.boundingBox();
-        assert(box && box.width > 0 && box.height >= 44, "menu items retain a visible hit target");
+        assert(box && box.width > 0 && box.height >= 28 && box.height <= 36, "menu items retain a compact desktop hit target");
       }
       await trigger.click();
       assert.equal(await root.getAttribute("data-open"), "false");
@@ -42,7 +42,17 @@ const { chromium } = require("playwright-core");
       assert.deepEqual(errors, []);
       await page.close();
     }
-    console.log("Action menu visibility, keyboard focus, selection and reduced motion verified.");
+    const touchPage = await browser.newPage({ viewport: { width: 390, height: 850 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
+    await touchPage.goto(pathToFileURL(join(__dirname, "../apps/guide/generated/motion-patterns.html")).href + "#dynamic-menu");
+    const touchRoot = touchPage.locator(".yg-action-menu-expanding");
+    await touchRoot.getByRole("button", { name: "View actions" }).click();
+    await touchPage.waitForFunction(() => document.querySelector(".yg-action-menu-expanding")?.dataset.open === "true");
+    for (const item of await touchRoot.getByRole("menuitem").all()) {
+      const box = await item.boundingBox();
+      assert(box && box.height >= 44, `coarse menu item height expected >= 44, got ${box?.height}`);
+    }
+    await touchPage.close();
+    console.log("Action menu visibility, keyboard focus, selection, coarse touch targets and reduced motion verified.");
   } finally {
     await browser.close();
   }

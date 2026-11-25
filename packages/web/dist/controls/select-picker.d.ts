@@ -7,8 +7,9 @@ type PickerOption = {
 export type SelectPickerProps = {
     label: string;
     value: string;
-    onChange: (value: string) => void;
+    onValueChange?: (value: string) => void;
+    onChange?: (value: string) => void;
     options: readonly PickerOption[];
 };
-export declare function SelectPicker({ label, value, onChange, options }: SelectPickerProps): import("react/jsx-runtime").JSX.Element;
+export declare function SelectPicker({ label, value, onValueChange, onChange, options }: SelectPickerProps): import("react/jsx-runtime").JSX.Element;
 export {};

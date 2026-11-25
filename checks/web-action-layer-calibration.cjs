@@ -19,7 +19,7 @@ const bundle = buildSync({ stdin: {resolveDir:process.cwd(), loader:'jsx', conte
       <Sheet open={open} onOpenChange={setOpen} title="Settings">Sheet content</Sheet>
     </div>;
   }
-  createRoot(document.getElementById('calibration-fixture')).render(<Fixture />);
+  createRoot(document.getElementById('calibration-fixture'), { identifierPrefix: 'alc-' }).render(<Fixture />);
 `}, bundle:true, write:false, platform:'browser', format:'iife', loader:{'.css':'empty','.module.css':'empty'} }).outputFiles[0].text;
 
 (async () => {
@@ -35,7 +35,7 @@ const bundle = buildSync({ stdin: {resolveDir:process.cwd(), loader:'jsx', conte
       });
       await page.addScriptTag({content:bundle});
       const host = page.locator('#calibration-fixture');
-      const sizes = {compact:30,regular:36,comfortable:40,spacious:48,touch:44};
+      const sizes = {compact:28,regular:32,comfortable:36,spacious:44,touch:44};
       for (const [size, expected] of Object.entries(sizes)) {
         const button = host.getByRole('button',{name:`${size} icon`});
         const box = await button.boundingBox();

@@ -1,9 +1,32 @@
 import samples from "../../../catalog/specimens/components.json";
 import { sectionHref } from "../routing";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import * as Y from "@openboa/yogurt";
 import { AgentMotionExample } from "./agent-motion-example";
 import { ExtendedExample } from "./extended-examples";
+
+export function SpecimenMatrix({ children }: { children: ReactNode }) {
+  return <div className="specimen-matrix">{children}</div>;
+}
+
+export function MatrixRow({
+  label,
+  stack = false,
+  children,
+}: {
+  label: string;
+  stack?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div className="specimen-matrix-row">
+      <Y.Text variant="meta" className="specimen-matrix-label">{label}</Y.Text>
+      <div className="specimen-matrix-cells" data-stack={stack || undefined}>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 const projects: Y.Option[] = samples["segmented-control"].options;
 const observation = {
@@ -183,7 +206,7 @@ export function Example({
       );
     case "button":
       return (
-        <Y.Stack gap={variation ? 16 : 4}>
+        <Y.Stack gap={variation ? 16 : 10}>
           {variation ? (
             <>
               <Y.Stack gap={8}>
@@ -212,55 +235,92 @@ export function Example({
                 </Y.ButtonGroup>
               </Y.Stack>
             </>
-          ) : <Y.ButtonGroup label="View actions">{primary}</Y.ButtonGroup>}
+          ) : (
+            <SpecimenMatrix>
+              <MatrixRow label="Emphasis">
+                <Y.ButtonGroup label="View actions">
+                  {primary}
+                  <Y.Button emphasis="soft" onClick={() => setNote("Draft kept.")}>Keep draft</Y.Button>
+                  <Y.Button emphasis="quiet" onClick={() => setNote("Changes discarded.")}>Discard</Y.Button>
+                </Y.ButtonGroup>
+              </MatrixRow>
+              <MatrixRow label="Tones">
+                <Y.Button tone="brand" onClick={() => setNote("Invitation sent.")}>Invite member</Y.Button>
+                <Y.Button tone="danger" onClick={() => setNote("Access removed.")}>Remove</Y.Button>
+                <Y.Button tone="danger" emphasis="soft" onClick={() => setNote("Session revoked.")}>Revoke</Y.Button>
+              </MatrixRow>
+              <MatrixRow label="Sizes">
+                <Y.Button size="compact" emphasis="soft" onClick={() => setNote("Compact clicked.")}>Compact</Y.Button>
+                <Y.Button size="regular" emphasis="soft" onClick={() => setNote("Regular clicked.")}>Regular</Y.Button>
+                <Y.Button size="comfortable" emphasis="soft" onClick={() => setNote("Comfortable clicked.")}>Comfortable</Y.Button>
+                <Y.Button size="touch" emphasis="soft" onClick={() => setNote("Touch clicked.")}>Touch</Y.Button>
+              </MatrixRow>
+              <MatrixRow label="States">
+                <Y.Button disabled>Disabled</Y.Button>
+                <Y.Button emphasis="soft" disabled>Disabled soft</Y.Button>
+                <Y.Button emphasis="quiet" disabled>Disabled quiet</Y.Button>
+                <Y.Button shape="pill" emphasis="soft" onClick={() => setNote("Pill clicked.")}>Pill</Y.Button>
+              </MatrixRow>
+            </SpecimenMatrix>
+          )}
           {status}
         </Y.Stack>
       );
     case "button-group":
       return (
-        <Y.Stack>
-          <Y.ButtonGroup label="Review actions">
-            {primary}
-            <Y.Button
-              emphasis="quiet"
-              onClick={() => setNote("Changes discarded.")}
-            >
-              Discard
-            </Y.Button>
-          </Y.ButtonGroup>
-          {status}
-        </Y.Stack>
-      );
-    case "bottom-action":
-      return (
-        <Y.Stack>
-          <Y.BottomAction>
-            {variation && (
-              <Y.Button
-                emphasis="soft"
-                onClick={() => setNote("Review postponed.")}
-              >
-                Later
-              </Y.Button>
-            )}
-            {primary}
-          </Y.BottomAction>
+        <Y.Stack gap={10}>
+          <SpecimenMatrix>
+            <MatrixRow label="Decision">
+              <Y.ButtonGroup label="Review actions">
+                <Y.Button emphasis="quiet" onClick={() => setNote("Changes discarded.")}>Discard</Y.Button>
+                {primary}
+              </Y.ButtonGroup>
+            </MatrixRow>
+            <MatrixRow label="Brand CTA">
+              <Y.ButtonGroup label="Publish actions">
+                <Y.Button emphasis="soft" onClick={() => setNote("Draft saved.")}>Save draft</Y.Button>
+                <Y.Button tone="brand" onClick={() => setNote("Published.")}>Publish</Y.Button>
+              </Y.ButtonGroup>
+            </MatrixRow>
+          </SpecimenMatrix>
           {status}
         </Y.Stack>
       );
     case "icon-button":
       return (
         <Y.Stack gap={12}>
-          <Y.Inline>
-            <Y.IconButton label="Add a view" icon="plus" emphasis="soft"
-              onClick={() => setCount((n) => n + 1)} />
-            {variation && <>
+          {variation ? (
+            <Y.Inline>
+              <Y.IconButton label="Add a view" icon="plus" emphasis="soft" onClick={() => setCount((n) => n + 1)} />
               <Y.IconButton label="Find a view" icon="search" size="compact" onClick={() => setNote("Search selected.")} />
               <Y.IconButton label="Copy a view" icon="copy" size="comfortable" emphasis="soft" onClick={() => setNote("View copied.")} />
               <Y.IconButton label="Save a view" icon="bookmark" size="touch" emphasis="filled" onClick={() => setNote("View saved.")} />
               <Y.IconButton label="Close views" icon="close" size="spacious" onClick={() => setNote("Views closed.")} />
-            </>}
-          </Y.Inline>
+            </Y.Inline>
+          ) : (
+            <SpecimenMatrix>
+              <MatrixRow label="Emphasis">
+                <Y.IconButton label="Add a view" icon="plus" emphasis="soft" onClick={() => setCount((n) => n + 1)} />
+                <Y.IconButton label="Bookmark view" icon="bookmark" emphasis="filled" onClick={() => setNote("Bookmarked.")} />
+                <Y.IconButton label="More options" icon="more" emphasis="quiet" onClick={() => setNote("More selected.")} />
+              </MatrixRow>
+              <MatrixRow label="Tones">
+                <Y.IconButton label="Share view" icon="send" emphasis="filled" tone="brand" onClick={() => setNote("Shared.")} />
+                <Y.IconButton label="Delete view" icon="close" emphasis="soft" tone="danger" onClick={() => setNote("Removed.")} />
+              </MatrixRow>
+              <MatrixRow label="Sizes">
+                <Y.IconButton label="Compact search" icon="search" size="compact" emphasis="soft" onClick={() => setNote("Compact.")} />
+                <Y.IconButton label="Regular search" icon="search" size="regular" emphasis="soft" onClick={() => setNote("Regular.")} />
+                <Y.IconButton label="Comfortable search" icon="search" size="comfortable" emphasis="soft" onClick={() => setNote("Comfortable.")} />
+                <Y.IconButton label="Touch search" icon="search" size="touch" emphasis="soft" onClick={() => setNote("Touch.")} />
+              </MatrixRow>
+              <MatrixRow label="Disabled">
+                <Y.IconButton label="Disabled filled" icon="plus" emphasis="filled" disabled />
+                <Y.IconButton label="Disabled soft" icon="plus" emphasis="soft" disabled />
+                <Y.IconButton label="Disabled quiet" icon="plus" emphasis="quiet" disabled />
+              </MatrixRow>
+            </SpecimenMatrix>
+          )}
           <Y.Text variant="help" role="status">{note || `${count} ${count === 1 ? "view" : "views"}`}</Y.Text>
         </Y.Stack>
       );
@@ -277,6 +337,39 @@ export function Example({
                 size={size} placeholder="Name your view" />
             ))}
           </Y.Stack>
+        );
+      }
+      if (id === "text-field" && !variation) {
+        return (
+          <SpecimenMatrix>
+            <MatrixRow label="Default" stack>
+              <Y.TextField
+                ref={field}
+                label="View name"
+                value={value}
+                placeholder="Name your view"
+                help="Visible to workspace members."
+                error={!value ? "Give this view a name." : undefined}
+                onChange={(e) => {
+                  setValue(e.target.value);
+                  setNote("Edited");
+                }}
+              />
+            </MatrixRow>
+            <MatrixRow label="States" stack>
+              <Y.TextField
+                label="Slug"
+                defaultValue="weekly review!"
+                error="Use lowercase letters and hyphens only."
+              />
+              <Y.TextField
+                label="Workspace ID"
+                value="ws_sourdough_01"
+                disabled
+                readOnly
+              />
+            </MatrixRow>
+          </SpecimenMatrix>
         );
       }
       return (
@@ -359,19 +452,39 @@ export function Example({
           <Y.Stack gap={12}>
             {(["compact", "regular", "comfortable", "spacious", "touch"] as const).map((size) => (
               <Y.Select key={size} label={size[0].toUpperCase() + size.slice(1)}
-                controlSize={size} options={projects} value={choice} onChange={(e) => setChoice(e.target.value)} />
+                controlSize={size} options={projects} value={choice} onValueChange={setChoice} />
             ))}
-            <Y.Select label="Multiple choice" multiple size={3} options={projects} />
           </Y.Stack>
         );
       }
       return (
-        <Y.Select
-          label="Project"
-          options={projects}
-          value={choice}
-          onChange={(e) => setChoice(e.target.value)}
-        />
+        <SpecimenMatrix>
+          <MatrixRow label="Default" stack>
+            <Y.Select
+              label="Project"
+              options={projects}
+              value={choice}
+              onValueChange={setChoice}
+            />
+          </MatrixRow>
+          <MatrixRow label="States" stack>
+            <Y.Select
+              label="Role"
+              placeholder="Choose a role"
+              options={[
+                { id: "edit", label: "Can edit" },
+                { id: "view", label: "Can view" },
+                { id: "owner", label: "Owner", disabled: true },
+              ]}
+            />
+            <Y.Select
+              label="Locked project"
+              options={projects}
+              value="sourdough"
+              disabled
+            />
+          </MatrixRow>
+        </SpecimenMatrix>
       );
     case "combobox":
       return (
@@ -389,21 +502,62 @@ export function Example({
         </Y.Stack>;
       }
       return (
-        <Y.Checkbox
-          label={samples.checkbox.label}
-          checked={active}
-          onCheckedChange={(v) => setActive(v === true)}
-        />
+        <SpecimenMatrix>
+          <MatrixRow label="Interactive">
+            <Y.Checkbox
+              label={samples.checkbox.label}
+              checked={active}
+              onCheckedChange={(v) => setActive(v === true)}
+            />
+          </MatrixRow>
+          <MatrixRow label="States">
+            <Y.Checkbox label="Unchecked" defaultChecked={false} />
+            <Y.Checkbox label="Mixed" checked="indeterminate" />
+            <Y.Checkbox label="Disabled on" checked disabled />
+            <Y.Checkbox label="Disabled off" disabled />
+          </MatrixRow>
+        </SpecimenMatrix>
       );
     case "radio-group":
-      return <Y.RadioGroup {...mode} />;
-    case "switch":
       return (
-        <Y.Stack gap={4}>
-          {dates}
-          <Y.Text variant="meta">
-            {active ? samples.switch.on : samples.switch.off}
-          </Y.Text>
+        <SpecimenMatrix>
+          <MatrixRow label="Interactive" stack>
+            <Y.RadioGroup {...mode} />
+          </MatrixRow>
+          <MatrixRow label="Disabled" stack>
+            <Y.RadioGroup
+              label="Locked workspace"
+              options={projects}
+              value="sourdough"
+              disabled
+            />
+          </MatrixRow>
+        </SpecimenMatrix>
+      );
+    case "switch":
+      if (variation) {
+        return (
+          <Y.Stack gap={8}>
+            {dates}
+            <Y.Switch label="Inset presentation" presentation="inset" defaultChecked />
+          </Y.Stack>
+        );
+      }
+      return (
+        <Y.Stack gap={10}>
+          <SpecimenMatrix>
+            <MatrixRow label="Interactive" stack>
+              {dates}
+              <Y.Text variant="meta">
+                {active ? samples.switch.on : samples.switch.off}
+              </Y.Text>
+            </MatrixRow>
+            <MatrixRow label="States">
+              <Y.Switch label="Default off" defaultChecked={false} />
+              <Y.Switch label="Disabled on" checked disabled />
+              <Y.Switch label="Disabled off" disabled />
+            </MatrixRow>
+          </SpecimenMatrix>
         </Y.Stack>
       );
     case "link":
@@ -431,23 +585,58 @@ export function Example({
       );
     case "tabs":
       return (
-        <Y.Tabs
-          label="Project details"
-          value={choice}
-          onValueChange={setChoice}
-          items={projects.map((p) => ({
-            ...p,
-            panel: (
-              <Y.Inline>
-                {mark(p.id as Y.Project)}
-                {p.label} workspace
-              </Y.Inline>
-            ),
-          }))}
-        />
+        <SpecimenMatrix>
+          <MatrixRow label="Underline" stack>
+            <Y.Tabs
+              label="Project details"
+              presentation="underline"
+              value={choice}
+              onValueChange={setChoice}
+              items={projects.map((p) => ({
+                ...p,
+                panel: (
+                  <Y.Inline>
+                    {mark(p.id as Y.Project)}
+                    {p.label} workspace
+                  </Y.Inline>
+                ),
+              }))}
+            />
+          </MatrixRow>
+          <MatrixRow label="Pill" stack>
+            <Y.Tabs
+              presentation="pill"
+              label="Workspace view"
+              value={choice}
+              onValueChange={setChoice}
+              items={projects.map((p) => ({
+                ...p,
+                panel: <Y.Text variant="help">Showing {p.label} records.</Y.Text>,
+              }))}
+            />
+          </MatrixRow>
+        </SpecimenMatrix>
       );
     case "segmented-control":
-      return <Y.SegmentedControl {...mode} />;
+      return (
+        <SpecimenMatrix>
+          <MatrixRow label="Interactive">
+            <Y.SegmentedControl {...mode} />
+          </MatrixRow>
+          <MatrixRow label="Disabled item">
+            <Y.SegmentedControl
+              label="Density mode"
+              value="regular"
+              onValueChange={() => {}}
+              options={[
+                { id: "compact", label: "Compact" },
+                { id: "regular", label: "Regular" },
+                { id: "archived", label: "Archived", disabled: true },
+              ]}
+            />
+          </MatrixRow>
+        </SpecimenMatrix>
+      );
     case "pagination":
       return <Y.Pagination page={count} pages={5} onPageChange={setCount} />;
     case "disclosure-row":
@@ -458,58 +647,86 @@ export function Example({
       );
     case "action-menu":
       return (
-        <Y.Stack>
-          <Y.ActionMenu
-            label={samples.menu.label}
-            items={samples.menu.items.map((item) => ({ ...item, disabled: variation && item.id === "archive" }))}
-            onSelect={(id) =>
-              setNote(
-                {
-                  rename: "Renaming view.",
-                  duplicate: "View duplicated.",
-                  archive: "View archived.",
-                }[id] ?? "",
-              )
-            }
-          />
+        <Y.Stack gap={10}>
+          {variation ? (
+            <Y.ActionMenu
+              label={samples.menu.label}
+              items={samples.menu.items.map((item) => ({ ...item, disabled: item.id === "archive" }))}
+              onSelect={(id) =>
+                setNote({ rename: "Renaming view.", duplicate: "View duplicated.", archive: "View archived." }[id] ?? "")
+              }
+            />
+          ) : (
+            <SpecimenMatrix>
+              <MatrixRow label="Button">
+                <Y.ActionMenu
+                  label={samples.menu.label}
+                  items={samples.menu.items}
+                  onSelect={(id) =>
+                    setNote({ rename: "Renaming view.", duplicate: "View duplicated.", archive: "View archived." }[id] ?? "")
+                  }
+                />
+              </MatrixRow>
+              <MatrixRow label="Overflow">
+                <Y.ActionMenu
+                  label="Member row actions"
+                  triggerVariant="more"
+                  selectionIndicator="leading"
+                  items={[
+                    { id: "edit", label: "Can edit", checked: true },
+                    { id: "view", label: "Can view" },
+                    { id: "remove", label: "Remove access", tone: "danger", separatorBefore: true },
+                  ]}
+                  onSelect={(id) => setNote("Selected " + id + ".")}
+                />
+              </MatrixRow>
+            </SpecimenMatrix>
+          )}
           {status}
         </Y.Stack>
       );
     case "popover":
       return (
-        <Y.Popover label={samples.popover.label}>
-          <Y.Text>
-            {samples.popover.body}
-          </Y.Text>
-        </Y.Popover>
+        <SpecimenMatrix>
+          <MatrixRow label="Bottom">
+            <Y.Popover label={samples.popover.label}>
+              <Y.Text>{samples.popover.body}</Y.Text>
+            </Y.Popover>
+          </MatrixRow>
+          <MatrixRow label="Top">
+            <Y.Popover label="Keyboard shortcuts" side="top">
+              <Y.Text>Press Escape to dismiss and return focus to the trigger.</Y.Text>
+            </Y.Popover>
+          </MatrixRow>
+        </SpecimenMatrix>
       );
     case "dialog":
-    case "drawer":
     case "sheet": {
-      const Panel =
-        id === "drawer" ? Y.Drawer : id === "dialog" ? Y.Dialog : Y.Sheet;
+      const Panel = id === "dialog" ? Y.Dialog : Y.Sheet;
       return (
-        <>
-          <Y.Button emphasis="soft" onClick={() => setOpen(true)}>
-            {samples.dialog.title}
-          </Y.Button>
-          <Panel open={open} onOpenChange={setOpen} title={samples.dialog.title}>
-            <Y.TextField
-              label={samples.dialog.label}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-            />
-            <Y.Button
-              onClick={() => {
-                setOpen(false);
-                setNote(samples.dialog.saved);
-              }}
-            >
-              {samples.dialog.submit}
+        <SpecimenMatrix>
+          <MatrixRow label="Interactive">
+            <Y.Button emphasis="soft" onClick={() => setOpen(true)}>
+              {samples.dialog.title}
             </Y.Button>
-          </Panel>
-          {status}
-        </>
+            <Panel open={open} onOpenChange={setOpen} title={samples.dialog.title}>
+              <Y.TextField
+                label={samples.dialog.label}
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+              <Y.Button
+                onClick={() => {
+                  setOpen(false);
+                  setNote(samples.dialog.saved);
+                }}
+              >
+                {samples.dialog.submit}
+              </Y.Button>
+            </Panel>
+            {status}
+          </MatrixRow>
+        </SpecimenMatrix>
       );
     }
     case "tooltip":
@@ -561,16 +778,34 @@ export function Example({
         />
       );
     case "badge":
+      if (variation) {
+        return (
+          <Y.Inline>
+            <Y.Badge tone="neutral" variant="outline">Draft</Y.Badge>
+            <Y.Badge tone="success" variant="outline">Saved</Y.Badge>
+            <Y.Badge tone="warning" variant="outline">Pending</Y.Badge>
+            <Y.Badge tone="danger" variant="outline">Blocked</Y.Badge>
+            <Y.Badge tone="accent" variant="outline">Shared</Y.Badge>
+          </Y.Inline>
+        );
+      }
       return (
-        <Y.Inline>
-          <Y.Badge tone="neutral">Draft</Y.Badge>
-          {variation && (
-            <>
-              <Y.Badge tone="success">Saved</Y.Badge>
-              <Y.Badge tone="accent">Shared</Y.Badge>
-            </>
-          )}
-        </Y.Inline>
+        <SpecimenMatrix>
+          <MatrixRow label="Soft">
+            <Y.Badge tone="neutral">Draft</Y.Badge>
+            <Y.Badge tone="success">Saved</Y.Badge>
+            <Y.Badge tone="warning">Pending</Y.Badge>
+            <Y.Badge tone="danger">Blocked</Y.Badge>
+            <Y.Badge tone="accent">Shared</Y.Badge>
+          </MatrixRow>
+          <MatrixRow label="Outline">
+            <Y.Badge tone="neutral" variant="outline">Owner</Y.Badge>
+            <Y.Badge tone="success" variant="outline">Ready</Y.Badge>
+            <Y.Badge tone="warning" variant="outline">Review</Y.Badge>
+            <Y.Badge tone="danger" variant="outline">Failed</Y.Badge>
+            <Y.Badge tone="accent" variant="outline">Pinned</Y.Badge>
+          </MatrixRow>
+        </SpecimenMatrix>
       );
     case "status":
       return (
@@ -600,23 +835,38 @@ export function Example({
       );
     case "progress":
       return (
-        <Y.Stack>
-          <Y.Progress label={samples.progress.label} value={count} max={5} />
-          <Y.Button
-            emphasis="soft"
-            onClick={() => setCount((n) => (n >= 5 ? 0 : n + 1))}
-          >
-            {count >= 5 ? samples.progress.reset : samples.progress.next}
-          </Y.Button>
-        </Y.Stack>
+        <SpecimenMatrix>
+          <MatrixRow label="Interactive" stack>
+            <Y.Progress label={samples.progress.label} value={count} max={5} />
+            <Y.Button
+              emphasis="soft"
+              size="compact"
+              onClick={() => setCount((n) => (n >= 5 ? 0 : n + 1))}
+            >
+              {count >= 5 ? samples.progress.reset : samples.progress.next}
+            </Y.Button>
+          </MatrixRow>
+          <MatrixRow label="Complete" stack>
+            <Y.Progress label="Synced" value={5} max={5} />
+          </MatrixRow>
+          <MatrixRow label="Segmented" stack>
+            <Y.Progress label="Source checks" value={12} max={16} presentation="segmented" valueLabel="75%" />
+          </MatrixRow>
+          <MatrixRow label="Pending" stack>
+            <Y.Progress label="Preparing export" />
+          </MatrixRow>
+        </SpecimenMatrix>
       );
     case "toast":
-      return open ? (
-        <Y.Toast message="View saved." onDismiss={() => setOpen(false)} />
-      ) : (
-        <Y.Button emphasis="soft" onClick={() => setOpen(true)}>
-          Save view
-        </Y.Button>
+      return (
+        <Y.Stack gap={10}>
+          <Y.Inline>
+            <Y.Button emphasis="soft" onClick={() => setOpen(true)}>
+              Save view
+            </Y.Button>
+          </Y.Inline>
+          {open && <Y.Toast message="View saved." onDismiss={() => setOpen(false)} />}
+        </Y.Stack>
       );
     case "result":
       return confirmed ? (
@@ -638,7 +888,58 @@ export function Example({
         <Y.RecordFacts title="Weekly review" facts={facts} {...observation} />
       );
     case "data-table":
-      return sampleTable;
+      return (
+        <Y.Stack gap={10}>
+          <SpecimenMatrix>
+            <MatrixRow label="Sortable" stack>
+              {sampleTable}
+            </MatrixRow>
+            <MatrixRow label="Structured" stack>
+              <Y.DataTable
+                caption="Project access overview"
+                columns={[
+                  { id: "member", label: "Member", kind: "identity" },
+                  { id: "role", label: "Role", kind: "role" },
+                  { id: "edits", label: "Edits", kind: "numeric", numeric: true, sortValue: (row) => typeof row.cells.edits === "number" ? row.cells.edits : null },
+                  { id: "actions", label: "Actions", kind: "actions", align: "end" },
+                ]}
+                rows={[
+                  {
+                    id: "maya",
+                    cells: {
+                      member: <Y.Inline gap={8}><Y.Avatar label="Maya Chen" size={28} /><Y.Text>Maya Chen</Y.Text></Y.Inline>,
+                      role: <Y.Badge tone="neutral">Owner</Y.Badge>,
+                      edits: 14,
+                      actions: <Y.Text variant="meta">—</Y.Text>,
+                    },
+                  },
+                  {
+                    id: "jules",
+                    cells: {
+                      member: <Y.Inline gap={8}><Y.Avatar label="Jules Reed" size={28} /><Y.Text>Jules Reed</Y.Text></Y.Inline>,
+                      role: <Y.Badge tone="neutral" variant="outline">Can edit</Y.Badge>,
+                      edits: 9,
+                      actions: (
+                        <Y.ActionMenu
+                          label="Actions for Jules Reed"
+                          triggerVariant="more"
+                          triggerSize="compact"
+                          items={[
+                            { id: "copy", label: "Copy member ID" },
+                            { id: "remove", label: "Remove access", tone: "danger", separatorBefore: true },
+                          ]}
+                          onSelect={(actionId) => setNote(`Selected ${actionId} for Jules Reed.`)}
+                        />
+                      ),
+                    },
+                  },
+                ]}
+              />
+            </MatrixRow>
+          </SpecimenMatrix>
+          {status}
+        </Y.Stack>
+      );
     case "table":
       return (
         <Y.Table caption={samples.readings.label}>
@@ -670,8 +971,6 @@ export function Example({
           {...observation}
         />
       );
-    case "legend":
-      return <Y.Legend label="Completed reviews (records)" />;
     case "confirm-dialog":
       return (
         <Y.Stack>
@@ -729,7 +1028,6 @@ export function Example({
         </Y.Inline>
       );
     case "agent-avatar":
-    case "gaze":
       return <AgentMotionExample variation={variation} />;
     case "message":
       return (
@@ -741,21 +1039,7 @@ export function Example({
           Three notes are ready for review.
         </Y.Message>
       );
-    case "activity":
-      return (
-        <Y.Inline>
-          <Y.Activity agent="Kai" state={active ? "ready" : "working"} />
-          <Y.Button
-            emphasis="quiet"
-            size="compact"
-            onClick={() => setActive(!active)}
-          >
-            {active ? "Start review" : "Finish"}
-          </Y.Button>
-        </Y.Inline>
-      );
     case "transcript":
-    case "reading-anchor":
       return (
         <Y.Stack>
           <Y.Transcript label="Review thread" revision={count}>

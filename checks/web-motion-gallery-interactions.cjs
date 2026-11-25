@@ -27,7 +27,7 @@ const select = async (root, role, name, attr) => {
 const file = {name:"brief.txt",mimeType:"text/plain",buffer:Buffer.from("Draft")};
 
 const actions = {
-  "agent-steps": async root => { await click(root,"Next step"); await root.locator('[aria-current="step"]').getByText("Draft the update").waitFor(); },
+  "agent-steps": async root => { await click(root,"Next step"); await byText(root, /Draft the update/).waitFor(); },
   "bottom-bar": root => select(root,"tab","Saved","aria-selected"),
   "swipe-deck": async (root,page) => {
     await click(root,"Next");
@@ -96,12 +96,12 @@ const actions = {
     assert.equal(await copied.evaluate(node => node.style.getPropertyValue("--yg-copy-roll")), "1");
     await button(root, "Copy").waitFor();
   },
-  "date-choice": async root => {
-    const trigger = root.getByRole("button", { name: "Choose a date" });
+  "date-choice": async (root, page) => {
+    const trigger = root.getByRole("button", { name: "2026-11-20" });
     await trigger.click();
-    await root.getByRole("button", { name: /November 21/ }).click();
+    await page.getByRole("button", { name: /November 21/ }).click();
     await byText(root, "Selected: 2026-11-21").waitFor();
-    assert.equal(await trigger.getAttribute("data-state"), "closed");
+    assert.equal(await root.getByRole("button", { name: "2026-11-21" }).getAttribute("aria-expanded"), "false");
     await root.getByRole("button", { name: "Clear" }).click();
     await byText(root, "No date selected").waitFor();
   },
@@ -295,7 +295,7 @@ const actions = {
       await entry.waitFor({state:'detached'});
     }
   },
-  "number-stepper": async root => {await click(root,"Add guest");await root.locator(".yg-quantity-in").getByText("4").waitFor();},
+  "number-stepper": async root => {await click(root,"Add guest");await root.locator("output").getByText("4").waitFor();},
   "otp": async (root, page) => {
     const input = root.getByRole("textbox", {name:"Verification code"});
     await input.fill("12345");
@@ -378,7 +378,7 @@ const actions = {
   "prompt-box": async root => {const input=root.getByRole("textbox",{name:"Prompt"});await input.fill("Summarize the review");await input.press("Enter");await root.getByRole("status").getByText("Thinking").waitFor();await click(root,"Stop");await input.waitFor();},
   "quantity-stepper": async root => {await click(root,"Add one copy");await root.locator("output").getByText("2").waitFor();},
   "range-slider": root => press(root.getByRole("slider",{name:"Minimum price"}),"ArrowRight","200"),
-  "rating": async root => { const item = root.getByRole("radio", {name: "4 of 5"}); await item.check(); assert(await item.isChecked()); },
+  "rating": async root => { const item = root.getByRole("radio", {name: "4 of 5"}); await item.click(); await selected(item, "aria-checked"); },
   "read-along": async (root,page) => {
     const marker = root.locator(".extra-reading-marker");
     const start = await marker.evaluate(el=>el.style.getPropertyValue("--reading-left"));
@@ -425,10 +425,10 @@ const actions = {
     const item = root.getByRole("radio", {name: "5 of 5"});
     await item.focus();
     await item.press("Space");
-    assert(await item.isChecked());
+    await selected(item, "aria-checked");
   },
   "stat-card": root => show(root,"Review a record","25"),
-  "step-progress": async root => {await click(root,"Next step");assert.equal(await root.getByRole("progressbar").getAttribute("value"),"2");await root.locator('[data-complete]').waitFor();},
+  "step-progress": async root => {await click(root,"Next step");assert.equal(await root.getByRole("progressbar").getAttribute("value"),"2");await byText(root, /Draft the update/).waitFor();},
   "storage-meter": async root => {
     await click(root,"Add files");await button(root,/Source files/).click();await click(root,"Free up space");
     await root.locator('[data-outcome="pending"]').waitFor();

@@ -2,23 +2,15 @@
 import {
   useContext, useId, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent, type ReactNode,
 } from "react";
-import {
-  Menubar as M,
-  NavigationMenu as N,
-  Popover as P,
-  HoverCard as H,
-} from "radix-ui";
 import { Button as SDKButton } from "@ui-sdk/react/button";
 import { Accordion as SDKAccordion, AccordionItem, AccordionHeader, AccordionTrigger, AccordionPanel } from "@ui-sdk/react/accordion";
 import { Command as SDKCommand, CommandEmpty, CommandInput, CommandItem, CommandList } from "@ui-sdk/react/command";
 import { Menu, MenuContent, MenuContextTrigger, MenuItem } from "@ui-sdk/react/menu";
 import { DayPicker } from "react-day-picker";
-import { PanelGroup, Panel, PanelResizeHandle } from "react-resizable-panels";
 import { cx, Icon, type IconName, type Option } from "../foundation/foundation.js";
 import { Button, IconButton } from "./actions.js";
 import { Dialog } from "./layers.js";
 import { NavigationList, type Destination } from "./navigation.js";
-import { Checkbox, RadioGroup, Textarea } from "./forms.js";
 import { CarouselMotionReview } from "./motion-review-context.js";
 
 export function Accordion({
@@ -97,42 +89,6 @@ export function ContextMenu({
         ))}
       </MenuContent>
     </Menu>
-  );
-}
-export function HoverCard({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
-  const [open, setOpen] = useState(false),
-    id = useId();
-  return (
-    <H.Root open={open} onOpenChange={setOpen} openDelay={150} closeDelay={120}>
-      <H.Trigger asChild>
-        <button
-          type="button"
-          className="yg-link"
-          aria-expanded={open}
-          aria-controls={id}
-          onClick={() => setOpen(true)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setOpen(false);
-          }}
-        >
-          {label}
-        </button>
-      </H.Trigger>
-      <H.Content
-        id={id}
-        className="yg-flyout yg-hover-content"
-        sideOffset={4}
-        onEscapeKeyDown={() => setOpen(false)}
-      >
-        {children}
-      </H.Content>
-    </H.Root>
   );
 }
 export function Command({
@@ -223,70 +179,6 @@ export function Command({
     <Button emphasis="soft" onClick={start}>{label}</Button>
     <Dialog open={open} onOpenChange={setOpen} title={title}>{panel}</Dialog>
   </>;
-}
-export function Menubar({
-  label,
-  menus,
-  onSelect,
-}: {
-  label: string;
-  menus: { id: string; label: string; items: Option[] }[];
-  onSelect: (id: string) => void;
-}) {
-  return (
-    <M.Root className="yg-menu-bar" aria-label={label}>
-      {menus.map((m) => (
-        <M.Menu key={m.id} value={m.id}>
-          <M.Trigger>{m.label}</M.Trigger>
-          <M.Content
-            className="yg-flyout"
-            sideOffset={4}
-            align="start"
-            aria-label={m.label}
-          >
-            {m.items.map((i) => (
-              <M.Item
-                key={i.id}
-                disabled={i.disabled}
-                onSelect={() => onSelect(i.id)}
-              >
-                {i.label}
-              </M.Item>
-            ))}
-          </M.Content>
-        </M.Menu>
-      ))}
-    </M.Root>
-  );
-}
-export function NavigationMenu({
-  label,
-  groups,
-}: {
-  label: string;
-  groups: { id: string; label: string; links: Destination[] }[];
-}) {
-  return (
-    <N.Root className="yg-navigation-menu" aria-label={label}>
-      <N.List>
-        {groups.map((group) => (
-          <N.Item key={group.id}>
-            <N.Trigger>
-              {group.label}
-              <Icon name="down" />
-            </N.Trigger>
-            <N.Content className="yg-flyout">
-              {group.links.map((l) => (
-                <N.Link key={l.id} href={l.href}>
-                  {l.label}
-                </N.Link>
-              ))}
-            </N.Content>
-          </N.Item>
-        ))}
-      </N.List>
-    </N.Root>
-  );
 }
 export function Sidebar({
   label,
@@ -541,80 +433,6 @@ export function Carousel({
     </section>
   );
 }
-export function Stepper({
-  label,
-  steps,
-  current,
-  variant = "list",
-}: {
-  label: string;
-  steps: { id: string; label: string; detail?: string; action?: ReactNode }[];
-  current: string;
-  variant?: "list" | "progress";
-}) {
-  const at = steps.findIndex((s) => s.id === current);
-  const connected = variant === "progress" && steps.length > 1 && steps.length <= 5;
-  return (
-    <div className="yg-stage-list" data-connected={connected || undefined}
-      style={connected ? {"--yg-step-count": steps.length} as CSSProperties : undefined}>
-      {variant === "progress" && <div className="yg-step-track">
-        <progress aria-label={label} value={at + 1} max={Math.max(1, steps.length)} />
-        <span aria-hidden="true" style={{
-          "--yg-step-progress": connected ? Math.max(0, at) / (steps.length - 1) : (at + 1) / Math.max(1, steps.length),
-        } as CSSProperties} />
-      </div>}
-      <ol className="yg-stepper" aria-label={label} data-variant={variant}>
-        {steps.map((s, i) => (
-          <li
-            key={s.id}
-            aria-current={i === at ? "step" : undefined}
-            data-complete={i < at || undefined}
-          >
-            <span
-              className="yg-step-number"
-              aria-label={i < at ? "Completed" : undefined}
-            >
-              <span aria-hidden={i < at || undefined}>{i + 1}</span>
-              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m5 12.5 4.5 4.5L19 7.5" pathLength="22" />
-              </svg>
-            </span>
-            <div>
-              <strong>{s.label}</strong>
-              {s.detail && <p className="yg-help">{s.detail}</p>}
-            </div>
-            {s.action}
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
-}
-export function Resizable({
-  label,
-  first,
-  second,
-  initial = 40,
-}: {
-  label: string;
-  first: ReactNode;
-  second: ReactNode;
-  initial?: number;
-}) {
-  const start = Math.max(15, Math.min(85, initial));
-  return (
-    <PanelGroup direction="horizontal" className="yg-resizable">
-      <Panel defaultSize={start} minSize={15}>
-        {first}
-      </Panel>
-      <PanelResizeHandle aria-label={label} className="yg-resize-handle" />
-      <Panel defaultSize={100 - start} minSize={15}>
-        {second}
-      </Panel>
-    </PanelGroup>
-  );
-}
 type DateValue = {
   label: string;
   value?: string;
@@ -658,127 +476,5 @@ export function Calendar({ label, value, min, max, onValueChange }: DateValue) {
         if (d) onValueChange(civilText(d));
       }}
     />
-  );
-}
-export function DatePicker(props: DateValue) {
-  const [open, setOpen] = useState(false),
-    id = useId();
-  return (
-    <div className="yg-field">
-      <label htmlFor={id} className="yg-label">
-        {props.label}
-      </label>
-      <P.Root open={open} onOpenChange={setOpen}>
-        <P.Trigger id={id} className="yg-date-trigger">
-          {props.value ?? "Choose a date"}
-          <Icon name="down" />
-        </P.Trigger>
-        <P.Content
-          aria-label={props.label}
-          className="yg-flyout yg-date-popup"
-          sideOffset={4}
-          align="start"
-        >
-          <Calendar
-            {...props}
-            onValueChange={(value) => {
-              props.onValueChange(value);
-              setOpen(false);
-            }}
-          />
-        </P.Content>
-      </P.Root>
-    </div>
-  );
-}
-export interface Question {
-  id: string;
-  label: string;
-  kind: "single" | "multiple" | "text";
-  options?: Option[];
-  optional?: boolean;
-}
-export type Answers = Record<string, string | string[]>;
-export function Questionnaire({
-  questions,
-  onComplete,
-}: {
-  questions: Question[];
-  onComplete: (answers: Answers) => void;
-}) {
-  const [index, setIndex] = useState(0),
-    [answers, setAnswers] = useState<Answers>({});
-  const at = Math.min(index, questions.length - 1),
-    q = questions[at];
-  if (!q) return null;
-  const value = answers[q.id] ?? (q.kind === "multiple" ? [] : ""),
-    valid =
-      q.optional || (Array.isArray(value) ? value.length > 0 : !!value.trim());
-  const edit = (v: string | string[]) =>
-    setAnswers((a) => ({ ...a, [q.id]: v }));
-  function advance() {
-    if (!valid) return;
-    if (at < questions.length - 1) setIndex(at + 1);
-    else
-      onComplete(
-        Object.fromEntries(
-          questions
-            .filter((i) => answers[i.id] !== undefined)
-            .map((i) => [i.id, answers[i.id]]),
-        ),
-      );
-  }
-  return (
-    <section className="yg-stack yg-question">
-      <span className="yg-meta" aria-live="polite">
-        Question {at + 1} of {questions.length}
-      </span>
-      {q.kind === "text" ? (
-        <Textarea
-          label={q.label}
-          value={String(value)}
-          onChange={(e) => edit(e.target.value)}
-        />
-      ) : q.kind === "single" ? (
-        <RadioGroup
-          label={q.label}
-          options={q.options ?? []}
-          value={String(value)}
-          onValueChange={edit}
-        />
-      ) : (
-        <fieldset className="yg-fieldset">
-          <legend className="yg-label">{q.label}</legend>
-          {(q.options ?? []).map((o) => (
-            <Checkbox
-              key={o.id}
-              label={o.label}
-              disabled={o.disabled}
-              checked={Array.isArray(value) && value.includes(o.id)}
-              onCheckedChange={(v) => {
-                const selected = Array.isArray(value) ? value : [];
-                edit(
-                  v
-                    ? [...selected, o.id]
-                    : selected.filter((id) => id !== o.id),
-                );
-              }}
-            />
-          ))}
-        </fieldset>
-      )}
-      <div className="yg-inline">
-        <Button
-          emphasis="quiet"
-          disabled={at === 0}
-          onClick={() => setIndex(at - 1)}
-        >
-          Back
-        </Button>
-        <Button disabled={!valid} onClick={advance}>
-          {at === questions.length - 1 ? "Finish" : "Continue"}
-        </Button>
-      </div>
-    </section>
   );
 }

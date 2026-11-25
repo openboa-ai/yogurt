@@ -1,21 +1,34 @@
 "use client";
 import type { CSSProperties, ReactNode } from "react";
-import { Badge as SDKBadge } from "@openai/apps-sdk-ui/components/Badge";
 import { Progress as SDKProgress } from "@ui-sdk/react/progress";
-import { type Tone, Heading, Icon, Stack } from "../foundation/foundation.js";
+import { cx, type Tone, Heading, Icon, Stack } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
 
 export function Badge({
   children,
   tone = "neutral",
+  variant = "soft",
+  dot,
+  className,
 }: {
   children: ReactNode;
   tone?: Tone;
+  variant?: "soft" | "outline";
+  dot?: boolean;
+  className?: string;
 }) {
+  const isNumeric = typeof children === "number" || (typeof children === "string" && /^\d+$/.test(children.trim()));
+  const showDot = dot ?? !isNumeric;
   return (
-    <SDKBadge className="yg-badge" data-tone={tone}>
+    <span
+      className={cx("yg-badge", className)}
+      data-tone={tone}
+      data-variant={variant}
+      data-dot={showDot ? "true" : undefined}
+    >
+      {showDot && <span className="yg-badge-dot" aria-hidden="true" />}
       {children}
-    </SDKBadge>
+    </span>
   );
 }
 export function Status({
@@ -23,7 +36,7 @@ export function Status({
   tone = "neutral",
 }: {
   children: ReactNode;
-  tone?: Tone;
+  tone?: Exclude<Tone, "accent">;
 }) {
   return (
     <span className="yg-status" data-tone={tone} role="status">
@@ -79,10 +92,16 @@ export function Progress({
   label,
   value,
   max = 100,
+  presentation = "bar",
+  segments = 16,
+  valueLabel,
 }: {
   label: string;
   value?: number;
   max?: number;
+  presentation?: "bar" | "segmented";
+  segments?: number;
+  valueLabel?: string;
 }) {
   const limit = Number.isFinite(max) ? Math.max(1, max) : 100;
   const current =
@@ -90,25 +109,50 @@ export function Progress({
       ? Math.min(limit, Math.max(0, value))
       : undefined;
   const completion = current === undefined ? undefined : current / limit;
+  const count = Math.min(32, Math.max(4, Math.round(segments)));
+  const filled =
+    completion === undefined ? 0 : Math.min(count, Math.max(0, Math.round(completion * count)));
   return (
-    <label className="yg-progress">
+    <label className="yg-progress" data-presentation={presentation}>
       <span>
         {label}
-        {completion !== undefined && (
+        {(valueLabel !== undefined || completion !== undefined) && (
           <span className="yg-meta" aria-hidden="true">
-            {Math.round(completion * 100)}%
+            {valueLabel ?? `${Math.round((completion ?? 0) * 100)}%`}
           </span>
         )}
       </span>
       <SDKProgress value={current ?? null} max={limit}
         render={(props) => <progress {...props} value={current} max={limit} />} />
-      <span
-        className="yg-progress-track"
-        aria-hidden="true"
-        style={{ "--yg-progress-completion": completion } as CSSProperties}
-      >
-        <span />
-      </span>
+      {presentation === "segmented" ? (
+        <span
+          className="yg-progress-segments"
+          aria-hidden="true"
+          style={{ "--yg-progress-segments": count } as CSSProperties}
+        >
+          {Array.from({ length: count }, (_, i) => {
+            const state =
+              filled === 0
+                ? "empty"
+                : i < filled - 1
+                  ? "filled"
+                  : i === filled - 1
+                    ? filled === count
+                      ? "filled"
+                      : "active"
+                    : "empty";
+            return <span key={i} className="yg-progress-segment" data-state={state} />;
+          })}
+        </span>
+      ) : (
+        <span
+          className="yg-progress-track"
+          aria-hidden="true"
+          style={{ "--yg-progress-completion": completion } as CSSProperties}
+        >
+          <span />
+        </span>
+      )}
     </label>
   );
 }

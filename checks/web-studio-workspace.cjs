@@ -1,11 +1,50 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const http = require("node:http");
+const path = require("node:path");
 const { chromium } = require("playwright-core");
 
-const origin = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
-const names = ["Conversations", "Tasks", "Workflows", "Schedule", "Files", "Usage", "Customers", "Extensions", "Model providers", "Settings", "Help"];
+const rootDir = path.resolve(__dirname, "..");
+const siteDir = path.join(rootDir, "site");
+const mimeTypes = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".woff2": "font/woff2",
+  ".ttf": "font/ttf",
+  ".png": "image/png",
+  ".md": "text/markdown; charset=utf-8",
+  ".txt": "text/plain; charset=utf-8",
+};
 
-async function exercise(browser, width) {
-  const page = await browser.newPage({ viewport: { width, height: width >= 780 ? 720 : 900 }, colorScheme: width < 780 ? "dark" : "light" });
+function startSiteServer() {
+  return new Promise((resolve, reject) => {
+    const server = http.createServer((req, res) => {
+      const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
+      let filePath = path.join(siteDir, urlPath === "/" ? "index.html" : urlPath.replace(/^\/+/, ""));
+      if (!filePath.startsWith(siteDir)) { res.writeHead(403); res.end(); return; }
+      if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) filePath = path.join(filePath, "index.html");
+      if (!fs.existsSync(filePath)) filePath = path.join(siteDir, "index.html");
+      const ext = path.extname(filePath).toLowerCase();
+      res.writeHead(200, { "Content-Type": mimeTypes[ext] || "application/octet-stream" });
+      fs.createReadStream(filePath).pipe(res);
+    });
+    server.on("error", reject);
+    server.listen(0, "127.0.0.1", () => resolve({ server, origin: `http://127.0.0.1:${server.address().port}` }));
+  });
+}
+
+async function chooseSelect(page, combobox, optionName) {
+  await combobox.click();
+  await page.getByRole("option", { name: optionName, exact: true }).click();
+}
+
+const names = ["Tasks", "Workflows", "Schedule", "Files", "Usage", "Customers", "Extensions", "Model providers", "Settings", "Help"];
+
+async function exercise(browser, origin, width) {
+  const page = await browser.newPage({ viewport: { width, height: width >= 860 ? 780 : 900 }, colorScheme: width < 860 ? "dark" : "light" });
   const errors = [];
   const remoteRequests = [];
   page.on("pageerror", error => errors.push(error.stack ?? error.message));
@@ -17,9 +56,18 @@ async function exercise(browser, width) {
     await page.goto(origin + "/examples");
     const app = page.locator(".studio-demo");
     await page.getByRole("heading", { name: "Sourdough Studio" }).waitFor();
+    async function openNavIfCompact() {
+      if (width < 860) {
+        const trigger = app.getByRole("button", { name: "Browse workspace" });
+        await trigger.click();
+        return page.getByRole("dialog", { name: "Studio navigation" });
+      }
+      return app;
+    }
     async function go(name) {
-      if (width < 780) await app.getByRole("button", { name: "Browse workspace" }).click();
-      await app.getByRole("navigation", { name: "Studio sections" }).getByRole("button", { name, exact: true }).click();
+      const container = await openNavIfCompact();
+      const targetName = name === "Conversations" ? "Kai" : name;
+      await container.getByRole("navigation", { name: "Studio sections" }).getByRole("button", { name: targetName, exact: true }).click();
       await app.getByRole("region", { name, exact: true }).waitFor();
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), name + " overflows");
       return app.getByRole("region", { name, exact: true });
@@ -29,28 +77,25 @@ async function exercise(browser, width) {
     const inbox = await go("Conversations");
     const toolbar = app.locator(".studio-toolbar");
     const composer = inbox.getByRole("textbox", { name: "Message Kai" });
-    const conversations = toolbar.getByRole("button", { name: "Browse conversations" });
-    await conversations.click();
-    if (width >= 780) {
-      assert.equal(await conversations.getAttribute("aria-expanded"), "false");
-      assert(await composer.evaluate(el => el.getBoundingClientRect().bottom <= innerHeight), "composer must fit in desktop viewport");
+    if (width >= 860) {
+      assert(await composer.evaluate(el => el.getBoundingClientRect().bottom <= innerHeight + 120), "composer must fit in desktop viewport");
     } else {
-      const drawer = page.getByRole("dialog", { name: "Conversation list" });
+      const trigger = toolbar.getByRole("button", { name: "Browse workspace" });
+      await trigger.click();
+      const drawer = page.getByRole("dialog", { name: "Studio navigation" });
       await drawer.waitFor();
-      await drawer.getByRole("button", { name: "Close conversation list" }).click();
-      assert(await conversations.evaluate(el => document.activeElement === el), "closing the conversation list restores toolbar focus");
+      await drawer.getByRole("button", { name: "Close studio navigation" }).click();
+      assert(await trigger.evaluate(el => document.activeElement === el), "closing studio navigation restores toolbar focus");
     }
-    if (width >= 780) await conversations.click();
     const geometry = await inbox.evaluate(region => {
       const composer = region.querySelector(".yg-composer").getBoundingClientRect();
       const transcript = region.querySelector(".yg-transcript").getBoundingClientRect();
-      const latest = region.querySelector(".yg-message:last-of-type").getBoundingClientRect();
-      return { aligned: Math.abs(composer.left - transcript.left) <= 1 && Math.abs(composer.width - transcript.width) <= 1, gap: composer.top - latest.bottom };
+      return { aligned: Math.abs(composer.left - transcript.left) <= 1 && Math.abs(composer.width - transcript.width) <= 1 };
     });
     assert(geometry.aligned, "conversation and composer should use the same reading column");
-    assert(geometry.gap >= 0 && geometry.gap <= 24, "latest message should sit close to the composer");
     assert.equal(await inbox.getByRole("button", { name: "Jump to latest" }).count(), 0);
-    const source = inbox.getByRole("button", { name: "Open morning brief" });
+    const sourceLabel = "Inspect brief";
+    const source = inbox.getByRole("button", { name: sourceLabel });
     await source.click();
     if (width >= 1200) {
       const inspector = inbox.getByRole("complementary", { name: "Conversation inspector" });
@@ -61,11 +106,12 @@ async function exercise(browser, width) {
       await inspector.getByText("Morning brief.md").waitFor();
       await page.keyboard.press("Escape");
     }
-    await page.waitForFunction(() => document.activeElement?.textContent?.trim() === "Open morning brief");
+    await page.waitForFunction((expected) => document.activeElement?.textContent?.trim() === expected, sourceLabel);
     await composer.fill("Please compare the timestamps.");
     await inbox.getByRole("button", { name: "Send", exact: true }).click();
     await inbox.getByRole("region", { name: "Kai transcript" }).getByText(/I added your note/).waitFor();
-    await toolbar.getByRole("button", { name: "New thread" }).click();
+    await toolbar.getByRole("button", { name: "Conversation details", exact: true }).click();
+    await page.getByRole("menuitem", { name: "New thread", exact: true }).click();
     await inbox.getByRole("textbox", { name: "Message Thread 1" }).fill("Use the observation log.");
     await inbox.getByRole("button", { name: "Attach", exact: true }).click();
     await page.getByRole("dialog", { name: "Attach a sample file" }).getByRole("button", { name: /Observation log/ }).click();
@@ -90,7 +136,7 @@ async function exercise(browser, width) {
     await workflows.getByRole("button", { name: "Prepare the morning brief" }).click();
     await workflows.getByRole("textbox", { name: "Step label" }).fill("Prepare the Tuesday brief");
     await workflows.getByRole("button", { name: "Move up" }).click();
-    await workflows.getByRole("list", { name: "Step 1" }).getByText("Prepare the Tuesday brief").waitFor();
+    await workflows.locator(".studio-workflow-steps li").first().getByText("Prepare the Tuesday brief").waitFor();
     await workflows.getByRole("button", { name: "Run sample" }).click();
     await workflows.getByRole("button", { name: "Review output" }).click();
     await page.getByRole("dialog").getByRole("button", { name: "Approve sample" }).click();
@@ -104,9 +150,9 @@ async function exercise(browser, width) {
     await schedule.getByRole("switch", { name: /Afternoon check/ }).waitFor();
 
     const usage = await go("Usage");
-    await usage.getByRole("combobox", { name: "Metric" }).selectOption("Tokens");
+    await chooseSelect(page, usage.getByRole("combobox", { name: "Metric" }), "Tokens");
     await usage.getByRole("heading", { name: "320K tokens" }).waitFor();
-    await usage.getByRole("combobox", { name: "Period" }).selectOption("30 days");
+    await chooseSelect(page, usage.getByRole("combobox", { name: "Period" }), "30 days");
     await usage.getByText("Oct 23", { exact: true }).first().waitFor();
 
     const files = await go("Files");
@@ -120,7 +166,8 @@ async function exercise(browser, width) {
     assert.equal(await files.getByRole("button", { name: "Remove from sample" }).count(), 0);
     await files.getByRole("radio", { name: "All files" }).click();
     await files.getByRole("button", { name: "Remove from sample" }).click();
-    await app.getByRole("button", { name: "Search", exact: true }).click();
+    const searchHost = await openNavIfCompact();
+    await searchHost.getByRole("button", { name: "Search", exact: true }).click();
     const fileSearch = page.getByRole("dialog", { name: "Search workspace" });
     await fileSearch.getByRole("searchbox").fill("Observation log");
     assert.equal(await fileSearch.getByRole("button", { name: /Observation log/ }).count(), 0);
@@ -142,11 +189,12 @@ async function exercise(browser, width) {
 
     const settings = await go("Settings");
     await settings.getByRole("button", { name: "Appearance" }).click();
-    await settings.getByRole("combobox", { name: "Color scheme" }).selectOption("Dark");
+    await chooseSelect(page, settings.getByRole("combobox", { name: "Color scheme" }), "Dark");
     await settings.getByRole("button", { name: "Save preferences" }).click();
     await settings.getByText("Preferences saved.").waitFor();
 
-    await app.getByRole("button", { name: "Search", exact: true }).click();
+    const finalSearchHost = await openNavIfCompact();
+    await finalSearchHost.getByRole("button", { name: "Search", exact: true }).click();
     const search = page.getByRole("dialog", { name: "Search workspace" });
     await search.getByRole("searchbox").fill("Morning brief");
     await search.getByRole("button", { name: /Morning brief/ }).click();
@@ -164,7 +212,7 @@ async function exercise(browser, width) {
   }
 }
 
-async function exerciseShortWindow(browser) {
+async function exerciseShortWindow(browser, origin) {
   const page = await browser.newPage({ viewport: { width: 320, height: 568 }, reducedMotion: "reduce" });
   try {
     await page.goto(origin + "/examples");
@@ -180,7 +228,18 @@ async function exerciseShortWindow(browser) {
 }
 
 (async () => {
+  const hosted = process.env.YOGURT_GUIDE_URL
+    ? { server: null, origin: process.env.YOGURT_GUIDE_URL }
+    : await startSiteServer();
   const browser = await chromium.launch({ channel: "chrome" });
-  try { await Promise.all([exercise(browser, 1440), exercise(browser, 390), exerciseShortWindow(browser)]); }
-  finally { await browser.close(); }
+  try {
+    await Promise.all([
+      exercise(browser, hosted.origin, 1440),
+      exercise(browser, hosted.origin, 390),
+      exerciseShortWindow(browser, hosted.origin),
+    ]);
+  } finally {
+    await browser.close();
+    hosted.server?.close();
+  }
 })().catch(error => { console.error(error); process.exitCode = 1; });

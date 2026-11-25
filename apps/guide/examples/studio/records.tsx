@@ -23,7 +23,7 @@ export function Library({ files, target, onRemove }: {
   return <Y.Stack gap={16}>
     <Y.Inline className="studio-split">
       <Y.Inline><Y.SearchField label="Find files" value={query} onValueChange={setQuery} />
-        <Y.Select label="Owner" value={owner} options={options("All agents", "Kai", "Sol")} onChange={event => setOwner(event.target.value)} /></Y.Inline>
+        <Y.Select label="Owner" value={owner} options={options("All agents", "Kai", "Sol")} onValueChange={setOwner} /></Y.Inline>
       <Y.ButtonGroup label="File actions">
         <Y.Button emphasis="quiet" onClick={() => setFolder(true)}>New folder</Y.Button>
         <Y.Button emphasis="soft" aria-pressed={selecting} onClick={() => { setSelecting(!selecting); setChecked([]); }}>{selecting ? "Done selecting" : "Select files"}</Y.Button>
@@ -37,14 +37,26 @@ export function Library({ files, target, onRemove }: {
     {!!visibleSelection.length && <Y.Notice title={visibleSelection.length + " selected"} action={<Y.Button emphasis="quiet" onClick={() => {
       onRemove(visibleSelection); setChecked([]);
     }}>Remove from sample</Y.Button>} />}
-    {matches.length ? <Y.List label="Files">
-      <li className={layout === "Grid" ? "studio-file-grid" : undefined}><ul>
-        {matches.map(item => <Y.ListRow key={item.id} title={item.name} description={item.kind + " · " + item.owner + " · " + item.size}
-          leading={<Y.Icon name="copy" />} onActivate={selecting ? undefined : () => setSelected(item.id)}
-          trailing={selecting ? <Y.Checkbox label={"Select " + item.name} checked={checked.includes(item.id)}
-            onCheckedChange={value => setChecked(previous => value ? [...previous, item.id] : previous.filter(id => id !== item.id))} /> : undefined} />)}
-      </ul></li>
-    </Y.List> : <Y.EmptyResult query={query || kind} onClear={() => { setKind("All files"); setOwner("All agents"); setQuery(""); }} />}
+    {matches.length ? (
+      <Y.List label="Files" divided={layout === "List"} className={layout === "Grid" ? "studio-file-grid" : undefined}>
+        {matches.map(item => (
+          <Y.ListRow
+            key={item.id}
+            title={item.name}
+            description={item.kind + " · " + item.owner + " · " + item.size}
+            leading={<Y.Icon name="copy" />}
+            onActivate={selecting ? undefined : () => setSelected(item.id)}
+            trailing={selecting ? (
+              <Y.Checkbox
+                label={"Select " + item.name}
+                checked={checked.includes(item.id)}
+                onCheckedChange={value => setChecked(previous => value ? [...previous, item.id] : previous.filter(id => id !== item.id))}
+              />
+            ) : undefined}
+          />
+        ))}
+      </Y.List>
+    ) : <Y.EmptyResult query={query || kind} onClear={() => { setKind("All files"); setOwner("All agents"); setQuery(""); }} />}
     <Y.Dialog title={file?.name ?? "File preview"} open={!!file} onOpenChange={open => { if (!open) setSelected(""); }}>
       {file && <Y.Stack gap={12}><Y.Text variant="help">{file.kind} · {file.owner} · {file.size}</Y.Text>
         <Y.CodeBlock language={file.kind === "Spreadsheet" ? "CSV" : file.kind} code={file.detail} /></Y.Stack>}
@@ -59,7 +71,12 @@ export function Library({ files, target, onRemove }: {
   </Y.Stack>;
 }
 
-const initialCustomers = [{ id: "fieldwork", name: "Fieldwork Studio", email: "team@example.test", status: "Active" }];
+const initialCustomers = [
+  { id: "fieldwork", name: "Fieldwork Studio", email: "team@example.test", status: "Active" },
+  { id: "northwind", name: "Northwind Research", email: "ops@northwind.test", status: "Active" },
+  { id: "harbor", name: "Harbor Desk", email: "review@harbor.test", status: "Trial" },
+  { id: "meridian", name: "Meridian Archive", email: "desk@meridian.test", status: "Active" },
+];
 
 export function Customers() {
   const [tab, setTab] = useState("Customers");
@@ -82,10 +99,10 @@ export function Customers() {
     {tab === "Customers" && <>
       <Y.Inline className="studio-split"><Y.SearchField label="Filter customers" value={query} onValueChange={setQuery} />
         <Y.ButtonGroup label="Customer actions"><Y.Button emphasis="quiet" aria-pressed={showEmail} onClick={() => setShowEmail(!showEmail)}>Email column</Y.Button>
-        <Y.Button onClick={() => setOpen(true)}>New customer</Y.Button></Y.ButtonGroup></Y.Inline>
-      <Y.Surface><Y.DataTable caption="Customer register" columns={[{ id: "name", label: "Customer", sortValue: row => row.id },
-        ...(showEmail ? [{ id: "email", label: "Email" }] : []), { id: "status", label: "Status" }]}
-        rows={matching.map(item => ({ id: item.id, cells: { name: <Y.Button emphasis="quiet" onClick={() => setSelected(item.id)}>{item.name}</Y.Button>, email: item.email, status: <Y.Status tone="success">{item.status}</Y.Status> } }))} /></Y.Surface>
+        <Y.Button emphasis="filled" tone="brand" onClick={() => setOpen(true)}>New customer</Y.Button></Y.ButtonGroup></Y.Inline>
+      <Y.DataTable caption="Customer register" columns={[{ id: "name", label: "Customer", kind: "identity", sortValue: row => row.id },
+        ...(showEmail ? [{ id: "email", label: "Email", kind: "text" as const }] : []), { id: "status", label: "Status", kind: "role" }]}
+        rows={matching.map(item => ({ id: item.id, cells: { name: <Y.Button emphasis="quiet" size="compact" onClick={() => setSelected(item.id)}>{item.name}</Y.Button>, email: item.email, status: <Y.Status tone="success">{item.status}</Y.Status> } }))} />
       {!matching.length && <Y.EmptyResult query={query} onClear={() => setQuery("")} />}
       {current && <div key={current.id} className="studio-detail"><Y.Card title={current.name}><Y.Stack><Y.Text>{current.email}</Y.Text><Y.Status>{current.status}</Y.Status>
         <Y.Button emphasis="quiet" onClick={() => setSelected("")}>Close customer details</Y.Button></Y.Stack></Y.Card></div>}

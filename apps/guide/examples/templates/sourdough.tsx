@@ -74,7 +74,7 @@ export function SourdoughPreview() {
           {(threads[agent.id] ?? []).map((message, index) => <Message key={index} speaker={message.speaker}>{message.body}</Message>)}
           {pending[agent.id] && <Text variant="help" role="status">{agent.name} is preparing a reply.</Text>}
         </Transcript>
-        <Composer label={"Message " + agent.name} value={drafts[agent.id] ?? ""}
+        <Composer label={"Message " + agent.name} sendTone="neutral" value={drafts[agent.id] ?? ""}
           onValueChange={value => setDrafts(previous => ({ ...previous, [agent.id]: value }))}
           pending={pending[agent.id]}
           onSend={message => send(message.text)}

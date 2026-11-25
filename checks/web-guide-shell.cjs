@@ -1,8 +1,41 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const http = require("node:http");
+const path = require("node:path");
 const { chromium } = require("playwright-core");
 const { color: palette } = require("../design/tokens/brand.json");
 
-const base = process.env.YOGURT_GUIDE_URL ?? "http://127.0.0.1:5273";
+let base = process.env.YOGURT_GUIDE_URL ?? "";
+const rootDir = path.resolve(__dirname, "..");
+const siteDir = path.join(rootDir, "site");
+const mimeTypes = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".woff2": "font/woff2",
+  ".ttf": "font/ttf",
+  ".png": "image/png",
+  ".md": "text/markdown; charset=utf-8",
+  ".txt": "text/plain; charset=utf-8",
+};
+function startSiteServer() {
+  return new Promise((resolve, reject) => {
+    const server = http.createServer((req, res) => {
+      const urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
+      let filePath = path.join(siteDir, urlPath === "/" ? "index.html" : urlPath.replace(/^\/+/, ""));
+      if (!filePath.startsWith(siteDir)) { res.writeHead(403); res.end(); return; }
+      if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) filePath = path.join(filePath, "index.html");
+      if (!fs.existsSync(filePath)) filePath = path.join(siteDir, "index.html");
+      const ext = path.extname(filePath).toLowerCase();
+      res.writeHead(200, { "Content-Type": mimeTypes[ext] || "application/octet-stream" });
+      fs.createReadStream(filePath).pipe(res);
+    });
+    server.on("error", reject);
+    server.listen(0, "127.0.0.1", () => resolve({ server, origin: `http://127.0.0.1:${server.address().port}` }));
+  });
+}
 const destinations = [
   ["Tokens", "/tokens", "Tokens"],
   ["Components", "/components", "Button"],
@@ -19,7 +52,7 @@ const patternControls = {
   "operations-library": ["searchbox", "Search operations"],
   "attention-inbox": ["list", "Attention items"],
   "artifact-library": ["searchbox", "Search library"],
-  "project-access": ["textbox", "Email address"],
+  "project-access": ["textbox", "Email"],
   "agent-profile": ["form", "Agent profile"],
   "run-inspector": ["list", "Runs"],
   "agent-sidebar": ["searchbox", "Find an agent"],
@@ -165,20 +198,9 @@ async function checkGuide(browser, width) {
     await page.goto(base + "/components.html#input-otp");
     await heading("InputOTP").waitFor();
     assert.equal(new URL(page.url()).pathname, "/components/input-otp");
-    await page.goto(base + "/motion-patterns.html#plan-switch");
-    await heading("RadioGroup").waitFor();
-    assert.equal(new URL(page.url()).pathname + new URL(page.url()).search, "/components/radio-group?preview=plan-options");
-    const plan = page.locator(".specimen").getByRole("radiogroup", { name: "Plan" });
-    const studio = plan.getByRole("radio", { name: /Studio/ });
-    await studio.check();
-    assert.equal(await studio.isChecked(), true);
-    await page.getByRole("button", { name: "Use in a project" }).click();
-    await page.getByText('import { PlanSwitch } from "@openboa/yogurt/radio-group";', { exact: true }).waitFor();
     for (const [legacy, next, title, role, name] of [
       ["/components/motion-spring-dropdown", "/components/select?preview=spring-dropdown", "Select", "combobox", "Work status"],
       ["/motion/range-slider", "/components/slider?preview=range-slider", "Slider", "slider", "Minimum price"],
-      ["/components/motion-command-button", "/components/command?preview=command-button", "Command", "button", "Run command"],
-      ["/motion/tooltip-detail", "/components/tooltip?preview=tooltip-detail", "Tooltip", "button", "Review scope"],
     ]) {
       await page.goto(base + legacy);
       await heading(title).waitFor();
@@ -202,7 +224,6 @@ async function checkGuide(browser, width) {
       ["/templates", "/patterns", "Patterns"],
       ["/components/project-settings", "/patterns/project-settings", "ProjectSettings"],
       ["/examples/signature/index.html", "/#wordmark-study", "Yogurt"],
-      ["/patterns/task-states.html", "/components/motion-task-list", "TaskList"],
     ]) {
       await page.goto(base + previous);
       await heading(title).waitFor();
@@ -224,7 +245,7 @@ async function checkGuide(browser, width) {
     await heading("ProjectAccess").waitFor();
     assert.equal(new URL(page.url()).pathname, "/patterns/project-access");
     const preview = page.locator(".template-stage");
-    await preview.getByRole("textbox", { name: "Email address" }).fill("new@example.test");
+    await preview.getByRole("textbox", { name: "Email" }).fill("new@example.test");
     await preview.getByRole("button", { name: "Invite", exact: true }).click();
     await preview.getByRole("list", { name: "People with access" }).getByText("new@example.test", { exact: true }).waitFor();
     await page.getByRole("button", { name: "Reset preview" }).click();
@@ -246,7 +267,11 @@ async function checkGuide(browser, width) {
     assert.equal(await matrix.getByRole("radiogroup").count(), Object.keys(palette).length);
     assert.equal(await matrix.getByRole("radio").count(),
       Object.values(palette).flatMap(colors => Object.keys(colors)).length);
-    await page.locator("#hue").selectOption("orange");
+    const chooseSelect = async (combobox, optionName) => {
+      await combobox.click();
+      await page.getByRole("option", typeof optionName === "string" ? { name: optionName, exact: true } : { name: optionName }).click();
+    };
+    await chooseSelect(page.locator("#hue"), "orange");
     assert.match(await page.locator("#color-name").innerText(), /^orange\./);
     const shades = page.getByRole("radiogroup", { name: "orange shades" });
     const shade = shades.getByRole("radio", { name: /^orange 600/ });
@@ -256,7 +281,7 @@ async function checkGuide(browser, width) {
     assert.equal(await page.locator("#color-name").innerText(), "orange.500");
     const rosterSearch = page.getByRole("searchbox", { name: "Find an agent" });
     await rosterSearch.fill("014");
-    await page.getByLabel("Status", { exact: true }).selectOption("Working");
+    await chooseSelect(page.getByRole("combobox", { name: "Status", exact: true }), "Working");
     await page.getByText("No matching agents.").waitFor();
     await page.getByRole("button", { name: "Clear filters" }).click();
     assert.equal(await rosterSearch.evaluate(el => document.activeElement === el), true);
@@ -266,11 +291,11 @@ async function checkGuide(browser, width) {
     const contour = page.getByRole("radiogroup", { name: "Contour at detail size" });
     await contour.getByRole("radio", { name: "Plain" }).click();
     assert.equal(await contour.getByRole("radio", { name: "Plain" }).getAttribute("aria-checked"), "true");
-    await page.getByLabel("Agent state").selectOption("blocked");
+    await chooseSelect(page.getByRole("combobox", { name: "Agent state", exact: true }), "Blocked");
     await page.getByText("Kai · Blocked", { exact: true }).waitFor();
     await page.goto(base + "/emoji.html?emoji=1f60a");
     await page.locator("#emoji-name").filter({ hasText: /Smiling Face/i }).waitFor();
-    await page.getByLabel("Face color").selectOption("peach");
+    await chooseSelect(page.getByRole("combobox", { name: "Face color", exact: true }), "Soft peach");
     assert.match(await page.getByRole("link", { name: "SVG", exact: true }).getAttribute("href"), /variants\/peach/);
     const emojiSearch = page.getByRole("searchbox", { name: "Find an emoji" });
     await emojiSearch.fill("zzzznoemoji");
@@ -278,21 +303,16 @@ async function checkGuide(browser, width) {
     await page.getByRole("button", { name: "Clear filters" }).click();
     assert.equal(await emojiSearch.evaluate(el => document.activeElement === el), true);
     await page.goto(base + "/playbook?project=sourdough");
-    await page.locator("#pb-project option").first().waitFor({ state: "attached" });
-    assert.equal(await page.locator("#pb-project").inputValue(), "sourdough");
-    await page.getByLabel("Product brief").selectOption("meatball");
+    await page.locator("#pb-project").waitFor({ state: "visible" });
+    assert.match(await page.locator("#pb-project").innerText(), /Sourdough/);
+    await chooseSelect(page.getByRole("combobox", { name: "Product brief", exact: true }), /^Meatball/);
     const previous = await page.locator("#example-title").textContent();
-    await page.getByLabel("Product condition").selectOption({ index: 1 });
+    await page.getByRole("combobox", { name: "Product condition", exact: true }).click();
+    await page.locator('.yg-select-popup[data-open] [role="option"]').nth(1).click();
     assert.notEqual(await page.locator("#example-title").textContent(), previous);
     await page.getByRole("button", { name: "Guide options" }).click();
     await page.getByRole("menuitem", { name: "Review checks" }).click();
     assert.equal(await page.locator("#proof details").getAttribute("open"), "");
-    await page.goto(base + "/components/motion-profile-card");
-    const specimen = page.locator(".specimen");
-    await specimen.getByRole("button", { name: "Follow Kai" }).click();
-    await specimen.getByRole("button", { name: "Message" }).click();
-    await specimen.getByRole("status").filter({ hasText: "A message draft is ready for Kai." }).waitFor();
-    assert.equal(await specimen.getByRole("button", { name: "Following Kai" }).getAttribute("aria-pressed"), "true");
 
     await page.goto(base + "/agents");
     await page.getByRole("button", { name: "Play sequence" }).click();
@@ -304,6 +324,8 @@ async function checkGuide(browser, width) {
 }
 
 (async () => {
+  const hosted = base ? { server: null, origin: base } : await startSiteServer();
+  base = hosted.origin;
   const browser = await chromium.launch({ channel: process.env.YOGURT_BROWSER_CHANNEL ?? "chrome" });
   try {
     await Promise.all([checkGuide(browser, 320), checkGuide(browser, 900), checkGuide(browser, 1440),
@@ -311,6 +333,7 @@ async function checkGuide(browser, width) {
     console.log("Guide navigation, appearance, pattern interaction and index scrolling passed.");
   } finally {
     await browser.close();
+    hosted.server?.close();
   }
 })().catch(error => {
   console.error(error);

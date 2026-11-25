@@ -2,9 +2,9 @@
 
 import { useState, type ReactNode } from "react";
 import {
-  AgentAvatar, Badge, Button, Heading, Inline, ProjectMark, SearchField,
+  AgentAvatar, Button, Heading, Inline, ProjectMark, SearchField,
   SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarItem,
-  SidebarSubmenu, Text, type AgentSummary,
+  SidebarSubmenu, Stack, Text, type AgentSummary,
 } from "@openboa/yogurt";
 
 export function AgentSidebar({
@@ -23,17 +23,17 @@ export function AgentSidebar({
   const team = available.filter((agent) => !agent.pinned);
   const rows = (members: readonly AgentSummary[]) => members.map((agent) => (
     <SidebarItem key={agent.id} label={agent.name} active={agent.id === currentId}
-      icon={agent.avatar ?? (agent.art && <AgentAvatar agent={agent.art} state={agent.state} size={24} label="" />)}
-      badge={agent.unread && <Badge>Unread</Badge>} onSelect={() => onSelect(agent.id)} />
+      icon={agent.avatar ?? (agent.art && <AgentAvatar agent={agent.art} state={agent.state} size={20} label="" />)}
+      badge={agent.unread && <span className="yg-signal-dot" role="img" aria-label="Unread" />} onSelect={() => onSelect(agent.id)} />
   ));
 
   return (
     <>
       <SidebarHeader compact={<ProjectMark project="openboa" size={24} label="" />}>
-        <Inline gap={8}><ProjectMark project="openboa" size={24} label="" /><Heading level={3}>Agents</Heading></Inline>
-      </SidebarHeader>
-      <SidebarHeader>
-        <SearchField label="Find an agent" value={query} onValueChange={setQuery} />
+        <Stack gap={8}>
+          <Inline gap={8}><ProjectMark project="openboa" size={20} label="" /><Heading level={4}>Agents</Heading></Inline>
+          <SearchField label="Find an agent" placeholder="Find an agent" hiddenLabel size="compact" value={query} onValueChange={setQuery} />
+        </Stack>
       </SidebarHeader>
       <SidebarContent label="Agents">
         {pinned.length > 0 && <SidebarGroup label="Pinned">{rows(pinned)}</SidebarGroup>}

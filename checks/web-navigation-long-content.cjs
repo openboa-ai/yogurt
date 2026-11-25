@@ -9,20 +9,18 @@ const fixture = buildSync({
     import React, { useState } from 'react';
     import { createRoot } from 'react-dom/client';
     import { SegmentedControl } from './packages/web/dist/entries/segmented-control.js';
-    import { Menubar } from './packages/web/dist/entries/menubar.js';
     const long = 'UnbrokenNavigationLabelWithALongNameForNarrowScreens';
     function App() {
       const [selected, setSelected] = useState('long');
       return <div style={{width:'min(280px, 100%)', minWidth:0}}>
         <SegmentedControl label="View choices" value={selected} onValueChange={setSelected}
           options={[{id:'long',label:long},{id:'other',label:'Other'}]} />
-        <Menubar label="Workspace menu" menus={[{id:'long',label:long,items:[{id:'open',label:'Open'}]}]} onSelect={() => {}} />
         <output data-testid="selected">{selected}</output>
       </div>;
     }
     const node = document.createElement('div'); node.id='navigation-long-fixture';
     document.querySelector('.specimen[data-component="segmented-control"] .specimen-inner').append(node);
-    createRoot(node).render(<App />);
+    createRoot(node, { identifierPrefix: 'nlc-' }).render(<App />);
   `}, bundle:true, write:false, platform:"browser", format:"iife",
   loader:{".css":"empty", ".module.css":"empty"},
 }).outputFiles[0].text;
@@ -38,7 +36,7 @@ const fixture = buildSync({
       const host = page.locator('#navigation-long-fixture');
       const segment = host.locator('.yg-segment');
       await segment.waitFor();
-      for (const element of [segment, ...await segment.locator(':scope > button').all(), host.locator('.yg-menu-bar'), ...await host.locator('.yg-menu-bar > button').all()]) {
+      for (const element of [segment, ...await segment.locator(':scope > button').all()]) {
         const bounds = await element.evaluate(node => ({client:node.clientWidth,scroll:node.scrollWidth}));
         assert(bounds.scroll <= bounds.client + 1, 'navigation labels must fit their container: ' + JSON.stringify(bounds));
       }

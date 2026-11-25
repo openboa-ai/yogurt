@@ -1,6 +1,7 @@
+@layer yg.patterns {
 #yogurt-agent-family { color-scheme: light dark; }
 :is(#yogurt-agent-family, .guide-agents) {
-  color: light-dark(var(--boa-color-gray-green-950), var(--boa-color-neutral-100));
+  color: var(--yg-text);
   font: var(--yg-font-body, var(--boa-role-weight-body) var(--boa-size-ui)/var(--boa-line-height-ui) var(--boa-font-family));
 }
 :is(#yogurt-agent-family, .guide-agents) main {
@@ -29,4 +30,5 @@
 .family-notch-row { display: flex; flex-wrap: wrap; gap: 1px; }
 @media (max-width: 400px) {
   .family-controls > * { min-inline-size: 0; }
+}
 }

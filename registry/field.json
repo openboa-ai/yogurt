@@ -8,7 +8,7 @@
     {
       "path": "ui/field.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { Field } from \"@openboa/yogurt/field\";\n"
+      "content": "\"use client\";\n\nexport { Field, FieldGroup, FormRow } from \"@openboa/yogurt/field\";\n"
     }
   ]
 }

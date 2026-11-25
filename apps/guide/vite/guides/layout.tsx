@@ -19,7 +19,7 @@ export function GuidePage({ title, detail, chapters, action, children, id }: {
           <NavigationList label={title + " sections"} current="" items={chapters.map(([id, label]) => ({ id, label, href: "#" + id }))} />
         </Stack>
       </aside>}
-      <Stack className="guide-editorial-sections" gap={64}>{children}</Stack>
+      <Stack className="guide-editorial-sections" gap={36}>{children}</Stack>
     </Grid>
   </main>;
 }

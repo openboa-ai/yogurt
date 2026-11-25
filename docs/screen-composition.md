@@ -32,12 +32,12 @@ Use Rethink Sans and one page title per active screen. Apply display to the page
 | Label and tightly related secondary text | tight gap | 4 |
 | Control and label or closely related detail | control gap | 6 |
 | Neighboring controls in one group | inline gap | 8 |
-| Items in an ordinary stack | stack gap | 12 |
-| Header details and a distinct action group | panel gap | 16 |
-| Peer sections of a screen | section gap | 24 |
-| Padding inside an ordinary card | panel inset | 18 |
+| Items in an ordinary stack | stack gap | 10 |
+| Header details and a distinct action group | panel gap | 14 |
+| Peer sections of a screen | section gap | 20 |
+| Padding inside an ordinary card | card inset regular | 16 |
 
-Values are design pixels on Web and refer to the equivalent role when mapped to Native. Read the [UI bindings](../design/tokens/ui.json) rather than copying values into product styles. Choose regular control density by default; use compact for a genuinely dense desktop toolbar and the touch target for touch contexts. Keep related controls the same size. Use whitespace to group, a surface for independent content or a distinct interaction, and a divider where it clarifies a real boundary. Use neutral surfaces for canvas, focus, hover and selection by default. Use semantic palette roles for brand emphasis or meaningful signals. Keep focus visible and supply readable status text.
+Values are design pixels on Web and desktop WebView. Read the [UI bindings](../design/tokens/ui.json) rather than copying values into product styles. Choose regular control density by default; use compact for a genuinely dense desktop toolbar and the touch target for touch contexts. Keep related controls the same size. Use whitespace to group, a surface for independent content or a distinct interaction, and a divider where it clarifies a real boundary. Use neutral surfaces for canvas, focus, hover and selection by default. Use semantic palette roles for brand emphasis or meaningful signals. Keep focus visible and supply readable status text.
 
 ## Actions and overlays
 
@@ -63,15 +63,15 @@ Values are design pixels on Web and refer to the equivalent role when mapped to 
 
 ## Worked compositions
 
-From the consumer root run `yogurt add <block-id> --target web` or use `--target native`. The [block catalog](../catalog/blocks.json) identifies the editable source. The [installation guide](using-yogurt.md#editable-blocks) explains where it lands. Resolve each supporting control in the target you are using.
+From the consumer root run `yogurt add <block-id> --target web`. The [block catalog](../catalog/blocks.json) identifies the editable source. The [installation guide](using-yogurt.md#editable-blocks) explains where it lands. Resolve each supporting control from `@openboa/yogurt`.
 
 ### Collections and detail
 
 Start with `collection-browser` when the task begins with search. Put the collection title, labeled query and optional filters on one reading edge. Use ListRow for an item to open. Use a disclosure for related detail that stays in the collection. Expand into a separate detail view or inspector when the record needs substantial space. Give the detail a heading and a clear path back.
 
-Keep query, stable selected ID and list position in the host above the detail view. If the installed collection recipe owns its query locally, keep it mounted or move the query into the host before separating the views. Include the stable ID in matching when people search by ID. On a narrow window, change which region is shown while preserving those values. In markup, register the installed control sources and route their messages to the same host model. Use the public Web entries for the corresponding fields, rows, headings and results.
+Keep query, stable selected ID and list position in the host above the detail view. If the installed collection recipe owns its query locally, keep it mounted or move the query into the host before separating the views. Include the stable ID in matching when people search by ID. On a narrow window, change which region is shown while preserving those values. Use the public Web entries for the corresponding fields, rows, headings and results.
 
-Check matching by name and ID, open a record, then return focus to its result. Keep the query visible when a search yields nothing. Explain the result and let the person clear that query. Return focus to the search field when clearing it. Native markup can bind the installed SearchField's optional `autofocus` argument to that host state. An empty collection and a failed read have their own copy and recovery.
+Check matching by name and ID, open a record, then return focus to its result. Keep the query visible when a search yields nothing. Explain the result and let the person clear that query. Return focus to the search field when clearing it. An empty collection and a failed read have their own copy and recovery.
 
 ### Settings
 
@@ -85,6 +85,27 @@ Start with `conversation-panel` for the transcript and composer. Add `agent-work
 
 Exercise send, a pending or interrupted reply and return to an earlier thread. Readable status and recovery belong by the affected reply. At narrow widths, disclose the sidebar or inspector and preserve the selected conversation and draft.
 
+## Spatial placement grammar and visual critique
+
+Apply these six placement criteria to every Yogurt `0.2.0` screen and recipe:
+
+1. **Inline status proximity**: Place status badges (`Owner`, `Scheduled`, `Unread`, `Needs attention`, `Waiting`) inline directly beside the title or identity they qualify — never stranded on the far trailing edge where they compete with controls.
+2. **Trailing action isolation**: Reserve the trailing edge strictly for interactive controls (`Select`, `ActionMenu` `...` overflow triggers, `Button`) or comparable timestamps/values — never mix passive status badges with trailing controls.
+3. **Control baseline and height parity**: Match control heights (`28px` compact, `32px` regular, `36px` comfortable, `44px` touch) and bottom-align inputs, selects, and submit buttons on shared horizontal rows (`FormRow`, invite bars, toolbars).
+4. **Intrinsic action sizing**: Keep actions inside vertical `Stack` containers and card footers at intrinsic width rather than stretching to 100%, with right-aligned `[Discard (quiet)] [Primary (filled brand)]` confirmation groups.
+5. **Framed hierarchy and material containment**: Center focused tasks (`ProjectAccess`, `ProjectSettings`, `AgentProfile`, `DecisionReview`, `OperationsLibrary`, `AttentionInbox`, `CollectionBrowser`, `RunInspector`) inside flat framed `Card` surfaces (`--yg-raised` + `--yg-border-subtle`, zero static drop shadow) at readable container measure (`--yg-container-medium`), while full-width multi-pane workspaces (`AgentWorkspace`, `ProjectWorkspace`, `Sourdough Studio`) span the viewport with hairline dividers.
+6. **Single reading edge and focus continuity**: Align headings, labels, rows, and primary content to one leading edge per pane; preserve crisp Ink Blue `:focus-visible` outlines, sibling focus stops (no nested interactive buttons), zero initial mount fly-in on `Tabs`/`SegmentedControl`, and clean focus restoration on overlay dismissal.
+
+### Visual critique checks
+
+Before shipping a screen or recipe, inspect live Light and Dark renders (at `1440px` desktop and `390px` narrow widths) across `neutral`, `paper`, and `mist` materials:
+
+- Zero horizontal overflow or right-edge clipping (including wide data tables and token strips).
+- Zero CSS gradients and zero static card drop shadows; tight shadows reserved for floating transient layers (`Popover`, `ActionMenu`, `Select` popup, `Dialog`, `Sheet`, `Toast`).
+- Crisp 4-tier border separation (`--yg-border-subtle`, `--yg-border-control`, `--yg-border-strong`, `--yg-border-indicator`) and clear disabled hierarchy across `filled`, `soft`, and `quiet` buttons.
+- 4-tier color hierarchy: alabaster Light (`#F6F6F4`/`#FAFAFA`/`#FFFFFF`) and carbon Dark (`#0B0B0D`/`#0F0F11`/`#131316`) surfaces, Monochrome Ink ordinary controls, OpenBoa Ink Blue (`#175174` light / `#79B3D6` dark) for `tone="brand"` CTAs and focus rings, muted Warm Terracotta strictly for secondary `--yg-accent`, and operational signals (`success`, `warning`, `danger`) kept strictly separate from brand.
+- Unified `@ui-sdk/react` `Select` and `Popover` keyboard and pointer behavior verified in Chromium (and WebKit where installed).
+
 ## Put the guidance to work
 
 1. Resolve the task and renderer against the pinned SDK. Start with a matching editable block when its states and host inputs fit. Compose supported parts otherwise.
@@ -92,7 +113,7 @@ Exercise send, a pending or interrupted reply and return to an earlier thread. R
 3. Extend a shared part when the missing slot or behavior belongs to its recurring purpose. Keep a one-off product layout local. When the same task repeats across products, promote its proven composition to an editable recipe and add a catalog entry.
 4. Apply a new token only where an existing role cannot express the same relationship across consuming parts. Capture the mismatch on two related screens before introducing another role.
 
-Vite and Next.js use the same Web API. Vercel Native expresses the same intent through its supported controls, theme roles and focus behavior. For example, use the installed `yg-top` and `yg-button-group` templates where supported. An installed entry proves availability of code. Verify appearance and interaction in the actual renderer before calling the experiences equivalent.
+Vite, Next.js and desktop WebView use the same React API and `@layer`-ordered Yogurt stylesheet. An installed entry proves availability of code. Verify appearance and interaction in Chromium and WebKit before calling a composition complete.
 
 ## Document and review a composition
 

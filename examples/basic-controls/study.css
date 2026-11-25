@@ -1,13 +1,13 @@
 #yg-saved-view {
   --yg-bg:light-dark(var(--boa-color-neutral-0),var(--boa-color-neutral-975));
-  --yg-plane:light-dark(var(--boa-color-gray-green-50),var(--boa-color-neutral-950));
+  --yg-plane:light-dark(var(--boa-color-neutral-50),var(--boa-color-neutral-950));
   --yg-field:light-dark(var(--boa-color-neutral-100),var(--boa-color-neutral-850));
-  --yg-ink:light-dark(var(--boa-color-gray-green-950),var(--boa-color-neutral-50));
-  --yg-quiet:light-dark(var(--boa-color-gray-green-700),var(--boa-color-neutral-300));
-  --yg-action:light-dark(var(--boa-color-slate-750),var(--boa-color-slate-200));
+  --yg-ink:light-dark(var(--boa-color-neutral-950),var(--boa-color-neutral-50));
+  --yg-quiet:light-dark(var(--boa-color-neutral-700),var(--boa-color-neutral-300));
+  --yg-action:light-dark(var(--boa-color-slate-700),var(--boa-color-slate-700));
   --yg-hover:light-dark(var(--boa-color-slate-800),var(--boa-color-slate-100));
   --yg-press:light-dark(var(--boa-color-slate-900),var(--boa-color-slate-300));
-  --yg-on:light-dark(var(--boa-color-gray-green-50),var(--boa-color-slate-950));
+  --yg-on:light-dark(var(--boa-color-neutral-50),var(--boa-color-slate-950));
   --yg-off:light-dark(var(--boa-color-neutral-600),var(--boa-color-neutral-500));
   --yg-inactive:light-dark(var(--boa-color-neutral-200),var(--boa-color-neutral-800));
   --yg-error:light-dark(var(--boa-color-coral-700),var(--boa-color-coral-200));

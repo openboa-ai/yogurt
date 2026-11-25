@@ -73,7 +73,7 @@ def export():
         face_parts = [node for node in root.iter() if node.get("data-face-base") == "true"]
         if face_parts:
             for node in face_parts:
-                if node.get("data-fill") != "yellow.250":
+                if node.get("data-fill") != "yellow.300":
                     raise ValueError(f"Expected the approved yellow face in {key}")
                 node.set("data-fill", "orange.200")
                 node.set("fill", palette["orange"]["200"])

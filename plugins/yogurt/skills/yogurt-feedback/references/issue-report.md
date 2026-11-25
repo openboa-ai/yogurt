@@ -7,7 +7,7 @@ Run `node ../../bin/report-issue.mjs <project-root>` from the skill folder and p
   "mode": "draft",
   "owner": "sdk",
   "title": "Dialog does not restore focus on Escape",
-  "pin": "0.1.0-local.16",
+  "pin": "0.2.0-local.1",
   "renderer": "web",
   "publicId": "confirm-dialog",
   "symptom": "focus moves to the document body after Escape",

@@ -16,12 +16,16 @@ import "./templates.css";
 
 const paths = (id: string) => "/patterns/" + id;
 const groups = galleryGroups.flatMap(group => group.items);
+const fullWidthBlocks = new Set([
+  "agent-workspace", "project-workspace", "agent-sidebar", "project-sidebar",
+]);
+
 const related = {
   compose: ["card", "button-group", "switch", "record-facts"],
-  type: ["post", "heading", "stack", "text"],
-  chart: ["chart", "bar-chart", "legend", "segmented-control"],
+  type: ["heading", "stack", "text"],
+  chart: ["chart", "segmented-control"],
   dashboard: ["sidebar-layout", "card", "chart", "data-table", "search-field"],
-  account: ["form", "text-field", "button", "notice", "surface"],
+  account: ["text-field", "button", "notice", "surface"],
   navigation: ["sidebar-layout", "card"],
   variants: {
     dropdown: ["action-menu"],
@@ -38,13 +42,20 @@ export default function Templates({ id = "", appearance }: { id?: string; appear
   const block = blocks.find(item => item.id === id);
   if (block) return <main className="guide-templates">
     <Stack gap={24}>
-      <PageHeader title={block.name} detail={block.description} action={<Link href="/patterns">All patterns</Link>} />
+      <PageHeader title={block.name} detail={block.description} action={<Link className="guide-chip-link" href="/patterns">All patterns</Link>} />
       <div className="template-preview">
         <Inline className="template-preview-heading">
           <Heading level={2}>Live preview</Heading>
           <Button emphasis="quiet" size="compact" onClick={() => setReset(value => value + 1)}>Reset preview</Button>
         </Inline>
-        <div className="template-stage" key={id + ":" + reset}><BlockExample id={id} /></div>
+        <div
+          className="template-stage"
+          data-layout={fullWidthBlocks.has(id) ? "full" : "centered"}
+          data-pattern-stage={id}
+          key={id + ":" + reset}
+        >
+          <BlockExample id={id} />
+        </div>
       </div>
       <Stack gap={8}>
         <Heading level={2}>When to use it</Heading>
@@ -52,7 +63,9 @@ export default function Templates({ id = "", appearance }: { id?: string; appear
       </Stack>
       <Stack gap={8}>
         <Heading level={2}>Components used</Heading>
-        <Inline className="template-component-links">{block.components.map(component => <Link key={component} href={"/components/" + component}>{component}</Link>)}</Inline>
+        <Inline className="template-component-links">
+          {block.components.map(component => <Link key={component} className="guide-chip-link" href={"/components/" + component}>{component}</Link>)}
+        </Inline>
         {["agent-workspace", "agent-sidebar", "conversation-panel", "agent-profile"].includes(id) &&
           <Link href="/examples">See it in Sourdough Studio</Link>}
       </Stack>
@@ -94,7 +107,9 @@ export default function Templates({ id = "", appearance }: { id?: string; appear
         </div>
         <Stack gap={8}>
           <Heading level={2}>Components used</Heading>
-          <Inline>{components.map(item => <Link key={item} href={"/components/" + item}>{item}</Link>)}</Inline>
+          <Inline className="template-component-links">
+            {components.map(item => <Link key={item} className="guide-chip-link" href={"/components/" + item}>{item}</Link>)}
+          </Inline>
           {studies.some(item => item.id === id) && <Text variant="help">Use these building blocks in the full workspace example. <Link href="/examples/sourdough">Open Sourdough</Link></Text>}
         </Stack>
       </Stack>

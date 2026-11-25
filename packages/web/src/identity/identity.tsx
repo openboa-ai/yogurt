@@ -67,7 +67,7 @@ export function Gaze({
       className="yg-eyes"
       data-gaze={state}
       data-static={!animated || undefined}
-      fill="var(--boa-color-gray-green-950)"
+      fill="var(--boa-color-neutral-950)"
     >
       <circle className="yg-eye" cx={x - 13} cy={y} r="2.45" />
       <circle className="yg-eye" cx={x + 13} cy={y} r="2.45" />
@@ -121,7 +121,7 @@ export function AgentAvatar({
     >
       <g className="yg-avatar-body">
         <path d={art.path} fill={color ? agentColors[color] : art.fill} />
-        <g className="yg-eyes" data-gaze={state} data-static fill="var(--boa-color-gray-green-950)">
+        <g className="yg-eyes" data-gaze={state} data-static fill="var(--boa-color-neutral-950)">
           {[-13, 13].map(offset => (
             <g key={offset} transform={`translate(${art.x + offset} ${art.y})`}>
               <g className="yg-eye">

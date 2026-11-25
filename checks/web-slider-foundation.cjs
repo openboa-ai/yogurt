@@ -13,8 +13,8 @@ const assert = require("node:assert/strict");
         reducedMotion: width === 320 ? "reduce" : "no-preference",
       });
       await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#slider");
-      const surface = page.locator('.specimen[data-component="slider"] .yg-value-slider');
-      const slider = surface.getByRole("slider");
+      const surface = page.locator('.specimen[data-component="slider"] .yg-value-slider').first();
+      const slider = surface.getByRole("slider", { name: "Preview volume" });
       await slider.waitFor();
       const initial = Number(await slider.inputValue());
       const geometry = await surface.evaluate(el => ({
@@ -23,9 +23,9 @@ const assert = require("node:assert/strict");
         thumb: el.querySelector("[data-slot=slider-thumb]").getBoundingClientRect().width,
         fill: el.querySelector("[data-slot=slider-indicator]").getBoundingClientRect().width,
       }));
-      assert(geometry.height >= 44);
+      assert(geometry.height >= 32);
       assert.equal(geometry.track, 4);
-      assert.equal(geometry.thumb, 28);
+      assert.equal(geometry.thumb, 16);
       await slider.focus();
       await page.keyboard.press("ArrowRight");
       assert(Number(await slider.inputValue()) > initial);
@@ -38,7 +38,7 @@ const assert = require("node:assert/strict");
       const card = page.locator(".variation .specimen .yg-value-slider");
       const preview = card.getByRole("slider", { name: "Preview volume" });
       const control = card.locator("[data-slot=slider-control]");
-      assert((await control.boundingBox()).height >= 44);
+      assert((await control.boundingBox()).height >= 30);
       assert.equal(await preview.getAttribute("aria-valuetext"), "30%");
       await preview.focus();
       await page.keyboard.press("ArrowRight");
@@ -89,6 +89,12 @@ const assert = require("node:assert/strict");
       assert(edge, "the value stays inside the card at the endpoint");
       await page.close();
     }
-    console.log("Slider hit area, value display, keyboard, pointer and reduced motion verified at 320 and 1440 px.");
+    const touchPage = await browser.newPage({ viewport: { width: 390, height: 900 }, isMobile: true, hasTouch: true });
+    await touchPage.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#slider");
+    const touchControl = touchPage.locator('.specimen[data-component="slider"] .yg-value-slider [data-slot=slider-control]').first();
+    await touchControl.waitFor();
+    assert((await touchControl.boundingBox()).height >= 44, "coarse slider control hit area >= 44px");
+    await touchPage.close();
+    console.log("Slider hit area, coarse touch target, value display, keyboard, pointer and reduced motion verified at 320 and 1440 px.");
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

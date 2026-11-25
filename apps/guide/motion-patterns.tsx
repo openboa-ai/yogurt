@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import {
-  ActionMenu, Button, Command, Disclosure, Icon, IconButton, InputOTP,
-  ProjectMark, RangeSlider, SearchField, Link, SegmentedControl, Select, SidebarItem, SidebarLayout, Stepper, Switch, Tabs, Text, Yogurt,
+  ActionMenu, Button, Command, Disclosure, Icon, IconButton, InputOTP, Progress,
+  ProjectMark, RangeSlider, SearchField, Link, SegmentedControl, Select, SidebarItem, SidebarLayout, Switch, Tabs, Text, Yogurt,
 } from "@openboa/yogurt";
 import {
   ActivityIsland, CheckboxList, CopyButton, DetentDial, ExpandCard, FanCards, FileDrop,
@@ -99,7 +99,7 @@ function ChoiceExample({ kind }: {kind: "plan" | "focus" | "select" | "dial"}) {
   const [value, setValue] = useState({plan: "team", focus: "all", select: "active", dial: "overview"}[kind]);
   if (kind === "plan") return <PlanSwitch options={plans} value={value} onChange={setValue} />;
   if (kind === "focus") return <FocusPicker options={focusOptions} value={value} onChange={setValue} />;
-  if (kind === "select") return <Select presentation="animated" label="Work status" options={workStatuses} value={value} onChange={setValue} />;
+  if (kind === "select") return <Select presentation="animated" label="Work status" options={workStatuses} value={value} onValueChange={setValue} />;
   return <DetentDial options={pages} value={value} onChange={setValue} />;
 }
 
@@ -281,7 +281,8 @@ function CommandExample({ kind }: {kind: "button" | "palette" | "menu"}) {
 function StepExample({ agent }: {agent: boolean}) {
   const [index, setIndex] = useState(0);
   return <div className="motion-sample-stack">
-    <Stepper label={agent ? "Agent steps" : "Step progress"} steps={steps} current={steps[index].id} variant={agent ? "list" : "progress"} />
+    <Progress label={agent ? "Agent steps" : "Step progress"} value={index + 1} max={steps.length} />
+    <Text variant="help">{steps[index].label} — {steps[index].detail}</Text>
     <div className="motion-sample-actions">
       <Button size="compact" emphasis="quiet" disabled={index === 0} onClick={() => setIndex(value => value - 1)}>Back</Button>
       <Button size="compact" emphasis="soft" onClick={() => setIndex(value => (value + 1) % steps.length)}>

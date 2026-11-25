@@ -62,7 +62,7 @@ export function FormRecipe({ recipe }: { recipe: Recipe }) {
     case "appointment":
       return <Y.Stack gap={16}>
         <Y.Calendar label="Appointment date" value={date} onValueChange={next => { setDate(next); setSaved(false); }} />
-        <Y.Select label="Available time" placeholder="Choose a time" options={options("09:30", "11:00", "14:30")} value={selected} onChange={event => { setSelected(event.target.value); setSaved(false); }} />
+        <Y.Select label="Available time" placeholder="Choose a time" options={options("09:30", "11:00", "14:30")} value={selected} onValueChange={next => { setSelected(next); setSaved(false); }} />
         <Y.Inline><Y.Button disabled={!selected || saved} onClick={() => setSaved(true)}>Book appointment</Y.Button>
           {saved && <Y.Status tone="success">Reserved for {date} at {selected}.</Y.Status>}</Y.Inline>
       </Y.Stack>;
@@ -76,9 +76,16 @@ export function FormRecipe({ recipe }: { recipe: Recipe }) {
     case "payout":
     case "transfer":
       return <Y.Stack gap={16}>
-        <Y.NumericSpinner label={id === "payout" ? "Minimum payout (USD)" : "Transfer amount (USD)"} value={value} min={5} max={1000} step={5}
-          onValueChange={next => { setValue(next); setSaved(false); }} />
-        {id === "transfer" && <Y.Select label="Destination" options={options("Operating account", "Reserve account")} defaultValue="Operating account" onChange={() => setSaved(false)} />}
+        <Y.TextField
+          label={id === "payout" ? "Minimum payout (USD)" : "Transfer amount (USD)"}
+          type="number"
+          min={5}
+          max={1000}
+          step={5}
+          value={String(value)}
+          onChange={event => { setValue(Number(event.target.value) || 0); setSaved(false); }}
+        />
+        {id === "transfer" && <Y.Select label="Destination" options={options("Operating account", "Reserve account")} defaultValue="Operating account" onValueChange={() => setSaved(false)} />}
         <Y.Inline><Y.Button disabled={saved} onClick={() => setSaved(true)}>{id === "payout" ? "Save threshold" : "Preview transfer"}</Y.Button>
           {saved && <Y.Status tone="success">{id === "payout" ? "Threshold saved." : "Transfer ready for review."}</Y.Status>}</Y.Inline>
       </Y.Stack>;

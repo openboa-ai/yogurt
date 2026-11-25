@@ -8,7 +8,7 @@
     {
       "path": "ui/tooltip.tsx",
       "type": "registry:ui",
-      "content": "\"use client\";\n\nexport { Tooltip, MorphTooltip } from \"@openboa/yogurt/tooltip\";\n"
+      "content": "\"use client\";\n\nexport { Tooltip } from \"@openboa/yogurt/tooltip\";\n"
     }
   ]
 }

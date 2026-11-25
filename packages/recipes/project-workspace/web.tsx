@@ -19,6 +19,7 @@ import {
   SidebarTrigger,
   Stack,
   Tabs,
+  Text,
   ThreadRow,
   resourceLabels,
   type Project,
@@ -77,31 +78,32 @@ function ProjectView({
   const sources = project.sources.filter((row) => matches(sourceSearch, row.title, resourceLabels[row.kind], row.detail));
   const current = selection?.projectId === project.id ? selection : undefined;
   const newChat = onNewChat && (
-    <Button emphasis="soft" onClick={() => onNewChat(project.id)}>New chat</Button>
+    <Button emphasis="soft" size="compact" onClick={() => onNewChat(project.id)}>New chat</Button>
   );
   const addSource = onAddSource && (
-    <Button emphasis="soft" onClick={() => onAddSource(project.id)}>Add source</Button>
+    <Button emphasis="soft" size="compact" onClick={() => onAddSource(project.id)}>Add source</Button>
   );
   const editInstructions = onEditInstructions && (
-    <Button emphasis="soft" onClick={() => onEditInstructions(project.id)}>Edit instructions</Button>
+    <Button emphasis="soft" size="compact" onClick={() => onEditInstructions(project.id)}>Edit instructions</Button>
   );
 
   return (
-    <Stack gap={24} className="yg-project-view">
+    <Stack gap={16} className="yg-project-view">
       <header className="yg-project-header">
         <div className="yg-project-identity">
           {project.mark && <ProjectMark project={project.mark} label="" />}
           <div>
-            <Heading>{project.title}</Heading>
-            {project.description && <p className="yg-project-description">{project.description}</p>}
+            <Heading level={2}>{project.title}</Heading>
+            {project.description && <Text variant="help" className="yg-project-description">{project.description}</Text>}
           </div>
         </div>
         {onShare && (
-          <Button emphasis="quiet" onClick={() => onShare(project.id)}>Share</Button>
+          <Button emphasis="quiet" size="compact" onClick={() => onShare(project.id)}>Share</Button>
         )}
       </header>
       <Tabs
         label="Project content"
+        presentation="underline"
         value={tab}
         onValueChange={setTab}
         items={[
@@ -112,7 +114,7 @@ function ProjectView({
               <Stack gap={12}>
                 {composer?.(project.id)}
                 {project.threads.length > 0 && (
-                  <FilterBar label="Find a project chat" query={threadSearch} onQueryChange={setThreadSearch}>
+                  <FilterBar label="Find a project chat" hiddenLabel placeholder="Find a project chat..." query={threadSearch} onQueryChange={setThreadSearch}>
                     {newChat}
                   </FilterBar>
                 )}
@@ -143,7 +145,7 @@ function ProjectView({
             panel: (
               <Stack gap={12}>
                 {project.sources.length > 0 && (
-                  <FilterBar label="Find a project source" query={sourceSearch} onQueryChange={setSourceSearch}>
+                  <FilterBar label="Find a project source" hiddenLabel placeholder="Find a project source..." query={sourceSearch} onQueryChange={setSourceSearch}>
                     {addSource}
                   </FilterBar>
                 )}
@@ -174,7 +176,7 @@ function ProjectView({
             label: "Instructions",
             panel: project.instructions ? (
               <Stack gap={12}>
-                <p className="yg-project-instructions">{project.instructions}</p>
+                <Text className="yg-project-instructions">{project.instructions}</Text>
                 {editInstructions && <div>{editInstructions}</div>}
               </Stack>
             ) : (
@@ -201,12 +203,16 @@ export function ProjectWorkspace({
   const shown = projects.filter((row) => matches(query, row.title, row.description));
   return (
     <section aria-label="Project workspace" className="yg-project-workspace">
-      <SidebarLayout label="Project directory" width="13rem" navigation={
+      <SidebarLayout label="Project directory" variant="flat" width="12.5rem" navigation={
         <>
-          <SidebarHeader><Heading level={3}>Projects</Heading></SidebarHeader>
-          {projects.length > 0 && (
-            <SidebarHeader><SearchField label="Find a project" value={query} onValueChange={setQuery} /></SidebarHeader>
-          )}
+          <SidebarHeader>
+            <Stack gap={8}>
+              <Heading level={4}>Projects</Heading>
+              {projects.length > 0 && (
+                <SearchField label="Find a project" placeholder="Find a project" hiddenLabel size="compact" value={query} onValueChange={setQuery} />
+              )}
+            </Stack>
+          </SidebarHeader>
           <SidebarContent label="Available projects">
             {shown.map((row) => (
               <SidebarItem key={row.id} label={row.title} active={row.id === projectId}
@@ -216,11 +222,11 @@ export function ProjectWorkspace({
             {!shown.length && query.trim() && <EmptyResult query={query} onClear={() => setQuery("")} />}
           </SidebarContent>
           {onCreateProject && (
-            <SidebarFooter><Button emphasis="quiet" onClick={onCreateProject}>New project</Button></SidebarFooter>
+            <SidebarFooter><Button emphasis="quiet" size="compact" onClick={onCreateProject}>New project</Button></SidebarFooter>
           )}
         </>
       }>
-        <Stack gap={12}>
+        <Stack gap={12} className="yg-project-main">
           <div><SidebarTrigger label="Projects" showLabel /></div>
           {project ? (
           <ProjectView key={project.id} project={project} {...view} />

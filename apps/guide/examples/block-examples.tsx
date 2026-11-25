@@ -28,7 +28,8 @@ function RecipeExample({ id }: { id: string }) {
     [status, setStatus] = useState(""),
     [input, setInput] = useState("");
   const [messages, setMessages] = useState<ThreadMessage[]>([
-    { id: "first", speaker: "Kai", body: "The draft is ready for review." },
+    { id: "first", speaker: "Kai", body: "The draft is ready for review.", time: "09:40", variant: "received" },
+    { id: "second", speaker: "You", body: "Verified the summary metrics — ready to share.", time: "09:42", variant: "sent" },
   ]);
   if (id === "project-settings")
     return (

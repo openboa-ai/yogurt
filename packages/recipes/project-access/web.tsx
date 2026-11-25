@@ -1,7 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { Button, ConfirmDialog, FieldError, Heading, Inline, Select, Stack, TextField } from "@openboa/yogurt";
+import {
+  ActionMenu,
+  Avatar,
+  Badge,
+  Button,
+  Card,
+  ConfirmDialog,
+  FieldError,
+  FormRow,
+  Inline,
+  List,
+  ListRow,
+  Select,
+  Stack,
+  Status,
+  TextField,
+} from "@openboa/yogurt";
 
 export type ProjectRole = "view" | "edit";
 type Member = { id: string; name: string; detail?: string; role: ProjectRole | "owner" };
@@ -11,7 +27,7 @@ export function ProjectAccess({
   project, revision, members, onInvite, onChangeRole, onRemove,
   pending = false, error,
 }: {
-  project: {id: string; name: string};
+  project: { id: string; name: string };
   revision: string;
   members: readonly Member[];
   onInvite?: (projectId: string, email: string, role: ProjectRole, revision: string) => void;
@@ -29,52 +45,149 @@ function AccessForm({ project, revision, members, onInvite, onChangeRole, onRemo
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<ProjectRole>("view");
   const [review, setReview] = useState<{ id: string; revision: string }>();
+  const [copiedId, setCopiedId] = useState<string>();
   const member = review?.revision === revision ? members.find((item) => item.id === review.id && item.role !== "owner") : undefined;
+
+  function copyMemberId(id: string) {
+    setCopiedId(id);
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      void navigator.clipboard.writeText(id).catch(() => {});
+    }
+  }
+
   return (
-    <Stack gap={16}>
-      <Heading>{project.name} access</Heading>
-      {onInvite && (
-        <form className="yg-access-invite" aria-label="Invite to project" onSubmit={(event) => {
-          event.preventDefault();
-          if (!pending && email.trim()) onInvite(project.id, email.trim(), role, revision);
-        }}>
-          <TextField label="Email address" type="email" autoComplete="email" required
-            disabled={pending} value={email} onChange={(event) => setEmail(event.currentTarget.value)} />
-          <Select label="Role" value={role} disabled={pending} options={roles}
-            onChange={(event) => setRole(event.currentTarget.value as ProjectRole)} />
-          <Button type="submit" pending={pending} pendingLabel="Inviting" disabled={!email.trim()}>Invite</Button>
-        </form>
-      )}
-      {error && <FieldError role="alert">{error}</FieldError>}
-      <ul className="yg-access-roster" aria-label="People with access">
-        {members.map((item) => (
-          <li key={item.id}>
-            <div>
-              <strong>{item.name}</strong>
-              {item.detail && <div className="yg-meta">{item.detail}</div>}
-            </div>
-            {item.role === "owner" ? <span className="yg-meta">Owner</span> : (
-              <Inline gap={8}>
-                {onChangeRole
-                  ? <Select label={"Access for " + item.name} value={item.role} options={roles} disabled={pending}
-                    onChange={(event) => onChangeRole(project.id, item.id, event.currentTarget.value as ProjectRole, revision)} />
-                  : <span className="yg-meta">{roles.find((entry) => entry.id === item.role)?.label}</span>}
-                {onRemove && <Button emphasis="quiet" disabled={pending} onClick={() => setReview({ id: item.id, revision })}>Remove {item.name}</Button>}
-              </Inline>
-            )}
-          </li>
-        ))}
-      </ul>
-      {member && onRemove && (
-        <ConfirmDialog open pending={pending} onOpenChange={(open) => { if (!open) setReview(undefined); }}
-          decision={{ id: member.id, revision, title: "Remove " + member.name + "?",
-            consequence: "They will lose access to this project.", confirmLabel: "Remove access", available: !pending }}
-          onConfirm={() => {
-            if (pending) return;
-            onRemove(project.id, member.id, revision);
-            setReview(undefined);
-          }} />
-      )}
-    </Stack>
+    <Card
+      title={`${project.name} access`}
+      description="Invite collaborators and manage project permissions."
+      headerAction={
+        <Badge tone="neutral" dot={false}>
+          {members.length} {members.length === 1 ? "member" : "members"}
+        </Badge>
+      }
+    >
+      <Stack gap={14}>
+        {onInvite && (
+          <form
+            aria-label="Invite to project"
+            onSubmit={(event) => {
+              event.preventDefault();
+              if (!pending && email.trim()) {
+                onInvite(project.id, email.trim(), role, revision);
+                setEmail("");
+              }
+            }}
+          >
+            <FormRow className="yg-access-invite" align="end">
+              <TextField
+                label="Email"
+                type="email"
+                placeholder="name@openboa.ai"
+                autoComplete="email"
+                required
+                disabled={pending}
+                value={email}
+                onChange={(event) => setEmail(event.currentTarget.value)}
+              />
+              <Select
+                label="Role"
+                className="yg-access-role-select"
+                value={role}
+                disabled={pending}
+                options={roles}
+                onValueChange={(next) => setRole(next as ProjectRole)}
+              />
+              <Button
+                type="submit"
+                emphasis="filled"
+                tone="brand"
+                pending={pending}
+                pendingLabel="Inviting"
+                disabled={!email.trim()}
+              >
+                Invite
+              </Button>
+            </FormRow>
+          </form>
+        )}
+        {error && <FieldError role="alert">{error}</FieldError>}
+        <List label="People with access" divided className="yg-access-list">
+          {members.map((item) => (
+            <ListRow
+              key={item.id}
+              leading={<Avatar label={item.name} size={28} />}
+              title={item.name}
+              inlineMeta={item.role === "owner" ? <Badge tone="neutral" variant="soft">Owner</Badge> : undefined}
+              description={item.detail}
+              value={
+                item.role === "owner"
+                  ? "Full control"
+                  : !onChangeRole
+                    ? roles.find((entry) => entry.id === item.role)?.label
+                    : undefined
+              }
+              actions={
+                item.role === "owner" ? undefined : (
+                  <Inline gap={6} wrap={false} className="yg-access-member-controls">
+                    {onChangeRole && (
+                      <Select
+                        label={"Access for " + item.name}
+                        hiddenLabel
+                        size="compact"
+                        className="yg-access-role-select"
+                        value={item.role}
+                        options={roles}
+                        disabled={pending}
+                        onValueChange={(next) =>
+                          onChangeRole(project.id, item.id, next as ProjectRole, revision)
+                        }
+                      />
+                    )}
+                    <ActionMenu
+                      label={"Actions for " + item.name}
+                      triggerVariant="more"
+                      triggerSize="compact"
+                      onSelect={(actionId) => {
+                        if (actionId === "copy-id") copyMemberId(item.id);
+                        else if (actionId === "remove") setReview({ id: item.id, revision });
+                      }}
+                      items={[
+                        { id: "copy-id", label: "Copy member ID" },
+                        ...(onRemove
+                          ? [{ id: "remove", label: "Remove", tone: "danger" as const, separatorBefore: true }]
+                          : []),
+                      ]}
+                    />
+                  </Inline>
+                )
+              }
+            />
+          ))}
+        </List>
+        {copiedId && <Status tone="success">Copied member ID: {copiedId}</Status>}
+        {member && onRemove && (
+          <ConfirmDialog
+            open
+            pending={pending}
+            onOpenChange={(open) => {
+              if (!open) setReview(undefined);
+            }}
+            decision={{
+              id: member.id,
+              revision,
+              title: "Remove " + member.name + "?",
+              consequence: "They will lose access to this project.",
+              confirmLabel: "Remove access",
+              available: !pending,
+              destructive: true,
+            }}
+            onConfirm={() => {
+              if (pending) return;
+              onRemove(project.id, member.id, revision);
+              setReview(undefined);
+            }}
+          />
+        )}
+      </Stack>
+    </Card>
   );
 }

@@ -16,7 +16,7 @@ const assert = require("node:assert/strict");
       assert.deepEqual(await arrow.evaluate(node => {
         const rect = node.getBoundingClientRect(); return [rect.width, rect.height];
       }), [20, 20]);
-      assert((await summary.boundingBox()).height >= 44);
+      assert((await summary.boundingBox()).height >= 32);
       await summary.focus();
       await page.keyboard.press("Enter");
       const bold = root.getByRole("button", { name: "Bold", exact: true });
@@ -25,8 +25,8 @@ const assert = require("node:assert/strict");
         const size = await button.locator(".extra-format-icon").evaluate(node => {
           const rect = node.getBoundingClientRect(); return [rect.width, rect.height];
         });
-        assert.deepEqual(size, [18, 18]);
-        assert((await button.boundingBox()).height >= 44);
+        assert.deepEqual(size, [20, 20]);
+        assert((await button.boundingBox()).height >= 28);
       }
       await bold.click();
       assert.equal(await bold.getAttribute("aria-pressed"), "true");
@@ -35,6 +35,12 @@ const assert = require("node:assert/strict");
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
       await page.close();
     }
-    console.log("Disclosure toolbar icon sizes, alignment and interaction verified at 320 and 1440 px.");
+    const touchPage = await browser.newPage({ viewport: { width: 390, height: 900 }, isMobile: true, hasTouch: true });
+    await touchPage.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/motion-patterns.html")).href + "#disclosure-toolbar");
+    const touchSummary = touchPage.locator("#disclosure-toolbar").getByText("Text formatting", { exact: true });
+    await touchSummary.waitFor();
+    assert((await touchSummary.boundingBox()).height >= 44, "coarse disclosure summary height >= 44px");
+    await touchPage.close();
+    console.log("Disclosure toolbar icon sizes, alignment, coarse targets and interaction verified at 320 and 1440 px.");
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

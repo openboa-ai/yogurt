@@ -186,12 +186,12 @@ export function AgentWorkspaceExample({ id }: { id: string }) {
         const busy = status === "thinking" || status === "working";
         return (
           <Stack gap={16}>
-            <Transcript label={"Conversation with " + agent.name} revision={messages.length + ":" + (status === undefined ? "previous" : "current")}>
+            <Transcript label={"Conversation with " + agent.name} readingAnchor="when-away" revision={messages.length + ":" + (status === undefined ? "previous" : "current")}>
               {messages.map((message) => (
                 <Message
                   key={message.id}
                   speaker={message.speaker}
-                  avatar={message.speaker === agent.name && agent.art ? <AgentAvatar agent={agent.art} size={24} label="" animated={false} /> : undefined}
+                  avatar={message.speaker === agent.name && agent.art ? <AgentAvatar agent={agent.art} size={24} label="" state={agent.state} /> : undefined}
                 >
                   {message.text}
                 </Message>

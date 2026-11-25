@@ -1,5 +1,4 @@
-import { readFileSync } from "node:fs";
-import { basename, dirname, resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import { canonicalGuideUrl } from "./guide-routes.mjs";
@@ -33,39 +32,18 @@ function guideRoutes() {
   };
 }
 
-function anatomy() {
-  const prefix = "\0yogurt-anatomy:";
-  return {
-    name: "yogurt-anatomy",
-    enforce: "pre",
-    async resolveId(source, importer) {
-      if (!source.endsWith(".module.css") || !importer?.includes("/@openai/apps-sdk-ui/")) return;
-      const result = await this.resolve(source, importer, { skipSelf: true });
-      if (result) return prefix + result.id + ".js";
-    },
-    load(id) {
-      if (!id.startsWith(prefix)) return;
-      const path = id.slice(prefix.length, -3);
-      const family = basename(path, ".module.css");
-      const names = [...new Set([...readFileSync(path, "utf8").matchAll(/\.([A-Za-z_][\w-]*)/g)].map(match => match[1]))];
-      return "export default " + JSON.stringify(Object.fromEntries(names.map(name => [name, "yg-sdk-" + family + "-" + name]))) + ";";
-    },
-  };
-}
-
 export default defineConfig({
   root,
   base: "/",
   publicDir: resolve(repo, "site"),
   appType: "mpa",
-  plugins: [guideRoutes(), anatomy(), watchTokens()],
+  plugins: [guideRoutes(), watchTokens()],
   resolve: { alias: [
     { find: /^@openboa\/yogurt\/motion-patterns$/, replacement: resolve(repo, "packages/web/src/patterns/motion-patterns.ts") },
     { find: /^@openboa\/yogurt$/, replacement: resolve(repo, "packages/web/src/index.ts") },
   ] },
   optimizeDeps: {
-    exclude: ["@openai/apps-sdk-ui"],
-    include: ["react", "react/jsx-runtime", "react-dom", "react-dom/client", "lodash.debounce", "@openai/apps-sdk-ui > react/jsx-runtime"],
+    include: ["react", "react/jsx-runtime", "react-dom", "react-dom/client"],
   },
   server: { fs: { allow: [repo] } },
   preview: { port: 5273 },

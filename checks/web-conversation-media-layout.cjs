@@ -9,12 +9,13 @@ const bundle = buildSync({
     import React from 'react';
     import { createRoot } from 'react-dom/client';
     import { Message, Transcript } from './packages/web/src/identity/identity.tsx';
-    import { Bubble } from './packages/web/src/patterns/editorial.tsx';
     const image = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="500"><rect width="1000" height="500" fill="#777"/></svg>');
-    const content = (prefix) => <><img alt={prefix + ' image'} src={image} width="1000" height="500" /><pre data-content={prefix}>{'long_code_without_spaces'.repeat(50)}</pre></>;
-    createRoot(document.getElementById('conversation-media-fixture')).render(
+    createRoot(document.getElementById('conversation-media-fixture'), { identifierPrefix: 'cml-' }).render(
       <Transcript label="Conversation" revision={1}>
-        <Message speaker="Agent">{content('message')}<Bubble>{content('bubble')}</Bubble></Message>
+        <Message speaker="Agent">
+          <img alt="message image" src={image} width="1000" height="500" />
+          <pre data-content="message">{'long_code_without_spaces'.repeat(50)}</pre>
+        </Message>
       </Transcript>
     );
   ` }, bundle: true, write: false, platform: "browser", format: "iife",
@@ -34,30 +35,20 @@ const bundle = buildSync({
     });
     await page.addScriptTag({ content: bundle });
     const host = page.locator("#conversation-media-fixture");
-    const bubble = host.locator(".yg-bubble");
-    await bubble.waitFor();
-    for (const prefix of ["message", "bubble"]) {
-      const image = host.getByRole("img", { name: `${prefix} image` });
-      await image.evaluate(node => node.decode());
-      const geometry = await image.evaluate(node => {
-        const rect = node.getBoundingClientRect();
-        const container = (node.closest('.yg-bubble') || node.closest('.yg-message > div:last-child')).getBoundingClientRect();
-        return { width: rect.width, height: rect.height, left: rect.left, right: rect.right, containerLeft: container.left, containerRight: container.right };
-      });
-      assert(geometry.left >= geometry.containerLeft - 1 && geometry.right <= geometry.containerRight + 1, `${prefix} image must fit its container`);
-      assert(Math.abs(geometry.width / geometry.height - 2) < .02, `${prefix} image must keep its 2:1 ratio`);
-      const code = host.locator(`pre[data-content="${prefix}"]`);
-      const codeLayout = await code.evaluate(node => ({ width: node.clientWidth, scroll: node.scrollWidth, overflow: getComputedStyle(node).overflowX }));
-      assert(codeLayout.scroll > codeLayout.width && ["auto", "scroll"].includes(codeLayout.overflow), `${prefix} code must scroll within its own width`);
-    }
-    const bounds = await host.evaluate(node => {
-      const body = node.querySelector('.yg-message > div:last-child');
-      const bubble = node.querySelector('.yg-bubble');
-      const rect = element => { const r = element.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width, scroll: element.scrollWidth, client: element.clientWidth }; };
-      return { host: rect(node), body: rect(body), bubble: rect(bubble), transcript: rect(node.querySelector('.yg-scroll')) };
+    const image = host.getByRole("img", { name: "message image" });
+    await image.waitFor();
+    await image.evaluate(node => node.decode());
+    const geometry = await image.evaluate(node => {
+      const rect = node.getBoundingClientRect();
+      const container = node.closest('.yg-message > div:last-child').getBoundingClientRect();
+      return { width: rect.width, height: rect.height, left: rect.left, right: rect.right, containerLeft: container.left, containerRight: container.right };
     });
-    assert(bounds.bubble.right <= bounds.body.right + 1, `bubble must remain within the message: ${JSON.stringify(bounds)}`);
+    assert(geometry.left >= geometry.containerLeft - 1 && geometry.right <= geometry.containerRight + 1, "message image must fit its container");
+    assert(Math.abs(geometry.width / geometry.height - 2) < .02, "message image must keep its 2:1 ratio");
+    const code = host.locator('pre[data-content="message"]');
+    const codeLayout = await code.evaluate(node => ({ width: node.clientWidth, scroll: node.scrollWidth, overflow: getComputedStyle(node).overflowX }));
+    assert(codeLayout.scroll > codeLayout.width && ["auto", "scroll"].includes(codeLayout.overflow), "message code must scroll within its own width");
     assert(await host.evaluate(node => node.scrollWidth <= node.clientWidth + 1), "conversation must not overflow its host");
-    console.log("Conversation media fit and retain aspect ratio; long code scrolls within message and bubble at 320 px.");
+    console.log("Conversation media fit and retain aspect ratio; long code scrolls within message at 320 px.");
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

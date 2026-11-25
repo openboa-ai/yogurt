@@ -263,26 +263,6 @@
     }
   },
   {
-    "id": "bottom-action",
-    "name": "BottomAction",
-    "family": "Actions",
-    "module": "actions",
-    "description": "Keep the next step reachable on a small screen.",
-    "guidance": {
-      "useWhen": "Keep a task’s next action accessible at the lower edge.",
-      "combineWith": [
-        "button",
-        "bottom-info"
-      ],
-      "avoid": "Do not cover task content with a fixed action area.",
-      "verify": [
-        "safe area",
-        "content clearance",
-        "keyboard access"
-      ]
-    }
-  },
-  {
     "id": "field",
     "name": "Field",
     "family": "Forms",
@@ -297,7 +277,11 @@
         "help and error association",
         "invalid state"
       ]
-    }
+    },
+    "exports": [
+      "FieldGroup",
+      "FormRow"
+    ]
   },
   {
     "id": "label",
@@ -369,8 +353,7 @@
       "useWhen": "Edit a single line of text with a persistent label.",
       "combineWith": [
         "help-text",
-        "field-error",
-        "form"
+        "field-error"
       ],
       "avoid": "Use a multiline field for longer written input.",
       "verify": [
@@ -410,8 +393,7 @@
       "useWhen": "Edit a note or other multiline text.",
       "combineWith": [
         "help-text",
-        "field-error",
-        "form"
+        "field-error"
       ],
       "avoid": "Use a single-line field for a short value.",
       "verify": [
@@ -469,9 +451,7 @@
     "description": "Choose an independent option.",
     "guidance": {
       "useWhen": "Select an independent option or membership in a set.",
-      "combineWith": [
-        "form"
-      ],
+      "combineWith": [],
       "avoid": "Use a radio group when exactly one choice is required. The control does not expose a description association.",
       "verify": [
         "checked",
@@ -483,15 +463,12 @@
   {
     "id": "radio-group",
     "name": "RadioGroup",
-    "exports": ["FocusPicker", "PlanSwitch"],
     "family": "Forms",
     "module": "forms",
     "description": "Choose one of several alternatives.",
     "guidance": {
       "useWhen": "Choose one option from a small visible set.",
-      "combineWith": [
-        "form"
-      ],
+      "combineWith": [],
       "avoid": "Do not use a radio group for independent choices. The group does not expose a description association.",
       "verify": [
         "selected",
@@ -717,27 +694,6 @@
     }
   },
   {
-    "id": "drawer",
-    "name": "Drawer",
-    "family": "Layers",
-    "module": "layers",
-    "description": "Pull up a task and dismiss it from its lower-edge surface.",
-    "guidance": {
-      "useWhen": "Open a temporary task surface from the lower edge.",
-      "combineWith": [
-        "button",
-        "form"
-      ],
-      "avoid": "Do not use an overlay for information the reader must compare continuously with the underlying page.",
-      "verify": [
-        "open and close",
-        "focus restoration",
-        "narrow layout",
-        "reduced motion"
-      ]
-    }
-  },
-  {
     "id": "sheet",
     "name": "Sheet",
     "family": "Layers",
@@ -746,8 +702,7 @@
     "guidance": {
       "useWhen": "Open a temporary task surface with room for additional content.",
       "combineWith": [
-        "button",
-        "form"
+        "button"
       ],
       "avoid": "Do not use a sheet to obscure information required throughout the task.",
       "verify": [
@@ -761,7 +716,6 @@
   {
     "id": "tooltip",
     "name": "Tooltip",
-    "exports": ["MorphTooltip"],
     "family": "Layers",
     "module": "layers",
     "description": "Explain a compact action on hover or focus.",
@@ -950,8 +904,7 @@
     "guidance": {
       "useWhen": "Keep a consequential message and optional action beside a task.",
       "combineWith": [
-        "button",
-        "form"
+        "button"
       ],
       "avoid": "Reserve urgent alerts for messages that need immediate attention.",
       "verify": [
@@ -1110,7 +1063,6 @@
     "guidance": {
       "useWhen": "Show one observed series over an ordered range with source and time.",
       "combineWith": [
-        "legend",
         "data-table"
       ],
       "avoid": "Do not connect gaps or turn missing readings into zero.",
@@ -1119,26 +1071,6 @@
         "negative values",
         "readings table",
         "source and time"
-      ]
-    }
-  },
-  {
-    "id": "legend",
-    "name": "Legend",
-    "family": "Data",
-    "module": "data",
-    "description": "Name the series and its unit.",
-    "guidance": {
-      "useWhen": "Name a chart series and its unit.",
-      "combineWith": [
-        "chart",
-        "bar-chart"
-      ],
-      "avoid": "Do not distinguish data series by color alone.",
-      "verify": [
-        "series name",
-        "unit",
-        "contrast"
       ]
     }
   },
@@ -1227,25 +1159,6 @@
     }
   },
   {
-    "id": "gaze",
-    "name": "Gaze",
-    "family": "Identity & conversation",
-    "module": "identity",
-    "description": "Express an observed state with the eyes.",
-    "guidance": {
-      "useWhen": "Set the eye expression within an agent illustration.",
-      "combineWith": [
-        "agent-avatar"
-      ],
-      "avoid": "Do not use eyes without the agent silhouette as a standalone status.",
-      "verify": [
-        "state",
-        "static rendering",
-        "reduced motion"
-      ]
-    }
-  },
-  {
     "id": "message",
     "name": "Message",
     "family": "Identity & conversation",
@@ -1255,35 +1168,13 @@
       "useWhen": "Keep a speaker, their content and optional time together.",
       "combineWith": [
         "transcript",
-        "agent-avatar",
-        "attachment"
+        "agent-avatar"
       ],
       "avoid": "Do not infer a speaker from color or position alone.",
       "verify": [
         "speaker",
         "timestamp",
         "long content"
-      ]
-    }
-  },
-  {
-    "id": "activity",
-    "name": "Activity",
-    "family": "Identity & conversation",
-    "module": "identity",
-    "description": "Describe the actual state of a reply.",
-    "guidance": {
-      "useWhen": "Announce the observed state of an agent reply.",
-      "combineWith": [
-        "agent-avatar",
-        "transcript"
-      ],
-      "avoid": "Do not mark a reply complete without confirmation.",
-      "verify": [
-        "working",
-        "interrupted",
-        "done",
-        "status announcement"
       ]
     }
   },
@@ -1296,9 +1187,7 @@
     "guidance": {
       "useWhen": "Present a labeled thread that follows new replies until the reader scrolls away.",
       "combineWith": [
-        "message",
-        "reading-anchor",
-        "activity"
+        "message"
       ],
       "avoid": "Do not force scrolling to the newest content while the reader is reviewing older messages.",
       "verify": [
@@ -1306,66 +1195,6 @@
         "reader scroll position",
         "jump to latest",
         "keyboard scrolling"
-      ]
-    }
-  },
-  {
-    "id": "reading-anchor",
-    "name": "ReadingAnchor",
-    "family": "Identity & conversation",
-    "module": "identity",
-    "description": "Return to the newest message when ready.",
-    "guidance": {
-      "useWhen": "Return to the newest content when the reader chooses.",
-      "combineWith": [
-        "transcript",
-        "button"
-      ],
-      "avoid": "Do not force the reader away from older content.",
-      "verify": [
-        "keyboard activation",
-        "new content while reading",
-        "scroll target"
-      ]
-    }
-  },
-  {
-    "id": "aspect-ratio",
-    "name": "AspectRatio",
-    "family": "Foundations",
-    "module": "editorial",
-    "description": "Reserve the media frame while content loads.",
-    "guidance": {
-      "useWhen": "Reserve a predictable media frame while content loads.",
-      "combineWith": [
-        "asset",
-        "card"
-      ],
-      "avoid": "Use the media native aspect ratio when cropping would conceal necessary content.",
-      "verify": [
-        "loading",
-        "responsive width",
-        "content fit"
-      ]
-    }
-  },
-  {
-    "id": "direction",
-    "name": "Direction",
-    "family": "Foundations",
-    "module": "editorial",
-    "description": "Set the reading and interaction direction of a region.",
-    "guidance": {
-      "useWhen": "Set the reading and interaction direction of a region.",
-      "combineWith": [
-        "text",
-        "tabs"
-      ],
-      "avoid": "Keep the direction consistent with the content and host locale.",
-      "verify": [
-        "left-to-right",
-        "right-to-left",
-        "keyboard movement"
       ]
     }
   },
@@ -1399,7 +1228,6 @@
     "guidance": {
       "useWhen": "Frame a media asset at the requested size.",
       "combineWith": [
-        "aspect-ratio",
         "card"
       ],
       "avoid": "Preserve the meaning and accessible name of the supplied content.",
@@ -1407,87 +1235,6 @@
         "size",
         "crop",
         "accessible name"
-      ]
-    }
-  },
-  {
-    "id": "gradient",
-    "name": "Gradient",
-    "family": "Foundations",
-    "module": "editorial",
-    "description": "Blend two palette roles on a decorative surface.",
-    "guidance": {
-      "useWhen": "Apply a decorative gradient using a shared tone.",
-      "combineWith": [
-        "surface",
-        "text"
-      ],
-      "avoid": "Ensure overlaid content remains readable.",
-      "verify": [
-        "contrast",
-        "light",
-        "dark"
-      ]
-    }
-  },
-  {
-    "id": "elevation",
-    "name": "Elevation",
-    "family": "Foundations",
-    "module": "editorial",
-    "description": "Lift a surface above its surroundings.",
-    "guidance": {
-      "useWhen": "Express a surface layer with flat, raised or floating elevation.",
-      "combineWith": [
-        "surface",
-        "popover",
-        "dialog"
-      ],
-      "avoid": "Use elevation only when it clarifies a layering relationship.",
-      "verify": [
-        "layer order",
-        "contrast",
-        "forced colors"
-      ]
-    }
-  },
-  {
-    "id": "kbd",
-    "name": "KeyboardShortcut",
-    "family": "Foundations",
-    "module": "editorial",
-    "description": "Show the keys for an available command.",
-    "guidance": {
-      "useWhen": "Show the keys for an available command.",
-      "combineWith": [
-        "command",
-        "tooltip"
-      ],
-      "avoid": "Provide the named action independently of its shortcut.",
-      "verify": [
-        "accessible label",
-        "platform key names",
-        "wrapping"
-      ]
-    }
-  },
-  {
-    "id": "post",
-    "name": "Post",
-    "family": "Foundations",
-    "module": "editorial",
-    "description": "Set the reading width and rhythm of longer copy.",
-    "guidance": {
-      "useWhen": "Present longer editorial content with a readable measure.",
-      "combineWith": [
-        "heading",
-        "text"
-      ],
-      "avoid": "Use ordinary task layout for short interactive controls.",
-      "verify": [
-        "heading hierarchy",
-        "reading width",
-        "narrow layout"
       ]
     }
   },
@@ -1500,8 +1247,7 @@
     "guidance": {
       "useWhen": "Present a labeled responsive collection of items.",
       "combineWith": [
-        "list-header",
-        "list-footer"
+        "list-header"
       ],
       "avoid": "Do not use a grid when comparison depends on aligned columns.",
       "verify": [
@@ -1533,27 +1279,6 @@
     }
   },
   {
-    "id": "list-footer",
-    "name": "ListFooter",
-    "family": "Collections",
-    "module": "editorial",
-    "description": "Show a collection total or its next action.",
-    "guidance": {
-      "useWhen": "Place collection totals or a next action after the items.",
-      "combineWith": [
-        "list",
-        "count",
-        "pagination"
-      ],
-      "avoid": "Do not put critical task context only after a long collection.",
-      "verify": [
-        "empty collection",
-        "long text",
-        "action focus"
-      ]
-    }
-  },
-  {
     "id": "top",
     "name": "PageHeader",
     "family": "Collections",
@@ -1570,45 +1295,6 @@
         "heading hierarchy",
         "long title",
         "narrow layout"
-      ]
-    }
-  },
-  {
-    "id": "bottom-info",
-    "name": "BottomInfo",
-    "family": "Feedback",
-    "module": "editorial",
-    "description": "Keep supporting information with the decision it explains.",
-    "guidance": {
-      "useWhen": "Keep supporting information near the decision it explains.",
-      "combineWith": [
-        "bottom-action",
-        "button"
-      ],
-      "avoid": "Do not hide essential consequences behind decorative content.",
-      "verify": [
-        "accessible label",
-        "reading order",
-        "narrow layout"
-      ]
-    }
-  },
-  {
-    "id": "highlight",
-    "name": "Highlight",
-    "family": "Feedback",
-    "module": "editorial",
-    "description": "Draw attention to a word or part of a surface.",
-    "guidance": {
-      "useWhen": "Mark a relevant span within content.",
-      "combineWith": [
-        "text"
-      ],
-      "avoid": "Do not depend on highlight color alone to convey a warning or error.",
-      "verify": [
-        "contrast",
-        "surrounding context",
-        "wrapping"
       ]
     }
   },
@@ -1633,83 +1319,6 @@
     }
   },
   {
-    "id": "toast-stack",
-    "name": "ToastStack",
-    "family": "Feedback",
-    "module": "editorial",
-    "description": "Present and dismiss independent notifications.",
-    "guidance": {
-      "useWhen": "Present independently dismissible notifications.",
-      "combineWith": [],
-      "avoid": "Do not use a transient notice as the only record of a critical outcome. Pass items instead of nesting Toast children.",
-      "verify": [
-        "multiple notices",
-        "dismissal",
-        "screen reader announcement"
-      ]
-    }
-  },
-  {
-    "id": "table-row",
-    "name": "TableRow",
-    "family": "Data",
-    "module": "editorial",
-    "description": "Pair a row heading with its value.",
-    "guidance": {
-      "useWhen": "Pair one named value with its label.",
-      "combineWith": [
-        "amount-top"
-      ],
-      "avoid": "Do not use this description row as a table row element or nest it inside RecordFacts.",
-      "verify": [
-        "long value",
-        "units",
-        "missing value"
-      ]
-    }
-  },
-  {
-    "id": "amount-top",
-    "name": "AmountTop",
-    "family": "Data",
-    "module": "editorial",
-    "description": "Lead with a quantity and its unit.",
-    "guidance": {
-      "useWhen": "Emphasize a named amount with its unit and supporting detail.",
-      "combineWith": [
-        "record-facts",
-        "bottom-info"
-      ],
-      "avoid": "Do not omit units or imply precision that is not known.",
-      "verify": [
-        "unit",
-        "long values",
-        "missing value"
-      ]
-    }
-  },
-  {
-    "id": "bar-chart",
-    "name": "BarChart",
-    "family": "Data",
-    "module": "editorial",
-    "description": "Compare signed or missing readings against a common zero.",
-    "guidance": {
-      "useWhen": "Compare named signed readings from a common zero.",
-      "combineWith": [
-        "legend",
-        "data-table"
-      ],
-      "avoid": "Do not render a missing reading as a zero value.",
-      "verify": [
-        "negative readings",
-        "missing values",
-        "units",
-        "source and time"
-      ]
-    }
-  },
-  {
     "id": "avatar",
     "name": "Avatar",
     "family": "Identity & conversation",
@@ -1726,66 +1335,6 @@
         "accessible name",
         "failed image",
         "small size"
-      ]
-    }
-  },
-  {
-    "id": "bubble",
-    "name": "Bubble",
-    "family": "Identity & conversation",
-    "module": "editorial",
-    "description": "Group a speaker’s content by its direction.",
-    "guidance": {
-      "useWhen": "Group conversational content by incoming or outgoing direction.",
-      "combineWith": [
-        "message",
-        "transcript"
-      ],
-      "avoid": "Do not rely on alignment alone to identify the speaker.",
-      "verify": [
-        "long content",
-        "speaker label",
-        "narrow layout"
-      ]
-    }
-  },
-  {
-    "id": "attachment",
-    "name": "Attachment",
-    "family": "Identity & conversation",
-    "module": "editorial",
-    "description": "Show a file, its state and available actions.",
-    "guidance": {
-      "useWhen": "Show a named file with optional progress and actions.",
-      "combineWith": [
-        "composer",
-        "message"
-      ],
-      "avoid": "Do not expose remove or open actions without host support.",
-      "verify": [
-        "upload progress",
-        "missing preview",
-        "available actions"
-      ]
-    }
-  },
-  {
-    "id": "marker",
-    "name": "Marker",
-    "family": "Identity & conversation",
-    "module": "editorial",
-    "description": "Place a named event between messages.",
-    "guidance": {
-      "useWhen": "Mark a named event in a conversation or sequence.",
-      "combineWith": [
-        "transcript",
-        "message"
-      ],
-      "avoid": "Do not convey the event only through the marker color.",
-      "verify": [
-        "event text",
-        "contrast",
-        "narrow layout"
       ]
     }
   },
@@ -1819,8 +1368,7 @@
     "guidance": {
       "useWhen": "Inspect named run steps and their observed details.",
       "combineWith": [
-        "accordion",
-        "activity"
+        "accordion"
       ],
       "avoid": "Do not report an unobserved step as complete.",
       "verify": [
@@ -1828,27 +1376,6 @@
         "complete",
         "failed",
         "keyboard disclosure"
-      ]
-    }
-  },
-  {
-    "id": "input-group",
-    "name": "InputGroup",
-    "family": "Forms",
-    "module": "inputs",
-    "description": "Keep an input and its prefix or action together.",
-    "guidance": {
-      "useWhen": "Edit one value with a directly related prefix, suffix or action.",
-      "combineWith": [
-        "button",
-        "help-text",
-        "field-error"
-      ],
-      "avoid": "Do not combine unrelated fields in one group.",
-      "verify": [
-        "focus",
-        "validation",
-        "narrow width"
       ]
     }
   },
@@ -1873,26 +1400,11 @@
     }
   },
   {
-    "id": "split-text-field",
-    "name": "SplitTextField",
-    "family": "Forms",
-    "module": "inputs",
-    "description": "Edit related segments with individual labels.",
-    "guidance": {
-      "useWhen": "Edit related segments with independent accessible labels.",
-      "combineWith": [],
-      "avoid": "Use one field when segments have no separate meaning. Individual parts do not expose a description or error association.",
-      "verify": [
-        "part labels",
-        "maximum length",
-        "keyboard editing"
-      ]
-    }
-  },
-  {
     "id": "slider",
     "name": "Slider",
-    "exports": ["RangeSlider"],
+    "exports": [
+      "RangeSlider"
+    ],
     "family": "Forms",
     "module": "inputs",
     "description": "Choose a bounded value or interval.",
@@ -1904,105 +1416,6 @@
         "minimum",
         "maximum",
         "keyboard"
-      ]
-    }
-  },
-  {
-    "id": "numeric-spinner",
-    "name": "NumericSpinner",
-    "family": "Forms",
-    "module": "inputs",
-    "description": "Change a bounded integer one step at a time.",
-    "guidance": {
-      "useWhen": "Adjust a bounded integer one step at a time.",
-      "combineWith": [],
-      "avoid": "Use a slider for a continuous range. Use the built-in help property for supporting text.",
-      "verify": [
-        "minimum",
-        "maximum",
-        "disabled"
-      ]
-    }
-  },
-  {
-    "id": "rating",
-    "name": "Rating",
-    "family": "Forms",
-    "module": "inputs",
-    "description": "Read or set a score on a labeled scale.",
-    "guidance": {
-      "useWhen": "Read or choose a score from a small labeled ordered scale.",
-      "combineWith": [
-        "help-text"
-      ],
-      "avoid": "Do not use a rating for a non-ordered set of categories.",
-      "verify": [
-        "keyboard selection",
-        "read-only",
-        "reduced motion"
-      ]
-    }
-  },
-  {
-    "id": "agreement",
-    "name": "Agreement",
-    "family": "Forms",
-    "module": "inputs",
-    "description": "Review individual terms and change their collective selection.",
-    "guidance": {
-      "useWhen": "Review and select individual terms, with a control for selecting all enabled entries.",
-      "combineWith": [
-        "button",
-        "link"
-      ],
-      "avoid": "Do not treat selecting terms as proof of submission or acceptance until the host confirms it.",
-      "verify": [
-        "partial selection",
-        "disabled entries",
-        "select all",
-        "detail access"
-      ]
-    }
-  },
-  {
-    "id": "keypad",
-    "name": "Keypad",
-    "family": "Forms",
-    "module": "inputs",
-    "description": "Enter a number or letters with a touch keypad.",
-    "guidance": {
-      "useWhen": "Provide on-screen keys for a host-managed input.",
-      "combineWith": [
-        "text-field",
-        "button"
-      ],
-      "avoid": "Do not assume the private layout alone secures sensitive entry.",
-      "verify": [
-        "disabled",
-        "delete",
-        "optional submit",
-        "number and alphabet modes"
-      ]
-    }
-  },
-  {
-    "id": "form",
-    "name": "Form",
-    "family": "Forms",
-    "module": "inputs",
-    "description": "Submit and reset a labeled group of native fields.",
-    "guidance": {
-      "useWhen": "Group labeled fields for an explicit submit or reset.",
-      "combineWith": [
-        "text-field",
-        "field-error",
-        "button"
-      ],
-      "avoid": "Do not infer success before the host confirms submission. Set button type explicitly for submit and reset actions.",
-      "verify": [
-        "validation",
-        "submit",
-        "reset"
       ]
     }
   },
@@ -2082,87 +1495,6 @@
     }
   },
   {
-    "id": "hover-card",
-    "name": "HoverCard",
-    "family": "Layers",
-    "module": "advanced",
-    "description": "Inspect related detail on hover, focus or touch.",
-    "guidance": {
-      "useWhen": "Show supplementary detail from a labeled trigger.",
-      "combineWith": [
-        "link",
-        "popover"
-      ],
-      "avoid": "Do not put essential information behind hover alone.",
-      "verify": [
-        "focus",
-        "touch",
-        "escape dismissal"
-      ]
-    }
-  },
-  {
-    "id": "command",
-    "name": "Command",
-    "family": "Layers",
-    "module": "advanced",
-    "description": "Find and invoke an enabled command by name.",
-    "guidance": {
-      "useWhen": "Find and invoke an available named command.",
-      "combineWith": [
-        "dialog",
-        "search-field"
-      ],
-      "avoid": "Do not show commands the host cannot execute.",
-      "verify": [
-        "empty results",
-        "disabled command",
-        "keyboard selection",
-        "focus restoration"
-      ]
-    }
-  },
-  {
-    "id": "menubar",
-    "name": "Menubar",
-    "family": "Navigation",
-    "module": "advanced",
-    "description": "Move between keyboard-accessible command menus.",
-    "guidance": {
-      "useWhen": "Group application commands into named menus.",
-      "combineWith": [
-        "action-menu",
-        "button"
-      ],
-      "avoid": "Use navigation links for destination changes rather than commands.",
-      "verify": [
-        "keyboard navigation",
-        "disabled commands",
-        "menu dismissal"
-      ]
-    }
-  },
-  {
-    "id": "navigation-menu",
-    "name": "NavigationMenu",
-    "family": "Navigation",
-    "module": "advanced",
-    "description": "Browse groups of related destinations.",
-    "guidance": {
-      "useWhen": "Group related destinations under named navigation triggers.",
-      "combineWith": [
-        "navigation-list",
-        "link"
-      ],
-      "avoid": "Do not mix destination links and state-changing commands without clear distinction.",
-      "verify": [
-        "keyboard navigation",
-        "destination labels",
-        "dismissal"
-      ]
-    }
-  },
-  {
     "id": "sidebar",
     "name": "Sidebar",
     "family": "Navigation",
@@ -2203,67 +1535,6 @@
     }
   },
   {
-    "id": "carousel",
-    "name": "Carousel",
-    "family": "Navigation",
-    "module": "advanced",
-    "description": "Move between ordered items at your own pace.",
-    "guidance": {
-      "useWhen": "Let the reader move through ordered items at their own pace.",
-      "combineWith": [
-        "icon-button"
-      ],
-      "avoid": "Do not make essential content depend on automatic movement. Its current position cannot be controlled by an external Pagination.",
-      "verify": [
-        "first and last item",
-        "empty items",
-        "touch and keyboard",
-        "reduced motion"
-      ]
-    }
-  },
-  {
-    "id": "stepper",
-    "name": "Stepper",
-    "family": "Navigation",
-    "module": "advanced",
-    "description": "Read the current stage of a multi-step task.",
-    "guidance": {
-      "useWhen": "Show the current stage within a known sequence.",
-      "combineWith": [
-        "progress",
-        "button"
-      ],
-      "avoid": "Do not imply an unconfirmed stage is complete.",
-      "verify": [
-        "current stage",
-        "missing current ID",
-        "long labels",
-        "narrow layout"
-      ]
-    }
-  },
-  {
-    "id": "resizable",
-    "name": "Resizable",
-    "family": "Foundations",
-    "module": "advanced",
-    "description": "Change the relative size of two panes by pointer or keyboard.",
-    "guidance": {
-      "useWhen": "Let someone adjust the relative width of two panes.",
-      "combineWith": [
-        "sidebar-layout",
-        "scroll-area"
-      ],
-      "avoid": "Keep pane content usable at its minimum size.",
-      "verify": [
-        "pointer resize",
-        "keyboard resize",
-        "minimum size"
-      ]
-    }
-  },
-  {
     "id": "calendar",
     "name": "Calendar",
     "family": "Forms",
@@ -2277,46 +1548,6 @@
         "date limits",
         "keyboard navigation",
         "invalid date"
-      ]
-    }
-  },
-  {
-    "id": "date-picker",
-    "name": "DatePicker",
-    "family": "Forms",
-    "module": "advanced",
-    "description": "Open a calendar to change a date.",
-    "guidance": {
-      "useWhen": "Choose a local date from a trigger and calendar.",
-      "combineWith": [],
-      "avoid": "Do not use a date picker for a date-and-time value. The control already contains its label and calendar.",
-      "verify": [
-        "date limits",
-        "selection",
-        "popup dismissal",
-        "focus"
-      ]
-    }
-  },
-  {
-    "id": "questionnaire",
-    "name": "Questionnaire",
-    "family": "Forms",
-    "module": "advanced",
-    "description": "Answer one or more questions and review the resulting answers.",
-    "guidance": {
-      "useWhen": "Collect a sequence of single-choice, multiple-choice or text answers.",
-      "combineWith": [
-        "radio-group",
-        "checkbox",
-        "textarea"
-      ],
-      "avoid": "Do not assume answers are saved before the host confirms completion.",
-      "verify": [
-        "required answer",
-        "optional answer",
-        "previous question",
-        "completion"
       ]
     }
   },
@@ -2454,7 +1685,6 @@
     "guidance": {
       "useWhen": "Prepare a message with optional attachments and tools.",
       "combineWith": [
-        "attachment",
         "action-menu",
         "transcript"
       ],

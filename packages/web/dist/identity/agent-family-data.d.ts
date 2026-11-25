@@ -1,7 +1,7 @@
 export type AgentMotionFit = readonly [slide: number, lift: number, tilt: number, gazeX: number, gazeY: number];
 export declare const agentColors: {
-    readonly "slate.300": "#A1B5C5";
-    readonly "slate.400": "#8195A3";
+    readonly "slate.300": "#79B3D6";
+    readonly "slate.400": "#5C9BC2";
     readonly "blue.300": "#86C0FE";
     readonly "blue.400": "#60A7F5";
     readonly "indigo.300": "#A6B4F7";
@@ -12,13 +12,13 @@ export declare const agentColors: {
     readonly "rose.300": "#D1ABBB";
     readonly "rose.400": "#BE94A7";
     readonly "red.400": "#FF7E77";
-    readonly "coral.200": "#E8C1B0";
-    readonly "coral.300": "#D5A59A";
+    readonly "terracotta.200": "#E7B9AE";
+    readonly "terracotta.300": "#D88F7D";
     readonly "orange.400": "#F69A57";
     readonly "earth.300": "#C5B59F";
     readonly "ochre.200": "#E0CE9D";
     readonly "ochre.300": "#D6BB84";
-    readonly "yellow.250": "#FFDC63";
+    readonly "yellow.300": "#E9D985";
     readonly "lime.300": "#BED68F";
     readonly "sage.300": "#B0BEAB";
     readonly "sage.400": "#97AB91";
@@ -37,7 +37,7 @@ export declare const agentShapes: {
     };
     readonly sol: {
         readonly name: "Sol";
-        readonly color: "coral.300";
+        readonly color: "terracotta.300";
         readonly center: readonly [50, 49];
         readonly motion: "sol";
         readonly fit: readonly [1, 1, 1, 1, 1];
@@ -93,7 +93,7 @@ export declare const agentShapes: {
     };
     readonly "tilted-oval": {
         readonly name: "Tilted oval";
-        readonly color: "coral.200";
+        readonly color: "terracotta.200";
         readonly center: readonly [50, 55];
         readonly motion: "kai";
         readonly fit: readonly [1, 1, 0.86, 1, 1];

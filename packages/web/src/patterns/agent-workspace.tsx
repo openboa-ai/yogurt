@@ -44,7 +44,7 @@ export function AgentRow({
       <AgentAvatar
         agent={agent.art}
         state={agent.state}
-        size={36}
+        size={28}
       />
     ) : null);
   return (
@@ -59,6 +59,7 @@ export function AgentRow({
       {avatar && (
         <span className="yg-agent-row-art" aria-hidden="true">
           {avatar}
+          {!agent.avatar && <span className="yg-agent-row-presence" data-state={agent.state} />}
         </span>
       )}
       <span className="yg-agent-row-copy">
@@ -78,9 +79,12 @@ export function AgentRow({
             {agent.unread && <span className="yg-agent-row-new">Unread</span>}
           </span>
           {(agent.preview || agent.role) && (
-            <span className="yg-agent-row-preview">
-              {agent.preview || agent.role}
-            </span>
+            <>
+              <span className="yg-agent-row-sep" aria-hidden="true">·</span>
+              <span className="yg-agent-row-preview">
+                {agent.preview || agent.role}
+              </span>
+            </>
           )}
         </span>
       </span>
@@ -145,7 +149,7 @@ export function RuntimePanel({
         {(canWatch || canRequest || canReturn || canReconnect) && (
           <div className="yg-runtime-actions">
             {canWatch && <Button emphasis="soft" onClick={onWatch}>Watch screen</Button>}
-            {canRequest && <Button emphasis={state === "waiting" ? "filled" : "quiet"} onClick={onRequestControl}>Request control</Button>}
+            {canRequest && <Button emphasis={state === "waiting" ? "filled" : "quiet"} tone={state === "waiting" ? "brand" : "neutral"} onClick={onRequestControl}>Request control</Button>}
             {canReturn && <Button onClick={onReturnControl}>Return control</Button>}
             {canReconnect && <Button emphasis="soft" onClick={onReconnect}>Reconnect</Button>}
           </div>

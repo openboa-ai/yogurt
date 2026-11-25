@@ -58,7 +58,7 @@ function Motion() {
   const [state, setState] = useState<GazeState>("ready");
   return <Surface className="guide-panel" id="motion-demo">
     <Stack gap={16}>
-      <Select label="Agent state" options={states.map(([id, label]) => ({id, label}))} value={state} onChange={event => setState(event.currentTarget.value as GazeState)} />
+      <Select label="Agent state" options={states.map(([id, label]) => ({id, label}))} value={state} onValueChange={next => setState(next as GazeState)} />
       <Inline gap={24}><AgentAvatar agent="Kai" state={state} size={96} /><AgentAvatar agent="Kai" state={state} size={24} /></Inline>
       <Text role="status">Kai · {states.find(([id]) => id === state)?.[1]}</Text>
     </Stack>

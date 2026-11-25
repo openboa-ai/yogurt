@@ -6,15 +6,10 @@ const variants: Readonly<Record<string, Readonly<Record<string, string | null>>>
   "segmented-control": { "segmented-control": null },
   switch: { "toggle-switch": null },
   "sidebar-layout": { "sidebar-collapse": null },
-  command: { "command-palette": null, "command-button": null },
   "action-menu": { "dynamic-menu": null },
   "text-field": { "spring-input": null },
-  stepper: { "step-progress": null, "agent-steps": null },
-  "toast-stack": { notifications: null },
-  "radio-group": { "focus-options": "FocusPicker", "plan-options": "PlanSwitch" },
   select: { "spring-dropdown": null },
   slider: { "range-slider": "RangeSlider", "elastic-slider": "RangeSlider" },
-  tooltip: { "tooltip-detail": "MorphTooltip" },
 };
 
 export const componentPreviews = Object.fromEntries(

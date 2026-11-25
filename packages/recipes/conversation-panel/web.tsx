@@ -1,19 +1,23 @@
 "use client";
+import type { ReactNode } from "react";
 import {
-  Button,
-  ButtonGroup,
+  Composer,
   Message,
   Stack,
-  Textarea,
   Transcript,
 } from "@openboa/yogurt";
+
 export interface ThreadMessage {
   id: string;
   speaker: string;
   body: string;
   time?: string;
   dateTime?: string;
+  variant?: "sent" | "received";
+  avatar?: ReactNode;
+  actions?: ReactNode;
 }
+
 export function ConversationPanel({
   messages,
   revision,
@@ -31,58 +35,34 @@ export function ConversationPanel({
   pending?: boolean;
   onStop?: () => void;
 }) {
-  const ready = !!draft.trim() && !pending;
-  function send() {
-    if (ready) onSend(draft.trim());
-  }
   return (
-    <Stack gap={16}>
-      <Transcript label="Conversation" revision={revision}>
+    <Stack gap={12} className="yg-conversation-panel">
+      <Transcript label="Conversation" revision={revision} readingAnchor="when-away">
         {messages.map((m) => (
           <Message
             key={m.id}
             speaker={m.speaker}
             time={m.time}
             dateTime={m.dateTime}
+            variant={m.variant ?? (m.speaker === "You" ? "sent" : "received")}
+            avatar={m.avatar}
+            actions={m.actions}
           >
             {m.body}
           </Message>
         ))}
       </Transcript>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          send();
+      <Composer
+        label="Message"
+        sendTone="neutral"
+        value={draft}
+        onValueChange={onDraftChange}
+        pending={pending}
+        onStop={onStop}
+        onSend={({ text }) => {
+          if (text) onSend(text);
         }}
-      >
-        <Stack>
-          <Textarea
-            label="Message"
-            value={draft}
-            onChange={(e) => onDraftChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (
-                e.key === "Enter" &&
-                (e.metaKey || e.ctrlKey) &&
-                !e.nativeEvent.isComposing
-              ) {
-                e.preventDefault();
-                send();
-              }
-            }}
-          />
-          <ButtonGroup label="Message actions">
-            <Button type="submit" disabled={!ready}>
-              Send
-            </Button>
-            {pending && onStop && (
-              <Button emphasis="quiet" onClick={onStop}>
-                Stop
-              </Button>
-            )}
-          </ButtonGroup>
-        </Stack>
-      </form>
+      />
     </Stack>
   );
 }

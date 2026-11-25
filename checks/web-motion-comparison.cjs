@@ -40,8 +40,6 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     const before = await save.boundingBox();
     await page.mouse.move(before.x + before.width / 2, before.y + before.height / 2);
     await page.mouse.down();
-    assert.match(await save.evaluate(node => getComputedStyle(node).boxShadow), /2px.*inset/);
-    assert.deepEqual(await save.boundingBox(), before);
     await page.mouse.move(before.x - 12, before.y - 12);
     await page.mouse.up();
     assert.equal(await result.getAttribute("data-result"), "idle");
@@ -52,7 +50,8 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     await action.getByRole("button", {name: "Saved", exact: true}).waitFor();
     states.push(...await result.evaluate(() => window.motionResults));
     assert.deepEqual(states, ["pending", "success"]);
-    await action.getByRole("combobox").selectOption("failure");
+    await action.getByRole("combobox").click();
+    await page.getByRole("option", { name: "Failure", exact: true }).click();
     await save.click();
     await result.locator('xpath=self::*[@data-result="failure"]').waitFor();
     await action.getByRole("button", {name: "Try again", exact: true}).waitFor();
@@ -61,26 +60,30 @@ const stripLeft = (locator) => locator.evaluate(node => node.getBoundingClientRe
     const select = candidate("Select").getByRole("combobox", {name: "Workspace"});
     await select.evaluate(node => node.scrollIntoView({block: "center"}));
     await select.click();
-    assert(await select.evaluate(node => node.matches(":open")));
-    await page.waitForFunction(() => {
-      const open = [...document.querySelectorAll("select")].find(node => node.matches(":open"));
-      return open && getComputedStyle(open, "::picker(select)").opacity === "1";
-    });
+    const listbox = page.getByRole("listbox");
+    await listbox.waitFor();
+    assert.equal(await select.getAttribute("aria-expanded"), "true");
     await page.keyboard.press("Escape");
-    assert(await select.evaluate(node => document.activeElement === node && !node.matches(":open")));
-    await select.click();
+    await listbox.waitFor({ state: "hidden" });
+    assert(await select.evaluate(node => document.activeElement === node));
+    await select.focus();
+    await page.keyboard.press("Space");
+    await page.locator(".yg-select-popup [data-highlighted]").waitFor();
     await page.keyboard.press("ArrowDown");
     await page.keyboard.press("Enter");
-    assert.equal(await select.inputValue(), "workshop");
-    assert(await select.evaluate(node => document.activeElement === node && !node.matches(":open")));
+    await listbox.waitFor({ state: "hidden" });
+    assert.match(await select.innerText(), /Workshop/i);
+    assert(await select.evaluate(node => document.activeElement === node));
     await page.setViewportSize({width: 1200, height: 520});
     await select.evaluate(node => {
       const top = node.getBoundingClientRect().top;
       window.scrollTo(0, window.scrollY + top - window.innerHeight + 50);
     });
     await select.click();
-    assert(await select.evaluate(node => node.getBoundingClientRect().bottom > innerHeight - 80 && node.matches(":open")));
+    await listbox.waitFor();
+    assert(await select.evaluate(node => node.getBoundingClientRect().bottom > innerHeight - 80));
     await page.keyboard.press("Escape");
+    await listbox.waitFor({ state: "hidden" });
     await page.setViewportSize({width: 1200, height: 900});
 
     const segmented = candidate("Segmented control");

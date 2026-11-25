@@ -9,14 +9,20 @@ import { animateTabMarker } from "./tab-motion.js";
 
 export function Link({
   emphasis,
+  tone,
   size = "regular",
   className,
   children,
   ...props
-}: ComponentProps<"a"> & { href: string; emphasis?: ButtonProps["emphasis"]; size?: ButtonProps["size"] }) {
+}: ComponentProps<"a"> & {
+  href: string;
+  emphasis?: ButtonProps["emphasis"];
+  tone?: ButtonProps["tone"];
+  size?: ButtonProps["size"];
+}) {
   if (emphasis) {
     return <a {...props} className={cx("yg-button", "yg-action-link", className)}
-      data-emphasis={emphasis} data-control-size={size}>
+      data-emphasis={emphasis} data-tone={tone} data-control-size={size}>
       <span className="yg-button-label">{children}</span>
     </a>;
   }
@@ -118,7 +124,7 @@ export function Tabs({
   items: { id: string; label: string; panel: ReactNode; icon?: IconName; disabled?: boolean }[];
   value: string;
   onValueChange: (id: string) => void;
-  presentation?: "pill" | "dock";
+  presentation?: "underline" | "pill" | "dock";
 }) {
   const list = useRef<HTMLDivElement>(null);
   const marker = useRef<HTMLDivElement>(null);
