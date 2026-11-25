@@ -68,7 +68,7 @@ export default function BrandPage() {
           <img src={signature} alt="OpenBoa" width={184} height={37} />
           <Stack gap={12}>
             <Heading>Every limit has a shelf life.</Heading>
-            <Text>A good idea can be a few years early. OpenBoa builds products and businesses around what people can now do with AI.</Text>
+            <Text>Nothing is permanently out of reach. OpenBoa exists to break what stands between imagination and reality.</Text>
           </Stack>
         </Grid>
       </section>
@@ -88,12 +88,12 @@ export default function BrandPage() {
         <Inline gap={16}><Link href="/library#emoji">Project emoji</Link><Link href="/agents">Agent family</Link></Inline>
       </GuideSection>
       <GuideSection id="voice" title="Voice">
-        <Text>“Shelf life” gives a big claim an ordinary unit of time. The About copy follows it back to the person whose idea arrived early.</Text>
+        <Text>“Shelf life” gives a big claim an ordinary unit of time. The Vision copy pairs it directly with OpenBoa’s purpose—breaking what stands between imagination and reality.</Text>
         <Text>A repository description can reward a second reading. Someone looking for a missing agent needs the result and a way forward. The roster says <strong>No matching agents.</strong> The button reads <strong>Clear filters</strong>.</Text>
         <Disclosure label="Plainspoken copy study">
           <Stack gap={12}>
             <Text><strong>Home.</strong> We can build more of what we imagine.</Text>
-            <Text><strong>About.</strong> OpenBoa develops products and businesses with AI at their core. We start with what people want to do.</Text>
+            <Text><strong>Vision.</strong> Nothing is permanently out of reach. OpenBoa exists to break what stands between imagination and reality.</Text>
           </Stack>
         </Disclosure>
         <Link href="/content/terms.json" download>English terms by context</Link>
