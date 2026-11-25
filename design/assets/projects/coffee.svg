@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title description">
+  <title id="title">coffee</title>
+  <desc id="description">A porcelain café cup and saucer with dark roast coffee, golden crema and rising steam.</desc>
+  <defs><clipPath id="contour"><path clip-rule="evenodd" d="M0 0H64V64H0Z M37.4 63 L37.8 58.6 C39.3 58.4 39.8 57.6 40.1 55.9 C40.3 54.6 40.6 54 41.3 54 C42.1 54 42.4 54.7 42.8 55.8 C43.3 57.2 43.9 57.7 45.4 57.4 L46.2 63 Z"/></clipPath></defs>
+  <g clip-path="url(#contour)">
+  <path id="saucer" data-token="neutral.300" fill="#C5C4BD" d="M5 49.4 C5.2 43.4 17.2 40.4 31.2 40.5 C45.2 40.6 57.2 43.8 57 49.8 C56.8 55.6 45 58.6 31 58.5 C17 58.4 4.8 55.2 5 49.4 Z"/>
+  <path id="saucer-well" data-token="neutral.400" fill="#9B9A93" d="M13.6 48.8 C13.8 45.6 21.6 43.8 31.2 43.9 C40.8 44 48.6 45.8 48.4 49 C48.2 52 40.6 53.8 31 53.7 C21.4 53.6 13.4 51.8 13.6 48.8 Z"/>
+  <path id="handle" data-token="neutral.300" fill="#C5C4BD" d="M44.2 25 C53 24.4 58.6 28.4 58 35 C57.4 41.4 51.2 44.8 43 44.2 L44 39.2 C49 39.4 52.6 37.6 52.9 34.4 C53.2 31.2 50 29.6 45.2 30 Z"/>
+  <path id="cup" data-token="neutral.200" fill="#E5E5E0" d="M9.6 22.4 L48.6 22.6 L46.6 39.2 C45.4 47.8 39 52 29.1 52 C19.2 52 12.8 47.6 11.6 39 Z"/>
+  <path id="cup-shade" data-token="neutral.300" fill="#C5C4BD" d="M35.5 28.5 C34.8 38.6 30.8 46.8 22.8 50.8 C24.8 51.6 26.9 52 29.1 52 C39 52 45.4 47.8 46.6 39.2 L48.6 22.6 C44.8 26.2 40.4 27.9 35.5 28.5 Z"/>
+  <path id="rim" data-token="neutral.100" fill="#F4F4F1" d="M9.6 22.4 C9.8 16.6 18.4 13.8 29.1 13.8 C39.8 13.8 48.4 16.8 48.6 22.6 C48.4 28.2 39.8 31 29.1 31 C18.4 31 9.8 28.2 9.6 22.4 Z"/>
+  <path id="brew" data-token="earth.950" fill="#2A231E" d="M13.4 22.3 C13.6 18.8 20.4 16.6 29.1 16.6 C37.8 16.6 44.6 18.9 44.8 22.4 C44.6 25.8 37.8 28 29.1 28 C20.4 28 13.6 25.8 13.4 22.3 Z"/>
+  <path id="crema" data-token="ochre.200" fill="#E0CE9D" d="M17.2 23.4 C20.4 20.4 26.8 19.4 34.8 20.2 C29.8 21.8 26 24.2 22.4 25.8 C19.8 26 17.6 24.8 17.2 23.4 Z"/>
+  <path id="steam" data-token="neutral.300" fill="#C5C4BD" d="M28.6 11.8 C25.8 10 25.4 7.4 28 5 C29.4 3.8 31.4 3.2 33.4 3.6 C31.2 5.2 30.2 6.6 31.4 8.2 C32.4 9.8 31.8 11.4 29.6 12.2 C29.2 12.3 28.9 12.1 28.6 11.8 Z"/>
+  </g>
+</svg>

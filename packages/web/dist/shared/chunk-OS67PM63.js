@@ -2,7 +2,7 @@
 import {
   AgentAvatar,
   agentPresenceLabels
-} from "./chunk-ENE3GVQC.js";
+} from "./chunk-IKFKYWZT.js";
 import {
   Status
 } from "./chunk-BG4OQ2LF.js";

@@ -1,12 +1,12 @@
 # U05A · Preserve each food mark at small sizes
 
-Design: DRAFT, revision 1. Implementation: NOT ADMITTED. Evidence for this change: NOT_RUN.
+Design: ACCEPTED, revision 2 (add `coffee` project mark for Coffee Chat). Implementation: COMPLETE. Evidence for this change: 128×128 transparent PNG & SVG exported from `emoji.json` tokens, verified at 16/24/32/96 px on Paper & Ink, plus `check:tokens`, `check:ui`, `design-sources.mjs`, and Guide `/library#emoji` checks passed.
 
 Parent: [I05 design r1](../../../intents/artwork/I05-choose-recognizable-art/spec.md) · criterion `I05-U05A`. Parent specification SHA-256 `df5c94ee0746fab7b492a9b30aff5ca5b410af59aa0b954f4dc1cebb2d8af0c0`.
 
 ## Decision and ownership
 
-Use the current yogurt cup, scored sourdough and freestanding peppered meatball. Each has one fitted, transparent cut into its exterior contour. Token names in the editable source are authoritative.
+Use the current yogurt cup, scored sourdough, freestanding peppered meatball and alabaster porcelain coffee cup and saucer (`coffee`, with dark roast coffee, golden crema, rising steam and lower-right saucer cut). Each has one fitted, transparent cut into its exterior contour. Token names in the editable source are authoritative.
 
 **Proposed writer.** Artwork and agents maintainer, `design/assets/projects`. **Consumer.** Project headers, chat messages and release notes. **Independent verifier.** An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 

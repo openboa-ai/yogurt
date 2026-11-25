@@ -15,7 +15,7 @@ const samples = [
   ["1f60a", "Smiling face"], ["1f44d", "Thumbs up"], ["1f525", "Fire"], ["1f680", "Rocket"],
   ["1f3a8", "Artist palette"], ["1f992", "Giraffe"], ["1f52d", "Telescope"], ["1f433", "Spouting whale"],
 ] as const;
-const ids = ["yogurt", "sourdough", "meatball"] as const;
+const ids = ["yogurt", "sourdough", "meatball", "coffee"] as const;
 const states = [
   ["ready", "Ready"], ["thinking", "Thinking"], ["working", "Working"], ["waiting", "Waiting for you"],
   ["blocked", "Blocked"], ["done", "Finished"],
@@ -86,7 +86,7 @@ export default function DesignSources() {
       <Link href="/tokens#catalog">Product component catalog</Link>
     </GuideSection>
     <GuideSection id="emoji" title="Project emoji">
-      <Text>A peeled lid identifies yogurt. One long score identifies sourdough. Three flecks of cracked pepper finish the round meatball.</Text>
+      <Text>A peeled lid identifies yogurt. One long score identifies sourdough. Three flecks of cracked pepper finish the round meatball. A porcelain cup and saucer with rising steam identifies coffee.</Text>
       <ProjectEmoji />
     </GuideSection>
     <GuideSection id="icons" title="Icons">
