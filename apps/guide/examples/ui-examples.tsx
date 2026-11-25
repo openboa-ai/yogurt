@@ -1017,7 +1017,7 @@ export function Example({
     case "project-mark":
       return (
         <Y.Inline gap={16}>
-          {projects.map((p) => (
+          {[...projects, { id: "coffee", label: "Coffee" }].map((p) => (
             <Y.ProjectMark
               key={p.id}
               project={p.id as Y.Project}

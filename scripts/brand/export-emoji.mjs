@@ -4,7 +4,14 @@ const directory = new URL("../../design/assets/projects/", import.meta.url);
 const source = JSON.parse(await readFile(new URL("emoji.json", directory), "utf8"));
 const { color } = JSON.parse(await readFile(new URL(source.palette, directory), "utf8"));
 
-for (const project of source.projects) {
+const filter = new Set(process.argv.slice(2));
+const targets = filter.size ? source.projects.filter(project => filter.has(project.name)) : source.projects;
+if (filter.size && targets.length !== filter.size) {
+  const known = new Set(targets.map(project => project.name));
+  throw new Error("Unknown project mark: " + [...filter].filter(name => !known.has(name)).join(", "));
+}
+
+for (const project of targets) {
   const layers = project.layers.map(layer => {
     const [hue, step] = layer.color.split(".");
     const fill = color[hue]?.[step];

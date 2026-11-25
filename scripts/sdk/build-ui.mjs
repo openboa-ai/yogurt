@@ -72,6 +72,7 @@ for (const [key, file] of Object.entries({
   yogurt: "projects/yogurt.svg",
   meatball: "projects/meatball.svg",
   sourdough: "projects/sourdough.svg",
+  coffee: "projects/coffee.svg",
 }))
   art[key] =
     "data:image/svg+xml;base64," +
