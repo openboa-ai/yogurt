@@ -86,7 +86,7 @@ export default function DesignSources() {
       <Link href="/tokens#catalog">Product component catalog</Link>
     </GuideSection>
     <GuideSection id="emoji" title="Project emoji">
-      <Text>A peeled lid identifies yogurt. One long score identifies sourdough. Three flecks of cracked pepper finish the round meatball. A sage cup and saucer with rising steam identifies coffee.</Text>
+      <Text>A peeled lid identifies yogurt. One long score identifies sourdough. Three flecks of cracked pepper finish the round meatball. A porcelain cup and saucer with rising steam identifies coffee.</Text>
       <ProjectEmoji />
     </GuideSection>
     <GuideSection id="icons" title="Icons">

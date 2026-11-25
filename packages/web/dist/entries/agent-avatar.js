@@ -2,7 +2,7 @@
 import {
   AgentAvatar,
   getAgentFamily
-} from "../shared/chunk-V5YH7RLS.js";
+} from "../shared/chunk-IKFKYWZT.js";
 import "../shared/chunk-5GJUJT3P.js";
 import "../shared/chunk-XELXU7JZ.js";
 import "../shared/chunk-5ZXHC2QO.js";

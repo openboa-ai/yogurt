@@ -6,7 +6,7 @@ Parent: [I05 design r1](../../../intents/artwork/I05-choose-recognizable-art/spe
 
 ## Decision and ownership
 
-Use the current yogurt cup, scored sourdough, freestanding peppered meatball and sage ceramic coffee cup and saucer (`coffee`, with dark roast coffee, golden crema, rising steam and lower-right saucer cut). Each has one fitted, transparent cut into its exterior contour. Token names in the editable source are authoritative.
+Use the current yogurt cup, scored sourdough, freestanding peppered meatball and alabaster porcelain coffee cup and saucer (`coffee`, with dark roast coffee, golden crema, rising steam and lower-right saucer cut). Each has one fitted, transparent cut into its exterior contour. Token names in the editable source are authoritative.
 
 **Proposed writer.** Artwork and agents maintainer, `design/assets/projects`. **Consumer.** Project headers, chat messages and release notes. **Independent verifier.** An illustrator checking exported marks at 16, 24 and 32 px on both system surfaces. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
