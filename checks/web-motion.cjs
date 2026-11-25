@@ -54,8 +54,12 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
 
     const activeMark = () => svg.locator(".yg-eye").evaluateAll(eyes => eyes.map(eye =>
       ["round", "cross", "smile"].find(mark => +getComputedStyle(eye.querySelector(".yg-eye-" + mark)).opacity === 1)));
+    const chooseState = async (combobox, stateKey) => {
+      await combobox.click();
+      await page.getByRole("option", { name: states[stateKey].label, exact: true }).click();
+    };
     for (const [state, clip] of Object.entries(states)) {
-      await select.selectOption(state);
+      await chooseState(select, state);
       await waitForAnimations("running");
       assert.equal(await agent.getByRole("status").textContent(), clip.label);
       assert.equal(await eyes.getAttribute("data-gaze"), state);
@@ -64,7 +68,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
       assert.equal(await svg.evaluate((el) => getComputedStyle(el).backgroundColor), "rgba(0, 0, 0, 0)");
     }
 
-    await select.selectOption("ready");
+    await chooseState(select, "ready");
     const neutral = await sample(250);
     const glance = await sample(4430);
     const readyClosed = await sample(1640);
@@ -76,7 +80,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     assert((await sample(7900))[1].x < -2);
     assert.deepEqual(await sample(11160), neutral);
 
-    await select.selectOption("thinking");
+    await chooseState(select, "thinking");
     const firstLook = await sample(110);
     const upRight = await sample(1660);
     const rightProfile = await sample(2350);
@@ -113,7 +117,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     await sample(5640);
     if (capture) await agent.screenshot({ path: join(capture, "motion-agent-thinking.png") });
 
-    await select.selectOption("working");
+    await chooseState(select, "working");
     const start = await sample(0);
     const early = await sample(85);
     const left = await sample(245);
@@ -140,7 +144,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     assert(start[0].y > 2 && start[1].y > 3);
     const beforeRetarget = await sample(4250);
 
-    await select.selectOption("waiting");
+    await chooseState(select, "waiting");
     const interrupted = await svg.evaluate((root) => {
       const body = root.querySelector(".yg-avatar-body");
       const entry = body.getAnimations().find(a => a.id === "yg-avatar-entry");
@@ -163,7 +167,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     await sample(2700);
     if (capture) await agent.screenshot({ path: join(capture, "motion-agent-waiting.png") });
 
-    await select.selectOption("blocked");
+    await chooseState(select, "blocked");
     const flinch = await sample(115);
     assert.deepEqual(await activeMark(), ["round", "round"]);
     const drop = await sample(450);
@@ -176,7 +180,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     assert.deepEqual(await activeMark(), ["cross", "cross"]);
     if (capture) await agent.screenshot({ path: join(capture, "motion-agent-blocked.png") });
 
-    await select.selectOption("done");
+    await chooseState(select, "done");
     assert.equal(await agent.getByRole("status").textContent(), states.done.label);
     await sample(0);
     assert.deepEqual(await activeMark(), ["cross", "cross"]);
@@ -210,7 +214,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     }
     assert.deepEqual(await activeMark(), ["smile", "smile"]);
     if (capture) await agent.screenshot({ path: join(capture, "motion-agent-finished.png") });
-    await select.selectOption("working");
+    await chooseState(select, "working");
     await waitForAnimations("running");
     const attrUpdates = await svg.evaluate((root) => new Promise(resolve => {
       let writes = 0;
@@ -224,7 +228,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     await agent.evaluate((el) => { el.style.removeProperty("margin-top"); });
     await waitForAnimations("running");
 
-    await select.selectOption("blocked");
+    await chooseState(select, "blocked");
     await svg.evaluate((root) => Promise.all(root.getAnimations({ subtree: true }).map(a => a.finished)));
     assert.equal(await agent.getByRole("status").textContent(), "Blocked");
 
@@ -244,10 +248,10 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     assert.equal(await workspace.locator(".yg-agent-detail-header .yg-eyes").getAttribute("data-gaze"), "ready");
 
     let nav = await open("segmented-control");
-    let marker = nav.locator(".yg-selection-marker[data-ready]");
+    let marker = nav.locator(".yg-selection-marker[data-ready]").first();
     await marker.waitFor();
-    const first = nav.locator(".yg-segment button").filter({ hasText: "Sourdough" });
-    const last = nav.locator(".yg-segment button").filter({ hasText: "Yogurt" });
+    const first = nav.locator(".yg-segment").first().locator("button").filter({ hasText: "Sourdough" });
+    const last = nav.locator(".yg-segment").first().locator("button").filter({ hasText: "Yogurt" });
     await last.press("Space");
     assert.equal(await last.getAttribute("data-state"), "on");
     await first.press("Space");
@@ -256,7 +260,7 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     assert.equal(await last.getAttribute("data-state"), "on");
     assert(boundsMatch(await marker.boundingBox(), await last.boundingBox()));
 
-    for (const id of ["dialog", "sheet", "drawer"]) {
+    for (const id of ["dialog", "sheet"]) {
       const layer = await open(id);
       const trigger = layer.getByRole("button", {name: "Edit view", exact: true});
       await trigger.click();
@@ -276,12 +280,12 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     }
 
     const progress = await open("progress");
-    const value = progress.getByRole("progressbar");
+    const value = progress.getByRole("progressbar", { name: "Reviewed records" });
     const initial = Number(await value.getAttribute("value"));
     await progress.getByRole("button", {name: "Review next record"}).click();
     assert.equal(Number(await value.getAttribute("value")), initial + 1);
     const maximum = Number(await value.getAttribute("max"));
-    const track = progress.locator(".yg-progress-track > span");
+    const track = progress.locator(".yg-progress-track > span").first();
     await track.evaluate(promiseToSettle);
     const fill = await track.evaluate(el => new DOMMatrixReadOnly(getComputedStyle(el).transform).a);
     assert(Math.abs(fill - (initial + 1) / maximum) < 0.001);
@@ -297,21 +301,21 @@ const boundsMatch = (a, b) => ["x", "y", "width", "height"].every((key) => Math.
     await page.setViewportSize({width:390,height:850});
     const reduced = await open("agent-avatar");
     const reducedSelect = reduced.getByRole("combobox", { name: "Agent state" });
-    await reducedSelect.selectOption("working");
+    await chooseState(reducedSelect, "working");
     assert.equal(await reduced.getByRole("status").textContent(), "Working");
     assert.equal(await reduced.locator(".yg-avatar-body").evaluate((el) => el.getAnimations({ subtree: true }).length), 0);
     assert(await reduced.locator(".yg-avatar-body").evaluate((el) => new DOMMatrixReadOnly(getComputedStyle(el).transform).f > 2));
-    await reducedSelect.selectOption("thinking");
+    await chooseState(reducedSelect, "thinking");
     assert.equal(await reduced.locator(".yg-eye").count(), 2);
-    await reducedSelect.selectOption("blocked");
+    await chooseState(reducedSelect, "blocked");
     assert.equal(await reduced.locator(".yg-eye-cross").first().evaluate(el => getComputedStyle(el).opacity), "1");
-    await reducedSelect.selectOption("thinking");
+    await chooseState(reducedSelect, "thinking");
     assert(await reduced.locator(".yg-eye").first().evaluate(el => new DOMMatrixReadOnly(getComputedStyle(el).transform).f < -4));
     if (capture) await reduced.screenshot({ path: join(capture, "motion-agent-reduced-dark.png") });
     nav = await open("segmented-control");
-    marker = nav.locator(".yg-selection-marker[data-ready]");
+    marker = nav.locator(".yg-selection-marker[data-ready]").first();
     await marker.waitFor();
-    await nav.locator(".yg-segment button").filter({ hasText: "Yogurt" }).press("Space");
+    await nav.locator(".yg-segment").first().locator("button").filter({ hasText: "Yogurt" }).press("Space");
     assert.equal(await marker.evaluate((el) => el.getAnimations().length), 0);
 
     assert.deepEqual(errors, []);

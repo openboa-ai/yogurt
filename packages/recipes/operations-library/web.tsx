@@ -3,16 +3,18 @@ import { useState, type ReactNode } from "react";
 import {
   Badge,
   Button,
+  Card,
   Count,
   EmptyResult,
   FilterBar,
+  List,
   ListHeader,
+  ListRow,
   Result,
   RoutineRow,
   Skeleton,
   Stack,
   Tabs,
-  Text,
   type RoutineRecord,
   type Tone,
 } from "@openboa/yogurt";
@@ -44,18 +46,17 @@ function CapabilityRows({
   onInspect?: (group: Category, id: string) => void;
 }) {
   return (
-    <ul className="yg-operations-list" aria-label={group}>
+    <List label={group} divided>
       {items.map((item) => {
         const state = states[item.state];
         return (
-          <li className="yg-routine-row" key={item.id}>
-            <div className="yg-work-event-content">
-              <strong>{item.title}</strong>
-              <Text variant="help">{item.detail}</Text>
-            </div>
-            <div className="yg-operations-actions">
-              <Badge tone={state.tone}>{state.label}</Badge>
-              {onInspect && (
+          <ListRow
+            key={item.id}
+            title={item.title}
+            inlineMeta={<Badge tone={state.tone}>{state.label}</Badge>}
+            description={item.detail}
+            actions={
+              onInspect ? (
                 <Button
                   emphasis="quiet"
                   size="compact"
@@ -64,12 +65,12 @@ function CapabilityRows({
                 >
                   Details
                 </Button>
-              )}
-            </div>
-          </li>
+              ) : undefined
+            }
+          />
         );
       })}
-    </ul>
+    </List>
   );
 }
 
@@ -124,56 +125,68 @@ export function OperationsLibrary({
     );
   }
   return (
-    <Stack gap={12} className="yg-operations-library">
-      <ListHeader
-        title="Operations"
-        action={!loading && <Count label={tab} value={visible[tab].length} />}
-      />
-      <FilterBar label="Search operations" query={query} onQueryChange={setQuery} />
-      <div aria-busy={loading || undefined}>
-        <Tabs
-          label="Operations type"
-          value={tab}
-          onValueChange={(id) => setTab(id as Category)}
-          items={[
-            {
-              id: "routines",
-              label: "Routines",
-              panel: panel(
-                "routines",
-                <ul className="yg-operations-list" aria-label="Routines">
-                  {visible.routines.map((routine) => (
-                    <li key={routine.id}>
-                      <RoutineRow
-                        routine={routine}
-                        onInspect={onInspect && ((id) => onInspect("routines", id))}
-                        onEdit={onEditRoutine}
-                        onRun={onRunRoutine}
-                      />
-                    </li>
-                  ))}
-                </ul>,
-              ),
-            },
-            {
-              id: "skills",
-              label: "Skills",
-              panel: panel(
-                "skills",
-                <CapabilityRows group="skills" items={visible.skills} onInspect={onInspect} />,
-              ),
-            },
-            {
-              id: "connections",
-              label: "Connections",
-              panel: panel(
-                "connections",
-                <CapabilityRows group="connections" items={visible.connections} onInspect={onInspect} />,
-              ),
-            },
-          ]}
-        />
-      </div>
-    </Stack>
+    <Card className="yg-operations-library" density="compact">
+      <Stack gap={6}>
+        <div className="yg-operations-toolbar">
+          <ListHeader
+            title="Operations"
+            action={!loading && <Count label={tab} value={visible[tab].length} />}
+          />
+          <FilterBar
+            label="Search operations"
+            placeholder="Search routines, skills, or connections..."
+            hiddenLabel
+            size="compact"
+            query={query}
+            onQueryChange={setQuery}
+          />
+        </div>
+        <div aria-busy={loading || undefined}>
+          <Tabs
+            label="Operations type"
+            presentation="underline"
+            value={tab}
+            onValueChange={(id) => setTab(id as Category)}
+            items={[
+              {
+                id: "routines",
+                label: "Routines",
+                panel: panel(
+                  "routines",
+                  <ul className="yg-operations-list" aria-label="Routines">
+                    {visible.routines.map((routine) => (
+                      <li key={routine.id}>
+                        <RoutineRow
+                          routine={routine}
+                          onInspect={onInspect && ((id) => onInspect("routines", id))}
+                          onEdit={onEditRoutine}
+                          onRun={onRunRoutine}
+                        />
+                      </li>
+                    ))}
+                  </ul>,
+                ),
+              },
+              {
+                id: "skills",
+                label: "Skills",
+                panel: panel(
+                  "skills",
+                  <CapabilityRows group="skills" items={visible.skills} onInspect={onInspect} />,
+                ),
+              },
+              {
+                id: "connections",
+                label: "Connections",
+                panel: panel(
+                  "connections",
+                  <CapabilityRows group="connections" items={visible.connections} onInspect={onInspect} />,
+                ),
+              },
+            ]}
+          />
+        </div>
+      </Stack>
+    </Card>
   );
 }

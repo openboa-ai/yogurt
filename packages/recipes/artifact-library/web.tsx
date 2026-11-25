@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Button, EmptyResult, Heading, Inline, ResourceRow, SearchField, Select, Stack, type ResourceKind } from "@openboa/yogurt";
+import { Button, Card, EmptyResult, FormRow, ResourceRow, SearchField, Select, Stack, Text, type ResourceKind } from "@openboa/yogurt";
 
 export interface LibraryArtifact {
   id: string;
@@ -46,36 +46,62 @@ export function ArtifactLibrary({
     setType("all");
   }
   return (
-    <Stack gap={16} className="yg-artifact-library">
-      <Inline className="yg-workspace-bar">
-        <Heading>{title}</Heading>
-        {onAdd && <Button onClick={onAdd}>Add source</Button>}
-      </Inline>
-      <div className="yg-artifact-filter">
-        <SearchField label="Search library" value={query} onValueChange={setQuery} />
-        <Select label="Type" value={type} options={categories}
-          onChange={(event) => setType(event.currentTarget.value)} />
-      </div>
-      {visible.length === 0 ? (
-        term ? <EmptyResult query={query} onClear={reset} /> :
-        !artifacts.length ? <EmptyResult empty="No artifacts yet" /> :
-        <Stack><p role="status">No matching artifacts.</p><Button emphasis="soft" onClick={reset}>Show all types</Button></Stack>
-      ) : (
-        <div className="yg-artifact-layout" data-preview={!!selected || undefined}>
-          <ul className="yg-artifact-list" aria-label={title}>
-            {visible.map((item) => (
-              <ResourceRow key={item.id} resource={{ ...item, title: item.name }}
-                selected={selected?.id === item.id} onOpen={onOpen} onPinChange={onPinChange} />
-            ))}
-          </ul>
-          {selected && (
-            <section className="yg-artifact-preview" aria-label={selected.name + " preview"}>
-              <Heading level={3}>{selected.name}</Heading>
-              {selected.preview ?? <p className="yg-help">{selected.detail ?? "Preview unavailable."}</p>}
-            </section>
-          )}
-        </div>
-      )}
-    </Stack>
+    <Card
+      title={title}
+      density="regular"
+      className="yg-artifact-library"
+      headerAction={
+        onAdd && (
+          <Button size="compact" emphasis="filled" tone="brand" onClick={onAdd}>
+            Add source
+          </Button>
+        )
+      }
+    >
+      <Stack gap={12}>
+        <FormRow className="yg-artifact-filter" align="center">
+          <SearchField
+            label="Search library"
+            placeholder="Search library"
+            hiddenLabel
+            size="compact"
+            value={query}
+            onValueChange={setQuery}
+          />
+          <Select
+            label="Type"
+            hiddenLabel
+            size="compact"
+            value={type}
+            options={categories}
+            onValueChange={setType}
+          />
+        </FormRow>
+        {visible.length === 0 ? (
+          term ? <EmptyResult query={query} onClear={reset} /> :
+          !artifacts.length ? <EmptyResult empty="No artifacts yet" /> :
+          <Stack gap={8}>
+            <Text variant="help" role="status">No matching artifacts.</Text>
+            <div><Button emphasis="soft" size="compact" onClick={reset}>Show all types</Button></div>
+          </Stack>
+        ) : (
+          <div className="yg-artifact-layout" data-preview={!!selected || undefined}>
+            <ul className="yg-artifact-list" aria-label={title}>
+              {visible.map((item) => (
+                <ResourceRow key={item.id} resource={{ ...item, title: item.name }}
+                  selected={selected?.id === item.id} onOpen={onOpen} onPinChange={onPinChange} />
+              ))}
+            </ul>
+            {selected && (
+              <Card title={selected.name} className="yg-artifact-preview" variant="raised">
+                <div role="region" aria-label={selected.name + " preview"}>
+                  {selected.preview ?? <Text variant="help">{selected.detail ?? "Preview unavailable."}</Text>}
+                </div>
+              </Card>
+            )}
+          </div>
+        )}
+      </Stack>
+    </Card>
   );
 }

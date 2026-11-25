@@ -75,13 +75,33 @@ async function sample(avatars, state, width) {
       const palette = root.getByRole("combobox", { name: "Color" });
       await rosterAvatars.last().waitFor();
       assert.equal(await rosterAvatars.count(), 45);
-      assert.equal(await palette.locator("option").count(), 27);
+      async function chooseOption(combobox, optionName) {
+        await combobox.click();
+        const option = (wrapped ? page.frameLocator("iframe") : page).getByRole("option", { name: optionName, exact: true });
+        await option.waitFor();
+        await option.click();
+        await option.waitFor({ state: "hidden" });
+      }
+      const stateLabels = {
+        ready: "Ready",
+        thinking: "Thinking",
+        working: "Working",
+        waiting: "Waiting for you",
+        blocked: "Blocked",
+        done: "Finished",
+      };
+      await palette.click();
+      const paletteOptions = (wrapped ? page.frameLocator("iframe") : page).getByRole("option");
+      await paletteOptions.first().waitFor();
+      assert.equal(await paletteOptions.count(), 27);
+      await page.keyboard.press("Escape");
+      await paletteOptions.first().waitFor({ state: "hidden" });
       assert.equal(await roster.getByRole("button").count(), 15);
       assert.equal(await root.evaluate(element => element.ownerDocument.documentElement.scrollWidth - element.ownerDocument.defaultView.innerWidth), 0);
 
       let compactPoses = 0;
       for (const state of Object.keys(beats)) {
-        await states.selectOption(state);
+        await chooseOption(states, stateLabels[state]);
         await rosterAvatars.last().evaluate(svg => new Promise(resolve => requestAnimationFrame(resolve)));
         compactPoses += await sample(rosterAvatars, state, 24);
       }
@@ -90,7 +110,7 @@ async function sample(avatars, state, width) {
       for (let i = 0; i < (width === 736 ? await groups.count() : 1); i += 1) {
         await groups.nth(i).click();
         for (const state of Object.keys(beats)) {
-          await states.selectOption(state);
+          await chooseOption(states, stateLabels[state]);
           await detailAvatars.last().evaluate(svg => new Promise(resolve => requestAnimationFrame(resolve)));
           detailPoses += await sample(detailAvatars, state, 96);
         }
@@ -100,21 +120,21 @@ async function sample(avatars, state, width) {
       assert.equal(await detailAvatars.count(), 2);
       const path = detailAvatars.first().locator(".yg-avatar-body > path");
       const original = await path.getAttribute("d");
-      await palette.selectOption("blue.300");
+      await chooseOption(palette, "blue.300");
       assert.equal(await path.getAttribute("fill"), "#86C0FE");
       assert.equal(await path.getAttribute("d"), original);
-      await palette.selectOption("");
-      await states.selectOption("waiting");
+      await chooseOption(palette, "Original colors");
+      await chooseOption(states, stateLabels.waiting);
       await sample(detailAvatars, "waiting", 96);
       await sample(rosterAvatars, "waiting", 24);
       if (capture) await root.screenshot({ path: join(capture, "motion-agent-family-" + colorScheme + ".png") });
 
       await root.getByRole("button", { name: "Play sequence" }).click();
-      assert.equal(await states.inputValue(), "thinking");
+      assert.match(await states.innerText(), /Thinking/);
       await root.getByRole("button", { name: "Stop sequence" }).click();
-      assert.equal(await states.inputValue(), "ready");
+      assert.match(await states.innerText(), /Ready/);
       await page.emulateMedia({ reducedMotion: "reduce" });
-      await states.selectOption("done");
+      await chooseOption(states, stateLabels.done);
       await detailAvatars.first().evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
       assert(await detailAvatars.evaluateAll(all => all.every(svg => svg.getAnimations({subtree:true}).length === 0 &&
         +getComputedStyle(svg.querySelector(".yg-eye-smile")).opacity === 1)));

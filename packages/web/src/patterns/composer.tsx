@@ -1,11 +1,38 @@
 "use client";
 
 import { useId, useRef, useState, type ReactNode } from "react";
-import { Attachment } from "./editorial.js";
 import { ActionMenu } from "../controls/layers.js";
-import { Button } from "../controls/actions.js";
+import { Button, IconButton } from "../controls/actions.js";
+import { Icon } from "../foundation/foundation.js";
 import { PromptAction, PromptEditor } from "./prompt-shared.js";
 import { MentionOptions, useMention } from "./mention-controller.js";
+
+function ComposerAttachment({
+  name,
+  detail,
+  onRemove,
+  progress,
+}: {
+  name: string;
+  detail?: string;
+  onRemove?: () => void;
+  progress?: number;
+}) {
+  return (
+    <div className="yg-attachment">
+      <span className="yg-file-name">
+        <strong>{name}</strong>
+        {detail && <small>{detail}</small>}
+      </span>
+      {progress !== undefined && (
+        <progress aria-label={"Upload " + name} value={progress} max={100} />
+      )}{" "}
+      {onRemove && (
+        <IconButton icon="close" label={"Remove " + name} onClick={onRemove} />
+      )}
+    </div>
+  );
+}
 
 export interface DraftAttachment {
   id: string;
@@ -20,6 +47,12 @@ export interface ComposerTool {
   disabled?: boolean;
 }
 
+export interface ComposerContextChip {
+  id: string;
+  label: string;
+  tone?: "neutral" | "brand" | "accent" | "warning";
+}
+
 export function Composer({
   value,
   onValueChange,
@@ -32,9 +65,14 @@ export function Composer({
   pending = false,
   onStop,
   label = "Message",
+  placeholder,
   toolLabel = "Tools",
+  sendTone = "neutral",
   error,
   companion,
+  header,
+  contextChips,
+  shortcutHint,
   mentionPeople,
 }: {
   value: string;
@@ -48,9 +86,14 @@ export function Composer({
   pending?: boolean;
   onStop?: () => void;
   label?: string;
+  placeholder?: string;
   toolLabel?: string;
+  sendTone?: "brand" | "neutral";
   error?: string;
   companion?: ReactNode;
+  header?: ReactNode;
+  contextChips?: readonly ComposerContextChip[];
+  shortcutHint?: string;
   mentionPeople?: readonly { id: string; label: string }[];
 }) {
   const id = useId();
@@ -60,24 +103,30 @@ export function Composer({
   const text = value.trim();
   const ready = !pending && !composing && (text.length > 0 || attachments.length > 0)
     && attachments.every((item) => item.progress == null || item.progress >= 100);
+  const hasHeader = Boolean(header);
   return (
     <form className="yg-composer yg-prompt-shared" aria-label={label + " composer"} aria-busy={pending || undefined}
       onSubmit={(event) => {
         event.preventDefault();
         if (ready && !composingRef.current) onSend({ text, attachmentIds: attachments.map((item) => item.id) });
       }}>
+      {hasHeader && (
+        <div className="yg-composer-header">
+          {header}
+        </div>
+      )}
       {attachments.length > 0 && (
         <ul className="yg-composer-sources" aria-label="Attachments">
           {attachments.map((item) => (
             <li key={item.id}>
-              <Attachment name={item.name} detail={item.detail} progress={item.progress}
+              <ComposerAttachment name={item.name} detail={item.detail} progress={item.progress}
                 onRemove={onRemoveAttachment && (() => onRemoveAttachment(item.id))} />
             </li>
           ))}
         </ul>
       )}
       <PromptEditor presentation="composer" id={id} aria-label={label} aria-describedby={error ? id + "-error" : undefined}
-        placeholder={label} rows={2} value={value}
+        placeholder={placeholder ?? label} rows={1} value={value}
         {...(mentionPeople === undefined ? {
           onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => onValueChange(event.currentTarget.value),
         } : mention.editorProps)}
@@ -91,24 +140,44 @@ export function Composer({
           setComposing(false);
           mention.editorProps.onCompositionEnd?.(event);
         }}
+        onKeyDown={event => {
+          if (mentionPeople !== undefined) mention.editorProps.onKeyDown?.(event);
+          if (
+            !event.defaultPrevented &&
+            event.key === "Enter" &&
+            (event.metaKey || event.ctrlKey) &&
+            !event.nativeEvent.isComposing &&
+            !composingRef.current &&
+            ready
+          ) {
+            event.preventDefault();
+            onSend({ text, attachmentIds: attachments.map((item) => item.id) });
+          }
+        }}
         inputRef={mentionPeople === undefined ? undefined : mention.input}
         after={mentionPeople === undefined ? undefined : <MentionOptions mention={mention} />} />
-      {error && <span className="yg-field-error" id={id + "-error"} role="alert">{error}</span>}
+      {error && <span className="yg-error" id={id + "-error"} role="alert">{error}</span>}
       <div className="yg-composer-footer">
         <div className="yg-composer-tools">
           {onAddAttachment && (
-            <Button emphasis="quiet" onClick={onAddAttachment} disabled={pending}>Attach</Button>
+            <IconButton icon="plus" label="Attach" emphasis="soft" size="compact" onClick={onAddAttachment} disabled={pending} />
           )}
           {!pending && onTool && tools.length > 0 && (
-            <ActionMenu label={toolLabel} items={[...tools]} onSelect={onTool} />
+            <ActionMenu label={toolLabel} triggerSize="compact" items={[...tools]} onSelect={onTool} />
           )}
+          {contextChips?.map((chip) => (
+            <span key={chip.id} className="yg-composer-chip" data-tone={chip.tone ?? "neutral"}>
+              {chip.label}
+            </span>
+          ))}
         </div>
         <div className="yg-composer-tools">
           {companion}
+          {shortcutHint && <span className="yg-composer-hint" aria-hidden="true">{shortcutHint}</span>}
           <PromptAction presentation="composer" busy={pending} ready={ready} onStop={onStop}
             renderComposer={(button, stopping) => stopping
-              ? <Button key="stop" ref={button} className="yg-shared-action" emphasis="soft" onClick={onStop}>Stop</Button>
-              : <Button key="send" ref={button} className="yg-shared-action" type="submit" disabled={!ready} pending={pending} pendingLabel="Sending">Send</Button>} />
+              ? <Button key="stop" ref={button} className="yg-shared-action" emphasis="soft" size="compact" onClick={onStop}>Stop</Button>
+              : <Button key="send" ref={button} className="yg-shared-action yg-composer-send" data-icon-only="" aria-label="Send" tone={sendTone} size="compact" type="submit" disabled={!ready} pending={pending}><Icon name="send" /></Button>} />
         </div>
       </div>
     </form>

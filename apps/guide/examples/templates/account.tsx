@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Form, Heading, Inline, Notice, ProjectMark, Stack, Surface, Text, TextField } from "@openboa/yogurt";
+import { Button, Heading, Inline, Notice, ProjectMark, Stack, Surface, Text, TextField } from "@openboa/yogurt";
 
 export function AccountPreview({ id }: { id: string }) {
   const [mode, layout] = id.split("-");
@@ -25,7 +25,7 @@ export function AccountPreview({ id }: { id: string }) {
     {complete ? <Stack gap={16}>
       <Notice title="Preview complete">{emailOnly ? "An email link would be sent in a connected product." : "A connected product would continue to your workspace."}</Notice>
       <Button emphasis="soft" onClick={() => { setComplete(false); setAttempted(false); }}>Start again</Button>
-    </Stack> : <Form label={title} noValidate onSubmit={event => {
+    </Stack> : <form className="yg-form" aria-label={title} noValidate onSubmit={event => {
       event.preventDefault();
       setAttempted(true);
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || (signup && !emailOnly && !name.trim()) || (!emailOnly && password.length < 8)) return;
@@ -40,7 +40,7 @@ export function AccountPreview({ id }: { id: string }) {
         <Button type="submit">{emailOnly ? "Continue with email" : signup ? "Create account" : "Sign in"}</Button>
         <Text variant="help">Demo only. Use sample values.</Text>
       </Stack>
-    </Form>}
+    </form>}
   </Stack>;
 
   return <div className="template-account" data-layout={layout}>

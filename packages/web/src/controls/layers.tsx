@@ -1,12 +1,13 @@
 "use client";
 import { words } from "../foundation/words.js";
-import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, isValidElement, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactElement, type ReactNode } from "react";
 import { Dialog as SDKDialog, DialogContent } from "@ui-sdk/react/dialog";
-import { Popover as SDKPopover, PopoverContent } from "@ui-sdk/react/popover";
-import { Menu, MenuContent, MenuItem, MenuTrigger } from "@ui-sdk/react/menu";
+import { Popover as SDKPopover, PopoverClose, PopoverContent, PopoverDescription, PopoverTitle, PopoverTrigger } from "@ui-sdk/react/popover";
+import { Menu, MenuCheckboxItem, MenuContent, MenuItem, MenuSeparator, MenuTrigger } from "@ui-sdk/react/menu";
+import { Tooltip as SDKTooltip, TooltipArrow, TooltipContent, TooltipTrigger } from "@ui-sdk/react/tooltip";
 import { Button as SDKButton } from "@ui-sdk/react/button";
-import { Icon, type Option } from "../foundation/foundation.js";
-import { Button, IconButton } from "./actions.js";
+import { cx, Icon, type Option } from "../foundation/foundation.js";
+import { Button, IconButton, type ButtonProps, type ButtonSize } from "./actions.js";
 
 export function Disclosure({
   label,
@@ -48,94 +49,185 @@ function useOutside(
   }, [ref, close, open]);
 }
 
-/** Keep an inline layer within its viewport and any clipping scroll containers. */
-function useAnchoredPlacement(ref: React.RefObject<HTMLDivElement | null>, open: boolean) {
-  useLayoutEffect(() => {
-    const anchor = ref.current;
-    const panel = anchor?.querySelector<HTMLElement>(".yg-anchored-panel");
-    const view = anchor?.ownerDocument.defaultView;
-    if (!open || !anchor || !panel || !view) return;
-    const apply = (property: string, value: string) => {
-      if (panel.style.getPropertyValue(property) !== value) panel.style.setProperty(property, value);
-    };
-    const place = () => {
-      const viewport = view.visualViewport;
-      let left = viewport?.offsetLeft ?? 0, top = viewport?.offsetTop ?? 0;
-      let right = left + (viewport?.width ?? view.innerWidth), bottom = top + (viewport?.height ?? view.innerHeight);
-      for (let parent = anchor.parentElement; parent && parent !== anchor.ownerDocument.documentElement; parent = parent.parentElement) {
-        const style = view.getComputedStyle(parent);
-        const clipX = /^(auto|scroll|hidden|clip)$/.test(style.overflowX);
-        const clipY = /^(auto|scroll|hidden|clip)$/.test(style.overflowY);
-        if (!clipX && !clipY) continue;
-        const box = parent.getBoundingClientRect();
-        const x = box.left + parent.clientLeft, y = box.top + parent.clientTop;
-        if (clipX) { left = Math.max(left, x); right = Math.min(right, x + parent.clientWidth); }
-        if (clipY) { top = Math.max(top, y); bottom = Math.min(bottom, y + parent.clientHeight); }
-      }
-      const anchorBox = anchor.getBoundingClientRect();
-      const safeWidth = Math.max(0, right - left - 16);
-      apply("max-inline-size", `min(19rem, 85vw, ${safeWidth}px)`);
-      apply("min-inline-size", `min(11rem, 80vw, ${safeWidth}px)`);
-      const gap = parseFloat(view.getComputedStyle(panel).getPropertyValue("--yg-offset-layer")) || 6;
-      const below = Math.max(0, bottom - 8 - anchorBox.bottom - gap);
-      const above = Math.max(0, anchorBox.top - gap - top - 8);
-      apply("max-block-size", `${Math.max(above, below)}px`);
-      apply("overflow-y", "auto");
-      const width = panel.offsetWidth, height = panel.offsetHeight;
-      const rtl = view.getComputedStyle(anchor).direction === "rtl";
-      const preferred = rtl ? anchorBox.right - width : anchorBox.left;
-      const targetLeft = Math.min(Math.max(preferred, left + 8), Math.max(left + 8, right - 8 - width));
-      const showAbove = below < height && above > below;
-      const targetTop = showAbove ? anchorBox.top - gap - height : anchorBox.bottom + gap;
-      apply("inset-inline-start", "auto");
-      apply("inset-inline-end", "auto");
-      apply("left", `${targetLeft - anchorBox.left}px`);
-      apply("bottom", "auto");
-      apply("top", `${targetTop - anchorBox.top}px`);
-      panel.dataset.side = showAbove ? "above" : "below";
-    };
-    place();
-    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(place);
-    observer?.observe(anchor);
-    observer?.observe(panel);
-    view.addEventListener("resize", place);
-    view.addEventListener("scroll", place, true);
-    view.visualViewport?.addEventListener("resize", place);
-    view.visualViewport?.addEventListener("scroll", place);
-    return () => {
-      observer?.disconnect();
-      view.removeEventListener("resize", place);
-      view.removeEventListener("scroll", place, true);
-      view.visualViewport?.removeEventListener("resize", place);
-      view.visualViewport?.removeEventListener("scroll", place);
-    };
-  }, [ref, open]);
+export interface ActionMenuItem extends Option {
+  checked?: boolean;
+  tone?: "neutral" | "danger";
+  separatorBefore?: boolean;
 }
+
 type ActionMenuProps = {
   label: string;
-  items: Option[];
+  items: ActionMenuItem[];
   onSelect: (id: string) => void;
   triggerText?: string;
+  triggerVariant?: "button" | "more";
+  triggerEmphasis?: ButtonProps["emphasis"];
+  triggerSize?: ButtonSize;
+  selectionIndicator?: "leading" | "none";
+  align?: "start" | "center" | "end";
   presentation?: "anchored" | "expanding";
 };
 
 export function ActionMenu({ presentation = "anchored", ...props }: ActionMenuProps) {
   if (presentation === "expanding") return <ExpandingActionMenu {...props} />;
-  const { label, items, onSelect, triggerText = label } = props;
+  const {
+    label,
+    items,
+    onSelect,
+    triggerText = label,
+    triggerVariant = "button",
+    triggerEmphasis,
+    triggerSize = "regular",
+    selectionIndicator,
+    align,
+  } = props;
+  const hasLeadingRail =
+    selectionIndicator === "leading" ||
+    (selectionIndicator !== "none" && items.some((item) => item.checked !== undefined));
+  const resolvedAlign = align ?? (triggerVariant === "more" ? "end" : "start");
   return (
     <Menu loop>
-      <MenuTrigger aria-label={label} render={<Button emphasis="soft" />}>
-        {triggerText}<Icon name="down" />
-      </MenuTrigger>
-      <MenuContent className="yg-popup-menu" aria-label={label} align="start" sideOffset={6} collisionPadding={8}
-        render={(props, state) => <div {...props} aria-hidden={!state.open || undefined} inert={!state.open} />}>
-        {items.map(item => (
-          <MenuItem key={item.id} value={item.id} label={item.label} disabled={item.disabled}
-            render={<SDKButton type="button" />} onSelect={() => onSelect(item.id)}>{item.label}</MenuItem>
-        ))}
+      {triggerVariant === "more" ? (
+        <MenuTrigger
+          aria-label={label}
+          render={
+            <IconButton
+              icon="more"
+              label={label}
+              emphasis={triggerEmphasis ?? "quiet"}
+              size={triggerSize}
+              className="yg-menu-more-trigger"
+            />
+          }
+        />
+      ) : (
+        <MenuTrigger
+          aria-label={label}
+          render={
+            <Button
+              emphasis={triggerEmphasis ?? "soft"}
+              size={triggerSize}
+            />
+          }
+        >
+          {triggerText}
+          <Icon name="down" />
+        </MenuTrigger>
+      )}
+      <MenuContent
+        className="yg-popup-menu"
+        data-selection-rail={hasLeadingRail ? "leading" : undefined}
+        aria-label={label}
+        align={resolvedAlign}
+        sideOffset={6}
+        collisionPadding={8}
+        render={(contentProps, state) => (
+          <div
+            {...contentProps}
+            aria-hidden={!state.open || undefined}
+            inert={!state.open}
+          />
+        )}
+      >
+        {items.map((item, index) => {
+          const itemContent = (
+            <>
+              {hasLeadingRail && (
+                <span className="yg-menu-check-rail" aria-hidden="true">
+                  {item.checked && <Icon name="check" />}
+                </span>
+              )}
+              <span className="yg-menu-item-label">{item.label}</span>
+            </>
+          );
+          return (
+            <Fragment key={item.id}>
+              {item.separatorBefore && index > 0 && (
+                <MenuSeparator className="yg-menu-separator" />
+              )}
+              {item.checked !== undefined ? (
+                <MenuCheckboxItem
+                  value={item.id}
+                  label={item.label}
+                  disabled={item.disabled}
+                  checked={item.checked}
+                  closeOnSelect
+                  data-tone={item.tone === "danger" ? "danger" : undefined}
+                  data-checked={item.checked ? "" : undefined}
+                  render={<SDKButton type="button" />}
+                  onCheckedChange={() => onSelect(item.id)}
+                >
+                  {itemContent}
+                </MenuCheckboxItem>
+              ) : (
+                <MenuItem
+                  value={item.id}
+                  label={item.label}
+                  disabled={item.disabled}
+                  data-tone={item.tone === "danger" ? "danger" : undefined}
+                  render={<SDKButton type="button" />}
+                  onSelect={() => onSelect(item.id)}
+                >
+                  {itemContent}
+                </MenuItem>
+              )}
+            </Fragment>
+          );
+        })}
       </MenuContent>
     </Menu>
   );
+}
+
+function useMenuRovingKeyDown({
+  enabled,
+  currentId,
+  setActive,
+  close,
+  trigger,
+}: {
+  enabled: ActionMenuItem[];
+  currentId: string | undefined;
+  setActive: (id: string) => void;
+  close: (restore?: boolean) => void;
+  trigger: React.RefObject<HTMLButtonElement | null>;
+}) {
+  return (e: KeyboardEvent<HTMLElement>) => {
+    const index = enabled.findIndex((o) => o.id === currentId);
+    if (e.key === "Escape") {
+      e.preventDefault();
+      e.stopPropagation();
+      close(true);
+      return;
+    }
+    if (e.key === "Tab") {
+      trigger.current?.focus();
+      close();
+      return;
+    }
+    if (!enabled.length) return;
+    const move = (
+      {
+        ArrowDown: (index + 1) % enabled.length,
+        ArrowUp: (index - 1 + enabled.length) % enabled.length,
+        Home: 0,
+        End: enabled.length - 1,
+      } as Record<string, number | undefined>
+    )[e.key];
+    if (move !== undefined) {
+      e.preventDefault();
+      setActive(enabled[move].id);
+    } else if (e.key.length === 1) {
+      const ordered = [
+        ...enabled.slice(index + 1),
+        ...enabled.slice(0, index + 1),
+      ];
+      const match = ordered.find((o) =>
+        o.label.toLowerCase().startsWith(e.key.toLowerCase()),
+      );
+      if (match) setActive(match.id);
+    }
+  };
 }
 
 function ExpandingActionMenu({ label, items, onSelect, triggerText = label }: ActionMenuProps) {
@@ -155,6 +247,13 @@ function ExpandingActionMenu({ label, items, onSelect, triggerText = label }: Ac
     if (restore) trigger.current?.focus();
   }
   useOutside(area, () => close(), open);
+  const handleMenuKeyDown = useMenuRovingKeyDown({
+    enabled,
+    currentId: current?.id,
+    setActive,
+    close,
+    trigger,
+  });
   useEffect(() => {
     if (open) {
       const node =
@@ -218,42 +317,7 @@ function ExpandingActionMenu({ label, items, onSelect, triggerText = label }: Ac
         className="yg-action-menu-fold"
         render={(props) => <div {...props} id={menu} role="menu" aria-label={label}
           tabIndex={-1} hidden={false} aria-hidden={!open || undefined} inert={!open} />}
-        onKeyDownCapture={(e) => {
-          const index = enabled.findIndex((o) => o.id === current?.id);
-          if (e.key === "Escape") {
-            e.preventDefault();
-            e.stopPropagation();
-            close(true);
-            return;
-          }
-          if (e.key === "Tab") {
-            trigger.current?.focus();
-            close();
-            return;
-          }
-          if (!enabled.length) return;
-          const move = (
-            {
-              ArrowDown: (index + 1) % enabled.length,
-              ArrowUp: (index - 1 + enabled.length) % enabled.length,
-              Home: 0,
-              End: enabled.length - 1,
-            } as Record<string, number | undefined>
-          )[e.key];
-          if (move !== undefined) {
-            e.preventDefault();
-            setActive(enabled[move].id);
-          } else if (e.key.length === 1) {
-            const ordered = [
-              ...enabled.slice(index + 1),
-              ...enabled.slice(0, index + 1),
-            ];
-            const match = ordered.find((o) =>
-              o.label.toLowerCase().startsWith(e.key.toLowerCase()),
-            );
-            if (match) setActive(match.id);
-          }
-        }}
+        onKeyDownCapture={handleMenuKeyDown}
       >
         <div className="yg-action-menu-options">{options}</div>
       </PopoverContent>
@@ -261,55 +325,68 @@ function ExpandingActionMenu({ label, items, onSelect, triggerText = label }: Ac
     </SDKPopover>
   );
 }
+export { PopoverClose, PopoverDescription, PopoverTitle };
+export interface PopoverProps {
+  label: string;
+  trigger?: ReactNode;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  side?: "top" | "bottom" | "left" | "right";
+  align?: "start" | "center" | "end";
+  sideOffset?: number;
+  className?: string;
+  children: ReactNode;
+}
+
 export function Popover({
   label,
+  trigger,
+  open,
+  defaultOpen,
+  onOpenChange,
+  side = "bottom",
+  align = "start",
+  sideOffset = 6,
+  className,
   children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
-  const [open, setOpen] = useState(false);
-  const outer = useRef<HTMLDivElement>(null);
-  const trigger = useRef<HTMLButtonElement>(null);
-  const content = useRef<HTMLDivElement>(null);
-  const id = useId();
-  useAnchoredPlacement(outer, open);
-  useOutside(outer, () => setOpen(false), open);
-  useEffect(() => {
-    if (open) content.current?.focus();
-  }, [open]);
+}: PopoverProps) {
   return (
-    <SDKPopover open={open} onOpenChange={setOpen} dismissible={false}>
-    <div
-      ref={outer}
-      className="yg-anchor"
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget as Node | null))
-          setOpen(false);
-      }}
-      onKeyDown={(e) => {
-        if (open && e.key === "Escape") {
-          e.stopPropagation();
-          setOpen(false);
-          trigger.current?.focus();
-        }
-      }}
+    <SDKPopover
+      open={open}
+      defaultOpen={defaultOpen}
+      onOpenChange={(next) => onOpenChange?.(next)}
     >
-      <Button
-        ref={trigger}
-        emphasis="soft"
-        aria-expanded={open}
-        aria-controls={open ? id : undefined}
-        onClick={() => setOpen(!open)}
+      {trigger !== undefined ? (
+        isValidElement(trigger) ? (
+          <PopoverTrigger render={trigger as ReactElement<Record<string, unknown>>} />
+        ) : (
+          <PopoverTrigger render={<Button emphasis="soft" />}>
+            {trigger}
+          </PopoverTrigger>
+        )
+      ) : (
+        <PopoverTrigger render={<Button emphasis="soft" />}>
+          {label}
+        </PopoverTrigger>
+      )}
+      <PopoverContent
+        side={side}
+        align={align}
+        sideOffset={sideOffset}
+        collisionPadding={8}
+        className={cx("yg-popover", className)}
+        aria-label={label}
+        render={(props) => (
+          <div
+            {...props}
+            role="dialog"
+            aria-label={label}
+          />
+        )}
       >
-        {label}
-      </Button>
-      <PopoverContent inline ref={content} render={(props) => <div {...props}
-        id={id} className="yg-anchored-panel yg-popover" role="region"
-        aria-label={label} tabIndex={-1} aria-hidden={!open || undefined} inert={!open} />}>
         {children}
       </PopoverContent>
-    </div>
     </SDKPopover>
   );
 }
@@ -332,18 +409,15 @@ function Modal({
   const ref = useRef<HTMLDialogElement>(null);
   const drag = useRef<{ id: number; origin: number } | null>(null);
   const id = useId();
-  const fallback = useRef<HTMLElement | null>(null);
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog || !open) return;
-    fallback.current = dialog.ownerDocument.activeElement as HTMLElement;
     dialog.showModal();
     return () => {
       drag.current = null;
       dialog.removeAttribute("data-dragging");
       dialog.style.removeProperty("--yg-drag-distance");
       if (dialog.open) dialog.close();
-      if (fallback.current?.isConnected) fallback.current.focus();
     };
   }, [open]);
   return (
@@ -418,92 +492,34 @@ export function Drawer(props: DialogProps) {
 }
 export function Tooltip({
   label,
+  delay = 0,
   children,
 }: {
   label: string;
+  delay?: number;
   children: (props: { "aria-describedby": string }) => ReactNode;
 }) {
-  const id = useId();
-  const [visible, setVisible] = useState(false);
-  const hovered = useRef(false);
-  const focused = useRef(false);
-  const anchor = useRef<HTMLSpanElement>(null);
-  useLayoutEffect(() => {
-    const host = anchor.current;
-    const tip = host?.querySelector<HTMLElement>(".yg-tip");
-    const view = host?.ownerDocument.defaultView;
-    if (!visible || !host || !tip || !view) return;
-    const place = () => {
-      const bounds = host.getBoundingClientRect();
-      const viewport = view.visualViewport;
-      let left = viewport?.offsetLeft ?? 0;
-      let top = viewport?.offsetTop ?? 0;
-      const width = viewport?.width ?? view.innerWidth;
-      let right = left + width;
-      let bottom = top + (viewport?.height ?? view.innerHeight);
-      for (let parent = host.parentElement; parent && parent !== host.ownerDocument.documentElement; parent = parent.parentElement) {
-        const style = view.getComputedStyle(parent);
-        const clipsX = /^(auto|scroll|hidden|clip)$/.test(style.overflowX);
-        const clipsY = /^(auto|scroll|hidden|clip)$/.test(style.overflowY);
-        if (!clipsX && !clipsY) continue;
-        const box = parent.getBoundingClientRect();
-        const x = box.left + parent.clientLeft;
-        const y = box.top + parent.clientTop;
-        if (clipsX) { left = Math.max(left, x); right = Math.min(right, x + parent.clientWidth); }
-        if (clipsY) { top = Math.max(top, y); bottom = Math.min(bottom, y + parent.clientHeight); }
-      }
-      const available = `${Math.max(1, right - left - 16)}px`;
-      if (tip.style.getPropertyValue("--yg-tip-available") !== available) tip.style.setProperty("--yg-tip-available", available);
-      const center = (bounds.left + bounds.right) / 2;
-      const half = tip.offsetWidth / 2;
-      const safeCenter = Math.max(left + 8 + half, Math.min(center, right - 8 - half));
-      tip.style.setProperty("--yg-tip-shift", `${safeCenter - center}px`);
-      const above = bounds.top - top - 12;
-      const below = bottom - bounds.bottom - 12;
-      tip.dataset.side = above >= tip.offsetHeight || above >= below ? "above" : "below";
-    };
-    place();
-    const observer = typeof ResizeObserver === "undefined" ? undefined : new ResizeObserver(place);
-    observer?.observe(host);
-    observer?.observe(tip);
-    view.addEventListener("resize", place);
-    view.addEventListener("scroll", place, true);
-    view.visualViewport?.addEventListener("resize", place);
-    view.visualViewport?.addEventListener("scroll", place);
-    return () => {
-      observer?.disconnect();
-      view.removeEventListener("resize", place);
-      view.removeEventListener("scroll", place, true);
-      view.visualViewport?.removeEventListener("resize", place);
-      view.visualViewport?.removeEventListener("scroll", place);
-    };
-  }, [visible, label]);
+  const triggerNode = children({} as { "aria-describedby": string });
   return (
-    <SDKPopover open={visible} onOpenChange={setVisible} dismissible={false}>
-    <span
-      ref={anchor}
-      className="yg-tip-anchor"
-      onPointerEnter={() => { hovered.current = true; setVisible(true); }}
-      onPointerLeave={() => { hovered.current = false; if (!focused.current) setVisible(false); }}
-      onFocus={() => { focused.current = true; setVisible(true); }}
-      onBlur={(event) => {
-        if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
-        focused.current = false;
-        if (!hovered.current) setVisible(false);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Escape") setVisible(false);
-      }}
-    >
-      {children({ "aria-describedby": id })}
-      <PopoverContent inline keepMounted initialFocus="none" finalFocus="none"
-        render={(props) => <span {...props} role="tooltip" id={id} aria-label={label} hidden={false} aria-hidden={!visible} data-open={visible} tabIndex={undefined} className="yg-tip" />}>
+    <SDKTooltip delay={delay} closeDelay={0} type="description">
+      {isValidElement(triggerNode) ? (
+        <TooltipTrigger render={triggerNode as ReactElement<Record<string, unknown>>} />
+      ) : (
+        <TooltipTrigger render={<span />}>{triggerNode}</TooltipTrigger>
+      )}
+      <TooltipContent
+        side="top"
+        sideOffset={6}
+        collisionPadding={8}
+        className="yg-tip"
+        aria-label={label}
+      >
         {label}
-      </PopoverContent>
-    </span>
-    </SDKPopover>
+      </TooltipContent>
+    </SDKTooltip>
   );
 }
+export { TooltipArrow };
 
 export function MorphTooltip({ label, detail }: { label: string; detail: string }) {
   return <Tooltip label={detail}>{props =>

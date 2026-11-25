@@ -1,12 +1,13 @@
 "use client";
 
+import { useId } from "react";
 import {
   AgentAvatar,
   Button,
   ButtonGroup,
+  Card,
   FieldError,
-  Heading,
-  Inline,
+  FieldGroup,
   Select,
   Stack,
   TextField,
@@ -40,6 +41,7 @@ export function AgentProfile({
   pending?: boolean;
   error?: string;
 }) {
+  const formId = useId();
   const dirty =
     draft.name !== saved.name ||
     draft.appearance !== saved.appearance ||
@@ -48,65 +50,85 @@ export function AgentProfile({
   const scopeAvailable = scopes.some((scope) => scope.id === draft.scopeId && !scope.disabled);
   const canSave = dirty && draft.name.trim() !== "" && scopeAvailable;
   return (
-    <form
-      aria-label="Agent profile"
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (canSave && !pending) onSave(agentId, { ...draft, name: draft.name.trim() });
-      }}
-    >
-      <Stack gap={16}>
-        <Inline gap={12}>
-          <span aria-hidden="true"><AgentAvatar agent={draft.appearance} size={44} /></span>
-          <Heading>Agent profile</Heading>
-        </Inline>
-        <TextField
-          label="Name"
-          value={draft.name}
-          disabled={pending}
-          required
-          onChange={(event) => onChange({ ...draft, name: event.target.value })}
-        />
-        <Select
-          label="Silhouette"
-          value={draft.appearance}
-          disabled={pending}
-          options={[
-            { id: "Kai", label: "Kai" },
-            { id: "Sol", label: "Sol" },
-          ]}
-          onChange={(event) => {
-            const appearance = event.target.value;
-            if (appearance === "Kai" || appearance === "Sol") onChange({ ...draft, appearance });
-          }}
-        />
-        <Select
-          label="Memory scope"
-          value={scopeAvailable ? draft.scopeId : ""}
-          placeholder="Choose an available scope"
-          help="Choose where this agent uses its working context."
-          required
-          options={scopes}
-          disabled={pending}
-          onChange={(event) => onChange({ ...draft, scopeId: event.target.value })}
-        />
-        <Textarea
-          label="Working instructions"
-          value={draft.instructions}
-          disabled={pending}
-          rows={3}
-          onChange={(event) => onChange({ ...draft, instructions: event.target.value })}
-        />
-        {error && <FieldError role="alert">{error}</FieldError>}
-        <ButtonGroup label="Agent profile actions">
-          <Button type="submit" disabled={!canSave} pending={pending} pendingLabel="Saving">
-            Save profile
-          </Button>
+    <Card
+      title="Agent profile"
+      description="Configure agent identity, memory scope, and working instructions."
+      headerAction={
+        <span aria-hidden="true">
+          <AgentAvatar agent={draft.appearance} size={28} />
+        </span>
+      }
+      action={
+        <ButtonGroup label="Agent profile actions" justify="end">
           <Button emphasis="quiet" disabled={!dirty || pending} onClick={() => onChange(saved)}>
             Discard
           </Button>
+          <Button
+            type="submit"
+            form={formId}
+            emphasis="filled"
+            tone="brand"
+            disabled={!canSave}
+            pending={pending}
+            pendingLabel="Saving"
+          >
+            Save profile
+          </Button>
         </ButtonGroup>
-      </Stack>
-    </form>
+      }
+    >
+      <form
+        id={formId}
+        aria-label="Agent profile"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (canSave && !pending) onSave(agentId, { ...draft, name: draft.name.trim() });
+        }}
+      >
+        <Stack gap={12}>
+          <FieldGroup legend="Identity">
+            <TextField
+              label="Name"
+              value={draft.name}
+              disabled={pending}
+              required
+              onChange={(event) => onChange({ ...draft, name: event.target.value })}
+            />
+            <Select
+              label="Silhouette"
+              value={draft.appearance}
+              disabled={pending}
+              options={[
+                { id: "Kai", label: "Kai" },
+                { id: "Sol", label: "Sol" },
+              ]}
+              onValueChange={(appearance) => {
+                if (appearance === "Kai" || appearance === "Sol") onChange({ ...draft, appearance });
+              }}
+            />
+          </FieldGroup>
+          <FieldGroup legend="Scope & instructions">
+            <Select
+              label="Memory scope"
+              value={scopeAvailable ? draft.scopeId : ""}
+              placeholder="Choose an available scope"
+              help="Choose where this agent uses its working context."
+              required
+              options={scopes}
+              disabled={pending}
+              onValueChange={(scopeId) => onChange({ ...draft, scopeId })}
+            />
+            <Textarea
+              label="Working instructions"
+              value={draft.instructions}
+              disabled={pending}
+              rows={3}
+              onChange={(event) => onChange({ ...draft, instructions: event.target.value })}
+            />
+          </FieldGroup>
+          {error && <FieldError role="alert">{error}</FieldError>}
+        </Stack>
+      </form>
+    </Card>
   );
 }

@@ -65,11 +65,6 @@
     "role": "Press"
   },
   {
-    "id": "bottom-action",
-    "treatment": "Keep the action reachable in the inset and preserve its position while its own state changes.",
-    "role": "Press"
-  },
-  {
     "id": "field",
     "treatment": "Keep label, value and correction in their reading order across validation and reflow.",
     "role": "Field"
@@ -180,11 +175,6 @@
     "role": "Layer"
   },
   {
-    "id": "drawer",
-    "treatment": "Use its anchored edge to explain entrance. Let any supported drag track the pointer and leave keyboard dismissal available.",
-    "role": "Layer"
-  },
-  {
     "id": "sheet",
     "treatment": "Reveal the sheet from its real opening edge and respect the same focus and dismissal contract at narrow sizes.",
     "role": "Layer"
@@ -280,11 +270,6 @@
     "role": "Outcome"
   },
   {
-    "id": "legend",
-    "treatment": "Keep series labels, units and keys in place so readers can compare values across charts.",
-    "role": "Still"
-  },
-  {
     "id": "confirm-dialog",
     "treatment": "Use focused layer entrance and immediate dismissal. Keep the current revision and action name readable while pending.",
     "role": "Layer"
@@ -305,39 +290,14 @@
     "role": "Presence"
   },
   {
-    "id": "gaze",
-    "treatment": "Use a distinct eye pose for each reported state and a readable still pose with reduced motion.",
-    "role": "Presence"
-  },
-  {
     "id": "message",
     "treatment": "Reveal newly arriving content without moving the speaker marker or replaying already read text.",
     "role": "Composition"
   },
   {
-    "id": "activity",
-    "treatment": "Reflect the current host state with a quiet cue during real work and a durable text label for each settled state.",
-    "role": "Outcome"
-  },
-  {
     "id": "transcript",
     "treatment": "Keep the reader's position when they are away from the newest reply. Follow new content only when anchored there.",
     "role": "Composition"
-  },
-  {
-    "id": "reading-anchor",
-    "treatment": "Show the return action while the reader is away. Align to the newest message only when requested or already following.",
-    "role": "Outcome"
-  },
-  {
-    "id": "aspect-ratio",
-    "treatment": "Reserve the actual frame so loading and viewport reflow leave surrounding reading positions stable.",
-    "role": "Still"
-  },
-  {
-    "id": "direction",
-    "treatment": "Apply reading and interaction direction to the region as one change and keep existing focus valid.",
-    "role": "Still"
   },
   {
     "id": "card",
@@ -347,26 +307,6 @@
   {
     "id": "asset",
     "treatment": "Reserve the asset frame. Playback belongs to its media controls or explicitly supplied authored state.",
-    "role": "Still"
-  },
-  {
-    "id": "gradient",
-    "treatment": "Keep palette roles steady and use the blend as a static surface.",
-    "role": "Still"
-  },
-  {
-    "id": "elevation",
-    "treatment": "Hold depth cues stable. A moving layer can introduce them within its approved entrance.",
-    "role": "Still"
-  },
-  {
-    "id": "kbd",
-    "treatment": "Keep the key hint still and update its content only when the available command changes.",
-    "role": "Still"
-  },
-  {
-    "id": "post",
-    "treatment": "Keep reading width and the reader's position steady while adjacent interfaces change.",
     "role": "Still"
   },
   {
@@ -380,23 +320,8 @@
     "role": "Still"
   },
   {
-    "id": "list-footer",
-    "treatment": "Keep totals and next actions readable without moving the reader unexpectedly.",
-    "role": "Still"
-  },
-  {
     "id": "top",
     "treatment": "Keep the page title, detail and actions aligned as content loads or updates.",
-    "role": "Still"
-  },
-  {
-    "id": "bottom-info",
-    "treatment": "Keep supporting copy with the action it explains when the surrounding surface changes.",
-    "role": "Still"
-  },
-  {
-    "id": "highlight",
-    "treatment": "Use a stable emphasis on resolved content and allow a brief change only when it marks a new, meaningful target.",
     "role": "Still"
   },
   {
@@ -405,43 +330,8 @@
     "role": "Outcome"
   },
   {
-    "id": "toast-stack",
-    "treatment": "Add and remove from a consistent edge while preserving each item's reading time, identity and dismissal.",
-    "role": "Outcome"
-  },
-  {
-    "id": "table-row",
-    "treatment": "Keep the row heading aligned to current values and preserve the row by identity on update.",
-    "role": "Still"
-  },
-  {
-    "id": "amount-top",
-    "treatment": "Hold digits, scale and units steady. Show the reported amount directly.",
-    "role": "Still"
-  },
-  {
-    "id": "bar-chart",
-    "treatment": "Retain the signed scale and zero baseline. Move only a directly operated selection or viewport.",
-    "role": "Outcome"
-  },
-  {
     "id": "avatar",
     "treatment": "Keep the person's portrait or initials stable through selection and status changes.",
-    "role": "Still"
-  },
-  {
-    "id": "bubble",
-    "treatment": "Hold reading edges and speaker alignment steady as the content grows.",
-    "role": "Still"
-  },
-  {
-    "id": "attachment",
-    "treatment": "Reflect the active drop target immediately. Present the attached file or correction only after the recognized input.",
-    "role": "Composition"
-  },
-  {
-    "id": "marker",
-    "treatment": "Keep the event at its position in the timeline and let the user continue reading.",
     "role": "Still"
   },
   {
@@ -455,49 +345,14 @@
     "role": "Outcome"
   },
   {
-    "id": "input-group",
-    "treatment": "Keep prefix, value and action aligned. Contain feedback to the focused or activated part.",
-    "role": "Field"
-  },
-  {
     "id": "input-otp",
     "treatment": "Track the actual caret and filled slots from a single input. Commit typing, paste and deletion immediately.",
-    "role": "Field"
-  },
-  {
-    "id": "split-text-field",
-    "treatment": "Keep each labeled segment and cursor stable. Move focus only in response to supported input.",
     "role": "Field"
   },
   {
     "id": "slider",
     "treatment": "Track the pointer directly and update the value with each accepted input. Accept keyboard changes without a trailing thumb animation.",
     "role": "Direct"
-  },
-  {
-    "id": "numeric-spinner",
-    "treatment": "Update the bounded numeric value from each accepted action. Hold the number and stepper hit areas steady.",
-    "role": "Field"
-  },
-  {
-    "id": "rating",
-    "treatment": "Distinguish a pointer preview from the committed value. Set the actual rating immediately on activation.",
-    "role": "Selection"
-  },
-  {
-    "id": "agreement",
-    "treatment": "Update individual and collective selection together. Keep the terms available through the change.",
-    "role": "Field"
-  },
-  {
-    "id": "keypad",
-    "treatment": "Give the pressed key immediate feedback while the character appears in the real target.",
-    "role": "Press"
-  },
-  {
-    "id": "form",
-    "treatment": "Keep draft geometry and submission feedback steady. Focus the correction or expose the real result as appropriate.",
-    "role": "Field"
   },
   {
     "id": "toggle",
@@ -520,26 +375,6 @@
     "role": "Layer"
   },
   {
-    "id": "hover-card",
-    "treatment": "Keep the card anchored and readable during a brief reveal. Make the relationship available through focus and touch.",
-    "role": "Layer"
-  },
-  {
-    "id": "command",
-    "treatment": "Show search and focus at entry. Preserve the active command by identity as matches change.",
-    "role": "Layer"
-  },
-  {
-    "id": "menubar",
-    "treatment": "Maintain real keyboard focus and active menu through lateral movement. Keep one open surface anchored.",
-    "role": "Selection"
-  },
-  {
-    "id": "navigation-menu",
-    "treatment": "Reveal the current group from its trigger. Retarget promptly when the user moves to a different group.",
-    "role": "Layer"
-  },
-  {
     "id": "sidebar",
     "treatment": "Use the anchored edge to explain collapse and expansion. Keep active navigation, scroll and recoverable focus.",
     "role": "Selection"
@@ -550,33 +385,8 @@
     "role": "Selection"
   },
   {
-    "id": "carousel",
-    "treatment": "Track supported drags directly and settle to an actual selected item. Keep buttons and keyboard navigation available.",
-    "role": "Direct"
-  },
-  {
-    "id": "stepper",
-    "treatment": "Show completed, current and available steps from real state. Move only the progress indicator.",
-    "role": "Outcome"
-  },
-  {
-    "id": "resizable",
-    "treatment": "Track the grip immediately under pointer or keyboard, clamp to the actual limits and retain focus.",
-    "role": "Direct"
-  },
-  {
     "id": "calendar",
     "treatment": "Update dates and month content immediately so grid focus, selected civil date and visible labels agree.",
-    "role": "Selection"
-  },
-  {
-    "id": "date-picker",
-    "treatment": "Anchor the picker to its trigger and commit the chosen civil date together with its accessible value.",
-    "role": "Layer"
-  },
-  {
-    "id": "questionnaire",
-    "treatment": "Expose the actual current question and keep entered answers available when a user moves between steps.",
     "role": "Selection"
   },
   {

@@ -19,38 +19,25 @@ const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/compon
       const errors = [];
       page.on("pageerror", error => errors.push(String(error)));
       await page.goto(gallery + "#select");
-      const select = page.getByRole("combobox", { name: "Project" });
+      const select = page.getByRole("combobox", { name: "Project", exact: true });
       await select.click();
-      await page.waitForFunction(() => document.querySelector(".specimen select")?.matches(":open"));
-      assert.equal(await select.evaluate(node => node.matches(":open")), true);
-      assert.equal(await select.inputValue(), "sourdough");
+      const listbox = page.getByRole("listbox");
+      await listbox.waitFor();
+      assert.equal(await select.getAttribute("aria-expanded"), "true");
+      assert.match(await select.innerText(), /Sourdough/);
       await page.keyboard.press("Escape");
-      assert.equal(await select.inputValue(), "sourdough", "cancelling must not change the value");
+      await listbox.waitFor({ state: "hidden" });
+      assert.match(await select.innerText(), /Sourdough/, "cancelling must not change the value");
       await select.focus();
       await page.keyboard.press("Space");
+      await page.locator(".yg-select-popup [data-highlighted]").waitFor();
       await page.keyboard.press("ArrowDown");
       await page.keyboard.press("Enter");
-      assert.equal(await select.inputValue(), "meatball");
+      await listbox.waitFor({ state: "hidden" });
+      assert.match(await select.innerText(), /Meatball/);
       assert.deepEqual(errors, []);
       await context.close();
     }
-
-    // This exercises the feature-detection branch; it is not a substitute for
-    // testing an actual browser that does not implement customizable select.
-    const context = await browser.newContext({ viewport: { width: 320, height: 800 } });
-    const page = await context.newPage();
-    await page.addInitScript(() => {
-      const original = CSS.supports.bind(CSS);
-      CSS.supports = (...args) => args[0] === "appearance" && args[1] === "base-select" ? false : original(...args);
-    });
-    await page.goto(gallery + "#select");
-    const fallback = page.getByRole("combobox", { name: "Project" });
-    await fallback.click();
-    await page.waitForFunction(() => document.querySelector(".specimen select")?.matches(":open"));
-    assert.equal(await fallback.locator("xpath=..").getAttribute("data-picker-side"), null);
-    await fallback.getByRole("option", { name: "Yogurt", exact: true }).click();
-    assert.equal(await fallback.inputValue(), "yogurt");
-    await context.close();
-    console.log("Native select motion preferences, keyboard behavior and feature-detection fallback verified.");
+    console.log("Custom Select motion preferences, forced colors and keyboard behavior verified.");
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

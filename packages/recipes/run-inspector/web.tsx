@@ -1,8 +1,10 @@
 "use client";
 import { useId, type ReactNode } from "react";
 import {
+  Badge,
   Button,
   ButtonGroup,
+  Card,
   Heading,
   List,
   ListRow,
@@ -55,7 +57,6 @@ export function RunInspector({
   renderResult?: (run: RunRecord) => ReactNode;
   loading?: boolean;
 }) {
-  const headingId = useId();
   const detailId = useId();
   const current = runs.find((run) => run.id === selectedId);
   const status = current && states[current.state];
@@ -65,73 +66,85 @@ export function RunInspector({
     current?.canCancel &&
     (current.state === "queued" || current.state === "running" || current.state === "blocked");
   return (
-    <Stack role="region" aria-labelledby={headingId} gap={16}>
-      <Heading id={headingId}>Run history</Heading>
-      {loading ? (
-        <Skeleton label="Loading runs" />
-      ) : runs.length === 0 ? (
-        <Result title="No runs yet" />
-      ) : (
-        <>
-          <List label="Runs">
+    <div className="yg-run-inspector">
+      <div role="region" aria-label="Run history" className="yg-run-inspector-layout">
+      <Card title="Run history" density="compact">
+        {loading ? (
+          <Skeleton label="Loading runs" />
+        ) : runs.length === 0 ? (
+          <Result title="No runs yet" />
+        ) : (
+          <List label="Runs" divided>
             {runs.map((run) => (
               <ListRow
                 key={run.id}
                 title={run.title}
-                description={run.time}
-                trailing={
-                  <Text variant="meta">
-                    {run.id === selectedId && "Selected · "}
+                inlineMeta={
+                  <Badge tone={states[run.state].tone}>
                     {states[run.state].label}
-                  </Text>
+                  </Badge>
                 }
+                description={run.time}
+                current={run.id === selectedId}
                 onActivate={() => onSelect(run.id)}
               />
             ))}
           </List>
-          {current && status ? (
-            <Stack key={current.id} role="region" aria-labelledby={detailId} gap={12}>
-              <Stack gap={4}>
-                <Heading id={detailId} level={3}>{current.title}</Heading>
-                <Status tone={status.tone}>{status.label}</Status>
-                {current.summary && <Text variant="help">{current.summary}</Text>}
-              </Stack>
-              {current.steps.length > 0 && <Trace label="Steps" events={[...current.steps]} />}
-              {(current.result != null || renderResult) && (
-                <Stack gap={4}>
-                  <Heading level={3}>Result</Heading>
-                  {current.result}
-                  {renderResult?.(current)}
-                </Stack>
-              )}
-              {((canRetry && onRetry) || (canCancel && onCancel)) && (
-                <ButtonGroup label="Run actions">
-                  {canRetry && onRetry && (
-                    <Button
-                      emphasis="soft"
-                      pending={current.pending}
-                      onClick={() => onRetry(current.id)}
-                    >
-                      Retry run
-                    </Button>
-                  )}
+        )}
+      </Card>
+      {!loading && runs.length > 0 && (
+        current && status ? (
+          <Card
+            key={current.id}
+            title={current.title}
+            description={current.summary}
+            headerAction={<Status tone={status.tone}>{status.label}</Status>}
+            action={
+              ((canRetry && onRetry) || (canCancel && onCancel)) ? (
+                <ButtonGroup label="Run actions" justify="end">
                   {canCancel && onCancel && (
                     <Button
                       emphasis="quiet"
+                      size="compact"
                       pending={current.pending}
                       onClick={() => onCancel(current.id)}
                     >
                       Cancel run
                     </Button>
                   )}
+                  {canRetry && onRetry && (
+                    <Button
+                      emphasis="filled"
+                      tone="brand"
+                      pending={current.pending}
+                      onClick={() => onRetry(current.id)}
+                    >
+                      Retry run
+                    </Button>
+                  )}
                 </ButtonGroup>
+              ) : undefined
+            }
+          >
+            <Stack role="region" aria-labelledby={detailId} gap={12}>
+              <span id={detailId} className="yg-sr-only">{current.title}</span>
+              {current.steps.length > 0 && <Trace label="Steps" events={[...current.steps]} />}
+              {(current.result != null || renderResult) && (
+                <Stack gap={4}>
+                  <Heading level={4}>Result</Heading>
+                  {current.result}
+                  {renderResult?.(current)}
+                </Stack>
               )}
             </Stack>
-          ) : (
+          </Card>
+        ) : (
+          <Card density="compact">
             <Result title="Select a run to see its details" />
-          )}
-        </>
+          </Card>
+        )
       )}
-    </Stack>
+      </div>
+    </div>
   );
 }

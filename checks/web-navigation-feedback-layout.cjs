@@ -9,27 +9,24 @@ const bundle = buildSync({
     import React from 'react';
     import { createRoot } from 'react-dom/client';
     import { Breadcrumb, NavigationList, Pagination } from './packages/web/src/controls/navigation.tsx';
-    import { Navbar, Stepper } from './packages/web/src/controls/advanced.tsx';
+    import { Navbar } from './packages/web/src/controls/advanced.tsx';
     import { Badge, Status, Notice, Result, Skeleton, Progress } from './packages/web/src/controls/feedback.tsx';
-    import { Legend } from './packages/web/src/controls/data.tsx';
     import { Count } from './packages/web/src/patterns/collections.tsx';
     const long = 'UnbrokenWorkspaceName'.repeat(6);
     const links = [{id:'a',label:long,href:'#a'},{id:'b',label:long,href:'#b'}];
     const wrap = (id, child) => <section data-layout={id}>{child}</section>;
-    createRoot(document.getElementById('navigation-feedback-fixture')).render(<>
+    createRoot(document.getElementById('navigation-feedback-fixture'), { identifierPrefix: 'nfl-' }).render(<>
       {wrap('breadcrumb', <Breadcrumb items={links} />)}
       {wrap('navigation', <NavigationList label="Navigation" items={links} current="a" />)}
       {wrap('navbar', <Navbar label={long} onBack={() => {}} action={<button type="button">Action</button>} />)}
       {wrap('badge', <Badge>{long}</Badge>)}
       {wrap('count', <Count label="items" value={1234567890123456} />)}
       {wrap('status', <Status>{long}</Status>)}
-      {wrap('legend', <Legend label={long} />)}
       {wrap('progress', <Progress label={long} value={55} />)}
       {wrap('notice', <Notice title={long}>{long}</Notice>)}
       {wrap('result', <Result title={long}>{long}</Result>)}
       {wrap('skeleton', <Skeleton />)}
       {wrap('pagination', <Pagination page={2} pages={10} onPageChange={() => {}} />)}
-      {wrap('stepper', <Stepper label="Steps" current="a" steps={[{id:'a',label:long},{id:'b',label:long}]} />)}
     </>);
   ` }, bundle: true, write: false, platform: "browser", format: "iife",
   loader: { ".css": "empty", ".module.css": "empty" },
@@ -47,7 +44,7 @@ const bundle = buildSync({
         document.body.append(host);
       });
       await page.addScriptTag({ content: bundle });
-      await page.locator('#navigation-feedback-fixture [data-layout="stepper"]').waitFor();
+      await page.locator('#navigation-feedback-fixture [data-layout="pagination"]').waitFor();
       const boxes = await page.locator('#navigation-feedback-fixture [data-layout]').evaluateAll(nodes => nodes.map(node => ({
         id: node.dataset.layout, width: node.clientWidth, scroll: node.scrollWidth,
       })));

@@ -91,13 +91,15 @@ export function IconButton({
 }
 export function ButtonGroup({
   label,
+  justify,
   children,
 }: {
   label: string;
+  justify?: "start" | "center" | "end" | "between";
   children: ReactNode;
 }) {
   return (
-    <Inline role="group" aria-label={label}>
+    <Inline role="group" aria-label={label} justify={justify} gap={6}>
       {children}
     </Inline>
   );

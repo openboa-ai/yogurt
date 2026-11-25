@@ -10,7 +10,6 @@ import { basename, dirname, resolve } from "node:path";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
-import { anatomy } from "./anatomy.mjs";
 import { generateTokens } from "../tokens/generate.mjs";
 import { validateAgentNames } from "../agents/agent-names.mjs";
 process.chdir(fileURLToPath(new URL("../..", import.meta.url)));
@@ -65,10 +64,7 @@ writeFileSync(
   src + "/index.ts",
   modules.map((m) => 'export * from "./' + m + '";').join("\n") +
     '\nexport { words } from "./foundation/words.js";\n' +
-    'export { CopyButton, LoadingSuccessButton } from "./patterns/motion-status.js";\n' +
-    'export { HoldButton, SlideConfirm } from "./patterns/motion-confirm.js";\n' +
-    'export { CartButton } from "./patterns/motion-cart.js";\n' +
-    'export { ProfileCard } from "./patterns/motion-cards.js";\n',
+    'export { CopyButton } from "./patterns/motion-status.js";\n',
 );
 const art = {};
 for (const [key, file] of Object.entries({
@@ -144,6 +140,18 @@ for (const item of motionComponents) {
     files: [{ path: "ui/" + item.id + ".tsx", type: "registry:ui", content }],
   }, null, 2) + "\n");
 }
+const activeEntryIds = new Set([...catalog, ...motionComponents].map((e) => e.id));
+for (const file of readdirSync(src + "/entries")) {
+  if (file.endsWith(".ts") && !activeEntryIds.has(basename(file, ".ts"))) {
+    unlinkSync(src + "/entries/" + file);
+  }
+}
+const activeRegistryIds = new Set(["registry", ...catalog.map((e) => e.id), ...blocks.map((b) => b.id), ...motionComponents.map((m) => m.id)]);
+for (const file of readdirSync("registry")) {
+  if (file.endsWith(".json") && !activeRegistryIds.has(basename(file, ".json"))) {
+    unlinkSync("registry/" + file);
+  }
+}
 writeFileSync(
   "registry/registry.json",
   JSON.stringify(
@@ -179,7 +187,6 @@ const built = await build({
   jsx: "automatic",
   treeShaking: true,
   external: ["react", "react/*", "react-dom", "react-dom/*", "@ui-sdk/core", "@ui-sdk/core/*", "@ui-sdk/react", "@ui-sdk/react/*"],
-  plugins: [anatomy],
   banner: { js: '"use client";' },
   legalComments: "none",
   chunkNames: "shared/[name]-[hash]",
@@ -189,6 +196,10 @@ const built = await build({
 const outputs = new Set(Object.keys(built.metafile.outputs));
 for (const file of readdirSync("packages/web/dist/shared")) {
   const path = "packages/web/dist/shared/" + file;
+  if (file.endsWith(".js") && !outputs.has(path)) unlinkSync(path);
+}
+for (const file of readdirSync("packages/web/dist/entries")) {
+  const path = "packages/web/dist/entries/" + file;
   if (file.endsWith(".js") && !outputs.has(path)) unlinkSync(path);
 }
 const notices = new Map();

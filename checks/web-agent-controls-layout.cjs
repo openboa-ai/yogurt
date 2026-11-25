@@ -8,7 +8,7 @@ const assert = require("node:assert/strict");
   try {
     for (const width of [320, 390, 768, 1440]) {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
-      for (const id of ["agent-avatar", "gaze"]) {
+      for (const id of ["agent-avatar"]) {
         await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#" + id);
         const specimen = page.locator(`.specimen[data-component="${id}"]`);
         const tools = specimen.locator(".agent-motion-tools");
@@ -17,7 +17,7 @@ const assert = require("node:assert/strict");
         await play.waitFor();
         const geometry = await tools.evaluate(root => {
           const box = element => { const r = element.getBoundingClientRect(); return {left:r.left, right:r.right, top:r.top, bottom:r.bottom}; };
-          return { root:box(root), select:box(root.querySelector(".yg-select")), button:box(root.querySelector(".yg-button")), viewport:document.documentElement.scrollWidth };
+          return { root:box(root), select:box(root.querySelector(".yg-select-trigger")), button:box(root.querySelector(".yg-button")), viewport:document.documentElement.scrollWidth };
         });
         for (const part of [geometry.select, geometry.button]) {
           assert(part.left >= geometry.root.left - 1 && part.right <= geometry.root.right + 1, `${id} control fits at ${width}px`);
@@ -29,13 +29,14 @@ const assert = require("node:assert/strict");
         } else {
           assert(geometry.button.top >= geometry.select.bottom + 7, `${id} wrapped controls do not overlap at ${width}px`);
         }
-        await select.selectOption("working");
+        await select.click();
+        await page.getByRole("option", { name: "Working", exact: true }).click();
         assert.equal(await specimen.locator(".yg-agent-avatar .yg-eyes").first().getAttribute("data-gaze"), "working");
         await play.click();
         const stop = tools.getByRole("button", { name: "Stop sequence", exact: true });
         await stop.waitFor();
         await stop.click();
-        assert.equal(await select.inputValue(), "ready");
+        assert.match(await select.innerText(), /Ready/);
       }
       for (const id of ["agent-sidebar", "project-sidebar"]) {
         await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#" + id);

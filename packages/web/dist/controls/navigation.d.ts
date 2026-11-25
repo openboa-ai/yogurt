@@ -2,9 +2,10 @@ import { type ComponentProps, type ReactNode } from "react";
 import { type ButtonProps } from "./actions.js";
 import { type Choices } from "./forms.js";
 import { type IconName } from "../foundation/foundation.js";
-export declare function Link({ emphasis, size, className, children, ...props }: ComponentProps<"a"> & {
+export declare function Link({ emphasis, tone, size, className, children, ...props }: ComponentProps<"a"> & {
     href: string;
     emphasis?: ButtonProps["emphasis"];
+    tone?: ButtonProps["tone"];
     size?: ButtonProps["size"];
 }): import("react/jsx-runtime").JSX.Element;
 export interface Destination {
@@ -37,7 +38,7 @@ export declare function Tabs({ label, items, value, onValueChange, presentation,
     }[];
     value: string;
     onValueChange: (id: string) => void;
-    presentation?: "pill" | "dock";
+    presentation?: "underline" | "pill" | "dock";
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Pagination({ page, pages, onPageChange, label, }: {
     page: number;

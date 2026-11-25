@@ -18,16 +18,18 @@ export function Tasks() {
   const task = matches.find(item => item.id === selected) ?? matches[0];
   return <Y.Stack gap={16}>
     <Y.Inline className="studio-split"><Y.SegmentedControl label="Task status" options={["All", "Needs you", "Working", "Waiting", "Done"].map(id => ({ id, label: id + " · " + tasks.filter(item => id === "All" || item.state === id).length }))} value={filter} onValueChange={setFilter} />
-      <Y.Button onClick={() => setCreate(true)}>New task</Y.Button></Y.Inline>
+      <Y.Button emphasis="filled" tone="brand" onClick={() => setCreate(true)}>New task</Y.Button></Y.Inline>
     <div className="studio-split-pane">
-      <Y.Surface><Y.List label="Tasks">{matches.map(item =>
+      <Y.Card variant="raised" density="compact"><Y.List label="Tasks" divided>{matches.map(item =>
         <Y.ListRow key={item.id} title={item.title} description={item.agent} current={item.id === task?.id}
-          trailing={<Y.Badge tone={item.state === "Needs you" ? "warning" : "neutral"}>{item.state}</Y.Badge>} onActivate={() => setSelected(item.id)} />)}
-        {!matches.length && <li><Y.Text variant="help">No matching tasks.</Y.Text></li>}</Y.List></Y.Surface>
-      {task && <div key={task.id} className="studio-detail"><Y.Card title={task.title} description={task.agent}>
-        <Y.Stack gap={12}><Y.Text>{task.note}</Y.Text>
-          {task.state === "Done" ? <Y.Status tone="success">Review recorded</Y.Status> : <Y.Inline><Y.Button onClick={() => setTasks(current => current.map(item => item.id === task.id ? { ...item, state: "Done" } : item))}>Mark complete</Y.Button></Y.Inline>}
-        </Y.Stack>
+          inlineMeta={<Y.Badge tone={item.state === "Needs you" ? "warning" : item.state === "Done" ? "success" : "neutral"}>{item.state}</Y.Badge>} onActivate={() => setSelected(item.id)} />)}
+        {!matches.length && <li><Y.Text variant="help">No matching tasks.</Y.Text></li>}</Y.List></Y.Card>
+      {task && <div key={task.id} className="studio-detail"><Y.Card title={task.title} description={task.agent}
+        headerAction={<Y.Badge tone={task.state === "Needs you" ? "warning" : task.state === "Done" ? "success" : "neutral"}>{task.state}</Y.Badge>}
+        action={task.state === "Done"
+          ? <Y.Status tone="success">Review recorded</Y.Status>
+          : <Y.ButtonGroup label="Task actions" justify="end"><Y.Button emphasis="filled" tone="brand" onClick={() => setTasks(current => current.map(item => item.id === task.id ? { ...item, state: "Done" } : item))}>Mark complete</Y.Button></Y.ButtonGroup>}>
+        <Y.Text>{task.note}</Y.Text>
       </Y.Card></div>}
     </div>
     <Y.Dialog title="New task" open={create} onOpenChange={setCreate}>
@@ -88,19 +90,31 @@ export function Workflows() {
   }
   return <Y.Stack gap={16}>
     <Y.Inline className="studio-split">
-      <Y.Select label="Workflow" options={flows.map(item => ({ id: item.id, label: item.name }))} value={current} onChange={event => { setCurrent(event.target.value); setSelected(""); setRun("idle"); }} />
+      <Y.Select label="Workflow" options={flows.map(item => ({ id: item.id, label: item.name }))} value={current} onValueChange={next => { setCurrent(next); setSelected(""); setRun("idle"); }} />
       <Y.ButtonGroup label="Workflow actions"><Y.Button emphasis="soft" onClick={newFlow}>New workflow</Y.Button>
         <Y.Button disabled={!flow.nodes.length || run === "review"} onClick={() => setRun(flow.nodes.some(node => node.type === "Approval") ? "review" : "done")}>Run sample</Y.Button></Y.ButtonGroup>
     </Y.Inline>
     <div className="studio-split-pane">
       <Y.Surface className="studio-workflow-canvas"><Y.Stack gap={12}>
-        <Y.Text variant="meta">Workflow steps</Y.Text>
-        {flow.nodes.map((node, index) => <div key={node.id} className="studio-workflow-step"><Y.List label={"Step " + (index + 1)}>
-          <Y.ListRow title={node.label} description={node.type} current={node.id === selected}
-            leading={<span className="studio-step-number" aria-hidden="true">{index + 1}</span>} onActivate={() => setSelected(node.id)} />
-        </Y.List></div>)}
-        {!flow.nodes.length && <Y.Text>Start with a trigger or add a step.</Y.Text>}
-        <Y.Inline><Y.ActionMenu label="Add step" items={options(...nodeTypes)} onSelect={add} /></Y.Inline>
+        <Y.Text variant="meta" className="studio-settings-cap">Workflow steps</Y.Text>
+        {flow.nodes.length > 0 ? (
+          <ol className="studio-workflow-steps" aria-label="Workflow steps">
+            {flow.nodes.map((node, index) => (
+              <Y.ListRow
+                key={node.id}
+                className="studio-workflow-step"
+                title={node.label}
+                description={node.type}
+                current={node.id === selected}
+                leading={<span className="studio-step-number" aria-hidden="true">{index + 1}</span>}
+                onActivate={() => setSelected(node.id)}
+              />
+            ))}
+          </ol>
+        ) : (
+          <Y.Text>Start with a trigger or add a step.</Y.Text>
+        )}
+        <Y.Inline><Y.ActionMenu label="Add step" triggerSize="compact" items={options(...nodeTypes)} onSelect={add} /></Y.Inline>
       </Y.Stack></Y.Surface>
       <div className="studio-detail" key={step?.id ?? "workflow"}><Y.Card title={step ? "Edit " + step.type.toLowerCase() : "Workflow details"}>
         <Y.Stack gap={12}>
@@ -175,9 +189,9 @@ export function Usage() {
   const value = metric === "Cost" ? 4.8 : 320;
   const summary = metric === "Cost" ? "$" + (value * size).toFixed(2) : Math.round(value * size) + "K tokens";
   return <Y.Stack gap={16}>
-    <Y.Inline><Y.Select label="Agent" value={agent} options={options("All agents", "Kai", "Sol")} onChange={event => setAgent(event.target.value)} />
-      <Y.Select label="Period" value={period} options={options("7 days", "30 days")} onChange={event => setPeriod(event.target.value)} />
-      <Y.Select label="Metric" value={metric} options={options("Cost", "Tokens")} onChange={event => setMetric(event.target.value)} /></Y.Inline>
+    <Y.Inline><Y.Select label="Agent" value={agent} options={options("All agents", "Kai", "Sol")} onValueChange={setAgent} />
+      <Y.Select label="Period" value={period} options={options("7 days", "30 days")} onValueChange={setPeriod} />
+      <Y.Select label="Metric" value={metric} options={options("Cost", "Tokens")} onValueChange={setMetric} /></Y.Inline>
     <div className="studio-split-pane">
       <Y.Card title={"Total " + metric.toLowerCase()}><Y.Heading className="studio-metric" level={4}>{summary}</Y.Heading></Y.Card>
       <Y.Card title="Workspace resources"><Y.Stack><Y.Progress label="CPU" value={27} /><Y.Progress label="Memory" value={48} /></Y.Stack></Y.Card>

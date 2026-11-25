@@ -6,6 +6,7 @@ export interface Decision {
     consequence: string;
     confirmLabel: string;
     available: boolean;
+    destructive?: boolean;
 }
 export interface DecisionRef {
     id: string;

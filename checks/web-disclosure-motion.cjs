@@ -36,9 +36,13 @@ const fixtureBundle = buildSync({
       await page.keyboard.press("Enter");
       assert.equal(await button.getAttribute("aria-expanded"), "false");
       await panel.waitFor({ state: "hidden" });
-      if (await panel.count()) {
-        assert.equal(await panel.evaluate(node => node.inert), true);
-        assert.equal(await panel.getAttribute("aria-hidden"), "true");
+      const hiddenState = await accordion.evaluate(root => {
+        const node = root.querySelector(".yg-accordion-content");
+        return node ? { inert: node.inert, ariaHidden: node.getAttribute("aria-hidden") } : null;
+      });
+      if (hiddenState) {
+        assert.equal(hiddenState.inert, true);
+        assert.equal(hiddenState.ariaHidden, "true");
       }
       assert.equal(await button.evaluate(node => node === document.activeElement), true);
 

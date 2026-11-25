@@ -1,6 +1,6 @@
 {
   "sdk": "@openboa/yogurt",
   "catalogs": {
-    "1": ["0.1.0-local.16"]
+    "1": ["0.1.0-local.16", "0.2.0-local.1"]
   }
 }

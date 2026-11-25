@@ -15,7 +15,8 @@ async function verify() {
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
       await page.goto(pathToFileURL(join(__dirname, "../apps/guide/generated/workflows.html")).href);
-      await page.getByRole("combobox", { name: "Sort records" }).selectOption("title");
+      await page.getByRole("combobox", { name: "Sort records" }).click();
+      await page.getByRole("option", { name: "Title", exact: true }).click();
       assert.match(await page.getByRole("list", { name: "Workspace records" }).getByRole("button").first().textContent(), /Project intake/);
       await page.getByRole("button", { name: /Project intake/ }).click();
       const detail = page.getByRole("region", { name: "Record details" });

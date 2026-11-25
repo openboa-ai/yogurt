@@ -10,7 +10,7 @@ for(const width of [320,1440]){
  await page.goto(pathToFileURL(join(process.cwd(),"apps/guide/generated/components.html")).href+"#button");
  const section=page.locator(".variation .specimen");
  await section.waitFor();
- const sizes={Compact:30,Regular:36,Comfortable:40,Spacious:48,Touch:44};
+ const sizes={Compact:28,Regular:32,Comfortable:36,Spacious:44,Touch:44};
  for(const [label,height] of Object.entries(sizes)){
   const button=section.getByRole("button",{name:label,exact:true});
   await button.waitFor();
@@ -22,7 +22,7 @@ for(const width of [320,1440]){
  assert((await pill.evaluate(node=>parseInt(getComputedStyle(node).borderRadius)))>50);
  await page.goto(pathToFileURL(join(process.cwd(),"apps/guide/generated/components.html")).href+"#icon-button");
  const iconSpecimen=page.locator(".variation .specimen");
- for (const [name,height,glyphWidth] of [["Find a view",30,14],["Add a view",36,16],["Copy a view",40,20],["Save a view",44,20],["Close views",48,20]]) {
+ for (const [name,height,glyphWidth] of [["Find a view",28,14],["Add a view",32,16],["Copy a view",36,20],["Save a view",44,20],["Close views",44,20]]) {
   const button=iconSpecimen.getByRole("button",{name,exact:true});
   const geometry=await button.evaluate(node=>{
    const button=node.getBoundingClientRect();

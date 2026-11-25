@@ -10,12 +10,12 @@ const checkboxSize = require("../design/tokens/ui.json").geometry["checkbox-size
     for (const width of [320, 1440]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: width === 320 ? "dark" : "light" });
       await page.goto(pathToFileURL(join(process.cwd(), "apps/guide/generated/components.html")).href + "#checkbox");
-      const control = page.locator('.specimen[data-component="checkbox"]').getByRole("checkbox");
+      const control = page.locator('.specimen[data-component="checkbox"]').getByRole("checkbox", { name: "Include archived views" });
       await control.waitFor();
       const box = await control.boundingBox();
       assert.equal(box.width, checkboxSize);
       assert.equal(box.height, checkboxSize);
-      assert.equal(await control.evaluate(el => getComputedStyle(el).borderWidth), "0px");
+      assert.equal(await control.evaluate(el => getComputedStyle(el).borderWidth), "1px");
       const before = await control.getAttribute("aria-checked");
       await control.focus();
       await page.keyboard.press("Space");

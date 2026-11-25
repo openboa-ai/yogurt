@@ -51,12 +51,16 @@ const bundle = buildSync({
         await page.emulateMedia({ forcedColors });
         const focus = await dismiss("a").evaluate(node => {
           const style = getComputedStyle(node);
-          return { active: node === document.activeElement, visible: node.matches(":focus-visible"), outline: style.outlineStyle, width: parseFloat(style.outlineWidth) };
+          return { active: node === document.activeElement, visible: node.matches(":focus-visible"), outline: style.outlineStyle, width: parseFloat(style.outlineWidth), shadow: style.boxShadow };
         });
         assert.equal(focus.active, true, `dismiss focus must remain on the button (${forcedColors})`);
         assert.equal(focus.visible, true, `keyboard focus must remain visible (${forcedColors})`);
-        assert.notEqual(focus.outline, "none", `focus outline must be present (${forcedColors})`);
-        assert(focus.width > 0, `focus outline must have a visible width (${forcedColors})`);
+        if (forcedColors === "active") {
+          assert.notEqual(focus.outline, "none", `forced-colors focus outline must be present (${forcedColors})`);
+          assert(focus.width > 0, `forced-colors focus outline must have a visible width (${forcedColors})`);
+        } else {
+          assert(focus.shadow && focus.shadow !== "none", `unified focus boxShadow must be present (${forcedColors})`);
+        }
       }
       await page.emulateMedia({ forcedColors: "none" });
       await dismiss("a").click();

@@ -18,7 +18,7 @@ Vite and Next.js use the shared React components. A desktop shell loads the same
 
 ## First reviewable slice
 
-The owner selected the 8 px corners in the [first-four study](engineering/controls/first-four/README.md) and authorized extending its type, spacing and interaction to the full inventory. The [component library specification](engineering/controls/component-library/spec.md) records the original component contracts. Use the [SDK gallery](../apps/guide/generated/components.html) to inspect the implementation. The original Upright 9 ink blue, slate.750, anchors the UI.
+The owner selected the 8 px corners in the [first-four study](engineering/controls/first-four/README.md) and authorized extending its type, spacing and interaction to the full inventory. The [component library specification](engineering/controls/component-library/spec.md) records the original component contracts. Use the [SDK gallery](../apps/guide/generated/components.html) to inspect the implementation. The original Upright 9 ink blue, slate.700, anchors the UI.
 
 ## Ownership, failures and delivery
 

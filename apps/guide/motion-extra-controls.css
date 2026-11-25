@@ -1,3 +1,4 @@
+@layer yg.patterns {
 .motion-extra { display: grid; justify-items: start; gap: var(--yg-gap-stack); width: min(100%, 320px); }
 .motion-extra > .yg-field { inline-size: 100%; }
 .motion-extra small, .motion-extra > span { color: var(--yg-muted); }
@@ -44,10 +45,10 @@
 .motion-scrubber-bar { position: relative; height: 36px; overflow: hidden; border-radius: var(--yg-radius-control); background: var(--yg-field); cursor: pointer; touch-action: none; user-select: none; }
 .motion-scrubber-fill, .motion-scrubber-ticks, .motion-scrubber-handle { position: absolute; pointer-events: none; }
 .motion-scrubber-fill { inset-block: 0; inset-inline-start: 0; inline-size: var(--scrub-progress); border-radius: inherit; background: color-mix(in srgb, var(--yg-text) 14%, transparent); }
-.motion-scrubber-ticks { inset: 15px 5% 15px 15%; opacity: .25; background: repeating-linear-gradient(to right, var(--yg-text) 0 1px, transparent 1px 11.11%); }
+.motion-scrubber-ticks { inset: 15px 5% 15px 15%; opacity: .25; border-block-start: 1px dashed var(--yg-text); }
 .motion-scrubber-handle { inset-block-start: 50%; inset-inline-start: var(--scrub-progress); translate: -7px -50%; }
 .motion-scrubber-bar:dir(rtl) .motion-scrubber-handle { translate: 7px -50%; }
-.motion-scrubber-handle i { display: block; width: 4px; height: 22px; border-radius: 100px; background: var(--yg-text); scale: .7; opacity: .15; }
+.motion-scrubber-handle i { display: block; width: 4px; height: 22px; border-radius: var(--yg-radius-pill); background: var(--yg-text); scale: .7; opacity: .15; }
 .motion-scrubber-bar:is([data-active], :focus-visible) .motion-scrubber-handle i { opacity: .8; scale: 1; }
 .motion-scrubber-bar:focus-visible { outline: var(--boa-stroke-focus) solid var(--yg-inverse); outline-offset: 2px; }
 .motion-scrubber-label, .motion-scrubber-value { position: absolute; top: 50%; translate: 0 -50%; font: var(--yg-font-action); pointer-events: none; }
@@ -82,7 +83,7 @@
 .motion-wheel { touch-action: none; }
 
 .motion-extra-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.motion-invite { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr); min-inline-size: 0; width: min(320px, 100%); padding: 16px; border-radius: 24px; background: var(--yg-raised-surface); }
+.motion-invite { box-sizing: border-box; display: grid; grid-template-columns: minmax(0, 1fr); min-inline-size: 0; width: min(320px, 100%); padding: 16px; border-radius: var(--yg-radius-sheet); background: var(--yg-raised-surface); }
 .motion-invite-count, .motion-invite small { color: var(--yg-muted); font-size: 13px; }
 .motion-invite-stack { position: relative; height: 44px; margin: 14px 0 16px; overflow: auto hidden; }
 .motion-invite-stack button { position: absolute; top: 2px; width: 40px; height: 40px; border: 3px solid var(--yg-raised-surface); border-radius: 50%; background: var(--yg-field); color: var(--yg-inverse); font: inherit; cursor: pointer; }
@@ -97,7 +98,7 @@
 .motion-wheel { position: relative; height: 222px; overflow: hidden; border-radius: var(--yg-radius-panel); background: var(--yg-raised-surface); touch-action: none; cursor: grab; user-select: none; }
 .motion-wheel:active { cursor: grabbing; }
 .motion-wheel-highlight { position: absolute; inset: calc(50% - 18px) 8px auto; height: 36px; border-radius: var(--yg-radius-control); background: var(--yg-field); }
-.motion-wheel-perspective { position: absolute; inset: 0; perspective: 1000px; mask-image: linear-gradient(transparent, #000 34%, #000 66%, transparent); pointer-events: none; }
+.motion-wheel-perspective { position: absolute; inset: 0; perspective: 1000px; pointer-events: none; }
 .motion-wheel-items { position: absolute; inset: 50% 0 auto; transform-style: preserve-3d; transform: translateZ(-102.08px) rotateX(var(--wheel-turn, 0deg)); }
 .motion-wheel-items > div { position: absolute; inset: -18px 0 auto; display: grid; place-items: center; height: 36px; backface-visibility: hidden; color: var(--yg-muted); }
 .motion-wheel-items > [aria-selected="true"] { color: var(--yg-text); font-weight: 600; }
@@ -123,4 +124,5 @@
 .motion-format-marker { position: absolute; inset-block: var(--yg-inset-layer); border-radius: var(--yg-radius-control); background: var(--yg-inverse); pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
   .motion-format-tools button { transition: color 150ms ease-out, background-color 150ms ease-out; }
+}
 }

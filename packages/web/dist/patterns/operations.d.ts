@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 declare const eventKinds: {
     task: {
         label: string;
@@ -55,9 +56,12 @@ export interface WorkEventRecord {
     dateTime?: string;
     state?: keyof typeof eventStates;
 }
-export declare function WorkEvent({ event, onOpen, }: {
+export declare function WorkEvent({ event, onOpen, inlineMeta, actions, hideStateBadge, }: {
     event: WorkEventRecord;
     onOpen?: (id: string) => void;
+    inlineMeta?: ReactNode;
+    actions?: ReactNode;
+    hideStateBadge?: boolean;
 }): import("react/jsx-runtime").JSX.Element;
 declare const routineStates: {
     scheduled: {

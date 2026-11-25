@@ -11,7 +11,7 @@ import {
   type ReactNode,
 } from "react";
 import { Button, IconButton } from "../controls/actions.js";
-import { cx, Icon } from "../foundation/foundation.js";
+import { cx, Icon, type ControlSize } from "../foundation/foundation.js";
 
 type SidebarState = {
   controls: string;
@@ -132,6 +132,10 @@ export function SidebarLayout({
           <dialog ref={dialog} id={controls} aria-label={label} className="yg-sidebar-drawer"
             onCancel={(event) => { event.preventDefault(); state.dismiss(); }}
             onClick={(event) => {
+              if (event.target instanceof Element && event.target.closest(".yg-agent-row, [data-sidebar-dismiss]")) {
+                state.dismiss();
+                return;
+              }
               if (event.target !== event.currentTarget) return;
               const bounds = event.currentTarget.getBoundingClientRect();
               if (event.clientX < bounds.left || event.clientX > bounds.right ||
@@ -153,19 +157,20 @@ export function SidebarLayout({
 export function SidebarTrigger({
   label,
   showLabel = false,
-}: { label?: string; showLabel?: boolean }) {
+  size = "regular",
+}: { label?: string; showLabel?: boolean; size?: ControlSize }) {
   const state = useContext(SidebarContext);
   if (!state) throw Error("Use SidebarTrigger inside SidebarLayout.");
   if (!state.canToggle) return null;
   const title = label ?? (state.expanded ? "Collapse navigation" : "Expand navigation");
   if (showLabel) return (
-    <Button emphasis="quiet" aria-controls={state.controls} aria-expanded={state.expanded}
+    <Button emphasis="quiet" size={size} aria-controls={state.controls} aria-expanded={state.expanded}
       onClick={(event) => state.toggle(event.currentTarget)}>
       <Icon name="menu" />{title}
     </Button>
   );
   return (
-    <IconButton icon="menu" label={title}
+    <IconButton icon="menu" label={title} size={size}
       aria-controls={state.controls} aria-expanded={state.expanded}
       onClick={(event) => state.toggle(event.currentTarget)} />
   );
@@ -249,7 +254,7 @@ export function SidebarItem({
           state?.dismiss();
         }}>{body}</button>
       )}
-      {!rail && action}
+      {!rail && action && <span className="yg-sidebar-item-action">{action}</span>}
     </div>
   );
 }

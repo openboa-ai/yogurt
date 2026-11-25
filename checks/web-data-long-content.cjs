@@ -8,13 +8,14 @@ const bundle = buildSync({
   stdin: { resolveDir: process.cwd(), loader: "jsx", contents: `
     import React from 'react';
     import { createRoot } from 'react-dom/client';
-    import { Card, BarChart } from './packages/web/src/patterns/editorial.tsx';
+    import { Card } from './packages/web/src/patterns/editorial.tsx';
+    import { Chart } from './packages/web/src/controls/data.tsx';
     import { StatCard } from './packages/web/src/patterns/motion-cards.tsx';
     const long = 'UnbrokenWorkspaceName'.repeat(6);
-    createRoot(document.getElementById('data-long-fixture')).render(<>
+    createRoot(document.getElementById('data-long-fixture'), { identifierPrefix: 'dlc-' }).render(<>
       <Card title={long} description={long}><span>{long}</span></Card>
       <StatCard label={long} value={1234567890123456} detail="Change" />
-      <BarChart title={long} points={[{id:'a', label:long, value:125}]} unit="items" source={long} asOf="2026-01-01" />
+      <Chart title={long} series="Items" points={[{id:'a', label:'Mon', value:125},{id:'b', label:'Tue', value:210}]} unit="items" source={long} asOf="2026-01-01" />
     </>);
   ` }, bundle: true, write: false, platform: "browser", format: "iife",
   loader: { ".css": "empty", ".module.css": "empty" },
@@ -32,12 +33,12 @@ const bundle = buildSync({
     });
     await page.addScriptTag({ content: bundle });
     const host = page.locator("#data-long-fixture");
-    await host.locator('.yg-bars').waitFor();
-    for (const selector of [".yg-card", ".yg-stat-card", ".yg-bars"]) {
+    await host.locator('.yg-chart').waitFor();
+    for (const selector of [".yg-card", ".yg-stat-card", ".yg-chart"]) {
       const layout = await host.locator(selector).evaluate(node => ({ width: node.clientWidth, scroll: node.scrollWidth }));
       assert(layout.scroll <= layout.width + 1, `${selector} overflows: ${layout.scroll} > ${layout.width}`);
     }
     assert(await host.evaluate(node => node.scrollWidth <= node.clientWidth + 1), "data examples must not overflow the host");
-    console.log("Card, StatCard and BarChart long content remains within its container at 320 px.");
+    console.log("Card, StatCard and Chart long content remains within its container at 320 px.");
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

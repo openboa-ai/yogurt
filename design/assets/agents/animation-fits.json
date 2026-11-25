@@ -2,8 +2,8 @@
   "colors": [
     "slate.300", "slate.400", "blue.300", "blue.400", "indigo.300",
     "violet.200", "violet.300", "purple.400", "magenta.300", "rose.300",
-    "rose.400", "red.400", "coral.200", "coral.300", "orange.400",
-    "earth.300", "ochre.200", "ochre.300", "yellow.250", "lime.300",
+    "rose.400", "red.400", "terracotta.200", "terracotta.300", "orange.400",
+    "earth.300", "ochre.200", "ochre.300", "yellow.300", "lime.300",
     "sage.300", "sage.400", "teal.200", "teal.300", "green.400", "cyan.300"
   ],
   "shapes": {

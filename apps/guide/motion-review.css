@@ -1,3 +1,4 @@
+@layer yg.patterns {
 #yogurt-motion-review .motion-review > section {
   display: grid;
   padding: var(--boa-space-24);
@@ -64,4 +65,5 @@
     min-height: 106px;
     gap: var(--boa-space-12);
   }
+}
 }

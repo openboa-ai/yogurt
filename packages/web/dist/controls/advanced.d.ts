@@ -24,30 +24,9 @@ type CommandProps = {
 export declare function ContextMenu({ label, items, onSelect, children, }: CommandProps & {
     children: ReactNode;
 }): import("react/jsx-runtime").JSX.Element;
-export declare function HoverCard({ label, children, }: {
-    label: string;
-    children: ReactNode;
-}): import("react/jsx-runtime").JSX.Element;
 export declare function Command({ label, title, items, onSelect, presentation, triggerText, }: CommandProps & {
     presentation?: "dialog" | "inline";
     triggerText?: string;
-}): import("react/jsx-runtime").JSX.Element;
-export declare function Menubar({ label, menus, onSelect, }: {
-    label: string;
-    menus: {
-        id: string;
-        label: string;
-        items: Option[];
-    }[];
-    onSelect: (id: string) => void;
-}): import("react/jsx-runtime").JSX.Element;
-export declare function NavigationMenu({ label, groups, }: {
-    label: string;
-    groups: {
-        id: string;
-        label: string;
-        links: Destination[];
-    }[];
 }): import("react/jsx-runtime").JSX.Element;
 export declare function Sidebar({ label, links, current, }: {
     label: string;
@@ -80,23 +59,6 @@ export declare function Carousel({ label, items, }: {
         content: ReactNode;
     }[];
 }): import("react/jsx-runtime").JSX.Element;
-export declare function Stepper({ label, steps, current, variant, }: {
-    label: string;
-    steps: {
-        id: string;
-        label: string;
-        detail?: string;
-        action?: ReactNode;
-    }[];
-    current: string;
-    variant?: "list" | "progress";
-}): import("react/jsx-runtime").JSX.Element;
-export declare function Resizable({ label, first, second, initial, }: {
-    label: string;
-    first: ReactNode;
-    second: ReactNode;
-    initial?: number;
-}): import("react/jsx-runtime").JSX.Element;
 type DateValue = {
     label: string;
     value?: string;
@@ -105,17 +67,4 @@ type DateValue = {
     max?: string;
 };
 export declare function Calendar({ label, value, min, max, onValueChange }: DateValue): import("react/jsx-runtime").JSX.Element;
-export declare function DatePicker(props: DateValue): import("react/jsx-runtime").JSX.Element;
-export interface Question {
-    id: string;
-    label: string;
-    kind: "single" | "multiple" | "text";
-    options?: Option[];
-    optional?: boolean;
-}
-export type Answers = Record<string, string | string[]>;
-export declare function Questionnaire({ questions, onComplete, }: {
-    questions: Question[];
-    onComplete: (answers: Answers) => void;
-}): import("react/jsx-runtime").JSX.Element | null;
 export {};

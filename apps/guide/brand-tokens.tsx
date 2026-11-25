@@ -47,7 +47,7 @@ export function BrandTokens() {
                 { id: "dark", label: "Dark" },
               ]}
               value={mode}
-              onChange={(e) => setMode(e.target.value as typeof mode)}
+              onValueChange={(next) => setMode(next as typeof mode)}
             />
           </div>
           <div className="brand-role-grid">

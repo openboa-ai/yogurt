@@ -1,3 +1,4 @@
+@layer yg.patterns {
 body:has(#yogurt-motion-comparison) {
   margin: 0;
 }
@@ -153,4 +154,5 @@ body:has(#yogurt-motion-comparison) {
 
 @media (max-width: 36rem) {
   .motion-pair { grid-template-columns: 1fr; }
+}
 }

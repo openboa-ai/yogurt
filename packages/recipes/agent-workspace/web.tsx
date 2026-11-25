@@ -39,7 +39,7 @@ function WorkspaceDetail({
   const avatar = agent.avatar ?? (agent.art && (
     <AgentAvatar
       agent={agent.art}
-      size={40}
+      size={24}
       state={agent.state}
     />
   ));
@@ -50,6 +50,7 @@ function WorkspaceDetail({
           <IconButton
             label="Browse agents"
             icon="menu"
+            size="compact"
             className="yg-agent-roster-toggle"
             aria-controls={rosterId}
             aria-expanded={rosterOpen}
@@ -57,7 +58,7 @@ function WorkspaceDetail({
           />
           {avatar && <span className="yg-agent-detail-art" aria-hidden="true">{avatar}</span>}
           <div className="yg-agent-detail-identity">
-            <Heading id={headingId} data-agent-heading="" level={3} tabIndex={-1}>{agent.name}</Heading>
+            <Heading id={headingId} data-agent-heading="" level={4} tabIndex={-1}>{agent.name}</Heading>
             <Text variant="help" role="status">
               {agent.role ? agent.role + " · " : ""}{agentPresenceLabels[agent.state]}
             </Text>
@@ -65,7 +66,8 @@ function WorkspaceDetail({
           {renderRuntime && (
             <Button
               ref={inspectorButton}
-              emphasis="quiet"
+              emphasis="soft"
+              size="compact"
               aria-expanded={inspectorOpen}
               aria-controls={inspectorId}
               onClick={() => setInspectorOpen((value) => !value)}
@@ -78,17 +80,19 @@ function WorkspaceDetail({
           <aside id={inspectorId} className="yg-agent-inspector" aria-label="Computer inspector" hidden={!runtime}>
             {runtime && (
               <>
-                <div className="yg-agent-inspector-close">
+                <header className="yg-agent-inspector-head">
+                  <Heading level={5}>Computer</Heading>
                   <IconButton
                     label="Close computer"
                     icon="close"
+                    size="compact"
                     onClick={() => {
                       setInspectorOpen(false);
                       inspectorButton.current?.focus();
                     }}
                   />
-                </div>
-                {runtime}
+                </header>
+                <div className="yg-agent-inspector-body">{runtime}</div>
               </>
             )}
           </aside>
@@ -164,12 +168,12 @@ export function AgentWorkspace({
         <nav id={rosterId} ref={roster} aria-label="Agent roster" className="yg-agent-roster">
           <Stack gap={12}>
             <header className="yg-agent-roster-header">
-              <Heading level={3}>Agents</Heading>
+              <Heading level={4}>Agents</Heading>
               {current && rosterOpen && (
-                <IconButton icon="close" label="Close agent roster" className="yg-agent-roster-toggle" onClick={closeRoster} />
+                <IconButton icon="close" size="compact" label="Close agent roster" className="yg-agent-roster-toggle" onClick={closeRoster} />
               )}
             </header>
-            <SearchField label="Find an agent" value={query} onValueChange={setQuery} />
+            <SearchField label="Find an agent" placeholder="Find an agent" hiddenLabel size="compact" value={query} onValueChange={setQuery} />
             {sections.length === 0 && (
               <Stack gap={8} className="yg-agent-empty">
                 <Text variant="help">{term ? "No matching agents." : "No agents available."}</Text>

@@ -209,7 +209,7 @@ export function OperationsExample({ id }: { id: string }) {
             <Select
               label="Run schedule"
               value={cadence}
-              onChange={(event) => setCadence(event.target.value)}
+              onValueChange={setCadence}
               options={cadences.map((schedule) => ({ id: schedule, label: schedule }))}
             />
             <ButtonGroup label="Schedule actions">

@@ -13,17 +13,18 @@ writeFileSync(
 );
 const rules = [
   "/* Generated from design/assets/agents/presence-motion.json. */",
-  ".yg-eye { transform-box: fill-box; transform-origin: center; }",
+  "@layer yg.patterns {",
+  "  .yg-eye { transform-box: fill-box; transform-origin: center; }",
 ];
 function writeTrack(selector, track, {durationMs, repeat, frames}, transform) {
   rules.push(
-    selector + " {",
-    "  animation: " + track + " " + durationMs + "ms var(--yg-settle, ease-out) " +
+    "  " + selector + " {",
+    "    animation: " + track + " " + durationMs + "ms var(--yg-settle, ease-out) " +
       (repeat ? "infinite" : "both") + ";",
-    "}",
-    "@keyframes " + track + " {",
-    ...frames.map((pose) => "  " + pose[0] + "% { transform: " + transform(pose) + "; }"),
-    "}",
+    "  }",
+    "  @keyframes " + track + " {",
+    ...frames.map((pose) => "    " + pose[0] + "% { transform: " + transform(pose) + "; }"),
+    "  }",
   );
 }
 for (const [state, motion] of Object.entries(states)) {
@@ -36,10 +37,11 @@ for (const [state, motion] of Object.entries(states)) {
   }
 }
 rules.push(
-  ".yg-eyes[data-offscreen], .yg-eyes[data-offscreen] > .yg-eye { animation-play-state: paused; }",
-  ".yg-message .yg-eyes[data-gaze], .yg-message .yg-eyes[data-gaze] > .yg-eye { animation: none; }",
-  "@media (prefers-reduced-motion: reduce) {",
-  "  .yg-eyes[data-gaze], .yg-eyes[data-gaze] > .yg-eye { animation: none; }",
+  "  .yg-eyes[data-offscreen], .yg-eyes[data-offscreen] > .yg-eye { animation-play-state: paused; }",
+  "  .yg-message .yg-eyes[data-gaze], .yg-message .yg-eyes[data-gaze] > .yg-eye { animation: none; }",
+  "  @media (prefers-reduced-motion: reduce) {",
+  "    .yg-eyes[data-gaze], .yg-eyes[data-gaze] > .yg-eye { animation: none; }",
+  "  }",
   "}",
 );
 writeFileSync("design/styles/ui-agent-motion.css", rules.join("\n") + "\n");

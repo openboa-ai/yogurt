@@ -40,7 +40,7 @@ const fixture = buildSync({
       container.style.inlineSize = '100%';
       container.style.maxInlineSize = '480px';
       document.querySelector('.specimen[data-component="composer"]').append(container);
-      createRoot(container).render(React.createElement(App));
+      createRoot(container, { identifierPrefix: 'cf-' }).render(React.createElement(App));
     `,
   },
   bundle: true,
@@ -86,12 +86,12 @@ async function assertLayout(form, selectors) {
         await input.waitFor();
         assert.equal(await send.isDisabled(), true);
         await assertLayout(form, ["textarea", ".yg-composer-footer", ".yg-composer-footer > .yg-composer-tools:last-child > button"]);
-        assert.equal(await input.evaluate(element => getComputedStyle(element).resize), "vertical");
-        const initialColor = await form.evaluate(element => getComputedStyle(element).backgroundColor);
+        assert.equal(await input.evaluate(element => getComputedStyle(element).resize), "none");
+        const initialBorder = await form.evaluate(element => getComputedStyle(element).borderColor);
         await input.focus();
         assert.equal(await input.evaluate(element => element === document.activeElement), true);
         assert.equal(await form.evaluate(element => element.matches(":focus-within")), true);
-        await page.waitForFunction(({ color }) => getComputedStyle(document.querySelector('#composer-fixture .yg-composer')).backgroundColor !== color, { color: initialColor });
+        await page.waitForFunction(({ color }) => getComputedStyle(document.querySelector('#composer-fixture .yg-composer')).borderColor !== color, { color: initialBorder });
         await input.fill("A line of content\n".repeat(20));
         await page.waitForFunction(() => {
           const input = document.querySelector('#composer-fixture textarea');

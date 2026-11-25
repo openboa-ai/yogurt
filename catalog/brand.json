@@ -9,7 +9,7 @@
     "wordmark": "design/assets/logo/openboa-wordmark.svg",
     "layout": "B2",
     "wordmarkWeight": 760,
-    "color": "slate.750"
+    "color": "slate.700"
   },
   "sources": {
     "primitives": "design/tokens/brand.json",

@@ -77,7 +77,7 @@ function SaveExample({ candidate }: { candidate: boolean }) {
 
   return (
     <div className="motion-control-stack">
-      <Select label="Simulated result" value={outcome} onChange={event => setOutcome(event.currentTarget.value)}
+      <Select label="Simulated result" value={outcome} onValueChange={setOutcome}
         options={[{id: "success", label: "Success"}, {id: "failure", label: "Failure"}]} />
       <div className="motion-save-row">
         <Button className={candidate ? "motion-press" : undefined} pending={state === "pending"} onClick={save}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  BarChart, Button, ButtonGroup, Card, Chart, CodeBlock, Heading, Inline, Post,
+  Button, ButtonGroup, Card, Chart, CodeBlock, Heading, Inline,
   RecordFacts, SegmentedControl, Select, Stack, Status, Switch, Text, Yogurt,
   type Appearance, type Material,
 } from "@openboa/yogurt";
@@ -16,7 +16,7 @@ export function ChartStudy() {
   const categories = [{ id: "briefs", label: "Briefs", value: 8 }, { id: "reviews", label: "Reviews", value: 12 }, { id: "releases", label: "Releases", value: 4 }];
   return <Stack gap={24} className="template-study">
     <SegmentedControl label="Chart example" options={choices(["Trend", "Compare categories", "Missing readings"])} value={view} onValueChange={setView} />
-    {view === "compare-categories" ? <BarChart title="Completed work by type" unit="items" points={categories} {...source} /> :
+    {view === "compare-categories" ? <Chart title="Completed work by type" series="Completed" unit="items" points={categories} {...source} /> :
       <Stack gap={12}>
         <SegmentedControl label="Chart period" options={choices(["Week", "Month"])} value={period} onValueChange={setPeriod} />
         <Chart title="Completed work over time" series="Completed" unit="items"
@@ -32,11 +32,11 @@ export function TypeStudy() {
   const [measure, setMeasure] = useState("standard");
   return <Stack gap={24} className="template-study">
     <Inline className="template-study-controls">
-      <Select label="Content" options={choices(["Documentation", "Record", "Conversation"])} value={view} onChange={event => setView(event.target.value)} />
-      <Select label="Rhythm" options={choices(["Compact", "Regular", "Spacious"])} value={density} onChange={event => setDensity(event.target.value)} />
-      <Select label="Reading measure" options={choices(["Narrow", "Standard", "Wide"])} value={measure} onChange={event => setMeasure(event.target.value)} />
+      <Select label="Content" options={choices(["Documentation", "Record", "Conversation"])} value={view} onValueChange={setView} />
+      <Select label="Rhythm" options={choices(["Compact", "Regular", "Spacious"])} value={density} onValueChange={setDensity} />
+      <Select label="Reading measure" options={choices(["Narrow", "Standard", "Wide"])} value={measure} onValueChange={setMeasure} />
     </Inline>
-    <Post className="template-prose" data-measure={measure}>
+    <div className="yg-post template-prose" data-measure={measure}>
       <Stack gap={density === "compact" ? 8 : density === "spacious" ? 24 : 16}>
         <Heading>{view === "documentation" ? "Prepare a release brief" : view === "record" ? "Workspace 2.4" : "Review notes"}</Heading>
         <Text variant="meta">Updated November 21 · Studio</Text>
@@ -46,7 +46,7 @@ export function TypeStudy() {
         <ul><li>Check the latest revision.</li><li>Resolve the remaining owner question.</li><li>Share the brief with reviewers.</li></ul>
         <Text variant="help">Keep the next step near the material it affects.</Text>
       </Stack>
-    </Post>
+    </div>
   </Stack>;
 }
 
@@ -88,13 +88,13 @@ export function ComposeStudy({ guideAppearance }: { guideAppearance: "light" | "
   ].join("\n");
   return <Stack gap={24} className="template-study">
     <Inline className="template-study-controls template-composition-controls">
-      <Select label="Task" options={choices(["Review", "Settings", "Register"])} value={task} onChange={event => { setTask(event.target.value); setStatus("Draft"); }} />
-      <Select label="Appearance" options={choices(["Light", "Dark"])} value={appearance} onChange={event => setAppearance(event.target.value as Appearance)} />
-      <Select label="Surface" options={choices(["Neutral", "Paper", "Mist"])} value={material} onChange={event => setMaterial(event.target.value as Material)} />
-      <Select label="Density" options={choices(["Compact", "Regular", "Spacious"])} value={density} onChange={event => setDensity(event.target.value as typeof density)} />
-      <Select label="Action size" options={choices(["Compact", "Regular", "Touch"])} value={size} onChange={event => setSize(event.target.value as typeof size)} />
-      <Select label="Action shape" options={choices(["Rounded", "Pill"])} value={shape} onChange={event => setShape(event.target.value as typeof shape)} />
-      <Select label="Action color" options={choices(["Neutral", "Brand"])} value={tone} onChange={event => setTone(event.target.value as typeof tone)} />
+      <Select label="Task" options={choices(["Review", "Settings", "Register"])} value={task} onValueChange={next => { setTask(next); setStatus("Draft"); }} />
+      <Select label="Appearance" options={choices(["Light", "Dark"])} value={appearance} onValueChange={next => setAppearance(next as Appearance)} />
+      <Select label="Surface" options={choices(["Neutral", "Paper", "Mist"])} value={material} onValueChange={next => setMaterial(next as Material)} />
+      <Select label="Density" options={choices(["Compact", "Regular", "Spacious"])} value={density} onValueChange={next => setDensity(next as typeof density)} />
+      <Select label="Action size" options={choices(["Compact", "Regular", "Touch"])} value={size} onValueChange={next => setSize(next as typeof size)} />
+      <Select label="Action shape" options={choices(["Rounded", "Pill"])} value={shape} onValueChange={next => setShape(next as typeof shape)} />
+      <Select label="Action color" options={choices(["Neutral", "Brand"])} value={tone} onValueChange={next => setTone(next as typeof tone)} />
     </Inline>
     <Yogurt appearance={appearance} material={material} className="template-composition-canvas">
       <Card title={current.title} description={current.description} density={density}>

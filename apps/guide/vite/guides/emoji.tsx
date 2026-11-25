@@ -57,7 +57,7 @@ function EmojiDetail({ item, color, onColorChange, ink, onInkChange }: {
       <Checkbox label="Ink surface" checked={ink} onCheckedChange={value => onInkChange(value === true)} />
       {item.variants?.includes("peach") && <Select label="Face color" value={color}
         options={[{id: "yellow", label: "Bright yellow"}, {id: "peach", label: "Soft peach"}]}
-        onChange={event => onColorChange(event.currentTarget.value)} />}
+        onValueChange={onColorChange} />}
       <ButtonGroup label="Emoji files">
         <Link href={svg} download emphasis="soft">SVG</Link>
         <Link href={artwork(item, "png", color)} download emphasis="soft">128 px PNG</Link>
@@ -92,7 +92,7 @@ export default function EmojiGallery() {
         <SearchField id="emoji-search" label="Find an emoji" placeholder="Name, emoji or code point" value={query}
           onValueChange={value => { setQuery(value); setPage(1); }} />
         <Select id="emoji-group" label="Group" options={groupOptions} value={group}
-          onChange={event => { setGroup(event.currentTarget.value); setPage(1); }} />
+          onValueChange={next => { setGroup(next); setPage(1); }} />
       </Grid>
       <Grid gap={24} className="guide-emoji-layout">
         <Stack gap={12}>

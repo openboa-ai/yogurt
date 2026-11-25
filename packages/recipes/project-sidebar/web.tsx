@@ -2,8 +2,8 @@
 
 import { useState, type ReactNode } from "react";
 import {
-  Badge, Heading, IconButton, Inline, ProjectMark, SearchField, SidebarContent,
-  SidebarFooter, SidebarGroup, SidebarHeader, SidebarItem, SidebarSubmenu, Text,
+  Count, Heading, IconButton, Inline, ProjectMark, SearchField, SidebarContent,
+  SidebarFooter, SidebarGroup, SidebarHeader, SidebarItem, SidebarSubmenu, Stack, Text,
   type Project,
 } from "@openboa/yogurt";
 
@@ -31,9 +31,11 @@ export function ProjectSidebar({
   return (
     <>
       <SidebarHeader compact={<ProjectMark project={mark} label="" size={24} />}>
-        <Inline gap={8}><ProjectMark project={mark} label="" size={24} /><Heading level={3}>{title}</Heading></Inline>
+        <Stack gap={8}>
+          <Inline gap={8}><ProjectMark project={mark} label="" size={20} /><Heading level={4}>{title}</Heading></Inline>
+          <SearchField label="Find a view" placeholder="Find a view" hiddenLabel size="compact" value={query} onValueChange={setQuery} />
+        </Stack>
       </SidebarHeader>
-      <SidebarHeader><SearchField label="Find a view" value={query} onValueChange={setQuery} /></SidebarHeader>
       <SidebarContent label={title + " views"}>
         <SidebarGroup label="Workspace" action={onAdd &&
           <IconButton icon="plus" size="compact" label="Add project view" onClick={onAdd} />}>
@@ -43,7 +45,7 @@ export function ProjectSidebar({
               {section.items.map((item) => (
                 <SidebarItem key={item.id} label={item.title} href={item.href}
                   active={item.id === currentId} onSelect={onSelect && (() => onSelect(item.id))}
-                  badge={item.unread ? <Badge>{item.unread}</Badge> : undefined} />
+                  badge={item.unread ? <Count value={item.unread} label="unread" /> : undefined} />
               ))}
             </SidebarSubmenu>
           ))}

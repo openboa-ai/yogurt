@@ -66,25 +66,49 @@ export function MetricRecipe({ recipe }: { recipe: Recipe }) {
     id: label, label, value: period === "current" ? values[index] : Math.round(values[index] * 7) / 10,
   }));
   if (id === "traffic-mix") {
+    const total = points.reduce((sum, point) => sum + point.value, 0) || 100;
+    const radius = 44;
+    const circumference = 2 * Math.PI * radius;
     let cumulative = 0;
     const segments = points.map((point, index) => {
-      const start = cumulative;
-      cumulative += point.value;
-      return { ...point, color: ["slate-750", "teal-600", "ochre-500", "violet-600"][index], start, end: cumulative };
+      const fraction = point.value / total;
+      const offset = -cumulative * circumference;
+      cumulative += fraction;
+      return {
+        ...point,
+        colorVar: `var(--donut-series-${index})`,
+        length: fraction * circumference,
+        offset,
+      };
     });
-    return <Y.Stack gap={12}>
-      <div role="img" aria-label="Traffic sources by percentage" className="template-donut"
-        style={{ "--template-chart-slices": segments.map(({ color, start, end }) => "var(--boa-color-" + color + ") " + start + "% " + end + "%").join(", ") } as CSSProperties} />
-      <Y.List label="Traffic sources">{segments.map(({ id, label, value, color }) =>
-        <Y.ListRow key={id} title={label} leading={<span className="template-chart-key" style={{ backgroundColor: "var(--boa-color-" + color + ")" }} />}
+    return <Y.Stack gap={12} className="template-donut-wrap">
+      <div role="img" aria-label="Traffic sources by percentage" className="template-donut">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <g transform="rotate(-90 60 60)">
+            {segments.map(({ id: segId, colorVar, length, offset }) => (
+              <circle
+                key={segId}
+                cx="60"
+                cy="60"
+                r={radius}
+                fill="none"
+                stroke={colorVar}
+                strokeWidth="16"
+                strokeDasharray={`${length.toFixed(2)} ${circumference.toFixed(2)}`}
+                strokeDashoffset={offset.toFixed(2)}
+              />
+            ))}
+          </g>
+        </svg>
+      </div>
+      <Y.List label="Traffic sources">{segments.map(({ id, label, value, colorVar }) =>
+        <Y.ListRow key={id} title={label} leading={<span className="template-chart-key" style={{ backgroundColor: colorVar }} />}
           trailing={<Y.Text variant="meta">{value}%</Y.Text>} />
       )}</Y.List>
     </Y.Stack>;
   }
   return <Y.Stack gap={16}>
-    {components.includes("bar-chart")
-      ? <Y.BarChart title={title} unit={unit} points={points} {...observation} />
-      : <Y.Chart title={title} series={title} unit={unit} points={points} {...observation} />}
+    <Y.Chart title={title} series={title} unit={unit} points={points} {...observation} />
     <Y.SegmentedControl label="Reporting period" options={[{ id: "current", label: "Current" }, { id: "previous", label: "Previous" }]} value={period} onValueChange={setPeriod} />
   </Y.Stack>;
 }

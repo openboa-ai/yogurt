@@ -105,9 +105,9 @@ export function FoundationRecipe({ recipe, appearance }: { recipe: Recipe; appea
       </Y.Inline>{action && <Y.Status>{action}</Y.Status>}</Y.Stack>;
     case "shortcuts":
       return <Y.List label="Keyboard shortcuts">
-        <Y.ListRow title="Find a command" trailing={<Y.KeyboardShortcut label="Command K" keys={["⌘", "K"]} />} />
-        <Y.ListRow title="Find in document" trailing={<Y.KeyboardShortcut label="Command F" keys={["⌘", "F"]} />} />
-        <Y.ListRow title="Close the current menu" trailing={<Y.KeyboardShortcut label="Escape" keys={["Esc"]} />} />
+        <Y.ListRow title="Find a command" trailing={<Y.Badge variant="outline">⌘ K</Y.Badge>} />
+        <Y.ListRow title="Find in document" trailing={<Y.Badge variant="outline">⌘ F</Y.Badge>} />
+        <Y.ListRow title="Close the current menu" trailing={<Y.Badge variant="outline">Esc</Y.Badge>} />
       </Y.List>;
     case "directory":
       return <NavigationPreview id="grouped" />;

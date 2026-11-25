@@ -56,10 +56,10 @@ export function AgentFamily() {
       <Grid className="family-controls" gap={12}>
         <Select label="Agent state" value={state}
           options={states.map(id => ({ id, label: agentPresenceLabels[id] }))}
-          onChange={event => selectState(event.currentTarget.value as Presence)} />
+          onValueChange={next => selectState(next as Presence)} />
         <Select label="Color" value={color ?? ""}
           options={[{ id: "", label: "Original colors" }, ...Object.keys(agentColors).map(id => ({ id, label: id }))]}
-          onChange={event => setColor(event.currentTarget.value === "" ? undefined : event.currentTarget.value as AgentColor)} />
+          onValueChange={next => setColor(next === "" ? undefined : next as AgentColor)} />
         <ButtonGroup label="Agent playback">
           <Button emphasis="soft" onClick={() => setReplay(value => value + 1)}>Replay state</Button>
           <Button onClick={playSequence}>{playing ? "Stop sequence" : "Play sequence"}</Button>

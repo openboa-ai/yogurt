@@ -37,13 +37,13 @@ export default function Playbook() {
       <Card title="Choose a task">
         <Stack gap={16}>
           <Select id="pb-project" label="Product brief" value={project.id} options={projects}
-            onChange={event => {
-              const next = examples.find(item => item.id === event.currentTarget.value);
+            onValueChange={value => {
+              const next = examples.find(item => item.id === value);
               if (next) { setProject(next); setIndex(0); }
             }} />
           <Select id="pb-state" label="Product condition" value={String(index)}
             options={project.scenes.map((item, position) => ({id: String(position), label: item.label}))}
-            onChange={event => setIndex(Number(event.currentTarget.value))} />
+            onValueChange={value => setIndex(Number(value))} />
           <Heading level={4}>Product inputs</Heading>
           <Text>{project.inputs}</Text>
         </Stack>

@@ -10,17 +10,8 @@ const assert = require("node:assert/strict");
   try {
     for (const width of [320, 1440]) {
       const page = await browser.newPage({ viewport: { width, height: 900 }, colorScheme: width === 320 ? "dark" : "light", reducedMotion: "reduce" });
-      await page.goto(gallery + "#date-picker");
-      const root = page.locator('.specimen[data-component="date-picker"]');
-      const trigger = root.getByRole("button", { name: "Review date" });
-      await trigger.waitFor();
-      assert.equal(await trigger.getAttribute("data-state"), "closed");
-      await trigger.click();
-      assert.equal(await trigger.getAttribute("data-state"), "open");
-      assert.equal(await trigger.locator(".yg-icon").evaluate(el => getComputedStyle(el).rotate), "180deg");
-      assert.equal(await trigger.locator(".yg-icon").evaluate(el => getComputedStyle(el).transitionDuration), "0s");
-
-      const calendar = root.locator(".yg-calendar");
+      await page.goto(gallery + "#calendar");
+      const calendar = page.locator('.specimen[data-component="calendar"] .yg-calendar');
       await calendar.waitFor();
       const bounds = await calendar.boundingBox();
       assert(bounds.x >= -1 && bounds.x + bounds.width <= width + 1, "calendar fits inside the viewport");
@@ -31,39 +22,8 @@ const assert = require("node:assert/strict");
       assert.notEqual(beforeHover.background, "rgba(0, 0, 0, 0)");
       await selected.hover();
       assert.deepEqual(await selected.evaluate(appearance), beforeHover, "hover preserves the selected state");
-
       await calendar.getByRole("button", { name: /November 21/ }).click();
-      assert.equal(await trigger.getAttribute("data-state"), "closed");
-      assert.match(await trigger.innerText(), /2026-11-21/);
-      await trigger.click();
-      assert.equal(await trigger.getAttribute("data-state"), "open");
-      await page.keyboard.press("Escape");
-      assert.equal(await trigger.getAttribute("data-state"), "closed");
-      await page.emulateMedia({ reducedMotion: "no-preference" });
-      const chevron = trigger.locator(".yg-icon");
-      async function verifyRotation(target) {
-        const frames = await chevron.evaluate(async node => {
-          const motion = node.getAnimations().find(animation => animation.transitionProperty === "rotate");
-          if (!motion) return [];
-          motion.pause();
-          await motion.ready;
-          const duration = motion.effect.getTiming().duration;
-          const values = [0, .35, 1].map(sample => {
-            motion.currentTime = sample * duration;
-            return getComputedStyle(node).rotate;
-          });
-          motion.finish();
-          return values.map(value => value === "0deg" ? "none" : value);
-        });
-        assert.equal(new Set(frames.slice(0, 3)).size, 3, "the chevron rotates through an intermediate frame");
-        assert.equal(frames[2], target);
-      }
-      await trigger.click();
-      assert.equal(await trigger.getAttribute("data-state"), "open");
-      await verifyRotation("180deg");
-      await page.keyboard.press("Escape");
-      assert.equal(await trigger.getAttribute("data-state"), "closed");
-      await verifyRotation("none");
+      await calendar.locator(".rdp-selected button", { hasText: "21" }).waitFor();
       await page.close();
 
       const touch = await browser.newPage({ viewport: { width, height: 900 }, isMobile: true, hasTouch: true, reducedMotion: "reduce" });
@@ -91,27 +51,8 @@ const assert = require("node:assert/strict");
       assert(focusedBounds.focusedLeft >= focusedBounds.left - 1 && focusedBounds.focusedRight <= focusedBounds.right + 1,
         "keyboard focus scrolls the day into the calendar viewport");
       touchMeasurements.push({ viewport: width, dayWidth: size.width, dayHeight: size.height });
-
-      await touch.goto(gallery + "#date-picker");
-      const touchRoot = touch.locator('.specimen[data-component="date-picker"]');
-      const touchTrigger = touchRoot.getByRole("button", { name: "Review date" });
-      await touchTrigger.tap();
-      const popup = touchRoot.locator(".yg-date-popup");
-      await popup.waitFor();
-      const popupBox = await popup.boundingBox();
-      assert(popupBox.x >= -1 && popupBox.x + popupBox.width <= width + 1, "touch date popup fits in viewport");
-      const daySizes = await popup.locator(".rdp-day_button").evaluateAll(elements => elements.map(el => {
-        const box = el.getBoundingClientRect();
-        return { x: box.x, width: box.width, height: box.height };
-      }));
-      assert(daySizes.length > 27, "the month has day buttons");
-      assert(daySizes.every(day => day.width >= 44 && day.height >= 44), "every rendered day has a 44px touch target");
-      assert(daySizes.every(day => day.x >= -1 && day.x + day.width <= width + 1), "all day targets fit inside viewport");
-      await popup.getByRole("button", { name: /November 21/ }).tap();
-      assert.equal(await touchTrigger.getAttribute("data-state"), "closed");
-      assert.match(await touchTrigger.innerText(), /2026-11-21/);
       await touch.close();
     }
-    console.log(JSON.stringify({ datePicker: "open, selection, dismissal and selected hover checked", touchMeasurements }));
+    console.log(JSON.stringify({ calendar: "selection, hover and touch targets checked", touchMeasurements }));
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

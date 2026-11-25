@@ -1,1 +1,1 @@
-export { Tooltip, MorphTooltip } from "../controls/layers.js";
+export { Tooltip } from "../controls/layers.js";

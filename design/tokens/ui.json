@@ -1,310 +1,322 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "roles": {
-    "overlay-ink": ["neutral.1000", "neutral.1000"],
-    "canvas": [
-      "neutral.0",
-      "neutral.975"
+    "overlay-ink": ["neutral.950", "neutral.950"],
+    "backdrop": ["neutral.200", "neutral.950"],
+    "surface": ["neutral.100", "neutral.950"],
+    "surface-inspector": ["neutral.100", "neutral.950"],
+    "surface-list": ["neutral.100", "neutral.950"],
+    "canvas": ["neutral.50", "neutral.900"],
+    "raised": ["neutral.50", "neutral.900"],
+    "input-surface": ["neutral.50", "neutral.950"],
+    "elevated": ["neutral.50", "neutral.800"],
+    "popover": ["neutral.50", "neutral.800"],
+    "field": ["neutral.100", "neutral.800"],
+    "hover": ["neutral.200", "neutral.700"],
+    "text": ["neutral.950", "neutral.100"],
+    "muted": ["neutral.600", "neutral.300"],
+    "text-subtle": ["neutral.500", "neutral.400"],
+    "text-decorative": ["neutral.500", "neutral.500"],
+    "text-disabled": ["neutral.400", "neutral.600"],
+    "inverse": ["neutral.950", "neutral.100"],
+    "on-inverse": ["neutral.50", "neutral.950"],
+    "inverse-hover": ["neutral.800", "neutral.200"],
+    "inverse-press": ["neutral.700", "neutral.300"],
+    "border-subtle": [
+      { "token": "neutral.950", "alpha": 0.085 },
+      { "token": "neutral.50", "alpha": 0.08 }
     ],
-    "surface": [
-      "neutral.50",
-      "neutral.900"
+    "border-chrome": [
+      { "token": "neutral.950", "alpha": 0.15 },
+      { "token": "neutral.50", "alpha": 0.14 }
     ],
-    "field": [
-      "neutral.100",
-      "neutral.850"
+    "border-control": [
+      { "token": "neutral.950", "alpha": 0.46 },
+      { "token": "neutral.50", "alpha": 0.36 }
     ],
-    "hover": [
-      "neutral.200",
-      "neutral.800"
+    "border-strong": [
+      { "token": "neutral.950", "alpha": 0.48 },
+      { "token": "neutral.50", "alpha": 0.48 }
     ],
-    "text": [
-      "neutral.950",
-      "neutral.50"
+    "border-indicator": [
+      { "token": "neutral.950", "alpha": 0.48 },
+      { "token": "neutral.50", "alpha": 0.48 }
     ],
-    "muted": [
-      "neutral.700",
-      "neutral.300"
+    "focus-ring": ["slate.700", "slate.300"],
+    "focus-halo": [
+      { "token": "slate.700", "alpha": 0.16 },
+      { "token": "slate.300", "alpha": 0.2 }
     ],
-    "inverse": [
-      "neutral.1000",
-      "neutral.50"
+    "brand": ["slate.700", "slate.700"],
+    "brand-hover": ["slate.800", "slate.600"],
+    "brand-press": ["slate.900", "slate.800"],
+    "on-brand": ["neutral.50", "neutral.50"],
+    "brand-ink": ["slate.700", "slate.300"],
+    "brand-soft": ["slate.50", "slate.900"],
+    "brand-soft-hover": ["slate.100", "slate.800"],
+    "brand-border": [
+      { "token": "slate.700", "alpha": 0.26 },
+      { "token": "slate.300", "alpha": 0.34 }
     ],
-    "on-inverse": [
-      "neutral.50",
-      "neutral.1000"
+    "action": ["slate.700", "slate.700"],
+    "action-hover": ["slate.800", "slate.600"],
+    "action-press": ["slate.900", "slate.800"],
+    "on-action": ["neutral.50", "neutral.50"],
+    "action-ink": ["slate.700", "slate.300"],
+    "action-soft": ["slate.50", "slate.900"],
+    "action-soft-hover": ["slate.100", "slate.800"],
+    "action-border": [
+      { "token": "slate.700", "alpha": 0.26 },
+      { "token": "slate.300", "alpha": 0.34 }
     ],
-    "inverse-hover": [
-      "neutral.850",
-      "neutral.100"
+    "accent": ["terracotta.600", "terracotta.300"],
+    "accent-hover": ["terracotta.700", "terracotta.200"],
+    "accent-press": ["terracotta.800", "terracotta.400"],
+    "on-accent": ["neutral.50", "terracotta.950"],
+    "accent-soft": ["terracotta.50", "terracotta.900"],
+    "accent-soft-hover": ["terracotta.100", "terracotta.800"],
+    "accent-border": [
+      { "token": "terracotta.600", "alpha": 0.26 },
+      { "token": "terracotta.300", "alpha": 0.34 }
     ],
-    "inverse-press": [
-      "neutral.800",
-      "neutral.200"
-    ],
-    "brand": [
-      "slate.750",
-      "slate.750"
-    ],
-    "action": [
-      "slate.750",
-      "slate.200"
-    ],
-    "action-hover": [
-      "slate.800",
-      "slate.100"
-    ],
-    "action-press": [
-      "slate.900",
-      "slate.300"
-    ],
-    "on-action": [
-      "gray-green.50",
-      "slate.950"
-    ],
-    "action-soft": [
-      "slate.50",
-      "slate.850"
-    ],
-    "action-soft-hover": [
-      "slate.100",
-      "slate.800"
-    ],
-    "off": [
-      "neutral.600",
-      "neutral.500"
-    ],
-    "thumb": [
-      "neutral.0",
-      "neutral.975"
-    ],
-    "signal-positive": [
-      "green.700",
-      "green.400"
-    ],
-    "on-signal-positive": [
-      "neutral.0",
-      "green.950"
-    ],
-    "signal-positive-soft": [
-      "green.50",
-      "green.900"
-    ],
-    "signal-warning": [
-      "orange.700",
-      "orange.300"
-    ],
-    "signal-limit": [
-      "red.700",
-      "red.300"
-    ],
-    "signal-rating": [
-      "yellow.700",
-      "yellow.250"
-    ],
-    "signal-category-secondary": [
-      "magenta.600",
-      "magenta.300"
-    ],
-    "danger": [
-      "neutral.950",
-      "neutral.25"
-    ],
-    "danger-soft": [
-      "neutral.200",
-      "neutral.800"
-    ],
-    "success": [
-      "neutral.700",
-      "neutral.300"
-    ],
-    "success-soft": [
-      "neutral.100",
-      "neutral.850"
-    ],
-    "warning": [
-      "neutral.800",
-      "neutral.200"
-    ],
-    "warning-soft": [
-      "neutral.200",
-      "neutral.850"
-    ],
-    "accent": [
-      "neutral.800",
-      "neutral.200"
-    ],
-    "accent-soft": [
-      "neutral.100",
-      "neutral.850"
-    ]
+    "off": ["neutral.500", "neutral.500"],
+    "thumb": ["neutral.50", "neutral.100"],
+    "danger": ["red.700", "red.400"],
+    "danger-hover": ["red.800", "red.300"],
+    "danger-press": ["red.900", "red.500"],
+    "on-danger": ["neutral.50", "red.950"],
+    "danger-soft": ["red.50", "red.900"],
+    "danger-soft-hover": ["red.100", "red.800"],
+    "danger-border": ["red.200", "red.800"],
+    "success": ["green.700", "green.300"],
+    "success-hover": ["green.800", "green.200"],
+    "success-press": ["green.900", "green.400"],
+    "on-success": ["neutral.50", "green.950"],
+    "success-soft": ["green.50", "green.900"],
+    "success-soft-hover": ["green.100", "green.800"],
+    "success-border": ["green.200", "green.800"],
+    "warning": ["orange.700", "orange.400"],
+    "warning-hover": ["orange.800", "orange.300"],
+    "warning-press": ["orange.900", "orange.500"],
+    "on-warning": ["neutral.50", "orange.950"],
+    "warning-soft": ["orange.50", "orange.900"],
+    "warning-soft-hover": ["orange.100", "orange.800"],
+    "warning-border": ["orange.200", "orange.800"],
+    "signal-positive": ["green.700", "green.300"],
+    "on-signal-positive": ["neutral.50", "green.950"],
+    "signal-positive-soft": ["green.50", "green.900"],
+    "signal-warning": ["orange.700", "orange.400"],
+    "signal-limit": ["red.700", "red.400"],
+    "signal-rating": ["yellow.700", "yellow.300"],
+    "signal-category-secondary": ["magenta.600", "magenta.300"]
   },
   "materials": {
     "paper": {
-      "canvas": [
-        "paper.25",
-        "paper.975"
+      "backdrop": ["paper.200", "paper.950"],
+      "surface": ["paper.100", "paper.950"],
+      "surface-inspector": ["paper.100", "paper.950"],
+      "surface-list": ["paper.100", "paper.950"],
+      "canvas": ["paper.50", "paper.900"],
+      "raised": ["paper.50", "paper.900"],
+      "input-surface": ["paper.50", "paper.950"],
+      "elevated": ["paper.50", "paper.800"],
+      "popover": ["paper.50", "paper.800"],
+      "field": ["paper.100", "paper.800"],
+      "hover": ["paper.200", "paper.700"],
+      "text": ["paper.950", "paper.100"],
+      "muted": ["paper.600", "paper.300"],
+      "text-subtle": ["paper.500", "paper.400"],
+      "text-decorative": ["paper.500", "paper.500"],
+      "text-disabled": ["paper.400", "paper.600"],
+      "inverse": ["paper.950", "paper.100"],
+      "on-inverse": ["paper.50", "paper.950"],
+      "inverse-hover": ["paper.800", "paper.200"],
+      "inverse-press": ["paper.700", "paper.300"],
+      "thumb": ["paper.50", "paper.100"],
+      "off": ["paper.500", "paper.500"],
+      "border-subtle": [
+        { "token": "paper.950", "alpha": 0.09 },
+        { "token": "paper.50", "alpha": 0.08 }
       ],
-      "surface": [
-        "paper.50",
-        "paper.950"
+      "border-chrome": [
+        { "token": "paper.950", "alpha": 0.16 },
+        { "token": "paper.50", "alpha": 0.14 }
       ],
-      "field": [
-        "paper.100",
-        "paper.850"
+      "border-control": [
+        { "token": "paper.950", "alpha": 0.46 },
+        { "token": "paper.50", "alpha": 0.36 }
       ],
-      "hover": [
-        "paper.200",
-        "paper.800"
+      "border-strong": [
+        { "token": "paper.950", "alpha": 0.48 },
+        { "token": "paper.50", "alpha": 0.48 }
       ],
-      "text": [
-        "paper.950",
-        "paper.50"
-      ],
-      "muted": [
-        "paper.700",
-        "paper.300"
+      "border-indicator": [
+        { "token": "paper.950", "alpha": 0.48 },
+        { "token": "paper.50", "alpha": 0.48 }
       ]
     },
     "mist": {
-      "canvas": [
-        "mist.25",
-        "mist.975"
+      "backdrop": ["mist.200", "mist.950"],
+      "surface": ["mist.100", "mist.950"],
+      "surface-inspector": ["mist.100", "mist.950"],
+      "surface-list": ["mist.100", "mist.950"],
+      "canvas": ["mist.50", "mist.900"],
+      "raised": ["mist.50", "mist.900"],
+      "input-surface": ["mist.50", "mist.950"],
+      "elevated": ["mist.50", "mist.800"],
+      "popover": ["mist.50", "mist.800"],
+      "field": ["mist.100", "mist.800"],
+      "hover": ["mist.200", "mist.700"],
+      "text": ["mist.950", "mist.100"],
+      "muted": ["mist.600", "mist.300"],
+      "text-subtle": ["mist.500", "mist.400"],
+      "text-decorative": ["mist.500", "mist.500"],
+      "text-disabled": ["mist.400", "mist.600"],
+      "inverse": ["mist.950", "mist.100"],
+      "on-inverse": ["mist.50", "mist.950"],
+      "inverse-hover": ["mist.800", "mist.200"],
+      "inverse-press": ["mist.700", "mist.300"],
+      "thumb": ["mist.50", "mist.100"],
+      "off": ["mist.500", "mist.500"],
+      "border-subtle": [
+        { "token": "mist.950", "alpha": 0.09 },
+        { "token": "mist.50", "alpha": 0.08 }
       ],
-      "surface": [
-        "mist.50",
-        "mist.950"
+      "border-chrome": [
+        { "token": "mist.950", "alpha": 0.16 },
+        { "token": "mist.50", "alpha": 0.14 }
       ],
-      "field": [
-        "mist.100",
-        "mist.850"
+      "border-control": [
+        { "token": "mist.950", "alpha": 0.46 },
+        { "token": "mist.50", "alpha": 0.36 }
       ],
-      "hover": [
-        "mist.200",
-        "mist.800"
+      "border-strong": [
+        { "token": "mist.950", "alpha": 0.48 },
+        { "token": "mist.50", "alpha": 0.48 }
       ],
-      "text": [
-        "mist.950",
-        "mist.50"
-      ],
-      "muted": [
-        "mist.700",
-        "mist.300"
+      "border-indicator": [
+        { "token": "mist.950", "alpha": 0.48 },
+        { "token": "mist.50", "alpha": 0.48 }
       ]
     }
   },
   "geometry": {
+    "radius-inset": "radius.inset",
     "radius-small": "radius.small",
+    "radius-chip": "radius.small",
     "radius-control": "radius.control",
+    "radius-menu": "radius.menu",
+    "radius-popover": "radius.popover",
     "radius-panel": "radius.panel",
-    "radius-sheet": "radius.card",
-    "radius-card": "radius.surface",
+    "radius-card": "radius.card",
+    "radius-feature": "radius.feature",
+    "radius-sheet": "radius.sheet",
+    "radius-pill": "radius.round",
     "size-compact": "control.compact",
     "size-regular": "control.height",
-    "size-touch": "control.touch",
-    "size-icon": "control.icon",
-    "glyph": "control.glyph",
-    "inset-compact": "space.10",
-    "inset-regular": "space.12",
-    "inset-roomy": "space.16",
-    "inset-layer": "space.6",
-    "inset-panel": "space.18",
-    "inset-sheet": "space.24",
-    "dialog-width": 400,
-    "composer-measure": 640,
-    "prompt-corner": "radius.sheet",
-    "picker-measure": 232,
-    "gap-tight": "space.4",
-    "gap-inline": "space.8",
-    "gap-stack": "space.12",
-    "gap-section": "space.24",
-    "offset-layer": "space.6",
-    "radius-menu": "radius.panel",
-    "menu-row": "control.height",
-    "layer-shift": "space.4",
-    "switch-width": 44,
-    "switch-height": 24,
-    "thumb-size": 20,
-    "track-inset": 2,
-    "radius-inset": "radius.inset",
-    "radius-popover": "radius.popover",
-    "radius-feature": "radius.card",
-    "radius-pill": "radius.round",
     "size-comfort": "control.comfort",
+    "size-touch": "control.touch",
     "size-row": "control.row",
     "size-spacious": "control.spacious",
     "size-featured": "control.featured",
-    "field-featured-height": "control.featured",
-    "field-featured-radius": "radius.card",
-    "field-featured-gap": "space.8",
-    "field-featured-inset-start": "space.16",
-    "field-featured-inset-end": "space.10",
-    "field-featured-inset-block": "space.8",
-    "glyph-small": "space.14",
+    "size-icon": "control.icon",
+    "glyph": "control.glyph",
+    "glyph-small": 14,
     "glyph-large": "space.20",
-    "inset-row": "space.14",
+    "container-compact": "container.compact",
+    "container-narrow": "container.narrow",
+    "container-medium": "container.medium",
+    "container-wide": "container.wide",
+    "inset-layer": "space.4",
+    "inset-compact": "space.10",
+    "inset-regular": "space.12",
+    "inset-row": "space.12",
+    "inset-roomy": "space.16",
+    "inset-panel": "space.16",
+    "inset-sheet": "space.20",
+    "gap-tight": "space.4",
     "gap-control": "space.6",
-    "gap-row": "space.10",
+    "gap-inline": "space.8",
+    "gap-row": "space.8",
+    "gap-stack": "space.10",
     "gap-panel": "space.16",
+    "gap-section": "space.20",
     "gap-card-copy": "space.4",
+    "offset-layer": "space.6",
+    "layer-shift": "space.4",
+    "menu-row": "control.compact",
+    "anchored-menu-min-width": 176,
+    "dialog-width": 400,
+    "composer-measure": 640,
+    "picker-measure": 232,
+    "prompt-corner": "radius.panel",
+    "switch-width": 38,
+    "switch-height": 22,
+    "thumb-size": 18,
+    "track-inset": 2,
+    "checkbox-size": 16,
+    "checkbox-radius": "radius.inset",
+    "otp-control-max-width": 320,
+    "otp-slot-width": 36,
+    "otp-slot-height": 40,
+    "otp-slot-gap": 8,
+    "otp-slot-radius": "radius.panel",
+    "tab-pill-padding": 3,
+    "tab-pill-height": "control.compact",
+    "segment-track-padding": 3,
+    "segment-option-gap": "space.2",
+    "segment-option-inset-inline": "space.12",
+    "segment-option-height": 26,
+    "segment-track-radius": "radius.round",
+    "segment-option-radius": "radius.round",
+    "slider-track-height": 4,
+    "slider-thumb-size": 16,
+    "slider-hit-height": "control.height",
+    "slider-tip-height": "control.compact",
+    "slider-tip-lift": "space.16",
+    "slider-card-width": 320,
+    "quantity-action-size": "control.comfort",
+    "quantity-value-width": "control.comfort",
+    "quantity-card-inset": "space.16",
+    "list-row-height": "control.row",
+    "list-row-gap": "space.10",
+    "list-row-inset": "space.10",
+    "card-corner": "radius.card",
+    "composer-corner": "radius.feature",
+    "card-inset-compact": "space.12",
+    "card-inset-regular": "space.16",
+    "card-inset-spacious": "space.20",
+    "action-glyph-compact": 14,
+    "action-glyph-regular": "control.glyph",
+    "action-glyph-large": "space.20",
+    "button-radius": "radius.round",
+    "button-pill-radius": "radius.round",
+    "button-compact-radius": "radius.round",
+    "button-inline-inset": "space.16",
+    "button-compact-inset": "space.12",
+    "button-touch-inset": "space.20",
+    "button-size-compact": "control.compact",
+    "button-size-regular": "control.height",
+    "button-size-comfort": "control.comfort",
+    "button-size-spacious": "control.spacious",
+    "button-size-touch": "control.touch",
+    "field-featured-height": "control.featured",
+    "field-featured-radius": "radius.control",
+    "field-featured-gap": "space.8",
+    "field-featured-inset-start": "space.12",
+    "field-featured-inset-end": "space.10",
+    "field-featured-inset-block": "space.4",
     "task-measure": 260,
     "storage-measure": 300,
     "drop-measure": 296,
     "specimen-compact-height": 96,
     "specimen-min-height": 144,
     "specimen-content-width": 496,
-    "specimen-inset": "space.24",
+    "specimen-inset": "space.16",
     "specimen-wide-inset": "space.16",
     "drawer-content-width": 496,
     "drawer-grip-target": 112,
-    "drawer-dismiss-distance": 64,
-    "anchored-menu-min-width": 176,
-    "otp-control-max-width": 328,
-    "otp-slot-width": 48,
-    "otp-slot-height": 56,
-    "otp-slot-gap": 8,
-    "otp-slot-radius": 14,
-    "tab-pill-padding": 4,
-    "tab-pill-height": "control.height",
-    "segment-track-padding": 4,
-    "segment-option-gap": "space.6",
-    "segment-option-inset-inline": "space.14",
-    "segment-option-height": "control.height",
-    "segment-track-radius": "space.16",
-    "segment-option-radius": "radius.panel",
-    "slider-track-height": "space.4",
-    "slider-thumb-size": 28,
-    "slider-hit-height": "control.touch",
-    "slider-tip-height": "control.compact",
-    "slider-tip-lift": "space.20",
-    "slider-card-width": 320,
-    "checkbox-size": 20,
-    "checkbox-radius": "radius.control",
-    "quantity-action-size": "control.comfort",
-    "quantity-value-width": "control.comfort",
-    "quantity-card-inset": "space.20",
-    "list-row-height": "control.spacious",
-    "list-row-gap": "space.12",
-    "list-row-inset": "space.12",
-    "card-corner": "radius.surface",
-    "composer-corner": "radius.surface",
-    "card-inset-compact": "space.16",
-    "card-inset-regular": "space.18",
-    "card-inset-spacious": "space.24",
-    "action-glyph-compact": "space.14",
-    "action-glyph-regular": "space.16",
-    "action-glyph-large": "space.20",
-    "button-radius": "radius.control",
-    "button-pill-radius": "radius.round",
-    "button-compact-radius": "radius.small",
-    "button-inline-inset": "space.12",
-    "button-compact-inset": "space.10",
-    "button-touch-inset": "space.16",
-    "button-size-compact": "control.compact",
-    "button-size-regular": "control.height",
-    "button-size-comfort": "control.comfort",
-    "button-size-spacious": "control.spacious",
-    "button-size-touch": "control.touch"
+    "drawer-dismiss-distance": 64
   },
   "opacity": {
     "overlay-scrim": 40
@@ -315,99 +327,52 @@
     "layer-exit": 110,
     "travel": 220,
     "change": 180,
-    "panel": 260,
-    "expand": 320,
+    "panel": 240,
+    "expand": 280,
     "busy": 800,
     "placeholder-sweep": 1000,
-    "reveal": 420
+    "reveal": 360
   },
   "motionProfiles": {
-    "button-release": {"duration": 280,"fallback": "settle","samples": [0,0.22,0.59,0.83,0.97,1.016,1.018,1.01,1]},
-    "slider-lift": {"duration": 340,"fallback": "arrive","samples": [0,0.24,0.56,0.79,0.95,1.04,1.055,1.035,1.01,1]},
-    "menu-height": {"duration": 470,"fallback": "settle","samples": [0.0,0.107,0.312,0.531,0.718,0.857,0.95,1.003,1.029,1.036,1.034,1.027,1.019,1.011,1.006,1.0]},
-    "exposure": {"duration": 400,"fallback": "settle","samples": [0.0,0.15,0.357,0.529,0.659,0.753,0.822,0.872,0.907,0.933,0.952,0.965,0.975,0.982,0.987,1.0]},
-    "wheel": {"duration": 560,"fallback": "settle","samples": [0.0,0.084,0.237,0.396,0.537,0.652,0.743,0.811,0.863,0.901,0.928,0.948,0.963,0.973,0.981,1.0]},
-    "pull-return": {"duration": 535,"fallback": "settle","samples": [0.0,0.151,0.435,0.719,0.933,1.059,1.109,1.108,1.081,1.048,1.019,0.999,0.99,0.987,0.989,1.0]},
-    "storage-reel-fast": {"duration": 450,"fallback": "settle","samples": [0.0,0.103,0.297,0.497,0.669,0.798,0.889,0.947,0.981,0.999,1.007,1.01,1.009,1.007,1.005,1.0]},
-    "storage-reel-medium": {"duration": 435,"fallback": "settle","samples": [0.0,0.099,0.291,0.496,0.676,0.814,0.911,0.971,1.005,1.021,1.025,1.023,1.018,1.013,1.009,1.0]},
-    "storage-reel-slow": {"duration": 420,"fallback": "settle","samples": [0.0,0.095,0.284,0.494,0.682,0.83,0.934,0.999,1.034,1.047,1.046,1.039,1.029,1.019,1.011,1.0]},
-    "file-check": {"duration": 550,"fallback": "settle","samples": [0.0,0.113,0.31,0.503,0.66,0.777,0.858,0.913,0.948,0.97,0.983,0.991,0.995,0.998,0.999,1.0]},
-    "step-check": {"duration": 660,"fallback": "settle","samples": [0.0,0.116,0.323,0.528,0.695,0.816,0.898,0.948,0.978,0.993,1.001,1.003,1.004,1.003,1.003,1.0]},
-    "deck-release": {"duration": 550,"fallback": "settle","samples": [0.0,0.173,0.502,0.822,1.046,1.155,1.17,1.13,1.072,1.019,0.985,0.971,0.972,0.98,0.99,1.0]},
-    "deck-depth": {"duration": 440,"fallback": "settle","samples": [0.0,0.103,0.305,0.523,0.714,0.86,0.957,1.014,1.041,1.047,1.043,1.034,1.023,1.014,1.007,1.0]},
-    "ticket-turn": {"duration": 625,"fallback": "settle","samples": [0.0,0.132,0.361,0.58,0.749,0.865,0.936,0.977,0.997,1.005,1.007,1.006,1.005,1.003,1.002,1.0]},
-    "rating-pop": {"duration": 525,"fallback": "settle","samples": [0.0,0.297,0.832,1.25,1.388,1.282,1.076,0.909,0.85,0.887,0.967,1.033,1.058,1.045,1.014,1.0]},
-    "drag-position": {"duration": 360,"fallback": "settle","samples": [0.0,0.2,0.495,0.727,0.872,0.95,0.986,1.0,1.004,1.004,1.003,1.002,1.001,1.0,1.0,1.0]},
-    "refresh-pull": {"duration": 525,"fallback": "settle","samples": [0.0,0.206,0.568,0.886,1.076,1.143,1.127,1.077,1.028,0.995,0.981,0.98,0.987,0.994,1.0,1.0]},
-    "tag-enter": {"duration": 480,"fallback": "settle","samples": [0.0,0.186,0.553,0.926,1.172,1.261,1.23,1.135,1.034,0.965,0.933,0.937,0.96,0.986,1.007,1.0]},
-    "stepper-spin": {"duration": 480,"fallback": "settle","samples": [0.0,0.219,0.641,1.04,1.261,1.29,1.197,1.064,0.96,0.914,0.919,0.954,0.993,1.018,1.027,1.0]},
-    "pagination": {"duration": 520,"fallback": "settle","samples": [0.0,0.081,0.252,0.435,0.598,0.731,0.832,0.901,0.947,0.977,0.993,1.002,1.006,1.006,1.006,1.0]},
-    "reading-marker": {"duration": 330,"fallback": "settle","samples": [0.0,0.098,0.287,0.481,0.646,0.777,0.864,0.922,0.959,0.981,0.993,0.999,1.002,1.002,1.002,1.0]},
-    "selection-lead": {"duration": 280,"fallback": "settle","samples": [0.0,0.09,0.271,0.466,0.639,0.774,0.871,0.933,0.975,0.997,1.009,1.012,1.012,1.01,1.008,1.0]},
-    "selection-tail": {"duration": 545,"fallback": "settle","samples": [0.0,0.092,0.284,0.495,0.681,0.821,0.922,0.985,1.018,1.032,1.034,1.029,1.022,1.015,1.009,1.0]},
-    "bottom-label": {"duration": 420,"fallback": "settle","samples": [0.0,0.097,0.293,0.504,0.688,0.823,0.919,0.979,1.011,1.024,1.027,1.023,1.018,1.012,1.008,1.0]},
-    "picker-opacity": {"duration": 360,"fallback": "settle","samples": [0.0,0.101,0.287,0.48,0.644,0.771,0.861,0.921,0.959,0.982,0.994,1.001,1.003,1.004,1.003,1.0]},
-    "picker-lift": {"duration": 460,"fallback": "settle","samples": [0.0,0.109,0.316,0.531,0.712,0.847,0.935,0.988,1.014,1.024,1.024,1.02,1.015,1.01,1.006,1.0]},
-    "picker-row": {"duration": 390,"fallback": "settle","samples": [0.0,0.086,0.269,0.476,0.664,0.815,0.922,0.991,1.029,1.045,1.047,1.04,1.031,1.022,1.013,1.0]},
-    "picker-slide": {"duration": 380,"fallback": "settle","samples": [0.0,0.089,0.285,0.494,0.68,0.832,0.932,0.995,1.029,1.041,1.041,1.034,1.026,1.017,1.01,1.0]},
-    "picker-highlight": {"duration": 250,"fallback": "settle","samples": [0.0,0.075,0.236,0.422,0.598,0.745,0.858,0.938,0.989,1.018,1.032,1.035,1.032,1.027,1.02,1.0]},
-    "switch-travel": {"duration": 490,"fallback": "settle","samples": [0.0,0.14,0.441,0.743,0.974,1.112,1.158,1.143,1.099,1.05,1.01,0.985,0.976,0.976,0.983,1.0]},
-    "storage-fill": {"duration": 450,"fallback": "settle","samples": [0.0,0.203,0.618,1.0,1.244,1.305,1.232,1.102,0.989,0.92,0.907,0.933,0.973,1.007,1.026,1.0]},
-    "storage-disclose": {"duration": 460,"fallback": "settle","samples": [0.0,0.096,0.301,0.513,0.701,0.838,0.934,0.989,1.017,1.028,1.028,1.023,1.017,1.011,1.007,1.0]},
-    "storage-lift": {"duration": 420,"fallback": "settle","samples": [0.0,0.097,0.293,0.504,0.688,0.823,0.919,0.979,1.011,1.024,1.027,1.023,1.018,1.012,1.008,1.0]},
-    "letter-progress": {"duration": 430,"fallback": "settle","samples": [0.0,0.099,0.299,0.529,0.724,0.878,0.977,1.035,1.059,1.062,1.053,1.039,1.026,1.014,1.005,1.0]},
-    "prompt-editor": {"duration": 340,"fallback": "settle","samples": [0.0,0.089,0.269,0.452,0.623,0.757,0.855,0.919,0.962,0.987,1.0,1.006,1.008,1.008,1.006,1.0]},
-    "prompt-status": {"duration": 360,"fallback": "settle","samples": [0.0,0.09,0.274,0.474,0.652,0.792,0.891,0.956,0.994,1.013,1.02,1.021,1.018,1.013,1.009,1.0]},
-    "prompt-action": {"duration": 345,"fallback": "settle","samples": [0.0,0.113,0.343,0.585,0.786,0.928,1.013,1.053,1.062,1.054,1.039,1.025,1.012,1.004,0.999,1.0]},
-    "nav-divider": {"duration": 480,"fallback": "settle","samples": [0.0,0.129,0.384,0.66,0.88,1.022,1.09,1.106,1.091,1.063,1.034,1.011,0.997,0.99,0.989,1.0]},
-    "nav-bottom": {"duration": 395,"fallback": "settle","samples": [0.0,0.094,0.294,0.501,0.681,0.818,0.916,0.975,1.006,1.021,1.024,1.022,1.017,1.012,1.008,1.0]},
-    "command-width": {"duration": 420,"fallback": "settle","samples": [0.0,0.097,0.293,0.504,0.688,0.823,0.919,0.979,1.011,1.024,1.027,1.023,1.018,1.012,1.008,1.0]},
-    "command-height": {"duration": 460,"fallback": "settle","samples": [0.0,0.089,0.279,0.479,0.661,0.797,0.897,0.958,0.995,1.013,1.019,1.019,1.016,1.012,1.009,1.0]},
-    "command-highlight": {"duration": 350,"fallback": "settle","samples": [0.0,0.092,0.291,0.498,0.688,0.828,0.924,0.986,1.018,1.031,1.032,1.027,1.021,1.014,1.008,1.0]},
-    "task-check": {"duration": 650,"fallback": "settle","samples": [0.0,0.1,0.286,0.478,0.636,0.759,0.846,0.904,0.943,0.967,0.982,0.99,0.995,0.998,0.999,1.0]},
-    "checklist-strike": {"duration": 550,"fallback": "settle","samples": [0.0,0.086,0.264,0.464,0.637,0.775,0.874,0.94,0.982,1.004,1.014,1.016,1.015,1.012,1.009,1.0]},
-    "file-press": {"duration": 460,"fallback": "settle","samples": [0.0,0.168,0.545,0.923,1.2,1.312,1.288,1.184,1.056,0.958,0.907,0.902,0.93,0.97,1.005,1.0]},
-    "card-open": {"duration": 480,"fallback": "settle","samples": [0.0,0.103,0.308,0.538,0.737,0.884,0.977,1.03,1.051,1.053,1.044,1.032,1.02,1.011,1.004,1.0]},
-    "card-fan": {"duration": 490,"fallback": "settle","samples": [0.0,0.097,0.314,0.549,0.757,0.919,1.02,1.073,1.089,1.083,1.064,1.043,1.024,1.009,0.999,1.0]},
-    "card-lift": {"duration": 385,"fallback": "settle","samples": [0.0,0.123,0.376,0.666,0.911,1.07,1.154,1.17,1.143,1.096,1.049,1.01,0.984,0.973,0.971,1.0]},
-    "card-detail": {"duration": 435,"fallback": "settle","samples": [0.0,0.106,0.328,0.569,0.768,0.92,1.014,1.061,1.074,1.067,1.051,1.034,1.018,1.007,0.999,1.0]},
-    "text-pop": {"duration": 475,"fallback": "settle","samples": [0.0,0.215,0.663,1.055,1.275,1.295,1.194,1.054,0.951,0.907,0.918,0.956,0.997,1.022,1.029,1.0]},
-    "tooltip-arrive": {"duration": 370,"fallback": "settle","samples": [0.0,0.105,0.302,0.518,0.699,0.829,0.92,0.975,1.002,1.015,1.018,1.016,1.013,1.009,1.005,1.0]},
-    "island-expand": {"duration": 410,"fallback": "settle","samples": [0.0,0.093,0.293,0.527,0.728,0.883,0.986,1.047,1.071,1.072,1.061,1.044,1.028,1.015,1.005,1.0]},
-    "step-fill": {"duration": 620,"fallback": "settle","samples": [0.0,0.105,0.302,0.506,0.676,0.798,0.884,0.939,0.971,0.989,0.998,1.002,1.003,1.003,1.003,1.0]},
-    "success-label": {"duration": 375,"fallback": "settle","samples": [0.0,0.102,0.305,0.521,0.706,0.843,0.934,0.988,1.016,1.026,1.026,1.021,1.016,1.01,1.006,1.0]},
-    "surface-focus": {
-      "duration": 360,
+    "press": {
+      "duration": 240,
       "fallback": "settle",
-      "samples": [0, 0.101, 0.287, 0.48, 0.644, 0.771, 0.861, 0.921, 0.959, 0.982, 0.994, 1.001, 1.003, 1.004, 1.003, 1]
+      "samples": [0, 0.24, 0.62, 0.86, 0.98, 1.015, 1.012, 1.005, 1]
+    },
+    "indicator": {
+      "duration": 240,
+      "fallback": "arrive",
+      "samples": [0, 0.14, 0.38, 0.62, 0.8, 0.91, 0.97, 1.005, 1.012, 1.008, 1.003, 1]
+    },
+    "layer": {
+      "duration": 200,
+      "fallback": "arrive",
+      "samples": [0, 0.2, 0.48, 0.72, 0.87, 0.95, 0.988, 1.002, 1]
+    },
+    "expand": {
+      "duration": 280,
+      "fallback": "settle",
+      "samples": [0, 0.14, 0.36, 0.58, 0.76, 0.88, 0.95, 0.985, 0.998, 1]
+    },
+    "settle": {
+      "duration": 260,
+      "fallback": "settle",
+      "samples": [0, 0.18, 0.45, 0.69, 0.85, 0.94, 0.985, 1.004, 1.002, 1]
     }
   },
   "elevation": {
+    "active": [
+      [1, 2, 8]
+    ],
     "lift": [
-      [
-        1,
-        3,
-        8
-      ]
+      [1, 2, 5]
     ],
     "float": [
-      [
-        1,
-        3,
-        9
-      ],
-      [
-        8,
-        24,
-        12
-      ]
+      [1, 2, 6],
+      [6, 18, 10]
     ],
     "panel": [
-      [
-        12,
-        36,
-        18
-      ]
+      [8, 28, 16]
     ]
   },
   "easing": {
@@ -418,7 +383,7 @@
   },
   "typeMetrics": {
     "lineHeightScale": 1.25,
-    "tracking": 0,
+    "tracking": -0.006,
     "lineHeightRoles": {
       "action": "ui",
       "body": "interface",
@@ -426,26 +391,50 @@
       "label": "help",
       "help": "help",
       "meta": "caption",
+      "cap": "cap",
       "card-title": "card-title",
       "editor": "editor",
-      "reading": "body"
+      "reading": "body",
+      "heading": "subheading",
+      "section": "section",
+      "display": "headline",
+      "value": "value"
+    },
+    "trackingRoles": {
+      "action": "label",
+      "body": "body",
+      "compact": "label",
+      "label": "label",
+      "help": "body",
+      "meta": "meta",
+      "cap": "cap",
+      "badge": "label",
+      "card-title": "heading",
+      "heading": "heading",
+      "display": "display",
+      "touch": "body",
+      "editor": "body",
+      "reading": "body",
+      "section": "heading",
+      "value": "value"
     }
   },
   "types": {
     "action": ["ui", "ui"],
     "body": ["interface", "body"],
     "compact": ["help", "ui"],
-    "label": ["help", "body"],
+    "label": ["help", "ui"],
     "help": ["help", "body"],
     "meta": ["caption", "body"],
-    "badge": ["caption", "body"],
-    "card-title": ["card-title", "ui"],
-    "heading": ["subheading", "body"],
-    "display": ["headline", "body"],
+    "cap": ["cap", "ui"],
+    "badge": ["caption", "ui"],
+    "card-title": ["card-title", "heading"],
+    "heading": ["subheading", "heading"],
+    "display": ["headline", "heading"],
     "touch": ["body", "body"],
     "editor": ["editor", "body"],
     "reading": ["body", "body"],
-    "section": ["section", "body"],
-    "value": ["value", "body"]
+    "section": ["section", "heading"],
+    "value": ["value", "value"]
   }
 }

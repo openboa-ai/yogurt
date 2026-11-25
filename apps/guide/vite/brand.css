@@ -1,114 +1,119 @@
-.guide-shell .guide-brand {
-  inline-size: 100%;
-  max-inline-size: var(--guide-width);
-  margin-inline: auto;
-  padding-inline: var(--guide-gutter);
-  padding-block: var(--yg-gap-section) var(--boa-space-64);
-}
-
-.guide-brand-opening {
-  grid-template-columns: minmax(0, 1.16fr) minmax(0, 1fr);
-  grid-template-areas: "title artwork" "intro artwork";
-  grid-template-rows: auto auto;
-  align-content: center;
-  align-items: center;
-  min-block-size: clamp(29rem, 44vi, 37rem);
-  padding-block: var(--boa-space-32) var(--boa-space-48);
-  margin-block-end: var(--boa-space-32);
-}
-.guide-brand-title { grid-area: title; }
-.guide-brand-title .yg-heading {
-  font-size: clamp(4.5rem, 14.3vi, 12.5rem);
-  font-weight: var(--boa-role-weight-wordmark);
-  line-height: .86;
-  letter-spacing: var(--boa-tracking-display);
-}
-.guide-brand-intro {
-  grid-area: intro;
-  inline-size: min(100%, 32rem);
-  padding-inline-start: clamp(var(--boa-space-24), 5.5vi, var(--boa-space-64));
-}
-.guide-brand-intro .guide-brand-slogan {
-  font-size: clamp(var(--boa-size-title), 4vi, 3.5rem);
-  line-height: .99;
-  letter-spacing: var(--boa-tracking-heading);
-}
-.guide-brand-slogan strong {
-  display: block;
-  color: light-dark(var(--boa-color-slate-750), var(--boa-color-slate-300));
-  font-weight: var(--boa-role-weight-heading);
-}
-.guide-brand-intro .guide-brand-description {
-  max-inline-size: 47ch;
-  color: var(--yg-muted);
-  font-size: var(--boa-size-body);
-  line-height: var(--boa-line-height-body);
-}
-.guide-brand-artwork {
-  grid-area: artwork;
-  display: grid;
-  place-items: center;
-  align-self: stretch;
-  min-block-size: 26rem;
-  border-radius: var(--yg-radius-sheet);
-  background: light-dark(var(--boa-color-paper-100), var(--boa-color-gray-green-950));
-}
-.guide-brand-artwork .yg-mark {
-  inline-size: min(88%, 28.5rem);
-  block-size: auto;
-}
-
-.guide-brand-body { max-inline-size: 70rem; }
-.guide-brand-body [id] { scroll-margin-block-start: var(--yg-gap-section); }
-.guide-brand-body .guide-section .yg-text { max-inline-size: 68ch; }
-.guide-brand-body .guide-section > .yg-stack > h2 {
-  font-size: var(--boa-size-section);
-  line-height: var(--boa-line-height-section);
-}
-
-.guide-company-layout {
-  grid-template-columns: minmax(10rem, 1fr) minmax(0, 2fr);
-  align-items: start;
-  padding-block: var(--boa-space-24);
-}
-.guide-company-layout .yg-heading {
-  font-size: clamp(var(--boa-size-section), 4vi, var(--boa-size-headline));
-  line-height: 1.06;
-  letter-spacing: var(--boa-tracking-heading);
-}
-.guide-company-layout .yg-text { max-inline-size: 48ch; }
-.guide-company-layout img,
-.guide-brand-art img { display: block; max-inline-size: 100%; object-fit: contain; }
-.guide-company-layout img {
-  background: var(--boa-color-gray-green-50);
-  border-radius: var(--yg-radius-control);
-  padding: var(--yg-gap-tight);
-}
-
-.guide-brand-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
-.guide-brand-asset-row { grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr); align-items: center; }
-.guide-brand-art {
-  display: grid;
-  place-items: center;
-  min-block-size: 7rem;
-  padding: var(--yg-inset-regular);
-  border-radius: var(--yg-radius-control);
-  background: var(--boa-color-gray-green-50);
-}
-.guide-brand .yg-inline { flex-wrap: wrap; }
-
-@media (max-width: 48rem) {
-  .guide-brand-opening {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "title" "intro" "artwork";
-    min-block-size: 0;
-    padding-block: var(--boa-space-24) 0;
+@layer yg.patterns {
+  .guide-shell .guide-brand {
+    inline-size: 100%;
+    max-inline-size: var(--guide-width);
+    margin-inline: auto;
+    padding-inline: var(--guide-gutter);
+    padding-block: var(--boa-space-24) var(--boa-space-48);
   }
-  .guide-brand-intro { padding-inline-start: 0; }
-  .guide-brand-artwork { min-block-size: 13rem; }
-  .guide-brand-artwork .yg-mark { inline-size: min(60%, 14rem); }
-  .guide-company-layout { grid-template-columns: minmax(0, 1fr); padding-block: 0; }
-}
-@media (max-width: 34rem) {
-  .guide-brand-asset-row { grid-template-columns: minmax(0, 1fr); }
+
+  .guide-brand-opening {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    grid-template-areas: "title artwork" "intro artwork";
+    grid-template-rows: auto auto;
+    align-content: center;
+    align-items: center;
+    min-block-size: auto;
+    padding-block: var(--boa-space-24) var(--boa-space-24);
+    margin-block-end: var(--boa-space-24);
+  }
+  .guide-brand-title { grid-area: title; }
+  .guide-brand-title .yg-heading {
+    font-size: clamp(2.5rem, 4.5vw, 3.5rem);
+    font-weight: var(--boa-role-weight-heading);
+    line-height: 1.04;
+    letter-spacing: var(--boa-tracking-display);
+  }
+  .guide-brand-intro {
+    grid-area: intro;
+    inline-size: min(100%, 34rem);
+    padding-inline-start: 0;
+  }
+  .guide-brand-intro .guide-brand-slogan {
+    font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+    line-height: 1.15;
+    letter-spacing: var(--boa-tracking-heading);
+  }
+  .guide-brand-slogan strong {
+    display: inline;
+    color: var(--yg-brand-ink);
+    font-weight: var(--boa-role-weight-heading);
+  }
+  .guide-brand-intro .guide-brand-description {
+    max-inline-size: 50ch;
+    color: var(--yg-muted);
+    font-size: var(--boa-size-body);
+    line-height: var(--boa-line-height-body);
+  }
+  .guide-brand-artwork {
+    grid-area: artwork;
+    display: grid;
+    place-items: center;
+    align-self: stretch;
+    min-block-size: 16rem;
+    border-radius: var(--yg-radius-panel);
+    background: var(--yg-surface);
+    border: 1px solid var(--yg-border-subtle);
+  }
+  .guide-brand-artwork .yg-mark {
+    inline-size: min(64%, 14rem);
+    block-size: auto;
+  }
+
+  .guide-brand-body { max-inline-size: 70rem; }
+  .guide-brand-body [id] { scroll-margin-block-start: var(--boa-space-48); }
+  .guide-brand-body .guide-section .yg-text { max-inline-size: 68ch; }
+  .guide-brand-body .guide-section > .yg-stack > h2 {
+    font-size: var(--boa-size-section);
+    line-height: var(--boa-line-height-section);
+  }
+
+  .guide-company-layout {
+    grid-template-columns: minmax(10rem, 1fr) minmax(0, 2fr);
+    align-items: start;
+    padding-block: var(--boa-space-16);
+  }
+  .guide-company-layout .yg-heading {
+    font-size: clamp(var(--boa-size-section), 3vi, var(--boa-size-headline));
+    line-height: 1.12;
+    letter-spacing: var(--boa-tracking-heading);
+  }
+  .guide-company-layout .yg-text { max-inline-size: 48ch; }
+  .guide-company-layout img,
+  .guide-brand-art img { display: block; max-inline-size: 100%; object-fit: contain; }
+  .guide-company-layout img {
+    background: var(--yg-surface);
+    border: 1px solid var(--yg-border-subtle);
+    border-radius: var(--yg-radius-control);
+    padding: var(--yg-gap-tight);
+  }
+
+  .guide-brand-cards { grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); }
+  .guide-brand-asset-row { grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr); align-items: center; }
+  .guide-brand-art {
+    display: grid;
+    place-items: center;
+    min-block-size: 7rem;
+    padding: var(--yg-inset-regular);
+    border-radius: var(--yg-radius-control);
+    background: var(--yg-surface);
+    border: 1px solid var(--yg-border-subtle);
+  }
+  .guide-brand .yg-inline { flex-wrap: wrap; }
+
+  @media (max-width: 48rem) {
+    .guide-brand-opening {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "title" "intro" "artwork";
+      min-block-size: 0;
+      padding-block: var(--boa-space-16) 0;
+    }
+    .guide-brand-intro { padding-inline-start: 0; }
+    .guide-brand-artwork { min-block-size: 11rem; }
+    .guide-brand-artwork .yg-mark { inline-size: min(52%, 10rem); }
+    .guide-company-layout { grid-template-columns: minmax(0, 1fr); padding-block: 0; }
+  }
+  @media (max-width: 34rem) {
+    .guide-brand-asset-row { grid-template-columns: minmax(0, 1fr); }
+  }
 }

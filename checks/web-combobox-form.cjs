@@ -30,7 +30,7 @@ const fixture = buildSync({
     }
     const node = document.createElement('div'); node.id = 'combobox-form-fixture';
     document.querySelector('.specimen[data-component="combobox"]').appendChild(node);
-    createRoot(node).render(<App />);
+    createRoot(node, { identifierPrefix: 'cb-' }).render(<App />);
   ` }, bundle: true, write: false, format: "iife", platform: "browser",
   loader: { ".css": "empty", ".module.css": "empty" },
 }).outputFiles[0].text;

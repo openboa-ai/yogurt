@@ -135,15 +135,17 @@ export function ThreadRow({
         onOpen={onOpen && (() => onOpen(thread.id))}
       >
         <span className="yg-workspace-row-copy">
-          <span className="yg-workspace-row-title">{thread.title}</span>
+          <span className="yg-row-title-line">
+            <span className="yg-workspace-row-title">{thread.title}</span>
+            {thread.unread && <span className="yg-signal-dot" role="img" aria-label="Unread" />}
+          </span>
           {thread.preview && <Text id={detailId} variant="help">{thread.preview}</Text>}
         </span>
-        <span className="yg-thread-meta">
-          {thread.updatedAt && (
+        {thread.updatedAt && (
+          <span className="yg-thread-meta">
             <time id={timeId} dateTime={thread.updatedAt.dateTime}>{thread.updatedAt.label}</time>
-          )}
-          {thread.unread && <Text variant="meta" className="yg-thread-unread">Unread</Text>}
-        </span>
+          </span>
+        )}
       </RowBody>
     </li>
   );

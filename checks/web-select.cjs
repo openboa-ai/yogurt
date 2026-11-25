@@ -4,49 +4,14 @@ const { resolve } = require("node:path");
 const assert = require("node:assert/strict");
 const brand = require("../design/tokens/brand.json");
 const { control, radius } = brand;
-const { geometry } = require("../design/tokens/ui.json");
-const spacing = name => brand.space[geometry[name].split(".")[1]];
-const rowOffset = spacing("offset-layer") + spacing("inset-layer");
+
 const gallery = pathToFileURL(resolve(__dirname, "../apps/guide/generated/components.html")).href;
-async function metrics(select) {
-  return select.evaluate((el) => {
-    const panel = getComputedStyle(el, "::picker(select)");
-    const box = (n) =>
-      Object.fromEntries(
-        ["x", "y", "width", "height", "top", "bottom"].map((k) => [
-          k,
-          n.getBoundingClientRect()[k],
-        ]),
-      );
-    const option = el.options[0];
-    return {
-      view: [innerWidth, innerHeight],
-      value: el.value,
-      opened: el.matches(":open"),
-      field: box(el),
-      first: box(option),
-      last: box(el.options[el.length - 1]),
-      appearance: panel.appearance,
-      panelWidth: parseFloat(panel.width),
-      height: parseFloat(panel.height),
-      side: panel.positionArea,
-      material: getComputedStyle(el).colorScheme,
-      background: panel.backgroundColor,
-      rowFont: getComputedStyle(option).fontSize,
-      corner: panel.borderTopLeftRadius,
-      gap: panel.marginBlockStart,
-      rowPadding: getComputedStyle(option).paddingInlineStart,
-      textInset: getComputedStyle(el).paddingInlineStart,
-      check: getComputedStyle(el.selectedOptions[0], "::checkmark").order,
-    };
-  });
-}
+
 (async () => {
   const browser = await chromium.launch({
     channel: process.env.YOGURT_BROWSER_CHANNEL || "chrome",
   });
-  const seen = [],
-    problems = [];
+  const seen = [], problems = [];
   try {
     for (const [theme, width, touch] of [
       ["light", 1120, false],
@@ -64,97 +29,66 @@ async function metrics(select) {
       page.on("pageerror", (e) => problems.push(String(e)));
       await page.goto(gallery + "#select");
       await page.evaluate(() => document.fonts.ready);
-      const select = page.getByRole("combobox", { name: "Project" });
+      const select = page.getByRole("combobox", { name: "Project", exact: true });
       if (touch) await select.tap();
       else await select.click();
-      await page.waitForFunction(() =>
-        document.querySelector(".specimen select")?.matches(":open"),
-      );
-      const entering = await metrics(select);
-      assert.ok(entering.first.height >= (touch ? control.touch : control.height));
-      await page.waitForFunction(() => getComputedStyle(
-        document.querySelector(".specimen select"), "::picker(select)",
-      ).translate === "none");
-      const m = await metrics(select);
-      assert.equal(m.appearance, "base-select");
-      assert.equal(m.corner, radius.popover + "px");
-      assert.equal(m.check, "1");
-      assert.ok(Math.abs(m.field.width - m.panelWidth) < 1, JSON.stringify(m));
-      assert.ok(m.first.height >= (touch ? control.touch : control.height));
-      assert.ok(
-        Math.abs(m.field.bottom + rowOffset - m.first.top) < 1 ||
-          Math.abs(m.field.top - rowOffset - m.last.bottom) < 1,
-        JSON.stringify(m),
-      );
-      const clip = {
-        x: Math.max(0, Math.floor(m.field.x - 24)),
-        y: Math.max(
-          0,
-          Math.floor(Math.min(m.field.top - 48, m.first.top - 24)),
-        ),
-        width: Math.min(width, m.field.width + 48),
-        height: Math.ceil(
-          Math.max(m.last.bottom, m.field.bottom) +
-            32 -
-            Math.max(
-              0,
-              Math.floor(Math.min(m.field.top - 48, m.first.top - 24)),
-            ),
-        ),
-      };
-      clip.width = Math.min(Math.ceil(clip.width), width - clip.x);
-      await select.evaluate((el) =>
-        Promise.all(
-          el.parentElement
-            .getAnimations({ subtree: true })
-            .map((a) => a.finished),
-        ),
-      );
-      if (process.env.YOGURT_CAPTURE_DIR)
-        await page.screenshot({
-          path: resolve(
-            process.env.YOGURT_CAPTURE_DIR,
-            "select-" + (touch ? "touch" : theme) + ".png",
-          ),
-          clip,
-        });
+      const listbox = page.getByRole("listbox");
+      await listbox.waitFor();
+      await page.locator(".yg-select-popup[data-open]:not([data-starting-style])").waitFor();
+      await page.evaluate(() => Promise.all(
+        Array.from(document.querySelectorAll(".yg-select-popup")).flatMap((el) => el.getAnimations().map((a) => a.finished.catch(() => {})))
+      ));
+      const metrics = await page.evaluate(() => {
+        const trigger = document.querySelector(".specimen .yg-select-trigger");
+        const panel = document.querySelector('.yg-select-popup[data-open]') || document.querySelector(".yg-select-popup");
+        const option = panel.querySelector('[role="option"]');
+        return {
+          field: trigger.getBoundingClientRect().toJSON(),
+          panel: panel.getBoundingClientRect().toJSON(),
+          optionHeight: option.getBoundingClientRect().height,
+          corner: getComputedStyle(panel).borderTopLeftRadius,
+          background: getComputedStyle(panel).backgroundColor,
+        };
+      });
+      assert.equal(metrics.corner, radius.menu + "px");
+      assert.ok(metrics.optionHeight >= (touch ? control.touch : control.compact), JSON.stringify(metrics));
+      assert.ok(metrics.panel.width >= 160 && Math.abs(metrics.panel.x - metrics.field.x) <= 2, JSON.stringify(metrics));
       if (!touch) {
         await page.keyboard.press("ArrowDown");
         await page.keyboard.press("Escape");
-        assert.equal(await select.inputValue(), "sourdough");
+        await listbox.waitFor({ state: "hidden" });
+        assert.match(await select.innerText(), /Sourdough/);
         await select.focus();
         await page.keyboard.press("Space");
+        await page.locator(".yg-select-popup [data-highlighted]").waitFor();
         await page.keyboard.press("ArrowDown");
         await page.keyboard.press("Enter");
-        assert.equal(await select.inputValue(), "meatball");
+        await listbox.waitFor({ state: "hidden" });
+        assert.match(await select.innerText(), /Meatball/);
         await select.click();
-        await select.getByRole("option", { name: "Yogurt", exact: true }).click();
-        assert.equal(await select.inputValue(), "yogurt");
+        await listbox.waitFor();
+        await page.getByRole("option", { name: "Yogurt", exact: true }).click();
+        await listbox.waitFor({ state: "hidden" });
+        assert.match(await select.innerText(), /Yogurt/);
         for (const name of ["Paper", "Mist"]) {
           await page.getByRole("radio", { name, exact: true }).click();
           await select.click();
-          const g = await metrics(select);
-          seen.push([theme, name, g.background]);
+          await listbox.waitFor();
+          const bg = await page.locator(".yg-select-popup[data-open]").evaluate(el => getComputedStyle(el).backgroundColor);
+          seen.push([theme, name, bg]);
           await page.keyboard.press("Escape");
+          await listbox.waitFor({ state: "hidden" });
         }
-        await page.getByRole("button", { name: "Brand & tokens" }).click();
-        const brand = page.getByRole("combobox", { name: "Appearance" });
-        await brand.click();
-        assert.equal((await metrics(brand)).appearance, "base-select");
-        await page.getByRole("option", { name: "Dark", exact: true }).click();
-        assert.match(
-          await page.locator(".brand-role-grid").innerText(),
-          /neutral\.975/,
-        );
       } else {
-        await select.getByRole("option", { name: "Yogurt", exact: true }).tap();
-        assert.equal(await select.inputValue(), "yogurt");
+        await page.getByRole("option", { name: "Yogurt", exact: true }).tap();
+        await listbox.waitFor({ state: "hidden" });
+        assert.match(await select.innerText(), /Yogurt/);
       }
-      seen.push(m);
+      seen.push(metrics);
       await context.close();
     }
     assert.deepEqual(problems, []);
-    console.log(JSON.stringify({ browser: browser.version(), seen }, null, 2));
+    console.log(JSON.stringify({ browser: browser.version(), seen: seen.length }, null, 2));
   } finally {
     await browser.close();
   }

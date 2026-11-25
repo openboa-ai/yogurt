@@ -1,5 +1,4 @@
 import { build } from "esbuild";
-import { anatomy } from "../../../scripts/sdk/anatomy.mjs";
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,7 +15,6 @@ const js = await build({
   entryPoints: ["apps/guide/" + entry + ".tsx"],
   write: false,
   bundle: true,
-  plugins: comparison ? [anatomy] : [],
   minify: true,
   format: "iife",
   jsx: "automatic",

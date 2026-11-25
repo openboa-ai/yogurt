@@ -1,124 +1,127 @@
-.yg-motion-password, .yg-motion-dial { display: grid; gap: var(--yg-gap-inline); inline-size: min(100%, 360px); }
-.yg-motion-dial input { inline-size: 100%; accent-color: var(--yg-inverse); cursor: pointer; }
-.yg-motion-dial-options { display: flex; justify-content: space-between; gap: var(--yg-gap-inline); color: var(--yg-muted); font: var(--yg-font-meta); }
-.yg-motion-password-meter { display: flex; gap: var(--yg-gap-tight); }
-.yg-motion-password-meter span { flex: 1; height: 4px; border-radius: var(--yg-radius-inset); background: var(--yg-field);  }
-.yg-motion-password-checks { color: var(--yg-muted); }
-.yg-motion-checklist { border: 0; padding: 0; margin: 0; display: grid; gap: var(--yg-gap-inline); min-inline-size: 0; }
-.yg-motion-checklist legend { margin-bottom: 12px; }
-.yg-motion-checklist-item { display: flex; gap: var(--yg-gap-row); align-items: center; padding: var(--yg-inset-regular); border: 1px solid var(--yg-off); border-radius: var(--yg-radius-control); cursor: pointer; }
-.yg-motion-checklist-item:has(input:checked) { background: var(--yg-field); }
-.yg-motion-dial { justify-items: center; }
-.yg-motion-dial-face { position: relative; display: grid; place-items: center; inline-size: 144px; aspect-ratio: 1; border: 1px solid var(--yg-off); border-radius: 50%; background: var(--yg-field); box-shadow: inset 0 0 0 8px var(--yg-surface, transparent); }
-.yg-motion-dial-marker { position: absolute; inset: 8px; border-radius: 50%; transform: rotate(var(--yg-dial-angle));  }
-.yg-motion-dial-marker::before { content: ""; position: absolute; inset-block-start: 0; inset-inline-start: calc(50% - 2px); inline-size: 4px; block-size: 13px; border-radius: var(--yg-radius-inset); background: var(--yg-inverse); }
-.yg-motion-dial-value { max-inline-size: 90px; text-align: center; }
-.yg-motion-dial-options { inline-size: 100%; flex-wrap: wrap; }
-.yg-motion-dial-options [data-selected] { color: var(--yg-text, inherit); }
+@layer yg.patterns {
+  .yg-motion-password, .yg-motion-dial { display: grid; gap: var(--yg-gap-inline); inline-size: min(100%, 360px); }
+  .yg-motion-dial input { inline-size: 100%; accent-color: var(--yg-inverse); cursor: pointer; }
+  .yg-motion-dial-options { display: flex; justify-content: space-between; gap: var(--yg-gap-inline); color: var(--yg-muted); font: var(--yg-font-meta); }
+  .yg-motion-password-meter { display: flex; gap: var(--yg-gap-tight); }
+  .yg-motion-password-meter span { flex: 1; height: 4px; border-radius: var(--yg-radius-inset); background: var(--yg-field);  }
+  .yg-motion-password-checks { color: var(--yg-muted); }
+  .yg-motion-checklist { border: 0; padding: 0; margin: 0; display: grid; gap: var(--yg-gap-inline); min-inline-size: 0; }
+  .yg-motion-checklist legend { margin-bottom: 12px; }
+  .yg-motion-checklist-item { display: flex; gap: var(--yg-gap-row); align-items: center; padding: var(--yg-inset-regular); border: 1px solid var(--yg-off); border-radius: var(--yg-radius-control); cursor: pointer; }
+  .yg-motion-checklist-item:has(input:checked) { background: var(--yg-field); }
+  .yg-motion-dial { justify-items: center; }
+  .yg-motion-dial-face { position: relative; display: grid; place-items: center; inline-size: 144px; aspect-ratio: 1; border: 1px solid var(--yg-off); border-radius: 50%; background: var(--yg-field); box-shadow: inset 0 0 0 8px var(--yg-surface, transparent); }
+  .yg-motion-dial-marker { position: absolute; inset: 8px; border-radius: 50%; transform: rotate(var(--yg-dial-angle));  }
+  .yg-motion-dial-marker::before { content: ""; position: absolute; inset-block-start: 0; inset-inline-start: calc(50% - 2px); inline-size: 4px; block-size: 13px; border-radius: var(--yg-radius-inset); background: var(--yg-inverse); }
+  .yg-motion-dial-value { max-inline-size: 90px; text-align: center; }
+  .yg-motion-dial-options { inline-size: 100%; flex-wrap: wrap; }
+  .yg-motion-dial-options [data-selected] { color: var(--yg-text, inherit); }
 
-.yg-motion-password-meter span { background: color-mix(in srgb, var(--yg-text) 14%, transparent); }
-.yg-motion-checklist-item { padding: 11px var(--yg-inset-row); border-color: var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: color-mix(in srgb, var(--yg-surface) 82%, var(--yg-field)); }
-.yg-motion-checklist-item:has(input:checked) { border-color: color-mix(in srgb, var(--yg-inverse) 35%, transparent); background: var(--yg-field); }
-.yg-motion-dial-face { border-color: var(--yg-surface-edge); background: color-mix(in srgb, var(--yg-surface) 65%, var(--yg-field)); box-shadow: inset 0 0 0 8px var(--yg-surface); }
+  .yg-motion-password-meter span { background: color-mix(in srgb, var(--yg-text) 14%, transparent); }
+  .yg-motion-checklist-item { padding: 11px var(--yg-inset-row); border-color: var(--yg-surface-edge); border-radius: var(--yg-radius-control); background: color-mix(in srgb, var(--yg-surface) 82%, var(--yg-field)); }
+  .yg-motion-checklist-item:has(input:checked) { border-color: color-mix(in srgb, var(--yg-inverse) 35%, transparent); background: var(--yg-field); }
+  .yg-motion-dial-face { border-color: var(--yg-surface-edge); background: color-mix(in srgb, var(--yg-surface) 65%, var(--yg-field)); box-shadow: inset 0 0 0 8px var(--yg-surface); }
 
-.yg-motion-dial > label { font: var(--yg-font-label); }
-.yg-motion-checklist legend { margin-bottom: 8px; font: var(--yg-font-label); }
-.yg-motion-checklist-item { min-height: 36px; box-sizing: border-box; gap: var(--yg-gap-inline); padding: var(--boa-space-8) var(--yg-inset-regular); border-radius: var(--yg-radius-control); font: var(--yg-font-body); }
-.yg-motion-dial-face { inline-size: 120px; }
-.yg-motion-dial-value { font: var(--yg-font-body); }
+  .yg-motion-dial > label { font: var(--yg-font-label); }
+  .yg-motion-checklist legend { margin-bottom: 8px; font: var(--yg-font-label); }
+  .yg-motion-checklist-item { min-height: 36px; box-sizing: border-box; gap: var(--yg-gap-inline); padding: var(--boa-space-8) var(--yg-inset-regular); border-radius: var(--yg-radius-control); font: var(--yg-font-body); }
+  .yg-motion-dial-face { inline-size: 120px; }
+  .yg-motion-dial-value { font: var(--yg-font-body); }
 
-.yg-motion-password { width: min(320px, 100%); gap: 0; }
-.yg-motion-password > label { margin: 0 0 8px 4px; font: var(--yg-font-label); color: var(--yg-muted); }
-.yg-motion-password-field { display: flex; align-items: center; min-block-size: var(--yg-field-featured-height); padding: var(--boa-space-6) var(--boa-space-6) var(--boa-space-6) var(--yg-inset-regular); border-radius: var(--yg-field-featured-radius); background: var(--yg-field); }
-.yg-motion-password-field:focus-within { background: var(--yg-focus-surface); }
-.yg-motion-password-field input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--yg-text); font: var(--yg-font-body); }
-.yg-motion-password-eye { flex: none; inline-size: var(--yg-button-size-comfort); color: var(--yg-muted); }
-.yg-motion-password-eye svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.9; }
-.yg-motion-password-slash { stroke-dasharray: 22; stroke-dashoffset: 0; transition: stroke-dashoffset var(--yg-change) var(--yg-settle); }
-.yg-motion-password-eye[aria-pressed="true"] .yg-motion-password-slash { stroke-dashoffset: 22; }
-.yg-motion-password-eye circle { transform-origin: 12px 12px; scale: .5; }
-.yg-motion-password-eye[aria-pressed="true"] circle { scale: 1; }
-@media (prefers-reduced-motion: no-preference) {
-  .yg-motion-password-eye circle { transition: scale var(--yg-motion-picker-slide); }
-  .yg-motion-dial-marker { transition: transform var(--yg-motion-wheel); }
-}
-.yg-motion-password-meter { gap: 6px; margin-top: 12px; }
-.yg-motion-password-meter span { height: 5px; overflow: hidden; border-radius: 3px; background: var(--yg-field); }
-.yg-motion-password-meter i {
-  display: block; height: 100%; width: 100%; scale: 0 1;
-  transform-origin: left; border-radius: inherit; background: var(--yg-meter-color, var(--yg-inverse));
-}
-.yg-motion-password-meter:dir(rtl) i { transform-origin: right; }
-.yg-motion-password[data-score="1"] { --yg-meter-color: var(--yg-signal-limit); }
-.yg-motion-password[data-score="2"] { --yg-meter-color: var(--yg-signal-warning); }
-.yg-motion-password[data-score="3"] { --yg-meter-color: var(--yg-signal-rating); }
-.yg-motion-password[data-score="4"] { --yg-meter-color: var(--yg-signal-positive); }
-.yg-motion-password { container-type: inline-size; }
-.yg-motion-password-checks {
-  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
-  margin-top: 10px; font: var(--yg-font-meta); min-block-size: 32px;
-}
-.yg-motion-password-checks strong { display: inline-block; color: var(--yg-meter-color, var(--yg-muted)); white-space: nowrap; }
-.yg-motion-password-checks > [id] { min-inline-size: 0; text-align: end; }
-@container (max-width: 280px) {
-  .yg-motion-password-checks { display: grid; gap: 3px; }
-  .yg-motion-password-checks > [id] { text-align: start; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .yg-motion-password-meter i {
-    transition: scale var(--yg-motion-letter-progress), background-color var(--yg-change) var(--yg-settle);
+  .yg-motion-password { width: min(320px, 100%); gap: 0; }
+  .yg-motion-password > label { margin: 0 0 8px 4px; font: var(--yg-font-label); color: var(--yg-muted); }
+  .yg-motion-password-field { display: flex; align-items: center; min-block-size: var(--yg-field-featured-height); padding: var(--boa-space-6) var(--boa-space-6) var(--boa-space-6) var(--yg-inset-regular); border: 1px solid var(--yg-border-control); border-radius: var(--yg-field-featured-radius); background: var(--yg-input-surface); }
+  .yg-motion-password-field:focus-within { border-color: var(--yg-focus-ring); box-shadow: 0 0 0 1.5px var(--yg-focus-ring), 0 0 0 3.5px var(--yg-focus-halo); }
+  .yg-motion-password-field input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; color: var(--yg-text); font: var(--yg-font-body); }
+  .yg-motion-password-field input:focus-visible { outline: none; box-shadow: none; }
+  .yg-motion-password-eye { flex: none; inline-size: var(--yg-button-size-comfort); color: var(--yg-muted); }
+  .yg-motion-password-eye svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.9; }
+  .yg-motion-password-slash { stroke-dasharray: 22; stroke-dashoffset: 0; transition: stroke-dashoffset var(--yg-change) var(--yg-settle); }
+  .yg-motion-password-eye[aria-pressed="true"] .yg-motion-password-slash { stroke-dashoffset: 22; }
+  .yg-motion-password-eye circle { transform-origin: 12px 12px; scale: .5; }
+  .yg-motion-password-eye[aria-pressed="true"] circle { scale: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .yg-motion-password-eye circle { transition: scale var(--yg-motion-expand); }
+    .yg-motion-dial-marker { transition: transform var(--yg-motion-indicator); }
   }
-  .yg-motion-password-checks strong { animation: yg-password-score 220ms var(--yg-arrive) both; }
-}
-@keyframes yg-password-score { from { opacity: 0; translate: 0 6px; } }
-.yg-motion-checklist { box-sizing: border-box; width: min(320px, 100%); gap: 0; padding: var(--yg-card-inset-compact); border-radius: var(--yg-card-corner); background: var(--yg-surface); }
-.yg-motion-checklist legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-.yg-motion-checklist-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
-.yg-motion-checklist-heading strong { font: var(--yg-font-card-title); }
-.yg-motion-checklist-heading span { color: var(--yg-muted); font: var(--yg-font-meta); }
-.yg-motion-checklist-heading b { color: var(--yg-text); font-variant-numeric: tabular-nums; }
-.yg-motion-checklist-item, .yg-motion-checklist-item:has(input:checked) { position: relative; min-height: var(--yg-list-row-height); gap: var(--yg-list-row-gap); padding: 0; border: 0; border-radius: 0; background: transparent; }
-.yg-motion-checklist-item > label { position: relative; flex: 1; display: flex; align-items: center; min-height: var(--yg-list-row-height); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--yg-change); }
-.yg-motion-checklist-item > label > span { position: relative; overflow: hidden; text-overflow: ellipsis; }
-.yg-motion-checklist-item > label > span::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--yg-change) var(--yg-settle); }
-.yg-motion-checklist-item:has([role="checkbox"]:is([data-state="checked"], [data-checked])) > label { color: var(--yg-muted); }
-.yg-motion-checklist-item:has([role="checkbox"]:is([data-state="checked"], [data-checked])) > label > span::after {
-  transform: scaleX(1);
-  transition: transform var(--yg-motion-checklist-strike) 110ms;
-}
-@media (prefers-reduced-motion: reduce) {
-  .yg-motion-password-slash, .yg-motion-password-meter i, .yg-motion-checklist-item > label, .yg-motion-checklist-item > label > span::after { transition: none !important; }
-}
+  .yg-motion-password-meter { gap: 6px; margin-top: 12px; }
+  .yg-motion-password-meter span { height: 5px; overflow: hidden; border-radius: 3px; background: var(--yg-field); }
+  .yg-motion-password-meter i {
+    display: block; height: 100%; width: 100%; scale: 0 1;
+    transform-origin: left; border-radius: inherit; background: var(--yg-meter-color, var(--yg-inverse));
+  }
+  .yg-motion-password-meter:dir(rtl) i { transform-origin: right; }
+  .yg-motion-password[data-score="1"] { --yg-meter-color: var(--yg-signal-limit); }
+  .yg-motion-password[data-score="2"] { --yg-meter-color: var(--yg-signal-warning); }
+  .yg-motion-password[data-score="3"] { --yg-meter-color: var(--yg-signal-rating); }
+  .yg-motion-password[data-score="4"] { --yg-meter-color: var(--yg-signal-positive); }
+  .yg-motion-password { container-type: inline-size; }
+  .yg-motion-password-checks {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+    margin-top: 10px; font: var(--yg-font-meta); min-block-size: 32px;
+  }
+  .yg-motion-password-checks strong { display: inline-block; color: var(--yg-meter-color, var(--yg-muted)); white-space: nowrap; }
+  .yg-motion-password-checks > [id] { min-inline-size: 0; text-align: end; }
+  @container (max-width: 280px) {
+    .yg-motion-password-checks { display: grid; gap: 3px; }
+    .yg-motion-password-checks > [id] { text-align: start; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .yg-motion-password-meter i {
+      transition: scale var(--yg-motion-settle), background-color var(--yg-change) var(--yg-settle);
+    }
+    .yg-motion-password-checks strong { animation: yg-password-score 220ms var(--yg-arrive) both; }
+  }
+  @keyframes yg-password-score { from { opacity: 0; translate: 0 6px; } }
+  .yg-motion-checklist { box-sizing: border-box; width: min(320px, 100%); gap: 0; padding: var(--yg-card-inset-compact); border-radius: var(--yg-card-corner); background: var(--yg-surface); }
+  .yg-motion-checklist legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .yg-motion-checklist-heading { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+  .yg-motion-checklist-heading strong { font: var(--yg-font-card-title); }
+  .yg-motion-checklist-heading span { color: var(--yg-muted); font: var(--yg-font-meta); }
+  .yg-motion-checklist-heading b { color: var(--yg-text); font-variant-numeric: tabular-nums; }
+  .yg-motion-checklist-item, .yg-motion-checklist-item:has(input:checked) { position: relative; min-height: var(--yg-list-row-height); gap: var(--yg-list-row-gap); padding: 0; border: 0; border-radius: 0; background: transparent; }
+  .yg-motion-checklist-item > label { position: relative; flex: 1; display: flex; align-items: center; min-height: var(--yg-list-row-height); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--yg-change); }
+  .yg-motion-checklist-item > label > span { position: relative; overflow: hidden; text-overflow: ellipsis; }
+  .yg-motion-checklist-item > label > span::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--yg-change) var(--yg-settle); }
+  .yg-motion-checklist-item:has([role="checkbox"]:is([data-state="checked"], [data-checked])) > label { color: var(--yg-muted); }
+  .yg-motion-checklist-item:has([role="checkbox"]:is([data-state="checked"], [data-checked])) > label > span::after {
+    transform: scaleX(1);
+    transition: transform var(--yg-motion-settle) 110ms;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .yg-motion-password-slash, .yg-motion-password-meter i, .yg-motion-checklist-item > label, .yg-motion-checklist-item > label > span::after { transition: none !important; }
+  }
 
-.yg-step-track { position: relative; display: grid; block-size: 4px; margin-block-end: var(--boa-space-12); border-radius: 4px; background: var(--yg-field); }
-.yg-step-track progress { position: absolute; opacity: 0; inline-size: 100%; block-size: 100%; }
-.yg-step-track > span { inline-size: calc(var(--yg-step-progress) * 100%); border-radius: inherit; background: var(--yg-signal-positive); }
-.yg-step-number > * { grid-area: 1 / 1; }
-.yg-step-number svg { inline-size: 16px; block-size: 16px; opacity: 0; }
-.yg-step-number svg path { stroke-dasharray: 22; stroke-dashoffset: 22; }
-.yg-stepper [data-complete] .yg-step-number { background: var(--yg-signal-positive-soft); color: var(--yg-signal-positive); }
-.yg-stepper [data-complete] .yg-step-number > span { opacity: 0; }
-.yg-stepper [data-complete] .yg-step-number svg { opacity: 1; }
-.yg-stepper [data-complete] .yg-step-number svg path { stroke-dashoffset: 0; }
-.yg-stage-list[data-connected] { position: relative; }
-.yg-stage-list[data-connected] .yg-step-track {
-  position: absolute; inset: calc((var(--yg-size-compact) - 4px) / 2) calc(50% / var(--yg-step-count)) auto;
-  margin: 0;
+  .yg-step-track { position: relative; display: grid; block-size: 4px; margin-block-end: var(--boa-space-12); border-radius: 4px; background: var(--yg-field); }
+  .yg-step-track progress { position: absolute; opacity: 0; inline-size: 100%; block-size: 100%; }
+  .yg-step-track > span { inline-size: calc(var(--yg-step-progress) * 100%); border-radius: inherit; background: var(--yg-signal-positive); }
+  .yg-step-number > * { grid-area: 1 / 1; }
+  .yg-step-number svg { inline-size: 16px; block-size: 16px; opacity: 0; }
+  .yg-step-number svg path { stroke-dasharray: 22; stroke-dashoffset: 22; }
+  .yg-stepper [data-complete] .yg-step-number { background: var(--yg-signal-positive-soft); color: var(--yg-signal-positive); }
+  .yg-stepper [data-complete] .yg-step-number > span { opacity: 0; }
+  .yg-stepper [data-complete] .yg-step-number svg { opacity: 1; }
+  .yg-stepper [data-complete] .yg-step-number svg path { stroke-dashoffset: 0; }
+  .yg-stage-list[data-connected] { position: relative; }
+  .yg-stage-list[data-connected] .yg-step-track {
+    position: absolute; inset: calc((var(--yg-size-compact) - 4px) / 2) calc(50% / var(--yg-step-count)) auto;
+    margin: 0;
+  }
+  .yg-stage-list[data-connected] .yg-stepper {
+    position: relative; grid-template-columns: repeat(var(--yg-step-count), minmax(0, 1fr)); column-gap: 0;
+  }
+  .yg-stage-list[data-connected] .yg-stepper li { text-align: center; align-items: center; padding-inline: 4px; }
+  .yg-stage-list[data-connected] [aria-current] .yg-step-number { background: var(--yg-inverse); color: var(--yg-on-inverse); }
+  @media (forced-colors: active) {
+    .yg-step-track { forced-color-adjust: none; background: GrayText; }
+    .yg-step-track > span { background: Highlight; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .yg-step-track > span { transition: inline-size var(--yg-motion-settle); }
+    .yg-step-number, .yg-step-number > span { transition: background-color var(--yg-motion-layer), color var(--yg-motion-layer), opacity var(--yg-motion-layer); }
+    .yg-step-number svg path { transition: stroke-dashoffset var(--yg-motion-settle); }
+    .yg-stepper [data-complete] .yg-step-number svg path { transition-delay: 120ms; }
+    .yg-stepper [aria-current] .yg-step-number { animation: yg-step-current var(--yg-motion-indicator); }
+  }
+  @keyframes yg-step-current { from { scale: .7; } }
 }
-.yg-stage-list[data-connected] .yg-stepper {
-  position: relative; grid-template-columns: repeat(var(--yg-step-count), minmax(0, 1fr)); column-gap: 0;
-}
-.yg-stage-list[data-connected] .yg-stepper li { text-align: center; align-items: center; padding-inline: 4px; }
-.yg-stage-list[data-connected] [aria-current] .yg-step-number { background: var(--yg-inverse); color: var(--yg-on-inverse); }
-@media (forced-colors: active) {
-  .yg-step-track { forced-color-adjust: none; background: GrayText; }
-  .yg-step-track > span { background: Highlight; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .yg-step-track > span { transition: inline-size var(--yg-motion-step-fill); }
-  .yg-step-number, .yg-step-number > span { transition: background-color var(--yg-motion-picker-lift), color var(--yg-motion-picker-lift), opacity var(--yg-motion-picker-lift); }
-  .yg-step-number svg path { transition: stroke-dashoffset var(--yg-motion-step-check); }
-  .yg-stepper [data-complete] .yg-step-number svg path { transition-delay: 120ms; }
-  .yg-stepper [aria-current] .yg-step-number { animation: yg-step-current var(--yg-motion-stepper-spin); }
-}
-@keyframes yg-step-current { from { scale: .7; } }

@@ -13,7 +13,15 @@ import {
 import { Input as SDKInput, InputGroup as SDKInputGroup } from "@ui-sdk/react/input";
 import { Textarea as SDKTextarea, createInputController } from "@ui-sdk/react/textarea";
 import {
-  Combobox as SDKCombobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList,
+  Select as SDKSelect,
+  SelectContent,
+  SelectItem,
+  SelectItemIndicator,
+  SelectTrigger,
+  SelectValue,
+} from "@ui-sdk/react/select";
+import {
+  Combobox as SDKCombobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxItemIndicator, ComboboxList,
   createComboboxController,
 } from "@ui-sdk/react/combobox";
 import { Switch as SDKSwitch, SwitchThumb } from "@ui-sdk/react/switch";
@@ -21,8 +29,6 @@ import { Checkbox as SDKCheckbox, CheckboxIndicator } from "@ui-sdk/react/checkb
 import { RadioGroup as SDKRadio, Radio as SDKRadioItem, RadioIndicator } from "@ui-sdk/react/radio";
 import { Icon, type ControlSize, type Option, cx } from "../foundation/foundation.js";
 import { IconButton } from "./actions.js";
-
-export { FocusPicker, PlanSwitch } from "./choice-cards.js";
 
 export function Label(props: ComponentProps<"label">) {
   return <label {...props} className={cx("yg-label", props.className)} />;
@@ -33,11 +39,15 @@ export function HelpText(props: ComponentProps<"p">) {
 export function FieldError(props: ComponentProps<"p">) {
   return <p {...props} className={cx("yg-error", props.className)} />;
 }
+export type FieldLayout = "vertical" | "horizontal" | "responsive";
+
 interface FieldInfo {
   id?: string;
   label: string;
   help?: string;
   error?: string;
+  layout?: FieldLayout;
+  hiddenLabel?: boolean;
 }
 interface FieldAttributes {
   id: string;
@@ -53,25 +63,112 @@ export function Field({
   label,
   help,
   error,
+  layout = "vertical",
+  hiddenLabel = false,
   labelEnd,
+  className,
   children,
-}: FieldInfo & { labelEnd?: ReactNode; children: (props: FieldAttributes) => ReactNode }) {
+}: FieldInfo & {
+  labelEnd?: ReactNode;
+  className?: string;
+  children: (props: FieldAttributes) => ReactNode;
+}) {
   const fallback = useId();
   const input = id ?? fallback;
   const description =
     [help && input + "-help", error && input + "-error"]
       .filter(Boolean)
       .join(" ") || undefined;
-  return (
-    <div className="yg-field">
-      {labelEnd ? <div className="yg-ghost-head"><Label htmlFor={input}>{label}</Label>{labelEnd}</div> : <Label htmlFor={input}>{label}</Label>}
-      {children({
-        id: input,
-        "aria-describedby": description,
-        "aria-invalid": error ? true : undefined,
-      })}
+  const labelNode = labelEnd ? (
+    <div className="yg-ghost-head">
+      <Label htmlFor={input} className={hiddenLabel ? "yg-sr-only" : undefined}>
+        {label}
+      </Label>
+      {labelEnd}
+    </div>
+  ) : (
+    <Label htmlFor={input} className={hiddenLabel ? "yg-sr-only" : undefined}>
+      {label}
+    </Label>
+  );
+  const controlNode = children({
+    id: input,
+    "aria-describedby": description,
+    "aria-invalid": error ? true : undefined,
+  });
+  const feedbackNode = (
+    <>
       {help && <HelpText id={input + "-help"}>{help}</HelpText>}
       {error && <FieldError id={input + "-error"}>{error}</FieldError>}
+    </>
+  );
+  if (layout === "responsive") {
+    return (
+      <div className={cx("yg-field-responsive", className)}>
+        <div className="yg-field" data-layout="responsive">
+          <div className="yg-field-label-col">{labelNode}</div>
+          <div className="yg-field-control-col">
+            {controlNode}
+            {feedbackNode}
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (layout === "horizontal") {
+    return (
+      <div className={cx("yg-field", className)} data-layout="horizontal">
+        <div className="yg-field-label-col">{labelNode}</div>
+        <div className="yg-field-control-col">
+          {controlNode}
+          {feedbackNode}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className={cx("yg-field", className)} data-layout="vertical">
+      {labelNode}
+      {controlNode}
+      {feedbackNode}
+    </div>
+  );
+}
+
+export function FieldGroup({
+  legend,
+  description,
+  className,
+  children,
+  ...props
+}: ComponentProps<"fieldset"> & {
+  legend?: string;
+  description?: string;
+}) {
+  return (
+    <fieldset {...props} className={cx("yg-fieldset yg-field-group", className)}>
+      {legend && <legend className="yg-field-group-legend">{legend}</legend>}
+      {description && <p className="yg-help yg-field-group-description">{description}</p>}
+      <div className="yg-field-group-fields">{children}</div>
+    </fieldset>
+  );
+}
+
+export function FormRow({
+  align = "end",
+  className,
+  children,
+  ...props
+}: ComponentProps<"div"> & {
+  align?: "start" | "center" | "end" | "stretch";
+}) {
+  return (
+    <div
+      {...props}
+      className={cx("yg-form-row", className)}
+      data-align={align}
+    >
+      {children}
     </div>
   );
 }
@@ -93,6 +190,8 @@ export function TextField({
   label,
   help,
   error,
+  layout,
+  hiddenLabel,
   className,
   value,
   defaultValue,
@@ -101,7 +200,7 @@ export function TextField({
   ...props
 }: InputProps) {
   return (
-    <Field {...{ id, label, help, error }}>
+    <Field {...{ id, label, help, error, layout, hiddenLabel }}>
       {(binding) => (
         <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`, className)}>
           {motion === "spring" && (props.type ?? "text") === "text" && !Array.isArray(value) && !Array.isArray(defaultValue)
@@ -125,6 +224,8 @@ export function SearchField({
   label,
   help,
   error,
+  layout,
+  hiddenLabel,
   value,
   onValueChange,
   placeholder,
@@ -143,7 +244,7 @@ export function SearchField({
 }) {
   const ref = useRef<HTMLInputElement>(null);
   return (
-    <Field {...{ id, label, help, error }}>
+    <Field {...{ id, label, help, error, layout, hiddenLabel }}>
       {(binding) => (
         <SDKInputGroup className={cx("yg-input", `yg-input-size-${size}`)}>
           <Icon name="search" />
@@ -182,6 +283,8 @@ export function Textarea({
   label,
   help,
   error,
+  layout,
+  hiddenLabel,
   className,
   value,
   defaultValue,
@@ -232,7 +335,7 @@ export function Textarea({
     return () => { form.removeEventListener("reset", reset); if (timer) clearTimeout(timer); };
   }, [suggestion, value, props.form]);
   return (
-    <Field {...{ id, label, help, error }} labelEnd={suggestion !== undefined && available ? <span className="yg-ghost-key" aria-hidden="true">Tab ↹</span> : undefined}>
+    <Field {...{ id, label, help, error, layout, hiddenLabel }} labelEnd={suggestion !== undefined && available ? <span className="yg-ghost-key" aria-hidden="true">Tab ↹</span> : undefined}>
       {(binding) => (
         <>
         <SDKInputGroup className={cx("yg-input yg-textarea", suggestion !== undefined && "yg-ghost-input", className)}>
@@ -292,75 +395,137 @@ export function Textarea({
     </Field>
   );
 }
-type NativeSelectProps = FieldInfo & ComponentProps<"select"> & {
-  options: Option[];
-  placeholder?: string;
-  controlSize?: ControlSize;
-};
+type StandardSelectProps = FieldInfo &
+  Omit<ComponentProps<"select">, "size" | "value" | "defaultValue" | "onChange"> & {
+    options: Option[];
+    placeholder?: string;
+    size?: ControlSize;
+    controlSize?: ControlSize;
+    value?: string;
+    defaultValue?: string;
+    onValueChange?: (value: string) => void;
+    onChange?: React.ChangeEventHandler<HTMLSelectElement>;
+  };
 
-export function Select(props: (NativeSelectProps & { presentation?: "native" }) |
-  (SelectPickerProps & { presentation: "animated" })) {
+export function Select(
+  props:
+    | (StandardSelectProps & { presentation?: "custom" })
+    | (SelectPickerProps & { presentation: "animated" }),
+) {
   if (props.presentation === "animated") return <SelectPicker {...props} />;
-  const { presentation: _presentation, ...nativeProps } = props;
-  return <NativeSelect {...nativeProps} />;
+  const { presentation: _presentation, ...selectProps } = props;
+  return <UnifiedSelect {...selectProps} />;
 }
 
-function NativeSelect({
+function UnifiedSelect({
   id,
   label,
   help,
   error,
+  layout,
+  hiddenLabel,
   options,
   placeholder,
-  onPointerDown,
-  onKeyDown,
-  controlSize = "regular",
-  ...props
-}: NativeSelectProps) {
-  const dropdown = !props.multiple && (props.size ?? 1) <= 1;
-  function positionPicker(select: HTMLSelectElement) {
-    if (!dropdown || !select.ownerDocument.defaultView?.CSS.supports("appearance", "base-select")) return;
-    const viewport = select.ownerDocument.defaultView;
-    const viewHeight = viewport.visualViewport?.height ?? viewport.innerHeight;
-    const viewTop = viewport.visualViewport?.offsetTop ?? 0;
-    const bounds = select.getBoundingClientRect();
-    const desired = Math.min(288, select.offsetHeight * select.options.length + 16);
-    const above = bounds.top - viewTop;
-    const below = viewTop + viewHeight - bounds.bottom;
-    if (select.parentElement) {
-      select.parentElement.dataset.pickerSide = below < desired && above > below ? "above" : "below";
-    }
-  }
+  size,
+  controlSize,
+  value,
+  defaultValue,
+  onValueChange,
+  onChange,
+  name,
+  disabled,
+  required,
+  className,
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
+  autoComplete: _autoComplete,
+  form: _form,
+  multiple: _multiple,
+  ...restProps
+}: StandardSelectProps) {
+  const triggerRest = restProps as Record<string, unknown>;
+  const resolvedSize = size ?? controlSize ?? "regular";
+  const hasEmptyOption = options.some((option) => option.id === "");
+  const sdkItems = options.map((option) => ({
+    value: option.id,
+    label: option.label,
+    disabled: option.disabled,
+  }));
+  const controlled = value !== undefined;
+  const resolvedValue = controlled
+    ? value === "" && !hasEmptyOption
+      ? null
+      : String(value)
+    : undefined;
+  const resolvedDefault = controlled
+    ? undefined
+    : defaultValue !== undefined
+      ? defaultValue === "" && !hasEmptyOption
+        ? null
+        : String(defaultValue)
+      : placeholder
+        ? null
+        : (options.find((option) => !option.disabled)?.id ?? null);
 
   return (
-    <Field {...{ id, label, help, error }}>
+    <Field {...{ id, label, help, error, layout, hiddenLabel }}>
       {(binding) => (
-        <div className={cx("yg-select", `yg-input-size-${controlSize}`)} data-dropdown={dropdown || undefined}>
-          <select
-            {...props}
-            {...binding}
-            aria-describedby={describedBy(props["aria-describedby"], binding["aria-describedby"])}
-            aria-invalid={binding["aria-invalid"] ?? props["aria-invalid"]}
-            onPointerDown={event => {
-              onPointerDown?.(event);
-              if (!event.defaultPrevented) positionPicker(event.currentTarget);
-            }}
-            onKeyDown={event => {
-              onKeyDown?.(event);
-              if (!event.defaultPrevented && !event.currentTarget.matches(":open")) {
-                positionPicker(event.currentTarget);
-              }
-            }}
+        <SDKSelect
+          items={sdkItems}
+          value={resolvedValue}
+          defaultValue={resolvedDefault}
+          name={name}
+          disabled={disabled}
+          required={required}
+          onValueChange={(next) => {
+            const normalized = next ?? "";
+            onValueChange?.(normalized);
+            if (onChange) {
+              const target = { value: normalized, name: name ?? "" };
+              onChange({
+                target,
+                currentTarget: target,
+              } as unknown as React.ChangeEvent<HTMLSelectElement>);
+            }
+          }}
+        >
+          <SelectTrigger
+            {...triggerRest}
+            id={binding.id}
+            aria-describedby={describedBy(ariaDescribedBy, binding["aria-describedby"])}
+            aria-invalid={binding["aria-invalid"] ?? ariaInvalid}
+            className={cx(
+              "yg-select",
+              "yg-select-trigger",
+              `yg-input-size-${resolvedSize}`,
+              className,
+            )}
           >
-            {placeholder && <option value="">{placeholder}</option>}
-            {options.map((o) => (
-              <option key={o.id} value={o.id} disabled={o.disabled}>
-                {o.label}
-              </option>
+            <SelectValue placeholder={placeholder} className="yg-select-value" />
+            <Icon name="down" />
+          </SelectTrigger>
+          <SelectContent
+            className="yg-popup-menu yg-select-popup"
+            sideOffset={6}
+            align="start"
+            collisionPadding={8}
+          >
+            {options.map((option) => (
+              <SelectItem
+                key={option.id}
+                value={option.id}
+                label={option.label}
+                disabled={option.disabled}
+                className="yg-select-option"
+              >
+                <span className="yg-select-option-label">{option.label}</span>
+                <SelectItemIndicator className="yg-select-option-check">
+                  <Icon name="check" />
+                </SelectItemIndicator>
+              </SelectItem>
             ))}
-          </select>
-          {dropdown && <Icon name="down" />}
-        </div>
+          </SelectContent>
+        </SDKSelect>
       )}
     </Field>
   );
@@ -382,25 +547,40 @@ export function Switch({
   id,
   className,
   disabled,
+  presentation = "row",
   onCheckedChange,
   ...props
 }: Checkable & {
   help?: string;
+  presentation?: "row" | "inset";
   checked?: boolean;
   defaultChecked?: boolean;
   onCheckedChange?: (value: boolean) => void;
 }) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
+  const labelId = inputId + "-label";
+  const helpId = help ? inputId + "-help" : undefined;
   return (
-    <div className={cx("yg-choice yg-switch", className)} data-disabled={disabled || undefined}>
-      <SDKSwitch {...props} id={inputId} disabled={disabled} onCheckedChange={onCheckedChange}>
+    <div
+      className={cx("yg-choice yg-switch", className)}
+      data-presentation={presentation}
+      data-disabled={disabled || undefined}
+    >
+      <SDKSwitch
+        {...props}
+        id={inputId}
+        disabled={disabled}
+        aria-labelledby={labelId}
+        aria-describedby={helpId}
+        onCheckedChange={onCheckedChange}
+      >
         <SwitchThumb />
       </SDKSwitch>
       <label htmlFor={inputId}>
         <span>
-          {label}
-          {help && <span className="yg-help">{help}</span>}
+          <span id={labelId}>{label}</span>
+          {help && <span id={helpId} className="yg-help">{help}</span>}
         </span>
       </label>
     </div>
@@ -471,7 +651,7 @@ export function RadioGroup({
         onValueChange={(next) => { if (next !== null) onValueChange(next); }}
       >
         {options.map((option) => presentation === "swatches" && "color" in option ? (
-          <div className="yg-swatch-choice" key={option.id} style={{ gridColumn: option.column }}>
+          <div className="yg-swatch-choice" key={option.id} data-step={option.label} style={{ gridColumn: option.column }}>
             <SDKRadioItem value={option.id} disabled={option.disabled}
               aria-label={option.accessibleLabel} style={{ backgroundColor: option.color }} />
             {columns === undefined && <span className="yg-meta" aria-hidden="true">{option.label}</span>}
@@ -487,6 +667,7 @@ export function RadioGroup({
   );
 }
 export function Combobox({
+  id,
   label,
   options,
   value,
@@ -495,10 +676,19 @@ export function Combobox({
   name,
   help,
   error,
-}: Choices & Pick<FieldInfo, "help" | "error">) {
+  layout,
+  hiddenLabel,
+  placeholder,
+  size = "regular",
+  className,
+}: Choices & Pick<FieldInfo, "id" | "help" | "error" | "layout" | "hiddenLabel"> & {
+  placeholder?: string;
+  size?: ControlSize;
+  className?: string;
+}) {
   const [controller] = useState(() => createComboboxController<string>());
   return (
-    <Field {...{ label, help, error }}>
+    <Field {...{ id, label, help, error, layout, hiddenLabel }}>
       {binding => (
         <SDKCombobox controller={controller} value={value || null} name={name} disabled={disabled}
           itemToLabel={id => options.find(option => option.id === id)?.label ?? ""}
@@ -509,19 +699,26 @@ export function Combobox({
             }
             onValueChange(next);
           }}>
-          <ComboboxInput {...binding} className="yg-standalone" autoComplete="off"
-            onFocus={event => event.currentTarget.select()}
-            onClick={event => {
-              if (event.currentTarget.getAttribute("aria-expanded") === "true") return;
-              controller.open();
-              controller.setQuery("");
-            }} />
-          <ComboboxContent className="yg-popup-menu yg-combobox-popup" sideOffset={6} align="start" collisionPadding={8}
-            render={(props, state) => <div {...props} aria-hidden={!state.open || undefined} inert={!state.open} />}>
+          <span className="yg-combobox-wrap">
+            <ComboboxInput {...binding} className={cx("yg-standalone yg-combobox-input", `yg-input-size-${size}`, className)}
+              placeholder={placeholder} autoComplete="off"
+              onFocus={event => event.currentTarget.select()}
+              onClick={event => {
+                if (event.currentTarget.getAttribute("aria-expanded") === "true") return;
+                controller.open();
+                controller.setQuery("");
+              }} />
+            <span className="yg-combobox-chevron" aria-hidden="true"><Icon name="down" /></span>
+          </span>
+          <ComboboxContent className="yg-popup-menu yg-combobox-popup" sideOffset={6} align="start" collisionPadding={8}>
             <ComboboxList aria-label={label}>
               {options.map(option => (
-                <ComboboxItem key={option.id} value={option.id} label={option.label} disabled={option.disabled}>
-                  {option.label}
+                <ComboboxItem key={option.id} value={option.id} label={option.label} disabled={option.disabled}
+                  className="yg-select-option">
+                  <span className="yg-select-option-label">{option.label}</span>
+                  <ComboboxItemIndicator className="yg-select-option-check">
+                    <Icon name="check" />
+                  </ComboboxItemIndicator>
                 </ComboboxItem>
               ))}
             </ComboboxList>

@@ -23,7 +23,7 @@ const bundle = buildSync({
         <button type="button" data-testid="outside">Other action</button>
       </>;
     }
-    createRoot(document.getElementById('mention-caret-fixture')).render(<Fixture />);
+    createRoot(document.getElementById('mention-caret-fixture'), { identifierPrefix: 'mc-' }).render(<Fixture />);
   ` }, bundle: true, write: false, platform: "browser", format: "iife",
   loader: { ".css": "empty", ".module.css": "empty" },
 }).outputFiles[0].text;

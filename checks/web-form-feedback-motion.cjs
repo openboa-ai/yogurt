@@ -28,7 +28,7 @@ const fixture = buildSync({
     }
     const node=document.createElement('div'); node.id='form-feedback-fixture';
     document.querySelector('.specimen[data-component="search-field"] .specimen-inner').append(node);
-    createRoot(node).render(<App />);
+    createRoot(node, { identifierPrefix: 'ffm-' }).render(<App />);
   `}, bundle:true, write:false, platform:"browser", format:"iife",
   loader:{".css":"empty", ".module.css":"empty"},
 }).outputFiles[0].text;

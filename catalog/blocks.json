@@ -10,7 +10,9 @@
       "button",
       "button-group",
       "field-error",
-      "stack"
+      "stack",
+      "card",
+      "field"
     ],
     "guidance": "Use this when changes need an explicit save. Group related fields in one form, keep Save and Discard together, and show validation beside the affected field before applying the draft."
   },
@@ -40,7 +42,7 @@
       "record-facts",
       "stack",
       "status",
-      "table-row"
+      "card"
     ],
     "guidance": "Use this when an action depends on the state a person reviewed. Show the relevant facts beside the decision, then confirm the action against the reviewed revision and report its outcome in place."
   },
@@ -54,7 +56,8 @@
       "message",
       "stack",
       "textarea",
-      "transcript"
+      "transcript",
+      "composer"
     ],
     "guidance": "Use this for an ongoing thread. Place the composer after the transcript, preserve drafts across unrelated updates, and surface Stop beside the composer while a reply is in progress."
   },
@@ -147,7 +150,8 @@
       "resource-row",
       "search-field",
       "select",
-      "stack"
+      "stack",
+      "card"
     ],
     "guidance": "Use this when people reopen outputs across sessions. Keep type and text filters together, reveal a selected artifact without losing the result list, and show the pinned state on the artifact itself."
   },
@@ -163,7 +167,14 @@
       "inline",
       "select",
       "stack",
-      "text-field"
+      "text-field",
+      "card",
+      "field",
+      "list",
+      "list-row",
+      "avatar",
+      "badge",
+      "action-menu"
     ],
     "guidance": "Use this when a project has its own members and permissions. Keep invitations separate from editing existing roles and ask for confirmation when a change alters someone else’s access."
   },
@@ -180,7 +191,9 @@
       "stack",
       "text",
       "textarea",
-      "text-field"
+      "text-field",
+      "card",
+      "field"
     ],
     "guidance": "Use this when identity and instructions are editable together. Place the live identity preview beside the identity fields and place scope and instructions in a separate group so users can review what each change affects."
   },
@@ -199,7 +212,9 @@
       "stack",
       "status",
       "text",
-      "trace"
+      "trace",
+      "card",
+      "badge"
     ],
     "guidance": "Use this when people need to diagnose or act on one run. Show the current status and result before the trace, and group Retry or Cancel with the run they affect."
   },
