@@ -20,6 +20,8 @@
     padding-block: 0;
     padding-inline: max(var(--guide-gutter), calc((100% - var(--guide-width)) / 2 + var(--guide-gutter)));
     background: var(--yg-canvas);
+    border: 0;
+    border-radius: 0;
     border-block-end: 1px solid var(--yg-border-subtle);
   }
   .guide-masthead .guide-identity {
