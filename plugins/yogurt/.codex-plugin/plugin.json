@@ -1,6 +1,6 @@
 {
   "name": "yogurt",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "Design, build, review, and report issues for OpenBoa interfaces using a pinned Yogurt SDK.",
   "skills": "./skills/",
   "interface": {

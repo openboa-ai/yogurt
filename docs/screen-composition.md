@@ -33,7 +33,7 @@ Use Rethink Sans and one page title per active screen. Apply display to the page
 | Control and label or closely related detail | control gap | 6 |
 | Neighboring controls in one group | inline gap | 8 |
 | Items in an ordinary stack | stack gap | 10 |
-| Header details and a distinct action group | panel gap | 14 |
+| Header details and a distinct action group | panel gap | 16 |
 | Peer sections of a screen | section gap | 20 |
 | Padding inside an ordinary card | card inset regular | 16 |
 
@@ -100,10 +100,11 @@ Apply these six placement criteria to every Yogurt `0.2.0` screen and recipe:
 
 Before shipping a screen or recipe, inspect live Light and Dark renders (at `1440px` desktop and `390px` narrow widths) across `neutral`, `paper`, and `mist` materials:
 
-- Zero horizontal overflow or right-edge clipping (including wide data tables and token strips).
+- Zero horizontal overflow or right-edge clipping (including wide data tables and token strips); verify wide `DataTable` columns scroll cleanly instead of crushing at `390px`.
 - Zero CSS gradients and zero static card drop shadows; tight shadows reserved for floating transient layers (`Popover`, `ActionMenu`, `Select` popup, `Dialog`, `Sheet`, `Toast`).
-- Crisp 4-tier border separation (`--yg-border-subtle`, `--yg-border-control`, `--yg-border-strong`, `--yg-border-indicator`) and clear disabled hierarchy across `filled`, `soft`, and `quiet` buttons.
-- 4-tier color hierarchy: alabaster Light (`#F6F6F4`/`#FAFAFA`/`#FFFFFF`) and carbon Dark (`#0B0B0D`/`#0F0F11`/`#131316`) surfaces, Monochrome Ink ordinary controls, OpenBoa Ink Blue (`#175174` light / `#79B3D6` dark) for `tone="brand"` CTAs and focus rings, muted Warm Terracotta strictly for secondary `--yg-accent`, and operational signals (`success`, `warning`, `danger`) kept strictly separate from brand.
+- Crisp border separation (`--yg-border-subtle`, `--yg-border-chrome`, `--yg-border-control`, `--yg-border-strong`, `--yg-border-indicator`), opaque disabled filled buttons (`neutral.200`/`neutral.800` + `--yg-text-disabled`), and zero Light `#F4F4F1`-on-`#F4F4F1` surface collisions.
+- 4-tier color hierarchy: default `neutral` Light (`#FFFFFF`/`#F4F4F1`/`#E5E5E0`) and obsidian Dark (`#0A0A0D`/`#131317`/`#1D1D22`/`#2A2A30`) surfaces, Monochrome Ink ordinary controls, locked OpenBoa Ink Blue (`#175174` on `#FFFFFF`) for `tone="brand"` CTAs and adaptive `--yg-brand-ink` / `:focus-visible` (`#175174` light / `#79B3D6` dark), muted Warm Terracotta strictly for secondary `--yg-accent`, and operational signals (`success`, `warning`, `danger`) kept strictly separate from brand.
+- Consumer structural hygiene: `SidebarHeader` titles stay single-line (`white-space: nowrap`), fixed `ToastStack` containers declare an explicit `inline-size` (never collapsing to narrow columns), sticky headers do not overlap scrolled content, `ActivityIsland` labels stay untruncated, `<List divided>` wraps valid list-item children (`ListRow`, `WorkEvent`, `ThreadRow`, `AgentRow`, `ResourceRow`, `RoutineRow`), inline `.yg-decision-card` confirmations avoid double-nested `.yg-facts` wells, and app CSS binds bare verified tokens from `design/styles/ui-tokens.css` with zero literal hex/rgb fallbacks.
 - Unified `@ui-sdk/react` `Select` and `Popover` keyboard and pointer behavior verified in Chromium (and WebKit where installed).
 
 ## Put the guidance to work
