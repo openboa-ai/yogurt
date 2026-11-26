@@ -44,10 +44,10 @@ For a Web SDK backed by a local archive, include how to obtain that exact archiv
 
 ## Install the local SDK
 
-Run `npm ci && npm run build && npm pack` at the Yogurt root to produce the archive for the version in `package.json`. Install that file in a consuming project using its relative path. The package has React and React DOM 19.2 peers and includes the pinned UI SDK core and React adapter.
+Run `npm ci && npm run build && npm pack` at the Yogurt root to produce the archive for the version in `package.json`. Install that file in a consuming project using its relative path. In text-only repositories, add `vendor/*.tgz` to `.gitignore` instead of committing the binary archive and document the exact `npm pack` step in the project's `README.md`. The package has React and React DOM 19.2 peers and includes the pinned UI SDK core and React adapter.
 
 ```sh
-npm install ./vendor/openboa-yogurt-0.1.0-local.16.tgz
+npm install ./vendor/openboa-yogurt-0.2.0-local.1.tgz
 npx yogurt list
 npx yogurt add button --target web
 ```
@@ -97,11 +97,11 @@ Reusable Web motion components are listed in the installed `catalog/motion-compo
 
 ### Control sizes and action shapes
 
-Web `Button`, `TextField` and `SearchField` accept the same size names: `compact`, `regular`, `comfortable`, `spacious` and `touch`, corresponding to 30, 36, 40, 48 and 44 px. Use `controlSize` for the same visual choices on `Select`; its native `size` attribute retains its HTML meaning. Regular is the default. Choose the size for the context and provide at least a 44 px target for touch. Buttons support `shape="rounded"` and `shape="pill"`; filled, soft and quiet describe emphasis rather than size. The component guide demonstrates each option.
+Web `Button`, `TextField` and `SearchField` accept the same size names: `compact`, `regular`, `comfortable`, `spacious` and `touch`, corresponding to 28, 32, 36, 44 and 44 px. Use `controlSize` for the same visual choices on `Select`; its native `size` attribute retains its HTML meaning. Regular is the default. Choose the size for the context and provide at least a 44 px target for touch. Buttons support `shape="rounded"` and `shape="pill"`; filled, soft and quiet describe emphasis rather than size. The component guide demonstrates each option.
 
 Resolve `motion-copy-button`, `motion-cart-button`, `motion-hold-button`, `motion-slide-confirm` and `motion-loading-success-button` for the reusable Web versions. Their registry entries install import wrappers.
 
-Web cards accept `density="compact"`, `"regular"` or `"spacious"`. The insets are 12, 18 and 24 px, with a shared 24 px corner. Choose the inset for the content and surrounding space; a density does not change the card's purpose or action.
+Web cards accept `density="compact"`, `"regular"` or `"spacious"`. The insets are 12, 16 and 20 px, with a shared 16 px corner. Choose the inset for the content and surrounding space; a density does not change the card's purpose or action.
 
 An `AgentAvatar` uses the host’s `ready`, `thinking`, `working`, `waiting`, `blocked` or `done` state. Pass the state to roster and conversation components through `AgentSummary`. Keep a readable status label next to active work, and use `animated={false}` for archived portraits outside the Message component. Message keeps its portraits still by default. AgentAvatar follows the system motion preference and uses a still version of the current expression when motion is reduced. [Motion and component behavior](motion.md)
 
@@ -138,7 +138,7 @@ The action policy controls requested changes; it does not filter snapshots or qu
 
 Follow the [design system rules](design-system-rules.md) for mandatory reuse, project composition and promotion of shared patterns.
 
-Commit a `yogurt.config.json` in the project and run `yogurt check` in its CI. A mixed host can declare `{"surfaces":{"site":{"target":"web","root":"apps/site/src"},"app":{"target":"web","root":"apps/app/src"}},"version":"0.1.0-local.16"}`. The command reads only declared presentation directories, checks for the corresponding adapter, known imports and numbered colors, and reports direct vendor imports, literal color declarations and other typefaces with a source location. It leaves the source untouched. Open the actual target to review copy, hierarchy and density at normal and narrow sizes. Operate the primary action and one recovery path by keyboard and pointer where supported. Record the observed result, including focus return and motion that affects the task.
+Commit a `yogurt.config.json` in the project and run `yogurt check` in its CI. A mixed host can declare `{"surfaces":{"site":{"target":"web","root":"apps/site/src"},"app":{"target":"web","root":"apps/app/src"}},"version":"0.2.0-local.1"}`. The command reads only declared presentation directories, checks for the corresponding adapter, known imports and numbered colors, and reports direct vendor imports, literal color declarations and other typefaces with a source location. It leaves the source untouched. Open the actual target to review copy, hierarchy and density at normal and narrow sizes. Operate the primary action and one recovery path by keyboard and pointer where supported. Record the observed result, including focus return and motion that affects the task.
 
 
 ## Editable blocks
