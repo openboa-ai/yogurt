@@ -73,7 +73,7 @@ export default function BrandPage() {
         </Grid>
       </section>
       <GuideSection id="family" title="The OpenBoa family">
-        <Text><strong>OpenBoa</strong> pairs <strong>Open</strong> with <strong>Boa</strong>—short for <strong>Business of Agents</strong>. Breaking limits is the permanent purpose; building the open Business of Agents is how we put it to work. Write OpenBoa with a capital O and B in company introductions and credits, lead with a project’s own name when someone is using it, and keep repository names lowercase.</Text>
+        <Text>In <strong>OpenBoa</strong>, <strong>Boa</strong> stands for <strong>Business of Agents</strong>. Breaking limits is the permanent purpose; we put it to work by building the Business of Agents in the open. Write OpenBoa with a capital O and B in company introductions and credits, lead with a project’s own name when someone is using it, and keep repository names lowercase.</Text>
         <Grid className="guide-brand-cards" gap={24}>
           {names.map(({ project, slogan, detail }) => <article key={project}>
             <Stack gap={8}>
@@ -94,7 +94,7 @@ export default function BrandPage() {
           <Stack gap={12}>
             <Text><strong>Home.</strong> We can build more of what we imagine.</Text>
             <Text><strong>Vision.</strong> Nothing is permanently out of reach. OpenBoa exists to break what stands between imagination and reality.</Text>
-            <Text><strong>Name.</strong> OpenBoa — Open Business of Agents.</Text>
+            <Text><strong>Name.</strong> OpenBoa — Business of Agents.</Text>
           </Stack>
         </Disclosure>
         <Link href="/content/terms.json" download>English terms by context</Link>
