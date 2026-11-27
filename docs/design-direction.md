@@ -21,7 +21,7 @@ OpenBoa’s primary color is the Upright 9 symbol’s Ink blue, `slate.700` (#17
 
 | Surface | First read | Composition | Where expression belongs |
 | --- | --- | --- | --- |
-| Company introduction | “Every limit has a shelf life.” | Place the B2 signature and give the headline a generous reading measure. Follow with the short Vision statement. | The wordplay and distinctive mark carry the character. [Company copy](https://yogurt-theta.vercel.app/index.html#identity) |
+| Company introduction | “Every limit has a shelf life.” | Place the B2 signature and give the headline a generous reading measure. Follow with the short Vision statement. Keep **OpenBoa** (*Open Business of Agents*) as the bridge from permanent purpose to current practice in approach and brand-origin copy. | The wordplay and distinctive mark carry the character. [Company copy](https://yogurt-theta.vercel.app/index.html#identity) |
 | Meatball decision | The object and consequence of the choice | Lead with the decision. Put project, revision and consequence next to it. Place the explicit action after those facts and leave cancellation easy to find. | The small peppered food mark identifies the project. Use direct confirmation and recovery language. [Review pattern](intents/patterns/I13-review-a-decision/spec.md) |
 | Sourdough record | The value, unit and time observed | Place the value and unit on one reading line. Group source, time and coverage below. Put missing facts in words and show only an available action. | The scored loaf identifies the owner. A stale or unknown value has a text treatment with its date or reason. [Inspection pattern](intents/patterns/I12-inspect-a-record/spec.md) |
 

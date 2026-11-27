@@ -6,7 +6,7 @@ Parent: [I02 design r1](../../../intents/language/I02-write-in-context/spec.md) 
 
 ## Decision and ownership
 
-Keep the company line “Every limit has a shelf life.” and the three maintained repository descriptions in their intended contexts. UI copy names the object, condition and supported next action.
+Keep the company line “Every limit has a shelf life.”, the **OpenBoa** (*Open Business of Agents*) name origin in brand and approach contexts, and the three maintained repository descriptions in their intended contexts. UI copy names the object, condition and supported next action.
 
 **Proposed writer.** Language and naming maintainer, `design/content/terms.json`. **Consumer.** Brand writers and any client presenting an action or result. **Independent verifier.** A product editor given the state fixture and the final screen, without the proposed wording. The OpenBoa design-system owner decides acceptance of this change. Product-owned facts and effects stay with the source named in the intent.
 
